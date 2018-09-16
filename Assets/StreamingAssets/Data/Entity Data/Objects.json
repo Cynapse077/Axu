@@ -1,0 +1,357 @@
+{
+    "Objects" : [
+        {
+            "Name" : "Gib",
+            "ObjectType" : "Body",
+            "Sprite" : "object-limb.png",
+            "Description" : "Freshly segmented flesh."
+        },
+        {
+            "Name" : "Bloodstain",
+            "ObjectType" : "Bloodstain",
+            "Sprite" : "object-bloodstain.png",
+            "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
+            "Render In Back" : true,
+            "Description" : "A pool of blood."
+        },
+        {
+            "Name" : "Bloodstain",
+            "ObjectType" : "Bloodstain_Permanent",
+            "Sprite" : "object-bloodstain.png",
+            "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
+            "Render In Back" : true,
+            "Description" : "A pool of blood."
+        },
+        {
+            "Name" : "Bloodstain",
+            "ObjectType" : "Bloodstain_Wall",
+            "Sprite" : "object-bloodstain_wall.png",
+            "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
+            "Render In Back" : true,
+            "Description" : "A pool of blood."
+        },
+        {
+            "Name" : "Small Chest",
+            "ObjectType" : "Chest",
+            "Sprite" : "object-chest_closed.png",
+            "Container" : { "Capacity" : 20 },
+            "Description" : "A small wooden chest. I wonder what it could contain?"
+        },
+        {
+            "Name" : "Small Chest",
+            "ObjectType" : "Chest_Open",
+            "Sprite" : "object-chest_open.png",
+            "Container" : { "Capacity" : 20 },
+            "Description" : "A small wooden chest. I wonder what it could contain?"
+        },
+        {
+            "Name" : "Loot",
+            "ObjectType" : "Loot",
+            "Sprite" : "object-loot.png",
+            "Container" : { "Capacity" : 20 },
+            "Description" : "Items strewn about the ground."
+        },
+        {
+            "Name" : "Wooden Barrel",
+            "ObjectType" : "Barrel",
+            "Sprite" : "object-barrel_closed.png",
+            "Container" : { "Capacity" : 10 },
+            "Description" : "A wood barrel with metal rings. It could contain loot."
+        },
+        {
+            "Name" : "Wooden Barrel",
+            "ObjectType" : "Barrel_Open",
+            "Sprite" : "object-barrel_open.png",
+            "Container" : { "Capacity" : 10 },
+            "Description" : "A wood barrel with metal rings. It could contain loot."
+        },
+        {
+            "Name" : "Campfire",
+            "ObjectType" : "Campfire",
+            "Sprite" : "object-campfire.png",
+            "Physics" : "Solid",
+            "Light" : 4,
+            "Description" : "A roaring fire."
+        },
+        {
+            "Name" : "Table",
+            "ObjectType" : "Table",
+            "Sprite" : "object-table_small.png",
+            "Render In Back" : true,
+            "Description" : "A crudely crafted wooden table."
+        },
+        {
+            "Name" : "Door",
+            "ObjectType" : "Door_Closed",
+            "Sprite" : "object-door_wood_closed.png",
+            "Description" : "A doorway."
+        },
+        {
+            "Name" : "Door",
+            "ObjectType" : "Door_Open",
+            "Sprite" : "object-door_wood_open.png",
+            "Description" : "A doorway."
+        },
+        {
+            "Name" : "Prison Door",
+            "ObjectType" : "Prison_Door_Closed",
+            "Sprite" : "object-door_metal_closed.png",
+            "Description" : "A doorway."
+        },
+        {
+            "Name" : "Prison Door",
+            "ObjectType" : "Prison_Door_Open",
+            "Sprite" : "object-door_metal_open.png",
+            "Description" : "A doorway."
+        },
+        {
+            "Name" : "Ensistic Door",
+            "ObjectType" : "Ensis_Door_Closed",
+            "Sprite" : "object-door_ensis_closed.png",
+            "Description" : "A door only the Ensis can open."
+        },
+        {
+            "Name" : "Ensistic Door",
+            "ObjectType" : "Ensis_Door_Open",
+            "Sprite" : "object-door_ensis_open.png",
+            "Description" : "A door only the Ensis can open."
+        },
+        {
+            "Name" : "Strange Door",
+            "ObjectType" : "Magna_Door_Closed",
+            "Sprite" : "object-door_magna_closed.png",
+            "Description" : "A doorway."
+        },
+        {
+            "Name" : "Strange Door",
+            "ObjectType" : "Magna_Door_Open",
+            "Sprite" : "object-door_magna_open.png",
+            "Description" : "A doorway."
+        },
+        {
+            "Name" : "Bed",
+            "ObjectType" : "Bed",
+            "Sprite" : "object-bed_small.png",
+            "Render In Back" : true,
+            "Description" : "Someone's bed."
+        },
+        {
+            "Name" : "Sign",
+            "ObjectType" : "Sign_House",
+            "Sprite" : "object-sign.png",
+            "Description" : "A sign. It reads:\n\""
+        },
+        {
+            "Name" : "Sign",
+            "ObjectType" : "Sign_Shop",
+            "Sprite" : "object-sign_shop.png",
+            "Description" : "A sign. It reads:\n\""
+        },
+        {
+            "Name" : "Sign",
+            "ObjectType" : "Sign_Hospital",
+            "Sprite" : "object-sign_hospital.png",
+            "Description" : "A sign. It reads:\n\""
+        },
+        {
+            "Name" : "Bed Roll",
+            "ObjectType" : "Bed_Roll",
+            "Sprite" : "object-bedroll.png",
+            "Render In Back" : true,
+            "Description" : "A portable sleeping spot."
+        },
+        {
+            "Name" : "Brazier",
+            "ObjectType" : "Brazier",
+            "Sprite" : "object-brazier.png",
+            "Light" : 4,
+            "Render In Back" : true,
+            "Description" : "A large braier filled with a flammable ore and incense. It burns brightly."
+        },
+        {
+            "Name" : "Spike Trap",
+            "ObjectType" : "Trap_Spike",
+            "Sprite" : "object-trap_spike.png",
+            "Physics" : "Damage",
+            "Render In Back" : true,
+            "Description" : "A retractable set of bloody spikes."
+        },
+        {
+            "Name" : "Terminal",
+            "ObjectType" : "Terminal_On",
+            "Sprite" : "object-terminal_on.png",
+            "Description" : "A computer terminal. Its screen flashes brightly with text."
+        },
+        {
+            "Name" : "Terminal",
+            "ObjectType" : "Terminal_Off",
+            "OnInteract" : { "File" : "Objects", "Function" : "Interact_Terminal" },
+            "Sprite" : "object-terminal_off.png",
+            "Description" : "A computer terminal. It appears to be off."
+        },
+        {
+            "Name" : "Tall Grass",
+            "ObjectType" : "Tall_Grass",
+            "Sprite" : "object-grass.png",
+            "Render In Front" : true,
+            "Description" : "Tall grass, perfect for hiding."
+        },
+        {
+            "Name" : "Statue",
+            "ObjectType" : "Statue",
+            "Sprite" : "object-statue.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A faceless statue made of solid gold. It appears to be praying."
+        },
+        {
+            "Name" : "Broken Statue",
+            "ObjectType" : "Statue_Broken",
+            "Sprite" : "object-statue_broken.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A faceless statue made of solid gold. It was broken by your hand."
+        },
+        {
+            "Name" : "Curious Crystal",
+            "ObjectType" : "Crystal",
+            "Sprite" : "object-crystal_on.png",
+            "Physics" : "Solid",
+            "Light" : 1,
+            "Render In Front" : true,
+            "Description" : "What made such a curious structure? What could it do?"
+        },
+        {
+            "Name" : "Bookshelf",
+            "ObjectType" : "Bookshelf",
+            "Sprite" : "object-bookshelf.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A shelf containing several pieces of literature."
+        },
+        {
+            "Name" : "Burnt Bookshelf",
+            "ObjectType" : "Bookshelf_Burnt",
+            "Sprite" : "object-bookshelf_burnt.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A shelf that contained literature. It is burnt, and the books within are illegible."
+        },
+        {
+            "Name" : "Cryopod",
+            "ObjectType" : "Cryopod_Closed",
+            "Sprite" : "object-cryopod_closed.png",
+            "Physics" : "Solid",
+            "OnInteract" : { "File" : "Objects", "Function" : "Interact_Cryopod" },
+            "Render In Front" : true,
+            "Description" : "A pod made to house people in a deep sleep during space travel."
+        },
+        {
+            "Name" : "Cryopod",
+            "ObjectType" : "Cryopod_Open",
+            "Sprite" : "object-cryopod_open.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A pod made to house people in a deep sleep during space travel."
+        },
+        {
+            "Name" : "Stone",
+            "ObjectType" : "Stone",
+            "Sprite" : "object-stone.png",
+            "Render In Back" : true,
+            "Description" : "A stone protruding from the earth."
+        },
+        {
+            "Name" : "Web",
+            "ObjectType" : "Web",
+            "Sprite" : "object-web.png",
+            "Render In Back" : true,
+            "Description" : "A strongly woven web, probably made by a large arachnid."
+        },
+        {
+            "Name" : "Anvil",
+            "ObjectType" : "Anvil",
+            "Sprite" : "object-anvil.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A tool used by blacksmiths and other metal workers."
+        },
+        {
+            "Name" : "Ore",
+            "ObjectType" : "Ore",
+            "Sprite" : "object-ore.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A tool used by blacksmiths and other metal workers."
+        },
+        {
+            "Name" : "Table",
+            "ObjectType" : "Table_Large",
+            "Sprite" : "object-table_big.png",
+            "Render In Back" : true,
+            "Description" : "A crudely crafted wooden table."
+        },
+        {
+        	"Name" : "Stair Lock",
+        	"ObjectType" : "Stair_Lock",
+        	"Sprite" : "object-stairlock.png",
+        	"Physics" : "Solid",
+            "OnInteract" : { "File" : "Objects", "Function" : "Interact_Stairlock" },
+        	"Render In Front" : true,
+        	"Description" : "A blocking stone, heavy and chained. It is used to cover staircases."
+        },
+        {
+            "Name" : "Fence",
+            "ObjectType" : "Fence",
+            "Sprite" : "object-fence.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A sturdy wood fence."
+        },
+        {
+            "Name" : "Bars",
+            "ObjectType" : "Bars",
+            "Sprite" : "object-bars.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "Thick bars made of rusted metal."
+        },
+        {
+            "Name" : "Headstone",
+            "ObjectType" : "Headstone",
+            "Sprite" : "object-gravestone.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A headstone for a deceased person."
+        },
+        {
+            "Name" : "Grave",
+            "ObjectType" : "Grave",
+            "Sprite" : "object-grave.png",
+            "OnInteract" : { "File" : "Objects", "Function" : "Interact_Grave" },
+            "Render In Back" : true,
+            "Description" : ""
+        },
+        {
+            "Name" : "Open Grave",
+            "ObjectType" : "Grave_Dug",
+            "Sprite" : "object-grave_dug.png",
+            "Render In Back" : true,
+            "Description" : ""
+        },
+        {
+            "Name" : "Pine Tree",
+            "ObjectType" : "Tree_Pine",
+            "Sprite" : "object-tree_pine.png",
+            "Physics" : "Solid",
+            "Render In Front" : true,
+            "Description" : "A sturdy pine tree."
+        },
+        {
+            "Name" : "Robotic Frame",
+            "ObjectType" : "Robot_Frame",
+            "Sprite" : "object-robot.png",
+            "Description" : "An empty robotic chasis. It requires an AI Core to interact with."
+        }
+    ]
+}

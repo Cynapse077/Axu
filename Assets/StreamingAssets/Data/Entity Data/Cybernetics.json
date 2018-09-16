@@ -1,0 +1,49 @@
+{
+    "Cybernetics" : [
+        {
+            "Name" : "Healing Nanomachines",
+            "ID" : "nano_heal",
+            "Description" : "Upon being injured, your body will release nanomachines to help close the wound. <color=green>+HP Regen</color>",
+            "Slots" : [ "Slot_Chest" ],
+            "Stats" : [
+                { "Stat" : "HP Regen", "Amount" : 2 }
+            ]
+        },
+        {
+            "Name" : "Adrenaline Nanomachines",
+            "ID" : "nano_restore",
+            "Description" : "Your blood is filled with nanomachines that aid in removing fatigue from muscles. <color=green>+ST Regen</color>",
+            "Slots" : [ "Slot_Chest" ],
+            "Stats" : [
+                { "Stat" : "ST Regen", "Amount" : 2 }
+            ]
+        },
+        {
+            "Name" : "Radiation Scrubber",
+            "ID" : "rad_scrubber",
+            "Description" : "Slowly removes radiation from your body.",
+            "Slots" : [ "Slot_Chest", "Slot_Back" ],
+            "Events" : [
+                "OnTurn" { "File" : "Cybernetics", "Function" : "Scrub_Radiation" }
+            ]
+        },
+        {
+            "Name" : "Target Sensor",
+            "ID" : "sensor",
+            "Description" : "Your eyes are able to accurately predict a target's movement. <color=green>+ACC</color>",
+            "Slots" : [ "Slot_Head" ],
+            "Stats" : [
+                { "Stat" : "Accuracy", "Amout" : 1 }
+            ]
+        },
+        {
+            "Name" : "Impact Sole",
+            "ID" : "stealthsole",
+            "Description" : "Cushion under the soles of your feet, reducing the amount of sound you make.",
+            "Slots" : [ "Slot_Leg" ],
+            "Stats" : [
+                { "Stat" : "Stealth", "Amount" : 3 }
+            ]
+        }
+    ]
+}
