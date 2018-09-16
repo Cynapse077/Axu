@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------------------------------------------------
+#	-=[UPCOMING GOALS]=-																							    #
+-------------------------------------------------------------------------------------------------------------------------
+
+- Mouse movement on world map - mouse cursor offset is wrong.
+- Blood slime familiar.
+- Hire NPCs to stay at your base to sell goods, provide medical services, etc.
+- Spawn enemies based on level via blueprint grouping. Sort similar ones by level. Quite like how Fallout 4 or Skyrim does it, but not to that extent.
+	- Just to make sure you don't run into the same group of low-level Bandits later in the game.
+
+CYBERNETICS:
+- One per body slot.
+	- Folding blade that takes up arm and weapon slot. - Equip to arm, and will unequip weapon, and set wep to itself. - or set default limb to folded blade? But only for one arm..?
+	- Increased vision at night.
+	- Radiation scrubber.
+	- Impact soles for extra stealth.
+
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,380 @@
+{
+
+    "Body Structures" : [
+        {
+            "Name" : "Humanoid",
+            "Parts" : [ "head", "back", "chest", "arm", "arm", "leg", "leg" ]
+        },
+        {
+            "Name" : "Quadruped",
+            "Parts" : [ "head", "back", "chest", "foreleg", "foreleg", "hindleg", "hindleg" ]
+        },
+        {
+            "Name" : "Centaur",
+            "Parts" : [ "head", "back", "chest", "arm", "arm", "foreleg", "foreleg", "hindleg", "hindleg" ]
+        },
+        {
+            "Name" : "Arms_And_Tail",
+            "Parts" : [ "head", "back", "chest", "arm", "arm", "tail" ]
+        },
+        {
+            "Name" : "Plant_Flower",
+            "Parts" : [ "head_bulb", "body_stalk", "vine", "vine", "roots" ]
+        },
+        {
+            "Name" : "Flying",
+            "Parts" : [ "head", "wings", "chest", "wing", "wing", "leg", "leg" ]
+        },
+        {
+            "Name" : "Humanoid Two-Headed",
+            "Parts" : [ "head", "head", "back", "chest", "arm", "arm", "leg", "leg" ]
+        },
+        {
+            "Name" : "Humanoid Flying",
+            "Parts" : [ "head", "wings", "chest", "arm", "arm", "wing", "wing", "leg", "leg" ]
+        },
+        {
+            "Name" : "Jelly",
+            "Parts" : [ "body", "heart" ]
+        },
+        {
+        	"Name" : "Snake/Worm",
+        	"Parts" : [ "head", "body", "tail" ]
+        },
+        {
+            "Name" : "Snake/Worm Flying",
+            "Parts" : [ "head", "body", "wing", "wing", "tail" ]
+        }, 
+        {
+            "Name" : "Fish",
+            "Parts" : [ "head", "body", "back", "fin", "fin", "tail" ]
+        },
+        {
+            "Name" : "Tripod",
+            "Parts" : [ "turret", "tripod" ]
+        },
+        {
+            "Name" : "Scritter",
+            "Parts" : [ "head", "leg", "leg", "hindleg" ]
+        },
+        {
+            "Name" : "Neant",
+            "Parts" : [ "head", "body", "leg", "leg", "hindleg", "hindleg" ]
+        },
+        {
+            "Name" : "Insect",
+            "Parts" : [ "head", "body", "arm", "arm", "leg", "leg", "hindleg", "hindleg" ]
+        },
+        {
+            "Name" : "Thillid",
+            "Parts" : [ "head", "body", "tentacle", "tentacle", "tentacle", "tentacle_leg", "tentacle_leg", "tentacle_leg" ]
+        },
+        {
+            "Name" : "The Empty",
+            "Parts" : [ "head", "tentacle", "tentacle" ]
+        },
+        {
+            "Name" : "The Empty Tentacle",
+            "Parts" : [ "tentacle" ]
+        },
+        {
+            "Name" : "Humanoid Robot",
+            "Parts" : [ "head_robot", "chest_robot", "back_robot", "arm_robot", "arm_robot", "leg_robot", "leg_robot" ]
+        },
+        {
+            "Name" : "Cyborg",
+            "Parts" : [ "head", "back", "chest_robot", "arm", "arm_robot", "leg_robot", "leg" ]
+        }
+    ],
+
+    "Body Parts" : [
+        {
+            "Name" : "Head",
+            "ID" : "head",
+            "Slot" : "Slot_Head",
+            "Size" : 4,
+            "Stats" : [ { "Stat" : "Intelligence", "Amount" : 4 } ],
+            "Tags" : [ "OnSeverLast_Die" ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Chest",
+            "ID" : "chest",
+            "Slot" : "Slot_Chest",
+            "Size" : 20,
+            "Stats" : [ { "Stat" : "Endurance", "Amount" : 1 } ],
+            "Severable" : false,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Body",
+            "ID" : "body",
+            "Slot" : "Slot_Chest",
+            "Size" : 20,
+            "Stats" : [ { "Stat" : "Endurance", "Amount" : 1 } ],
+            "Severable" : false,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Back",
+            "ID" : "back",
+            "Slot" : "Slot_Back",
+            "Size" : 10,
+            "Stats" : [ { "Stat" : "Endurance", "Amount" : 1 } ],
+            "Severable" : false,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Wings",
+            "ID" : "wings",
+            "Slot" : "Slot_Back",
+            "Size" : 12,
+            "Severable" : false,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Arm",
+            "ID" : "arm",
+            "Slot" : "Slot_Arm",
+            "Size" : 10,
+            "Stats" : [ { "Stat" : "Strength", "Amount" : 2 } ],
+            "Tags" : [ "Grip" ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Leg",
+            "ID" : "leg",
+            "Slot" : "Slot_Leg",
+            "Size" : 8,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 4 } ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Fin",
+            "ID" : "fin",
+            "Slot" : "Slot_Misc",
+            "Size" : 6,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 2 } ],
+            "Severable" : true,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Wing",
+            "ID" : "wing",
+            "Slot" : "Slot_Wing",
+            "Size" : 8,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 5 } ],
+            "Severable" : true,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Tail",
+            "ID" : "sm_tail",
+            "Slot" : "Slot_Tail",
+            "Size" : 2,
+            "Stats" : [ { "Stat" : "Dexterity", "Amount" : 1 } ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        }, 
+        {
+            "Name" : "Tail",
+            "ID" : "tail",
+            "Slot" : "Slot_Tail",
+            "Size" : 8,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 3 } ],
+            "Tags" : [ "Grip" ],
+            "Severable" : true,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Foreleg",
+            "ID" : "foreleg",
+            "Slot" : "Slot_Leg",
+            "Size" : 10,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 3 } ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Hind Leg",
+            "ID" : "hindleg",
+            "Slot" : "Slot_Leg",
+            "Size" : 6,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 4 } ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Heart",
+            "ID" : "heart",
+            "Slot" : "Slot_Back",
+            "Size" : 2,
+            "Severable" : false,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Tentacle",
+            "ID" : "tentacle",
+            "Slot" : "Slot_Arm",
+            "Size" : 8,
+            "Tags" : [ "Grip" ],
+            "Stats" : [ { "Stat" : "Strength", "Amount" : 1 } ],
+            "Severable" : true,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Tentacle",
+            "ID" : "tentacle_leg",
+            "Slot" : "Slot_Leg",
+            "Size" : 8,
+            "Tags" : [ "Grip" ],
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 2 } ],
+            "Severable" : true,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Bulb",
+            "ID" : "head_bulb",
+            "Slot" : "Slot_Head",
+            "Size" : 7,
+            "Severable" : true,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Stalk",
+            "ID" : "body_stalk",
+            "Slot" : "Slot_Chest",
+            "Size" : 20,
+            "Severable" : false,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Vine",
+            "ID" : "vine",
+            "Slot" : "Slot_Arm",
+            "Size" : 5,
+            "Stats" : [ { "Stat" : "Strength", "Amount" : 1 } ],
+            "Tags" : [ "Grip" ],
+            "Severable" : true,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Roots",
+            "ID" : "roots",
+            "Slot" : "Slot_Leg",
+            "Size" : 3,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 1 } ],
+            "Severable" : false,
+            "Can Wear Gear" : false
+        }, 
+        {
+            "Name" : "Turret",
+            "ID" : "turret",
+            "Slot" : "Slot_Head",
+            "Size" : 5,
+            "Stats" : [ { "Stat" : "Accuracy", "Amount" : 1 } ],
+            "Tags" : [ "Synthetic" ],
+            "Severable" : false,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Tripod",
+            "ID" : "tripod",
+            "Slot" : "Slot_Leg",
+            "Size" : 10,
+            "Stats" : [ { "Stat" : "Accuracy", "Amount" : 2 } ],
+            "Tags" : [ "Synthetic" ],
+            "Severable" : false,
+            "Can Wear Gear" : false
+        },
+        {
+            "Name" : "Arm",
+            "ID" : "arm_mech",
+            "Slot" : "Slot_Arm",
+            "Size" : 10,
+            "Stats" : [ { "Stat" : "Strength", "Amount" : 1 }, { "Stat" : "Dexterity", "Amount" : 1 } ],
+            "Tags" : [ "Synthetic", "External", "Grip" ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Head",
+            "ID" : "head_mech",
+            "Slot" : "Slot_Head",
+            "Size" : 4,
+            "Stats" : [ { "Stat" : "Intelligence", "Amount" : 1 }, { "Stat" : "Accuracy", "Amount" : 1 } ],
+            "Tags" : [ "Synthetic", "External" ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Wing",
+            "ID" : "wing_mech",
+            "Slot" : "Slot_Wing",
+            "Size" : 7,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 2 } ],
+            "Tags" : [ "Synthetic", "External" ],
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+
+        {
+            "Name" : "Head",
+            "ID" : "head_robot",
+            "Slot" : "Slot_Head",
+            "Size" : 5,
+            "Stats" : [ { "Stat" : "Intelligence", "Amount" : 2 } ],
+            "Tags" : [ "Synthetic" ],
+            "Default Equipped" : "plating",
+            "Severable" : true,
+            "Can Wear Gear" : true 
+        },
+        {
+            "Name" : "Chasis",
+            "ID" : "chest_robot",
+            "Slot" : "Slot_Chest",
+            "Size" : 15,
+            "Stats" : [ { "Stat" : "Endurance", "Amount" : 2 } ],
+            "Tags" : [ "Synthetic" ],
+            "Default Equipped" : "plating",
+            "Severable" : false,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Back",
+            "ID" : "back_robot",
+            "Slot" : "Slot_Back",
+            "Size" : 6,
+            "Stats" : [ { "Stat" : "Endurance", "Amount" : 2 } ],
+            "Tags" : [ "Synthetic" ],
+            "Default Equipped" : "plating",
+            "Severable" : false,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Arm",
+            "ID" : "arm_robot",
+            "Slot" : "Slot_Arm",
+            "Size" : 8,
+            "Stats" : [ { "Stat" : "Strength", "Amount" : 4 } ],
+            "Tags" : [ "Grip", "Synthetic" ],
+            "Default Equipped" : "plating",
+            "Severable" : true,
+            "Can Wear Gear" : true
+        },
+        {
+            "Name" : "Leg",
+            "ID" : "leg_robot",
+            "Slot" : "Slot_Leg",
+            "Size" : 8,
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 5 } ],
+            "Tags" : [ "Synthetic" ],
+            "Default Equipped" : "plating",
+            "Severable" : true,
+            "Can Wear Gear" : true
+        }
+    ]
+}

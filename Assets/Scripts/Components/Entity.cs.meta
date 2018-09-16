@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 05af3d3a63d4c174c8222ae959b71a98
+timeCreated: 1467382508
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - projectile: {fileID: 162132, guid: b6ff0073ac4346a4c92449994b7fb673, type: 2}
+  - swimmingSprite: {instanceID: 0}
+  - beamDown: {fileID: 168870, guid: 088e765b017ec824295ce48d0a391446, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

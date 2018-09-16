@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1997638758576784}
+  m_IsPrefabParent: 1
+--- !u!1 &1997638758576784
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4838910918364520}
+  - component: {fileID: 114594248078776818}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4838910918364520
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997638758576784}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 27.723423, y: -14.733181, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114594248078776818
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997638758576784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59c539e3b9b77af439f96c6b8667f0f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slashEffects:
+  - {fileID: 1310944750690924, guid: d5da186f9474a3b45953eefe9905ba30, type: 2}
+  - {fileID: 1806263278420272, guid: 7151c175917c40c40ba794fc532e9db4, type: 2}
+  - {fileID: 1044309008049448, guid: 3a1b62e0ea60e5144bbc469a872522be, type: 2}
+  - {fileID: 1910698909395976, guid: 4147db166e94ead48b104fc27504c088, type: 2}
+  - {fileID: 1572665521280566, guid: 6f075744a7bae6a4586e4c97da7d5096, type: 2}
+  - {fileID: 151422, guid: 6a7bfcbc43d69a84281b50cc8595f083, type: 2}
+  - {fileID: 1803136865635048, guid: 55c52a894b1cecd40b3e35074ec2b8c9, type: 2}
+  - {fileID: 1235485150692220, guid: 554aaf083b91f874395ff7ee6ba9062d, type: 2}
+  abilityEffects:
+  - {fileID: 1539633527407150, guid: 83db618d273847542b2d461a17f8a818, type: 2}
+  - {fileID: 127204, guid: 93d0822745b07ee4cb898f0cb12995aa, type: 2}
+  - {fileID: 108308, guid: 8fb0b2f227247a14fa268054955126ab, type: 2}
+  - {fileID: 108308, guid: 6bcbb3ab63cd97c41850e197157bbfd1, type: 2}
+  - {fileID: 191170, guid: 0d8ea354c7428e546807b5b29c24f57a, type: 2}
+  - {fileID: 1962609334062376, guid: bb2ac165517712c488cc11ae662b6ee0, type: 2}
+  - {fileID: 145246, guid: 69d69d0c42ceaa440929dcfb257eb693, type: 2}
+  shootEffect: {fileID: 162132, guid: b6ff0073ac4346a4c92449994b7fb673, type: 2}
+  throwEffect: {fileID: 1000013773973108, guid: d98745d32535973459395ca07fdb0d53,
+    type: 2}
+  teleBeam: {fileID: 168870, guid: 088e765b017ec824295ce48d0a391446, type: 2}
+  splash: {fileID: 1000012717689072, guid: f22873216f187c14d9c8f2536772d6d5, type: 2}
+  damageEffect: {fileID: 172956, guid: 38777e740001b724690878903de1d30d, type: 2}
+  blockEffect: {fileID: 172956, guid: 77e83dfe9525f1b4cac10786c3ffe7c1, type: 2}
+  lightningBolt: {fileID: 127204, guid: 93d0822745b07ee4cb898f0cb12995aa, type: 2}
+  roarEffect: {fileID: 197884, guid: 2571d05f43e85f04993ab237583dff20, type: 2}
+  exclamationMark: {fileID: 114274, guid: f115c792c71f1d347b4ecc1ba19c3d0b, type: 2}

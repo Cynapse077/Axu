@@ -1,0 +1,29 @@
+{
+    "World" : {
+        "Size" : { "x" : 200, "y" : 200 },
+        "Tileset" : "/Data/Art/WorldMap_Biomes.png",
+        "Locations" : "/Data/Maps/Locations.json",
+        "Location Sprites" : "/Data/Art/World Landmarks.png"
+    },
+    "Local" : {
+        "Size" : { "x" : 45, "y" : 30 },
+        "Tileset" : "/Data/Art/LocalMap.png",
+        "Start Position" : { "x" : 22, "y" : 2 }
+    },
+    "Day Length" : { "Day" : 4000, "Night" : 2000 },
+    "Data" : {
+        "NPCs" : "/Data/Entity Data/NPC Types.json",
+        "Spawn Tables" : "/Data/Entity Data/Tables/Encounter Tables.json",
+        "Body Structures" : "/Data/Entity Data/Body Structures.json",
+        "Items" : "/Data/Item Data/Items.json",
+        "Artifacts" : "/Data/Item Data/Artifacts.json",
+        "Natural Items" : "/Data/Item Data/Natural Items.json",
+        "Item Modifiers" : "/Data/Item Data/Modifiers.json",
+        "Default Maps": "/Data/Maps/Default",
+        "Quests" : "/Data/Dialogue/Quests.json",
+        "Factions" : "/Data/Entity Data/Factions.json",
+        "Objects" : "/Data/Entity Data/Objects.json",
+        "Abilities" : "/Data/Entity Data/Abilities.json",
+        "Liquids" : "/Data/Item Data/Liquids.json"
+    }
+}

@@ -1,0 +1,811 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1964814299523580}
+  m_IsPrefabParent: 1
+--- !u!1 &1964814299523580
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4232869952401020}
+  - component: {fileID: 114239951578923714}
+  - component: {fileID: 114822051971929934}
+  m_Layer: 0
+  m_Name: TileMap
+  m_TagString: TileMap
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1965474924687658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4388148389880734}
+  - component: {fileID: 212757918913306772}
+  m_Layer: 0
+  m_Name: offscreenarrows
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4232869952401020
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1964814299523580}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4388148389880734}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4388148389880734
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1965474924687658}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1, y: -31, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4232869952401020}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114239951578923714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1964814299523580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9afbd79b7667b14fac51837aeaaca92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldCoordX: 0
+  worldCoordY: 0
+  currentElevation: 0
+  worldMap:
+    startPosition:
+      _x: 0
+      _y: 0
+    ruinsPos: []
+    vaultAreas: []
+    doneLoading: 0
+  goingDown: 1
+  tilePrefab: {fileID: 1755656294914606, guid: 680f62733d7bcb54b920068b3d64ede3, type: 2}
+--- !u!114 &114822051971929934
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1964814299523580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ee58546f81343f4ca9e72476e2c35b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilesets:
+  - Name: Water Plains
+    Norm: 00000000
+    Rare: 00000000
+    Autotile:
+    - {fileID: 21300000, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300002, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300004, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300006, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300008, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300010, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300012, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300014, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300016, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300018, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300020, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300022, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300024, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300026, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300028, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300030, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300032, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300034, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300036, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300038, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300040, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300042, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300044, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300046, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300048, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300050, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+  - Name: Water Forest
+    Norm: 00000000
+    Rare: 00000000
+    Autotile:
+    - {fileID: 21300000, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300002, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300004, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300006, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300008, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300010, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300012, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300014, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300016, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300018, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300020, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300022, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300024, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300026, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300028, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300030, guid: 4cb6e7dcf2a96a8439cebf2c6ce40731, type: 3}
+    - {fileID: 21300032, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300034, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300036, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300038, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300040, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300042, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300044, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300046, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300048, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+    - {fileID: 21300050, guid: cc45aec9e79da2c4dbfb3f81603a7172, type: 3}
+  - Name: Sand Plains
+    Norm: 08000000
+    Rare: 220000002300000008000000
+    Autotile:
+    - {fileID: 21300012, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300014, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300016, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300018, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300020, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300022, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300024, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300026, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300028, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300030, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300032, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300034, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300036, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300038, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300040, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300042, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300000, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300002, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300004, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300006, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300008, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+    - {fileID: 21300010, guid: a0ce7c673a2f8b143a92ca8d647fea50, type: 3}
+  - Name: Water Shore
+    Norm: 00000000
+    Rare: 00000000
+    Autotile:
+    - {fileID: 21300000, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300002, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300004, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300006, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300008, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300010, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300012, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300014, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300016, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300018, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300020, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300022, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300024, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300026, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300028, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300030, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300032, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300034, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300036, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300038, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300040, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300042, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300044, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300046, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300048, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+    - {fileID: 21300050, guid: 2303c36660b947c4e923b0f2d41623ce, type: 3}
+  - Name: Water Swamp
+    Norm: 6b0000001c0000001b000000
+    Rare: 1c0000001b000000
+    Autotile:
+    - {fileID: 21300012, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300014, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300016, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300018, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300020, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300022, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300024, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300026, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300028, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300030, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300032, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300034, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300036, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300038, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300040, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300042, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300000, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300002, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300004, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300006, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300008, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300010, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300044, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300046, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300048, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+    - {fileID: 21300050, guid: a3c75ac6224f34e4ba799ad60cc43f47, type: 3}
+  - Name: Desert Grass
+    Norm: 530000005400000064000000
+    Rare: 6500000066000000
+    Autotile:
+    - {fileID: 21300012, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300014, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300016, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300018, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300020, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300022, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300024, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300026, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300028, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300030, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300032, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300034, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300036, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300038, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300040, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300042, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300000, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300002, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300004, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300006, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300008, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+    - {fileID: 21300010, guid: eb755e10f4270454f8a74ea8a2a2e4b5, type: 3}
+  - Name: Water Desert
+    Norm: 00000000
+    Rare: 00000000
+    Autotile:
+    - {fileID: 21300020, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300022, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300024, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300026, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300028, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300030, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300032, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300034, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300036, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300038, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300040, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300042, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300044, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300046, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300048, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300050, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300000, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300002, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300004, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300006, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300008, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300010, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300012, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300014, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300016, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+    - {fileID: 21300018, guid: 83f640b473595264582da3e1c51b5173, type: 3}
+  - Name: Desert Sand
+    Norm: 530000005400000064000000
+    Rare: 6500000066000000
+    Autotile:
+    - {fileID: 21300012, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300014, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300016, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300018, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300020, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300022, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300024, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300026, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300028, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300030, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300032, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300034, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300036, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300038, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300040, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300042, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300044, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300002, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300004, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300006, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300008, guid: da340947c89b75843af81cd25d11b319, type: 3}
+    - {fileID: 21300010, guid: da340947c89b75843af81cd25d11b319, type: 3}
+  - Name: Underground Water
+    Norm: 00000000
+    Rare: 00000000
+    Autotile:
+    - {fileID: 21300020, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300022, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300024, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300026, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300028, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300030, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300032, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300034, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300036, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300038, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300040, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300042, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300044, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300046, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300048, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300050, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300000, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300002, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300004, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300006, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300008, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300010, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300012, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300014, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300016, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+    - {fileID: 21300018, guid: eb3e59a8cf1f5c74788256d236d53260, type: 3}
+  - Name: Rock Wall
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300022, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300024, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300026, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300028, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300030, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300032, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300034, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300036, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300038, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300040, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300042, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300044, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300046, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300048, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300050, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300000, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300002, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300004, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300006, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300008, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300010, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300012, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300014, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300016, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+    - {fileID: 21300018, guid: 2b5f363c02d9d5140bd90f263de7783b, type: 3}
+  - Name: Lava
+    Norm: 4a0000004b000000
+    Rare: 4a0000004b000000
+    Autotile:
+    - {fileID: 21300020, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300022, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300024, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300026, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300028, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300030, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300032, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300034, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300036, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300038, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300040, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300042, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300044, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300046, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300048, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300050, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300000, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300002, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300004, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300006, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300008, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300010, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300012, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300014, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300016, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+    - {fileID: 21300018, guid: 1257100867cd626489bf51ec3fbd6118, type: 3}
+  - Name: Wall1
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300022, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300024, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300026, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300028, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300030, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300032, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300034, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300036, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300038, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300040, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300042, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300044, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300046, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300048, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300050, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300000, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300002, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300004, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300006, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300008, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300010, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300012, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300014, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300016, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+    - {fileID: 21300018, guid: 4ffa545ffcb87ba4b8019de25b7bdd12, type: 3}
+  - Name: Wall2
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300022, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300024, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300026, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300028, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300030, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300032, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300034, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300036, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300038, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300040, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300042, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300044, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300046, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300048, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300050, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300000, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300002, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300004, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300006, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300008, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300010, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300012, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300014, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300016, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+    - {fileID: 21300018, guid: 6f966c41c9f24254cbb535b6913ae05c, type: 3}
+  - Name: Volcano Wall
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300022, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300024, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300026, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300028, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300030, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300032, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300034, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300036, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300038, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300040, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300042, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300044, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300046, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300048, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300050, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300000, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300002, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300004, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300006, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300008, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300010, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300012, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300014, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300016, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+    - {fileID: 21300018, guid: 3d2e7e54d09912a44ba2edf155125d96, type: 3}
+  - Name: Fence
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300000, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300002, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300004, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300006, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300008, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300010, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300012, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300014, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300016, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300018, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300020, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300022, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300024, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300026, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300028, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+    - {fileID: 21300030, guid: 2cc6d44f165909c40ac8f0a5bc13cd88, type: 3}
+  - Name: UG Tundra
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300022, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300024, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300026, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300028, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300030, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300032, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300034, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300036, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300038, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300040, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300042, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300044, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300046, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300048, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300050, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300000, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300002, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300004, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300006, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300008, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300010, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300012, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300014, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300016, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+    - {fileID: 21300018, guid: 3624d9625b03e4f41868abfe92b967f3, type: 3}
+  - Name: Ice
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300032, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300034, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300036, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300038, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300040, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300042, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300044, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300046, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300048, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300050, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300052, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300054, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300056, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300058, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300060, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300062, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300000, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300002, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300004, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300006, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300008, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300010, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300012, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300014, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300016, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+    - {fileID: 21300018, guid: 2fbb483253037f146a47b56dda362590, type: 3}
+  - Name: Water Tundra
+    Norm: 00000000
+    Rare: 00000000
+    Autotile:
+    - {fileID: 21300020, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300022, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300024, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300026, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300028, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300030, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300032, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300034, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300036, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300038, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300040, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300042, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300044, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300046, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300048, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300050, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300000, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300002, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300004, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300006, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300008, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300010, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300012, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300014, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300016, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+    - {fileID: 21300018, guid: 0d0441ec8817a5c4f9e9bd814ae28b3a, type: 3}
+  - Name: Prison Bars
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300000, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300002, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300004, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300006, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300008, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300010, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300012, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300014, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300016, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300018, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300020, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300022, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300024, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300026, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300028, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+    - {fileID: 21300030, guid: 4ee4c0b37ec626546afbde0a50b4851d, type: 3}
+  - Name: Magna Wall
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300022, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300024, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300026, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300028, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300030, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300032, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300034, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300036, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300038, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300040, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300042, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300044, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300046, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300048, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300050, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300000, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300002, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300004, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300006, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300008, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300010, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300012, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300014, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300016, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+    - {fileID: 21300018, guid: 06a5ad3c4db278a429ca30d24d3ca0a1, type: 3}
+  - Name: Facility Wall
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300022, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300024, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300026, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300028, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300030, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300032, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300034, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300036, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300038, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300040, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300042, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300044, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300046, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300048, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300050, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300000, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300002, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300004, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300006, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300008, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300010, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300012, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300014, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300016, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+    - {fileID: 21300018, guid: a03b499e0db6c3e41a76aa912dce9de4, type: 3}
+  - Name: Alpha
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300022, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300024, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300026, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300028, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300030, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300032, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300034, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300036, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300038, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300040, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300042, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300044, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300046, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300048, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300050, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300000, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300002, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300004, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300006, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300008, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300010, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300012, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300014, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300016, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+    - {fileID: 21300018, guid: c72fb7f930af0864da968583d4fc700a, type: 3}
+  - Name: Kin Wall
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300020, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300022, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300024, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300026, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300028, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300030, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300032, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300034, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300036, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300038, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300040, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300042, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300044, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300046, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300048, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300050, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300000, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300002, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300004, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300006, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300008, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300010, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300012, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300014, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300016, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+    - {fileID: 21300018, guid: b87ab52c1eda24f458678941dc848ab9, type: 3}
+--- !u!212 &212757918913306772
+SpriteRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1965474924687658}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -62272481
+  m_SortingLayer: -4
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 0e315e9e730d9d3458ff24ebd8f9b143, type: 3}
+  m_Color: {r: 0.6397059, g: 0.6397059, b: 0.6397059, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0

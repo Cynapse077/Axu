@@ -1,0 +1,50 @@
+[
+    {
+        "ID" : "test0",
+        "Display" : "This is a test dialogue box. Select a response.",
+        "Responses" : [
+            {
+                "Display" : "Answer with compassion.",
+                "GoTo" : "test0_1"
+            },
+            {
+                "Display" : "Answer with disinterest.",
+                "GoTo" : "test0_2"
+            },
+            {
+                "Display" : "Answer with anger.",
+                "GoTo" : "test0_3"
+            }
+        ]
+    },
+    {
+        "ID" : "test0_1",
+        "Display" : "You have answered with compassion. How nice!",
+        "Responses" : [
+            {
+                "Display" : "End Conversation",
+                "GoTo" : "End"
+            }
+        ]
+    },
+    {
+        "ID" : "test0_2",
+        "Display" : "You have answered with disinterest. So sorry to bore you...",
+        "Responses" : [
+            {
+                "Display" : "End Conversation",
+                "GoTo" : "End"
+            }
+        ]
+    },
+    {
+        "ID" : "test0_1",
+        "Display" : "You have answered with anger. Do you always get like this over a test? Ridiculous.",
+        "Responses" : [
+            {
+                "Display" : "End Conversation",
+                "GoTo" : "End"
+            }
+        ]
+    }
+]
