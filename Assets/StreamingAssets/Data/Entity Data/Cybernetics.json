@@ -10,7 +10,7 @@
             ]
         },
         {
-            "Name" : "Adrenaline Nanomachines",
+            "Name" : "Adrenal Nanomachines",
             "ID" : "nano_restore",
             "Description" : "Your blood is filled with nanomachines that aid in removing fatigue from muscles. <color=green>+ST Regen</color>",
             "Slots" : [ "Slot_Chest" ],
@@ -23,9 +23,9 @@
             "ID" : "rad_scrubber",
             "Description" : "Slowly removes radiation from your body.",
             "Slots" : [ "Slot_Chest", "Slot_Back" ],
-            "Events" : [
-                "OnTurn" { "File" : "Cybernetics", "Function" : "Scrub_Radiation" }
-            ]
+            "Events" : {
+                "OnTurn" : { "File" : "Cybernetics", "Function" : "Scrub_Radiation" }
+            }
         },
         {
             "Name" : "Target Sensor",
@@ -44,6 +44,9 @@
             "Stats" : [
                 { "Stat" : "Stealth", "Amount" : 3 }
             ]
-        }
+        },
+		{
+		
+		}
     ]
 }

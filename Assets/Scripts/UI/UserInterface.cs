@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
@@ -46,8 +45,8 @@ public class UserInterface : MonoBehaviour
 
     public GameObject loadingGO;
     public Image fadePanel;
-
-    int indexToUse, limbToReplaceIndex = -1;
+    int indexToUse;
+    readonly int limbToReplaceIndex = -1;
     List<Trait> levelUpTraits = new List<Trait>();
     TileMap tileMap;
     CursorControl cursorControl;
@@ -59,22 +58,21 @@ public class UserInterface : MonoBehaviour
     Stats playerStats;
     EntitySkills playerAbilities;
     PlayerInput playerInput;
-    bool miniMapOn = true;
 
     [Space(5)]
     public GameObject miniMapObject;
     public GameObject fullMapObject;
 
-    public bool selectedItemActions
+    public bool SelectItemActions
     {
         get { return IAPanel.gameObject.activeSelf; }
     }
-    public bool selectBodyPart
+    public bool SelectBodyPart
     {
         get { return SSPanel.gameObject.activeSelf; }
     }
 
-    public bool canMove
+    public bool NoWindowsOpen
     {
         get { return (uiState == UIWindow.None); }
     }
@@ -93,8 +91,8 @@ public class UserInterface : MonoBehaviour
         loading = true;
         paused = false;
 
-        miniMapObject.SetActive(miniMapOn);
-        fullMapObject.SetActive(false);
+        pausePanel.Init();
+        ToggleFullMap(false);
 
         uiState = UIWindow.None;
     }
@@ -110,7 +108,7 @@ public class UserInterface : MonoBehaviour
 
     public void ToggleFullMap(bool fullMap)
     {
-        miniMapObject.SetActive(!fullMap && miniMapOn);
+        miniMapObject.SetActive(!fullMap);
         fullMapObject.SetActive(fullMap);
     }
 
@@ -131,6 +129,7 @@ public class UserInterface : MonoBehaviour
             if (World.difficulty.Level == Difficulty.DiffLevel.Rogue || World.difficulty.Level == Difficulty.DiffLevel.Hunted)
             {
                 Manager.ClearFiles();
+                World.Reset();
                 UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             }
             else
@@ -154,17 +153,16 @@ public class UserInterface : MonoBehaviour
             AssignPlayerValues();
 
         HandleInput();
-        ItemScrolling();
 
-        if (Input.GetKeyDown(KeyCode.Slash) && Input.GetKey(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKeyDown(KeyCode.F1))
             uiState = UIWindow.Options;
     }
 
-    public void OpenGrapple()
+    public void OpenGrapple(Body targetBody)
     {
         uiState = UIWindow.Grapple;
         GPanel.gameObject.SetActive(true);
-        GPanel.Initialize(playerEntity.GetComponent<Body>());
+        GPanel.Initialize(playerEntity.body, targetBody);
     }
 
     public void NewAlert(string title, string content)
@@ -185,12 +183,12 @@ public class UserInterface : MonoBehaviour
         {
             CloseWindows();
         }
-        else if (uiState == UIWindow.None)
+        else
         {
             CloseWindows();
             uiState = UIWindow.Journal;
             JPanel.gameObject.SetActive(true);
-            JPanel.Init();
+            JPanel.Initialize();
         }
     }
 
@@ -198,20 +196,18 @@ public class UserInterface : MonoBehaviour
     {
         if (inv == null)
             inv = playerInventory;
+        
+        CloseWindows();
+        uiState = UIWindow.Inventory;
+        InvPanel.gameObject.SetActive(true);
+        EqPanel.gameObject.SetActive(true);
+        InvPanel.Init(inv);
+        EqPanel.Init(inv);
+    }
 
-        if (uiState == UIWindow.Inventory)
-        {
-            CloseWindows();
-        }
-        else if (uiState == UIWindow.None)
-        {
-            CloseWindows();
-            uiState = UIWindow.Inventory;
-            InvPanel.gameObject.SetActive(true);
-            EqPanel.gameObject.SetActive(true);
-            InvPanel.Init(inv);
-            EqPanel.Init(inv);
-        }
+    public void OpenPlayerInventory()
+    {
+        OpenInventory(playerInventory);
     }
 
     public void OpenLoot(Inventory inv)
@@ -236,14 +232,13 @@ public class UserInterface : MonoBehaviour
         if (uiState == UIWindow.Abilities)
         {
             CloseWindows();
-            return;
         }
-        else if (uiState == UIWindow.None)
+        else
         {
             CloseWindows();
-            AbPanel.gameObject.SetActive(true);
-            AbPanel.Init();
             uiState = UIWindow.Abilities;
+            AbPanel.gameObject.SetActive(true);
+            AbPanel.Initialize();
         }
     }
 
@@ -251,7 +246,7 @@ public class UserInterface : MonoBehaviour
     {
         paused = true;
         uiState = UIWindow.PauseMenu;
-        pausePanel.gameObject.SetActive(true);
+        pausePanel.TogglePause(paused);
     }
 
     public void OpenReplacementMenu(bool fromDoctor)
@@ -270,6 +265,8 @@ public class UserInterface : MonoBehaviour
 
     public void OpenCharacterPanel()
     {
+        CloseWindows();
+        uiState = UIWindow.Character;
         CharPanel.gameObject.SetActive(true);
         CharPanel.Initialize(playerStats, playerInventory);
     }
@@ -279,7 +276,7 @@ public class UserInterface : MonoBehaviour
         CloseWindows();
         uiState = UIWindow.UseItemOnItem;
         UsePanel.gameObject.SetActive(true);
-        UsePanel.Init(i, inv, (x => x.GetItemComponent<CLiquidContainer>() != null && x != i), "Fill");
+        UsePanel.Init(i, inv, (x => x.GetCComponent<CLiquidContainer>() != null && x != i), "Fill");
     }
 
     public void ItemOnItem_Coat(Item i, Inventory inv)
@@ -336,7 +333,7 @@ public class UserInterface : MonoBehaviour
                 break;
             case UIWindow.SelectItemToThrow:
                 ThrowPanel.gameObject.SetActive(true);
-                ThrowPanel.Init();
+                ThrowPanel.Initialize();
                 break;
             default:
                 CloseWindows();
@@ -363,14 +360,32 @@ public class UserInterface : MonoBehaviour
         if (playerInput.keybindings.GetKey("Pause"))
             BackPressed();
 
-        if (Input.GetKeyDown(KeyCode.Home) && !PlayerInput.fullMap)
-        {
-            miniMapOn = !miniMapOn;
-            miniMapObject.SetActive(miniMapOn);
-        }
-
         if (boxInv != null && playerInput.keybindings.GetKey("Pickup"))
             SelectPressed();
+
+        if (paused)
+        {
+            if (playerInput.keybindings.GetKey("East"))
+            {
+                selectedItemNum++;
+
+                if (selectedItemNum >= pausePanel.buttons.Length)
+                    selectedItemNum = 0;
+
+                pausePanel.UpdateSelected(selectedItemNum);
+                World.soundManager.MenuTick();
+            }
+            else if (playerInput.keybindings.GetKey("West"))
+            {
+                selectedItemNum--;
+
+                if (selectedItemNum < 0)
+                    selectedItemNum = pausePanel.buttons.Length - 1;
+
+                pausePanel.UpdateSelected(selectedItemNum);
+                World.soundManager.MenuTick();
+            }
+        }
 
         if (!paused && uiState != UIWindow.Alert)
         {
@@ -383,9 +398,8 @@ public class UserInterface : MonoBehaviour
                     CloseWindows();
                     return;
                 }
-                else if (uiState == UIWindow.None || uiState == UIWindow.PauseMenu)
+                else if (uiState == UIWindow.None)
                 {
-                    uiState = UIWindow.Character;
                     OpenRelevantWindow(UIWindow.Character);
                 }
             }
@@ -397,34 +411,7 @@ public class UserInterface : MonoBehaviour
                 boxInv = null;
         }
 
-        if (uiState == UIWindow.Inventory)
-        {
-            if (playerInput.keybindings.GetKey("East") && !selectedItemActions && !selectBodyPart)
-            {
-                if (column >= 1 || InvPanel.curInv.items.Count <= 0)
-                    return;
-
-                World.soundManager.MenuTick();
-                selectedItemNum = 0;
-                column++;
-                InvPanel.UpdateTooltip();
-            }
-            if (playerInput.keybindings.GetKey("West") && !selectBodyPart && !selectedItemActions)
-            {
-                if (column < 1 || selectedItemActions)
-                    return;
-
-                selectedItemNum = 0;
-
-                if (!canMove)
-                    World.soundManager.MenuTick();
-
-                column--;
-                InvPanel.UpdateTooltip();
-            }
-        }
-
-        if (uiState == UIWindow.ReplacePartWithItem)
+        else if (uiState == UIWindow.ReplacePartWithItem)
         {
             if (playerInput.keybindings.GetKey("East"))
             {
@@ -440,9 +427,9 @@ public class UserInterface : MonoBehaviour
             }
         }
 
-        if (uiState == UIWindow.Loot)
+        else if (uiState == UIWindow.Loot && boxInv != null)
         {
-            if (boxInv != null && boxInv.items.Count > 0)
+            if (boxInv.items.Count > 0)
             {
                 if (selectedItemNum > boxInv.items.Count - 1)
                     selectedItemNum = 0;
@@ -451,13 +438,11 @@ public class UserInterface : MonoBehaviour
                 selectedItemNum = 0;
         }
 
-        if (uiState == UIWindow.Shop)
+        if (uiState == UIWindow.Shop && shopInv != null)
         {
-            if (shopInv == null)
-                return;
-            if (playerInput.keybindings.GetKey("East") && !selectedItemActions)
+            if (playerInput.keybindings.GetKey("East"))
             {
-                if (column >= 1)
+                if (column >= 1 || playerInventory.items.Count <= 0)
                     return;
 
                 World.soundManager.MenuTick();
@@ -465,29 +450,23 @@ public class UserInterface : MonoBehaviour
                 column++;
                 ShopPanel.UpdateTooltip();
             }
-            if (playerInput.keybindings.GetKey("West") && !selectedItemActions)
+
+            if (playerInput.keybindings.GetKey("West"))
             {
-                if (column < 1)
+                if (column <= 0 || shopInv.items.Count <= 0)
                     return;
-                World.soundManager
-                    .MenuTick();
+
+                World.soundManager.MenuTick();
                 selectedItemNum = 0;
                 column--;
                 ShopPanel.UpdateTooltip();
             }
-            if (column == 0)
-            {
-                if (shopInv.items.Count > 0)
-                {
-                    if (selectedItemNum > shopInv.items.Count - 1)
-                        selectedItemNum = 0;
-                }
-            }
-            else if (selectedItemNum > playerInventory.items.Count - 1)
+
+            if (column == 0 && selectedItemNum > shopInv.items.Count - 1 || column == 1 && selectedItemNum > playerInventory.items.Count - 1)
                 selectedItemNum = 0;
         }
 
-        if (uiState == UIWindow.ReplacePartWithItem)
+        else if (uiState == UIWindow.ReplacePartWithItem)
         {
             if (playerInput.keybindings.GetKey("East"))
             {
@@ -504,18 +483,16 @@ public class UserInterface : MonoBehaviour
 
     public void SwitchSelectedNum(int amount)
     {
-        if (!canMove)
+        if (!NoWindowsOpen)
             World.soundManager.MenuTick();
 
         if (uiState == UIWindow.ReplacePartWithItem)
             RLPanel.SwitchSelectedNum(amount);
 
-        if (selectBodyPart)
+        if (SelectBodyPart)
             SSPanel.SwitchSelectedNum(amount);
-        else if (selectedItemActions)
-        {
+        else if (SelectItemActions)
             IAPanel.SwitchSelectedNum(amount);
-        }
         else
         {
             selectedItemNum += amount;
@@ -525,21 +502,14 @@ public class UserInterface : MonoBehaviour
             else if (selectedItemNum < 0)
                 selectedItemNum = SelectedMax();
 
-            if (uiState == UIWindow.Inventory)
-                InvPanel.UpdateTooltip();
-            else if (uiState == UIWindow.Shop)
+            if (uiState == UIWindow.Shop)
                 ShopPanel.UpdateTooltip();
             else if (uiState == UIWindow.Loot)
                 LPanel.UpdateTooltip();
             else if (uiState == UIWindow.SelectItemToThrow)
                 ThrowPanel.UpdateTooltip();
-            else if (uiState == UIWindow.Journal)
-                JPanel.UpdateTooltip();
             else if (uiState == UIWindow.PauseMenu)
                 pausePanel.UpdateSelected(selectedItemNum);
-            else if (uiState == UIWindow.Abilities)
-                AbPanel.UpdateTooltip();
-
         }
     }
 
@@ -586,13 +556,14 @@ public class UserInterface : MonoBehaviour
     public bool ShowItemTooltip()
     {
         if (column == 1)
-            return (uiState == UIWindow.Inventory && playerInventory.items.Count > 0 && !selectedItemActions && !selectBodyPart);
+            return (uiState == UIWindow.Inventory && playerInventory.items.Count > 0 && !SelectItemActions && !SelectBodyPart);
         else
-            return (uiState == UIWindow.Inventory && !selectedItemActions && !selectBodyPart);
+            return (uiState == UIWindow.Inventory && !SelectItemActions && !SelectBodyPart);
     }
 
-    public void ShowDialogue(DialogueController diaController)
+    public void ShowNPCDialogue(DialogueController diaController)
     {
+        selectedItemNum = 0;
         uiState = UIWindow.Dialogue;
         DPanel.gameObject.SetActive(true);
         DPanel.Display(diaController);
@@ -602,6 +573,23 @@ public class UserInterface : MonoBehaviour
     public void Dialogue_Chat(Faction faction, string npcID)
     {
         DPanel.SetText(Dialogue.Chat(faction, npcID));
+    }
+
+    public void Dialogue_Inquire(string nodeID)
+    {
+        selectedItemNum = 0;
+
+        if (DialogueList.nodes == null)
+            DialogueList.Init();
+
+        if (nodeID == "End")
+        {
+            CloseWindows();
+            return;
+        }
+            
+        DialogueList.DialogueNode node = DialogueList.GetNode(nodeID);
+        DPanel.Display(node);
     }
 
     public void Dialogue_CustomChat(string text)
@@ -625,12 +613,12 @@ public class UserInterface : MonoBehaviour
 
         if (playerInventory.gold < playerStats.CostToCureWounds())
         {
-            DPanel.SetText(LocalizationManager.GetLocalizedContent("Cannot_Afford")[0]);
+            DPanel.SetText(LocalizationManager.GetContent("Cannot_Afford"));
             return;
         }
 
         playerInventory.gold -= playerStats.CostToCureWounds();
-        DPanel.SetText(LocalizationManager.GetLocalizedContent("Healed_Wounds")[0]);
+        DPanel.SetText(LocalizationManager.GetContent("Healed_Wounds"));
         playerStats.CureAllWounds();
     }
 
@@ -640,7 +628,7 @@ public class UserInterface : MonoBehaviour
         {
             if (playerInventory.gold < playerStats.CostToReplaceLimbs())
             {
-                DPanel.SetText(LocalizationManager.GetLocalizedContent("Cannot_Afford")[0]);
+                DPanel.SetText(LocalizationManager.GetContent("Cannot_Afford"));
                 return;
             }
         }
@@ -713,9 +701,6 @@ public class UserInterface : MonoBehaviour
         if (selectedNumOverride > -1)
             selectedItemNum = selectedNumOverride;
 
-        if (uiState == UIWindow.Inventory)
-            return;
-
         //Level Up
         if (uiState == UIWindow.LevelUp)
         {
@@ -751,41 +736,13 @@ public class UserInterface : MonoBehaviour
                 }
             }
         }
-        else if (uiState == UIWindow.SelectItemToThrow && playerInventory.items.Count > 0)
-        {
-            playerEntity.fighter.SelectItemToThrow(playerInventory.Items_ThrowingFirst()[selectedItemNum]);
-            playerInput.ToggleThrow();
-            CloseWindows();
-        }
         else if (uiState == UIWindow.Alert)
         {
             Alert.CloseAlert();
         }
         else if (paused && uiState == UIWindow.PauseMenu)
         {
-            if (selectedItemNum == 0)
-            {
-                CloseWindows();
-                OpenRelevantWindow(UIWindow.Options);
-            }
-            else if (selectedItemNum == 1)
-            {
-                CloseWindows();
-                YesNoAction("YN_SaveQuit", () => { SaveAndQuit(); }, () => { CloseWindows(); }, "");
-            }
-            else
-            {
-                //OTHER STUFF HERE.
-            }
-        }
-        else if (uiState == UIWindow.Journal)
-        {
-            Journal journal = ObjectManager.playerJournal;
-            if (ObjectManager.playerJournal.quests.Count > 0)
-            {
-                journal.trackedQuest = journal.quests[selectedItemNum];
-                JPanel.Init();
-            }
+            pausePanel.buttons[selectedItemNum].onClick.Invoke();
         }
         else if (uiState == UIWindow.TargetBodyPart)
         {
@@ -796,10 +753,6 @@ public class UserInterface : MonoBehaviour
         {
             Select_Shop();
         }
-        else if (uiState == UIWindow.Abilities)
-        {
-            playerAbilities.abilities[selectedItemNum].Cast(playerEntity);
-        }
         else if (uiState == UIWindow.Dialogue)
         {
             DPanel.ChooseDialogue();
@@ -807,6 +760,13 @@ public class UserInterface : MonoBehaviour
         else if (uiState == UIWindow.ReplacePartWithItem)
         {
             RLPanel.SelectPressed();
+        }
+        else if (NoWindowsOpen)
+        {
+            if (World.tileMap.GetTileID(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == Tile.tiles["Stairs_Up"].ID)
+                playerInput.GoUp();
+            else if (World.tileMap.GetTileID(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == Tile.tiles["Stairs_Down"].ID)
+                playerInput.GoDown();
         }
     }
 
@@ -908,7 +868,7 @@ public class UserInterface : MonoBehaviour
             return;
         }
 
-        if (!selectedItemActions && !selectBodyPart)
+        if (!SelectItemActions && !SelectBodyPart)
             selectedItemNum = 0;
 
         if (Options_KeyPanel.WaitingForRebindingInput)
@@ -921,29 +881,18 @@ public class UserInterface : MonoBehaviour
         }
         if (paused)
         {
-            if (uiState == UIWindow.Options)
-            {
-                CloseWindows();
-                OpenPauseMenu();
-                return;
-            }
-            else
-            {
-                CloseWindows();
-                paused = false;
-                uiState = UIWindow.None;
-            }
+            paused = false;
         }
         else
         {
             if (PlayerInput.fullMap)
                 return;
-            if (selectedItemActions)
+            if (SelectItemActions)
             {
                 IAPanel.gameObject.SetActive(false);
                 return;
             }
-            if (selectBodyPart)
+            if (SelectBodyPart)
             {
                 SSPanel.gameObject.SetActive(false);
                 return;
@@ -970,9 +919,9 @@ public class UserInterface : MonoBehaviour
                 OpenPauseMenu();
                 return;
             }
-
-            CloseWindows();
         }
+
+        CloseWindows();
     }
 
     public void InitializeAllWindows(Inventory plInv = null)
@@ -988,77 +937,56 @@ public class UserInterface : MonoBehaviour
 
         else if (uiState == UIWindow.Loot)
             LPanel.Init(boxInv);
-        else if (uiState == UIWindow.SelectItemToThrow)
-            ThrowPanel.Init();
     }
 
     public void SetSelectedNumber(int num)
     {
         if (uiState != UIWindow.None)
         {
-            if (selectedItemActions)
+            if (SelectItemActions)
             {
-                InvPanel.UpdateTooltip();
-                return;
-            }
-            if (uiState == UIWindow.Inventory && num > SelectedMax())
-            {
-                selectedItemNum = SelectedMax();
                 InvPanel.UpdateTooltip();
                 return;
             }
 
             selectedItemNum = num;
 
-            if (uiState == UIWindow.Inventory)
-                InvPanel.UpdateTooltip();
-            else if (uiState == UIWindow.Shop)
+            if (uiState == UIWindow.Shop)
                 ShopPanel.UpdateTooltip();
             else if (uiState == UIWindow.SelectItemToThrow)
                 ThrowPanel.UpdateTooltip();
             else if (uiState == UIWindow.Loot)
                 LPanel.UpdateTooltip();
-            else if (uiState == UIWindow.Journal)
-                JPanel.UpdateTooltip();
             else if (uiState == UIWindow.PauseMenu)
                 pausePanel.UpdateSelected(selectedItemNum);
-        }
-        else if (num < playerAbilities.abilities.Count)
-        {
-                Skill currAbility = playerAbilities.abilities[num];
-                currAbility.Cast(playerEntity);
+            else if (uiState == UIWindow.Abilities)
+                AbPanel.ChangeSelectedNum(num);
+            else if (uiState == UIWindow.Journal)
+                JPanel.ChangeSelectedNum(num);
         }
     }
 
     int SelectedMax()
     {
-        if (selectedItemActions || selectBodyPart)
+        if (SelectItemActions || SelectBodyPart)
             return selectedItemNum;
 
         switch (uiState)
         {
             case UIWindow.PauseMenu:
-                return 2;
-            case UIWindow.Inventory:
-                return (column != 0) ? InvPanel.SelectedMax : EqPanel.SelectedMax;
+                return pausePanel.SelectedMax;
             case UIWindow.Shop:
                 return (column == 1) ? playerInventory.items.Count - 1 : shopInv.items.Count - 1;
             case UIWindow.TargetBodyPart:
                 return calledShotTarget.bodyParts.Count - 1;
             case UIWindow.AmputateLimb:
                 return playerInventory.entity.body.bodyParts.Count - 1;
-            case UIWindow.Abilities:
-                return playerAbilities.abilities.Count - 1;
-            case UIWindow.Journal:
-                return ObjectManager.playerJournal.quests.Count - 1;
             case UIWindow.Dialogue:
                 return DPanel.cMax;
             case UIWindow.Loot:
                 return LPanel.max;
             case UIWindow.UseItemOnItem:
                 return UsePanel.numItems - 1;
-            case UIWindow.SelectItemToThrow:
-                return playerInventory.Items_ThrowingFirst().Count - 1;
             case UIWindow.LevelUp:
                 return Mathf.Max(1, levelUpTraits.Count);
             case UIWindow.LiquidActions:
@@ -1084,7 +1012,6 @@ public class UserInterface : MonoBehaviour
         SSPanel.gameObject.SetActive(false);
         DPanel.gameObject.SetActive(false);
         JPanel.gameObject.SetActive(false);
-        pausePanel.gameObject.SetActive(false);
         LvlPanel.gameObject.SetActive(false);
         optionsPanel.gameObject.SetActive(false);
         RLPanel.gameObject.SetActive(false);
@@ -1093,10 +1020,14 @@ public class UserInterface : MonoBehaviour
         UsePanel.gameObject.SetActive(false);
         LAPanel.gameObject.SetActive(false);
         CAPanel.gameObject.SetActive(false);
+        pausePanel.TogglePause(false);
     }
 
     public void CloseWindows()
     {
+        if (uiState == UIWindow.LevelUp && !pickedTrait)
+            return;
+
         if (uiState == UIWindow.Options)
             optionsPanel.ApplyChanges();
 
@@ -1138,6 +1069,9 @@ public class UserInterface : MonoBehaviour
     public void ChangeMapNameInSideBar()
     {
         currentMapText.text = World.tileMap.TileName();
+
+        if (miniMapObject.activeSelf)
+            miniMapObject.GetComponent<Animator>().SetBool("Hide", World.tileMap.currentElevation != 0);
     }
 
     void FillLevelTraits()
@@ -1191,30 +1125,6 @@ public class UserInterface : MonoBehaviour
         BPPanel.TargetPart(target, BodyPartTargetPanel.SelectionType.Grab);
     }
 
-    void ItemScrolling()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            SetSelectedNumber(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            SetSelectedNumber(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            SetSelectedNumber(2);
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            SetSelectedNumber(3);
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-            SetSelectedNumber(4);
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-            SetSelectedNumber(5);
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-            SetSelectedNumber(6);
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-            SetSelectedNumber(7);
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-            SetSelectedNumber(8);
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-            SetSelectedNumber(9);
-    }
-
     public void PlayerDied(string killer)
     {
         if (killer == Manager.playerName)
@@ -1227,6 +1137,7 @@ public class UserInterface : MonoBehaviour
     public static string ColorByPercent(string text, int percent)
     {
         string returnText = "<color=white>" + text + "</color>";
+
         if (percent < 100)
             returnText = "<color=green>" + text + "</color>";
         if (percent < 75)

@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
-using LitJson;
+﻿using UnityEngine;
 
 [System.Serializable]
-public class TilesetManager : MonoBehaviour {
-	public List<Tileset> tilesets;
-}
+public class TilesetManager : MonoBehaviour 
+{
+    public TilesetObject ts;
 
-[System.Serializable]
-public class Tileset {
-	public string Name;
-	public int[] Norm;
-	public int[] Rare;
-	public Sprite[] Autotile;
+    public Tileset GetTileSet(int id) 
+    {
+        return ts.tileSets[id];
+    }
+
+    public Tileset GetTileSet(string id) 
+    {
+        return ts.tileSets.Find(x => x.Name == id);
+    }
 }

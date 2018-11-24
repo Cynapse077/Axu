@@ -1,37 +1,6 @@
 {
     "NPCs" : [
         {
-            "Name" : "Inactive Robot",
-            "ID" : "robot_inactive",
-            "Faction" : "frostborne",
-            "Body Structure" : "Humanoid Robot",
-            "Sprite" : "npc-villager_m1.png",
-            "Flags" : [
-                "Can_Speak",
-                "Inactive",
-                "Static",
-                "Can_Open_Doors"
-            ],
-            "Position" : { "Zone" : "Unassigned", "x" : 0, "y" : 0, "z" : -5 },
-            "Stats" : {
-                "Health" : 100,
-                "Stamina" : 10,
-
-                "Defense" : 4,
-                "Strength" : 7,
-                "Dexterity" : 4,
-                "Intelligence" : 5,
-                "Endurance" : 7,
-
-                "Speed" : 10,
-                "Perception" : 14,
-                "Accuracy" : 3
-            },
-            "Weapon_Choices" : [ "fists" ],
-            "MaxItems" : 2,
-            "MaxItemRarity" : 2
-        },
-        {
             "Name" : "Rojer",
             "ID" : "rojer",
             "Faction" : "xul",
@@ -111,7 +80,7 @@
                 "OnDisable_Regen",
                 "Boss"
             ],
-            "Position" : { "Zone" : "Unassigned", "x" : 0, "y" : 0, "z" : 0 },
+            "Position" : { "Zone" : "Random_Ocean", "x" : 22, "y" : 20, "z" : 0 },
             "Stats" : {
                 "Health" : 550,
                 "Stamina" : 100,
@@ -204,6 +173,7 @@
             "Faction" : "xul",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-blacksmith.png",
+			"Dialogue" : "blacksmith_init",
             "Flags" : [
                 "Human",
                 "Can_Speak",
@@ -242,46 +212,12 @@
             "Corpse_Item" : "corpse_human"
         },
         {
-            "Name" : "Har'kallem",
-            "ID" : "harkallem",
-            "Faction" : "ensis",
-            "Body Structure" : "Humanoid",
-            "Sprite" : "npc-harkallem.png",
-            "Quest" : "missingperson",
-            "Flags" : [
-                "Human",
-                "Can_Speak",
-                "Static",
-                "Merchant",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
-            ],
-            "Position" : { "Zone" : "Village", "x" : 22, "y" : 15, "z" : 0 },
-            "Stats" : {
-                "Health" : 88,
-                "Stamina" : 20,
-
-                "Defense" : 9,
-                "Strength" : 6,
-                "Dexterity" : 4,
-                "Intelligence" : 6,
-                "Endurance" : 8,
-
-                "Speed" : 14,
-                "Perception" : 15,
-                "Accuracy" : 1
-            },
-            "Weapon_Choices" : [ "Random_Weapon_R3" ],
-            "MaxItems" : 10,
-            "MaxItemRarity" : 4,
-            "Corpse_Item" : "corpse_human"
-        },
-        {
             "Name" : "Arthomas",
             "ID" : "arthomas",
             "Faction" : "ensis",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-arthomas.png",
+			"Dialogue" : "arthomas_init",
             "Flags" : [
                 "Human",
                 "Can_Speak",
@@ -360,6 +296,7 @@
                 "OnDisable_Regen",
                 "Boss"
             ],
+			"Dialogue" : "lomis_init",
             "Position" : { "Zone" : "Ensis Interior", "x" : 20, "y" : 6, "z" : 0 },
             "Stats" : {
                 "Health" : 70,
@@ -443,9 +380,7 @@
             "Skills" : [
                 { "ID" : "confsquare", "Level" : 2 }
             ],
-            "Weapon_Choices" : [
-                "tendrils"
-            ],
+            "Weapon_Choices" : [ "tendrils" ],
             "Inventory" : [
                 { "Item" : "rad_heart", "Max" : 1 },
                 { "Item" : "canteen/liquid_random", "Max" : 1 }
@@ -494,6 +429,7 @@
             "Faction" : "ensis",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-akklune.png",
+			"Dialogue" : "akklune_init",
             "Flags" : [
                 "Human",
                 "Can_Speak",
@@ -609,6 +545,7 @@
             "Faction" : "kin",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-isazna.png",
+			"Dialogue" : "isazna_init",
             "Flags" : [
                 "Human",
                 "Can_Speak",
@@ -654,7 +591,7 @@
                 "Stationary_While_Passive",
                 "Can_Open_Doors"
             ],
-            "Position" : { "Zone" : "Cathedral", "x" : 40, "y" : 15, "z" : 0 },
+            "Position" : { "Zone" : "Cathedral", "x" : 37, "y" : 14, "z" : 0 },
             "Stats" : {
                 "Health" : 25,
                 "Stamina" : 10,
@@ -915,7 +852,6 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-villager_m0.png|npc-villager_m1.png|npc-villager_f0.png|npc-villager_f1.png",
             "Flags" : [
-                "Named_NPC",
                 "Human",
                 "Can_Speak",
                 "Can_Open_Doors"
@@ -1223,6 +1159,80 @@
             "MaxItemRarity" : 3,
             "Corpse_Item" : "corpse_human"
         },
+		{
+            "Name" : "Kindred Adept",
+            "ID" : "kindred",
+            "Faction" : "kin",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-cultist.png",
+            "Flags" : [
+                "Human",
+                "Can_Speak",
+                "Can_Open_Doors"
+            ],
+            "Stats" : {
+                "Health" : 50,
+                "Stamina" : 19,
+
+                "Defense" : 7,
+                "Strength" : 6,
+                "Dexterity" : 5,
+                "Intelligence" : 10,
+                "Endurance" : 5,
+
+                "Speed" : 18,
+                "Perception" : 17,
+                "Accuracy" : 2,
+
+                "Heat Resist" : 50,
+                "Cold Resist" : 50
+            },
+			"Skills" : [
+            	{ "ID" : "firestream", "Level" : 3 },
+				{ "ID" : "zapline", "Level" : 3 }
+            ],
+            "Weapon_Choices" : [ "Random_Weapon_R2" ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 3,
+            "Corpse_Item" : "corpse_human"
+        },
+		{
+            "Name" : "Kindred Blademaster",
+            "ID" : "kin-blademaster",
+            "Faction" : "kin",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-kin_blademaster.png",
+            "Flags" : [
+                "Human",
+                "Can_Speak",
+                "Can_Open_Doors"
+            ],
+            "Stats" : {
+                "Health" : 65,
+                "Stamina" : 19,
+
+                "Defense" : 8,
+                "Strength" : 10,
+                "Dexterity" : 10,
+                "Intelligence" : 8,
+                "Endurance" : 5,
+
+                "Speed" : 15,
+                "Perception" : 13,
+                "Accuracy" : 1,
+
+                "Heat Resist" : 50,
+                "Cold Resist" : 50
+            },
+			"Skills" : [
+            	{ "ID" : "juke", "Level" : 4 }
+            ],
+            "Weapon_Choices" : [ "Random_Weapon_R4" ],
+			"Weapon Skill" : 5,
+            "MaxItems" : 2,
+            "MaxItemRarity" : 5,
+            "Corpse_Item" : "corpse_human"
+        },
 
 
         {
@@ -1399,13 +1409,14 @@
 
                 "Speed" : 15,
                 "Perception" : 10,
-                "Accuracy" : 3,
+                "Accuracy" : 2,
 
                 "Heat Resist" : 0,
                 "Cold Resist" : 0
             },
             "Weapon_Choices" : [ "stunbaton" ],
             "Firearm" : "huntingrifle",
+			"Weapon Skill" : 2,
             "Inventory" : [
                 { "Item" : "bullet", "Min" : 20, "Max" : 55 }
             ],
@@ -1480,6 +1491,7 @@
                 "frostborneblade",
                 "frostbornedagger"
             ],
+			"Weapon Skill" : 3,
             "MaxItems" : 3,
             "MaxItemRarity" : 3,
             "Corpse_Item" : "corpse_human"
@@ -1618,6 +1630,32 @@
             "MaxItems" : 2,
             "MaxItemRarity" : 2
         },
+		{
+            "Name" : "Elder Scrag",
+            "ID" : "scrag3",
+            "Faction" : "wildlife",
+            "Body Structure" : "Arms_And_Tail",
+            "Sprite" : "npc-scrag3.png",
+            "Flags" : [],
+            "Stats" : {
+                "Health" : 80,
+                "Stamina" : 20,
+
+                "Defense" : 8,
+                "Strength" : 8,
+                "Dexterity" : 5,
+                "Intelligence" : 2,
+                "Endurance" : 10,
+
+                "Speed" : 18,
+                "Perception" : 12,
+                "Accuracy" : 2
+            },
+			"Weapon Skill" : 2,
+            "Weapon_Choices" : [ "sharpclaws" ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 5
+        },
         {
             "Name" : "Bat",
             "ID" : "bat",
@@ -1638,11 +1676,11 @@
                 "Intelligence" : 2,
                 "Endurance" : 2,
 
-                "Speed" : 20,
+                "Speed" : 28,
                 "Perception" : 7,
                 "Accuracy" : 1
             },
-            "Weapon_Choices" : [ "fangs" ],
+            "Weapon_Choices" : [ "fangs_quick" ],
             "MaxItems" : 0,
             "MaxItemRarity" : 1
         },
@@ -1735,8 +1773,9 @@
                 "Cold Resist" : -20
             },
             "Weapon_Choices" : [ "spear" ],
+			"Weapon Skill" : 2,
             "MaxItems" : 2,
-            "MaxItemRarity" : 2
+            "MaxItemRarity" : 3
         },
         {
             "Name" : "Man-Eating Plant",
@@ -2007,6 +2046,37 @@
             "MaxItems" : 2,
             "MaxItemRarity" : 2
         },
+		{
+            "Name" : "Blood Slime",
+            "ID" : "slime4",
+            "Faction" : "wildlifepeace",
+            "Body Structure" : "Jelly",
+            "Sprite" : "npc-slime_blood.png",
+            "Flags" : [
+                "No_Blood",
+                "RBleed"
+            ],
+            "Stats" : {
+                "Health" : 35,
+                "Stamina" : 10,
+
+                "Defense" : 4,
+                "Strength" : 5,
+                "Dexterity" : 7,
+                "Intelligence" : 1,
+                "Endurance" : 7,
+
+                "Speed" : 10,
+                "Perception" : 12,
+                "Accuracy" : 1,
+
+                "Heat Resist" : 25,
+                "Cold Resist" : 25
+            },
+            "Weapon_Choices" : [ "ooze_caustic" ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 2
+        },
         {
             "Name" : "Venomous Slimeite",
             "ID" : "slime0_small",
@@ -2099,15 +2169,15 @@
         {
             "Name" : "Giant Worm",
             "ID" : "worm",
-            "Faction" : "wildlifepeace",
+            "Faction" : "wildlife",
             "Body Structure" : "Snake/Worm",
             "Sprite" : "npc-worm.png",
             "Flags" : [],
             "Stats" : {
-                "Health" : 26,
+                "Health" : 15,
                 "Stamina" : 2,
 
-                "Defense" : 1,
+                "Defense" : 2,
                 "Strength" : 3,
                 "Dexterity" : 5,
                 "Intelligence" : 1,
@@ -2150,6 +2220,37 @@
 
                 "Heat Resist" : 20,
                 "Cold Resist" : -10
+            },
+            "Weapon_Choices" : [ "constrictingtail" ],
+            "MaxItems" : 1,
+            "MaxItemRarity" : 2
+        },
+		{
+            "Name" : "Swamp Snapper",
+            "ID" : "snake2",
+            "Faction" : "wildlife",
+            "Body Structure" : "Snake/Worm",
+            "Sprite" : "npc-swampsnapper.png",
+            "Flags" : [
+                "Flying",
+                "RPois"
+            ],
+            "Stats" : {
+                "Health" : 25,
+                "Stamina" : 2,
+
+                "Defense" : 4,
+                "Strength" : 5,
+                "Dexterity" : 6,
+                "Intelligence" : 3,
+                "Endurance" : 3,
+
+                "Speed" : 9,
+                "Perception" : 11,
+                "Accuracy" : 1,
+
+                "Heat Resist" : 10,
+                "Cold Resist" : 10
             },
             "Weapon_Choices" : [ "constrictingtail" ],
             "MaxItems" : 1,
@@ -2215,6 +2316,7 @@
                 "Cold Resist" : -30
             },
             "Weapon_Choices" : [ "fangs" ],
+			"Weapon Skill" : 1,
             "MaxItems" : 0,
             "MaxItemRarity" : 2,
             "Corpse_Item" : "corpse_poison"
@@ -2573,7 +2675,41 @@
             "Weapon_Choices" : [
                 "shell"
             ],
+			"Weapon Skill" : 2,
             "MaxItems" : 1,
+            "MaxItemRarity" : 4
+        },
+		{
+            "Name" : "Boiling Lavashell",
+            "ID" : "lavashell2",
+            "Faction" : "wildlife",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-lavashell2.png",
+            "Flags" : [
+                "RBleed"
+            ],
+            "Stats" : {
+                "Health" : 60,
+                "Stamina" : 9,
+
+                "Defense" : 7,
+                "Strength" : 7,
+                "Dexterity" : 3,
+                "Intelligence" : 6,
+                "Endurance" : 9,
+
+                "Speed" : 11,
+                "Perception" : 12,
+                "Accuracy" : 4,
+
+                "Heat Resist" : 90,
+                "Cold Resist" : -80
+            },
+            "Weapon_Choices" : [
+                "shell"
+            ],
+			"Weapon Skill" : 3,
+            "MaxItems" : 2,
             "MaxItemRarity" : 4
         },
         {
@@ -2673,6 +2809,7 @@
             "Weapon_Choices" : [
                 "turret"
             ],
+			"Weapon Skill" : 1,
             "Firearm" : "turret",
             "Inventory" : [
                 { "Item" : "bullet", "Min" : 15, "Max" : 65 }
@@ -2708,6 +2845,7 @@
             "Skills" : [
             	{ "ID" : "shove", "Level" : 6 }
             ],
+			"Weapon Skill" : 2,
             "Weapon_Choices" : [
                 "riotshield"
             ],
@@ -2778,6 +2916,7 @@
             "Weapon_Choices" : [
                 "claws"
             ],
+			"Weapon Skill" : 1,
             "MaxItems" : 6,
             "MaxItemRarity" : 4
         },
@@ -2817,6 +2956,44 @@
             ],
             "MaxItems" : 2,
             "MaxItemRarity" : 4
+        },
+		{
+            "Name" : "Sprit of Below",
+            "ID" : "spectre2",
+            "Faction" : "...",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-phantom2.png",
+            "Flags" : [
+                "Flying",
+                "Radiation",
+                "No_Blood",
+                "No_Body",
+                "RPois",
+                "RBleed"       
+            ],
+            "Stats" : {
+                "Health" : 85,
+                "Stamina" : 30,
+
+                "Defense" : 8,
+                "Strength" : 6,
+                "Dexterity" : 7,
+                "Intelligence" : 6,
+                "Endurance" : 10,
+
+                "Speed" : 18,
+                "Perception" : 11,
+                "Accuracy" : 2,
+
+                "Heat Resist" : 20,
+                "Cold Resist" : 20
+            },
+            "Weapon_Choices" : [
+                "ghostwhip"
+            ],
+			"Weapon Skill" : 2,
+            "MaxItems" : 3,
+            "MaxItemRarity" : 5
         },
 
         {
@@ -2923,6 +3100,7 @@
             "Weapon_Choices" : [
                 "scythe"
             ],
+			"Weapon Skill" : 2,
             "MaxItems" : 3,
             "MaxItemRarity" : 4
         },
@@ -2953,6 +3131,7 @@
             "Weapon_Choices" : [
                 "blight"
             ],
+			"Weapon Skill" : 5,
             "MaxItems" : 2,
             "MaxItemRarity" : 5
         },
@@ -3019,6 +3198,7 @@
                 { "ID" : "shove", "Level" : 7 },
                 { "ID" : "grapple", "Level" : 5 }
             ],
+			"Weapon Skill" : 3,
             "Weapon_Choices" : [
                 "spikedbranch"
             ],
@@ -3208,7 +3388,10 @@
             "Weapon_Choices" : [
                 "tentacle"
             ],
-            "Skills" : [],
+			"Weapon Skill" : 3,
+            "Skills" : [
+				{ "ID" : "grapple", "Level" : 3 }
+			],
             "MaxItems" : 0,
             "MaxItemRarity" : 0
         },
@@ -3326,7 +3509,7 @@
             ],
             "Position" : { "Zone" : "Magna_C", "x" : 3, "y" : 6, "z" : 0 },
             "Stats" : {
-                "Health" : 120,
+                "Health" : 90,
                 "Stamina" : 50,
 
                 "Defense" : 6,
@@ -3341,6 +3524,7 @@
             "Weapon_Choices" : [
                 "fists"
             ],
+			"Weapon Skill" : 6,
             "Skills" : [
                 { "ID" : "confsquare", "Level" : 4 },
                 { "ID" : "zapline", "Level" : 3 },
@@ -3375,6 +3559,7 @@
             "Weapon_Choices" : [
                 "fists"
             ],
+			"Weapon Skill" : 3,
             "MaxItems" : 2,
             "MaxItemRarity" : 5
         }

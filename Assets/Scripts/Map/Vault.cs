@@ -8,20 +8,20 @@ public class Vault {
     public Vault(Coord pos, ZoneBlueprint_Underground bp) {
         position = pos;
         blueprint = bp;
-        screens = new TileMap_Data[bp.depth + 1];
+        screens = new TileMap_Data[bp.depth + 1]; 
     }
 
-	public TileMap_Data GetLevel(int level, bool goingDown, bool visited) {
+	public TileMap_Data GetLevel(int level, bool visited) {
 		if (screens[level] == null)
-			screens[level] = CreateLevel(level, goingDown, visited);
+			screens[level] = CreateLevel(level, visited);
 		
 		return screens[level];
 	}
 
 
-	TileMap_Data CreateLevel(int level, bool goingDown, bool visited) {
+	TileMap_Data CreateLevel(int level, bool visited) {
         if (!ContainsDepth(level))
-            return new TileMap_Data(position.x, position.y, level, goingDown, this, visited);
+            return new TileMap_Data(position.x, position.y, level, this, visited);
 
         return screens[level];
     }

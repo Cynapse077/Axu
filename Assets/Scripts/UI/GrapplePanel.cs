@@ -1,154 +1,187 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class GrapplePanel : MonoBehaviour {
+public class GrapplePanel : MonoBehaviour
+{
+    public Transform anchor;
+    public GameObject abilityIcon;
 
-	public Transform anchor;
-	public GameObject abilityIcon;
+    int max = 0;
+    int selectedNum = 0;
+    List<KeyValuePair<string, int>> actions;
+    Body body;
+    Body targetBody;
 
-	int max = 0;
-	int selectedNum = 0;
-	List<KeyValuePair<string, int>> actions;
-	Body body;
+    public void Initialize(Body bod, Body targetBod)
+    {
+        body = bod;
+        targetBody = targetBod;
+        anchor.DestroyChildren();
+        actions = new List<KeyValuePair<string, int>>();
+        max = 0;
 
-	public void Initialize(Body bod) {
-		body = bod;
-		anchor.DestroyChildren();
-		actions = new List<KeyValuePair<string, int>>();
-		max = 0;
+        string n = LocalizationManager.GetContent("Grapple_Grab");
+        int skill = body.entity.stats.proficiencies.MartialArts.level + 1;
 
-		string n = LocalizationManager.GetLocalizedContent("Grapple_Grab")[0];
+        if (body.AllGrips().Count <= 0)
+        {
+            //GRAB
+            GameObject grabGO = Instantiate(abilityIcon, anchor);
+            grabGO.GetComponentInChildren<Text>().text = n;
+            grabGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+            actions.Add(new KeyValuePair<string, int>("Grab", -1));
 
-		if (body.AllGrips().Count <= 0) {
-			//GRAB
-			GameObject grabGO = (GameObject)Instantiate(abilityIcon, anchor);
-			grabGO.GetComponentInChildren<Text>().text = n;
-			grabGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
-			actions.Add(new KeyValuePair<string, int>("Grab", -1));
+            max++;
+        }
 
-			max ++;
-		}
+        for (int i = 0; i < body.bodyParts.Count; i++)
+        {
+            if (body.bodyParts[i].grip != null && body.bodyParts[i].grip.heldPart != null)
+            {
 
-		selectedNum = 0;
-		int skill = body.GetComponent<EntitySkills>().abilities.Find(x => x.ID == "grapple").level;
-			
-		for (int i = 0; i < body.bodyParts.Count; i++) {
-			if (body.bodyParts[i].grip != null && body.bodyParts[i].grip.HeldPart != null) {
+                //PUSH
+                GameObject pushGO = Instantiate(abilityIcon, anchor);
+                n = LocalizationManager.GetContent("Grapple_Push");
+                n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.gameObject.name);
+                pushGO.GetComponentInChildren<Text>().text = n;
+                pushGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+                actions.Add(new KeyValuePair<string, int>("Push", i));
 
-				//PUSH
-				GameObject pushGO = (GameObject)Instantiate(abilityIcon, anchor);
-				n = LocalizationManager.GetLocalizedContent("Grapple_Push")[0];
-				n = n.Replace("[NAME]", body.bodyParts[i].grip.HeldPart.myBody.gameObject.name);
-				pushGO.GetComponentInChildren<Text>().text =  n;
-				pushGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
-				actions.Add(new KeyValuePair<string, int>("Push", i));
+                max++;
 
-				max++;
+                //TAKE DOWN
+                GameObject takeDownGO = Instantiate(abilityIcon, anchor);
+                n = LocalizationManager.GetContent("Grapple_TakeDown");
+                n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.gameObject.name);
+                takeDownGO.GetComponentInChildren<Text>().text = n;
+                takeDownGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+                actions.Add(new KeyValuePair<string, int>("Take Down", i));
 
-				//TAKE DOWN
-				GameObject takeDownGO = (GameObject)Instantiate(abilityIcon, anchor);
-				n = LocalizationManager.GetLocalizedContent("Grapple_TakeDown")[0];
-				n = n.Replace("[NAME]", body.bodyParts[i].grip.HeldPart.myBody.gameObject.name);
-				takeDownGO.GetComponentInChildren<Text>().text = n;
-				takeDownGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
-				actions.Add(new KeyValuePair<string, int>("Take Down", i));
+                max++;
 
-				max ++;
+                //Pressure Point
+                if (skill > 1)
+                {
+                    GameObject pressurePointGo = Instantiate(abilityIcon, anchor);
+                    n = LocalizationManager.GetContent("Grapple_PressurePoint");
+                    n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.displayName);
+                    pressurePointGo.GetComponentInChildren<Text>().text = n;
+                    pressurePointGo.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+                    actions.Add(new KeyValuePair<string, int>("Pressure", i));
 
-				//STRANGLE
-				if (skill > 1 && body.bodyParts[i].grip.HeldPart.slot == ItemProperty.Slot_Head) {
-					GameObject strangleGO = (GameObject)Instantiate(abilityIcon, anchor);
-					n = LocalizationManager.GetLocalizedContent("Grapple_Strangle")[0];
-					n = n.Replace("[NAME]", body.bodyParts[i].grip.HeldPart.myBody.gameObject.name);
-					strangleGO.GetComponentInChildren<Text>().text = n;
-					strangleGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
-					actions.Add(new KeyValuePair<string, int>("Strangle", i));
+                    max++;
+                }
 
-					max ++;
-				}
+                //STRANGLE
+                if (skill > 2 && body.bodyParts[i].grip.heldPart.slot == ItemProperty.Slot_Head)
+                {
+                    GameObject strangleGO = Instantiate(abilityIcon, anchor);
+                    n = LocalizationManager.GetContent("Grapple_Strangle");
+                    n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.entity.MyName);
+                    strangleGO.GetComponentInChildren<Text>().text = n;
+                    strangleGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+                    actions.Add(new KeyValuePair<string, int>("Strangle", i));
 
-				//YANK OFF LIMBS
-				if (body.entity.stats.Strength >= 8 && skill > 3) {
-					GameObject pullGO = (GameObject)Instantiate(abilityIcon, anchor);
-					n = LocalizationManager.GetLocalizedContent("Grapple_Pull")[0];
-					n = n.Replace("[NAME]", body.bodyParts[i].grip.HeldPart.displayName);
-					pullGO.GetComponentInChildren<Text>().text = n;
-					pullGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
-					actions.Add(new KeyValuePair<string, int>("Pull", i));
+                    max++;
+                }
 
-					max ++;
-				}
+                //Pull
+                if (skill > 3)
+                {
+                    GameObject pullGO = Instantiate(abilityIcon, anchor);
+                    n = LocalizationManager.GetContent("Grapple_Pull");
+                    n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.displayName);
+                    pullGO.GetComponentInChildren<Text>().text = n;
+                    pullGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+                    actions.Add(new KeyValuePair<string, int>("Pull", i));
 
-				//RELEASE GRIP
-				GameObject releaseGO = (GameObject)Instantiate(abilityIcon, anchor);
-				n = LocalizationManager.GetLocalizedContent("Grapple_Release")[0];
-				n = n.Replace("[NAME]", body.bodyParts[i].grip.HeldPart.myBody.gameObject.name);
-				releaseGO.GetComponentInChildren<Text>().text = n;
-				releaseGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
-				actions.Add(new KeyValuePair<string, int>("Release", i));
+                    max++;
+                }
 
-				max++;
-			}
-		}
-	}
+                //RELEASE GRIP
+                GameObject releaseGO = Instantiate(abilityIcon, anchor);
+                n = LocalizationManager.GetContent("Grapple_Release");
+                n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.gameObject.name);
+                releaseGO.GetComponentInChildren<Text>().text = n;
+                releaseGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+                actions.Add(new KeyValuePair<string, int>("Release", i));
 
-	void SelectPressed() {
-		if (actions[selectedNum].Key == "Grab") {
-			World.userInterface.CloseWindows();
-			PlayerInput pi = ObjectManager.player.GetComponent<PlayerInput>();
-			pi.grabbing = true;
-			pi.ChangeCursorMode(PlayerInput.CursorMode.Direction);
-		} else {
-			PerformAction();
-			ObjectManager.playerEntity.EndTurn(0.01f, 10);
-		}
-	}
+                max++;
+            }
+        }
+    }
 
-	void PerformAction() {
-		EntitySkills skills = ObjectManager.player.GetComponent<EntitySkills>();
-        Skill grappleSkill = skills.abilities.Find(x => x.ID == "grapple");
-		BodyPart targetLimb = body.bodyParts[actions[selectedNum].Value].grip.HeldPart;
+    void SelectPressed()
+    {
+        if (actions[selectedNum].Key == "Grab")
+        {
+            World.userInterface.CloseWindows();
+            World.userInterface.Grab(targetBody);
+        }
+        else
+        {
+            PerformAction();
+        }
+    }
 
-		if (actions[selectedNum].Key == "Push") {
-			Entity target = targetLimb.myBody.entity;
-			skills.Grapple_Shove(target, grappleSkill);
+    void PerformAction()
+    {
+        EntitySkills skills = ObjectManager.player.GetComponent<EntitySkills>();
+        BodyPart targetLimb = body.bodyParts[actions[selectedNum].Value].grip.heldPart;
 
-		} else if (actions[selectedNum].Key == "Take Down") {
-			Stats target = targetLimb.myBody.entity.stats;
-			skills.Grapple_TakeDown(target, targetLimb.displayName, grappleSkill);
+        if (actions[selectedNum].Key == "Push")
+        {
+            Entity target = targetLimb.myBody.entity;
+            skills.Grapple_Shove(target);
 
-		} else if (actions[selectedNum].Key == "Strangle") {
-			Stats target = targetLimb.myBody.entity.stats;
-			skills.Grapple_Strangle(target, grappleSkill);
+        }
+        else if (actions[selectedNum].Key == "Take Down")
+        {
+            Stats target = targetLimb.myBody.entity.stats;
+            skills.Grapple_TakeDown(target, targetLimb.displayName);
 
-		} else if (actions[selectedNum].Key == "Pull") {
-			skills.Grapple_Pull(body.bodyParts[actions[selectedNum].Value].grip, skills.abilities.Find(x => x.ID == "grapple"));
+        }
+        else if (actions[selectedNum].Key == "Strangle")
+        {
+            Stats target = targetLimb.myBody.entity.stats;
+            skills.Grapple_Strangle(target);
 
-		} else if (actions[selectedNum].Key == "Release") {
-			CombatLog.CombatMessage("Gr_ReleaseGrip", ObjectManager.player.name, targetLimb.myBody.gameObject.name, false);
-			body.bodyParts[actions[selectedNum].Value].grip.Release();
-		}
+        }
+        else if (actions[selectedNum].Key == "Pull")
+        {
+            skills.Grapple_Pull(body.bodyParts[actions[selectedNum].Value].grip);
 
-		World.userInterface.CloseWindows();
-	}
+        }
+        else if (actions[selectedNum].Key == "Pressure")
+        {
+            skills.Grapple_Pressure(body.bodyParts[actions[selectedNum].Value].grip);
+        }
+        else if (actions[selectedNum].Key == "Release")
+        {
+            CombatLog.CombatMessage("Gr_ReleaseGrip", ObjectManager.player.name, targetLimb.myBody.gameObject.name, false);
+            body.bodyParts[actions[selectedNum].Value].grip.Release();
+        }
 
-	public void Update() {
-		if (GameSettings.Keybindings.GetKey("North"))
-			selectedNum --;
-		else if (GameSettings.Keybindings.GetKey("South"))
-			selectedNum++;
+        World.userInterface.CloseWindows();
+    }
 
-		if (selectedNum < 0)
-			selectedNum = max - 1;
-		else if (selectedNum >= max)
-			selectedNum = 0;
+    public void Update()
+    {
+        if (GameSettings.Keybindings.GetKey("North"))
+            selectedNum--;
+        else if (GameSettings.Keybindings.GetKey("South"))
+            selectedNum++;
 
-		EventSystem.current.SetSelectedGameObject(anchor.GetChild(selectedNum).gameObject);
+        if (selectedNum < 0)
+            selectedNum = max - 1;
+        else if (selectedNum >= max)
+            selectedNum = 0;
 
-		if (GameSettings.Keybindings.GetKey("Enter"))
-			SelectPressed();
-	}
+        EventSystem.current.SetSelectedGameObject(anchor.GetChild(selectedNum).gameObject);
+
+        if (GameSettings.Keybindings.GetKey("Enter"))
+            SelectPressed();
+    }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class PlayerInput : MonoBehaviour
@@ -12,7 +12,6 @@ public class PlayerInput : MonoBehaviour
     public GameObject mapPointer;
     public GameObject directionSelectObject;
     public SpriteRenderer childSprite;
-    public bool grabbing = false;
 
     Coord storedTravelPos;
     Coord targetPosition;
@@ -55,9 +54,11 @@ public class PlayerInput : MonoBehaviour
     {
         if (storedTravelPos == null)
             storedTravelPos = new Coord(World.tileMap.worldCoordX, World.tileMap.worldCoordY);
-
-        storedTravelPos.x = World.tileMap.worldCoordX;
-        storedTravelPos.y = World.tileMap.worldCoordY;
+        else
+        {
+            storedTravelPos.x = World.tileMap.worldCoordX;
+            storedTravelPos.y = World.tileMap.worldCoordY;
+        }
     }
 
     void FlipX(bool flip)
@@ -68,7 +69,7 @@ public class PlayerInput : MonoBehaviour
     public void ChangeCursorMode(CursorMode cm)
     {
         cursorMode = cm;
-        directionSelectObject.SetActive(cursorMode == CursorMode.Direction);
+        directionSelectObject.SetActive(cursorMode == CursorMode.Direction || KeyHeld("AlternateAttack"));
         cursorControlScript.enabled = (cursorMode == CursorMode.Tile);
 
         if (!cursorControlScript.enabled)
@@ -79,8 +80,8 @@ public class PlayerInput : MonoBehaviour
     {
         get
         {
-            mapOffset.x = World.tileMap.worldCoordX + 50;
-            mapOffset.y = World.tileMap.worldCoordY - 200;
+            mapOffset.x = World.tileMap.worldCoordX + WorldMap.offset.x;
+            mapOffset.y = World.tileMap.worldCoordY + WorldMap.offset.y;
             return mapOffset;
         }
     }
@@ -140,16 +141,12 @@ public class PlayerInput : MonoBehaviour
             List<ContextualMenu.ContextualAction> co = ContextualMenu.GetActions();
 
             if (co.Count == 1)
-            {
                 co[0].myAction();
-            }
             else if (co.Count > 0)
-            {
                 World.userInterface.OpenContextActions(co);
-            }
         }
 
-        if (World.userInterface.canMove)
+        if (World.userInterface.NoWindowsOpen)
         {
             if (!UserInterface.paused && cursorMode != CursorMode.Tile)
                 HandleKeys();
@@ -171,7 +168,7 @@ public class PlayerInput : MonoBehaviour
         questPointer.OnChangeWorldMapPosition();
         World.userInterface.ChangeMapNameInSideBar();
 
-        if (KeyDown("Map") && World.tileMap.currentElevation == 0 && World.userInterface.canMove)
+        if (KeyDown("Map") && World.tileMap.currentElevation == 0 && World.userInterface.NoWindowsOpen)
         {
             TriggerLocalOrWorldMap();
             return;
@@ -182,12 +179,13 @@ public class PlayerInput : MonoBehaviour
             return;
         }
 
-        if (KeyDown("Pause") && World.userInterface.canMove)
+        if (KeyDown("Pause") && World.userInterface.NoWindowsOpen)
         {
             if (cursorMode == CursorMode.Tile)
                 fireWeapon = false;
             else if (cursorMode == CursorMode.Direction)
                 walking = false;
+
             ChangeCursorMode(CursorMode.None);
             return;
         }
@@ -264,10 +262,14 @@ public class PlayerInput : MonoBehaviour
             ChangeCursorMode((cursorMode == CursorMode.Tile) ? CursorMode.None : CursorMode.Tile);
             cursorControlScript.Reset();
         }
-        else if (KeyDown("Interact") && World.userInterface.canMove && cursorMode != CursorMode.Direction)
+        else if (KeyDown("Interact") && World.userInterface.NoWindowsOpen && cursorMode != CursorMode.Direction)
         {
-            ChangeCursorMode(CursorMode.Direction);
-            return;
+            List<ContextualMenu.ContextualAction> co = ContextualMenu.GetActions();
+
+            if (co.Count == 1)
+                co[0].myAction();
+            else
+                ChangeCursorMode(CursorMode.Direction);
         }
         else if (KeyDown("Pickup"))
         {
@@ -281,7 +283,7 @@ public class PlayerInput : MonoBehaviour
                 cursorControlScript.range = entity.stats.FirearmRange;
                 cursorControlScript.FindClosestEnemy(0);
             }
-            else if (playerInventory.firearm.lootable)
+            else if (playerInventory.firearm.lootable && playerInventory.firearm.amount > 0)
             {
                 entity.fighter.SelectItemToThrow(playerInventory.firearm);
                 ToggleThrow();
@@ -293,23 +295,17 @@ public class PlayerInput : MonoBehaviour
         {
             if (stats.health < stats.maxHealth || stats.stamina < stats.maxStamina)
             {
-                if (stats.Hunger <= Globals.Starving)
-                {
-                    Alert.NewAlert("Cannot_Rest_Enemies");
-                    return;
-                }
                 if (World.objectManager.SafeToRest())
                 {
                     CombatLog.SimpleMessage("Message_Rest");
+                    entity.resting = true;
                 }
                 else
                 {
                     Alert.NewAlert("Cannot_Rest_Enemies");
-                    return;
                 }
 
                 entity.CancelWalk();
-                entity.resting = true;
             }
         }
         else if (KeyDown("Walk") && World.objectManager.SafeToRest())
@@ -331,6 +327,7 @@ public class PlayerInput : MonoBehaviour
             moveTimer += Time.deltaTime;
             canHoldKeys = (moveTimer >= 0.25f);
         }
+
         if (AnyInputUp())
             moveTimer = 0;
     }
@@ -431,10 +428,19 @@ public class PlayerInput : MonoBehaviour
             if (!entity.canAct)
                 return;
 
-            if (KeyHeld("ForceAttack"))
+            if (KeyHeld("AlternateAttack") && !(x == 0 && y == 0))
             {
-                Attack(x, y);
-                return;
+                if (World.tileMap.WalkableTile(entity.posX + x, entity.posY + y))
+                {
+                    Cell c = World.tileMap.GetCellAt(entity.posX + x, entity.posY + y);
+
+                    if (c.entity != null)
+                    {
+                        World.userInterface.CalledShot(c.entity.body);
+                        //World.userInterface.OpenGrapple(c.entity.body);
+                        return;
+                    }
+                }
             }
 
             if (x == 0 && y == 0)
@@ -453,20 +459,11 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    void Attack(int x, int y)
-    {
-        canHoldKeys = false;
-
-        if (fullMap || !canHoldKeys)
-            entity.Swipe(x, y);
-    }
-
     public void CancelLook()
     {
         walking = false;
         activeSkill = null;
         fireWeapon = false;
-        grabbing = false;
         ChangeCursorMode(CursorMode.None);
     }
 
@@ -545,26 +542,6 @@ public class PlayerInput : MonoBehaviour
                 CheckFacingDirection(entity.posX + x);
                 walking = false;
                 CancelLook();
-            }
-
-            return true;
-        }
-
-        if (grabbing)
-        {
-            if (!(x == 0 && y == 0))
-            {
-                if (World.tileMap.WalkableTile(entity.posX + x, entity.posY + y) && World.tileMap.GetCellAt(entity.posX + x, entity.posY + y).entity != null)
-                {
-                    World.userInterface.Grab(World.tileMap.GetCellAt(entity.posX + x, entity.posY + y).entity.GetComponent<Body>());
-                    grabbing = false;
-                    CancelLook();
-                }
-                else
-                {
-                    grabbing = false;
-                    CancelLook();
-                }
             }
 
             return true;
@@ -679,7 +656,7 @@ public class PlayerInput : MonoBehaviour
             n.hasSeenPlayer = true;
         }
 
-        World.tileMap.CheckNPCTiles(false);
+        World.tileMap.CheckNPCTiles();
         npcsToMove.Clear();
     }
 
@@ -695,24 +672,6 @@ public class PlayerInput : MonoBehaviour
             if (playerInventory.overCapacity())
             {
                 Alert.NewAlert("Inv_Full");
-                return;
-            }
-            else if (stats.Hunger < Globals.Starving)
-            {
-                SetStoredTravelPosition();
-
-                if (fullMap)
-                    TriggerLocalOrWorldMap();
-
-                Alert.NewAlert("Starving");
-                World.tileMap.HardRebuild();
-                World.tileMap.SoftRebuild();
-                World.objectManager.NoStickNPCs(entity.posX, entity.posY);
-
-                if (fullMap)
-                    TriggerLocalOrWorldMap();
-
-                sidePanelUI.SetActive(!fullMap);
                 return;
             }
 
@@ -734,7 +693,6 @@ public class PlayerInput : MonoBehaviour
                 entity.body.TrainLimbOfType(new ItemProperty[] { ItemProperty.Slot_Leg, ItemProperty.Slot_Tail, ItemProperty.Slot_Wing });
             }
 
-            stats.Hunger -= timePass;
             World.turnManager.IncrementTime(timePass);
             World.tileMap.UpdateMapFeatures();
 
@@ -800,7 +758,7 @@ public class PlayerInput : MonoBehaviour
         if (num > 0)
         {
             //Up
-            if (World.tileMap.CheckTileID(entity.posX, entity.posY) != Tile.tiles["Stairs_Up"].ID)
+            if (World.tileMap.GetTileID(entity.posX, entity.posY) != Tile.tiles["Stairs_Up"].ID)
             {
                 Coord targetPos = World.tileMap.FindStairsUp();
 
@@ -813,7 +771,7 @@ public class PlayerInput : MonoBehaviour
         else
         {
             //Down
-            if (World.tileMap.CheckTileID(entity.posX, entity.posY) != Tile.tiles["Stairs_Down"].ID)
+            if (World.tileMap.GetTileID(entity.posX, entity.posY) != Tile.tiles["Stairs_Down"].ID)
             {
                 Coord targetPos = World.tileMap.FindStairsDown();
 
@@ -832,7 +790,6 @@ public class PlayerInput : MonoBehaviour
     {
         BringNPCs1();
         World.tileMap.currentElevation += num;
-        World.tileMap.goingDown = num < 0;
         World.tileMap.HardRebuild_NoLight();
 
         Coord newPlayerPos = (num < 0) ? World.tileMap.CurrentMap.StairsUp() : World.tileMap.CurrentMap.StairsDown();
@@ -875,7 +832,7 @@ public class PlayerInput : MonoBehaviour
         if (targetPos != null && !World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
             return;
 
-        entity.path = new Path_AStar(entity.myPos, targetPos);
+        entity.path = new Path_AStar(entity.myPos, targetPos, playerInventory.CanFly());
     }
     #endregion
 
@@ -900,16 +857,12 @@ public class PlayerInput : MonoBehaviour
 
         if (!fullMap)
         {
-            if (stats.Hunger < Globals.Starving)
-            {
-                Alert.NewAlert("Cannot_Travel_Hunger");
-                return;
-            }
-            else if (!World.objectManager.SafeToRest())
+            if (!World.objectManager.SafeToRest())
             {
                 Alert.NewAlert("Cannot_Travel_Enemies");
                 return;
             }
+
             World.tileMap.UpdateMapFeatures();
             SetStoredTravelPosition();
         }
@@ -926,7 +879,7 @@ public class PlayerInput : MonoBehaviour
             if (storedTravelPos != World.tileMap.WorldPosition)
                 World.tileMap.HardRebuild();
 
-            World.tileMap.CheckNPCTiles(true);
+            World.tileMap.CheckNPCTiles();
             World.tileMap.LightCheck(GetComponent<Entity>());
             entity.ForcePosition();
         }

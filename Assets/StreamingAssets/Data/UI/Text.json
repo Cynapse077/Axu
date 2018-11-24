@@ -1,5 +1,9 @@
 {
     "Dialogue Options" : [
+		{
+			"ID" : "Dialogue_Talk",
+			"Display" : "Inquire"
+		},
         {
             "ID" : "Dialogue_Chat",
             "Display" : "Chat"
@@ -548,9 +552,9 @@
             "ID" : "Switch Target",
             "Display" : "Switch Target"
         },
-        {
-            "ID" : "ForceAttack",
-            "Display" : "Force Attack"
+		{
+            "ID" : "AlternateAttack",
+            "Display" : "Targeted Attack"
         },
         {
             "ID" : "Walk",
@@ -819,6 +823,11 @@
             "ID" : "Butchery",
             "Display" : "Butchery",
             "Tooltip" : "Your skill with carving up corpses."
+        },
+        {
+            "ID" : "MartialArts",
+            "Display" : "Martial Arts",
+            "Tooltip" : "Your ability to use throws and grips."
         }
     ],
     "Status Effects" : [
@@ -1251,8 +1260,12 @@
         },
         {
             "ID" : "Grapple_Pull",
-            "Display" : "Yank Off [NAME]"
+            "Display" : "Pull [NAME]"
         },
+		{
+			"ID" : "Grapple_PressurePoint",
+			"Display" : "Apply Pressure to [NAME]"
+		},
         {
             "ID" : "Takedown_Name",
             "Display" : "<color=silver>takedown</color>"
@@ -1574,7 +1587,7 @@
         },
         {
             "ID" : "Message_Wound",
-            "Display" : "<color=red>Your [NAME] has been wounded! (<color=yellow>[ITEM]</color>)</color>"
+            "Display" : "<color=red>[NAME]'s [PART] has been wounded! (<color=yellow>[WOUND]</color>)</color>"
         },
         {
             "ID" : "Message_Wound_Cure",

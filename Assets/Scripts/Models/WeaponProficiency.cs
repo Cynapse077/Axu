@@ -1,84 +1,97 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [System.Serializable]
 [MoonSharp.Interpreter.MoonSharpUserData]
-public class WeaponProficiency {
-	
-	public string name;
-	public int level;
-	Proficiencies prof;
-	double _xp;
-	public string desc;
-	const int xpToNext = 1000;
-	static int MaxLevel = 10;
+public class WeaponProficiency
+{
+    public string name;
+    public int level;
+    Proficiencies prof;
+    double _xp;
+    public string desc;
+    const int xpToNext = 1000;
+    const int MaxLevel = 10;
 
-	public double xp {
-		get {
-			_xp = System.Math.Round(_xp, 2);
-			return _xp;
-		}
-		set { _xp = value; }
-	}
+    public double xp
+    {
+        get
+        {
+            _xp = System.Math.Round(_xp, 2);
+            return _xp;
+        }
+        set { _xp = value; }
+    }
 
-	public WeaponProficiency(string nam) {
-		this.name = nam;
-		this.level = 0;
-		this.xp = 0;
-	}
+    public WeaponProficiency(string nam)
+    {
+        name = nam;
+        level = 0;
+        xp = 0;
+    }
 
-	public WeaponProficiency(string nm, Proficiencies p) {
-		this.name = nm;
-		this.prof = p;
-		this.level = 0;
-		this.xp = 0;
-	}
+    public WeaponProficiency(string nm, Proficiencies p)
+    {
+        name = nm;
+        prof = p;
+        level = 0;
+        xp = 0;
+    }
 
-	public WeaponProficiency(string nam, int lvl, double exp) {
-		name = nam;
-		level = lvl;
-		xp = exp;
-	}
+    public WeaponProficiency(string nam, int lvl, double exp)
+    {
+        name = nam;
+        level = lvl;
+        xp = exp;
+    }
 
-	public bool AddXP(double amount) {
-		if (amount <= 0) 
-			return false;
-		
-		if (level < MaxLevel) {
-			xp += amount * 0.5;
-			bool leveled = false;
+    public bool AddXP(double amount)
+    {
+        if (amount <= 0)
+            return false;
 
-			while (xp >= xpToNext) {
-				xp -= xpToNext;
-				LevelUp();
-				leveled = true;
-			}
+        bool leveled = false;
 
-			return leveled;
-		} else
-			xp = 0;
-		
-		return false;
-	}
+        if (level < 1)
+            amount *= 2.0;
 
-	void LevelUp() {
-		level++;
-	}
+        if (level < MaxLevel)
+        {
+            xp += amount;
 
-	//Used for character creation screen.
-	public string CCLevelName() {
-		string myLvl = "<color=orange>" + (level).ToString() + "</color> - ";
-		int lvl = Mathf.Min(level, 10);
+            while (xp >= xpToNext)
+            {
+                xp -= xpToNext;
+                LevelUp();
+                leveled = true;
+            }
+        }
+        else
+            xp = 0;
 
-		return myLvl + LocalizationManager.GetContent(("Prof_L" + lvl.ToString()));
-	}
+        return leveled;
+    }
 
-	public string LevelName() {
-		int lvl = Mathf.Min(level - 1, 10);
+    void LevelUp()
+    {
+        level++;
+    }
 
-		return LocalizationManager.GetContent(("Prof_L" + lvl.ToString()));
-	}
+    //Used for character creation screen.
+    public string CCLevelName()
+    {
+        string myLvl = "<color=orange>" + (level).ToString() + "</color> - ";
+        int lvl = Mathf.Min(level, 10);
 
-	public void SetProficiency(Proficiencies p) { prof = p; }
-	public Proficiencies GetProficiency() { return prof; }
+        return myLvl + LocalizationManager.GetContent(("Prof_L" + lvl.ToString()));
+    }
+
+    public string LevelName()
+    {
+        int lvl = Mathf.Min(level - 1, 10);
+
+        return LocalizationManager.GetContent(("Prof_L" + lvl.ToString()));
+    }
+
+    public void SetProficiency(Proficiencies p) { prof = p; }
+    public Proficiencies GetProficiency() { return prof; }
 }

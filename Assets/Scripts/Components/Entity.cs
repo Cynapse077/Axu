@@ -2,33 +2,45 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using Pathfinding;
 
 [MoonSharpUserData]
 public class Entity : MonoBehaviour
 {
-    [HideInInspector] public int actionPoints = 10;
-    [HideInInspector] public bool isPlayer, canAct, resting, canCancelWalk;
-    [HideInInspector] public Coord walkDirection;
-    [HideInInspector] public Body body;
-    [HideInInspector] public Stats stats;
-    [HideInInspector] public Inventory inventory;
-    [HideInInspector] public BaseAI AI;
-    [HideInInspector] public CombatComponent fighter;
-    [HideInInspector] public EntitySkills skills;
+    public Body body { get; protected set; }
+    public Stats stats { get; protected set; }
+    public Inventory inventory { get; protected set; }
+    public BaseAI AI { get; protected set; }
+    public CombatComponent fighter { get; protected set; }
+    public EntitySkills skills { get; protected set; }
 
+    public int actionPoints = 10;
     public Path_AStar path;
     public Cell cell;
 
+    [HideInInspector] public bool isPlayer, canAct, resting, canCancelWalk;
+    [HideInInspector] public Coord walkDirection;
+
     int _posX = 0, _posY = 0;
     PlayerInput playerInput;
+    CameraControl cControl;
     SpriteRenderer spriteRenderer;
-    int healTimer = 11, restoreTimer = 11;
     Vector3 targetPosition;
     Coord mPos;
-    bool swimming;
-    CameraControl cControl;
+
+    bool swimming
+    {
+        get
+        {
+            return (World.tileMap != null && World.tileMap.IsWaterTile(posX, posY) && !inventory.CanFly());
+        }
+    }
 
     public string Name
+    {
+        get { return gameObject.name; }
+    }
+    public string MyName
     {
         get { return gameObject.name; }
     }
@@ -36,11 +48,6 @@ public class Entity : MonoBehaviour
     public bool Walking
     {
         get { return (walkDirection != null); }
-    }
-
-    public string MyName
-    {
-        get { return gameObject.name; }
     }
 
     public int posX
@@ -82,7 +89,7 @@ public class Entity : MonoBehaviour
 
             if (World.tileMap.currentElevation < 0)
             {
-                Vault v = World.tileMap.GetCurrentVault(World.tileMap.WorldPosition);
+                Vault v = World.tileMap.GetVaultAt(World.tileMap.WorldPosition);
 
                 if (v != null)
                     lgt = v.blueprint.light;
@@ -116,8 +123,6 @@ public class Entity : MonoBehaviour
         }
     }
 
-    System.Action<Coord> repeatAction;
-
     void SetCamera()
     {
         if (cControl == null)
@@ -136,7 +141,7 @@ public class Entity : MonoBehaviour
         if (GetComponent<PlayerInput>())
         {
             isPlayer = true;
-            World.tileMap.onScreenChange += onScreenChange;
+            World.tileMap.OnScreenChange += OnScreenChange;
             World.turnManager.CheckInSightObjectAndEntities();
             playerInput = gameObject.GetComponent<PlayerInput>();
             CacheVariables();
@@ -165,11 +170,13 @@ public class Entity : MonoBehaviour
 
     public void SetCell()
     {
-        if (World.tileMap.GetCellAt(myPos) != null)
-            World.tileMap.GetCellAt(myPos).SetEntity(this);
+        Cell c = World.tileMap.GetCellAt(myPos);
+        
+        if (c != null)
+            c.SetEntity(this);
     }
 
-    public bool onScreenChange(TileMap_Data oldMap, TileMap_Data newMap)
+    public bool OnScreenChange(TileMap_Data oldMap, TileMap_Data newMap)
     {
         SetCell();
         return true;
@@ -181,7 +188,7 @@ public class Entity : MonoBehaviour
             cell.UnSetEntity(this);
 
         if (isPlayer)
-            World.tileMap.onScreenChange -= onScreenChange;
+            World.tileMap.OnScreenChange -= OnScreenChange; 
     }
 
     //Go directly to a tile without lerping
@@ -206,7 +213,7 @@ public class Entity : MonoBehaviour
     {
         get
         {
-            float lspeed = .95f;
+            float lspeed = 0.8f;
             return lspeed * (float)GameSettings.Animation_Speed * 0.01f;
         }
     }
@@ -217,7 +224,9 @@ public class Entity : MonoBehaviour
             ContinuousActions();
 
         if (transform.position != targetPosition)
+        {
             transform.position = (GameSettings.Animation_Speed >= 55) ? targetPosition : Vector3.Lerp(transform.position, targetPosition, LerpSpeed);
+        }
     }
 
     void ContinuousActions()
@@ -251,7 +260,7 @@ public class Entity : MonoBehaviour
             }
             else if (resting)
             {
-                if (!World.objectManager.SafeToRest() || stats.Hunger < 50)
+                if (!World.objectManager.SafeToRest())
                     resting = false;
 
                 if (stats.health < stats.maxHealth || stats.stamina < stats.maxStamina)
@@ -304,7 +313,6 @@ public class Entity : MonoBehaviour
 
         if (isPlayer && World.tileMap.CheckEdgeLocalMap(posX + x, posY + y))
         {
-            PostTurn();
             EndTurn();
             return true;
         }
@@ -373,6 +381,7 @@ public class Entity : MonoBehaviour
                             }
                             else
                                 Wait();
+
                             return true;
                         }
                     }
@@ -381,10 +390,10 @@ public class Entity : MonoBehaviour
             else
             {
                 //try other tiles if you have a spear
-                if (body.MainHand == null || body.MainHand.equippedItem == null)
+                if (body.MainHand == null || body.MainHand.EquippedItem == null)
                     return false;
 
-                if (body.MainHand.equippedItem.attackType == Item.AttackType.Spear)
+                if (body.MainHand.EquippedItem.attackType == Item.AttackType.Spear)
                 {
                     if (!World.tileMap.WalkableTile(posX + (x * 2), posY + (y * 2)))
                     {
@@ -441,7 +450,6 @@ public class Entity : MonoBehaviour
                 SwapPosition(new Coord(x, y), otherEntity);
                 return true;
             }
-            //if not player
         }
         else
         {
@@ -457,7 +465,7 @@ public class Entity : MonoBehaviour
             }
         }
 
-        if (body.MainHand.equippedItem.attackType == Item.AttackType.Spear && (Mathf.Abs(x) == 2 || Mathf.Abs(y) == 2))
+        if (body.MainHand.EquippedItem.attackType == Item.AttackType.Spear && (Mathf.Abs(x) == 2 || Mathf.Abs(y) == 2))
         {
             if (isPlayer)
             {
@@ -489,8 +497,13 @@ public class Entity : MonoBehaviour
     void Move(int x, int y)
     {
         if (!World.tileMap.WalkableTile(posX + x, posY + y) || !World.tileMap.GetCellAt(posX + x, posY + y).Walkable_IgnoreEntity)
-            return;
+        {
+            if (!isPlayer)
+                EndTurn(0.01f, 10);
 
+            return;
+        }
+            
         if (isPlayer)
         {
             if (inventory.overCapacity())
@@ -504,8 +517,6 @@ public class Entity : MonoBehaviour
             EndTurn(0.01f);
             return;
         }
-
-        CheckForWebs();
 
         if (stats.HasEffect("Stuck") || stats.HasEffect("Topple") || !body.FreeToMove())
         {
@@ -527,10 +538,10 @@ public class Entity : MonoBehaviour
 
         if (GameSettings.Particle_Effects && !ObjectManager.playerEntity.Walking && (isPlayer || spriteRenderer.enabled == true))
         {
-            if (World.tileMap.EntityWaterCheck(_posX, _posY) && !inventory.CanFly())
+            if (World.tileMap.IsWaterTile(_posX, _posY) && !inventory.CanFly())
             {
                 World.soundManager.Splash();
-                SimplePool.Spawn(World.poolManager.splash, new Vector3(transform.position.x + 0.5f + x, transform.position.y + 0.2f + y, transform.position.z), Quaternion.identity);
+                SimplePool.Spawn(World.poolManager.splash, new Vector3(transform.position.x + 0.5f + x, transform.position.y + 0.2f + y, transform.position.z));
             }
         }
 
@@ -540,45 +551,10 @@ public class Entity : MonoBehaviour
             World.tileMap.LightCheck(this);
         }
 
-        EndTurn(0.001f);
-        PostTurn();
-        UpdateSwimming();
+        EndTurn();
     }
 
-    void CheckForWebs()
-    {
-        Cell c = World.tileMap.GetCellAt(posX, posY);
-
-        if (c == null)
-            return;
-
-        if (c.mapObjects.Find(o => o.objectType == "Web") != null)
-        {
-            bool cannotStick = (stats.hasTraitEffect(TraitEffects.Resist_Webs) || inventory.CanFly() || !isPlayer && AI.npcBase.HasFlag(NPC_Flags.Resist_Webs));
-
-            if (!cannotStick && SeedManager.combatRandom.Next(100) > stats.Strength * 4)
-            {
-                if (isPlayer)
-                    CombatLog.SimpleMessage("Message_Web_Stuck");
-
-                stats.AddStatusEffect("Stuck", 1);
-            }
-            else
-            {
-                if (isPlayer)
-                    CombatLog.SimpleMessage("Message_Web_Break");
-
-                stats.RemoveStatusEffect("Stuck");
-                c.mapObjects.Find(o => o.objectType == "Web").DestroyMe();
-            }
-        }
-        else if (stats.HasEffect("Stuck"))
-        {
-            stats.RemoveStatusEffect("Stuck");
-        }
-    }
-
-    public void Swipe(int x, int y)
+    void Swipe(int x, int y)
     {
         if (stats.HasEffect("Stun") || stats.Frozen())
             return;
@@ -595,23 +571,20 @@ public class Entity : MonoBehaviour
 
             if (ObjectManager.playerEntity.inSight(posX + x, posY + y))
             {
-                GameObject s = SimplePool.Spawn(World.poolManager.slashEffects[wepNum], targetPosition + new Vector3(ex, ey, 0), Quaternion.identity);
+                GameObject s = SimplePool.Spawn(World.poolManager.slashEffects[wepNum], targetPosition + new Vector3(ex, ey, 0));
                 int playerDir = ((isPlayer) ? playerInput.childSprite.flipX : AI.spriteRenderer.flipX) ? -1 : 1;
-                s.GetComponent<WeaponHitEffect>().FaceChildOtherDirection(playerDir, x, y, body.MainHand.equippedItem);
+                s.GetComponent<WeaponHitEffect>().FaceChildOtherDirection(playerDir, x, y, body.MainHand.EquippedItem);
             }
 
             if (!AttackTile(posX + x, posY + y))
             {
-                if (body.MainHand.equippedItem.attackType == Item.AttackType.Spear)
+                if (body.MainHand.EquippedItem.attackType == Item.AttackType.Spear)
                 {
                     x += x;
                     y += y;
 
                     if (!AttackTile(posX + x, posY + y))
-                    {
                         EndTurn(0.01f, fighter.AttackAPCost());
-                        return;
-                    }
                 }
             }
         }
@@ -626,11 +599,6 @@ public class Entity : MonoBehaviour
             if (inventory.EquippedItems().Find(i => i.HasProp(ItemProperty.Dig)).UseCharge() && World.tileMap.DigTile(posX + x, posY + y, false))
                 EndTurn(0.01f, 20);
         }
-    }
-
-    void UpdateSwimming()
-    {
-        swimming = (World.tileMap.EntityWaterCheck(posX, posY) && !inventory.CanFly()) ? true : false;
     }
 
     /// <summary>
@@ -776,7 +744,7 @@ public class Entity : MonoBehaviour
         otherEntity.myPos = tempPos;
 
         SetCell();
-        World.tileMap.GetCellAt(otherEntity.myPos).SetEntity(otherEntity);
+        otherEntity.SetCell();
 
         if (isPlayer)
             World.tileMap.LightCheck(this);
@@ -808,7 +776,7 @@ public class Entity : MonoBehaviour
 
                 if (!bai.isHostile && bai.npcBase.HasFlag(NPC_Flags.Can_Speak) && World.objectManager.SafeToRest())
                 {
-                    World.userInterface.ShowDialogue(targetCell.entity.GetComponent<DialogueController>());
+                    World.userInterface.ShowNPCDialogue(targetCell.entity.GetComponent<DialogueController>());
                     bai.FaceMe(myPos);
                     return;
                 }
@@ -820,13 +788,9 @@ public class Entity : MonoBehaviour
                     MapObjectSprite obj = targetCell.mapObjects[i];
 
                     if (obj.isDoor_Closed)
-                    {
                         OpenDoor(obj);
-                    }
                     else
-                    {
                         obj.Interact();
-                    }
                 }
 
                 EndTurn(0.05f, 15);
@@ -859,7 +823,7 @@ public class Entity : MonoBehaviour
         return false;
     }
 
-    public void ShootAtTile(int x, int y, string projectileName = "bullet")
+    public void ShootAtTile(int x, int y)
     {
         if (x == posX && y == posY)
             return;
@@ -878,8 +842,6 @@ public class Entity : MonoBehaviour
 
     IEnumerator FireWeapon(int x, int y)
     {
-        Coord targetPos = new Coord(x, y);
-
         if (inventory.firearm.HasProp(ItemProperty.Ranged))
         {
             if (inventory.firearm.HasProp(ItemProperty.Bow))
@@ -890,63 +852,11 @@ public class Entity : MonoBehaviour
 
         CombatLog.NameItemMessage("Message_FireWeapon", MyName, inventory.firearm.DisplayName());
 
-        for (int i = 0; i < inventory.firearm.GetItemComponent<CFirearm>().shots; i++)
+        int numShots = inventory.firearm.GetCComponent<CFirearm>().shots;
+
+        for (int i = 0; i < numShots; i++)
         {
-            GameObject bullet = SimplePool.Spawn(World.poolManager.shootEffect, targetPosition, Quaternion.identity);
-            bullet.name = "bullet";
-
-            TileDamage td = new TileDamage(this, targetPos, inventory.firearm.damageTypes);
-
-            LineRenderer lr = bullet.GetComponent<LineRenderer>();
-            lr.SetPosition(0, new Vector3(targetPosition.x + 0.5f, targetPosition.y + 0.5f, 0));
-            Vector2 targetArea = new Vector2(x + 0.5f, y + 0.5f - Manager.localMapSize.y);
-
-            if (World.tileMap.WalkableTile(x, y))
-            {
-                Cell c = World.tileMap.GetCellAt(x, y);
-
-                if (c != null && c.entity != null)
-                    fighter.lastTarget = World.tileMap.GetCellAt(x, y).entity;
-            }
-
-            float denom = (float)stats.proficiencies.Firearm.level + 2 + stats.Accuracy / 2 - inventory.firearm.Accuracy;
-
-            if (denom <= 0)
-                denom += 0.05f;
-
-            float missChance = (1.0f / denom) * 100f;
-            float maxMiss = SeedManager.combatRandom.Next(100);
-
-            if (Vector2.Distance(targetPosition, targetPos.toVector2()) >= stats.FirearmRange)
-                missChance *= 1.5f;
-
-            if (inventory.firearm.Accuracy < 0)
-                missChance *= 2.0f;
-
-            if (!inventory.firearm.HasProp(ItemProperty.Burst))
-                maxMiss -= (3 * i);
-
-            bool miss = (maxMiss <= missChance);
-
-            if (miss)
-            {
-                int xOffset = SeedManager.combatRandom.Next(-1, 2), yOffset = SeedManager.combatRandom.Next(-1, 2);
-
-                if (td.pos.x + xOffset != posX && td.pos.y != posY)
-                {
-                    targetArea += new Vector2(xOffset, yOffset);
-                    td.pos.x += xOffset;
-                    td.pos.y += yOffset;
-                }
-            }
-
-            lr.SetPosition(1, targetArea);
-            td.damage = inventory.firearm.CalculateDamage(stats.Dexterity - 4, stats.CheckProficiencies(inventory.firearm).level);
-            td.crit = inventory.firearm.AttackCrits(stats.proficiencies.Firearm.level + 1);
-            td.myName = LocalizationManager.GetContent("Bullet");
-            td.ApplyDamage();
-
-            stats.AddProficiencyXP(inventory.firearm, stats.Dexterity);
+            fighter.ShootFireArm(new Coord(x, y), i);
 
             if (inventory.firearm.HasProp(ItemProperty.Burst) || i == 0)
             {
@@ -958,39 +868,23 @@ public class Entity : MonoBehaviour
         yield return null;
     }
 
+    public void BulletTrail(Vector2 start, Vector2 end)
+    {
+        GameObject bullet = SimplePool.Spawn(World.poolManager.shootEffect, targetPosition);
+        LineRenderer lr = bullet.GetComponent<LineRenderer>();
+        lr.SetPosition(0, start + new Vector2(0.5f, 0.5f));
+        lr.SetPosition(1, end + new Vector2(0.5f, 0.5f));
+    }
+
     public void InstatiateThrowingEffect(Coord destination)
     {
-        GameObject lo = (GameObject)Instantiate(World.poolManager.throwEffect, transform.position, Quaternion.identity);
+        GameObject lo = Instantiate(World.poolManager.throwEffect, transform.position, Quaternion.identity);
         lo.GetComponent<LerpPos>().Init(destination);
     }
 
     public void Wait()
     {
-        PostTurn();
-    }
-
-    //Update status effects, residual healing
-    void PostTurn()
-    {
-        healTimer--;
-        restoreTimer--;
-
-        if (resting && healTimer % 3 == 0)
-            healTimer--;
-
-        if (healTimer <= 0)
-        {
-            healTimer = stats.TurnsToHeal();
-            stats.RestHP();
-        }
-
-        if (restoreTimer <= 0)
-        {
-            restoreTimer = stats.TurnsToRestore();
-            stats.RestST();
-        }
-
-        EndTurn(0.01f);
+        EndTurn();
     }
 
     public void Walk(Coord direction)
@@ -1019,18 +913,18 @@ public class Entity : MonoBehaviour
         if (stats != null && stats.HasEffect("Blind") || myPos.DistanceTo(new Coord(cX, cY)) >= sightRange && !World.tileMap.IsTileLit(cX, cY))
             return false;
 
-        Coord cPos = myPos;
-        int dx = cX - cPos.x, dy = cY - cPos.y;
+        int dx = cX - posX, dy = cY - posY;
         int nx = Mathf.Abs(dx), ny = Mathf.Abs(dy);
         int sign_x = dx > 0 ? 1 : -1, sign_y = dy > 0 ? 1 : -1;
+        Coord p = new Coord(posX, posY);
 
-        Coord p = new Coord(cPos.x, cPos.y);
         for (int ix = 0, iy = 0; ix < nx || iy < ny;)
         {
-            if (!World.tileMap.LightPassableTile(p.x, p.y) && p != cPos)
+            if (!World.tileMap.LightPassableTile(p.x, p.y) && p != myPos)
                 return false;
 
             float fx = (0.5f + ix) / nx, fy = (0.5f + iy) / ny;
+
             if (fx == fy)
             {
                 p.x += sign_x;
@@ -1097,13 +991,13 @@ public class Entity : MonoBehaviour
 
         if (swimming)
         {
-            if (!isPlayer && (AI.npcBase.HasFlag(NPC_Flags.Flying) || AI.npcBase.HasFlag(NPC_Flags.Aquatic)))
+            if (!isPlayer && AI.npcBase.HasFlag(NPC_Flags.Aquatic))
                 spd *= 1;
             else
             {
                 if (stats.FasterSwimmer())
                     spd *= 1.5f;
-                else if (!stats.FastSwimmer() || !inventory.CanFly())
+                else if (!stats.FastSwimmer())
                     spd *= 0.5f;
             }
         }
@@ -1121,12 +1015,10 @@ public class Entity : MonoBehaviour
     public void EndTurn(float waitTime = 0, int cost = 10)
     {
         canAct = false;
+        stats.PostTurn();
 
         if (isPlayer)
-        {
-            stats.HungerTick();
             World.turnManager.EndTurn(waitTime, cost);
-        }
         else
             actionPoints -= cost;
     }
@@ -1145,7 +1037,7 @@ public class Entity : MonoBehaviour
 
         ForcePosition();
         BeamDown();
-        ObjectManager.player.GetComponent<PlayerInput>().CheckMinimap();
+        World.playerInput.CheckMinimap();
 
         return true;
     }
@@ -1160,8 +1052,8 @@ public class Entity : MonoBehaviour
         if (!GameSettings.Particle_Effects || SeedManager.combatRandom.Next(100) < chance && !overrideRandom || !isPlayer && AI.npcBase.HasFlag(NPC_Flags.No_Blood))
             return;
 
-        int tNum = World.tileMap.CheckTileID(posX, posY);
-        if (World.tileMap.EntityWaterCheck(posX, posY) || tNum == Tile.tiles["Stairs_Up"].ID || tNum == Tile.tiles["Stairs_Down"].ID)
+        int tNum = World.tileMap.GetTileID(posX, posY);
+        if (World.tileMap.IsWaterTile(posX, posY) || tNum == Tile.tiles["Stairs_Up"].ID || tNum == Tile.tiles["Stairs_Down"].ID)
             return;
 
         World.objectManager.NewObject("Bloodstain", new Coord(posX, posY));
@@ -1207,27 +1099,6 @@ public class Entity : MonoBehaviour
                 }
             }
         }
-    }
-
-    void CacheVariables()
-    {
-        stats = GetComponent<Stats>();
-        body = GetComponent<Body>();
-        inventory = GetComponent<Inventory>();
-        skills = GetComponent<EntitySkills>();
-        body.entity = this;
-        inventory.entity = this;
-        stats.entity = this;
-        stats.Init();
-        inventory.Init();
-        fighter = new CombatComponent(this);
-
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        if (!isPlayer)
-            GetComponent<DialogueController>().SetupDialogueOptions();
-
-        healTimer = stats.TurnsToHeal();
-        restoreTimer = stats.TurnsToRestore();
     }
 
     bool AttackTile(int x, int y, bool freeAction = false)
@@ -1276,12 +1147,10 @@ public class Entity : MonoBehaviour
             if (y < 0)
                 intPos.y += y;
 
-            GameObject ss = SimplePool.Spawn(World.poolManager.slashEffects[4], intPos, Quaternion.identity);
-            ss.GetComponent<WeaponHitEffect>().DiagonalSlashDirection(x, y, body.MainHand.equippedItem);
-
-            //Non-diagonals
+            GameObject ss = SimplePool.Spawn(World.poolManager.slashEffects[4], intPos);
+            ss.GetComponent<WeaponHitEffect>().DiagonalSlashDirection(x, y, body.MainHand.EquippedItem);
         }
-        else
+        else //Non-diagonals
         {
             for (int p = -1; p <= 1; p++)
             {
@@ -1291,19 +1160,19 @@ public class Entity : MonoBehaviour
                     AttackTile(posX + p, posY + y, true);
             }
 
-            GameObject ss = SimplePool.Spawn(World.poolManager.slashEffects[3], targetPosition + new Vector3(x, y, 0), Quaternion.identity);
-
-            int dir = 1;
-
-            if (isPlayer)
-                dir = (playerInput.childSprite.flipX) ? -1 : 1;
-            else
-                dir = (AI.spriteRenderer.flipX) ? -1 : 1;
-
-            ss.GetComponent<WeaponHitEffect>().FaceChildOtherDirection(dir, x, y, body.MainHand.equippedItem);
+            GameObject ss = SimplePool.Spawn(World.poolManager.slashEffects[3], targetPosition + new Vector3(x, y, 0));
+            ss.GetComponent<WeaponHitEffect>().FaceChildOtherDirection((Flipped()) ? -1 : 1, x, y, body.MainHand.EquippedItem);
         }
 
         EndTurn(0.1f, fighter.AttackAPCost());
+    }
+
+    bool Flipped()
+    {
+        if (isPlayer)
+            return isPlayer && playerInput.childSprite.flipX;
+        else
+            return AI.spriteRenderer.flipX;
     }
 
     //TODO: Cache this.
@@ -1317,25 +1186,20 @@ public class Entity : MonoBehaviour
 
         for (int i = 0; i < equippedItems.Count; i++)
         {
-            Item eq = equippedItems[i];
-
-            if (eq == null)
+            if (equippedItems[i] != null)
             {
-                Debug.LogError("Null item in inventory.");
-                continue;
-            }
+                Item eq = equippedItems[i];
+                Stat_Modifier sm = eq.statMods.Find(x => x.Stat == "Light");
 
-            Stat_Modifier sm = eq.statMods.Find(x => x.Stat == "Light");
-
-            if (sm != null)
-            {
-                if (eq.HasProp(ItemProperty.Degrade) && eq.Charges() > 0)
+                if (sm != null)
                 {
-                    lightAmount += sm.Amount;
-                }
-                else
-                {
-                    lightAmount += sm.Amount;
+                    if (eq.HasProp(ItemProperty.Degrade))
+                    {
+                        if (eq.Charges() > 0)
+                            lightAmount += sm.Amount;
+                    }
+                    else
+                        lightAmount += sm.Amount;
                 }
             }
         }
@@ -1355,6 +1219,7 @@ public class Entity : MonoBehaviour
                     continue;
 
                 Cell c = World.tileMap.GetCellAt(new Coord(x, y));
+
                 if (c.Walkable)
                     cells.Add(c);
             }
@@ -1375,6 +1240,25 @@ public class Entity : MonoBehaviour
         }
 
         return closest;
+    }
+
+    void CacheVariables()
+    {
+        stats = GetComponent<Stats>();
+        body = GetComponent<Body>();
+        inventory = GetComponent<Inventory>();
+        skills = GetComponent<EntitySkills>();
+        body.entity = this;
+        inventory.entity = this;
+        stats.entity = this;
+        stats.Init();
+        inventory.Init();
+        fighter = new CombatComponent(this);
+
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (!isPlayer)
+            GetComponent<DialogueController>().SetupDialogueOptions();
     }
 
     //Only used for the player's character to be transfered to a writeable string.
@@ -1417,13 +1301,13 @@ public class Entity : MonoBehaviour
         List<SItem> handItems = new List<SItem>();
         for (int i = 0; i < body.Hands.Count; i++)
         {
-            handItems.Add(body.Hands[i].equippedItem.ToSimpleItem());
+            handItems.Add(body.Hands[i].EquippedItem.ToSimpleItem());
         }
 
         PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, gameObject.name, Manager.profName, stats.MyLevel, myStats,
             World.tileMap.WorldPosition, myPos, World.tileMap.currentElevation, traits, stats.proficiencies.GetProfs(),
-            bodyParts, inventory.gold, items, handItems, inventory.firearm.ToSimpleItem(), sskills, stats.Attributes["Charisma"], stats.Hunger, quests,
-            World.turnManager.currentWeather, ObjectManager.playerJournal.AllFlags(), inventory.baseWeapon, World.HumanCorpsesEaten);
+            bodyParts, inventory.gold, items, handItems, inventory.firearm.ToSimpleItem(), sskills, stats.Attributes["Charisma"], quests,
+            World.turnManager.currentWeather, ObjectManager.playerJournal.AllFlags(), inventory.baseWeapon);
 
         return me;
     }

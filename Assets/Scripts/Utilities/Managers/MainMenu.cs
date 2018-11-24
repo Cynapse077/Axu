@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using LitJson;
+using System.Threading;
 
 public class MainMenu : MonoBehaviour {
 
@@ -18,7 +19,7 @@ public class MainMenu : MonoBehaviour {
 	bool canLoad = true;
 	SoundManager soundManager;
 	bool canUseInput = false;
-	bool showOptions = false;
+	readonly bool showOptions = false;
 	MainMenuPanel mmp;
 
 	void Start() {
@@ -48,9 +49,7 @@ public class MainMenu : MonoBehaviour {
 			currentSelected = 0;
 
 		ReadSettings();
-		FillDataLists();
-
-		canUseInput = true;
+        FillDataLists();
 	}
 
 	void FillDataLists() {
@@ -61,14 +60,16 @@ public class MainMenu : MonoBehaviour {
 
 		SpriteManager.Init();
 		LuaManager.LoadScripts();
-		NameGenerator.FillSylList();
+		NameGenerator.FillSylList(Application.streamingAssetsPath);
 		SeedManager.InitializeSeeds();
 		ItemList.CreateItems();
 		SkillList.FillList();
 		FactionList.InitializeFactionList();
 		EntityList.FillListFromData();
 		Tile.InitializeTileDictionary();
-	}
+
+        canUseInput = true;
+    }
 
 	bool UpPressed() {
 		return(GameSettings.Keybindings.GetKey("North") || Input.GetKeyDown(KeyCode.UpArrow));
@@ -173,7 +174,7 @@ public class MainMenu : MonoBehaviour {
 			JsonData dat = JsonMapper.ToObject(gData);
 
 			if (dat.ContainsKey("World")) {
-				Manager.worldMapSize = new Coord((int)dat["World"]["Size"][0], (int)dat["World"]["Size"][1]);
+				Manager.worldMapSize = new Coord(200, 200);
 				WorldMap.BiomePath = dat["World"]["Tileset"].ToString();
                 WorldMap.LandmarkPath = dat["World"]["Location Sprites"].ToString();
                 WorldMap_Data.ZonePath = dat["World"]["Locations"].ToString();
@@ -181,7 +182,9 @@ public class MainMenu : MonoBehaviour {
 
 			if (dat.ContainsKey("Local")) {
 				Manager.localMapSize = new Coord((int)dat["Local"]["Size"][0], (int)dat["Local"]["Size"][1]);
-				TileMap.imagePath = dat["Local"]["Tileset"].ToString();
+                Manager.localMapSize.x = Mathf.Clamp(Manager.localMapSize.x, 15, 100);
+                Manager.localMapSize.y = Mathf.Clamp(Manager.localMapSize.y, 15, 100);
+                TileMap.imagePath = dat["Local"]["Tileset"].ToString();
 				Manager.localStartPos = new Coord((int)dat["Local"]["Start Position"][0], (int)dat["Local"]["Start Position"][1] - Manager.localMapSize.y);
 			}
 
@@ -207,5 +210,7 @@ public class MainMenu : MonoBehaviour {
 				ItemList.liqDataPath = dat["Data"]["Liquids"].ToString();
 			}
 		}
+
+        Tile.filePath = Application.streamingAssetsPath + "/Data/Maps/LocalTiles.json";
 	}
 }

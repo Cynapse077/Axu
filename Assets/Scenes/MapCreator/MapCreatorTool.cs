@@ -1,19 +1,8 @@
 ﻿using UnityEngine;
-using System;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.IO;
 using LitJson;
-
-
-/// ---------
-/// TODO: 
-///     - Add NPC placement. (Static and non-static)
-///     - Button to toggle random spawns. Will need a bool in TileMap_Data to check. Can be set to map's friendly variable initially.
-///     - Spawn groups.
-///     - Dropdown set to underground area. Maybe replace with string, since it's much easier.
-///     - Move objects and NPCs.
-/// ----------
 
 public class MapCreatorTool : MonoBehaviour
 {
@@ -44,6 +33,9 @@ public class MapCreatorTool : MonoBehaviour
     public RectTransform Tooltip;
     public Sprite empty;
     [HideInInspector] public Sprite[] objectSprites;
+    [HideInInspector] public List<NPCSpriteHolder> npcSprites;
+
+    public Transform mapAnchor;
 
     List<ChangeHolder> changes;
     List<MapCreator_Screen> savedMaps;
@@ -94,15 +86,28 @@ public class MapCreatorTool : MonoBehaviour
             objectSprites[i] = SpriteManager.GetObjectSprite(ItemList.mapObjectBlueprints[i].spriteID);
 
             //Clip image to bottom left
-            if (objectSprites[i].texture.width > 16)
-                objectSprites[i] = Sprite.Create(objectSprites[i].texture, new Rect(0, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
-        }
+            if (objectSprites[i].texture.width > 20)
+                objectSprites[i] = Sprite.Create(objectSprites[i].texture, new Rect(96, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
 
-        for (int i = 0; i < objectSprites.Length; i++)
-        {
             GameObject g = Instantiate(buttonPrefab, objectAnchor);
             g.GetComponent<MapCreator_SideButton>().Init(this, i, MapCreator_SideButton.MC_ButtonType.Object);
         }
+
+        //Setup NPC Sprites
+        npcSprites = new List<NPCSpriteHolder>();
+        int n = 0;
+
+        foreach (NPC_Blueprint bp in EntityList.npcs)
+        {
+            Sprite s = SpriteManager.GetNPCSprite(bp.spriteIDs[0]);
+            npcSprites.Add(new NPCSpriteHolder(bp.id, n, s));
+
+            GameObject g = Instantiate(buttonPrefab, npcAnchor);
+            g.GetComponent<MapCreator_SideButton>().Init(this, n, MapCreator_SideButton.MC_ButtonType.NPC);
+
+            n++;
+        }
+
     }
 
     void SetupTiles()
@@ -135,16 +140,15 @@ public class MapCreatorTool : MonoBehaviour
             g.GetComponent<MapCreator_SideButton>().Init(this, Tile.tiles[s].ID, MapCreator_SideButton.MC_ButtonType.Tile);
         }
 
+        GridLayoutGroup glg = mapAnchor.GetComponent<GridLayoutGroup>();
+        glg.constraintCount = mapSize.y;
+        glg.cellSize = new Vector2(mapAnchor.GetComponent<RectTransform>().sizeDelta.x / mapSize.x - 1, mapAnchor.GetComponent<RectTransform>().sizeDelta.x / mapSize.x - 1);
+
         for (int x = 0; x < mapSize.x; x++)
         {
             for (int y = mapSize.y - 1; y >= 0; y--)
             {
-                float xPos = 10 + x * tileSize, yPos = 10 + y * tileSize;
-                GameObject g = Instantiate(tilePrefab, new Vector3(xPos, yPos, 0), Quaternion.identity);
-                g.transform.SetParent(GameObject.Find("All Tiles").transform);
-
-                g.GetComponent<RectTransform>().sizeDelta = new Vector2(tileSize + 0.01f, tileSize + 0.01f);
-
+                GameObject g = Instantiate(tilePrefab, mapAnchor);
                 g.name = string.Format("({0}, {1})", x, y);
                 cells[x, y] = g.GetComponent<MapCreator_Cell>();
                 cells[x, y].pos = new Coord(x, y);
@@ -176,7 +180,22 @@ public class MapCreatorTool : MonoBehaviour
 
         foreach (Change c in holder.changes)
         {
-            cells[c.pos.x, c.pos.y].SetTile(Sprites[c.previousID], c.previousID);
+            switch (c.type)
+            {
+                case MC_Selection_Type.Fill:
+                case MC_Selection_Type.Paint:
+                    cells[c.pos.x, c.pos.y].SetTile(Sprites[c.previousID], c.previousID);
+                    break;
+
+                case MC_Selection_Type.Place_NPC:
+                    cells[c.pos.x, c.pos.y].SetNPCSprite(c.previousID);
+                    break;
+
+                case MC_Selection_Type.Place_Object:
+                    cells[c.pos.x, c.pos.y].SetObjectSprite(c.previousID);
+                    AutotileObjects(c.pos.x, c.pos.y, true);
+                    break;
+            }
         }
 
         if (holder.previousPos != null)
@@ -202,7 +221,7 @@ public class MapCreatorTool : MonoBehaviour
 
             if (cell.tileID == tileToReplace)
             {
-                holder.changes.Add(new Change(cell.pos, cell.tileID));
+                holder.changes.Add(new Change(cell.pos, cell.tileID, selectType));
                 cell.SetTile(Sprites[CurrentTile], CurrentTile);
 
                 if (cell.pos.x < mapSize.x - 1)
@@ -228,26 +247,31 @@ public class MapCreatorTool : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            int x0 = (lastSelected.x >= currentMouseOver.x) ? currentMouseOver.x : lastSelected.x;
-            int y0 = (lastSelected.y >= currentMouseOver.y) ? currentMouseOver.y : lastSelected.y;
+            BoxSelect();
+        }
+    }
 
-            int x1 = (lastSelected.x >= currentMouseOver.x) ? lastSelected.x : currentMouseOver.x;
-            int y1 = (lastSelected.y >= currentMouseOver.y) ? lastSelected.y : currentMouseOver.y;
+    void BoxSelect()
+    {
+        int x0 = (lastSelected.x >= currentMouseOver.x) ? currentMouseOver.x : lastSelected.x;
+        int y0 = (lastSelected.y >= currentMouseOver.y) ? currentMouseOver.y : lastSelected.y;
 
-            for (int x = 0; x < mapSize.x; x++)
+        int x1 = (lastSelected.x >= currentMouseOver.x) ? lastSelected.x : currentMouseOver.x;
+        int y1 = (lastSelected.y >= currentMouseOver.y) ? lastSelected.y : currentMouseOver.y;
+
+        for (int x = 0; x < mapSize.x; x++)
+        {
+            for (int y = 0; y < mapSize.y; y++)
             {
-                for (int y = 0; y < mapSize.y; y++)
-                {
-                    cells[x, y].GetComponent<Image>().color = Color.white;
-                }
+                cells[x, y].image.color = Color.white;
             }
+        }
 
-            for (int x = x0; x <= x1; x++)
+        for (int x = x0; x <= x1; x++)
+        {
+            for (int y = y0; y <= y1; y++)
             {
-                for (int y = y0; y <= y1; y++)
-                {
-                    cells[x, y].GetComponent<Image>().color = Color.yellow;
-                }
+                cells[x, y].image.color = Color.yellow;
             }
         }
     }
@@ -259,28 +283,50 @@ public class MapCreatorTool : MonoBehaviour
             for (int y = 0; y < mapSize.y; y++)
             {
                 cells[x, y].OnPress(true, true);
-                cells[x, y].EmptySprite();
+                cells[x, y].EmptySprite(MC_Selection_Type.Paint);
             }
         }
     }
 
-    public void Changed(int x, int y, bool skipAutoTile = false)
+    public void TileChanged(int x, int y, bool skipAutoTile = false)
+    {
+        lastSelected = new Coord(x, y);
+
+        if (GetID() != cells[x, y].tileID)
+        {
+            ChangeHolder holder = new ChangeHolder(new List<Change>(), lastSelected);
+            holder.changes.Add(new Change(new Coord(x, y), cells[x, y].tileID, MC_Selection_Type.Paint));
+            changes.Add(holder);
+
+            cells[x, y].SetTile(GetSprite(), GetID());
+
+            if (!skipAutoTile)
+                Autotile(x, y, 2, 2);
+        }
+    }
+
+    public void ObjectChanged(int x, int y)
     {
         lastSelected = new Coord(x, y);
 
         ChangeHolder holder = new ChangeHolder(new List<Change>(), lastSelected);
-        holder.changes.Add(new Change(new Coord(x, y), cells[x, y].tileID));
+        holder.changes.Add(new Change(new Coord(x, y), cells[x, y].objectID, MC_Selection_Type.Place_Object));
         changes.Add(holder);
+    }
 
-        cells[x, y].SetTile(GetSprite(), GetID());
+    public void NPCChanged(int x, int y)
+    {
+        lastSelected = new Coord(x, y);
 
-        if (!skipAutoTile)
-            Autotile(x, y, 1, 1);
+        ChangeHolder holder = new ChangeHolder(new List<Change>(), lastSelected);
+        holder.changes.Add(new Change(new Coord(x, y), cells[x, y].npcID, MC_Selection_Type.Place_NPC));
+        changes.Add(holder);
     }
 
     public void Box(Coord endPos)
     {
         ChangeHolder holder = new ChangeHolder(new List<Change>(), lastSelected);
+
         int x0 = (lastSelected.x >= endPos.x) ? endPos.x : lastSelected.x;
         int y0 = (lastSelected.y >= endPos.y) ? endPos.y : lastSelected.y;
 
@@ -291,8 +337,22 @@ public class MapCreatorTool : MonoBehaviour
         {
             for (int y = y0; y <= y1; y++)
             {
-                holder.changes.Add(new Change(new Coord(x, y), cells[x, y].tileID));
-                cells[x, y].SetTile(Sprites[CurrentTile], CurrentTile);
+                switch (selectType)
+                {
+                    case MC_Selection_Type.Paint:
+                        holder.changes.Add(new Change(new Coord(x, y), cells[x, y].tileID, selectType));
+                        cells[x, y].SetTile(Sprites[CurrentTile], CurrentTile);
+                        break;
+                    case MC_Selection_Type.Place_NPC:
+                        holder.changes.Add(new Change(new Coord(x, y), cells[x, y].npcID, selectType));
+                        cells[x, y].SetNPCSprite(CurrentTile);
+                        break;
+                    case MC_Selection_Type.Place_Object:
+                        holder.changes.Add(new Change(new Coord(x, y), cells[x, y].objectID, selectType));
+                        cells[x, y].SetObjectSprite(CurrentTile);
+                        AutotileObjects(x, y, true);
+                        break;
+                }
             }
         }
 
@@ -306,13 +366,65 @@ public class MapCreatorTool : MonoBehaviour
         return Tile.GetByID(cells[x, y].tileID);
     }
 
+    public void AutotileObjects(int px, int py, bool initial)
+    {
+        if (cells[px, py].objectID > 0 && ItemList.mapObjectBlueprints[cells[px, py].objectID].autotile)
+        {
+            int xOffset = BitwiseNeighbors(px, py, cells[px, py].objectID) * 16;
+            Texture2D t = SpriteManager.GetObjectSprite(ItemList.mapObjectBlueprints[cells[px, py].objectID].spriteID).texture;
+            cells[px, py].mapObject.sprite = Sprite.Create(t, new Rect(xOffset, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+        }
+
+        if (initial)
+        {
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    if (x == 0 && y == 0 || Mathf.Abs(x) + Mathf.Abs(y) > 1)
+                        continue;
+
+                    ObjectAutotile(px + x, py + y);
+                }
+            }
+        }
+    }
+
+    void ObjectAutotile(int x, int y)
+    {
+        if (World.OutOfLocalBounds(x, y))
+            return;
+
+        AutotileObjects(x, y, false);
+    }
+
+    int BitwiseNeighbors(int x, int y, int objID)
+    {
+        int tIndex = 0;
+
+        if (NeighborAt(x, y + 1, objID)) tIndex++;
+        if (NeighborAt(x - 1, y, objID)) tIndex += 2;
+        if (NeighborAt(x + 1, y, objID)) tIndex += 4;
+        if (NeighborAt(x, y - 1, objID)) tIndex += 8;
+
+        return tIndex;
+    }
+
+    bool NeighborAt(int x, int y, int objID)
+    {
+        if (World.OutOfLocalBounds(x, y))
+            return false;
+
+        return cells[x, y].objectID == objID;
+    }
+
     void Autotile(int cx, int cy, int width, int height)
     {
         for (int x = cx - width; x <= cx + width; x++)
         {
             for (int y = cy - width; y <= cy + width; y++)
             {
-                if (x == cx && y == cy || x < 0 || y < 0 || x >= mapSize.x || y >= mapSize.y || MapData(x, y) == null)
+                if (x < 0 || y < 0 || x >= mapSize.x || y >= mapSize.y || MapData(x, y) == null)
                     continue;
 
                 Tile_Data tile = MapData(x, y);
@@ -332,6 +444,8 @@ public class MapCreatorTool : MonoBehaviour
 
                     if (tile == Tile.tiles["Volcano_Wall"])
                         tIndex = 13;
+                    if (tile == Tile.tiles["Ice_Wall"])
+                        tIndex = 15;
 
                     BitwiseAutotile(x, y, tIndex, (z => Tile.isMountain(z)), true);
 
@@ -342,36 +456,36 @@ public class MapCreatorTool : MonoBehaviour
                     BitwiseAutotile(x, y, tIndex, (z => z == Tile.tiles["Lava"].ID), true);
 
                 }
-                else if (tile.HasTag("Wall") && MapData(x, y) != Tile.tiles["Door"])
+                else if (tile.HasTag("Wall"))
                 {
                     int tIndex = 11;
                     bool eightWay = false;
 
-                    if (Tile.IsInTag(tile.ID, "Construct_Ensis"))
+                    if (tile.HasTag("Construct_Ensis"))
                     {
                         tIndex = 12;
                         eightWay = true;
                     }
-                    else if (Tile.IsInTag(tile.ID, "Construct_Prison"))
+                    else if (tile.HasTag("Construct Prison"))
                     {
                         tIndex = 18;
                     }
-                    else if (Tile.IsInTag(tile.ID, "Construct_Magna"))
+                    else if (tile.HasTag("Construct_Magna"))
                     {
                         tIndex = 19;
                         eightWay = true;
                     }
-                    else if (Tile.IsInTag(tile.ID, "Construct_Facility"))
+                    else if (tile.HasTag("Construct_Facility"))
                     {
                         tIndex = 20;
                     }
-                    else if (Tile.IsInTag(tile.ID, "Construct_Kin"))
+                    else if (tile.HasTag("Construct_Kin"))
                     {
                         tIndex = 22;
                         eightWay = true;
                     }
 
-                    BitwiseAutotile(x, y, tIndex, (z => Tile.GetByID(z) != null && Tile.GetByID(z).HasTag("Wall") && !Tile.isMountain(z)), eightWay);
+                    BitwiseAutotile(x, y, tIndex, (z => Tile.GetByID(z).HasTag("Wall") && !Tile.isMountain(z)), eightWay);
                 }
                 else if (tile == Tile.tiles["Dream_Floor"])
                 {
@@ -427,7 +541,7 @@ public class MapCreatorTool : MonoBehaviour
                 sum = 25;
         }
 
-        cells[x, y].SetTile(tsm.tilesets[tIndex].Autotile[sum], cells[x, y].tileID);
+        cells[x, y].SetTile(tsm.GetTileSet(tIndex).Autotile[sum], cells[x, y].tileID);
         return sum;
     }
 
@@ -451,6 +565,11 @@ public class MapCreatorTool : MonoBehaviour
         selectType = MC_Selection_Type.Paint;
     }
 
+    public void SelectTool()
+    {
+        selectType = MC_Selection_Type.Select;
+    }
+
     public void SetCurrentTileID(int i)
     {
         CurrentTile = i;
@@ -459,6 +578,8 @@ public class MapCreatorTool : MonoBehaviour
             currentSelectedImage.sprite = Sprites[CurrentTile];
         else if (selectType == MC_Selection_Type.Place_Object)
             currentSelectedImage.sprite = objectSprites[CurrentTile];
+        else if (selectType == MC_Selection_Type.Place_NPC)
+            currentSelectedImage.sprite = npcSprites[CurrentTile].sprite;
     }
 
     public void SaveMap()
@@ -484,13 +605,18 @@ public class MapCreatorTool : MonoBehaviour
                     string t = ItemList.mapObjectBlueprints[cells[x, y].objectID].objectType;
                     sc.objects.Add(new MapCreator_Object(t, new Coord(x, y)));
                 }
+                if (cells[x, y].npcID >= 0)
+                {
+                    string t = EntityList.npcs[cells[x, y].npcID].id;
+                    sc.npcs.Add(new MapCreator_Object(t, new Coord(x, y)));
+                }
             }
         }
 
         sc.IDs = ids;
 
         JsonData mapJson = JsonMapper.ToJson(sc);
-        string path = (Application.isEditor) ? (Application.streamingAssetsPath + TileMap_Data.defaultMapPath + "/" + MapName + ".map") : (Application.persistentDataPath + "/Maps/" + MapName + ".map");
+        string path = Application.streamingAssetsPath + TileMap_Data.defaultMapPath + "/" + MapName + ".map";
 
         File.WriteAllText(path, mapJson.ToString());
         mapNameTitle.text = mapNameInput.text + ".map";
@@ -517,32 +643,16 @@ public class MapCreatorTool : MonoBehaviour
         LoadMenu.SetActive(true);
 
         savedMaps = new List<MapCreator_Screen>();
-
-        for (int i = 0; i < loadButtonAnchor.childCount; i++)
-        {
-            Destroy(loadButtonAnchor.GetChild(i).gameObject);
-        }
+        loadButtonAnchor.DespawnChildren();
 
         string modPath = (Application.streamingAssetsPath + TileMap_Data.defaultMapPath);
         string[] ss = Directory.GetFiles(modPath, "*.map", SearchOption.AllDirectories);
 
         GetDataFromDirectory(ss);
 
-        if (Directory.Exists(Application.persistentDataPath + "/Maps"))
-        {
-            modPath = (Application.persistentDataPath + "/Maps");
-            ss = Directory.GetFiles(modPath, "*.map", SearchOption.AllDirectories);
-        }
-        else
-        {
-            Directory.CreateDirectory(Application.persistentDataPath + "/Maps");
-        }
-
-        GetDataFromDirectory(ss);
-
         foreach (MapCreator_Screen m in savedMaps)
         {
-            GameObject button = Instantiate(loadButtonPrefab, loadButtonAnchor);
+            GameObject button = SimplePool.Spawn(loadButtonPrefab, loadButtonAnchor);
             button.GetComponentInChildren<Text>().text = "> " + m.Name + ".map";
             string mapInfo = string.Format(" File: {0}\n\n Location ID: {1}\n\n Elevation: {2}", m.Name, m.locationID, m.elev.ToString());
             button.GetComponent<MapCreator_LoadButton>().Init(this, mapInfo);
@@ -582,7 +692,26 @@ public class MapCreatorTool : MonoBehaviour
                 }
             }
 
+            if (d.ContainsKey("npcs"))
+            {
+                for (int j = 0; j < d["npcs"].Count; j++)
+                {
+                    string n = d["npcs"][j]["Name"].ToString();
+                    Coord p = new Coord((int)d["npcs"][j]["Pos"][0], (int)d["npcs"][j]["Pos"][1]);
+                    MapCreator_Object mco = new MapCreator_Object(n, p);
+                    sc.npcs.Add(mco);
+                }
+            }
+
             savedMaps.Add(sc);
+
+            /*SAVE ALL MAPS BACK TO DATA
+             * 
+            JsonData mapJson = JsonMapper.ToJson(sc);
+            string path = Application.streamingAssetsPath + TileMap_Data.defaultMapPath + "/" + sc.Name + ".map";
+            File.WriteAllText(path, mapJson.ToString()); 
+            */
+            
         }
     }
 
@@ -592,7 +721,6 @@ public class MapCreatorTool : MonoBehaviour
             changes.Clear();
 
         CurrentTile = 32;
-        SetPlace(0);
         FillAllWithCurrent();
         CancelSaveMenu();
 
@@ -614,7 +742,7 @@ public class MapCreatorTool : MonoBehaviour
     public void DeleteMap()
     {
         int m = mapToDeleteIndex;
-        string modPath = (Application.streamingAssetsPath + TileMap_Data.defaultMapPath + "/" + savedMaps[m].Name + ".map");
+        string modPath = (TileMap_Data.defaultMapPath + "/" + savedMaps[m].Name + ".map");
 
         if (!File.Exists(modPath))
             modPath = (Application.persistentDataPath + "/Maps/" + savedMaps[m].Name + ".map");
@@ -641,7 +769,7 @@ public class MapCreatorTool : MonoBehaviour
 
                 int index = screen.IDs[x * mapSize.y + y];
                 cells[x, y].SetTile(Sprites[index], index);
-                cells[x, y].EmptySprite();
+                cells[x, y].EmptySprite(MC_Selection_Type.Paint);
             }
         }
 
@@ -649,6 +777,13 @@ public class MapCreatorTool : MonoBehaviour
         {
             MapCreator_Object mco = savedMaps[m].objects[i];
             cells[mco.Pos.x, mco.Pos.y].SetObject(mco.Name);
+            AutotileObjects(mco.Pos.x, mco.Pos.y, true);
+        }
+
+        for (int i = 0; i < savedMaps[m].npcs.Count; i++)
+        {
+            MapCreator_Object mco = savedMaps[m].npcs[i];
+            cells[mco.Pos.x, mco.Pos.y].SetNPC(mco.Name);
         }
 
         SaveMenuActive();
@@ -662,7 +797,6 @@ public class MapCreatorTool : MonoBehaviour
         elevationSelector.value = (-screen.elev);
 
         CancelSaveMenu();
-        SetPlace(0);
 
         for (int x = 0; x < mapSize.x; x++)
         {
@@ -688,6 +822,7 @@ public class MapCreatorTool : MonoBehaviour
             {
                 Undo();
             }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (SaveMenu.activeSelf)
@@ -702,11 +837,11 @@ public class MapCreatorTool : MonoBehaviour
                 {
                     for (int y = 0; y < mapSize.y; y++)
                     {
-                        cells[x, y].GetComponent<Image>().color = Color.white;
+                        cells[x, y].image.color = Color.white;
                     }
                 }
 
-                cells[currentMouseOver.x, currentMouseOver.y].GetComponent<Image>().color = Color.magenta;
+                cells[currentMouseOver.x, currentMouseOver.y].image.color = Color.magenta;
             }
         }
     }
@@ -723,7 +858,6 @@ public class MapCreatorTool : MonoBehaviour
             selectType = MC_Selection_Type.Place_Object;
         else if (id == 2)
             selectType = MC_Selection_Type.Place_NPC;
-
     }
 
     public void OpenHelpMenu()
@@ -752,28 +886,31 @@ public class MapCreatorTool : MonoBehaviour
 
     public enum MC_Selection_Type
     {
-        Paint, Fill, Place_Object, Place_NPC, Save
+        Paint, Fill, Place_Object, Place_NPC, Save, Select
     }
 
-    public class MapCreator_Screen
+    struct MapCreator_Screen
     {
-        public string Name;
+        public string Name, locationID;
         public int[] IDs;
         public List<MapCreator_Object> objects;
-        public int elev;
-        public string locationID;
+        public List<MapCreator_Object> npcs;
+        public int elev, width, height;
 
         public MapCreator_Screen(string name, int e, Coord size, string land)
         {
             Name = name;
             IDs = new int[size.x * size.y];
             objects = new List<MapCreator_Object>();
+            npcs = new List<MapCreator_Object>();
             elev = e;
             locationID = land;
+            width = size.x;
+            height = size.y;
         }
     }
 
-    public class MapCreator_Object
+    struct MapCreator_Object
     {
         public string Name;
         public Coord Pos;
@@ -782,6 +919,20 @@ public class MapCreatorTool : MonoBehaviour
         {
             Name = n;
             Pos = p;
+        }
+    }
+
+    struct Change
+    {
+        public Coord pos;
+        public int previousID;
+        public MC_Selection_Type type;
+
+        public Change(Coord p, int pID, MC_Selection_Type selT)
+        {
+            pos = p;
+            previousID = pID;
+            type = selT;
         }
     }
 
@@ -802,15 +953,17 @@ public class MapCreatorTool : MonoBehaviour
         }
     }
 
-    class Change
+    public struct NPCSpriteHolder
     {
-        public Coord pos;
-        public int previousID;
+        public string npcID;
+        public int id;
+        public Sprite sprite;
 
-        public Change(Coord p, int pID)
+        public NPCSpriteHolder(string _nid, int _id, Sprite _sprite)
         {
-            pos = p;
-            previousID = pID;
+            npcID = _nid;
+            id = _id;
+            sprite = _sprite;
         }
     }
 }

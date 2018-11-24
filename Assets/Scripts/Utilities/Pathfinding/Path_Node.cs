@@ -1,8 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿
+namespace Pathfinding
+{
+    public class Path_Node
+    {
 
-public class Path_Node {
-
-	public Path_TileData data;
-	public Path_Edge[] edges;
+        public Path_TileData data;
+        public Path_Edge[] edges;
+    }
 }

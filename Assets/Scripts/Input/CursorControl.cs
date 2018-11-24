@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
-public class CursorControl : MonoBehaviour {
+public class CursorControl : MonoBehaviour
+{
 
     public GameObject explosive;
     public GameObject pathObject;
@@ -24,44 +25,53 @@ public class CursorControl : MonoBehaviour {
 
     [HideInInspector] Skill activeSkill;
     List<GameObject> lineObjects = new List<GameObject>();
-	int _myPosX, _myPosY;
-	ObjectManager objectManager;
-	SpriteRenderer spriteRenderer;
-	CameraControl camControl;
+    int _myPosX, _myPosY;
+    ObjectManager objectManager;
+    SpriteRenderer spriteRenderer;
+    CameraControl camControl;
 
     List<Entity> allTargets;
     public int targetIndex;
 
-	void OnAwake() {
-		camControl = Camera.main.GetComponent<CameraControl>();
-	}
+    void OnAwake()
+    {
+        camControl = Camera.main.GetComponent<CameraControl>();
+    }
 
-    public int myPosX {
-        get { 
-			return _myPosX;
+    public int myPosX
+    {
+        get
+        {
+            return _myPosX;
         }
-        protected set {
+        protected set
+        {
             _myPosX = value;
             _myPosX = Mathf.Clamp(_myPosX, 0, Manager.localMapSize.x - 1);
             OnPositionChange();
         }
     }
-    public int myPosY {
-        get {
+    public int myPosY
+    {
+        get
+        {
             return _myPosY;
         }
-        protected set {
+        protected set
+        {
             _myPosY = value;
             _myPosY = Mathf.Clamp(_myPosY, 0, Manager.localMapSize.y - 1);
             OnPositionChange();
         }
     }
 
-    public Coord myPos {
+    public Coord myPos
+    {
         get { return new Coord(myPosX, myPosY); }
-    }    
+    }
 
-    void Start() {
+    void Start()
+    {
         Reset();
 
         objectManager = World.objectManager;
@@ -73,7 +83,8 @@ public class CursorControl : MonoBehaviour {
         this.enabled = false;
     }
 
-    void OnEnable() {
+    void OnEnable()
+    {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.enabled = true;
 
@@ -81,82 +92,98 @@ public class CursorControl : MonoBehaviour {
             activeSkill = input.activeSkill;
     }
 
-    void OnDisable() {
+    void OnDisable()
+    {
         Reset();
         ClearUIObjects();
-		World.userInterface.LookTooltipOff();
+        World.userInterface.LookTooltipOff();
 
-		if (spriteRenderer == null)
-        	spriteRenderer = GetComponent<SpriteRenderer>();
-        
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
         spriteRenderer.enabled = false;
-		blinking = false;
-		throwingItem = false;
-		shooting = false;
+        blinking = false;
+        throwingItem = false;
+        shooting = false;
     }
 
-	void Update() {
-		if (GameSettings.UseMouse) {
-			MouseController mouseController = Camera.main.GetComponent<MouseController>();
-			mouseController.CursorIsActive = false;
+    void Update()
+    {
+        if (GameSettings.UseMouse)
+        {
+            MouseController mouseController = Camera.main.GetComponent<MouseController>();
+            mouseController.CursorIsActive = false;
 
-			if (input.cursorMode == PlayerInput.CursorMode.Tile) {
-				myPosX =  (int)mouseController.cursorPosition.x;
-				myPosY = (int)mouseController.cursorPosition.y;
-			}
-		}
+            if (input.cursorMode == PlayerInput.CursorMode.Tile)
+            {
+                myPosX = (int)mouseController.cursorPosition.x;
+                myPosY = (int)mouseController.cursorPosition.y;
+            }
+        }
 
         KeyInput();
 
-		if (playerEntity.inSight(myPos) && Vector2.Distance(playerEntity.transform.position, transform.position) <= range && World.tileMap.WalkableTile(myPosX, myPosY)) {
-			int s = (activeSkill != null && activeSkill.HasTag(AbilityTags.Small_Square) && activeSkill.castType == CastType.Target) ? 2 : 0;
-			spriteRenderer.sprite = sprites[s];
-			canSee = true;
-        } else {
+        if (playerEntity.inSight(myPos) && Vector2.Distance(playerEntity.transform.position, transform.position) <= range && World.tileMap.WalkableTile(myPosX, myPosY))
+        {
+            int s = (activeSkill != null && activeSkill.HasTag(AbilityTags.Small_Square) && activeSkill.castType == CastType.Target) ? 2 : 0;
+            spriteRenderer.sprite = sprites[s];
+            canSee = true;
+        }
+        else
+        {
             spriteRenderer.sprite = sprites[1];
             canSee = false;
         }
 
-		SetRange();
+        SetRange();
         transform.position = new Vector3(myPosX + 0.5f, myPosY + 0.5f - Manager.localMapSize.y, 0);
     }
 
-	void SetRange() {
-		if (!throwingItem && !blinking && !shooting && activeSkill == null) {
-			range = 55;
-		} else {
-			if (throwingItem)
-				range = playerEntity.stats.Strength * 2;
-			else if (blinking)
-				range = playerEntity.sightRange;
-			else if (shooting)
-				range = (playerEntity.stats.FirearmRange * 2);
-			else if (activeSkill != null)
-				range = activeSkill.range;
-			else
-				range = 55;
-		}
-	}
+    void SetRange()
+    {
+        if (!throwingItem && !blinking && !shooting && activeSkill == null)
+        {
+            range = 55;
+        }
+        else
+        {
+            if (throwingItem)
+                range = playerEntity.stats.Strength * 2;
+            else if (blinking)
+                range = playerEntity.sightRange;
+            else if (shooting)
+                range = (playerEntity.stats.FirearmRange * 2);
+            else if (activeSkill != null)
+                range = activeSkill.range;
+            else
+                range = 55;
+        }
+    }
 
-    public void Reset() {
-        if (playerEntity != null) {
+    public void Reset()
+    {
+        if (playerEntity != null)
+        {
             myPosX = playerEntity.posX;
             myPosY = playerEntity.posY;
         }
-            
+
         transform.localPosition = Vector3.zero;
     }
 
-    public void FindClosestEnemy(int offset) {
-		if (playerEntity.fighter.lastTarget != null) {
-			myPosX = playerEntity.fighter.lastTarget.posX;
-			myPosY = playerEntity.fighter.lastTarget.posY;
-			return;
-		}
+    public void FindClosestEnemy(int offset)
+    {
+        if (playerEntity.fighter.lastTarget != null)
+        {
+            myPosX = playerEntity.fighter.lastTarget.posX;
+            myPosY = playerEntity.fighter.lastTarget.posY;
+            return;
+        }
 
         FindInSightTargets();
 
-        if (allTargets.Count == 0) {
+        if (allTargets.Count == 0)
+        {
             Reset();
             targetIndex = 0;
             return;
@@ -171,95 +198,120 @@ public class CursorControl : MonoBehaviour {
 
         Entity closest = allTargets[targetIndex];
 
-        if (closest == null) {
+        if (closest == null)
+        {
             Reset();
-        } else {
+        }
+        else
+        {
             myPosX = closest.posX;
             myPosY = closest.posY;
         }
     }
 
-    void FindInSightTargets() {
+    void FindInSightTargets()
+    {
         allTargets = objectManager.onScreenNPCObjects.FindAll(x => x.AI.isHostile && x.AI.InSightOfPlayer());
     }
 
-    void KeyInput() {
-        if (Input.GetKeyDown(KeyCode.Tab)) {
+    void KeyInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
             FindClosestEnemy(targetIndex + 1);
         }
 
-        if (!canHoldKeys) {
-			if (input.keybindings.GetKey("North")) {
+        if (!canHoldKeys)
+        {
+            if (input.keybindings.GetKey("North"))
+            {
                 myPosY++;
             }
-			else if (input.keybindings.GetKey("East")) {
+            else if (input.keybindings.GetKey("East"))
+            {
                 myPosX++;
             }
-			else if (input.keybindings.GetKey("South")) {
+            else if (input.keybindings.GetKey("South"))
+            {
                 myPosY--;
             }
-			else if (input.keybindings.GetKey("West")) {
+            else if (input.keybindings.GetKey("West"))
+            {
                 myPosX--;
             }
-			else if (input.keybindings.GetKey("NorthEast")) {
+            else if (input.keybindings.GetKey("NorthEast"))
+            {
                 myPosX++;
                 myPosY++;
             }
-			else if (input.keybindings.GetKey("SouthEast")) {
+            else if (input.keybindings.GetKey("SouthEast"))
+            {
                 myPosX++;
                 myPosY--;
             }
-			else if (input.keybindings.GetKey("SouthWest")) {
+            else if (input.keybindings.GetKey("SouthWest"))
+            {
                 myPosX--;
                 myPosY--;
             }
-			else if (input.keybindings.GetKey("NorthWest")) {
+            else if (input.keybindings.GetKey("NorthWest"))
+            {
                 myPosX--;
                 myPosY++;
             }
-		} else if (!waitForRefresh) {
+        }
+        else if (!waitForRefresh)
+        {
             float waitTime = 0.1f;
 
-			if (input.keybindings.GetKey("North", KeyPress.Held)) { //N
+            if (input.keybindings.GetKey("North", KeyPress.Held))
+            { //N
                 myPosY++;
                 waitForRefresh = true;
                 Invoke("Refresh", waitTime);
             }
-			else if (input.keybindings.GetKey("East", KeyPress.Held)) { //E
+            else if (input.keybindings.GetKey("East", KeyPress.Held))
+            { //E
                 myPosX++;
                 waitForRefresh = true;
                 Invoke("Refresh", waitTime);
             }
-			else if (input.keybindings.GetKey("South", KeyPress.Held)) { //S
+            else if (input.keybindings.GetKey("South", KeyPress.Held))
+            { //S
                 myPosY--;
                 waitForRefresh = true;
                 Invoke("Refresh", waitTime);
             }
-			else if (input.keybindings.GetKey("West", KeyPress.Held)) { //W
+            else if (input.keybindings.GetKey("West", KeyPress.Held))
+            { //W
                 myPosX--;
                 waitForRefresh = true;
                 Invoke("Refresh", waitTime);
             }
 
-			else if (input.keybindings.GetKey("NorthEast", KeyPress.Held)) { //NE
+            else if (input.keybindings.GetKey("NorthEast", KeyPress.Held))
+            { //NE
                 myPosX++;
                 myPosY++;
                 waitForRefresh = true;
                 Invoke("Refresh", waitTime);
             }
-			else if (input.keybindings.GetKey("SouthEast", KeyPress.Held)) { //SE
+            else if (input.keybindings.GetKey("SouthEast", KeyPress.Held))
+            { //SE
                 myPosX++;
                 myPosY--;
                 waitForRefresh = true;
                 Invoke("Refresh", waitTime);
             }
-			else if (input.keybindings.GetKey("SouthWest", KeyPress.Held)) { //SW
+            else if (input.keybindings.GetKey("SouthWest", KeyPress.Held))
+            { //SW
                 myPosX--;
                 myPosY--;
                 waitForRefresh = true;
                 Invoke("Refresh", waitTime);
             }
-			else if (input.keybindings.GetKey("NorthWest", KeyPress.Held)) { //NW
+            else if (input.keybindings.GetKey("NorthWest", KeyPress.Held))
+            { //NW
                 myPosX--;
                 myPosY++;
                 waitForRefresh = true;
@@ -269,71 +321,81 @@ public class CursorControl : MonoBehaviour {
 
         CheckTile();
 
-		//Select a tile to affect in various ways 
-		//Firing, throwing, using skill. 
-		if (canSee) {
-			if (input.keybindings.GetKey("Fire") || input.keybindings.GetKey("Enter") || 
-				input.keybindings.GetKey("Interact") || (Input.GetMouseButtonUp(0) && GameSettings.UseMouse)) {
-				SelectTilePressed();
-			}
-		}
+        //Select a tile to affect in various ways 
+        //Firing, throwing, using skill. 
+        if (canSee)
+        {
+            if (input.keybindings.GetKey("Fire") || input.keybindings.GetKey("Enter") ||
+                input.keybindings.GetKey("Interact") || (Input.GetMouseButtonUp(0) && GameSettings.UseMouse))
+            {
+                SelectTilePressed();
+            }
+        }
 
-        if (input.AnyInput()) {
+        if (input.AnyInput())
+        {
             moveTimer += Time.deltaTime;
 
             if (moveTimer >= 0.3f)
                 canHoldKeys = true;
-        } else if (input.AnyInputUp()) {
+        }
+        else if (input.AnyInputUp())
+        {
             canHoldKeys = false;
             moveTimer = 0;
         }
     }
 
-	void SelectTilePressed() {
-		if (!World.tileMap.WalkableTile(myPosX, myPosY))
-			return;
-		
-		if (throwingItem) {
-			GameObject ex = (GameObject)Instantiate(explosive, playerEntity.transform.position, Quaternion.identity);
-			Explosive exScript = ex.GetComponent<Explosive>();
-			exScript.localPosition = new Coord(myPosX, myPosY);
+    void SelectTilePressed()
+    {
+        if (!World.tileMap.WalkableTile(myPosX, myPosY))
+            return;
 
-			playerEntity.fighter.ThrowItem(new Coord(myPosX, myPosY), exScript);
-			input.CheckFacingDirection(myPosX);
+        if (throwingItem)
+        {
+            GameObject ex = (GameObject)Instantiate(explosive, playerEntity.transform.position, Quaternion.identity);
+            Explosive exScript = ex.GetComponent<Explosive>();
+            exScript.localPosition = new Coord(myPosX, myPosY);
 
-			throwingItem = false;
-			input.CancelLook();
-		} else if (activeSkill != null) {
-			if (World.tileMap.GetCellAt(new Coord(_myPosX, _myPosY)).mapObjects.Find(x => x.isDoor_Closed) != null)
-				return;
-			
-			activeSkill.ActivateCoordinateSkill(skills, myPos);
-			input.activeSkill = null;
-			activeSkill = null;
+            playerEntity.fighter.ThrowItem(new Coord(myPosX, myPosY), exScript);
+            input.CheckFacingDirection(myPosX);
 
-			input.CheckFacingDirection(myPosX);
-			input.CancelLook();
-		} else if (!throwingItem) {
-			if (playerEntity.inventory.firearm.HasProp(ItemProperty.Ranged)) {
-				if (myPos == playerEntity.myPos)
-					return;
+            throwingItem = false;
+            input.CancelLook();
+        }
+        else if (activeSkill != null)
+        {
+            if (World.tileMap.GetCellAt(new Coord(_myPosX, _myPosY)).mapObjects.Find(x => x.isDoor_Closed) != null)
+                return;
+
+            activeSkill.ActivateCoordinateSkill(skills, myPos);
+            input.activeSkill = null;
+            activeSkill = null;
+
+            input.CheckFacingDirection(myPosX);
+            input.CancelLook();
+        }
+        else if (!throwingItem)
+        {
+            if (playerEntity.inventory.firearm.HasProp(ItemProperty.Ranged))
+            {
+                if (myPos == playerEntity.myPos)
+                    return;
 
                 Item fa = playerEntity.inventory.firearm;
-
-                string projectileName = "bullet";
-
-                if (fa.HasComponent<CFirearm>()) {
-                    projectileName = fa.GetItemComponent<CFirearm>().ammoID;
-                }
                 
-				playerEntity.ShootAtTile(myPosX, myPosY, ItemList.GetItemByID(projectileName).Name);
-				input.CheckFacingDirection(myPosX);
-				input.CancelLook();
+                playerEntity.ShootAtTile(myPosX, myPosY);
+                input.CheckFacingDirection(myPosX);
+                input.CancelLook();
 
-            //Give commands
-			} else if (World.tileMap.GetCellAt(myPosX, myPosY).entity != null) {
-                if (World.objectManager.NumFollowers() > 0) {
-                    for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++) {
+                //Give commands
+            }
+            else if (World.tileMap.GetCellAt(myPosX, myPosY).entity != null)
+            {
+                if (World.objectManager.NumFollowers() > 0)
+                {
+                    for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
+                    {
                         BaseAI bai = World.objectManager.onScreenNPCObjects[i].AI;
 
                         if (bai.npcBase.HasFlag(NPC_Flags.Follower))
@@ -342,62 +404,71 @@ public class CursorControl : MonoBehaviour {
 
                     CombatLog.SimpleMessage("Message_SetTarget");
                 }
-			}
-		}
-	}
-
-    void OnPositionChange() {
-        ClearUIObjects();
-
-		if (camControl == null && Camera.main != null)
-			camControl = Camera.main.GetComponent<CameraControl>();
-
-		Coord newPos = myPos;
-		Line line = new Line(playerEntity.myPos, newPos);
-		List<Coord> verts = line.GetPoints();
-
-		for (int i = 0; i < verts.Count; i++) {
-			Vector2 pos = new Vector2(verts[i].x, verts[i].y - Manager.localMapSize.y);
-			GameObject g = SimplePool.Spawn(pathObject, pos, Quaternion.identity);
-			lineObjects.Add(g);
-		}
-
-		if (!GameSettings.UseMouse)
-			camControl.SetTargetTransform(transform);
+            }
+        }
     }
 
-    void ClearUIObjects() {
-        for (int i = 0; i < lineObjects.Count; i++) {
+    void OnPositionChange()
+    {
+        ClearUIObjects();
+
+        if (camControl == null && Camera.main != null)
+            camControl = Camera.main.GetComponent<CameraControl>();
+
+        Coord newPos = myPos;
+        Line line = new Line(playerEntity.myPos, newPos);
+        List<Coord> points = line.GetPoints();
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            GameObject g = SimplePool.Spawn(pathObject, new Vector2(points[i].x, points[i].y - Manager.localMapSize.y));
+            lineObjects.Add(g);
+        }
+
+        if (!GameSettings.UseMouse)
+            camControl.SetTargetTransform(transform);
+    }
+
+    void ClearUIObjects()
+    {
+        for (int i = 0; i < lineObjects.Count; i++)
+        {
             SimplePool.Despawn(lineObjects[i].gameObject);
         }
 
         lineObjects.Clear();
     }
 
-    void Refresh() {
+    void Refresh()
+    {
         waitForRefresh = false;
     }
 
-    void CheckTile() {
-		World.userInterface.LookTooltipOff();
+    void CheckTile()
+    {
+        World.userInterface.LookTooltipOff();
         List<Entity> npcs = objectManager.onScreenNPCObjects;
 
-        for (int i = 0; i < npcs.Count; i++) {
+        for (int i = 0; i < npcs.Count; i++)
+        {
             Entity npcEntity = npcs[i];
 
-            if (npcEntity.myPos == myPos && canSee) {
-				World.userInterface.LookToolipOn(transform, npcEntity.AI);
+            if (npcEntity.myPos == myPos && canSee)
+            {
+                World.userInterface.LookToolipOn(transform, npcEntity.AI);
                 return;
             }
         }
 
         List<GameObject> mapobs = objectManager.onScreenMapObjects;
 
-        for (int i = 0; i < mapobs.Count; i++) {
+        for (int i = 0; i < mapobs.Count; i++)
+        {
             MapObjectSprite mos = mapobs[i].GetComponent<MapObjectSprite>();
 
-			if (mos.localPos == myPos && canSee && mos.objectType != "Bloodstain" && mos.objectType != "Bloodstain_Wall") {
-				World.userInterface.LookToolipOn(transform, mos);
+            if (mos.localPos == myPos && canSee && mos.objectType != "Bloodstain" && mos.objectType != "Bloodstain_Wall" && mos.Description != "")
+            {
+                World.userInterface.LookToolipOn(transform, mos);
                 return;
             }
         }

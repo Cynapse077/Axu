@@ -19,7 +19,7 @@ public class Explosive : MonoBehaviour {
 
 	public void DetonateExplosion(HashSet<DamageTypes> dTypes, Entity spawner) {
 		damage = Random.Range(10, 25) * World.BaseDangerLevel;
-		nameOfDamage = LocalizationManager.GetLocalizedContent("Explosion")[0];
+		nameOfDamage = LocalizationManager.GetContent("Explosion");
 		Instantiate(explosion[0],new Vector3(localPosition.x, localPosition.y, 0), Quaternion.identity);
 
 		for (int x = localPosition.x - radius; x <= localPosition.x + radius; x++) {
@@ -29,12 +29,14 @@ public class Explosive : MonoBehaviour {
 					if (!World.tileMap.WalkableTile(x, y))
 						World.tileMap.DigTile(x, y, true);
 				}
-					
-				TileDamage td = new TileDamage(spawner, new Coord(x, y), new HashSet<DamageTypes>() { DamageTypes.Heat });
-				td.damage = damage;
-				td.myName = nameOfDamage;
-				td.crit = false;
-				td.ApplyDamage();
+
+                TileDamage td = new TileDamage(spawner, new Coord(x, y), new HashSet<DamageTypes>() { DamageTypes.Heat })
+                {
+                    damage = damage,
+                    myName = nameOfDamage,
+                    crit = false
+                };
+                td.ApplyDamage();
 			}
 		}
 
@@ -43,15 +45,17 @@ public class Explosive : MonoBehaviour {
 	}
 
 	public void DetonateOneTile(Entity spawner) {
-		nameOfDamage = LocalizationManager.GetLocalizedContent("Projectile")[0];
+		nameOfDamage = LocalizationManager.GetContent("Projectile");
 		int x = localPosition.x, y = localPosition.y;
 		Instantiate(explosion[2],new Vector3(x, y, 0), Quaternion.identity);
 
-		TileDamage td = new TileDamage(spawner, new Coord(x, y), new HashSet<DamageTypes>() { DamageTypes.Blunt });
-		td.damage = damage;
-		td.myName = nameOfDamage;
-		td.crit = false;
-		td.ApplyDamage();
+        TileDamage td = new TileDamage(spawner, new Coord(x, y), new HashSet<DamageTypes>() { DamageTypes.Blunt })
+        {
+            damage = damage,
+            myName = nameOfDamage,
+            crit = false
+        };
+        td.ApplyDamage();
 
 		Destroy(gameObject);
 	}

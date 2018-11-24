@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LitJson;
 
-[System.Serializable]
+[Serializable]
 public class CComponent
 {
     public string ID;
@@ -18,7 +18,7 @@ public class CComponent
         return (CComponent)MemberwiseClone();
     }
 
-    public static object FromJson(JsonData data)
+    public static CComponent FromJson(JsonData data)
     {
         string id = data["ID"].ToString();
         JsonReader reader = new JsonReader(data.ToJson());
@@ -39,13 +39,14 @@ public class CComponent
             case "Coat": return JsonMapper.ToObject<CCoat>(reader);
             case "ModKit": return JsonMapper.ToObject<CModKit>(reader);
             case "ItemLevel": return JsonMapper.ToObject<CItemLevel>(reader);
+            case "Merchant": return JsonMapper.ToObject<CMerchant>(reader);
 
             default: return null;
         }
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class CCharges : CComponent
 {
     public int current;
@@ -192,6 +193,37 @@ public class CCoordinate : CComponent
     {
         string s = (isSet) ? (aNa + " - \n@ " + lPos.ToString()) : LocalizationManager.GetLocalizedContent("IT_NotSet")[0];
         return s;
+    }
+
+    public void Activate(Entity entity)
+    {
+        if (isSet)
+        {
+            entity.ForcePosition(new Coord(lPos.x, lPos.y));
+
+            World.tileMap.worldCoordX = wPos.x;
+            World.tileMap.worldCoordY = wPos.y;
+            World.tileMap.currentElevation = Ele;
+
+            World.tileMap.HardRebuild();
+            World.tileMap.SoftRebuild();
+
+            CombatLog.SimpleMessage("Return_Tele");
+            World.userInterface.CloseWindows();
+            entity.BeamDown();
+        }
+        else
+        {
+            wPos = World.tileMap.WorldPosition;
+            Ele = World.tileMap.currentElevation;
+            aNa = World.tileMap.TileName();
+            lPos = new Coord(entity.posX, entity.posY);
+
+            CombatLog.SimpleMessage("Return_Link");
+            isSet = true;
+        }
+
+        ObjectManager.player.GetComponent<PlayerInput>().CheckMinimap();
     }
 }
 
@@ -489,11 +521,23 @@ public class CItemLevel : CComponent
         if (level < maxLevel)
         {
             double xpPercent = Math.Round(xp / 10.0, 2);
-            return "Level " + level.ToString() + " (" + xpPercent.ToString() + "% xp)";
+            return string.Format("Level {0} ({1}%xp)", level, xpPercent);
         }
         else
         {
             return "Level " + level.ToString() + "(MAX)";
         }
+    }
+}
+
+[Serializable]
+public class CMerchant : CComponent
+{
+    public int rep;
+
+    public CMerchant() { ID = "Merchant"; }
+    public CMerchant(int reputation)
+    {
+        rep = reputation;
     }
 }

@@ -1,64 +1,104 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class AbilityPanel : MonoBehaviour {
+public class AbilityPanel : UIPanel
+{
+    [Header("Prefabs")]
+    public GameObject abilityButton;
+    [Header("Children")]
+    public Transform abilityBase;
+    public Scrollbar scrollBar;
+    public AbilityTooltip tooltip;
 
-	[Header("Prefabs")]
-	public GameObject abilityButton;
-	[Header("Children")]
-	public Transform abilityBase;
-	public Scrollbar scrollBar;
-	public AbilityTooltip tooltip;
+    EntitySkills skills;
 
-	EntitySkills skills;
+    private void Start()
+    {
+        
+    }
 
-	public void Init() {
-		skills = ObjectManager.player.GetComponent<EntitySkills>();
-		UpdateAbilities();
-	}
+    public override void Initialize()
+    {
+        skills = ObjectManager.playerEntity.skills;
+        UpdateAbilities();
+        base.Initialize();
+    }
 
-	void UpdateAbilities() {
-		abilityBase.DestroyChildren();
+    void UpdateAbilities()
+    {
+        abilityBase.DespawnChildren();
+        SelectedMax = 0;
+        SelectedNum = 0;
 
-		for (int i = 0; i < skills.abilities.Count; i++) {
-			GameObject g = (GameObject)Instantiate(abilityButton, abilityBase);
-			g.GetComponent<AbilityButton>().Setup(skills.abilities[i], i);
-			g.GetComponent<Button>().onClick.AddListener(() => { World.userInterface.SelectPressed(g.transform.GetSiblingIndex()); } );
-		}
+        for (int i = 0; i < skills.abilities.Count; i++)
+        {
+            GameObject g = SimplePool.Spawn(abilityButton, abilityBase);
+            g.GetComponent<AbilityButton>().Setup(skills.abilities[i], i);
+            g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex()));
+            SelectedMax++;
+        }
 
-		UpdateTooltip();
-	}
+        if (SelectedMax > 0)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(abilityBase.GetChild(0).gameObject);
+        }
+            
+        UpdateTooltip();
+    }
 
-	public void UpdateTooltip() {
-		if (abilityBase.childCount <= 0) {
-			tooltip.gameObject.SetActive(false);
-			return;
-		}
+    public void UpdateTooltip()
+    {
+        if (SelectedMax > 0)
+        {
+            tooltip.gameObject.SetActive(true);
+            tooltip.UpdateTooltip(skills.abilities[SelectedNum]);
+        }
+        else
+            tooltip.gameObject.SetActive(false);
+    }
 
-		tooltip.gameObject.SetActive(true);
+    public override void Update()
+    {
+        if (initialized)
+        {
+            if (SelectedMax > 0)
+            {
+                
+                if (GameSettings.Keybindings.GetKey("GoUpStairs") && SelectedNum < SelectedMax - 1)
+                {
+                    skills.abilities.Move(SelectedNum, SelectedNum + 1);
+                    SelectedNum++;
+                    UpdateAbilities();
+                }
+                else if (GameSettings.Keybindings.GetKey("GoDownStairs") && SelectedNum > 0)
+                {
+                    skills.abilities.Move(SelectedNum, SelectedNum - 1);
+                    SelectedNum--;
+                    UpdateAbilities();
+                }
+            }
 
-		tooltip.UpdateTooltip(skills.abilities[UserInterface.selectedItemNum]);
-	}
+            base.Update();
+        }
+    }
 
-	void Update() {
-		if (abilityBase.childCount > 0  && abilityBase.childCount > UserInterface.selectedItemNum)
-			EventSystem.current.SetSelectedGameObject(abilityBase.GetChild(UserInterface.selectedItemNum).gameObject);
-		
-		if (skills.abilities.Count > 0) {
-			scrollBar.value = 1f - ((float)UserInterface.selectedItemNum / (float)skills.abilities.Count);
+    public override void ChangeSelectedNum(int newIndex)
+    {
+        if (SelectedMax > 0)
+        {
+            EventSystem.current.SetSelectedGameObject(abilityBase.GetChild(SelectedNum).gameObject);
+            scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
+        }
 
-			if (GameSettings.Keybindings.GetKey("GoUpStairs") && UserInterface.selectedItemNum < skills.abilities.Count - 1) {
-				skills.abilities.Move(UserInterface.selectedItemNum, UserInterface.selectedItemNum + 1);
-				UserInterface.selectedItemNum ++;
-				UpdateAbilities();
-			} else if (GameSettings.Keybindings.GetKey("GoDownStairs") && UserInterface.selectedItemNum > 0) {
-				skills.abilities.Move(UserInterface.selectedItemNum, UserInterface.selectedItemNum - 1);
-				UserInterface.selectedItemNum --;
-				UpdateAbilities();
-			}
-		}
-	}
+        base.ChangeSelectedNum(newIndex);
+        UpdateTooltip();
+    }
+
+    protected override void OnSelect(int index)
+    {
+        base.OnSelect(index);
+        skills.abilities[index].Cast(skills.entity);
+    }
 }

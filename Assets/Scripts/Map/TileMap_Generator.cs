@@ -4,9 +4,9 @@ using System.Collections.Generic;
 public static class TileMap_Generator
 {
 
-    public static Tile_Data[,] Generate(WorldMap.Biome biome)
+    public static Tile_Data[,] Generate(WorldMap.Biome biome, bool hasLandmark)
     {
-        return CreateFromBiome(biome);
+        return CreateFromBiome(biome, hasLandmark);
     }
 
     static Random RNG
@@ -17,66 +17,132 @@ public static class TileMap_Generator
         }
     }
 
-    static Tile_Data[,] CreateFromBiome(WorldMap.Biome b)
+    static Tile_Data[,] CreateFromBiome(WorldMap.Biome b, bool hasLandmark)
     {
         Tile_Data[,] td = new Tile_Data[Manager.localMapSize.x, Manager.localMapSize.y];
-        bool pool = (b == WorldMap.Biome.Swamp || (b == WorldMap.Biome.Forest || b == WorldMap.Biome.Plains) && SeedManager.localRandom.Next(100) < 5);
-        string waterType = (b == WorldMap.Biome.Swamp) ? "Water_Swamp" : "Water";
+
 
         for (int x = 0; x < Manager.localMapSize.x; x++)
         {
             for (int y = 0; y < Manager.localMapSize.y; y++)
             {
-                td[x, y] = (pool && SeedManager.localRandom.Next(100) < 45) ? Tile.tiles[waterType] : TileFromBiome(b);
-
-                if (pool && (x == 0 || y == 0 || x == Manager.localMapSize.x - 1 || y == Manager.localMapSize.y - 1))
-                {
-                    td[x, y] = TileFromBiome(b);
-                }
+                td[x, y] = TileFromBiome(b);
             }
         }
 
-        if (pool)
-        {
-            for (int i = 0; i < 7; i++)
-            {
-                td = CellAutoWater(td, Tile.tiles[waterType]);
-            }
+        if (b == WorldMap.Biome.Plains && SeedManager.localRandom.Next(100) < 5)
+            AdditionalLayer(ref td, b, Tile.tiles["Shore_Sand"], 30, 6);
 
-            for (int i = 0; i < 2; i++)
+        if (b == WorldMap.Biome.Forest && SeedManager.localRandom.Next(100) < 5)
+            AdditionalLayer(ref td, b, Tile.tiles["Plains_Grass_2"], 25, 6);
+
+        if (b == WorldMap.Biome.Swamp || (b == WorldMap.Biome.Forest || b == WorldMap.Biome.Plains) && SeedManager.localRandom.Next(100) < 5)
+        {
+            if (!hasLandmark)
             {
-                RemoveIsolatedWaterTiles(ref td, Tile.tiles[waterType], b);
+                string waterType = (b == WorldMap.Biome.Swamp) ? "Water_Swamp" : "Water";
+                AdditionalLayer(ref td, b, Tile.tiles[waterType], 45, 7);
             }
         }
 
         return td;
     }
 
+    static void AdditionalLayer(ref Tile_Data[,] map, WorldMap.Biome biome, Tile_Data replaceTile, int chance, int iterations)
+    {
+        for (int x = 0; x < Manager.localMapSize.x; x++)
+        {
+            for (int y = 0; y < Manager.localMapSize.y; y++)
+            {
+                if (x == 0 || y == 0 || x == Manager.localMapSize.x - 1 || y == Manager.localMapSize.y - 1)
+                    continue;
+
+                if (SeedManager.localRandom.Next(100) < chance)
+                    map[x, y] = replaceTile;
+            }
+        }
+
+        for (int i = 0; i < iterations; i++)
+        {
+            map = CellAuto(map, replaceTile);
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            RemoveIsolatedWaterTiles(ref map, replaceTile, biome);
+        }
+    }
+
     public static Tile_Data TileFromBiome(WorldMap.Biome t, bool includeTrees = true)
     {
+        int ranNum;
+
         switch (t)
         {
             case WorldMap.Biome.Default:
                 return Tile.tiles["Default"];
+
             case WorldMap.Biome.Ocean:
                 return Tile.tiles["Water"];
+
             case WorldMap.Biome.Mountain:
                 return Tile.tiles["Mountain"];
+
             case WorldMap.Biome.Desert:
-                return Tile.DesertTile();
+                ranNum = RNG.Next(100);
+
+                if (ranNum == 99)
+                    return Tile.tiles["Desert_Cactus"];
+
+                if (ranNum < 3)
+                    return Tile.tiles["Desert_Vines"];
+                else if (ranNum < 5)
+                    return RNG.CoinFlip() ? Tile.tiles["Desert_Sand_3"] : Tile.tiles["Desert_Sand_4"];
+                else if (ranNum < 6)
+                    return Tile.tiles["Desert_Sand_5"];
+
+                return RNG.CoinFlip() ? Tile.tiles["Desert_Sand_1"] : Tile.tiles["Desert_Sand_2"];
+
             case WorldMap.Biome.Swamp:
-                return Tile.SwampTile();
+                ranNum = RNG.Next(55);
+
+                if (ranNum < 1)
+                    return Tile.tiles["Swamp_Frond"];
+                else if (ranNum < 10)
+                    return Tile.tiles["Swamp_Grass_2"];
+                else if (ranNum < 20)
+                    return Tile.tiles["Swamp_Grass_3"];
+                else if (ranNum < 21)
+                    return Tile.tiles["Swamp_Frond_2"];
+                else if (ranNum < 24)
+                    return Tile.tiles["Swamp_Flower"];
+                else
+                    return Tile.tiles["Swamp_Grass_1"];
+
             case WorldMap.Biome.Tundra:
-                return Tile.TundraTile();
+                ranNum = RNG.Next(100);
+
+                if (ranNum > 1)
+                {
+                    if (ranNum == 2)
+                        return Tile.tiles["Snow_2"];
+
+                    return (RNG.Next(100) < 96) ? Tile.tiles["Snow_1"] : Tile.tiles["Snow_3"];
+                }
+                else
+                    return RNG.CoinFlip() ? Tile.tiles["Snow_Tree"] : Tile.tiles["Snow_Grass"];
+
             case WorldMap.Biome.Plains:
                 float r = RNG.Next(100);
 
                 if (SeedManager.localRandom.Next(100) < 2 && includeTrees)
                 {
-                    return Tile.tiles["Plains_Tree_1"];
+                    return (SeedManager.localRandom.Next(100) < 90) ? Tile.tiles["Plains_Tree_1"] : Tile.tiles["Plains_Tree_2"];
                 }
                 else
                 {
+                    if (SeedManager.localRandom.Next(200) < 1)
+                        return Tile.tiles["Plains_Vine"];
+
                     if (r < 5)
                         return Tile.tiles["Plains_Flower"];
                     else if (r < 95)
@@ -84,10 +150,33 @@ public static class TileMap_Generator
                     else
                         return Tile.tiles["Plains_Grass_1"];
                 }
+
             case WorldMap.Biome.Forest:
-                return (RNG.Next(100) < 2 && includeTrees) ? Tile.tiles["Forest_Tree"] : Tile.ForestTile();
+                bool isTree = (RNG.Next(100) < 2 && includeTrees);
+
+                if (isTree)
+                    return (SeedManager.localRandom.Next(100) < 90) ? Tile.tiles["Forest_Tree"] : Tile.tiles["Forest_Tree_Dead"];
+
+                if (SeedManager.localRandom.Next(200) < 1)
+                    return Tile.tiles["Forest_Vine"];
+
+                ranNum = RNG.Next(100);
+
+                if (ranNum < 32)
+                    return Tile.tiles["Forest_Grass_1"];
+                else if (ranNum < 48)
+                    return Tile.tiles["Forest_Grass_2"];
+                else if (ranNum < 53)
+                    return Tile.tiles["Forest_Grass_3"];
+                else if (ranNum < 70)
+                    return Tile.tiles["Forest_Grass_4"];
+                else if (ranNum < 83)
+                    return Tile.tiles["Forest_Grass_5"];
+                else
+                    return Tile.tiles["Forest_Grass_6"];
+
             case WorldMap.Biome.Shore:
-                if (RNG.Next(100) < 5)
+                if (RNG.Next(100) < 8)
                 {
                     if (RNG.Next(1000) == 0)
                         return Tile.tiles["Shore_Star"];
@@ -165,7 +254,7 @@ public static class TileMap_Generator
         return map_data;
     }
 
-    static Tile_Data[,] CellAutoWater(Tile_Data[,] input, Tile_Data water)
+    static Tile_Data[,] CellAuto(Tile_Data[,] input, Tile_Data replace)
     {
         Tile_Data[,] td = new Tile_Data[input.GetLength(0), input.GetLength(1)];
 
@@ -181,12 +270,12 @@ public static class TileMap_Generator
                     {
                         int curX = x + ex, curY = y + ey;
 
-                        if (OutOfBounds(curX, curY) || input[curX, curY] != water)
+                        if (OutOfBounds(curX, curY) || input[curX, curY] != replace)
                             notWaterNeighbors++;
                     }
                 }
 
-                td[x, y] = (notWaterNeighbors >= 4) ? input[x, y] : water;
+                td[x, y] = (notWaterNeighbors >= 4) ? input[x, y] : replace;
             }
         }
 
@@ -207,7 +296,7 @@ public static class TileMap_Generator
                     {
                         for (int ey = -1; ey <= 1; ey++)
                         {
-                            if (ex == 0 && ey == 0 || Math.Abs(ex) + Math.Abs(ey) >= 2)
+                            if (OutOfBounds(x + ex, y + ey) || ex == 0 && ey == 0 || Math.Abs(ex) + Math.Abs(ey) > 1)
                                 continue;
 
                             if (td[x + ex, y + ey] == water)

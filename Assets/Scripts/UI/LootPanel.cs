@@ -36,8 +36,8 @@ public class LootPanel : MonoBehaviour {
 			gameObject.SetActive(false);
 			return;
 		} else {
-			relevantItems = inv.items.FindAll(x => !x.HasProp(ItemProperty.Pool) || x.HasProp(ItemProperty.Pool) && x.GetItemComponent<CLiquidContainer>() != null 
-				&& !x.GetItemComponent<CLiquidContainer>().isFull && x.GetItemComponent<CLiquidContainer>().currentAmount > 0);
+			relevantItems = inv.items.FindAll(x => !x.HasProp(ItemProperty.Pool) || x.HasProp(ItemProperty.Pool) && x.GetCComponent<CLiquidContainer>() != null 
+				&& !x.GetCComponent<CLiquidContainer>().isFull && x.GetCComponent<CLiquidContainer>().currentAmount > 0);
 
 			if (relevantItems.Count <= 0) {
 				World.userInterface.CloseWindows();
@@ -46,10 +46,10 @@ public class LootPanel : MonoBehaviour {
 
 			for (int i = 0; i < relevantItems.Count; i++) {
 				GameObject g = (GameObject)Instantiate(inventoryButton, inventoryBase);
-                Image img = g.transform.Find("Icon").GetComponent<Image>();
-                img.sprite = SwitchSprite(relevantItems[i]);
 
+                g.GetComponent<ItemButton>().icon.sprite = SwitchSprite(relevantItems[i]);
                 g.GetComponentInChildren<Text>().text = relevantItems[i].InvDisplay("");
+
 				Button b = g.GetComponent<Button>();
 				b.onClick.AddListener(() => { SelectPressed(g.transform.GetSiblingIndex()); } );
 				b.onClick.AddListener(() => { World.userInterface.InitializeAllWindows(); } );
@@ -101,8 +101,8 @@ public class LootPanel : MonoBehaviour {
 			inv.gameObject.BroadcastMessage("CheckInventory", SendMessageOptions.DontRequireReceiver);
 
 			Init(inv);
-		} else if (newItem.HasProp(ItemProperty.Pool) && newItem.HasComponent<CLiquidContainer>()) {
-			CLiquidContainer old = relevantItems[index].GetItemComponent<CLiquidContainer>();
+		} else if (newItem.HasProp(ItemProperty.Pool) && newItem.HasCComponent<CLiquidContainer>()) {
+			CLiquidContainer old = relevantItems[index].GetCComponent<CLiquidContainer>();
 
 			if (old.liquid == null)
 				return;

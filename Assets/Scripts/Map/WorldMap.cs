@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Pathfinding;
 
 [RequireComponent(typeof(MeshFilter))]
 [MoonSharp.Interpreter.MoonSharpUserData]
@@ -9,6 +9,7 @@ public class WorldMap : MonoBehaviour
 {
     public static string BiomePath;
     public static string LandmarkPath;
+    public static Coord offset = new Coord(50, -200);
     const int tileResolution = 16;
 
     public GameObject landmarkObject;
@@ -23,13 +24,32 @@ public class WorldMap : MonoBehaviour
     /*void Update() {
         if (Input.GetKeyDown(KeyCode.F2)) {
             string filePath = Application.persistentDataPath + "/Axu Overworld Map.png";
+
             SaveTextureToFile(texture, filePath);
             CombatLog.NewMessage("<color=green>World map screen saved to " + filePath + ".</color>");
         }
     }
 
     void SaveTextureToFile(Texture2D texture, string filename) {
-        File.WriteAllBytes(filename, texture.EncodeToPNG());
+        Texture2D tex = new Texture2D(texture.width, texture.height);
+        tex.SetPixels(texture.GetPixels());
+
+        foreach (KeyValuePair<Coord, GameObject> l in landmarks)
+        {
+            SpriteRenderer sr = l.Value.GetComponent<SpriteRenderer>();
+
+            Color[] cols = sr.sprite.texture.GetPixels((int)sr.sprite.rect.x, (int)sr.sprite.rect.y, (int)sr.sprite.rect.width, (int)sr.sprite.rect.height);
+            Color[] rep = texture.GetPixels(l.Key.x * 16, l.Key.y * 16, 16, 16);
+
+            for (int x = 0; x < rep.Length; x++)
+            {
+                cols[x] = Color.Lerp(rep[x], cols[x], cols[x].a);
+            }
+
+            tex.SetPixels(l.Key.x * 16, l.Key.y * 16, 16, 16, cols);
+        }
+
+        File.WriteAllBytes(filename, tex.EncodeToPNG());
     }*/
 
     public void Init()
@@ -39,10 +59,7 @@ public class WorldMap : MonoBehaviour
         landmarks = new Dictionary<Coord, GameObject>();
         texture = new Texture2D(Manager.worldMapSize.x * tileResolution, Manager.worldMapSize.y * tileResolution);
 
-        LoadImageFromStreamingAssets();
-
-        worldMapData = new WorldMap_Data(Manager.newGame);
-        StartCoroutine("BuildTexture");
+        worldMapData = new WorldMap_Data(Manager.newGame, () => {});
     }
 
     void LoadImageFromStreamingAssets()
@@ -68,8 +85,10 @@ public class WorldMap : MonoBehaviour
         landmarkTiles = newTex;
     }
 
-    IEnumerator BuildTexture()
+    public void BuildTexture()
     {
+        LoadImageFromStreamingAssets();
+
         Color[][] tiles = ChopUpSpriteSheet(terrainTiles);
         lmTiles = ChopUpSpriteSheet(landmarkTiles);
 
@@ -86,11 +105,11 @@ public class WorldMap : MonoBehaviour
                 Color[] p = tiles[tileNum];
 
                 if (mi.biome == Biome.Tundra)
-                    p = tsm.tilesets[2].Autotile[BitwiseOceanAdjacent(x, y)].GetPixels();
+                    p = tsm.GetTileSet("Tundra").Autotile[BitwiseOceanAdjacent(x, y)].GetPixels();
                 else if (mi.biome == Biome.Shore)
-                    p = tsm.tilesets[1].Autotile[BitwiseOceanAdjacent(x, y)].GetPixels();
+                    p = tsm.GetTileSet("Shore").Autotile[BitwiseOceanAdjacent(x, y)].GetPixels();
                 else if (mi.biome == Biome.Desert)
-                    p = tsm.tilesets[0].Autotile[BitwiseOceanAdjacent(x, y)].GetPixels();
+                    p = tsm.GetTileSet("Desert").Autotile[BitwiseOceanAdjacent(x, y)].GetPixels();
 
                 texture.SetPixels(x * tileResolution, y * tileResolution, tileResolution, tileResolution, p);
                 PlaceLandmark(x, y, mi);
@@ -101,7 +120,6 @@ public class WorldMap : MonoBehaviour
         texture.Apply();
 
         GetComponent<Renderer>().material.mainTexture = texture;
-        yield return null;
     }
 
     void PlaceLandmark(int x, int y, MapInfo mi)
@@ -115,7 +133,7 @@ public class WorldMap : MonoBehaviour
 
             if (mi.landmark == "River")
             {
-                sr.sprite = tsm.tilesets[3].Autotile[BitwiseRivers(x, y)];
+                sr.sprite = tsm.GetTileSet("River").Autotile[BitwiseRivers(x, y)];
             }
             else
             {
@@ -127,8 +145,9 @@ public class WorldMap : MonoBehaviour
 
                 t.SetPixels(l);
                 sr.sprite = Sprite.Create(t, new Rect(0, 0, tileResolution, tileResolution), new Vector2(0.5f, 0.5f), tileResolution);
-                landmarks.Add(new Coord(x, y), g);
             }
+
+            landmarks.Add(new Coord(x, y), g);
         }
     }
 
@@ -136,9 +155,6 @@ public class WorldMap : MonoBehaviour
     {
         switch (b)
         {
-            case Biome.Default:
-            case Biome.Ocean:
-                return 0;
             case Biome.Shore:
                 return 1;
             case Biome.Plains:
@@ -153,7 +169,7 @@ public class WorldMap : MonoBehaviour
                 return 6;
             case Biome.Tundra:
                 return 7;
-
+            case Biome.Ocean:
             default:
                 return 0;
         }

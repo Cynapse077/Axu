@@ -4,8 +4,8 @@ public struct ItemActions {
 	public List<ItemAction> Actions;
 
 	bool CanAdd(Item item, string action) {
-		return (item.HasComponent<CConsole>() && item.GetItemComponent<CConsole>().action == action || 
-			item.HasComponent<CLuaEvent>() && item.GetItemComponent<CLuaEvent>().evName == action);
+		return (item.HasCComponent<CConsole>() && item.GetCComponent<CConsole>().action == action || 
+			item.HasCComponent<CLuaEvent>() && item.GetCComponent<CLuaEvent>().evName == action);
 	}
 
 	public ItemActions(Item item) {
@@ -32,20 +32,20 @@ public struct ItemActions {
 		if (item.HasProp(ItemProperty.Edible) || CanAdd(item, "OnEat"))
 			Actions.Add(new ItemAction("Eat", "Action_Eat"));
 
-		if (item.HasComponent<CLiquidContainer>() && item.GetItemComponent<CLiquidContainer>().currentAmount > 0) {
+		if (item.HasCComponent<CLiquidContainer>() && item.GetCComponent<CLiquidContainer>().currentAmount > 0) {
 			Actions.Add(new ItemAction("Drink", "Action_Drink"));
 			Actions.Add(new ItemAction("Mix", "Action_Mix"));
 			Actions.Add(new ItemAction("Pour", "Action_Pour"));
 		}
 
 		if (item.HasProp(ItemProperty.Stop_Bleeding) || item.HasProp(ItemProperty.Reveal_Map) ||
-			item.HasProp(ItemProperty.Blink) || item.HasProp(ItemProperty.Teleport) || item.HasProp(ItemProperty.Surface_Tele) ||
-			item.HasProp(ItemProperty.ReplaceLimb) || CanAdd(item, "OnUse") || item.HasComponent<CModKit>()) {
+			item.HasProp(ItemProperty.Blink) || item.HasProp(ItemProperty.Surface_Tele) ||
+			item.HasProp(ItemProperty.ReplaceLimb) || CanAdd(item, "OnUse") || item.HasCComponent<CModKit>()) {
 			Actions.Add(new ItemAction("Use", "Action_Use"));
 		}
 
-		if (item.HasComponent<CCoordinate>()) {
-			CCoordinate ccord = item.GetItemComponent<CCoordinate>();
+		if (item.HasCComponent<CCoordinate>()) {
+			CCoordinate ccord = item.GetCComponent<CCoordinate>();
 			Actions.Add(((!ccord.isSet) ? (new ItemAction("Set", "Action_Set")) : (new ItemAction("Use", "Action_Use"))));
 		}
 

@@ -13,15 +13,14 @@ public class MapObjectSprite : MonoBehaviour
     public SpriteRenderer moreIconRenderer;
     public Cell cell;
     [HideInInspector] public Inventory inv;
-    public LuaCall onInteract;
 
     bool inSight;
     bool renderInBack = false;
     SpriteRenderer spriteRenderer;
     LightSource lightSource;
-    SpriteRenderer fi;
-    string _description;
+    SpriteRenderer fi; 
     Color myColor = Color.white;
+    bool on;
 
     public string objectType
     {
@@ -58,41 +57,54 @@ public class MapObjectSprite : MonoBehaviour
             SetLit(false);
     }
 
-    void Initialize()
+    void GrabFromBlueprint(MapObjectBlueprint bp) 
     {
-        MapObjectBlueprint bp = ItemList.GetMOB(objectType);
-
-        gameObject.name = bp.Name;
-        spriteRenderer.sprite = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID);
+        if (gameObject != null)
+        {
+            gameObject.name = bp.Name;
+            spriteRenderer.sprite = SpriteManager.GetObjectSprite(bp.spriteID);
+        }
+        
+        spriteRenderer.sortingLayerName = "Items";
+        spriteRenderer.sortingOrder = 2;
 
         if (bp.renderInFront)
-        {
             spriteRenderer.sortingLayerName = "Characters";
-        }
-        else if (bp.renderInBack)
-        {
+
+        if (bp.renderInBack) {
             spriteRenderer.sortingLayerName = "Items";
             spriteRenderer.sortingOrder = 0;
             renderInBack = true;
         }
-        else
-        {
-            spriteRenderer.sortingLayerName = "Items";
-            spriteRenderer.sortingOrder = 2;
-        }
 
-        //Container
-        if (bp.container != null)
-            SetInventory(bp.container.capacity);
+        if (objectBase.solid)
+            cell.SetUnwalkable();
 
-        //Tint
         if (bp.tint != Vector4.one)
             myColor = bp.tint;
 
-        if (bp.solid == MapObjectBlueprint.MapOb_Interactability.Solid)
-            objectBase.solid = true;
+        if (bp.light != 0) {
+            lightSource = new LightSource(bp.light);
+            SetLit(true);
+        }
 
-        _description = bp.description;
+        if (bp.autotile) 
+        {
+            Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID).texture;
+            spriteRenderer.sprite = Sprite.Create(t, new Rect(0, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+            Autotile(true);
+        }
+
+        if (bp.container != null)
+            SetInventory(bp.container.capacity);
+
+        if (objectBase.HasEvent("OnTurn"))
+            World.turnManager.incrementTurnCounter += OnTurn;
+    }
+
+    void Initialize()
+    {
+        GrabFromBlueprint(ItemList.GetMOB(objectType));
 
         switch (objectType)
         {
@@ -104,56 +116,98 @@ public class MapObjectSprite : MonoBehaviour
             case "Loot":
                 World.turnManager.incrementTurnCounter += UpdateVisuals;
                 break;
-            case "Fence":
-            case "Bars":
-                Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID).texture;
-                spriteRenderer.sprite = Sprite.Create(t, new Rect(0, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
-                Autotile(true);
-                break;
-        }
-
-        if (bp.light != 0)
-        {
-            lightSource = new LightSource(bp.light);
-            SetLit(true);
-        }
-
-        if (bp.onInteract != null)
-        {
-            onInteract = bp.onInteract;
         }
 
         SetPositionToLocalPos();
         UpdateVisuals();
     }
 
+    public void StartPulse(bool pulseOn)
+    {
+        on = pulseOn;
+        SendPulses(null, 0, on);
+    }
+
+    void SendPulses(Coord previous, int moveCount, bool pulseOn)
+    {
+        if (moveCount > 300)
+            return;
+
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0 || Mathf.Abs(x) + Mathf.Abs(y) > 1)
+                    continue;
+
+                Cell c = World.tileMap.GetCellAt(localPos.x + x, localPos.y + y);
+
+                if (c != null && c.position != previous)
+                    c.RecievePulse(localPos, moveCount, pulseOn);
+            }
+        }
+    }
+
+    public void ReceivePulse(Coord previous, int moveCount, bool pulseOn)
+    {
+        if (objectBase.recievePulse)
+        {
+            if (on != pulseOn)
+            {
+                if (isDoor_Closed)
+                    ForceOpen();
+                else
+                    Interact();
+            }
+
+            on = pulseOn;
+
+            if (objectBase.sendPulse)
+                SendPulses(previous, ++moveCount, pulseOn);
+        }
+    }
+
+    public void OnEntityEnter(Entity e)
+    {
+        if (objectBase.HasEvent("OnEntityEnter"))
+            LuaManager.CallScriptFunction(objectBase.GetEvent("OnEntityEnter"), e, this);
+    }
+
+    public void OnEntityExit(Entity e)
+    {
+        if (objectBase.HasEvent("OnEntityExit"))
+            LuaManager.CallScriptFunction(objectBase.GetEvent("OnEntityExit"), e, this);
+    }
+
+    void OnTurn()
+    {
+        LuaManager.CallScriptFunction(objectBase.GetEvent("OnTurn"));
+    }
+
     public void Autotile(bool initial)
     {
-        if (objectType == "Fence" || objectType == "Bars")
-        {
-            int xOffset = BitwiseNeighbors() * 16;
+        int xOffset = BitwiseNeighbors() * 16;
 
-            if (initial)
-                AutotileAdjacent();
+        if (initial)
+            AutotileAdjacent();
 
-            Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID).texture;
-            spriteRenderer.sprite = Sprite.Create(t, new Rect(xOffset, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
-        }
+        Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID).texture;
+        spriteRenderer.sprite = Sprite.Create(t, new Rect(xOffset, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
     }
 
     void AutotileAdjacent()
     {
-        if (NeighborAt(localPos.x, localPos.y + 1))
-            World.tileMap.GetCellAt(localPos.x, localPos.y + 1).mapObjects.Find(z => z.objectType == objectType).Autotile(false);
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0 || Mathf.Abs(x) + Mathf.Abs(y) > 1)
+                    continue;
 
-        if (NeighborAt(localPos.x - 1, localPos.y))
-            World.tileMap.GetCellAt(localPos.x - 1, localPos.y).mapObjects.Find(z => z.objectType == objectType).Autotile(false);
-
-        if (NeighborAt(localPos.x + 1, localPos.y))
-            World.tileMap.GetCellAt(localPos.x + 1, localPos.y).mapObjects.Find(z => z.objectType == objectType).Autotile(false);
-
-        if (NeighborAt(localPos.x, localPos.y - 1))
-            World.tileMap.GetCellAt(localPos.x, localPos.y - 1).mapObjects.Find(z => z.objectType == objectType).Autotile(false);
+                if (NeighborAt(localPos.x + x, localPos.y + y))
+                    World.tileMap.GetCellAt(localPos.x + x, localPos.y + y).mapObjects.Find(z => z.objectType == objectType).Autotile(false);
+            }
+        }
     }
 
     int BitwiseNeighbors()
@@ -170,7 +224,7 @@ public class MapObjectSprite : MonoBehaviour
 
     bool NeighborAt(int x, int y)
     {
-        if (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y)
+        if (World.OutOfLocalBounds(x, y))
             return false;
 
         return World.tileMap.GetCellAt(x, y).mapObjects.Find(z => z.objectType == objectType);
@@ -179,9 +233,16 @@ public class MapObjectSprite : MonoBehaviour
     public void SetTypeAndSwapSprite(string t)
     {
         objectBase.objectType = t;
+        MapObjectBlueprint bp = ItemList.GetMOB(objectBase.objectType);
 
-        if (spriteRenderer != null)
-            spriteRenderer.sprite = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID);
+        if (bp != null)
+        {
+            if (objectBase.HasEvent("OnTurn"))
+                World.turnManager.incrementTurnCounter -= OnTurn;
+
+            objectBase.ReInitialize(bp);
+            GrabFromBlueprint(bp);
+        }
     }
 
     void SpawnFire()
@@ -191,6 +252,8 @@ public class MapObjectSprite : MonoBehaviour
         f.name = "Fire";
         f.GetComponent<DestroyAfterTurns>().enabled = false;
         fi = f.GetComponentInChildren<SpriteRenderer>();
+        fi.sortingLayerName = "Items";
+        fi.sortingOrder = 1;
     }
 
     void SetLit(bool lit)
@@ -216,6 +279,14 @@ public class MapObjectSprite : MonoBehaviour
                     World.tileMap.tileRenderers[x, y].lit = lit;
             }
         }
+    }
+
+    public bool InSight()
+    {
+        if (cell == null)
+            return false;
+
+        return (cell.InSight);
     }
 
     void SetPositionToLocalPos()
@@ -246,8 +317,8 @@ public class MapObjectSprite : MonoBehaviour
             {
                 spriteRenderer.sprite = SwitchSprite(inv.items[0]);
 
-                if (inv.items[0].HasComponent<CLiquidContainer>() && inv.items[0].GetItemComponent<CLiquidContainer>().liquid != null)
-                    myColor = inv.items[0].GetItemComponent<CLiquidContainer>().liquid.color;
+                if (inv.items[0].HasCComponent<CLiquidContainer>() && inv.items[0].GetCComponent<CLiquidContainer>().liquid != null)
+                    myColor = inv.items[0].GetCComponent<CLiquidContainer>().liquid.color;
                 else
                     myColor = Color.white;
             }
@@ -299,9 +370,9 @@ public class MapObjectSprite : MonoBehaviour
                     World.objectManager.RemoveObject(objectBase, gameObject);
                     Destroy(gameObject);
                 }
-                else if (inv.items.Count == 1 && inv.items[0].GetItemComponent<CLiquidContainer>() != null)
+                else if (inv.items.Count == 1 && inv.items[0].HasCComponent<CLiquidContainer>())
                 {
-                    CLiquidContainer cl = inv.items[0].GetItemComponent<CLiquidContainer>();
+                    CLiquidContainer cl = inv.items[0].GetCComponent<CLiquidContainer>();
 
                     if (cl.liquid == null || cl.currentAmount <= 0)
                     {
@@ -310,6 +381,28 @@ public class MapObjectSprite : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public void ForceOpen()
+    {
+        if (isDoor_Closed)
+        {
+            if (objectType == "Door_Closed")
+                SetTypeAndSwapSprite("Door_Open");
+            if (objectType == "Ensis_Door_Closed")
+                SetTypeAndSwapSprite("Ensis_Door_Open");
+            else if (objectType == "Prison_Door_Closed")
+                SetTypeAndSwapSprite("Prison_Door_Open");
+            else if (objectType == "Magna_Door_Closed")
+                SetTypeAndSwapSprite("Magna_Door_Open");
+            else if (objectType == "Kin_Door_Closed")
+                SetTypeAndSwapSprite("Kin_Door_Open");
+            else if (objectType == "Elec_Door_Closed")
+                SetTypeAndSwapSprite("Elec_Door_Open");
+
+            World.tileMap.SoftRebuild();
+            World.soundManager.OpenDoor();
         }
     }
 
@@ -326,9 +419,7 @@ public class MapObjectSprite : MonoBehaviour
         if (objectType == "Ensis_Door_Closed")
         {
             if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Can_Enter_Ensis))
-            {
                 SetTypeAndSwapSprite("Ensis_Door_Open");
-            }
             else
             {
                 Alert.NewAlert("Locked");
@@ -340,9 +431,7 @@ public class MapObjectSprite : MonoBehaviour
         if (objectType == "Prison_Door_Closed")
         {
             if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Can_Open_Prison_Cells))
-            {
                 SetTypeAndSwapSprite("Prison_Door_Open");
-            }
             else
             {
                 Alert.NewAlert("Locked");
@@ -351,17 +440,34 @@ public class MapObjectSprite : MonoBehaviour
         }
 
         //Magna
-        if (objectType == "Magna_Door_Closed")
+        else if (objectType == "Magna_Door_Closed")
         {
             if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Can_Enter_Magna))
-            {
                 SetTypeAndSwapSprite("Magna_Door_Open");
-            }
             else
             {
                 Alert.NewAlert("Locked");
                 return;
             }
+        }
+
+        //Fabrication Plant 
+        else if (objectType == "Kin_Door_Closed")
+        {
+            if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Can_Enter_Fab))
+                SetTypeAndSwapSprite("Kin_Door_Open");
+            else
+            {
+                Alert.NewAlert("Locked");
+                return;
+            }
+        }
+
+        //Doors only open-able by switches and wires.
+        else if (objectType == "Elec_Door_Closed")
+        {
+            Alert.NewAlert("Locked");
+            return;
         }
 
         World.soundManager.OpenDoor();
@@ -380,112 +486,88 @@ public class MapObjectSprite : MonoBehaviour
 
     public void Interact()
     {
-        if (isDoor_Open && cell.entity == null)
-        {
-            if (objectBase.objectType == "Door_Open")
-                SetTypeAndSwapSprite("Door_Closed");
-            else if (objectBase.objectType == "Ensis_Door_Open")
-                SetTypeAndSwapSprite("Ensis_Door_Closed");
-            else if (objectBase.objectType == "Prison_Door_Open")
-                SetTypeAndSwapSprite("Prison_Door_Closed");
-            else if (objectBase.objectType == "Magna_Door_Open")
-                SetTypeAndSwapSprite("Magna_Door_Closed");
-        }
 
-        if (onInteract != null)
+        if (objectBase.HasEvent("OnInteract"))
         {
-            LuaManager.CallScriptFunction(onInteract.scriptName, onInteract.functionName, this);
+            LuaManager.CallScriptFunction(objectBase.GetEvent("OnInteract"), this);
             return;
         }
 
-        if (isDoor_Closed)
+        switch (objectType)
         {
-            World.soundManager.CloseDoor();
-            World.tileMap.SoftRebuild();
+            case "Barrel":
+                SetTypeAndSwapSprite("Barrel_Open");
+                break;
+
+            case "Chest":
+                SetTypeAndSwapSprite("Chest_Open");
+                break;
+
+            case "Statue":
+                if (ObjectManager.playerJournal.OnDestroyShrine_CheckQuestProgress())
+                {
+                    SetTypeAndSwapSprite("Statue_Broken");
+                    CombatLog.SimpleMessage("Break_Statue");
+                    World.soundManager.BreakArea();
+                }
+
+                break;
+
+            case "Crystal":
+                Landmark landmark = World.tileMap.GetRandomLandmark();
+                World.tileMap.SetPosition(landmark.position, 0);
+
+                ObjectManager.playerEntity.ForcePosition(World.tileMap.CurrentMap.GetRandomFloorTile());
+                ObjectManager.playerEntity.BeamDown();
+
+                World.tileMap.HardRebuild();
+                CombatLog.SimpleMessage("Crystal_Tele");
+
+                if (SeedManager.combatRandom.Next(100) < 10 && !ObjectManager.playerEntity.stats.hasTraitEffect(TraitEffects.Crystallization))
+                {
+                    ObjectManager.playerEntity.stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
+                    CombatLog.SimpleMessage("Crystal_Rad");
+                }
+                break;
+
+            case "Bookshelf":
+                World.userInterface.YesNoAction("YN_Read_Bookshelf",
+                    () => {
+                        World.userInterface.CloseWindows();
+                        string filePath = Application.streamingAssetsPath + "/Data/Dialogue/Books.json";
+                        string jsonText = File.ReadAllText(filePath);
+                        JsonData dat = JsonMapper.ToObject(jsonText);
+
+                        int num = SeedManager.combatRandom.Next(dat.Count);
+                        string title = dat[num]["Title"].ToString();
+                        string text = dat[num]["Text"].ToString();
+
+                        Alert.CustomAlert_WithTitle(title, text);
+                        SetTypeAndSwapSprite("Bookshelf_Empty");
+                    },
+                    () => { World.userInterface.CloseWindows(); }, "");
+                break;
+
+            case "Ore":
+                if (ObjectManager.playerEntity.inventory.DiggingEquipped())
+                {
+                    List<Item> newInv = new List<Item> { ItemList.GetItemByID("artifact4") };
+
+                    World.objectManager.NewInventory("Loot", new Coord(localPos.x, localPos.y), World.tileMap.WorldPosition, newInv);
+                    World.soundManager.BreakArea();
+                    DestroyMe();
+                }
+                else
+                    Alert.NewAlert("Need_Dig");
+                break;
         }
-        else
+
+        if (GetComponent<Inventory>() != null)
         {
-            switch (objectType)
-            {
-                case "Barrel":
-                    SetTypeAndSwapSprite("Barrel_Open");
-                    break;
+            inv = GetComponent<Inventory>();
 
-                case "Chest":
-                    SetTypeAndSwapSprite("Chest_Open");
-                    break;
-
-                case "Statue":
-                    if (ObjectManager.playerJournal.OnDestroyShrine_CheckQuestProgress())
-                    {
-                        SetTypeAndSwapSprite("Statue_Broken");
-                        CombatLog.SimpleMessage("Break_Statue");
-                        World.soundManager.BreakArea();
-                    }
-
-                    break;
-
-                case "Crystal":
-                    Landmark landmark = World.tileMap.GetRandomLandmark();
-                    World.tileMap.SetPosition(landmark.position, 0);
-
-                    ObjectManager.playerEntity.ForcePosition(World.tileMap.CurrentMap.GetRandomFloorTile());
-                    ObjectManager.playerEntity.BeamDown();
-
-                    World.tileMap.HardRebuild();
-                    CombatLog.SimpleMessage("Crystal_Tele");
-
-                    if (SeedManager.combatRandom.Next(100) < 5 && !ObjectManager.playerEntity.stats.hasTraitEffect(TraitEffects.Crystallization))
-                    {
-                        ObjectManager.playerEntity.stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
-                        CombatLog.SimpleMessage("Crystal_Rad");
-                    }
-                    break;
-
-                case "Bookshelf":
-                    World.userInterface.YesNoAction("YN_Read_Bookshelf",
-                        () =>
-                        {
-                            World.userInterface.CloseWindows();
-                            string filePath = Application.streamingAssetsPath + "/Data/Dialogue/Books.json";
-                            string jsonText = File.ReadAllText(filePath);
-                            JsonData dat = JsonMapper.ToObject(jsonText);
-
-                            int num = SeedManager.combatRandom.Next(dat.Count);
-                            string title = dat[num]["Title"].ToString();
-                            string text = dat[num]["Text"].ToString();
-
-                            Alert.CustomAlert_WithTitle(title, text);
-                        },
-                        () => { World.userInterface.CloseWindows(); }, "");
-                    break;
-
-                case "Ore":
-                    if (ObjectManager.playerEntity.inventory.DiggingEquipped())
-                    {
-                        List<Item> newInv = new List<Item>
-                        {
-                            ItemList.GetItemByID("artifact4")
-                        };
-                        World.objectManager.NewInventory("Loot", new Coord(localPos.x, localPos.y), World.tileMap.WorldPosition, newInv);
-                        World.soundManager.BreakArea();
-                        DestroyMe();
-                    }
-                    else
-                        Alert.NewAlert("Need_Dig");
-                    break;
-
-                default:
-                    break;
-            }
-
-            if (GetComponent<Inventory>() != null)
-            {
-                inv = GetComponent<Inventory>();
-
-                if (objectType == "Chest" || objectType == "Chest_Open" || inv.items.Count > 0)
-                    World.userInterface.OpenLoot(inv);
-            }
+            if (objectType == "Chest" || objectType == "Chest_Open" || inv.items.Count > 0)
+                World.userInterface.OpenLoot(inv);
         }
     }
 
@@ -502,7 +584,7 @@ public class MapObjectSprite : MonoBehaviour
 
     public string Description
     {
-        get { return _description + objectBase.description; }
+        get { return objectBase.description; }
     }
 
     public void SetParams(bool insight, bool hasseen)

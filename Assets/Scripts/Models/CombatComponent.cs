@@ -2,198 +2,267 @@
 using UnityEngine;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
-public class CombatComponent {
+public class CombatComponent
+{
+    public Item itemForThrowing;
+    public Entity lastTarget;
 
-	public Item itemForThrowing;
-	public Entity lastTarget;
+    Entity entity;
 
-	Entity entity;
+    Stats MyStats
+    {
+        get { return entity.stats; }
+    }
+    Inventory MyInventory
+    {
+        get { return entity.inventory; }
+    }
+    Body MyBody
+    {
+        get { return entity.body; }
+    }
 
-	Stats stats {
-		get { return entity.stats; }
-	}
-	Inventory inventory {
-		get { return entity.inventory; }
-	}
-	Body body {
-		get { return entity.body; }
-	}
+    public CombatComponent(Entity e)
+    {
+        entity = e;
+    }
 
-	public CombatComponent(Entity e) {
-		entity = e;
-	}
+    public void Attack(Stats target, bool freeAction = false, BodyPart targetPart = null, int sevChance = 0)
+    {
+        if (entity.isPlayer && target.entity.AI.npcBase.HasFlag(NPC_Flags.Follower))
+            return;
 
-	public void Attack(Stats target, bool freeAction = false, BodyPart targetPart = null, int accPenalty = 0) {
-		if (entity.isPlayer && target.GetComponent<BaseAI>().npcBase.HasFlag(NPC_Flags.Follower))
-			return;
+        //Main weapon
+        PerformAttack(target, MyBody.MainHand, targetPart, sevChance);
 
-		lastTarget = target.entity;
+        //Attack with all other arms.
+        List<BodyPart.Hand> hands = MyBody.Hands;
 
-		//Main weapon
-		PerformAttack(target, body.MainHand, targetPart, accPenalty);
-
-		//Attack with all other arms.
-		List<BodyPart.Hand> hands = body.Hands;
-
-		for (int i = 0; i < hands.Count; i++) {
-			if (hands[i] != body.MainHand && hands[i].isAttached && SeedManager.combatRandom.Next(80) <= (stats.Dexterity + 1))
-				PerformAttack(target, hands[i]);
-		}
+        for (int i = 0; i < hands.Count; i++)
+        {
+            if (hands[i] != MyBody.MainHand && hands[i].IsAttached && SeedManager.combatRandom.Next(80) <= (MyStats.Dexterity + 1))
+                PerformAttack(target, hands[i]);
+        }
 
         //TODO: Add extra attacks for bites, kicks, headbutts, etc.
 
-		if (!freeAction)
-			entity.EndTurn(0.1f, AttackAPCost());
-	}
- 
-	bool PerformAttack(Stats target, BodyPart.Hand hand, BodyPart targetPart = null, int accPenalty = 0) {
-		if (hand == null || target == null || hand.equippedItem == null)
-			return false;
+        lastTarget = target.entity;
 
-		Item wep = hand.equippedItem;
-		bool twoHandPenalty = wep.HasProp(ItemProperty.Two_Handed) && inventory.TwoHandPenalty(hand);
-		HashSet<DamageTypes> dt = wep.damageTypes;
-		WeaponProficiency prof = stats.CheckProficiencies(wep);
-		int missChance = stats.MissChance(wep) + accPenalty;
-		int damage = wep.CalculateDamage(stats.Strength, prof.level);
+        if (!freeAction)
+            entity.EndTurn(0.1f, AttackAPCost());
+    }
 
-		if (stats.HasEffect("Topple"))
-			missChance += 5;
-		if (twoHandPenalty)
-			missChance += 5;
+    bool PerformAttack(Stats target, BodyPart.Hand hand, BodyPart targetPart = null, int sevChance = 0)
+    {
+        if (hand == null || target == null || hand.EquippedItem == null)
+            return false;
 
-		//firearms have reduced physical damage.
-		if (wep.HasProp(ItemProperty.Ranged)) {
-			dt = new HashSet<DamageTypes>() { DamageTypes.Blunt };
-			Damage d = new Damage(1, 3, 0);
-			damage = d.Roll() + (stats.Strength / 2 - 1) + stats.proficiencies.Misc.level;
-		}
+        Item wep = hand.EquippedItem;
+        bool twoHandPenalty = wep.HasProp(ItemProperty.Two_Handed) && MyInventory.TwoHandPenalty(hand);
+        HashSet<DamageTypes> dt = wep.damageTypes;
+        int missChance = MyStats.MissChance(wep);
+        int profLevel = (entity.isPlayer) ? MyStats.CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
 
-		if (SeedManager.combatRandom.Next(100) < missChance) {
-			target.Miss(entity, wep);
-			return false;
-		}
+        if (MyStats.HasEffect("Topple"))
+            missChance += 5;
+        if (twoHandPenalty)
+            missChance += 5;
 
-		if (targetPart == null)
-			targetPart = target.entity.body.TargetableBodyParts().GetRandom(SeedManager.combatRandom);
+        if (SeedManager.combatRandom.Next(100) < missChance)
+        {
+            target.Miss(entity, wep);
+            return false;
+        }
 
-		if (target.TakeDamage(wep, damage, dt, entity, wep.AttackCrits((prof.level - 1 + stats.Accuracy + wep.Accuracy) / 2), targetPart)) {
-			if (entity.isPlayer) {
-				if (wep.attackType == Item.AttackType.Bash || wep.attackType == Item.AttackType.Sweep)
-					World.soundManager.AttackSound2();
-				else
-					World.soundManager.AttackSound();
+        int damage = wep.CalculateDamage(MyStats.Strength, profLevel);
 
-				//if it's a physical attack from a firearm, use misc prof
-				if (wep.itemType == Proficiencies.Firearm || wep.itemType == Proficiencies.Armor || wep.itemType == Proficiencies.Butchery)
-					stats.AddProficiencyXP(stats.proficiencies.Misc, stats.Intelligence);
-				else
-					stats.AddProficiencyXP(wep, stats.Intelligence);
+        //firearms have reduced physical damage.
+        if (wep.HasProp(ItemProperty.Ranged))
+        {
+            dt = new HashSet<DamageTypes>() { DamageTypes.Blunt };
+            Damage d = new Damage(1, 3, 0);
+            damage = d.Roll() + (MyStats.Strength / 2 - 1) + MyStats.proficiencies.Misc.level;
+        }
 
-			} else
-				ApplyNPCEffects(target, damage);
+        if (targetPart == null)
+            targetPart = target.entity.body.TargetableBodyParts().GetRandom(SeedManager.combatRandom);
 
-			ApplyWeaponEffects(target, wep);
-		}
+        if (target.TakeDamage(wep, damage, dt, entity, wep.AttackCrits((profLevel - 1 + MyStats.Accuracy + wep.Accuracy) / 2), targetPart, sevChance))
+        {
+            if (entity.isPlayer)
+            {
+                World.soundManager.PlayAttackSound(wep);
 
-		if (entity.isPlayer) {
-			stats.AddProficiencyXP(wep, stats.Intelligence);
+                //if it's a physical attack from a firearm, use misc prof
+                if (wep.itemType == Proficiencies.Firearm || wep.itemType == Proficiencies.Armor || wep.itemType == Proficiencies.Butchery)
+                    MyStats.AddProficiencyXP(MyStats.proficiencies.Misc, MyStats.Intelligence);
+                else
+                    MyStats.AddProficiencyXP(wep, MyStats.Intelligence);
 
-			if (hand.arm != null)
-				body.TrainLimb(hand.arm);
-		}
+                if (hand.arm != null)
+                    MyBody.TrainLimb(hand.arm);
 
-		return true;
-	}
+            }
+            else
+                ApplyNPCEffects(target, damage);
 
-	void ApplyWeaponEffects(Stats target, Item wep) {
-		if (wep.HasProp(ItemProperty.OnAttack_Radiation)) {
-			if (SeedManager.combatRandom.Next(100) < 5)
-				stats.Radiate(1);
-		}
+            ApplyWeaponEffects(target, wep);
+        }
 
-		if (target == null || target.health <= 0 || target.dead)
-			return;
+        return true;
+    }
 
-		if (wep.damageTypes.Contains(DamageTypes.Venom) && SeedManager.combatRandom.Next(100) <= 3)
-			target.AddStatusEffect("Poison", SeedManager.combatRandom.Next(2, 8));
-		if (wep.ContainsDamageType(DamageTypes.Bleed) && SeedManager.combatRandom.Next(100) <= 5)
-			target.AddStatusEffect("Bleed", SeedManager.combatRandom.Next(2, 8));
-		if (wep.HasProp(ItemProperty.Stun) && SeedManager.combatRandom.Next(100) <= 5)
-			target.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 4));
-		if (wep.HasProp(ItemProperty.Confusion) && SeedManager.combatRandom.Next(100) <= 5)
-			target.AddStatusEffect("Confuse", SeedManager.combatRandom.Next(2, 8));
-		if (wep.HasProp(ItemProperty.Knockback) && SeedManager.combatRandom.Next(100) <= 5) {
-			Entity otherEntity = target.entity;
+    void ApplyWeaponEffects(Stats target, Item wep)
+    {
+        if (wep.HasProp(ItemProperty.OnAttack_Radiation))
+        {
+            if (SeedManager.combatRandom.Next(100) < 5)
+                MyStats.Radiate(1);
+        }
 
-			if (otherEntity != null && otherEntity.myPos.DistanceTo(entity.myPos) < 2f)
-				otherEntity.ForceMove(otherEntity.posX - entity.posX, otherEntity.posY - entity.posY, stats.Strength - 1);
-		}
-	}
+        if (target == null || target.health <= 0 || target.dead)
+            return;
 
-	void ApplyNPCEffects(Stats target, int damage) {
-		entity.AI.OnHitEffects(target, damage);
-	}
+        if (wep.damageTypes.Contains(DamageTypes.Venom) && SeedManager.combatRandom.Next(100) <= 3)
+            target.AddStatusEffect("Poison", SeedManager.combatRandom.Next(2, 8));
+        if (wep.ContainsDamageType(DamageTypes.Bleed) && SeedManager.combatRandom.Next(100) <= 5)
+            target.AddStatusEffect("Bleed", SeedManager.combatRandom.Next(2, 8));
+        if (wep.HasProp(ItemProperty.Stun) && SeedManager.combatRandom.Next(100) <= 5)
+            target.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 4));
+        if (wep.HasProp(ItemProperty.Confusion) && SeedManager.combatRandom.Next(100) <= 5)
+            target.AddStatusEffect("Confuse", SeedManager.combatRandom.Next(2, 8));
+        if (wep.HasProp(ItemProperty.Knockback) && SeedManager.combatRandom.Next(100) <= 5)
+        {
+            Entity otherEntity = target.entity;
 
-	public int AttackAPCost() {
-		int timeCost = body.MainHand.equippedItem.GetAttackAPCost() + stats.AttackDelay;
+            if (otherEntity != null && otherEntity.myPos.DistanceTo(entity.myPos) < 2f)
+                otherEntity.ForceMove(otherEntity.posX - entity.posX, otherEntity.posY - entity.posY, MyStats.Strength - 1);
+        }
+    }
 
-		if (stats.HasEffect("Topple"))
-			timeCost += 7;
-		if (inventory.TwoHandPenalty(body.MainHand))
-			timeCost += 4;
+    void ApplyNPCEffects(Stats target, int damage)
+    {
+        entity.AI.OnHitEffects(target, damage);
+    }
 
-		return timeCost;
-	}
+    public int AttackAPCost()
+    {
+        int timeCost = MyBody.MainHand.EquippedItem.GetAttackAPCost() + MyStats.AttackDelay;
 
-	//Makes the current item to throw this item. 
-	public void SelectItemToThrow(Item i) {
-		itemForThrowing = i;
-	}
-	//Actually does the throw baloney
-	public void ThrowItem(Coord destination, Explosive damageScript) {
-		if (itemForThrowing == null || destination == null || damageScript == null)
-			return;
+        if (MyStats.HasEffect("Topple"))
+            timeCost += 7;
+        if (MyInventory.TwoHandPenalty(MyBody.MainHand))
+            timeCost += 4;
 
-		bool miss = (SeedManager.combatRandom.Next(100) > 40 + stats.proficiencies.Throwing.level + stats.Accuracy);
+        return timeCost;
+    }
 
-		if (miss) {
+    //Makes the current item to throw this item. 
+    public void SelectItemToThrow(Item i)
+    {
+        itemForThrowing = i;
+    }
+    //Actually does the throw baloney
+    public void ThrowItem(Coord destination, Explosive damageScript)
+    {
+        if (itemForThrowing == null || destination == null || damageScript == null)
+            return;
+
+        bool miss = (SeedManager.combatRandom.Next(100) > 40 + MyStats.proficiencies.Throwing.level + MyStats.Accuracy);
+
+        if (miss)
+        {
             Coord newPos = AdjacentCoord(destination);
 
             if (newPos != null)
                 destination = newPos;
         }
-            
 
-		//Instantiate
-		entity.InstatiateThrowingEffect(destination);
+        //Instantiate
+        entity.InstatiateThrowingEffect(destination);
 
-		if (itemForThrowing.HasProp(ItemProperty.Explosive)) {
-			damageScript.destroy = true;
-			damageScript.damage = SeedManager.combatRandom.Next(12, 31);
-			damageScript.nameOfDamage = "Explosion";
-		} else {
-			int throwingLevel = (entity.isPlayer) ? stats.proficiencies.Throwing.level : (World.DangerLevel() / 10) + 1;
-			damageScript.damage = itemForThrowing.ThrownDamage(throwingLevel, stats.Dexterity);
-			damageScript.nameOfDamage = itemForThrowing.Name;
-		}
+        if (itemForThrowing.HasProp(ItemProperty.Explosive))
+        {
+            damageScript.destroy = true;
+            damageScript.damage = SeedManager.combatRandom.Next(8, 21);
+            damageScript.nameOfDamage = "Explosion";
+        }
+        else
+        {
+            int throwingLevel = (entity.isPlayer) ? MyStats.proficiencies.Throwing.level : Mathf.Clamp((World.DangerLevel() / 10) + 1, 0, 3);
+            damageScript.damage = itemForThrowing.ThrownDamage(throwingLevel, MyStats.Dexterity);
+            damageScript.nameOfDamage = itemForThrowing.Name;
+        }
 
-		damageScript.localPosition = destination;
-		inventory.ThrowItem(destination, itemForThrowing, damageScript);
-		itemForThrowing = null;
+        damageScript.localPosition = destination;
+        MyInventory.ThrowItem(destination, itemForThrowing, damageScript);
+        itemForThrowing = null;
 
-		if (entity.isPlayer)
-			stats.AddProficiencyXP(stats.proficiencies.Throwing, stats.Intelligence);
+        if (entity.isPlayer)
+            MyStats.AddProficiencyXP(MyStats.proficiencies.Throwing, MyStats.Intelligence);
 
-		entity.EndTurn(0.3f);
-	}
+        entity.EndTurn(0.3f);
+    }
 
-    Coord AdjacentCoord(Coord destination) {
+    public void ShootFireArm(Coord targetPos, int iteration)
+    {
+        if (World.tileMap.WalkableTile(targetPos.x, targetPos.y))
+        {
+            Cell c = World.tileMap.GetCellAt(targetPos.x, targetPos.y);
+
+            if (c != null && c.entity != null)
+                lastTarget = c.entity;
+        }
+
+        TileDamage td = new TileDamage(entity, targetPos, entity.inventory.firearm.damageTypes);
+
+        if (FirearmMiss(targetPos, iteration))
+        {
+            td.pos.x += SeedManager.combatRandom.Next(-1, 2);
+            td.pos.y += SeedManager.combatRandom.Next(-1, 2);
+        }
+
+        entity.BulletTrail(entity.myPos.toVector2(), td.pos.toVector2());
+
+        td.damage = entity.inventory.firearm.CalculateDamage(entity.stats.Dexterity - 4, entity.stats.CheckProficiencies(entity.inventory.firearm).level);
+        td.crit = entity.inventory.firearm.AttackCrits(entity.stats.proficiencies.Firearm.level + 1);
+        td.myName = LocalizationManager.GetContent("Bullet");
+        td.ApplyDamage();
+
+        entity.stats.AddProficiencyXP(entity.inventory.firearm, entity.stats.Dexterity);
+    }
+
+    bool FirearmMiss(Coord targetPos, int iteration)
+    {
+        float denom = (float)entity.stats.proficiencies.Firearm.level + 2 + entity.stats.Accuracy / 2 - entity.inventory.firearm.Accuracy;
+
+        if (denom <= 0)
+            denom += 0.05f;
+
+        float missChance = (1.0f / denom) * 100f;
+        float maxMiss = SeedManager.combatRandom.Next(100);
+
+        if (entity.myPos.DistanceTo(targetPos) >= entity.stats.FirearmRange)
+            missChance *= 1.5f;
+
+        if (entity.inventory.firearm.Accuracy < 0)
+            missChance *= 2.0f;
+
+        if (!entity.inventory.firearm.HasProp(ItemProperty.Burst))
+            maxMiss -= (3 * iteration);
+
+        return maxMiss <= missChance;
+    }
+
+    Coord AdjacentCoord(Coord destination)
+    {
         List<Coord> nearbyCoords = new List<Coord>();
 
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                if (Mathf.Abs(x) + Mathf.Abs(y) >= 2 || destination.x + x < 0 || destination.x >= Manager.localMapSize.x 
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (Mathf.Abs(x) + Mathf.Abs(y) >= 2 || destination.x + x < 0 || destination.x >= Manager.localMapSize.x
                     || destination.y + y < 0 || destination.y + y >= Manager.localMapSize.y)
                     continue;
 
@@ -205,8 +274,10 @@ public class CombatComponent {
         return nearbyCoords.GetRandom(SeedManager.combatRandom);
     }
 
-	public int CheckWepType() {
-        switch (body.MainHand.equippedItem.attackType) {
+    public int CheckWepType()
+    {
+        switch (MyBody.MainHand.EquippedItem.attackType)
+        {
             case Item.AttackType.Slash: return 0;
             case Item.AttackType.Spear: return 1;
             case Item.AttackType.Bash: default: return 2;
@@ -215,57 +286,74 @@ public class CombatComponent {
             case Item.AttackType.Claw: case Item.AttackType.Psy: return 5;
             case Item.AttackType.Knife: return 6;
             case Item.AttackType.Bite: return 7;
-            
+
         }
-	}
+    }
 
-	public void Die() {
-		entity.canAct = false;
-		stats.dead = true;
-		entity.CreateBloodstain(true);
+    public void Die()
+    {
+        entity.canAct = false;
+        MyStats.dead = true;
+        entity.CreateBloodstain(true);
 
-		if (entity.cell != null)
-			entity.cell.UnSetEntity(entity);
+        if (entity.cell != null)
+            entity.cell.UnSetEntity(entity);
 
-		if (entity.isPlayer) {
-			World.userInterface.PlayerDied(((stats.lastHit == null) ? "<color=yellow>Hubris</color>" : stats.lastHit.name));
+        if (entity.isPlayer)
+        {
+            World.userInterface.PlayerDied(((MyStats.lastHit == null) ? "<color=yellow>???</color>" : MyStats.lastHit.name));
 
-			if (World.difficulty.Level == Difficulty.DiffLevel.Scavenger) {
-				int numToDrop = SeedManager.combatRandom.Next(0, 3);
+            if (World.difficulty.Level == Difficulty.DiffLevel.Scavenger && MyInventory.items.Count > 0)
+            {
+                int numToDrop = SeedManager.combatRandom.Next(0, 3);
 
-				for (int i = 0; i < numToDrop; i++) {
-					if (inventory.items.Count > 0) {
-						Item iToDrop = inventory.items.GetRandom();
+                for (int i = 0; i < numToDrop; i++)
+                {
+                    Item iToDrop = MyInventory.items.GetRandom();
 
-						if (iToDrop.HasProp(ItemProperty.Quest_Item))
-							continue;
+                    if (iToDrop.HasProp(ItemProperty.Quest_Item))
+                            continue;
 
-						inventory.Drop(iToDrop);
-					}
-				}
-			}
-		} else {
-			inventory.DropAll();
+                    MyInventory.Drop(iToDrop);
+                }
+            }
 
-			if (stats.lastHit != null) {
-				//Add relevant XP to the character that struck this NPC last
+            //Fail all arena quests
+            List<Quest> questsToFail = ObjectManager.playerJournal.quests.FindAll(x => x.failOnDeath);
+
+            for (int i = 0; i < questsToFail.Count; i++)
+            {
+                if (questsToFail[i].questGiver != null)
+                    questsToFail[i].questGiver.questID = questsToFail[i].ID;
+
+                questsToFail[i].FailSilently();
+            }
+        }
+        else
+        {
+            MyInventory.DropAll();
+
+            if (MyStats.lastHit != null)
+            {
+                //Add relevant XP to the character that struck this NPC last
                 //Maybe should add all XP to player unless it's a friendly NPC.
-				stats.lastHit.stats.GainExperience((stats.Strength + stats.Dexterity + stats.Intelligence + stats.Endurance * 2) / 2 + 1);
-			}
+                MyStats.lastHit.stats.GainExperience((MyStats.Strength + MyStats.Dexterity + MyStats.Intelligence + MyStats.Endurance * 2) / 2 + 1);
+            }
 
-			World.objectManager.DemolishNPC(entity, entity.AI.npcBase);
-			GameObject.Destroy(entity.gameObject);
-		}
-	}
+            World.objectManager.DemolishNPC(entity, entity.AI.npcBase);
+            GameObject.Destroy(entity.gameObject);
+        }
+    }
 
-	public void Remove() {
-		entity.canAct = false;
-		stats.dead = true;
+    public void Remove()
+    {
+        entity.canAct = false;
+        MyStats.dead = true;
 
-		if (entity.cell != null)
-			entity.cell.UnSetEntity(entity);
+        if (entity.cell != null)
+            entity.cell.UnSetEntity(entity);
 
-		World.objectManager.DemolishNPC(entity, entity.AI.npcBase);
-		GameObject.Destroy(entity.gameObject);
-	}
+        World.objectManager.DemolishNPC(entity, entity.AI.npcBase);
+        GameObject.Destroy(entity.gameObject);
+    }
 }

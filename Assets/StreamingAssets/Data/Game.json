@@ -1,6 +1,5 @@
 {
     "World" : {
-        "Size" : { "x" : 200, "y" : 200 },
         "Tileset" : "/Data/Art/WorldMap_Biomes.png",
         "Locations" : "/Data/Maps/Locations.json",
         "Location Sprites" : "/Data/Art/World Landmarks.png"

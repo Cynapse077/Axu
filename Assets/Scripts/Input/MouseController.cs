@@ -1,192 +1,226 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Pathfinding;
 
-public class MouseController : MonoBehaviour {
+public class MouseController : MonoBehaviour
+{
 
-	public Transform cursorObject;
-	public Vector3 cursorPosition;
-	public Sprite[] sprites;
-	UserInterface userInterface;
-	Transform cursor, worldCursor;
-	SpriteRenderer sRenderer;
-	Entity playerEntity;
-	PlayerInput playerInput;
-	Camera worldCamera;
+    public Transform cursorObject;
+    public Vector3 cursorPosition;
+    public Sprite[] sprites;
+    UserInterface userInterface;
+    Transform cursor, worldCursor;
+    SpriteRenderer sRenderer;
+    Entity playerEntity;
+    PlayerInput playerInput;
+    Camera worldCamera;
 
-	void Start () {
-		cursor = Instantiate(cursorObject).transform;
-		sRenderer = cursor.GetComponentInChildren<SpriteRenderer>();
-		userInterface = GameObject.FindObjectOfType<UserInterface>();
-	}
-	
-	void Update () {
-		if (ObjectManager.playerEntity == null)
-			return;
-		else {
-			playerEntity = ObjectManager.playerEntity;
-			if (playerEntity != null)
-				playerInput = playerEntity.GetComponent<PlayerInput>();
-		}
-			
-		if (GameSettings.UseMouse)
-			HandleMouseInput();
-	}
+    void Start()
+    {
+        cursor = Instantiate(cursorObject).transform;
+        sRenderer = cursor.GetComponentInChildren<SpriteRenderer>();
+        userInterface = GameObject.FindObjectOfType<UserInterface>();
+    }
 
-	void HandleMouseInput() {
-		Vector3 pos = Input.mousePosition;
-		pos = Camera.main.ScreenToWorldPoint(pos);
-		pos.x = Mathf.FloorToInt(pos.x);
-		pos.y = Mathf.FloorToInt(pos.y);
-		pos.z = -1;
-		cursorPosition = pos;
+    void Update()
+    {
+        if (ObjectManager.playerEntity == null)
+            return;
+        else
+        {
+            playerEntity = ObjectManager.playerEntity;
+            if (playerEntity != null)
+                playerInput = playerEntity.GetComponent<PlayerInput>();
+        }
 
-		if (Input.GetAxis("MouseX") != 0 || Input.GetAxis("MouseY") != 0)
-			CursorIsActive = true;
-		
-		if (World.userInterface != null && !World.userInterface.canMove) {
-			CursorIsActive = false;
-			return;
-		}
+        if (GameSettings.UseMouse)
+            HandleMouseInput();
+    }
 
-		if (PlayerInput.fullMap) {
-			WorldMapHandling();
-		} else if (CursorIsActive)
-			LocalMapHandling(pos);
-	}
+    void HandleMouseInput()
+    {
+        Vector3 pos = Input.mousePosition;
+        pos = Camera.main.ScreenToWorldPoint(pos);
+        pos.x = Mathf.FloorToInt(pos.x);
+        pos.y = Mathf.FloorToInt(pos.y);
+        pos.z = -1;
+        cursorPosition = pos;
 
-	void LocalMapHandling(Vector3 pos) {
-		if (playerEntity == null) 
-			return; 
-		
-		cursor.transform.position = pos;
-		int posX = (int)cursor.position.x, posY = (int)cursor.position.y;
+        if (Input.GetAxis("MouseX") != 0 || Input.GetAxis("MouseY") != 0)
+            CursorIsActive = true;
 
-		if (posX < 0 || posX > Manager.localMapSize.x - 1 || posY >= 0 || posY < -Manager.localMapSize.y) {
-			if (Input.GetMouseButtonUp(0)) {
-				if (Vector2.Distance(cursor.position, playerEntity.transform.position) < 2) {
-					MoveOffScreen(new Coord((int)cursor.position.x, (int)cursor.position.y));
-				} else {
-					for (int x = -1; x <= 1; x++) {
-						for (int y = -1; y <= 1; y++) {
-							if (Mathf.Abs(x) + Mathf.Abs(y) == 2 || posX + x < 0 || posX + x > Manager.localMapSize.x - 1 
-								|| posY + y >= 0 || posY + y < -Manager.localMapSize.y)
-								continue;
-							MovePlayer(new Coord(posX + x, posY + y));
-						}
-					}
-				}
-			}
-		} else {
-			bool canSee = (playerEntity.inSight(posX, posY) || World.tileMap.CurrentMap.has_seen[posX, posY + Manager.localMapSize.y]);
-			sRenderer.sprite = (canSee) ? sprites[0] : sprites[1];
+        if (World.userInterface != null && !World.userInterface.NoWindowsOpen)
+        {
+            CursorIsActive = false;
+            return;
+        }
 
-			Coord targetPos = new Coord((int)cursor.position.x, (int)cursor.position.y);
+        if (PlayerInput.fullMap)
+        {
+            WorldMapHandling();
+        }
+        else if (CursorIsActive)
+            LocalMapHandling(pos);
+    }
 
-			if (canSee) {
-				if (Input.GetMouseButtonUp(0))
-					MovePlayer(targetPos);
-				if (Input.GetMouseButtonDown(1) && ObjectManager.player.GetComponent<Inventory>().firearm.HasProp(ItemProperty.Ranged))
-					ObjectManager.playerEntity.ShootAtTile(targetPos.x, targetPos.y);
-			}
-		}
-	}
+    void LocalMapHandling(Vector3 pos)
+    {
+        if (playerEntity == null)
+            return;
 
-	void WorldMapHandling() {
-		if (worldCamera == null)
-			worldCamera = GameObject.FindObjectOfType<MiniMap>().GetComponent<Camera>();
-		if (worldCursor == null)
-			worldCursor = GameObject.Find("WorldPointerObject").transform;
+        cursor.transform.position = pos;
+        int posX = (int)cursor.position.x, posY = (int)cursor.position.y;
 
-		Ray ray = worldCamera.ScreenPointToRay(Input.mousePosition);
-		RaycastHit hit;
+        if (posX < 0 || posX > Manager.localMapSize.x - 1 || posY >= 0 || posY < -Manager.localMapSize.y)
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (Vector2.Distance(cursor.position, playerEntity.transform.position) < 2)
+                {
+                    MoveOffScreen(new Coord((int)cursor.position.x, (int)cursor.position.y));
+                }
+                else
+                {
+                    for (int x = -1; x <= 1; x++)
+                    {
+                        for (int y = -1; y <= 1; y++)
+                        {
+                            if (Mathf.Abs(x) + Mathf.Abs(y) == 2 || posX + x < 0 || posX + x > Manager.localMapSize.x - 1
+                                || posY + y >= 0 || posY + y < -Manager.localMapSize.y)
+                                continue;
+                            MovePlayer(new Coord(posX + x, posY + y));
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            bool canSee = (playerEntity.inSight(posX, posY) || World.tileMap.CurrentMap.has_seen[posX, posY + Manager.localMapSize.y]);
+            sRenderer.sprite = (canSee) ? sprites[0] : sprites[1];
 
-		if (Physics.Raycast(ray, out hit)) {
-			Vector3 pos = hit.point;
+            Coord targetPos = new Coord((int)cursor.position.x, (int)cursor.position.y);
 
-			pos.x = Mathf.FloorToInt(pos.x);
-			pos.y = Mathf.FloorToInt(pos.y);
+            if (canSee)
+            {
+                if (Input.GetMouseButtonUp(0))
+                    MovePlayer(targetPos);
+                if (Input.GetMouseButtonDown(1) && ObjectManager.playerEntity.inventory.firearm.HasProp(ItemProperty.Ranged))
+                    ObjectManager.playerEntity.ShootAtTile(targetPos.x, targetPos.y);
+            }
+        }
+    }
 
-			Coord targetPos = new Coord((int)pos.x, (int)pos.y);
-			worldCursor.position = pos + new Vector3(0.5f, 0.5f, 0);
-			cursor.position = pos;
+    void WorldMapHandling()
+    {
+        if (worldCamera == null)
+            worldCamera = GameObject.FindObjectOfType<MiniMap>().GetComponent<Camera>();
+        if (worldCursor == null)
+            worldCursor = GameObject.Find("WorldPointerObject").transform;
 
-			if (Input.GetMouseButtonUp(0))
-				MoveWorld(targetPos);
-		}
-	}
+        Ray ray = worldCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
-	void MoveWorld(Coord targetPos) {
-		playerInput.CancelWorldPath();
-		targetPos.x -= 50;
-		targetPos.y += 200;
-		playerInput.SetWorldPath(targetPos);
-	}
+        if (Physics.Raycast(ray, out hit))
+        {
+            Vector3 pos = hit.point;
 
-	void MoveOffScreen(Coord targetPos) {
-		Coord direction = new Coord(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
-		World.tileMap.CheckEdgeLocalMap(playerEntity.posX + direction.x, playerEntity.posY + direction.y);
-	}
+            pos.x = Mathf.FloorToInt(pos.x);
+            pos.y = Mathf.FloorToInt(pos.y);
 
-	public void MovePlayer(Coord targetPos) {
+            Coord targetPos = new Coord((int)pos.x, (int)pos.y);
+            worldCursor.position = pos + new Vector3(0.5f, 0.5f, 0);
+            cursor.position = pos;
+
+            if (Input.GetMouseButtonUp(0))
+                MoveWorld(targetPos);
+        }
+    }
+
+    void MoveWorld(Coord targetPos)
+    {
+        playerInput.CancelWorldPath();
+        targetPos.x -= 50;
+        targetPos.y += 200;
+        playerInput.SetWorldPath(targetPos);
+    }
+
+    void MoveOffScreen(Coord targetPos)
+    {
+        Coord direction = new Coord(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
+        World.tileMap.CheckEdgeLocalMap(playerEntity.posX + direction.x, playerEntity.posY + direction.y);
+    }
+
+    public void MovePlayer(Coord targetPos)
+    {
         targetPos.y += Manager.localMapSize.y;
 
-		if (playerInput.cursorMode == PlayerInput.CursorMode.Direction) {
-			if (Vector2.Distance(targetPos.toVector2(), playerEntity.myPos.toVector2()) > 1.5f) {
-				playerInput.CancelLook();
-				return;
-			}
+        if (playerInput.cursorMode == PlayerInput.CursorMode.Direction)
+        {
+            if (Vector2.Distance(targetPos.toVector2(), playerEntity.myPos.toVector2()) > 1.5f)
+            {
+                playerInput.CancelLook();
+                return;
+            }
 
-			playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
-			return;
-		}
-			
-		//if you are clicking on the character's tile.
-		if (targetPos == playerEntity.myPos) {
-			if (World.tileMap.CheckTileID(playerEntity.posX, playerEntity.posY) == Tile.tiles["Stairs_Up"].ID) {
-				userInterface.YesNoAction("YN_GoUp", () => { playerInput.GoUp(); }, null, "");
-				return;
-			}
+            playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
+            return;
+        }
 
-			if (World.tileMap.CheckTileID(playerEntity.posX, playerEntity.posY) == Tile.tiles["Stairs_Down"].ID) {
-				userInterface.YesNoAction("YN_GoDown", () => { playerInput.GoDown(); }, null, "");
-				return;	
-			}
+        //if you are clicking on the character's tile.
+        if (targetPos == playerEntity.myPos)
+        {
+            if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == Tile.tiles["Stairs_Up"].ID)
+            {
+                userInterface.YesNoAction("YN_GoUp", () => { playerInput.GoUp(); }, null, "");
+                return;
+            }
+            else if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == Tile.tiles["Stairs_Down"].ID)
+            {
+                userInterface.YesNoAction("YN_GoDown", () => { playerInput.GoDown(); }, null, "");
+                return;
+            }
 
 
-			if (playerInput) {
-				if (World.tileMap.GetCellAt(targetPos).mapObjects.Count > 0 && World.tileMap.GetCellAt(targetPos).HasInventory())
-					playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
-				else
-					playerEntity.Wait();
-			}
-			
-			return;
-		}
+            if (playerInput)
+            {
+                if (World.tileMap.GetCellAt(targetPos).mapObjects.Count > 0 && World.tileMap.GetCellAt(targetPos).HasInventory())
+                    playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
+                else
+                    playerEntity.Wait();
+            }
 
-		//There is an adjacent NPC here. Interact with them.
-		if (playerEntity.myPos.DistanceTo(targetPos)< 2f && World.tileMap.GetCellAt(targetPos) != null) {
-			Entity e = World.tileMap.GetCellAt(targetPos).entity;
+            return;
+        }
 
-			if (e != null && !e.GetComponent<BaseAI>().isHostile) {
-				playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
-				return;
-			}
-			if (World.tileMap.GetCellAt(targetPos).mapObjects.Count > 0)
-				playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
-		}
+        //There is an adjacent NPC here. Interact with them.
+        if (playerEntity.myPos.DistanceTo(targetPos) < 2f && World.tileMap.GetCellAt(targetPos) != null)
+        {
+            Entity e = World.tileMap.GetCellAt(targetPos).entity;
 
-		//Move to the selected position.
-		Path_AStar path = new Path_AStar(playerEntity.myPos, targetPos);
-		playerEntity.CancelWalk();
-		playerEntity.path = path;
-	}
+            if (e != null && !e.GetComponent<BaseAI>().isHostile)
+            {
+                playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
+                return;
+            }
+            if (World.tileMap.GetCellAt(targetPos).mapObjects.Count > 0)
+                playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
+        }
 
-	public bool CursorIsActive {
-		get {
-			return cursor.gameObject.activeSelf;	
-		}
-		set {
-			cursor.gameObject.SetActive(value);
-		}
-	}
+        //Move to the selected position.
+        Path_AStar path = new Path_AStar(playerEntity.myPos, targetPos, playerEntity.inventory.CanFly());
+        playerEntity.CancelWalk();
+        playerEntity.path = path;
+    }
+
+    public bool CursorIsActive
+    {
+        get
+        {
+            return cursor.gameObject.activeSelf;
+        }
+        set
+        {
+            cursor.gameObject.SetActive(value);
+        }
+    }
 }

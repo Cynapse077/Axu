@@ -3,392 +3,462 @@ using MoonSharp.Interpreter;
 
 [MoonSharpUserData]
 [System.Serializable]
-public class BodyPart : IWeighted {
-	const int maxLevel = 5;
+public class BodyPart : IWeighted
+{
+    const int maxLevel = 5;
 
-	public Body myBody;
-	public string name;
-	public string displayName;
-	public ItemProperty slot;
-	public List<Stat_Modifier> Attributes;
-	public int armor, level = 0; 
-	public bool held, external, organic, canWearGear = true;
-	public TraitEffects effect; //Leprosy or Crystalization.
-	public List<BPTags> bpTags;
-	public List<Wound> wounds;
-	public Grip grip;
-	public Hand hand;
-	public List<Grip> holdsOnMe = new List<Grip>();
+    public Body myBody;
+    public string name;
+    public string displayName;
+    public ItemProperty slot;
+    public List<Stat_Modifier> Attributes;
+    public int armor, level = 0;
+    public bool held, external, organic, canWearGear = true;
+    public TraitEffects effect; //Leprosy or Crystalization.
+    public BPTags[] bpTags;
+    public List<Wound> wounds;
+    public Grip grip;
+    public Hand hand;
+    public List<Grip> holdsOnMe = new List<Grip>();
 
-	double currXP = 0.0,  maxXP = 1500.0;
-	int _weight;
-	Item _equippedItem;
-	string _baseName;
-	bool _attached = true, _severable = false;
+    double currXP = 0.0, maxXP = 1500.0;
+    int _weight;
+    public Item equippedItem;
+    string _baseName;
+    bool _attached = true, _severable = false;
 
-	public int Weight {
-		get { return 30 - _weight; }
-		set { _weight = value; }
-	}
+    public int Weight
+    {
+        get { return 30 - _weight; }
+        set { _weight = value; }
+    }
 
-	public bool isAttached {
-		get { return _attached; }
-		protected set { _attached = value; }
-	}
+    public bool isAttached
+    {
+        get { return _attached; }
+        protected set { _attached = value; }
+    }
 
-	public Item equippedItem {
-		get { return _equippedItem; }
-		set { _equippedItem = value; }
-	}
+    public bool severable
+    {
+        get { return _severable; }
+        set { _severable = value; }
+    }
 
-	public bool severable {
-		get { return _severable; }
-		set { _severable = value; }
-	}
+    public bool Crippled
+    {
+        get { return wounds != null && wounds.Count > 0; }
+    }
 
-	public void SetXP(double xp, double max) {
-		currXP = xp;
-		maxXP = max;
-	}
-	
-	public BodyPart(string na, bool severable, ItemProperty itemSlot, bool _external = false, bool _organic = true) {
-		Attributes = new List<Stat_Modifier>();
-		_baseName = na;
-		name = na;
-		_attached = true;
-		_severable = severable;
-		equippedItem = ItemList.GetNone();
-		slot = itemSlot;
-		external = _external;
-		organic = _organic;
-		armor = 1;
-		held = false;
-		displayName = name;
-		bpTags = new List<BPTags>();
-		wounds = new List<Wound>();
-	}
-	
-	public BodyPart(string na, bool att) {
-		Attributes = new List<Stat_Modifier>();
-		name = na;
-		_attached = att;
-		equippedItem = ItemList.GetNone();
-		armor = 1;
-		organic = true;
-		held = false;
-		displayName = name;
-		bpTags = new List<BPTags>();
-		wounds = new List<Wound>();
-	}
+    public void SetXP(double xp, double max)
+    {
+        currXP = xp;
+        maxXP = max;
+    }
 
-	public BodyPart(BodyPart other) {
-		CopyFrom(other);
-	}
+    public BodyPart(string na, bool severable, ItemProperty itemSlot, bool _external = false, bool _organic = true)
+    {
+        Attributes = new List<Stat_Modifier>();
+        _baseName = na;
+        name = na;
+        _attached = true;
+        _severable = severable;
+        equippedItem = ItemList.GetNone();
+        slot = itemSlot;
+        external = _external;
+        organic = _organic;
+        armor = 1;
+        held = false;
+        displayName = name;
+        bpTags = new BPTags[0];
+        wounds = new List<Wound>();
+    }
 
-	public void WoundMe(HashSet<DamageTypes> dts) {
-		if (World.difficulty.Level == Difficulty.DiffLevel.Hunted || World.difficulty.Level == Difficulty.DiffLevel.Rogue) {
-			List<Wound> ws = TraitList.GetAvailableWounds(this, dts);
+    public BodyPart(string na, bool att)
+    {
+        Attributes = new List<Stat_Modifier>();
+        name = na;
+        _attached = att;
+        equippedItem = ItemList.GetNone();
+        armor = 1;
+        organic = true;
+        held = false;
+        displayName = name;
+        bpTags = new BPTags[0];
+        wounds = new List<Wound>();
+    }
 
-			if (ws == null || ws.Count == 0)
-				return;
+    public BodyPart(BodyPart other)
+    {
+        CopyFrom(other);
+    }
 
-			Wound w = ws.GetRandom(SeedManager.combatRandom);
-			w.Inflict(this);
-		}
-	}
+    public void InflictPhysicalWound()
+    {
+        HashSet<DamageTypes> dts = new HashSet<DamageTypes>() { DamageTypes.Blunt };
+        WoundMe(dts);
+    }
 
-	public Stat_Modifier GetStatMod(string search) {
-		if (Attributes.Find(x => x.Stat == search) == null)
-			Attributes.Add(new Stat_Modifier(search, 0));
+    public void WoundMe(HashSet<DamageTypes> dts)
+    {
+        if (World.difficulty.Level == Difficulty.DiffLevel.Hunted || World.difficulty.Level == Difficulty.DiffLevel.Rogue)
+        {
+            List<Wound> ws = TraitList.GetAvailableWounds(this, dts);
 
-		return Attributes.Find(x => x.Stat == search);
-	}
+            if (ws.Count > 0)
+            {
+                Wound w = ws.GetRandom(SeedManager.combatRandom);
+                w.Inflict(this);
+            }
+        }
+    }
 
-	public void AddAttribute(string id, int amount) {
-		if (Attributes.Find(x => x.Stat == id) != null)
-			Attributes.Find(x => x.Stat == id).Amount += amount;
-		else 
-			Attributes.Add(new Stat_Modifier(id, amount));
-	}
+    public Stat_Modifier GetStatMod(string search)
+    {
+        if (Attributes.Find(x => x.Stat == search) == null)
+            Attributes.Add(new Stat_Modifier(search, 0));
 
-	public void AddXP(Entity entity, double amount) {
-		if (myBody == null)
-			myBody = entity.body;
-		
-		if (level >= 5 || !organic || !isAttached || external)
-			return;
-		
-		currXP += amount;
+        return Attributes.Find(x => x.Stat == search);
+    }
 
-		while (currXP > maxXP) {
-			LevelUp(entity);
-			currXP -= maxXP;
-			maxXP *= 1.25;
-		}
-	}
+    public void AddAttribute(string id, int amount)
+    {
+        if (Attributes.Find(x => x.Stat == id) != null)
+            Attributes.Find(x => x.Stat == id).Amount += amount;
+        else
+            Attributes.Add(new Stat_Modifier(id, amount));
+    }
 
-	public void LevelUp(Entity entity) {
-		if (level >= 5)
-			return;
-		
-		level ++;
-		CombatLog.NameMessage("Limb_Stat_Gain", name);
+    public void AddXP(Entity entity, double amount)
+    {
+        if (myBody == null)
+            myBody = entity.body;
 
-		if (slot == ItemProperty.Slot_Arm) {
-			if (level % 2 == 0) {
-				GetStatMod("Dexterity").Amount ++;
-				entity.stats.Attributes["Dexterity"] ++;
-			} else {
-				GetStatMod("Strength").Amount ++;
-				entity.stats.Attributes["Strength"] ++;
-			}
-		} else if (slot == ItemProperty.Slot_Tail) {
-			if (level % 2 == 0) {
-				GetStatMod("Speed").Amount ++;
-				entity.stats.Attributes["Speed"] ++;
-			} else if (entity.isPlayer) {
-				GetStatMod("Stealth").Amount ++;
-				entity.stats.Attributes["Stealth"] ++;
-			}
-		} else if (slot == ItemProperty.Slot_Chest || slot == ItemProperty.Slot_Back) {
-			GetStatMod("Endurance").Amount ++;
-			entity.stats.Attributes["Endurance"] ++;
+        if (level >= 5 || !organic || !isAttached || external)
+            return;
 
-			entity.stats.maxHealth += 3;
-			entity.stats.maxStamina += 2;
-		} else if (slot == ItemProperty.Slot_Leg || slot == ItemProperty.Slot_Wing) {
-			GetStatMod("Speed").Amount ++;
-			entity.stats.Attributes["Speed"] ++;
-		} else if (slot == ItemProperty.Slot_Head) {
-			GetStatMod("Intelligence").Amount ++;
-			entity.stats.Attributes["Intelligence"] ++;
-		}
-	}
+        currXP += amount;
 
-	public void Sever(Entity entity) {
-		_attached = false;
-		_equippedItem.OnUnequip(entity, false);
-		Remove(entity.stats);
-	}
+        while (currXP > maxXP)
+        {
+            LevelUp(entity);
+            currXP -= maxXP;
+            maxXP *= 1.25;
+        }
+    }
 
-	public void Attach(Stats stats, bool showMessage = true) {
-		_attached = true;
-		_severable = true;
-		name = _baseName;
-		wounds.Clear();
+    public void LevelUp(Entity entity)
+    {
+        if (level >= 5)
+            return;
 
-		if (effect == TraitEffects.Leprosy && !stats.hasTrait("leprosy")) {
-			if (showMessage)
-				Alert.NewAlert("Dis_Lep_Attach");
-			
-			stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
-		} else if (effect == TraitEffects.Crystallization && !stats.hasTrait("crystal")) {
-			if (showMessage)
-				Alert.NewAlert("Dis_Cry_Attach");
-			
-			stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
-		}
+        level++;
+        CombatLog.NameMessage("Limb_Stat_Gain", name);
 
-		for (int i = 0; i < Attributes.Count; i++) {
-			if (Attributes[i].Stat != "Hunger")
-				stats.Attributes[Attributes[i].Stat] += Attributes[i].Amount;
-		}
-	}
+        if (slot == ItemProperty.Slot_Arm)
+        {
+            if (level % 2 == 0)
+            {
+                GetStatMod("Dexterity").Amount++;
+                entity.stats.Attributes["Dexterity"]++;
+            }
+            else
+            {
+                GetStatMod("Strength").Amount++;
+                entity.stats.Attributes["Strength"]++;
+            }
+        }
+        else if (slot == ItemProperty.Slot_Tail)
+        {
+            if (level % 2 == 0)
+            {
+                GetStatMod("Speed").Amount++;
+                entity.stats.Attributes["Speed"]++;
+            }
+            else if (entity.isPlayer)
+            {
+                GetStatMod("Stealth").Amount++;
+                entity.stats.Attributes["Stealth"]++;
+            }
+        }
+        else if (slot == ItemProperty.Slot_Chest || slot == ItemProperty.Slot_Back)
+        {
+            GetStatMod("Endurance").Amount++;
+            entity.stats.Attributes["Endurance"]++;
 
-	public void Remove(Stats stats) {
-		wounds.Clear();
-		organic = true;
+            entity.stats.maxHealth += 3;
+            entity.stats.maxStamina += 2;
+        }
+        else if (slot == ItemProperty.Slot_Leg || slot == ItemProperty.Slot_Wing)
+        {
+            GetStatMod("Speed").Amount++;
+            entity.stats.Attributes["Speed"]++;
+        }
+        else if (slot == ItemProperty.Slot_Head)
+        {
+            GetStatMod("Intelligence").Amount++;
+            entity.stats.Attributes["Intelligence"]++;
+        }
+    }
 
-		for (int i = 0; i < Attributes.Count; i++) {
-			if (Attributes[i].Stat != "Hunger")
-				stats.Attributes[Attributes[i].Stat] -= Attributes[i].Amount;
-		}
-	}
+    public void Sever(Entity entity)
+    {
+        _attached = false;
+        equippedItem.OnUnequip(entity, false);
+        Remove(entity.stats);
+    }
 
-	public SBodyPart ToSimpleBodyPart() {
-		if (_equippedItem == null || _equippedItem.ID == "none") 
-			_equippedItem = ItemList.GetNone();
-		
-		SItem equipped = _equippedItem.ToSimpleItem();
-		SBodyPart simple = new SBodyPart(name, equipped, severable, _attached, slot, canWearGear, 
-			Weight, Attributes, armor, effect, external, organic, level, currXP, maxXP, wounds);
+    public void Attach(Stats stats, bool showMessage = true)
+    {
+        _attached = true;
+        _severable = true;
+        name = _baseName;
+        wounds.Clear();
 
-		return simple;
-	}
+        if (effect == TraitEffects.Leprosy && !stats.hasTrait("leprosy"))
+        {
+            if (showMessage)
+                Alert.NewAlert("Dis_Lep_Attach");
 
-	public bool FreeToMove() {
-		return (holdsOnMe.Count == 0);
-	}
+            stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
+        }
+        else if (effect == TraitEffects.Crystallization && !stats.hasTrait("crystal"))
+        {
+            if (showMessage)
+                Alert.NewAlert("Dis_Cry_Attach");
 
-	public void TryBreakGrips() {
-		List<Grip> gripsToBreak = new List<Grip>();
+            stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
+        }
 
-		foreach (Grip g in holdsOnMe) {
-			if (g.GripBroken()) {
-				string message = LocalizationManager.GetLocalizedContent("Gr_BreakGrip")[0];
-				message = message.Replace("[ATTACKER]", g.myPart.myBody.gameObject.name);
-				message = message.Replace("[DEFENDER]", myBody.gameObject.name);
-				message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message;
-				CombatLog.NewMessage(message + "</color>");
-				gripsToBreak.Add(g);
-			}
-		}
+        for (int i = 0; i < Attributes.Count; i++)
+        {
+            if (Attributes[i].Stat != "Hunger")
+                stats.Attributes[Attributes[i].Stat] += Attributes[i].Amount;
+        }
+    }
 
-		foreach (Grip g in gripsToBreak) {
-			g.myPart.ReleaseGrip(true);
-		}
-	}
+    public void Remove(Stats stats)
+    {
+        wounds.Clear();
+        organic = true;
 
-	#region Grappling
-	public void GrabPart(BodyPart part) {
-		if (part == null || part.myBody == null || myBody == null)
-			return;
+        for (int i = 0; i < Attributes.Count; i++)
+        {
+            if (Attributes[i].Stat != "Hunger")
+                stats.Attributes[Attributes[i].Stat] -= Attributes[i].Amount;
+        }
+    }
 
-		if (grip == null)
-			grip = new Grip(part, this);
-		else {
-			grip.Release();
-			grip.Grab(part);
-		}
+    public SBodyPart ToSimpleBodyPart()
+    {
+        if (equippedItem == null || equippedItem.ID == "none")
+            equippedItem = ItemList.GetNone();
 
-		string message = LocalizationManager.GetLocalizedContent("Gr_Grab")[0];
-		message = message.Replace("[ATTACKER]", myBody.gameObject.name);
-		message = message.Replace("[DEFENDER]", part.myBody.gameObject.name);
-		message = message.Replace("[ATTACKER_LIMB]", displayName);
-		message = message.Replace("[DEFENDER_LIMB]", part.displayName);
-		message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message + "</color>";
-		CombatLog.NewMessage(message);
-	}
+        SItem equipped = equippedItem.ToSimpleItem();
+        SBodyPart simple = new SBodyPart(name, equipped, severable, _attached, slot, canWearGear,
+            Weight, Attributes, armor, effect, external, organic, level, currXP, maxXP, wounds);
 
-	public void ReleaseGrip(bool forced) {
-		if (grip == null)
-			grip = new Grip(null, this);
+        return simple;
+    }
 
-		if (!forced) {
-			string message = LocalizationManager.GetLocalizedContent("Gr_Release")[0];
-			message = message.Replace("[ATTACKER]", myBody.gameObject.name);
-			message = message.Replace("[DEFENDER]", grip.HeldPart.myBody.gameObject.name);
-			message = message.Replace("[DEFENDER_LIMB]", grip.HeldPart.name);
-			message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message + "</color>";
-			CombatLog.NewMessage(message);
-		}
+    public bool FreeToMove()
+    {
+        return (holdsOnMe.Count == 0);
+    }
 
-		grip.Release();
-	}
-	#endregion
+    public void TryBreakGrips()
+    {
+        List<Grip> gripsToBreak = new List<Grip>();
+
+        foreach (Grip g in holdsOnMe)
+        {
+            if (g.GripBroken())
+            {
+                string message = LocalizationManager.GetLocalizedContent("Gr_BreakGrip")[0];
+                message = message.Replace("[ATTACKER]", g.myPart.myBody.gameObject.name);
+                message = message.Replace("[DEFENDER]", myBody.gameObject.name);
+                message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message;
+                CombatLog.NewMessage(message + "</color>");
+                gripsToBreak.Add(g);
+            }
+        }
+
+        foreach (Grip g in gripsToBreak)
+        {
+            g.myPart.ReleaseGrip(true);
+        }
+    }
+
+    #region Grappling
+    public void GrabPart(BodyPart part)
+    {
+        if (part == null || part.myBody == null || myBody == null)
+            return;
+
+        if (grip == null)
+            grip = new Grip(part, this);
+        else
+        {
+            grip.Release();
+            grip.Grab(part);
+        }
+
+        string message = LocalizationManager.GetLocalizedContent("Gr_Grab")[0];
+        message = message.Replace("[ATTACKER]", myBody.gameObject.name);
+        message = message.Replace("[DEFENDER]", part.myBody.gameObject.name);
+        message = message.Replace("[ATTACKER_LIMB]", displayName);
+        message = message.Replace("[DEFENDER_LIMB]", part.displayName);
+        message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message + "</color>";
+        CombatLog.NewMessage(message);
+    }
+
+    public void ReleaseGrip(bool forced)
+    {
+        if (grip == null)
+            grip = new Grip(null, this);
+
+        if (!forced)
+        {
+            string message = LocalizationManager.GetLocalizedContent("Gr_Release")[0];
+            message = message.Replace("[ATTACKER]", myBody.gameObject.name);
+            message = message.Replace("[DEFENDER]", grip.heldPart.myBody.gameObject.name);
+            message = message.Replace("[DEFENDER_LIMB]", grip.heldPart.name);
+            message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message + "</color>";
+            CombatLog.NewMessage(message);
+        }
+
+        grip.Release();
+    }
+    #endregion
 
 
-	void CopyFrom(BodyPart other) {
-		Attributes = other.Attributes;
-		_baseName = other._baseName;
-		_weight = other._weight;
-		slot = other.slot;
-		name = other.name;
-		_attached = other.isAttached;
-		_equippedItem = other.equippedItem;
-		armor = other.armor;
-		external = other.external;
-		organic = other.organic;
-		_severable = other.severable;
-		held = other.held;
-		displayName = name;
-		bpTags = new List<BPTags>(other.bpTags);
-		hand = other.hand;
-		myBody = other.myBody;
-		wounds = other.wounds;
-	}
+    void CopyFrom(BodyPart other)
+    {
+        Attributes = other.Attributes;
+        _baseName = other._baseName;
+        _weight = other._weight;
+        slot = other.slot;
+        name = other.name;
+        _attached = other.isAttached;
+        equippedItem = new Item(other.equippedItem);
+        armor = other.armor;
+        external = other.external;
+        organic = other.organic;
+        _severable = other.severable;
+        held = other.held;
+        displayName = name;
+        myBody = other.myBody;
+        wounds = other.wounds;
+
+        if (other.hand != null)
+            hand = new Hand(other.hand);
+
+        bpTags = new BPTags[other.bpTags.Length];
+
+        for (int i = 0; i < other.bpTags.Length; i++)
+        {
+            bpTags[i] = other.bpTags[i];
+        }
+    }
 
     [MoonSharpUserData]
-	public class Hand {
-		public BodyPart arm;
-		Item _equippedItem;
+    public class Hand
+    {
+        public BodyPart arm;
+        public Item EquippedItem;
 
-		public bool isMainHand {
-			get { return (arm.myBody.MainHand == this); }
-		}
+        public bool IsAttached
+        {
+            get { return (arm != null && arm.isAttached); }
+        }
 
-		public bool isAttached {
-			get { return (arm != null && arm.isAttached); }
-		}
+        public void SetEquippedItem(Item i, Entity entity)
+        {
+            if (EquippedItem != null && entity != null)
+                EquippedItem.OnUnequip(entity, this == entity.body.MainHand);
 
-		public Item equippedItem {
-			get { return _equippedItem; }
-		}
+            EquippedItem = i;
 
-		public void SetEquippedItem(Item i, Entity entity) {
-			if (_equippedItem != null && entity != null)
-				_equippedItem.OnUnequip(entity, this == entity.body.MainHand);
+            if (entity != null && EquippedItem != null)
+                EquippedItem.OnEquip(entity.stats, this == entity.body.MainHand);
+        }
 
-			_equippedItem = i;
+        public Hand(BodyPart _arm, Item _item)
+        {
+            arm = _arm;
+            EquippedItem = _item;
+        }
 
-			if (entity != null && _equippedItem != null)
-				_equippedItem.OnEquip(entity.stats, this == entity.body.MainHand);
-		}
+        public Hand(Hand other)
+        {
+            arm = other.arm;
+            EquippedItem = other.EquippedItem;
+        }
+    }
 
-		public Hand(BodyPart _arm, Item _item) {
-			arm = _arm;
-			_equippedItem = _item;
-		}
+    public enum BPTags
+    {
+        None, Grip, OnSeverLast_Die, Synthetic, External
+    }
 
-		public Hand(Hand other) {
-			arm = other.arm;
-			_equippedItem = other.equippedItem;
-		}
+    public class Grip
+    {
+        public BodyPart myPart;
+        public BodyPart heldPart;
 
-		public SHand toSHand() {
-			return new SHand(_equippedItem.ToSimpleItem());
-		}
-	}
+        public Grip(BodyPart part, BodyPart me)
+        {
+            myPart = me;
+            Grab(part);
+        }
 
-	public enum BPTags {
-		None, Grip, OnSeverLast_Die, Synthetic, External
-	}
+        public Body HeldBody
+        {
+            get { return heldPart.myBody; }
+        }
 
-	public class Grip {
-		BodyPart _held;
-		public BodyPart myPart;
+        public int GripStrength()
+        {
+            return myPart.myBody.entity.stats.Strength;
+        }
 
-		public Grip(BodyPart part, BodyPart me) {
-			myPart = me;
-			Grab(part);
-		}
+        public bool GripBroken(int strPenalty = 0)
+        {
+            if (heldPart == null)
+                return true;
 
-		public BodyPart HeldPart {
-			get { return _held; }
-		}
+            int rollFor = SeedManager.combatRandom.Next(GripStrength() / 2, GripStrength() + 1) - strPenalty;
 
-		public Body HeldBody {
-			get { return HeldPart.myBody; }
-		}
+            if (myPart.Crippled)
+                rollFor -= 3;
 
-		public int GripStrength() {
-			return myPart.myBody.entity.stats.Strength;
-		}
+            int rollAgainst = SeedManager.combatRandom.Next(-2, HeldBody.entity.stats.Strength - 1);
 
-		public bool GripBroken(int strPenalty = 0) {
-			if (HeldPart == null)
-				return true;
-			
-			return (SeedManager.combatRandom.Next(-2, HeldBody.entity.stats.Strength) > SeedManager.combatRandom.Next(GripStrength() / 2, GripStrength() + 1) - strPenalty);
-		}
+            if (heldPart.Crippled)
+                rollAgainst -= 3;
 
-		public void Release() {
-			if (_held == null)
-				return;
+            return (rollAgainst > rollFor);
+        }
 
-			if (_held.holdsOnMe.Contains(this))
-				_held.holdsOnMe.Remove(this);
-			
-			_held = null;
-		}
+        public void Release()
+        {
+            if (heldPart == null)
+                return;
 
-		public void Grab(BodyPart part) {
-			_held = part;
+            if (heldPart.holdsOnMe.Contains(this))
+                heldPart.holdsOnMe.Remove(this);
 
-			if (_held != null)
-				_held.holdsOnMe.Add(this);
-		}
-	}
+            heldPart = null;
+        }
+
+        public void Grab(BodyPart part)
+        {
+            heldPart = part;
+
+            if (heldPart != null)
+                heldPart.holdsOnMe.Add(this);
+        }
+    }
 }
 
 

@@ -23,12 +23,30 @@
             "Name" : "Fangs",
             "Type" : "Unarmed",
             "Material" : "Bone",
-            "Damage" : "1d3",
+            "Damage" : "1d4",
             "FlavorText" : "Wicked, curved teeth.",
             "Attack Type" : "Bite",
             "Properties" : [
                 "Weapon",
                 "Cannot_Remove"
+            ],
+            "DmgTypes" : [
+                "Claw"
+            ],
+            "Lootable" : false
+        },
+		{
+            "ID" : "fangs_quick",
+            "Name" : "Fangs",
+            "Type" : "Unarmed",
+            "Material" : "Bone",
+            "Damage" : "1d3",
+            "FlavorText" : "Wicked, curved teeth.",
+            "Attack Type" : "Bite",
+            "Properties" : [
+                "Weapon",
+                "Cannot_Remove",
+				"Quick"
             ],
             "DmgTypes" : [
                 "Claw"
@@ -640,10 +658,7 @@
             "Material" : "Organic",
             "Weight" : 1,
             "Stackable" : true,
-            "FlavorText" : "A surprisingly edible frond from local fauna. After removing the spines, the taste almost resembles celery from back home.",
-            "Stat Mods" : [
-                { "Stat" : "Hunger" , "Amount" : 400 }
-            ],
+            "FlavorText" : "A frond from local fauna, covered in small, sharp spines. After removing the spines, the taste almost resembles celery from back home.",
             "Properties" : [
                 "Edible"
             ],
@@ -660,9 +675,6 @@
             "FlavorText" : "The corpse of a creature. It doesn't look appetizing at all.",
             "Components" : [
                 { "ID" : "Rot", "Max" : 2000  }
-            ],
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 2000 }
             ],
             "Properties" : [
                 "Edible",
@@ -683,9 +695,6 @@
             "Components" : [
                 { "ID" : "Rot", "Max" : 3000  }
             ],            
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 2000 }
-            ],
             "Properties" : [
                 "Edible",
                 "Radiate",
@@ -705,9 +714,6 @@
             "Components" : [
                 { "ID" : "Rot", "Max" : 1500  }
             ],            
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 1000 }
-            ],
             "Properties" : [
                 "Edible",
                 "Poison",
@@ -728,9 +734,6 @@
             "Components" : [
                 { "ID" : "Rot", "Max" : 2000  }
             ],
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 2000 }
-            ],
             "Properties" : [
                 "Edible",
                 "Severed_BodyPart",
@@ -750,9 +753,6 @@
             "Components" : [
                 { "ID" : "Rot", "Max" : 2000  }
             ],
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 2000 }
-            ],
             "Properties" : [
                 "Edible",
                 "Severed_BodyPart"
@@ -768,9 +768,6 @@
             "Material" : "None",
             "Weight" : 2,
             "FlavorText" : "The single internal organ in a slime. It looks poisonous.",
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 2000 }
-            ],
             "Properties" : [
                 "Edible",
                 "Poison",
@@ -787,9 +784,6 @@
             "Material" : "None",
             "Weight" : 2,
             "FlavorText" : "The excretion left by a rare species of slime. Highly nutritious, but not recommended for those used to fine dining.",
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 8000 }
-            ],
             "Properties" : [
                 "Edible"
             ],
@@ -808,7 +802,6 @@
                 { "ID" : "Rot", "Max" : 1500  }
             ],
             "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 500 },
                 { "Stat" : "Intelligence", "Amount" : 2 }
             ],
             "Properties" : [
@@ -816,7 +809,10 @@
                 "Severed_BodyPart",
                 "Replacement_Limb",
                 "Slot_Head"
-            ]
+            ],
+            "Display" : {
+                "On Ground" : "item-limb.png"
+            }
         },
         {
             "ID" : "severed_arm",
@@ -831,7 +827,6 @@
             ],   
             "Cost" : 0,
             "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 500 },
                 { "Stat" : "Strength", "Amount" : 1 }
             ],
             "Properties" : [
@@ -839,7 +834,10 @@
                 "Severed_BodyPart",
                 "Replacement_Limb",
                 "Slot_Arm"
-            ]
+            ],
+            "Display" : {
+                "On Ground" : "item-limb.png"
+            }
         },
         {
             "ID" : "severed_leg",
@@ -855,7 +853,6 @@
             ],   
             "Cost" : 0,
             "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 500 },
                 { "Stat" : "Speed", "Amount" : 2 }
             ],
             "Properties" : [
@@ -863,7 +860,10 @@
                 "Severed_BodyPart",
                 "Replacement_Limb",
                 "Slot_Leg"
-            ]
+            ],
+            "Display" : {
+                "On Ground" : "item-limb.png"
+            }
         },
         {
             "ID" : "severed_tail",
@@ -879,7 +879,6 @@
             ],   
             "Cost" : 0,
             "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 500 },
                 { "Stat" : "Speed", "Amount" : 1 }
             ],
             "Properties" : [
@@ -887,7 +886,10 @@
                 "Severed_BodyPart",
                 "Replacement_Limb",
                 "Slot_Tail"
-            ]
+            ],
+            "Display" : {
+                "On Ground" : "item-limb.png"
+            }
         },
         {
             "ID" : "severed_wing",
@@ -903,7 +905,6 @@
             ],   
             "Cost" : 0,
             "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 500 },
                 { "Stat" : "Speed", "Amount" : 2 }
             ],
             "Properties" : [
@@ -911,7 +912,10 @@
                 "Severed_BodyPart",
                 "Replacement_Limb",
                 "Slot_Wing"
-            ]
+            ],
+            "Display" : {
+                "On Ground" : "item-limb.png"
+            }
         },
         {
             "ID" : "pool",

@@ -52,10 +52,10 @@ public class CameraControl : MonoBehaviour {
 		cam.orthographicSize = (Screen.height / 16f / scale);
 		float horExtent = cam.orthographicSize * Screen.width / Screen.height;
 
-		minY = cam.orthographicSize - (Manager.localMapSize.y + 3);
-		maxY = Manager.localMapSize.y - cam.orthographicSize - (Manager.localMapSize.y - 3);
-		minX = horExtent - 3;
-		maxX = (Manager.localMapSize.x - horExtent + 6);
+		minY = cam.orthographicSize - (Manager.localMapSize.y + 4);
+		maxY = Manager.localMapSize.y - cam.orthographicSize - (Manager.localMapSize.y - 4);
+		minX = horExtent - 4;
+		maxX = (Manager.localMapSize.x - horExtent + 5);
 
 		if (cam.orthographicSize > Manager.localMapSize.y / 2) {
 			minY = maxY = (-Manager.localMapSize.y / 2);

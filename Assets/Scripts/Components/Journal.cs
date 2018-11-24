@@ -17,7 +17,7 @@ public class Journal : MonoBehaviour {
 	void Start() {
 		quests = new List<Quest>();
 		progressFlags = new List<ProgressFlags>();
-		World.tileMap.onScreenChange += UpdateLocation;
+		World.tileMap.OnScreenChange += UpdateLocation;
 		trackedQuest = null;
 
 		if (!Manager.newGame) {
@@ -41,7 +41,7 @@ public class Journal : MonoBehaviour {
 	}
 
 	public void OnDisable() {
-		World.tileMap.onScreenChange -= UpdateLocation;
+		World.tileMap.OnScreenChange -= UpdateLocation;
 	}
 
 	public List<ProgressFlags> AllFlags() {
@@ -125,50 +125,15 @@ public class Journal : MonoBehaviour {
 
 	//Called when an NPC dies, checks all quests to see if their faction or name was in the steps. If so, add one to the amount
 	public void OnNPCDeath_CheckQuestProgress(NPC n) {
-		for (int i = 0; i < quests.Count; i++) {
-			if (quests[i].questGiver != null && quests[i].questGiver == n) {
-				quests[i].Fail();
-			} else if (quests[i].NextStep.goal != null) {
-				switch (quests[i].NextStep.goal) {
-				case ("Kill") :
-					TickUpNPC(n, quests[i]);
-					break;
-				case ("KillAt"):
-					if (quests[i].NextStep.destination == World.tileMap.WorldPosition)
-						TickUpNPC(n, quests[i]);
-					break;
-				case ("KillAllAt"):
-					if (quests[i].NextStep.destination == World.tileMap.WorldPosition && Mathf.Abs(quests[i].NextStep.e) == World.tileMap.currentElevation) {
-						for (int j = 0; j < World.objectManager.onScreenNPCObjects.Count; j++) {
-							if (World.objectManager.onScreenNPCObjects[j].AI.npcBase != n && World.objectManager.onScreenNPCObjects[j].AI.isHostile)
-								return;
-						}
-
-						quests[i].CompleteStep(quests[i].NextStep);
-						quests[i].TryComplete();
-					}
-					break;
-				}
-			}
-		}
-	}
-
-	void TickUpNPC(NPC n, Quest q) {
-		QuestStep step = q.NextStep;
-
-		if (step.of == n.faction.ID || step.of == n.ID) {
-			step.amC ++;
-
-			if (step.amC >= step.am) {
-				q.CompleteStep(q.NextStep);
-				q.TryComplete();
-			}
-		}
+		foreach (Quest q in quests)
+        {
+            q.NPCDied(n);
+        }
 	}
 
 	//Called when the local map changes, checks all quests to see if there is a destination here.
 	bool UpdateLocation(TileMap_Data oldMap, TileMap_Data newMap) {
-		StartCoroutine("OnVisitArea_CheckQuestProgress", newMap);
+		StartCoroutine(OnVisitArea_CheckQuestProgress(newMap));
 		return true;
 	}
 	IEnumerator OnVisitArea_CheckQuestProgress(TileMap_Data newMap) {
@@ -178,7 +143,7 @@ public class Journal : MonoBehaviour {
                 Alert.NewAlert("Found_Base");
                 progressFlags.Add(ProgressFlags.Found_Base);
                 //Spawn chest with return tome in it.
-                MapObject moj = new MapObject("Chest", new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y - 8), newMap.mapInfo.position, newMap.elevation, "")
+                MapObject moj = new MapObject("Chest", new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y - 8), newMap.mapInfo.position, newMap.elevation)
                 {
                     inv = new List<Item>() { ItemList.GetItemByID("tome_return") }
                 };
@@ -192,10 +157,8 @@ public class Journal : MonoBehaviour {
 
 			for (int i = 0; i < quests.Count; i++) {
 				if (quests[i].steps.Count > 0 && quests[i].NextStep.goal == "Go") {
-					if (newMap.mapInfo.position == quests[i].destination && newMap.elevation == Mathf.Abs(quests[i].NextStep.e)) {
+					if (newMap.mapInfo.position == quests[i].destination && newMap.elevation == Mathf.Abs(quests[i].NextStep.e))
 						quests[i].CompleteStep(quests[i].NextStep);
-						quests[i].TryComplete();
-					}
 				}
 			}
 		}
@@ -238,8 +201,7 @@ public class Journal : MonoBehaviour {
 
 				if (quests[i].NextStep.amC >= quests[i].NextStep.am)
 					quests[i].CompleteStep(quests[i].NextStep);
-				
-				quests[i].TryComplete();
+
 				hasQuest = true;
 			}
 		}
@@ -250,8 +212,8 @@ public class Journal : MonoBehaviour {
 
 public enum ProgressFlags {
 	None,
-	Can_Enter_Power_Plant, Can_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna,
+	Can_Enter_Power_Plant, Can_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Can_Enter_Fab,
 	Hostile_To_Kin, Hostile_To_Ensis, Hostile_To_Oromir,
 	Hunts_Available, Arena_Available,
-	Found_Base, Learned_Butcher, SpawnedCannibal
+	Found_Base, Learned_Butcher
 }

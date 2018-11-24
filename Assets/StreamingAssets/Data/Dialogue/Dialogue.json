@@ -162,6 +162,12 @@
             "Dialogues" : [
                 "..."
             ]
-        }
+        },
+		{
+			"ID" : "killower",
+			"Dialogues" : [
+				"..."
+			]
+		}
     ]
 }

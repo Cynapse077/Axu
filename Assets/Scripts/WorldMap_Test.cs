@@ -50,10 +50,12 @@ public class WorldMap_Test : MonoBehaviour {
 		int width = Manager.worldMapSize.x, height = Manager.worldMapSize.y;
 
 		map = Generate_WorldMap.Generate(new System.Random(seed), width, height, layers, outerScale, innerScale);
-		tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
-		tex.filterMode = FilterMode.Point;
+        tex = new Texture2D(width, height, TextureFormat.ARGB32, false)
+        {
+            filterMode = FilterMode.Point
+        };
 
-		for (int x = 0; x < map.GetLength(0); x++) {
+        for (int x = 0; x < map.GetLength(0); x++) {
 			for (int y = 0; y < map.GetLength(1); y++) {
 				tex.SetPixel(x, y, GetPixel(x, y));
 			}

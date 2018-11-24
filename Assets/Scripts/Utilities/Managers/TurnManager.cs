@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,8 +24,6 @@ public class TurnManager : MonoBehaviour {
 	List<TurnTimer> timers = new List<TurnTimer>();
 	int timeOfDay = 0;
 	Entity playerEntity;
-	Inventory playerInventory;
-	ObjectManager objectManager;
 
     public int FullDayLength {
         get { return dayLength + nightLength; }
@@ -61,12 +58,10 @@ public class TurnManager : MonoBehaviour {
 
     public void Init() {
         playerEntity = ObjectManager.playerEntity;
-		playerInventory = playerEntity.inventory;
-        objectManager = World.objectManager;
 
         IncrementTime(0);
 		World.tileMap.HardRebuild();
-		World.tileMap.onScreenChange += CheckWeather;
+		World.tileMap.OnScreenChange += CheckWeather;
 
         PlayerTurn();
     }
@@ -161,26 +156,31 @@ public class TurnManager : MonoBehaviour {
 
 		//causes equipped items to degrade with charges
 		foreach (BodyPart.Hand h in hands) {
-			if (h.equippedItem != null && h.equippedItem.HasProp(ItemProperty.Degrade)) {
-				if (!h.equippedItem.UseCharge() && h.equippedItem.HasProp(ItemProperty.DestroyOnZeroCharges)) {
-					CombatLog.NameMessage("Item_Rot", h.equippedItem.Name);
-					h.SetEquippedItem(ItemList.GetItemByID(playerInventory.baseWeapon), ObjectManager.playerEntity);
+			if (h.EquippedItem != null && h.EquippedItem.HasProp(ItemProperty.Degrade)) {
+				if (!h.EquippedItem.UseCharge() && h.EquippedItem.HasProp(ItemProperty.DestroyOnZeroCharges)) {
+					CombatLog.NameMessage("Item_Rot", h.EquippedItem.Name);
+					h.SetEquippedItem(ItemList.GetItemByID(ObjectManager.playerEntity.inventory.baseWeapon), ObjectManager.playerEntity);
 				}
 			}
 		}
 
-		List<Item> rotItems = playerInventory.items.FindAll(x => x.GetItemComponent<CRot>() != null);
+		List<Item> rotItems = ObjectManager.playerEntity.inventory.items.FindAll(x => x.HasCComponent<CRot>());
+        
 		//Food items rot
 		foreach (Item i in rotItems) {
 			if (!i.UseCharge()) {
 				CombatLog.NameMessage("Item_Rot", i.Name);
-				playerInventory.RemoveInstance(i);
+                ObjectManager.playerEntity.inventory.RemoveInstance(i);
 			}
 		}
 
-		//Random chance to radiate in swamps
-		if (World.tileMap.CurrentMap.mapInfo.biome == WorldMap.Biome.Swamp && SeedManager.combatRandom.Next(100) <= 3)
-			playerEntity.stats.Radiate(SeedManager.combatRandom.Next(1, 3));
+        if (World.tileMap.currentElevation == 0)
+        {
+            MapInfo mi = World.tileMap.CurrentMap.mapInfo;
+
+            if (mi.radiation > 0 && SeedManager.combatRandom.Next(100) < (mi.radiation / 2f))
+                playerEntity.stats.Radiate(SeedManager.combatRandom.Next(mi.radiation));
+        }
 	}
 
     public void ChangeWeather(Weather _weather) {
@@ -252,10 +252,10 @@ public class TurnManager : MonoBehaviour {
     public IEnumerator NPCTurns(float wt) {
 		npcs.Clear();
 
-		if (objectManager.onScreenNPCObjects.Count > 0)
+		if (World.objectManager.onScreenNPCObjects.Count > 0)
             yield return new WaitForSeconds(0);
 
-		npcs.AddRange(objectManager.onScreenNPCObjects);
+		npcs.AddRange(World.objectManager.onScreenNPCObjects);
 
 		foreach (Entity ent in npcs) {
 			if (ent != null) {

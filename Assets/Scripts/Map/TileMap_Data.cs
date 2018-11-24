@@ -1,6 +1,7 @@
 using UnityEngine;
 using LitJson;
 using System.IO;
+using Pathfinding;
 using System.Collections.Generic;
 
 public class TileMap_Data
@@ -56,7 +57,7 @@ public class TileMap_Data
     /// <summary>
     /// New Vault map.
     /// </summary>
-    public TileMap_Data(int x, int y, int elev, bool goingDown, Vault _vault, bool _visited)
+    public TileMap_Data(int x, int y, int elev, Vault _vault, bool _visited)
     {
         mapInfo = World.tileMap.worldMap.GetTileAt(x, y);
         vault = _vault;
@@ -64,31 +65,28 @@ public class TileMap_Data
         Init();
 
         elevation = elev;
-
         visited = _visited;
-        CreateVaultLevel(vault, goingDown);
+        CreateVaultLevel(vault);
+
         FinalPassUnderground();
     }
 
     /// <summary>
     /// Generating a dream world for mind walking.
     /// </summary>
-    public TileMap_Data(int x, int y)
+    public TileMap_Data(string mapName)
     {
-        mapInfo = new MapInfo(new Coord(x, y), WorldMap.Biome.Default);
+        mapInfo = new MapInfo(World.tileMap.WorldPosition, WorldMap.Biome.Default);
         SeedManager.CoordinateSeed(mapInfo.position.x, mapInfo.position.y, 0);
         Init();
-        mapInfo.friendly = false;
-        dream = true;
-        visited = true;
-
-        map_data = TileMap_Generator.Dream();
+        mapInfo.friendly = true;
+        LoadSpecificMap(mapName);
         FinalPass();
     }
 
     void InitialTileFill()
     {
-        map_data = TileMap_Generator.Generate(mapInfo.biome);
+        map_data = TileMap_Generator.Generate(mapInfo.biome, mapInfo.HasLandmark());
 
         PlaceAdjacentBiomes();
         CheckPrefabs();
@@ -101,12 +99,6 @@ public class TileMap_Data
                 {
                     if (RNG.Next(100) < 35 && WalkableTile(x, y))
                         map_data[x, y] = Tile.tiles["Floor_Brick"];
-                }
-
-                if (mapInfo.biome == WorldMap.Biome.Forest)
-                {
-                    if (RNG.Next(1000) < 5 && WalkableTile(x, y) && Tile.IsInTag(map_data[x, y].ID, "Forest"))
-                        World.objectManager.NewObjectAtOtherScreen("Tree_Pine", new Coord(x, y), mapInfo.position, elevation);
                 }
             }
         }
@@ -328,25 +320,25 @@ public class TileMap_Data
                     int tIndex = 11;
                     bool eightWay = false;
 
-                    if (Tile.IsInTag(tile.ID, "Construct_Ensis"))
+                    if (tile.HasTag("Construct_Ensis"))
                     {
                         tIndex = 12;
                         eightWay = true;
                     }
-                    else if (Tile.IsInTag(tile.ID, "Construct_Prison"))
+                    else if (tile.HasTag("Construct Prison"))
                     {
                         tIndex = 18;
                     }
-                    else if (Tile.IsInTag(tile.ID, "Construct_Magna"))
+                    else if (tile.HasTag("Construct_Magna"))
                     {
                         tIndex = 19;
                         eightWay = true;
                     }
-                    else if (Tile.IsInTag(tile.ID, "Construct_Facility"))
+                    else if (tile.HasTag("Construct_Facility"))
                     {
                         tIndex = 20;
                     }
-                    else if (Tile.IsInTag(tile.ID, "Construct_Kin"))
+                    else if (tile.HasTag("Construct_Kin"))
                     {
                         tIndex = 22;
                         eightWay = true;
@@ -358,10 +350,10 @@ public class TileMap_Data
                 {
                     int tIndex = 9;
 
-                    if (elevation != 0 && World.tileMap.GetCurrentVault(mapInfo.position) != null)
+                    if (elevation != 0 && World.tileMap.GetVaultAt(mapInfo.position) != null)
                     {
                         //TODO: Hard-coded. Switch this out to check the vault's wall tile.
-                        string t = World.tileMap.GetCurrentVault(mapInfo.position).blueprint.id;
+                        string t = World.tileMap.GetVaultAt(mapInfo.position).blueprint.id;
 
                         if (t == "Caves_Volcano")
                             tIndex = 13;
@@ -399,6 +391,13 @@ public class TileMap_Data
                             z => Tile.GetByID(z).biome == WorldMap.Biome.Default && !Tile.isWaterTile(z, true) ||
                             Tile.GetByID(z).biome == tile.biome
                         ), true, TileMap_Generator.TileFromBiome(mapInfo.biome, false).ID);
+                }
+                else if (elevation != 0 && tile.HasTag("Walkable") && !tile.HasTag("Underground"))
+                {
+                    BitwiseAutotile(x, y, 21,
+                        (
+                            z => !Tile.GetByID(z).HasTag("Walkable") || !Tile.GetByID(z).HasTag("Underground")
+                        ), true, Tile.tiles["UG_Dirt_1"].ID);
                 }
             }
         }
@@ -462,25 +461,43 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                pathTileData[x, y] = new Path_TileData(WalkableTile(x, y), new Coord(x, y));
+                pathTileData[x, y] = new Path_TileData(WalkableTile(x, y), new Coord(x, y), map_data[x, y].costToEnter);
             }
         }
     }
 
     public Path_TileData GetTileData(int x, int y)
     {
-        if (x >= Width || y >= Height || x < 0 || y < 0)
+        if (World.OutOfLocalBounds(x, y))
             return null;
 
         if (pathTileData[x, y] == null)
-            pathTileData[x, y] = new Path_TileData(map_data[x, y].HasTag("Walkable"), new Coord(x, y));
+            pathTileData[x, y] = new Path_TileData(map_data[x, y].HasTag("Walkable"), new Coord(x, y), map_data[x, y].costToEnter);
 
         return pathTileData[x, y];
     }
 
-    public bool TileDataOutOfMap(int x, int y)
+    public void SetWalkable(int x, int y, bool walk)
     {
-        return (x >= Width || y >= Height || x < 0 || y < 0);
+        if (World.OutOfLocalBounds(x, y))
+            return;
+
+        if (pathTileData[x, y] == null)
+            pathTileData[x, y] = new Path_TileData(map_data[x, y].HasTag("Walkable"), new Coord(x, y), map_data[x, y].costToEnter);
+
+        pathTileData[x, y].walkable = walk;
+    }
+
+
+    public void ModifyTilePathCost(int x, int y, int cost)
+    {
+        if (World.OutOfLocalBounds(x, y))
+            return;
+
+        if (pathTileData[x, y] == null)
+            pathTileData[x, y] = new Path_TileData(map_data[x, y].HasTag("Walkable"), new Coord(x, y), map_data[x, y].costToEnter);
+
+        pathTileData[x, y].costToEnter += cost;
     }
 
     public Coord GetRandomFloorTile()
@@ -501,7 +518,7 @@ public class TileMap_Data
     //return tile id at a certain point
     public int GetTileNumAt(int x, int y)
     {
-        if (x < 0 || x >= Width || y < 0 || y >= Height)
+        if (World.OutOfLocalBounds(x, y))
             return Tile.tiles["Default"].ID;
 
         return map_data[x, y].ID;
@@ -509,7 +526,7 @@ public class TileMap_Data
 
     public bool WalkableTile(int x, int y)
     {
-        if (x < 0 || y < 0 || x >= Width || y >= Height)
+        if (World.OutOfLocalBounds(x, y))
             return false;
 
         return map_data[x, y].HasTag("Walkable");
@@ -539,9 +556,9 @@ public class TileMap_Data
         //If it overlaps roads, discard
         for (int i = 0; i < h.rooms.Length; i++)
         {
-            for (int x = h.rooms[i].left; x < h.rooms[i].right; x++)
+            for (int x = h.rooms[i].left - 1; x < h.rooms[i].right + 1; x++)
             {
-                for (int y = h.rooms[i].bottom; y < h.rooms[i].top; y++)
+                for (int y = h.rooms[i].bottom - 1; y < h.rooms[i].top + 1; y++)
                 {
                     if (map_data[x, y] == Tile.tiles["Floor_Brick_2"])
                         return false;
@@ -567,9 +584,7 @@ public class TileMap_Data
         {
             for (int y = h.Bottom() - 1; y <= h.Top(); y++)
             {
-                if (x < 0 || x >= Manager.localMapSize.x || y < 0 || y >= Manager.localMapSize.y)
-                    continue;
-                if (map_data[x, y] == Tile.tiles["Floor_Brick"] || map_data[x, y] == Tile.tiles["Wall_Brick"])
+                if (World.OutOfLocalBounds(x, y) || map_data[x, y] == Tile.tiles["Floor_Brick"] || map_data[x, y] == Tile.tiles["Wall_Brick"])
                     continue;
 
                 bool visited = false;
@@ -589,9 +604,7 @@ public class TileMap_Data
                             Coord newWall = new Coord(x, y);
 
                             if (x == h.Left() - 1 || x == h.Right() || y == h.Bottom() - 1 || y == h.Top())
-                            {
                                 possinleDoorPos.Add(newWall);
-                            }
 
                             visited = true;
                         }
@@ -621,20 +634,19 @@ public class TileMap_Data
             }
         }
 
+        Coord door = null;
+
         //place door
         if (finalDoors.Count > 0)
-        {
-            Coord door = finalDoors.GetRandom(RNG);
-            map_data[door.x, door.y] = Tile.tiles["Door"];
-        }
+            door = finalDoors.GetRandom(RNG);
         else if (possibleDoorPos.Count > 0)
-        {
-            Coord door = possibleDoorPos.GetRandom(RNG);
+            door = possibleDoorPos.GetRandom(RNG);
+
+        if (door != null)
             map_data[door.x, door.y] = Tile.tiles["Door"];
-        }
     }
 
-    List<JsonData> GetDataFromPath(string path)
+    List<JsonData> GetDataFromPath(string path, string mapName = "")
     {
         string[] ss = Directory.GetFiles(path, "*.map", SearchOption.AllDirectories);
         List<JsonData> datas = new List<JsonData>();
@@ -645,23 +657,41 @@ public class TileMap_Data
             JsonData d = JsonMapper.ToObject(jstring);
             int ele = (d.ContainsKey("elev")) ? (int)d["elev"] : 0;
             string locID = (d.ContainsKey("locationID")) ? d["locationID"].ToString() : "";
-            
-            if (Mathf.Abs(elevation) == Mathf.Abs(ele))
+
+            if (mapName != "")
             {
-                if (elevation != 0 && locID == World.tileMap.GetCurrentVault(mapInfo.position).blueprint.id ||
-                    !string.IsNullOrEmpty(mapInfo.landmark) && locID == mapInfo.landmark)
+                if (d["Name"].ToString() == mapName)
                 {
                     datas.Add(d);
+                    return datas;
                 }
             }
+
+            if (CanLoadMap(ele, locID))
+                datas.Add(d);
         }
 
         return datas;
     }
 
-    bool LoadCustomMap()
+    bool CanLoadMap(int ele, string locID)
     {
-        List<JsonData> datas = GetDataFromPath(Application.streamingAssetsPath + defaultMapPath);
+        if (Mathf.Abs(elevation) == Mathf.Abs(ele))
+        {
+            if (elevation == 0 && mapInfo.HasLandmark() && locID == mapInfo.landmark ||
+                elevation != 0 && locID == World.tileMap.GetVaultAt(mapInfo.position).blueprint.id ||
+                locID == "Random_Encounter" && !mapInfo.HasLandmark())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool LoadSpecificMap(string mapName)
+    {
+        List<JsonData> datas = GetDataFromPath(Application.streamingAssetsPath + defaultMapPath, mapName);
 
         if (datas.Count == 0)
             return false;
@@ -669,16 +699,19 @@ public class TileMap_Data
         loadedFromData = true;
         JsonData data = datas.GetRandom(RNG);
 
-        int max = data["IDs"].Count;
+        if (data == null)
+            return false;
 
-        for (int x = 0; x < Width; x++)
+        int maxX = (int)data["width"], maxY = (int)data["height"];
+
+        for (int x = 0; x < maxX; x++)
         {
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < maxY; y++)
             {
-                if (x * Height + y >= max)
+                if (x >= Width || y >= Height)
                     continue;
 
-                int id = (int)data["IDs"][x * Height + y];
+                int id = (int)data["IDs"][x * maxY + y];
 
                 if (id != Tile.tiles["Default"].ID)
                     map_data[x, y] = Tile.GetByID(id);
@@ -692,6 +725,95 @@ public class TileMap_Data
                 int x = (int)data["objects"][i]["Pos"][0], y = (int)data["objects"][i]["Pos"][1];
                 string oType = data["objects"][i]["Name"].ToString();
                 World.objectManager.NewObjectAtOtherScreen(oType, new Coord(x, y), mapInfo.position, -elevation);
+            }
+        }
+
+        if (data.ContainsKey("npcs") && !visited)
+        {
+            for (int i = 0; i < data["npcs"].Count; i++)
+            {
+                int x = (int)data["npcs"][i]["Pos"][0], y = (int)data["npcs"][i]["Pos"][1];
+                string nType = data["npcs"][i]["Name"].ToString();
+                NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
+
+                if (World.objectManager.NPCExists(nType) && bp.flags.Contains(NPC_Flags.Static))
+                {
+                    NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
+                    npc.worldPosition = new Coord(mapInfo.position);
+                    npc.elevation = -elevation;
+                    npc.localPosition = new Coord(x, y);
+                }
+                else
+                {
+                    NPC n = new NPC(bp, new Coord(mapInfo.position), new Coord(x, y), -elevation);
+                    World.objectManager.CreateNPC(n);
+                }
+            }
+        }
+
+        SetUpTileData();
+        return true;
+    }
+
+    bool LoadCustomMap()
+    {
+        List<JsonData> datas = GetDataFromPath(Application.streamingAssetsPath + defaultMapPath);
+
+        if (datas.Count == 0)
+            return false;
+
+        loadedFromData = true;
+        JsonData data = datas.GetRandom(RNG);
+
+        if (data == null)
+            return false;
+
+        int maxX = (int)data["width"], maxY = (int)data["height"];
+
+        for (int x = 0; x < maxX; x++)
+        {
+            for (int y = 0; y < maxY; y++)
+            {
+                if (x >= Width || y >= Height)
+                    continue;
+
+                int id = (int)data["IDs"][x * maxY + y];
+
+                if (id != Tile.tiles["Default"].ID)
+                    map_data[x, y] = Tile.GetByID(id);
+            }
+        }
+
+        if (data.ContainsKey("objects") && !visited)
+        {
+            for (int i = 0; i < data["objects"].Count; i++)
+            {
+                int x = (int)data["objects"][i]["Pos"][0], y = (int)data["objects"][i]["Pos"][1];
+                string oType = data["objects"][i]["Name"].ToString();
+                World.objectManager.NewObjectAtOtherScreen(oType, new Coord(x, y), mapInfo.position, -elevation);
+            }
+        }
+
+        if (data.ContainsKey("npcs") && !visited)
+        {
+            for (int i = 0; i < data["npcs"].Count; i++)
+            {
+                int x = (int)data["npcs"][i]["Pos"][0], y = (int)data["npcs"][i]["Pos"][1];
+                string nType = data["npcs"][i]["Name"].ToString();
+                NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
+                
+                if (World.objectManager.NPCExists(nType) && bp.flags.Contains(NPC_Flags.Static))
+                {
+                    NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
+                    npc.worldPosition = new Coord(mapInfo.position);
+                    npc.elevation = -elevation;
+                    npc.localPosition = new Coord(x, y);
+                }
+                else
+                {
+                    NPC n = new NPC(bp, new Coord(mapInfo.position), new Coord(x, y), -elevation);
+                    World.objectManager.CreateNPC(n);
+                }
             }
         }
 
@@ -711,23 +833,15 @@ public class TileMap_Data
                 float distToCenter = Vector2.Distance(center, new Vector2(x, y));
 
                 if (distToCenter < RNG.Next(4, 6))
-                {
                     map_data[x, y] = Tile.tiles["Lava"];
-                }
                 else if (distToCenter < RNG.Next(11, 13))
-                {
                     map_data[x, y] = Tile.tiles["Volcano_Wall"];
-                }
                 else
                 {
                     if (RNG.Next(1000) < 10)
-                    {
                         map_data[x, y] = Tile.tiles["Volcano_Wall"];
-                    }
                     else
-                    {
                         map_data[x, y] = (RNG.Next(100) < 25) ? Tile.tiles["Mountain_Floor"] : Tile.tiles["UG_Dirt_1"];
-                    }
                 }
             }
         }
@@ -747,16 +861,9 @@ public class TileMap_Data
 
         if (c != null)
             map_data[c.x, c.y] = Tile.tiles["Stairs_Down"];
-        else
-            Debug.LogError("Downwards stairs not found!");
     }
 
-    bool IsFinalFloor(Vault v)
-    {
-        return (elevation > v.blueprint.depth);
-    }
-
-    void CreateVaultLevel(Vault v, bool goingDown)
+    void CreateVaultLevel(Vault v)
     {
         if (LoadCustomMap())
             return;
@@ -767,22 +874,13 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                map_data[x, y] = Tile.GetByID(d.map_data[x, y]);
+                map_data[x, y] = Tile.GetByID(d.GetTileAt(x, y));
 
                 if (WalkableTile(x, y))
                 {
-                    if (v.blueprint.id == "Cave_Start")
-                    {
-                        if (RNG.Next(1000) < 12)
-                            World.objectManager.NewObjectAtOtherScreen("Web", new Coord(x, y), mapInfo.position, -elevation);
-                    }
-                    else if (v.blueprint.id == "Spider")
-                    {
-                        if (RNG.Next(1000) < 40)
-                            World.objectManager.NewObjectAtOtherScreen("Web", new Coord(x, y), mapInfo.position, -elevation);
-                    }
-
-                    if (RNG.Next(10000) < 4)
+                    if (v.blueprint.id == "Cave_Start" && RNG.Next(1000) < 12 || v.blueprint.id == "Spider" && RNG.Next(1000) < 40)
+                        World.objectManager.NewObjectAtOtherScreen("Web", new Coord(x, y), mapInfo.position, -elevation);
+                    else if (RNG.Next(10000) < Mathf.Abs(elevation) + 1)
                         World.objectManager.NewObjectAtOtherScreen("Chest", new Coord(x, y), mapInfo.position, -elevation);
                 }
             }
@@ -805,12 +903,6 @@ public class TileMap_Data
             }
 
             map_data[stairsCoord2.x, stairsCoord2.y] = Tile.tiles["Stairs_Down"];
-
-            if (!goingDown)
-            {
-                map_data[stairsUp.x, stairsUp.y] = Tile.tiles["Stairs_Down"];
-                map_data[stairsCoord2.x, stairsCoord2.y] = Tile.tiles["Stairs_Up"];
-            }
         }
 
         if (v.blueprint.id == "Cellar" && !visited)
@@ -881,22 +973,14 @@ public class TileMap_Data
                 //Place openings 
                 int dPos = RNG.Next(0, 4);
 
-                if (dPos == 0 && map_data[house.centerX, house.top] == Tile.tiles["Wall_Brick"])
-                { //N
+                if (dPos == 0 && map_data[house.centerX, house.top] == Tile.tiles["Wall_Brick"]) //N
                     map_data[house.centerX, house.top] = Tile.tiles["Floor_House"];
-                }
-                else if (dPos == 1 && map_data[house.centerX, bottom] == Tile.tiles["Wall_Brick"])
-                { //S
+                else if (dPos == 1 && map_data[house.centerX, bottom] == Tile.tiles["Wall_Brick"]) //S
                     map_data[house.centerX, bottom] = Tile.tiles["Floor_House"];
-                }
-                else if (dPos == 2 && map_data[house.right, house.centerY] == Tile.tiles["Wall_Brick"])
-                { //E
+                else if (dPos == 2 && map_data[house.right, house.centerY] == Tile.tiles["Wall_Brick"]) //E
                     map_data[house.right, house.centerY] = Tile.tiles["Floor_House"];
-                }
-                else if (dPos == 3 && map_data[house.left, house.centerY] == Tile.tiles["Wall_Brick"])
-                { //W
+                else if (dPos == 3 && map_data[house.left, house.centerY] == Tile.tiles["Wall_Brick"]) //W
                     map_data[house.left, house.centerY] = Tile.tiles["Floor_House"];
-                }
 
                 ruins.Add(house);
             }
@@ -905,11 +989,23 @@ public class TileMap_Data
         //Place barrels.
         if (!visited)
         {
-            for (int i = 0; i < RNG.Next(3, 11); i++)
+            for (int i = 0; i < RNG.Next(3, 7); i++)
             {
                 Coord lp = GetRandomFloorTile();
                 World.objectManager.NewObjectAtOtherScreen("Barrel", lp, mapInfo.position, elevation);
             }
+        }
+
+        Coord stairs = GetRandomFloorTile();
+
+        if (stairs != null)
+        {
+            map_data[stairs.x, stairs.y] = Tile.tiles["Stairs_Down"];
+        }
+        else
+        {
+            stairs = GetRandomFloorTile();
+            map_data[stairs.x, stairs.y] = Tile.tiles["Stairs_Down"];
         }
     }
 
@@ -929,7 +1025,8 @@ public class TileMap_Data
     {
         int centerX = Width / 2, centerY = Height / 2;
         int w = 3, h = 3;
-        float sinXAmount = RNG.Next(100, 155) / 100f, sinYAmount = RNG.Next(100, 155) / 100f;
+        float sinXAmount = RNG.Next(50, 100) / 100f, sinYAmount = RNG.Next(50, 100) / 100f;
+        float amplitude = RNG.Next(20, 50) * 0.1f;
         float offset = 1.0f;
 
         bool W = (x > 0 && RiverAt(x - 1, y));
@@ -943,8 +1040,8 @@ public class TileMap_Data
 
             for (int ry = 0; ry < Height; ry++)
             {
-                int ranNumX = (int)(Mathf.Sin(ry / 2) * sinXAmount * offset);
-                int ranNumY = (int)(Mathf.Sin(rx / 2) * sinYAmount * offset);
+                int ranNumX = (int)(Mathf.Sin(ry / 3) * sinXAmount * offset);
+                int ranNumY = (int)(Mathf.Sin(rx / 3) * sinYAmount * offset);
 
                 if (N && rx > centerX - w + ranNumX && rx < centerX + w + ranNumX && ry > centerY - h + ranNumY)
                     map_data[rx, ry] = Tile.tiles["Water"];
@@ -955,7 +1052,8 @@ public class TileMap_Data
                 if (W && ry > centerY - h + ranNumY && ry < centerY + h + ranNumY && rx < centerX + w + ranNumX)
                     map_data[rx, ry] = Tile.tiles["Water"];
 
-                offset += RNG.ZeroToOne() * 0.1f;
+                offset += RNG.ZeroToOne() * 0.15f;
+                amplitude += RNG.ZeroToOne() * 0.01f * RNG.Next(-1, 2);
             }
         }
 
@@ -978,7 +1076,8 @@ public class TileMap_Data
     {
         int centerX = Width / 2, centerY = Height / 2;
         int w = 2, h = 2;
-        float sinXAmount = 1f, sinYAmount = 1f;
+        float sinXAmount = RNG.ZeroToOne(), sinYAmount = RNG.ZeroToOne();
+        float amplitude = RNG.Next(30, 50) * 0.1f;
         float offset = 1.0f;
 
         bool W = (x > 0 && VillageAt(x - 1, y));
@@ -992,8 +1091,8 @@ public class TileMap_Data
 
             for (int ry = 0; ry < Height; ry++)
             {
-                int ranNumX = (int)(Mathf.Sin(ry / 2) * sinXAmount * offset);
-                int ranNumY = (int)(Mathf.Sin(rx / 2) * sinYAmount * offset);
+                int ranNumX = (int)(Mathf.Sin(ry / amplitude) * sinXAmount * offset);
+                int ranNumY = (int)(Mathf.Sin(rx / amplitude) * sinYAmount * offset);
 
                 if (N && rx > centerX - w + ranNumX && rx < centerX + w + ranNumX && ry > centerY - h + ranNumY)
                     map_data[rx, ry] = Tile.tiles["Floor_Brick_2"];
@@ -1004,7 +1103,8 @@ public class TileMap_Data
                 if (W && ry > centerY - h + ranNumY && ry < centerY + h + ranNumY && rx < centerX + w + ranNumX)
                     map_data[rx, ry] = Tile.tiles["Floor_Brick_2"];
 
-                offset += RNG.ZeroToOne() * 0.1f;
+                offset += RNG.ZeroToOne() * 0.15f;
+                amplitude += RNG.ZeroToOne() * 0.01f * RNG.Next(-1, 2);
             }
         }
     }

@@ -81,7 +81,8 @@
             "Friendly" : true,
             "Place At" : {
                 "Biome" : "Any Land"
-            }
+            },
+			"Underground" : "Temple of Xzol"
         },
         {
             "ID" : "Power Plant",
@@ -182,6 +183,7 @@
             "Tile Index" : 4,
             "Walkable" : true,
             "Amount" : 2,
+			"Radiation" : 8,
             "Place At" : {
                 "Biome" : "Any Land"
             }
@@ -195,7 +197,7 @@
             "Place At" : {
                 "Biome" : "Any Land"
             },
-            "Underground" : "Cave_Norm"
+            "Underground" : "Ruins_UG"
         },
         {
             "ID" : "Swamp Village",
@@ -253,16 +255,28 @@
             "Display" : "Crashed Ship",
             "Tile Index" : 12,
             "Walkable" : true,
+			"Radiation" : 2,
             "Place At" : {
                 "Biome" : "Any Land"
             }
         },
+		{
+			"ID" : "Lonely House",
+			"Display" : "Lonely House",
+			"Tile Index" : 22,
+			"Walkable" : true,
+			"Place At" : {
+				"Biome" : "Any Land"
+			},
+			"Underground" : "Puzzle"
+		},
         {
             "ID" : "Magna_C",
             "Display" : "Magna Dwyll",
             "Tile Index" : 34,
             "Walkable" : false,
             "Friendly" : true,
+			"Radiation" : 1,
             "Place At" : {
                 "Biome" : "Ocean"
             },
@@ -274,6 +288,7 @@
                     "Tile Index" : 37,
                     "Walkable" : false,
                     "Friendly" : true,
+					"Radiation" : 5,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 0, "y" : 1 }
@@ -285,6 +300,7 @@
                     "Tile Index" : 38,
                     "Walkable" : false,
                     "Friendly" : true,
+					"Radiation" : 5,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 1, "y" : 1 }
@@ -296,6 +312,7 @@
                     "Tile Index" : 35,
                     "Walkable" : false,
                     "Friendly" : true,
+					"Radiation" : 5,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 1, "y" : 0 }
@@ -307,6 +324,7 @@
                     "Tile Index" : 32,
                     "Walkable" : false,
                     "Friendly" : true,
+					"Radiation" : 5,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 1, "y" : -1 }
@@ -318,6 +336,7 @@
                     "Tile Index" : 31,
                     "Walkable" : false,
                     "Friendly" : true,
+					"Radiation" : 5,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 0, "y" : -1 }
@@ -329,6 +348,7 @@
                     "Tile Index" : 30,
                     "Walkable" : false,
                     "Friendly" : true,
+					"Radiation" : 5,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : -1, "y" : -1 }
@@ -340,6 +360,7 @@
                     "Tile Index" : 33,
                     "Walkable" : false,
                     "Friendly" : true,
+					"Radiation" : 5,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : -1, "y" : 0 }
@@ -351,6 +372,7 @@
                     "Tile Index" : 36,
                     "Walkable" : false,
                     "Friendly" : true,
+					"Radiation" : 5,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : -1, "y" : 1 }
@@ -375,7 +397,6 @@
 				}
 			},
 			"Wall Tile" : "Mountain",
-			"Wall Tile" : "Mountain",
 			"Floor Tiles" : [ 
 				{ "ID" : "UG_Dirt_1", "Weight" : 70 },
 				{ "ID" : "Mountain_Floor", "Weight" : 20 },
@@ -386,10 +407,28 @@
 			]
 		},
 		{
+			"ID" : "Puzzle",
+			"Display" : "???",
+			"Depth" : 3,
+			"Light" : 9,
+			"Rules" : {
+				"Load" : true
+			}
+		},
+		{
 			"ID" : "Arena",
 			"Display" : "Arena",
 			"Depth" : 1,
 			"Light" : 10,
+			"Rules" : {
+				"Load" : true
+			}
+		},
+		{
+			"ID" : "Temple of Xzol",
+			"Display" : "Temple of Xzol",
+			"Depth" : 10,
+			"Light" : 4,
 			"Rules" : {
 				"Load" : true
 			}
@@ -447,7 +486,6 @@
 				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ]
 			},
 			"Wall Tile" : "Mountain",
-			"Wall Tile" : "Mountain",
 			"Floor Tiles" : [ 
 				{ "ID" : "UG_Dirt_1", "Weight" : 70 },
 				{ "ID" : "Mountain_Floor", "Weight" : 20 },
@@ -458,9 +496,25 @@
 			]
 		},
 		{
+			"ID" : "Ruins_UG",
+			"Display" : "Underground Ruins",
+			"Depth" : 15,
+			"Light" : 4,
+			"Rules" : {
+				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ]
+			},
+			"Wall Tile" : "Mountain",
+			"Floor Tiles" : [ 
+				{ "ID" : "UG_Dirt_1", "Weight" : 50 },
+				{ "ID" : "UG_Tile", "Weight" : 5 },
+				{ "ID" : "UG_Dirt_2", "Weight" : 5 },
+				{ "ID" : "Floor_Brick", "Weight" : 50 }
+			]
+		},
+		{
 			"ID" : "Spider",
 			"Display" : "Neant Nest",
-			"Depth" : 5,
+			"Depth" : 7,
 			"Light" : 3,
 			"Rules" : {
 				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ]

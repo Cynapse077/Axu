@@ -33,7 +33,7 @@ public class AmmoPanel : MonoBehaviour {
 
 	void ChangeDisplayText() {
 		if (playerInventory.firearm.HasProp(ItemProperty.Ranged)) {
-			CFirearm cf = playerInventory.firearm.GetItemComponent<CFirearm>();
+			CFirearm cf = playerInventory.firearm.GetCComponent<CFirearm>();
 
 			if (cf != null) {
 				ammoText.text = "(" + cf.curr + "/" + cf.max + ")";

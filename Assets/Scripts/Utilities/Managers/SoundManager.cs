@@ -37,6 +37,14 @@ public class SoundManager : MonoBehaviour {
 	public void Eat() { PlaySoundNoRandom(17, 0.5f); }
 	public void Drink() { PlaySoundNoRandom(18, 1.2f); }
 
+    public void PlayAttackSound(Item i)
+    {
+        if (i.attackType == Item.AttackType.Bash || i.attackType == Item.AttackType.Sweep)
+            AttackSound2();
+        else
+            AttackSound();
+    }
+
 	void PlaySound(int soundNum) {
 		sfxSource.pitch = Random.Range(0.9f, 1.1f);
 		sfxSource.PlayOneShot(soundFX[soundNum], EffectVolume * sfxConst);

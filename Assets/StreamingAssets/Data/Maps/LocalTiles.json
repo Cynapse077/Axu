@@ -3,25 +3,29 @@
         "ID" : "Default",
         "TileIndex" : 9,
         "Tags" : [  ],
-        "Biome" : "None"
+        "Biome" : "None",
+		"Path Cost" : 0
     },
     {
         "ID" : "Water",
         "TileIndex" : 0,
         "Tags" : [ "Liquid", "Walkable" ],
-        "Biome" : "None"
+        "Biome" : "None",
+		"Path Cost" : 2
     },
     {
         "ID" : "Water_Swamp",
         "TileIndex" : 27,
         "Tags" : [ "Liquid", "Walkable", "Swamp" ],
-        "Biome" : "None"
+        "Biome" : "None",
+		"Path Cost" : 2
     },
     {
         "ID" : "Lava",
         "TileIndex" : 74,
         "Tags" : [ "Liquid", "Walkable", "Volcano" ],
-        "Biome" : "None"
+        "Biome" : "None",
+		"Path Cost" : 888
     },
     {
         "ID" : "Shore_Star",
@@ -274,7 +278,7 @@
     {
         "ID" : "Ice_Wall",
         "TileIndex" : 79,
-        "Tags" : [ "Tundra", "Wall", "Breakable" ],
+        "Tags" : [ "Tundra", "Mountain", "Breakable" ],
         "Biome" : "None"
     },
     {
@@ -532,9 +536,9 @@
         "Biome" : "None"
     },
     {
-        "ID" : "Ship_Wall",
+        "ID" : "Misc_Flooring",
         "TileIndex" : 110,
-        "Tags" : [ "Construct_Ship", "Wall" ],
+        "Tags" : [ "Walkable", "Flooring" ],
         "Biome" : "None"
     },
     {

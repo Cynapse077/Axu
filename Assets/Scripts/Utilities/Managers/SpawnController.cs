@@ -2,31 +2,50 @@
 using System.Collections.Generic;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
-public static class SpawnController {
-	static System.Random rng { get { return SeedManager.combatRandom; } }
+public static class SpawnController
+{
+    static System.Random rng { get { return SeedManager.combatRandom; } }
 
-	public static void SpawnStaticNPCs() {
-		List<NPC_Blueprint> static_npcs = EntityList.npcs.FindAll(x => x.flags.Contains(NPC_Flags.Static));
+    public static void SpawnStaticNPCs()
+    {
+        List<NPC_Blueprint> static_npcs = EntityList.npcs.FindAll(x => x.flags.Contains(NPC_Flags.Static));
 
-		foreach (NPC_Blueprint bp in static_npcs) {
-			NPC npc = new NPC(new Coord(0, 0), new Coord(0, 0), 0);
+        foreach (NPC_Blueprint bp in static_npcs)
+        {
+            if (bp.zone != "")
+            {
+                NPC npc = new NPC(bp, new Coord(0, 0), new Coord(0, 0), 0);
 
-			npc.FromBlueprint(bp);
-			npc.localPosition = bp.localPosition;
-			npc.elevation = bp.elevation;
-			npc.worldPosition = (bp.zone == "Unassigned") ? new Coord(-1, -1) : World.tileMap.worldMap.GetLandmark(bp.zone);
+                if (bp.zone.Contains("Random_"))
+                {
+                    npc.elevation = 0;
+                    npc.localPosition = new Coord(Random.Range(0, Manager.localMapSize.x), Random.Range(0, Manager.localMapSize.y));
 
-			World.objectManager.CreateNPC(npc);
-		}
-	}
+                    string biome = bp.zone.Replace("Random_", "");
+                    WorldMap.Biome b = biome.ToEnum<WorldMap.Biome>();
+                    npc.worldPosition = World.worldMap.worldMapData.GetRandomFromBiome(b);
+                }
+                else
+                {
+                    npc.localPosition = bp.localPosition;
+                    npc.elevation = bp.elevation;
+                    npc.worldPosition = (bp.zone == "Unassigned") ? new Coord(-1, -1) : World.tileMap.worldMap.GetLandmark(bp.zone);
+                }
 
-	public static void SpawnAttackers() {
+                World.objectManager.CreateNPC(npc);
+            }
+        }
+    }
+
+    public static void SpawnAttackers()
+    {
         List<GroupBlueprint> bps = new List<GroupBlueprint>();
 
-        for (int i = 0; i < NPCGroupList.groupBlueprints.Count; i++) {
+        for (int i = 0; i < NPCGroupList.groupBlueprints.Count; i++)
+        {
             GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
 
-            if (bp.Name.Contains("Bandits") && bp.level >= World.DangerLevel() - 1)
+            if (bp.Name.Contains("Bandits") && bp.level <= World.DangerLevel())
                 bps.Add(bp);
         }
 
@@ -39,23 +58,27 @@ public static class SpawnController {
         SpawnFromGroupName(spawn.Name, amount);
 
         World.tileMap.CheckNPCTiles();
-	}
+    }
 
-	public static void BiomeSpawn(int mx, int my, TileMap_Data mapData) {
-        if (mapData.elevation == 0) {
+    public static void BiomeSpawn(int mx, int my, TileMap_Data mapData)
+    {
+        if (mapData.elevation == 0)
+        {
             if (mapData.houses.Count > 0)
                 HouseObjects();
 
             int numSpawns = mapData.mapInfo.friendly ? rng.Next(1, 4) : rng.Next(0, 4);
-                
-            if (!mapData.mapInfo.friendly) {
+
+            if (!mapData.mapInfo.friendly)
+            {
                 if (rng.Next(100) < 60)
                     numSpawns = 0;
 
                 Encounter();
             }
 
-            if (numSpawns > 0) {
+            if (numSpawns > 0)
+            {
                 List<GroupBlueprint> gbs = GroupsThatCanSpawnHere(mapData);
 
                 if (gbs.Count <= 0)
@@ -63,49 +86,58 @@ public static class SpawnController {
 
                 GroupBlueprint gb = gbs.GetRandom(rng);
 
-                for (int i = 0; i < numSpawns; i++) {
+                for (int i = 0; i < numSpawns; i++)
+                {
                     SpawnBlueprint s = Utility.WeightedChoice(gb.npcs);
                     int amount = s.AmountToSpawn();
 
-                    for (int j = 0; j < amount; j++) {
+                    for (int j = 0; j < amount; j++)
+                    {
                         Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
 
-                        if (c != null) {
-                            NPC n = new NPC(mapData.mapInfo.position, c, mapData.elevation);
-                            NPC_Blueprint blue = EntityList.GetBlueprintByID(s.npcID);
-                            n.FromBlueprint(blue);
+                        if (c != null)
+                        {
+                            NPC n = new NPC(s.npcID, mapData.mapInfo.position, c, mapData.elevation);
                             World.objectManager.SpawnNPC(n);
                         }
                     }
                 }
             }
-        } else {
+        }
+        else
+        {
             SpawnUndergroundEnemies(mapData);
         }
 
-		World.tileMap.CheckNPCTiles();
-	}
+        World.tileMap.CheckNPCTiles();
+    }
 
-    static List<GroupBlueprint> GroupsThatCanSpawnHere(TileMap_Data mapData) {
+    static List<GroupBlueprint> GroupsThatCanSpawnHere(TileMap_Data mapData)
+    {
         return NPCGroupList.groupBlueprints.FindAll(x => x.CanSpawnHere(mapData));
     }
 
-	static void Encounter() {
-		//crystal
-		if (rng.Next(1000) <= 2) {
-			Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
+    static void Encounter()
+    {
+        //crystal
+        if (rng.Next(1000) <= 2)
+        {
+            Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
 
-            if (c != null) {
+            if (c != null)
+            {
                 World.objectManager.NewObjectAtOtherScreen("Crystal", c, World.tileMap.CurrentMap.mapInfo.position, 0);
                 return;
             }
-		}
+        }
 
         //Random minibosses.
-        if (World.DangerLevel() >= 6 && rng.Next(1000) < 5) {
+        if (World.DangerLevel() >= 6 && rng.Next(1000) < 5)
+        {
             List<GroupBlueprint> bps = new List<GroupBlueprint>();
 
-            for (int i = 0; i < NPCGroupList.groupBlueprints.Count; i++) {
+            for (int i = 0; i < NPCGroupList.groupBlueprints.Count; i++)
+            {
                 GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
 
                 if (bp.Name.Contains("Minibosses") && bp.level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
@@ -115,50 +147,55 @@ public static class SpawnController {
             if (bps.Count > 0)
                 SpawnFromGroupName(bps.GetRandom().Name);
         }
-		
-	}
 
-	static void HouseObjects() {
-		if (World.tileMap.CurrentMap.loadedFromData)
-			return;
-		
-		int numHouses = World.tileMap.CurrentMap.houses.Count;
+    }
 
-		for (int r = 0; r < numHouses; r++) {
-			string npcID = (r == 0 && rng.Next(100) < 25) ? "merch" : "villager";
+    static void HouseObjects()
+    {
+        if (World.tileMap.CurrentMap.loadedFromData)
+            return;
 
-			if (r == 1 && rng.Next(100) < 15) 
-				npcID = "doctor";
-			
-			World.objectManager.BuildingObjects(World.tileMap.CurrentMap.houses[r], World.tileMap.CurrentMap.mapInfo.position, npcID);
-		}
-	}
+        int numHouses = World.tileMap.CurrentMap.houses.Count;
 
-	//Summon a random minion from a particular group
-	public static void SummonFromGroup(string groupName, Coord localPosition) {
-		GroupBlueprint gbp = NPCGroupList.GetGroupByName(groupName);
-		SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+        for (int r = 0; r < numHouses; r++)
+        {
+            string npcID = (r == 0 && rng.Next(100) < 25) ? "merch" : "villager";
 
-		NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, World.tileMap.CurrentMap.mapInfo.position, localPosition);
-		n.elevation = World.tileMap.currentElevation;
+            if (r == 1 && rng.Next(100) < 15)
+                npcID = "doctor";
 
-		if (n.HasFlag(NPC_Flags.Summon_Adds))
-			n.flags.Remove(NPC_Flags.Summon_Adds);
+            World.objectManager.BuildingObjects(World.tileMap.CurrentMap.houses[r], World.tileMap.CurrentMap.mapInfo.position, npcID);
+        }
+    }
 
-		n.inventory = new List<Item>();
-		n.isHostile = true;
-		n.hasSeenPlayer = true;
-		World.objectManager.SpawnNPC(n);
-	}
+    //Summon a random minion from a particular group
+    public static void SummonFromGroup(string groupName, Coord localPosition)
+    {
+        GroupBlueprint gbp = NPCGroupList.GetGroupByName(groupName);
+        SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
 
-	static void SpawnUndergroundEnemies(TileMap_Data map) {
+        NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, World.tileMap.CurrentMap.mapInfo.position, localPosition);
+        n.elevation = World.tileMap.currentElevation;
+
+        if (n.HasFlag(NPC_Flags.Summon_Adds))
+            n.flags.Remove(NPC_Flags.Summon_Adds);
+
+        n.inventory = new List<Item>();
+        n.isHostile = true;
+        n.hasSeenPlayer = true;
+        World.objectManager.SpawnNPC(n);
+    }
+
+    static void SpawnUndergroundEnemies(TileMap_Data map)
+    {
         if (map.visited)
             return;
 
-        Vault v = World.tileMap.GetCurrentVault(World.tileMap.WorldPosition);
+        Vault v = World.tileMap.GetVaultAt(World.tileMap.WorldPosition);
 
         //Don't do random spawns on these floors. Will need a way to determine this in the json file
-        if (v.blueprint.id == "Prison") {
+        if (v.blueprint.id == "Prison")
+        {
             int ele = Mathf.Abs(map.elevation);
 
             if (ele >= 5 || ele == 1)
@@ -167,12 +204,14 @@ public static class SpawnController {
 
         List<GroupBlueprint> gbs = GroupsThatCanSpawnHere(map);
 
-        if (gbs.Count > 0) {
+        if (gbs.Count > 0)
+        {
             GroupBlueprint gb = gbs.GetRandom(rng);
             int amountSpawned = 0;
             int maxSpawns = 25;
 
-            for (int i = 0; i < rng.Next(1, 4); i++) {
+            for (int i = 0; i < rng.Next(1, 4); i++)
+            {
                 if (amountSpawned >= maxSpawns)
                     break;
 
@@ -180,16 +219,16 @@ public static class SpawnController {
                 int amount = s.AmountToSpawn() + Mathf.Abs(map.elevation);
                 amount = Mathf.Clamp(amount, 0, 6);
 
-                for (int j = 0; j < amount; j++) {
+                for (int j = 0; j < amount; j++)
+                {
                     if (amountSpawned >= maxSpawns)
                         break;
 
                     Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
 
-                    if (c != null) {
-                        NPC n = new NPC(map.mapInfo.position, c, -map.elevation);
-                        NPC_Blueprint blue = EntityList.GetBlueprintByID(s.npcID);
-                        n.FromBlueprint(blue);
+                    if (c != null)
+                    {
+                        NPC n = new NPC(s.npcID, map.mapInfo.position, c, -map.elevation);
                         World.objectManager.SpawnNPC(n);
                         amountSpawned++;
                     }
@@ -204,8 +243,10 @@ public static class SpawnController {
             SpawnObject("Chest", (SeedManager.combatRandom.Next(100) < 10) ? 2 : 1);
     }
 
-    public static void SpawnObject(string obT, int amount = 1) {
-        for (int i = 0; i < amount; i++) {
+    public static void SpawnObject(string obT, int amount = 1)
+    {
+        for (int i = 0; i < amount; i++)
+        {
             Coord pos = World.tileMap.CurrentMap.GetRandomFloorTile();
 
             if (pos != null)
@@ -213,69 +254,84 @@ public static class SpawnController {
         }
     }
 
-	public static NPC SpawnNPCByID(string npcID, Coord worldPos, int elevation = 0, Coord localPos = null) {
-		NPC npc;
+    public static NPC SpawnNPCByID(string npcID, Coord worldPos, int elevation = 0, Coord localPos = null)
+    {
+        NPC npc;
         Coord defaultCoord = new Coord(SeedManager.combatRandom.Next(1, Manager.localMapSize.x - 2), SeedManager.combatRandom.Next(3, Manager.localMapSize.y - 2));
 
-
-        if (World.objectManager.npcClasses.Find(x => x.ID == npcID && x.HasFlag(NPC_Flags.Static)) != null) {
-			npc = World.objectManager.npcClasses.Find(x => x.ID == npcID && x.HasFlag(NPC_Flags.Static));
-			npc.localPosition = localPos ?? defaultCoord;
+        //Move NPC, or create new if they have not been spawned yet.
+        if (World.objectManager.npcClasses.Find(x => x.ID == npcID && x.HasFlag(NPC_Flags.Static)) != null)
+        {
+            npc = World.objectManager.npcClasses.Find(x => x.ID == npcID && x.HasFlag(NPC_Flags.Static));
+            npc.localPosition = localPos ?? defaultCoord;
 
             npc.worldPosition = worldPos;
-			npc.elevation = elevation;
-		} else {
-			npc = EntityList.GetNPCByID(npcID, worldPos, localPos ?? defaultCoord);
-			npc.elevation = elevation;
-			World.objectManager.CreateNPC(npc);
-		}
+            npc.elevation = elevation;
+        }
+        else
+        {
+            npc = EntityList.GetNPCByID(npcID, worldPos, localPos ?? defaultCoord);
+            npc.elevation = elevation;
+            World.objectManager.CreateNPC(npc);
+        }
 
-		return npc;
-	}
+        return npc;
+    }
 
-    public static bool HasFoundEncounter(float chanceMultiplier = 1.0f) {
-		if (Manager.noEncounters || Random.value >= 0.015f * chanceMultiplier)
+    public static bool HasFoundEncounter(float chanceMultiplier = 1.0f)
+    {
+        if (Manager.noEncounters || Random.value >= 0.015f * chanceMultiplier || World.tileMap.worldMap.GetTileAt(World.tileMap.worldCoordX, World.tileMap.worldCoordY).friendly)
             return false;
-		
+
         return true;
     }
 
-    public static void SpawnFromGroupName(string name, int amount = 1) {
+    public static void SpawnFromGroupName(string name, int amount = 1)
+    {
         GroupBlueprint gbp = NPCGroupList.GetGroupByName(name);
         SpawnSingleGroup(gbp, amount);
     }
 
-	public static void SpawnFromGroupNameAt(string name, int amount, Coord position) {
-		GroupBlueprint gbp = NPCGroupList.GetGroupByName(name);
-		SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+    public static List<NPC> SpawnFromGroupNameAt(string name, int amount, Coord position)
+    {
+        GroupBlueprint gbp = NPCGroupList.GetGroupByName(name);
+        SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+        List<NPC> spawned = new List<NPC>();
 
-		if (amount == 0)
-			amount = chosenSpawn.AmountToSpawn();
+        if (amount == 0)
+            amount = chosenSpawn.AmountToSpawn();
 
-		for (int j = 0; j < amount; j++) {
-			chosenSpawn = Utility.WeightedChoice(gbp.npcs);
-			Coord stPos = World.tileMap.CurrentMap.GetRandomFloorTile();
+        for (int j = 0; j < amount; j++)
+        {
+            chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+            Coord stPos = World.tileMap.CurrentMap.GetRandomFloorTile();
 
-			if (stPos == null)
-				stPos = new Coord(rng.Next(0, Manager.localMapSize.x - 1), rng.Next(0, Manager.localMapSize.y - 1));
-			
-            if (stPos != null) {
+            if (stPos == null)
+                stPos = new Coord(rng.Next(0, Manager.localMapSize.x - 1), rng.Next(0, Manager.localMapSize.y - 1));
+
+            if (stPos != null)
+            {
                 NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, position, stPos);
                 n.AddFlag(NPC_Flags.SpawnedFromQuest);
                 World.objectManager.SpawnNPC(n);
+                spawned.Add(n);
             }
-		}
-	}
+        }
 
-	static void SpawnSingleGroup(GroupBlueprint gbp, int amount = 1) {
+        return spawned;
+    }
+
+    static void SpawnSingleGroup(GroupBlueprint gbp, int amount = 1)
+    {
         SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
         if (amount == 0)
             amount = chosenSpawn.AmountToSpawn();
 
-        for (int j = 0; j < amount; j++) {
-			chosenSpawn = Utility.WeightedChoice(gbp.npcs);
-			NPC npcToSpawn = EntityList.GetNPCByID(chosenSpawn.npcID, World.tileMap.CurrentMap.mapInfo.position, World.tileMap.CurrentMap.GetRandomFloorTile());
-			World.objectManager.SpawnNPC(npcToSpawn);
+        for (int j = 0; j < amount; j++)
+        {
+            chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+            NPC npcToSpawn = EntityList.GetNPCByID(chosenSpawn.npcID, World.tileMap.CurrentMap.mapInfo.position, World.tileMap.CurrentMap.GetRandomFloorTile());
+            World.objectManager.SpawnNPC(npcToSpawn);
         }
     }
 }

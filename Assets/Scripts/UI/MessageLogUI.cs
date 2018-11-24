@@ -8,7 +8,7 @@ public class MessageLogUI : MonoBehaviour {
 	public GameObject messageObject;
 	public Transform anchor;
 
-	int maxMessages = 6;
+	int maxMessages = 7;
 	Text[] messages;
 
 	void Start() {

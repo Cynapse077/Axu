@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728a6b87ba2196d4992bfb115da2085d, type: 3}
+  m_Name: TileSets_WorldMap
+  m_EditorClassIdentifier: 
+  tileSets:
+  - Name: Desert
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300000, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300002, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300004, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300006, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300008, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300010, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300012, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300014, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300016, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300018, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300020, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300022, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300024, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300026, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300028, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+    - {fileID: 21300030, guid: 21610d7ea2fced54e87db315a2113abf, type: 3}
+  - Name: Shore
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300000, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300002, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300004, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300006, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300008, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300010, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300012, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300014, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300016, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300018, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300020, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300022, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300024, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300026, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300028, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+    - {fileID: 21300030, guid: 42ef9b98c49f54f4484325453d57c175, type: 3}
+  - Name: Tundra
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300000, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300002, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300004, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300006, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300008, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300010, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300012, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300014, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300016, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300018, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300020, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300022, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300024, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300026, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300028, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+    - {fileID: 21300030, guid: 54917e9d7953f9e4e947405f889e74f4, type: 3}
+  - Name: River
+    Norm: 
+    Rare: 
+    Autotile:
+    - {fileID: 21300000, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300002, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300004, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300006, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300008, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300010, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300012, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300014, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300016, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300018, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300020, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300022, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300024, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300026, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300028, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}
+    - {fileID: 21300030, guid: c12b92ecb27debc40ad5c3badd6e3b2e, type: 3}

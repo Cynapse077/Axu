@@ -17,7 +17,3 @@ function SeverRandomBodyPart()
 
 	PlayerEntity.body.RemoveLimb(Random(1, #bodyParts))
 end
-
-function Mutate()
-	PlayerEntity.stats.ForceMutation()
-end	

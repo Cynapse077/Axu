@@ -7,13 +7,14 @@
             "Start Dialogue" : "You there, are you okay? (PLAYERNAME) is it? You must have been dropped off here not long ago. Here, take these.\n<color=grey>(Akk-Lune hands you multiple items)</color>\nI represent The <color=yellow>Ensis</color>, a group of individuals dedicated to creating a thriving civilization on Axu. I can help you get an audience with our leader if you wish. There is a cave in this building here. At the bottom lays an item we need. Grab it for me, and I may be able to help you. We could use a person of skill.",
             "Description" : "Explore the underground caverns. There are stairs down inside the <color=yellow>building</color> you started in front of.",
             "Quest Giver" : "akklune",
+			"Fail On Death Of" : [ "akklune" ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
                         { "NPC" : "deephunter_start", "Coordinate" : "Current", "Elevation" : -4, "Give Item" : "artifact1" }
                     ],
-                    "Console Command" : "give militaryration|give flask/liquid_regenitrol|give cloak1|log You were given a few items by Akk-Lune."
+                    "Console Command" : "give cloak1|give flask/liquid_regenitrol|log You were given a few items by Akk-Lune."
                 } 
             ],
             "Rewards" : [
@@ -73,6 +74,7 @@
             "Steps" : [
                 { "Goal" : "Go",  "Coordinate" : "Power Plant",  "Elevation" : 0  }
             ],
+			"End Dialogue" : "I've found the Power Plant that Akk-Lune was talking about. I need to enter and turn on all five terminals below.",
 
             "Chained Quest" : "ensis4"
         },
@@ -81,7 +83,7 @@
             "Name" : "Deactivate the Terminals",
             "ID" : "ensis4",
             "Type" : "Main",
-            "Description" : "Use 5 of the <color=yellow>terminals</color> in the Power Plant. One on each floor.",
+            "Description" : "Turn on the five terminals inside the Power Plant. There is one on each floor.",
             "Rewards" : [
                 { "XP" : 150 }
             ],
@@ -103,7 +105,7 @@
             "Name" : "Find the Ensis",
             "ID" : "ensis5",
             "Type" : "Main",
-            "Description" : "A voice told you to find people known as <color=yellow>\"The Ensis\"</color>. Arthomas is waiting for you there.",
+            "Description" : "A voice told you to find people known as <color=yellow>\"The Ensis\"</color>. Arthomas is waiting for you at their stronghold.",
             "Quest Giver" : "arthomas",
             "Flag" : "Can_Enter_Ensis",
             "Rewards" : [
@@ -112,7 +114,7 @@
             "Steps" : [
                 { "Goal" : "Return", "Coordinate" : "Ensis Exterior", "Elevation" : 0 }
             ],
-            "End Dialogue" : "A pleasure to meet you! My name is Arthomas. Please <color=yellow>head inside</color>. <color=orange>Lomis</color> is waiting to speak with you. You've been granted permission to enter the facility. Don't cause trouble, now...",
+            "End Dialogue" : "A pleasure to meet you! My name is Arthomas. Please head inside. <color=yellow>Lomis</color> is waiting to speak with you. You've been granted permission to enter the facility. Don't cause trouble, now...",
 
             "Chained Quest" : "ensis6"                 
         },
@@ -157,7 +159,7 @@
             "Name" : "Heart Recovery",
             "ID" : "ensis8",
             "Type" : "Main",
-            "Description" : "Recover an <color=yellow>Irradiated Heart</color> for Ka-Nil's experiments.",
+            "Description" : "Recover an <color=yellow>Irradiated Heart</color> for Ka-Nil's experiments. The creature at the bottom level of the Stronghold has one.",
             "Start Dialogue" : "Ah yes, good day to you. Lomis told me to expect you. I'm the head Ensistic engineer and scientist. It was quite a surprise to hear I'd be building a ship. It certainly will take a while. In the meantime, could you help me with a bit of research? I need an <color=yellow>Irradiated Heart</color>. Don't you mind what it's for. I've managed to capture a specimen. It's <color=yellow>down one level</color>. All I need is for you to kill it, and tear out its heart.",
             "Quest Giver" : "kanil",
             "Rewards" : [
@@ -166,7 +168,7 @@
             "Steps" : [
                 { "Goal" : "Fetch", "Item" : "rad_heart", "Amount" : 1 }
             ],
-            "End Dialogue" : "Ah yes, thank you. My experiments aren't exactly <i>condoned</i> by Lomis, so I have to keep my collection a secret. If you grab me more items, I can make you healing concoctions. This is great. My very own apprentice! Find me <color=yellow>10 Spiny Fronds</color> and I can do this for you. Go now, lackey! He he he..",
+            "End Dialogue" : "Ah yes, thank you. My experiments aren't exactly <i>condoned</i> by Lomis, so I have to keep my collection a secret. If you grab me more items, I can make you healing concoctions. This is great. My very own apprentice! Find me <color=yellow>4 Spiny Fronds</color> and I can do this for you. They can be found on the Man-Eating Plants on the surface. Go now! He he he..",
 
             "Chained Quest" : "ensis9"
         },
@@ -213,7 +215,6 @@
 
             "Chained Quest" : "ensis12"
         },
-
         {
             "Name" : "The Cathedral",
             "ID" : "ensis12",
@@ -224,14 +225,12 @@
                 { "XP" : 350 }
             ],
             "Steps" : [
-                { "Goal" : "Go", "Coordinate" : "Cathedral", "Elevation" : 0 },
                 { "Goal" : "Return", "Coordinate" : "Cathedral", "Elevation" : 0 }
             ],
             "End Dialogue" : "Ensis? Here? Or simply a freelancer? How strange. Have you come to murder me and my kin? Perhaps you wish to view the situation from a less narrow-minded view? Forgive me, my name is Corith. I am the high priest of this cathedral, devoted to the <color=cyan>Deep Ones</color> I can tell you're new here, and the conflict goes a bit beyond your understanding. Do not fret, I understand your desire to return home. That's what they promised you, yes? If you hear out our side, I will tell you everything you wish to know. Talk to me again when you are ready.",
 
             "Chained Quest" : "ensis13"
         },
-
         {
             "Name" : "Information",
             "ID" : "ensis13",
@@ -244,28 +243,10 @@
             "Steps" : [
                 { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
             ],
-            "End Dialogue" : "The <color=cyan>Kin of the Deep</color> wish only to be ourselves, not tied to those who cast us away from our previous home. How are we to forge ahead while looking over our shoulder, drilling the mistakes of others into our skull? This is why we burned the library. Our founder, <color=cyan>Isazna</color> spoke to ancient dieties presiding over this planet, and was offered the chance to make a new start. Not only surviving as we do now, we will thrive with the aid of the Deep Ones. If you wish to know more about our gods, you know where to find me.",
-
-            "Chained Quest" : "ensis14"
-        },
-
-        {
-            "Name" : "Information II",
-            "ID" : "ensis14",
-            "Type" : "Main",
-            "Description" : "Talk to Corith to gain information on the Deep Ones.",
-            "Quest Giver" : "corith",
-            "Rewards" : [
-                { "XP" : 0 }
-            ],
-            "Steps" : [
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
-            ],
-            "End Dialogue" : "The Deep Ones are dieties that look after this planet. Their influence is great, but not as powerful as it will become. Soon the first Deep One, Xzol will be transferred into a physical body. The rest will follow. This vessel needs to be constructed of a native stone to Axu, and adorned with several artifacts scattered across the planet. I know not how many we require to finish, but I do know Xzol's body has been constructed. The ritual may begin soon. \nNow... kill me if you must and return to your master. Perhaps the facts I've given you will be useful.",
+            "End Dialogue" : "Let me ask you one thing: How are we to forge ahead while looking over our shoulder, drilling the mistakes of others into our skull? Our founder, <color=cyan>Isazna</color> spoke to ancient dieties presiding over this planet, and was offered the chance to make a new start. Not only surviving as we do now, we will thrive with the aid of <color=yellow>The Deep Ones</color>, our gods. Their influence is great, but not as powerful as it will become. Soon the first Deep One, Xzol will be transferred into a physical body. The rest will follow. The ritual may begin soon. \n\nNow... kill me if you must, and return to your master. Perhaps the facts I've given you will be useful. I do hope you see what right we are doing, however.",
 
             "Chained Quest" : "ensis15"
         },
-
         {
             "Name" : "The Return",
             "ID" : "ensis15",
@@ -284,15 +265,14 @@
                     "Give Quest" : { "NPC" : "kanil", "Quest" : "ensis16" }
                 }
             ],
-            "End Dialogue" : "If what you heard was correct, we need to destroy Xzol's body before he is brought into this plane. Unfortunately, we don't know where it's being held, nor where the ceremony will be. While I gather some intel, <color=cyan>Ka-Nil might need your help</color>. Something regarding your ship."
+            "End Dialogue" : "If what you heard was correct, we need to destroy Xzol's body before he is brought into this plane. Unfortunately, we don't know where it's being held, nor where the ceremony will be. While I gather some intel, <color=yellow>Ka-Nil might need your help</color>. Something regarding your ship."
         },
-
         {
             "Name" : "Strike the Earth",
             "ID" : "ensis16",
             "Type" : "Main",
             "Description" : "Ka-Nil needs <color=yellow>7x Unknown Ore</color>, found only in the Tundra. The best-known veins are located beneath the <color=yellow>Frostborne Village</color>",
-            "Start Dialogue" : "Just the person I was looking for! I'm afraid I need a favor. There is a particular kind of ore, found only beneath the Frostborne Village, in order to complete the body of your ship. Be wary, these people are vicious, attacking everyone on sight. Their technology is quite advanced, focusing on autonamous machines and cold-resistant gear. I'd send somebody else, but you've proven yourself one of the best at this sort of job. Bring something to dig with.",
+            "Start Dialogue" : "Just the person I was looking for! I'm afraid I need a favor. There is a particular kind of ore, found beneath the Frostborne Village, in order to complete the body of your ship. Be wary, these people are vicious, attacking everyone on sight. Their technology is quite advanced, focusing on autonamous machines and cold-resistant gear. I'd send somebody else, but you've proven yourself one of the best at this sort of job. Bring something to dig with.",
             "Quest Giver" : "kanil",
             "Rewards" : [
                 { "XP" : 400 }
@@ -301,7 +281,7 @@
                 { "Goal" : "Go", "Coordinate" : "Frostborne Base", "Elevation" : -1 },
                 { "Goal" : "Fetch", "Item" : "artifact4", "Amount" : 7 }
             ],
-            "End Dialogue" : "I knew I could count on you. Those Frostborne are something, eh? I envy their skill with artificial intelligence. My library has nothing on the subject, and all my experiments have been nothing to write home about. Perhaps I'll figure it out one day. Anyways, I hear you're going after the Kin! Lomis told me to put the ship on hold until you do this. It seems quite unfair after all you've done for us. <color=yellow>Arthomas was also looking for you.</color> I wouldn't keep him waiting.",
+            "End Dialogue" : "I knew I could count on you. Those Frostborne are something, eh? I envy their skill with artificial intelligence. My library has nothing on the subject, and all my experiments have been nothing to write home about. Perhaps I'll figure it out one day. Anyways, I hear you're going after the Kin! Lomis told me to put the ship on hold until we complete this goal. It seems quite unfair after all you've done for us. <color=yellow>Arthomas was also looking for you.</color> I wouldn't keep him waiting.",
 
             "Chained Quest" : "ensis17"
         },
@@ -323,7 +303,7 @@
             "Steps" : [
                 { "Goal" : "Return", "Coordinate" : "Ensis Exterior", "Elevation" : 0 }
             ],
-            "End Dialogue" : "Good, you're here. Let me know when you're ready to embark on a task to prove your loyalty."
+            "End Dialogue" : "Good, you're here. Let me know when you're ready to embark on a task to prove your loyalty. Any involvement with the Kin stops here."
         },
         {
             "Name" : "First Strike",
@@ -339,7 +319,7 @@
             "Steps" : [
                 { "Goal" : "Kill", "Faction" : "kin", "Amount" : 5 }
             ],
-            "End Dialogue" : "You are truly one of us. I am glad to call you Ensis, (PLAYERNAME).\nOur spies have located where the Kin are manufacturing one of their gods' bodies. There's a <color=yellow>Fabrication Plant</color> up North in the <color=yellow>Tundra</color>. If we are lucky, you can make it there in time to stop the construction. It would help us avoid certain doom.",
+            "End Dialogue" : "You are truly one of us. I am glad to call you Ensis, (PLAYERNAME).\nOur spies have located where the Kin are manufacturing one of their gods' bodies. There's a <color=yellow>Fabrication Plant</color> up North in the <color=yellow>Tundra</color>. If we are lucky, you can make it there in time to stop the construction.",
 
             "Chained Quest" : "ensis19" 
         },
@@ -355,11 +335,12 @@
 			"Events" : [
 				{
 					"Event" : "OnStart",
-					"Remove Blockers" : { "Coordinate" : "Fabrication Plant", "Elevation" : 0 }
+					"Remove Blockers" : { "Coordinate" : "Fabrication Plant", "Elevation" : 0 },
+					"Console Command" : "questflag Can_Enter_Fab"
 				}
 			],
 			"Steps" : [
-				{ "Goal" : "Go", "Coordinate" : "Fabrication Plant", "Elevation" : -1 }
+				{ "Goal" : "Go", "Coordinate" : "Fabrication Plant", "Elevation" : 0 }
 			],
 			"End Dialogue" : "The place seems deserted. Perhaps the construction is being done inside.",
 
@@ -375,7 +356,7 @@
 				{ "XP" : 55 }
 			],
 			"Steps" : [
-				{ "Goal" : "Go", "Coordinate" : "Fabrication Plant", "Elevation" : -1 }
+				{ "Goal" : "Go", "Coordinate" : "Fabrication Plant", "Elevation" : -2 }
 			],
 			"End Dialogue" : "Not a sound. We are already too late. It would be smart to return to Arthomas and tell him of this misfortune.",
 
@@ -393,7 +374,29 @@
 			"Steps" : [
 				{ "Goal" : "Return", "Coordinate" : "Ensis Exterior", "Elevation" : 0 }
 			],
-			"End Dialogue" : "Gone? Damn... We were too late. That means the Deep One's body has been constructed and may now be waiting on a consciousness transfer. (TO BE CONTINUED...)"
+			"End Dialogue" : "Gone? Damn... We were too late. That means the Deep One's body has been constructed and may now be waiting on a consciousness transfer. Thankfully, we now know where this is going to take place. Beneath the Cathedral, where you met Corith previously, there is some kind of facility. Go there and stop the Kin before it is too late!",
+
+			"Chained Quest" : "ensis22"
+		},
+		{
+			"Name" : "Confrontation",
+			"ID" : "ensis22",
+			"Type" : "Main",
+			"Quest Giver" : "arthomas",
+			"Description" : "Go beneath the Cathedral and confront the Kin of the Deep before Xzol has been transferred into his new body.",
+			"Rewards" : [
+				{ "XP" : 200 }
+			],
+			"Events" : [
+				{
+                    "Event" : "OnStart",
+                    "Remove Blockers" : { "Coordinate" : "Cathedral", "Elevation" : 0 }
+                }
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "Coordinate" : "Cathedral", "Elevation" : -3 }
+			],
+			"End Dialogue" : ""
 		},
 
         {
@@ -429,36 +432,6 @@
             "End Dialogue" : "Good timing! A group of Lepers has come to raid our wares! Please get rid of them for us! I beg you!",
 
             "Chained Quest" : "blacksmith2"
-        },
-        {
-        	"Name" : "Missing Person",
-        	"ID" : "missingperson",
-        	"Type" : "Side",
-        	"Start Dialogue" : "I've had an unfortunate accident. My assistant went missing while we were studying sub-terranean fungi, and I am unable to find them. I need them to finish my research...",
-        	"Description" : "Find the missing person in the marked underground area.",
-        	"Quest Giver" : "harkallem",
-        	"Follow" : "Upon Completion",
-        	"Rewards" : [
-        		{ "XP" : 30 }
-        	],
-        	"Events" : [
-                {
-                    "Event" : "OnStart",
-                    "Spawn" : [
-                        { "NPC" : "villager", "Coordinate" : "Destination", "Elevation" : -3, "Set Quest Giver" : true }
-                    ]
-                },
-                {
-                	"Event" : "OnFail",
-                	"Give Quest" : { "NPC" : "harkallem", "Quest" : "missingperson" }
-                }
-            ],
-        	"Steps" : [
-        		{ "Goal" : "Go", "Coordinate" : "Ruins", "Elevation" : 0 },
-        		{ "Goal" : "Return", "Coordinate" : "Ruins", "Elevation" : -3 }
-        	],
-        	"End Dialogue" : "Oh thank goodness! I thought I was done for! Please take me back to the surface!",
-        	"Chained Quest" : "missingperson2"
         },
         {
         	"Name" : "Missing Person II",
@@ -507,7 +480,7 @@
                     "Give Quest" : { "NPC" : "saira", "Quest" : "sairashunt1" }
                 }
             ],
-            "End Dialogue" : "Thank you so much! It's only fair that I pass on the means to improve a weapon of yours. Take this Xul Mod Kit. Safe travels, wanderer. Oh, before you go, there is someone out at the Oasis that may need your help."
+            "End Dialogue" : "Thank you so much! It's only fair that I pass on the means to improve a weapon of yours. Take this Xul Mod Kit. Safe travels, wanderer. Oh, before you go, a friend of mine, Saira, is wandering near the Oasis. I'm sure she could use some help if you are willing. She's kept us fed with her hunting for years. I would be very greatful if you could check up on her."
         },
 
         {
@@ -517,7 +490,6 @@
             "Description" : "Kill 8 Parasects with the help of Saira.",
             "Start Dialogue" : "(PLAYERNAME), I presume? I heard from the Blacksmith that you were coming to help me on a few errands. I have to get some meat off the Parasects around these parts. Shall we hunt say.. 8, then move onto the next task?",
             "Quest Giver" : "saira",
-            "Flag" : "Learned_Butcher",
             "Follow" : "Until Completion",
             "Rewards" : [
                 { "XP" : 250 }
@@ -532,6 +504,7 @@
             "Name" : "Vampire Hunter",
             "ID" : "sairashunt2",
             "Type" : "Side",
+			"Flag" : "Learned_Butcher",
             "Description" : "There's a vampire in the Power Plant. Saira needs help taking it down.",
             "Quest Giver" : "saira",
             "Rewards" : [
@@ -539,7 +512,7 @@
             ],
             "Steps" : [
                 { "Goal" : "Go", "Coordinate" : "Power Plant", "Elevation" : -3 },
-                { "Goal" : "Kill", "Name" : "vamp", "Amount" : 1 },
+                { "Goal" : "KillAllSpawned" },
                 { "Goal" : "Return", "Coordinate" : "Current" }
             ],
             "Events" : [
@@ -605,10 +578,11 @@
                 }
             ],
             "Steps" : [
-                { "Goal" : "KillAt", "Name" : "ranger", "Amount" : 1, "Coordinate" : "Random_Close", "Elevation" : 0 },
+				{ "Goal" : "Go", "Coordinate" : "Random_Close", "Elevation" : 0 },
+                { "Goal" : "KillAllSpawned" },
                 { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
             ],
-            "End Dialogue" : "How did you fare? Interesting creature, eh? My thanks for performing that task. Hopefully this makes it worth your while. I've been told you've taken down a Deep Hunter. Would you like to try your luck against something even more interesting? Virash Saints are noble warriors devoted to the gods of the planet. I'd like you to take one down for me.",
+            "End Dialogue" : "How did you fare? Interesting creature, eh? My thanks for performing that task. Hopefully this makes it worth your while. I've been told you've taken down a Deep Hunter. Would you like to try your luck against something even more interesting? Virash Saints are noble warriors devoted to the \"gods\" of the planet. I'd like you to take one down for me.",
             "Chained Quest" : "ensis_sub1"
         },
         {
@@ -619,8 +593,7 @@
             "Quest Giver" : "pleicol",
             "Rewards" : [
                 { "XP" : 250 },
-                { "Gold" : 50 },
-                { "Item" : "tome_wrestling" }
+                { "Gold" : 50 }
             ],
             "Events" : [
                 {
@@ -631,7 +604,8 @@
                 }
             ],
             "Steps" : [
-                { "Goal" : "KillAt", "Name" : "saint", "Amount" : 1, "Coordinate" : "Random_Close", "Elevation" : 0 },
+				{ "Goal" : "Go", "Coordinate" : "Random_Close", "Elevation" : 0 },
+                { "Goal" : "KillAllSpawned" },
                 { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
             ],
             "End Dialogue" : "Another one down. You're quite good at this. I have one more mark for you, a Demigod. Now, the name isn't exactly accurate. These guys are quite like the Deep Hunters you'll find roaming caves, only stronger. Take it down, and show the Kin that men will rise above gods.",
@@ -656,7 +630,8 @@
                 }
             ],
             "Steps" : [
-                { "Goal" : "KillAt", "Name" : "demigod", "Amount" : 1, "Coordinate" : "Random_Close", "Elevation" : 0 },
+				{ "Goal" : "Go", "Coordinate" : "Random_Close", "Elevation" : 0 },
+                { "Goal" : "KillAllSpawned" },
                 { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
             ],
             "End Dialogue" : "Well done! Here's some money for your troubles."
@@ -676,7 +651,7 @@
             "Steps" : [
                 { "Goal" : "Return", "Coordinate" : "Ensis Interior", "Elevation" : -1 }
             ],
-            "End Dialogue" : "You're not exactly one of them, are you? Greetings, my name is Isazna. Did Gemskhet send you? Good, then everything is occuring as expected. We, The Kin of the Deep, represent a new era for this planet.  Look where our ancestors lead us, to a prison millions of miles away.\nI need you to do me a favor. Retrieve an artifact from the <color=yellow>Volcano</color> nearby, and I will show you marvelous things. There are forces at work that you cannot even comprehend. Take this suit. It will help you deal with the heat.",
+            "End Dialogue" : "You're not exactly one of them, are you? Greetings, my name is Isazna. Did Gemskhet send you? Good, then everything is occuring as expected. We, The Kin of the Deep, represent a new era for this planet.  Look where our ancestors lead us, to a prison billions of miles away.\nI need you to do me a favor. Retrieve an artifact from the <color=yellow>Volcano</color> nearby, and I will show you marvelous things. There are forces at work that you cannot even comprehend. Take this suit. It will help you deal with the heat.",
 
             "Chained Quest" : "kin1"    
         },
@@ -699,10 +674,10 @@
             ],
             "Steps" : [
                 { "Goal" : "Go", "Coordinate" : "Volcano", "Elevation" : 0 },
-                { "Goal" : "Kill", "Name" : "saint", "Amount" : 1 },
+                { "Goal" : "KillAllSpawned" },
                 { "Goal" : "Fetch", "Item" : "artifact2", "Amount" : 1 }
             ],
-            "End Dialogue" : "My thanks, wanderer. This will surely help us. Take this book, become stronger. You are worthy of the Ancient Ones' attention. I will answer any questions you may have. If you wish, you can be of more use to us. Do not be frightened, child. There is another artifact in the Ensis Stronghold Exterior Area. Take it, by any means. With the two artifacts, the Deep Ones will heed our call, and raise us to their breast. All others will serve the Kin. We <b>need</b> that artifact.",
+            "End Dialogue" : "My thanks, wanderer. This will surely help us. You are worthy of the Ancient Ones' attention. If you wish, you can be of more use to us. Do not be frightened, child. There is another artifact in the Ensis Stronghold Exterior Area. Just one level up, then slightly south. Take it, by any means. With the two artifacts, the Deep Ones will heed our call, and raise us to their breast. All others will serve the Kin. We <b>need</b> that artifact.",
 
             "Chained Quest" : "kin2"
         },
@@ -769,14 +744,14 @@
             "Events" : [
                 {
                     "Event" : "OnStart",
-                    "Give Quest" : { "NPC" : "oromir", "Quest" : "oromir0" },
                     "Spawn" : [
                         { "NPC" : "villager_thief", "Coordinate" : "Destination", "Elevation" : 0, "Give Item" : "ritualdagger" }
                     ]
                 }
             ],
             "Steps" : [
-                { "Goal" : "KillAt", "Name" : "villager_thief", "Amount" : 1, "Coordinate" : "Village", "Elevation" : 0 },
+				{ "Goal" : "Go", "Coordinate" : "Village", "Elevation" : 0 },
+                { "Goal" : "KillAllSpawned" },
                 { "Goal" : "Fetch", "Item" : "ritualdagger", "Amount" : 1 }
             ],
             "End Dialogue" : "You found it? Splendid. I hope it did not trouble you to spill a little blood in our name. One more thing... I need some intel on the Xul to the South. Could you check on them, and report back to me? Their pitiful village is in the Red Desert. Be wary of the wildlife and sandstorms.",
@@ -792,17 +767,19 @@
             "Rewards" : [
                 { "Gold" : 100 }
             ],
-            "Steps" : [
-                { "Goal" : "Go", "Coordinate" : "Xul Camp", "Elevation" : 0 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
-            ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Give Quest" : { "NPC" : "blacksmith", "Quest" : "blacksmith0" }
                 }
             ],
-            "End Dialogue" : "No resistance from the south? Perfect. Thank you, (PLAYERNAME). We have the dagger, the artifacts, and now we need the ritual area. There's a place of power out in the water. A betrayer of the Ensis lives in solitude inside the city of Magna Dwyll. The man's name is <color=yellow>Oromir</color>, but he now calls himself \"<color=yellow>The Duke of Lies</color>\". Be wary, as this crafty fellow has amassed some kind of army. We hope to harness the source's power instead. Kill him, and return here."
+			"Steps" : [
+                { "Goal" : "Go", "Coordinate" : "Xul Camp", "Elevation" : 0 },
+                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+            ],
+            "End Dialogue" : "No resistance from the south? Perfect. Thank you, (PLAYERNAME). We have the dagger, the artifacts, and now we need the ritual area. There's a place of power out in the water. A betrayer of the Ensis lives in solitude inside the city of Magna Dwyll. The man's name is <color=yellow>Oromir</color>, but he now calls himself \"<color=yellow>The Duke of Lies</color>\". Be wary, as this crafty fellow has amassed some kind of army. We hope to harness the source's power instead. Kill him, and return here.",
+
+			"Chained Quest" : "kin6"
         },
         {
             "Name" : "A Source of Power",
@@ -825,46 +802,6 @@
                 { "Goal" : "Return", "Coordinate" : "Kin Hideout", "Elevation" : 0 }
             ],
             "End Dialogue" : "I trust the Duke of Lies has been slain? Good now we move onto the next phase of our plan...\n\n<color=grey>(TO BE CONTINUED...)</color>"
-        },
-
-        {
-            "Name" : "A Third Option",
-            "ID" : "oromir0",
-            "Type" : "Main",
-            "Start Dialogue" : "Have you come to slay the Duke of Lies? Was it the Ensis or Kin that sent you? Ah, it doesn't matter. Attempt to do so if you feel it necessary, but I will not go peacefully. I have embraced my deceit, claimed my title. I have no qualms with either faction, but I feel there is no other way of existing without taking them out. The fact that you're talking to me instead of charging shows there's some hesitation. Perhaps you and I could work together instead?",
-            "Quest Giver" : "oromir",
-            "Description" : "Talk to Oromir, the Duke of Lies if you wish to hear his plan.",
-            "Rewards" : [
-                { "XP" : 0 }
-            ],
-            "Steps" : [
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
-            ],
-            "End Dialogue" : "Excellent. I knew there was a spark of intelligence in your eyes. Those blasted Ensis have been on my tail ever since my exile. Yes, I betrayed them. I wanted to expose their little hobby. Those mutated creatures used to be human. I'm sure you noticed the prison devoid of recognizable life? Yes, put two and two together. Ka-Nil needs to die. His experiments have gone too far. I can't get anywhere near the stronghold without being put down. Could you take him out for me?",
-            
-            "Chained Quest" : "oromir1"
-        },
-        {
-            "Name" : "The Mad Scientist",
-            "ID" : "oromir1",
-            "Type" : "Main",
-            "Quest Giver" : "oromir",
-            "Description" : "Oromir wants you to kill Ka-Nil for his abhorrent experiments on human life.",
-            "Flag" : "Hostile_To_Ensis",
-            "Rewards" : [
-                { "XP" : 350 }
-            ],
-            "Events" : [
-            	{
-            		"Event" : "OnComplete",
-            		"Remove Blockers" : { "Coordinate" : "Magna_C", "Elevation" : 0 }
-            	}
-            ],
-            "Steps" : [
-                { "Goal" : "KillAt", "Name" : "kanil", "Amount" : 1, "Coordinate" : "Ensis Interior", "Elevation" : -5 },
-                { "Goal" : "Return", "Coordinate" : "Magna_C", "Elevation" : 0 }
-            ],
-            "End Dialogue" : "Well done. I'm sure word has gotten around about your betrayal, but fear not. None would dare enter this fortress.\n\n (TO BE CONTINUED)"
         },
 
         {
@@ -905,7 +842,7 @@
         	],
         	"Steps" : [
         		{ "Goal" : "Go", "Coordinate" : "Spider Den", "Elevation" : -5 },
-        		{ "Goal" : "KillAt", "Name" : "neantqueen", "Amount" : 1, "Coordinate" : "Spider Den", "Elevation" : -5 },
+        		{ "Goal" : "KillAllSpawned" },
         		{ "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
         	],
         	"End Dialogue" : "You have my thanks! Here's something for your troubles."
@@ -941,12 +878,13 @@
             "Start Dialogue" : "Wanna step into the arena? Today's opponent is <color=yellow>1 Bandit</color>. Be wary. These fights are to the death.",
             "Description" : "Defeat the first wave in the arena. Kill all hostile enemies.",
             "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
             "Rewards" : [
                 { "XP" : 50 },
                 { "Gold" : 50 }
             ],
             "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
+                { "Goal" : "KillAllSpawned",
                     "Events" : [
                         {
                             "Event" : "OnStepComplete",
@@ -969,7 +907,12 @@
                 {
                     "Event" : "OnComplete",
                     "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena1" }
-                }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
             ],
             "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
         },
@@ -980,12 +923,13 @@
             "Start Dialogue" : "Wanna step into the arena? Today's opponents are <color=yellow>2 Bandit Scouts</color>. Be wary. These fights are to the death.",
             "Description" : "Defeat the second wave in the arena.",
             "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
             "Rewards" : [
                 { "XP" : 60 },
                 { "Gold" : 80 }
             ],
             "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
+                { "Goal" : "KillAllSpawned",
                     "Events" : [
                         {
                             "Event" : "OnStepComplete",
@@ -1009,7 +953,12 @@
                 {
                     "Event" : "OnComplete",
                     "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena2" }
-                }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
             ],
             "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
         },
@@ -1020,12 +969,13 @@
             "Start Dialogue" : "Wanna step into the arena? Today's opponents are <color=yellow>2 Bandit Scouts</color> and <color=yellow>1 Bandit</color>. Be wary. These fights are to the death.",
             "Description" : "Defeat the third wave in the arena.",
             "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
             "Rewards" : [
                 { "XP" : 60 },
                 { "Gold" : 100 }
             ],
             "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
+                { "Goal" : "KillAllSpawned",
                     "Events" : [
                         {
                             "Event" : "OnStepComplete",
@@ -1050,7 +1000,12 @@
                 {
                     "Event" : "OnComplete",
                     "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena3" }
-                }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
             ],
             "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
         },
@@ -1061,12 +1016,13 @@
             "Start Dialogue" : "Wanna step into the arena? Today's opponents are <color=yellow>1 Bandit Scout</color> and <color=yellow>1 Bandit Brute</color>. Be wary. These fights are to the death.",
             "Description" : "Defeat the fourth wave in the arena.",
             "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
             "Rewards" : [
                 { "XP" : 60 },
                 { "Gold" : 120 }
             ],
             "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
+                { "Goal" : "KillAllSpawned", 
                     "Events" : [
                         {
                             "Event" : "OnStepComplete",
@@ -1090,7 +1046,12 @@
                 {
                     "Event" : "OnComplete",
                     "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena4" }
-                }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
             ],
             "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
         },
@@ -1101,12 +1062,13 @@
             "Start Dialogue" : "Wanna step into the arena? Today's opponents are <color=yellow>2 Test Subjects</color>. Be wary. These fights are to the death.",
             "Description" : "Defeat the fifth wave in the arena.",
             "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
             "Rewards" : [
                 { "XP" : 100 },
                 { "Gold" : 150 }
             ],
             "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
+                { "Goal" : "KillAllSpawned",
                     "Events" : [
                         {
                             "Event" : "OnStepComplete",
@@ -1130,7 +1092,12 @@
                 {
                     "Event" : "OnComplete",
                     "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena5" }
-                }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
             ],
             "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
         },
@@ -1141,12 +1108,13 @@
             "Start Dialogue" : "Wanna step into the arena? Today's opponent is <color=yellow>1 Phlogistonist</color>. Be wary. These fights are to the death.",
             "Description" : "Defeat the sixth wave in the arena.",
             "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
             "Rewards" : [
                 { "XP" : 110 },
                 { "Gold" : 180 }
             ],
             "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
+                { "Goal" : "KillAllSpawned",
                     "Events" : [
                         {
                             "Event" : "OnStepComplete",
@@ -1168,8 +1136,14 @@
                 },
                 {
                     "Event" : "OnComplete",
-                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena6" }
-                }
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena6" },
+					"Move NPC" : { "NPC" : "killower", "Coordinate" : "Xul Camp", "Local Position" : { "x" : 40, "y" : 5 }, "Elevation" : 0 }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
             ],
             "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
         },
@@ -1180,13 +1154,14 @@
             "Start Dialogue" : "Wanna step into the arena? Today's opponent is <color=yellow>1 Restless Nightmare</color>. Be wary. These fights are to the death. This is an extremely dangerous foe.",
             "Description" : "Defeat the seventh wave in the arena.",
             "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
             "Flag" : "Arena_Available",
             "Rewards" : [
                 { "XP" : 300 },
                 { "Gold" : 200 }
             ],
             "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
+                { "Goal" : "KillAllSpawned",
                     "Events" : [
                         {
                             "Event" : "OnStepComplete",
@@ -1205,9 +1180,141 @@
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
                     "Create Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
-                }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
             ],
             "End Dialogue" : "Good show, here's your pay. I would like to do some daily fights. It'll take me some time to gather new creatures. Come back tomorrow to check them out!"
+        },
+
+		{
+            "Name" : "Daily Arena Challenge",
+            "ID" : "arena_daily",
+            "Type" : "Daily",
+            "Start Dialogue" : "Greetings, (PLAYERNAME). Care to step into the arena for my daily challenge? You never know what you might find in there.",
+            "Description" : "Kill the combatants in the arena.",
+            "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
+            "Rewards" : [
+                { "XP" : 300 },
+                { "Gold" : 200 }
+            ],
+            "Steps" : [
+                { "Goal" : "KillAllSpawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnStepComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn" : [
+                        { "NPC" : "nightmare", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
+                    ],
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Create Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
+            ],
+            "End Dialogue" : "Good show. Come back tomorrow for another fight."
+        },
+        {
+            "Name" : "Daily Arena Challenge",
+            "ID" : "arena_daily2",
+            "Type" : "Daily",
+            "Start Dialogue" : "Greetings, (PLAYERNAME). Care to step into the arena for my daily challenge? You never know what you might find in there.",
+            "Description" : "Kill the combatants in the arena.",
+            "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
+            "Rewards" : [
+                { "XP" : 300 },
+                { "Gold" : 200 }
+            ],
+            "Steps" : [
+                { "Goal" : "KillAllSpawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnStepComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn" : [
+                        { "NPC" : "bandit4", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 29, "y" : 14 }  },
+                        { "NPC" : "bandit2", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  },
+                        { "NPC" : "bandit2", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 }  }
+                    ],
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Create Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
+            ],
+            "End Dialogue" : "Good show. Come back tomorrow for another fight."
+        },
+        {
+            "Name" : "Daily Arena Challenge",
+            "ID" : "arena_daily3",
+            "Type" : "Daily",
+            "Start Dialogue" : "Greetings, (PLAYERNAME). Care to step into the arena for my daily challenge? You never know what you might find in there.",
+            "Description" : "Kill the combatants in the arena.",
+            "Quest Giver" : "arenamaster",
+			"Fail On Death" : true,
+            "Rewards" : [
+                { "XP" : 300 },
+                { "Gold" : 200 }
+            ],
+            "Steps" : [
+                { "Goal" : "KillAllSpawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnStepComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn" : [
+                        { "NPC" : "plant3", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 }  },
+                        { "NPC" : "plant3", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 26, "y" : 16 }  }
+                    ],
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Create Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : {},
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+				}
+            ],
+            "End Dialogue" : "Good show. Come back tomorrow for another fight."
         },
 
 
@@ -1261,115 +1368,6 @@
                 { "Goal" : "Return", "Coordinate" : "Current" }
             ],
             "End Dialogue" : "Good show. Come back tomorrow for another hunt."
-        },
-
-        {
-            "Name" : "Daily Arena Challenge",
-            "ID" : "arena_daily",
-            "Type" : "Daily",
-            "Start Dialogue" : "Greetings, (PLAYERNAME). Care to step into the arena for my daily challenge? You never know what you might find in there.",
-            "Description" : "Kill the combatants in the arena.",
-            "Quest Giver" : "arenamaster",
-            "Rewards" : [
-                { "XP" : 300 },
-                { "Gold" : 200 }
-            ],
-            "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
-                    "Events" : [
-                        {
-                            "Event" : "OnStepComplete",
-                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
-                        }
-                    ]
-                },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
-            ],
-            "Events" : [
-                {
-                    "Event" : "OnStart",
-                    "Spawn" : [
-                        { "NPC" : "nightmare", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
-                    ],
-                    "Set Elevation" : -1,
-                    "Set Local Position" : { "x" : 18, "y" : 15 },
-                    "Create Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
-                }
-            ],
-            "End Dialogue" : "Good show. Come back tomorrow for another fight."
-        },
-        {
-            "Name" : "Daily Arena Challenge",
-            "ID" : "arena_daily2",
-            "Type" : "Daily",
-            "Start Dialogue" : "Greetings, (PLAYERNAME). Care to step into the arena for my daily challenge? You never know what you might find in there.",
-            "Description" : "Kill the combatants in the arena.",
-            "Quest Giver" : "arenamaster",
-            "Rewards" : [
-                { "XP" : 300 },
-                { "Gold" : 200 }
-            ],
-            "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
-                    "Events" : [
-                        {
-                            "Event" : "OnStepComplete",
-                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
-                        }
-                    ]
-                },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
-            ],
-            "Events" : [
-                {
-                    "Event" : "OnStart",
-                    "Spawn" : [
-                        { "NPC" : "bandit4", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 29, "y" : 14 }  },
-                        { "NPC" : "bandit2", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  },
-                        { "NPC" : "bandit2", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 }  }
-                    ],
-                    "Set Elevation" : -1,
-                    "Set Local Position" : { "x" : 18, "y" : 15 },
-                    "Create Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
-                }
-            ],
-            "End Dialogue" : "Good show. Come back tomorrow for another fight."
-        },
-        {
-            "Name" : "Daily Arena Challenge",
-            "ID" : "arena_daily3",
-            "Type" : "Daily",
-            "Start Dialogue" : "Greetings, (PLAYERNAME). Care to step into the arena for my daily challenge? You never know what you might find in there.",
-            "Description" : "Kill the combatants in the arena.",
-            "Quest Giver" : "arenamaster",
-            "Rewards" : [
-                { "XP" : 300 },
-                { "Gold" : 200 }
-            ],
-            "Steps" : [
-                { "Goal" : "KillAllAt", "Coordinate" : "Arena", "Elevation" : -1,
-                    "Events" : [
-                        {
-                            "Event" : "OnStepComplete",
-                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
-                        }
-                    ]
-                },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
-            ],
-            "Events" : [
-                {
-                    "Event" : "OnStart",
-                    "Spawn" : [
-                        { "NPC" : "plant3", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 }  },
-                        { "NPC" : "plant3", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 26, "y" : 16 }  }
-                    ],
-                    "Set Elevation" : -1,
-                    "Set Local Position" : { "x" : 18, "y" : 15 },
-                    "Create Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
-                }
-            ],
-            "End Dialogue" : "Good show. Come back tomorrow for another fight."
         }
     ]
 }

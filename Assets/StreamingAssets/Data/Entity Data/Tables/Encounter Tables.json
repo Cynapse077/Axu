@@ -5,8 +5,8 @@
             "Landmarks" : [ "Village", "Rich District", "Graveyard", "Farm" ],
             "Possibilities" : [
                 { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "villager" },
-                { "Weight" : 6, "Amount" : "1d1", "Blueprint" : "farmer" },
-                { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "guard" },
+                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "farmer" },
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "guard" },
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "merc" },
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "kindred" }
             ]
@@ -50,7 +50,7 @@
         },
         {
             "Name" : "Bandits 1",
-            "Level" : 1,
+            "Level" : 0,
             "Biomes" : [ "Forest", "Plains" ],
             "Landmarks" : [ "Ruins", "River" ],
             "Possibilities" : [
@@ -111,27 +111,28 @@
             "Biomes" : [ "Forest", "Plains" ],
             "Landmarks" : [ "Ruins", "River" ],
             "Possibilities" : [
-                { "Weight" : 10, "Amount" : "2d3", "Blueprint" : "slime0" },
-                { "Weight" : 10, "Amount" : "2d3", "Blueprint" : "slime1" },
-                { "Weight" : 10, "Amount" : "2d3", "Blueprint" : "slime2" },
+                { "Weight" : 5, "Amount" : "1d3", "Blueprint" : "slime0" },
+                { "Weight" : 5, "Amount" : "1d3", "Blueprint" : "slime1" },
+                { "Weight" : 5, "Amount" : "1d3", "Blueprint" : "slime2" },
                 { "Weight" : 2, "Amount" : "1d2", "Blueprint" : "slime3" },
-                { "Weight" : 2, "Amount" : "2d3", "Blueprint" : "worm" }
+				{ "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slime4" }
             ]
         },
         {
             "Name" : "Wildlife 1",
-            "Level" : 2,
+            "Level" : 0,
             "Biomes" : [ "Forest", "Plains" ],
             "Landmarks" : [ "Ruins", "River" ],
             "Possibilities" : [
-                { "Weight" : 20, "Amount" : "1d3", "Blueprint" : "bat" },
-                { "Weight" : 10, "Amount" : "1d2", "Blueprint" : "bird" },
+                { "Weight" : 5, "Amount" : "1d3", "Blueprint" : "bat" },
                 { "Weight" : 5, "Amount" : "2d2", "Blueprint" : "slime1" },
                 { "Weight" : 5, "Amount" : "2d2", "Blueprint" : "slime0" },
                 { "Weight" : 5, "Amount" : "2d3", "Blueprint" : "slime2" },
                 { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "slime3" },
                 { "Weight" : 20, "Amount" : "1d4", "Blueprint" : "scrag0" },
-                { "Weight" : 2, "Amount" : "1d2", "Blueprint" : "scrag1" }
+                { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "scrag1" },
+				{ "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slime4" },
+				{ "Weight" : 3, "Amount" : "1d3", "Blueprint" : "worm" }
             ]
         },
         {
@@ -140,7 +141,7 @@
             "Biomes" : [ "Forest", "Plains" ],
             "Landmarks" : [ "Ruins", "River" ],
             "Possibilities" : [
-                { "Weight" : 25, "Amount" : "1d4", "Blueprint" : "bat" },
+                { "Weight" : 5, "Amount" : "1d4", "Blueprint" : "bat" },
                 { "Weight" : 10, "Amount" : "1d2", "Blueprint" : "bird" },
                 { "Weight" : 10, "Amount" : "2d2", "Blueprint" : "scrag2" },
                 { "Weight" : 20, "Amount" : "2d2", "Blueprint" : "scrag1" },
@@ -188,10 +189,11 @@
             "Landmarks" : [ "River" ],
             "Biomes" : [ "Forest", "Plains", "Swamp"],
             "Possibilities" : [
-                { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "slime0" },
-                { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "slime1" },
-                { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "slime2" },
-                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slime3" }
+                { "Weight" : 10, "Amount" : "1d2", "Blueprint" : "slime0" },
+                { "Weight" : 10, "Amount" : "1d2", "Blueprint" : "slime1" },
+                { "Weight" : 10, "Amount" : "1d2", "Blueprint" : "slime2" },
+                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "slime3" },
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "slime4" }
             ]
         },
         {
@@ -209,7 +211,7 @@
             "Landmarks" : [ "River" ],
             "Biomes" : [ "Forest", "Plains", "Swamp", "Desert" ],
             "Possibilities" : [
-                { "Weight" : 10, "Amount" : "2d3", "Blueprint" : "infected" }
+                { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "infected" }
             ]
         },
         {
@@ -218,10 +220,11 @@
             "Landmarks" : [ "River" ],
             "Biomes" : [ "Forest", "Plains", "Swamp" ],
             "Possibilities" : [
-                { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "wastewalker"},
+                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "wastewalker"},
                 { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "bird" },
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "subject" },
-                { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" }
+                { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" },
+				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "snake2" }
             ]
         },
         {
@@ -249,7 +252,8 @@
                 { "Weight" : 2, "Amount" : "1d2", "Blueprint" : "slime3" },
                 { "Weight" : 10, "Amount" : "2d2", "Blueprint" : "wastewalker"},
                 { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "bird" },
-                { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" }
+                { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" },
+				{ "Weight" : 4, "Amount" : "1d2", "Blueprint" : "snake2" }
             ]
         },
         {
@@ -263,7 +267,8 @@
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slime3" },
                 { "Weight" : 4, "Amount" : "1d4", "Blueprint" : "wastewalker"},
                 { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "slimemancer"},
-                { "Weight" : 1, "Amount" : "1d3", "Blueprint" : "infected" }
+                { "Weight" : 1, "Amount" : "1d3", "Blueprint" : "infected" },
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "snake2" }
             ]
         },
         {
@@ -276,7 +281,8 @@
                 { "Weight" : 1, "Amount" : "1d3", "Blueprint" : "plant3" },
                 { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" },
                 { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "insect" },
-                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "insect2" }
+                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "insect2" },
+				{ "Weight" : 1, "Amount" : "1d1", "Blueprint" : "snake2" }
             ]
         },
         {
@@ -297,7 +303,8 @@
                 { "Weight" : 10, "Amount" : "1d2", "Blueprint" : "snake" },
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "parasect" },
                 { "Weight" : 1, "Amount" : "1d3", "Blueprint" : "nomad" },
-                { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "insect" }
+                { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "insect" },
+				{ "Weight" : 1, "Amount" : "1d1", "Blueprint" : "insect2" }
             ]
         },
         {
@@ -306,8 +313,8 @@
             "Landmarks" : [ "Xul Camp" ],
             "Possibilities" : [
                 { "Weight" : 20, "Amount" : "1d1", "Blueprint" : "nomad" },
-                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "merch" },
-                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "doctor" },
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "merch" },
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "doctor" },
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "merc" }
             ]
         },
@@ -316,10 +323,10 @@
         {
             "Name" : "Start Cave 1",
             "Vaults" : [ "Cave_Start" ],
-            "Level" : 1,
+            "Level" : 0,
             "Depth" : 1,
             "Possibilities" : [
-                { "Weight" : 8, "Amount" : "1d2", "Blueprint" : "neant0" },
+                { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "neant0" },
                 { "Weight" : 8, "Amount" : "1d2", "Blueprint" : "bat" },
                 { "Weight" : 8, "Amount" : "1d2", "Blueprint" : "puggle0" },
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "puggle1" },
@@ -330,7 +337,7 @@
         {
             "Name" : "Vault Caves 1",
             "Vaults" : [ "Cave_Norm", "Default" ],
-            "Level" : 1,
+            "Level" : 0,
             "Depth" : 1,
             "Possibilities" : [
                 { "Weight" : 8, "Amount" : "1d1", "Blueprint" : "neant0" },
@@ -346,7 +353,7 @@
         },
         {
             "Name" : "Vault Caves 2",
-            "Vaults" : [ "Cave_Norm", "Default" ],
+            "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 2,
             "Depth" : 3,
             "Possibilities" : [
@@ -357,13 +364,14 @@
                 { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "puggle1" },
                 { "Weight" : 2, "Amount" : "1d2", "Blueprint" : "snake" },
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slimemancer"},
-                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "neant1" }
+                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "neant1" },
+				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "snake2" }
 
             ]
         },
         {
             "Name" : "Vault Caves 3",
-            "Vaults" : [ "Cave_Norm", "Default" ],
+            "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 5,
             "Depth" : 8,
             "Possibilities" : [
@@ -374,13 +382,14 @@
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "slimemancer"},
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "vamp" },
                 { "Weight" : 2, "Amount" : "1d2", "Blueprint" : "insect" },
-                { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "neant1" }
+                { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "neant1" },
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "snake2" }
 
             ]
         },
         {
             "Name" : "Vault Caves 4",
-            "Vaults" : [ "Cave_Norm", "Default" ],
+            "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 10,
             "Depth" : 10,
             "Possibilities" : [
@@ -396,7 +405,7 @@
         },
         {
             "Name" : "Vampire Nest 1",
-            "Vaults" : [ "Cave_Norm", "Default" ],
+            "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 13,
             "Depth" : 12,
             "Possibilities" : [
@@ -427,7 +436,8 @@
                 { "Weight" : 3, "Amount" : "1d2", "Blueprint" : "subject" },
                 { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "infected" },
                 { "Weight" : 6, "Amount" : "1d2", "Blueprint" : "neant0" },
-                { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "wastewalker"}
+                { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "wastewalker"},
+				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "snake2" }
             ]
         },
 
@@ -441,6 +451,7 @@
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "phoenix0" },
                 { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "phoenix1" },
                 { "Weight" : 6, "Amount" : "1d1", "Blueprint" : "lavashell" },
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "lavashell2" },
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "parasect" }
             ]
         },
@@ -462,9 +473,9 @@
             "Vaults" : [ "SubKin" ],
             "Level" : 1,
             "Possibilities" : [
-                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "statue" },
+                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "statue" },
                 { "Weight" : 20, "Amount" : "1d1", "Blueprint" : "spectre" },
-                { "Weight" : 60, "Amount" : "1d1", "Blueprint" : "subject" },
+                { "Weight" : 30, "Amount" : "1d1", "Blueprint" : "subject" },
                 { "Weight" : 15, "Amount" : "1d1", "Blueprint" : "golem" },
                 { "Weight" : 15, "Amount" : "1d2", "Blueprint" : "infected" },
                 { "Weight" : 10, "Amount" : "1d3", "Blueprint" : "insect" },
@@ -509,7 +520,9 @@
             "Landmarks" : [ "Crater" ],
             "Possibilities" : [
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "rubble_golem" },
-                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "golem" }
+                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "golem" },
+				{ "Weight" : 4, "Amount" : "1d1", "Blueprint" : "lavashell" },
+				{ "Weight" : 1, "Amount" : "1d1", "Blueprint" : "lavashell2" }
             ]
         },
         {
@@ -519,7 +532,8 @@
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "deephunter" },
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "saint" },
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "ranger" },
-                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "deephunter" }
+                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "deephunter" },
+				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "scrag3" }
             ]
         },
         {
@@ -530,7 +544,9 @@
                 { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "saint" },
                 { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "ranger" },
                 { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "deephunter" },
-                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "nightmare" }
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "nightmare" },
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "scrag3" },
+				{ "Weight" : 4, "Amount" : "1d1", "Blueprint" : "spectre2" }
             ]
         },
         {

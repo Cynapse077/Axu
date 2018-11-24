@@ -10,14 +10,7 @@ public class EntitySkills : MonoBehaviour {
 	public Entity entity;
 
 	int grappleLevel {
-		get {
-			int lvl = 0;
-
-			if (abilities.Find(x => x.ID == "grapple") != null)
-				lvl = abilities.Find(x => x.ID == "grapple").level;
-
-			return lvl;
-		}
+		get { return entity.stats.proficiencies.MartialArts.level + 1; }
 	}
 
 	void Start() {
@@ -25,12 +18,9 @@ public class EntitySkills : MonoBehaviour {
 		innateAbilities = new List<string>();
 
 		if (!entity.isPlayer) {
-			if (entity.AI == null)
-				entity.AI = GetComponent<BaseAI>();
-			
-			List<KeyValuePair<string, int>> sks = EntityList.GetBlueprintByID(entity.AI.npcBase.ID).skills;
+			KeyValuePair<string, int>[] sks = EntityList.GetBlueprintByID(entity.AI.npcBase.ID).skills;
 
-			for (int i = 0; i < sks.Count; i++) {
+			for (int i = 0; i < sks.Length; i++) {
 				Skill s = SkillList.GetSkillByID(sks[i].Key);
 				s.level = sks[i].Value;
 				AddSkill(s);
@@ -103,24 +93,24 @@ public class EntitySkills : MonoBehaviour {
 		}
 	}
 
-	public void Grapple_GrabPart(BodyPart targetLimb, Skill grapp) {
+	public void Grapple_GrabPart(BodyPart targetLimb) {
         if (entity.body.GrippableLimbs().Count > 0) {
             entity.body.GrippableLimbs().GetRandom().GrabPart(targetLimb);
 
-            if (entity.isPlayer && grapp != null)
-                grapp.AddXP(entity.stats.Intelligence / 4);
+            if (entity.isPlayer)
+                entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
         } else
             Alert.CustomAlert_WithTitle("No Grippable Limbs", "You have no parts to grab with!");
 	}
 
-	public void Grapple_TakeDown(Stats target, string limbName, Skill grapp) {
+	public void Grapple_TakeDown(Stats target, string limbName) {
 		int skill = entity.stats.Strength - 1;
         skill += (entity.isPlayer ? grappleLevel : SeedManager.combatRandom.Next(-1, 3));
 
-		if (SeedManager.combatRandom.Next(30) <= entity.stats.Strength + skill * 2) {
+		if (SeedManager.combatRandom.Next(50) <= entity.stats.Strength + skill * 2) {
 			string message = LocalizationManager.GetContent("Gr_TakeDown");
-			message = message.Replace("[ATTACKER]", ObjectManager.player.gameObject.name);
-			message = message.Replace("[DEFENDER]", target.gameObject.name);
+			message = message.Replace("[ATTACKER]", entity.MyName);
+			message = message.Replace("[DEFENDER]", target.entity.MyName);
 			message = message.Replace("[DEFENDER_LIMB]", limbName);
 			CombatLog.NewMessage(message);
 
@@ -129,19 +119,20 @@ public class EntitySkills : MonoBehaviour {
 			target.IndirectAttack(SeedManager.combatRandom.Next(1, 6), DamageTypes.Blunt, entity, LocalizationManager.GetContent("Takedown_Name"), true, false, false);
 		}
 
+        if (!target.entity.isPlayer)
+            target.entity.AI.SetTarget(entity);
 
-		if (entity.isPlayer) {
+        if (entity.isPlayer) {
 			target.entity.AI.BecomeHostile();
 			entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
 
-            if (grapp != null)
-			    grapp.AddXP(entity.stats.Intelligence);
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence / 2.0);
 		}
 
-		entity.EndTurn(0.02f, 15);
+		entity.EndTurn(0.02f, 10);
 	}
 
-	public void Grapple_Shove(Entity target, Skill grapp) {
+	public void Grapple_Shove(Entity target) {
 		int skill = entity.stats.Strength;
 
 		if (entity.isPlayer)
@@ -149,59 +140,69 @@ public class EntitySkills : MonoBehaviour {
 
 		if (SeedManager.combatRandom.Next(20) <= skill) {
 			string message = LocalizationManager.GetContent("Gr_Shove");
-			message = message.Replace("[ATTACKER]", gameObject.name);
-			message = message.Replace("[DEFENDER]", target.gameObject.name);
+			message = message.Replace("[ATTACKER]", entity.MyName);
+			message = message.Replace("[DEFENDER]", target.MyName);
 			CombatLog.NewMessage(message);
 
 			target.ForceMove(target.posX - entity.posX, target.posY - entity.posY, entity.stats.Strength);
 			entity.body.ReleaseAllGrips(true);
+
+            if (SeedManager.localRandom.Next(100) < 1)
+            {
+                target.stats.AddStatusEffect("Topple", 2);
+            }
 		}
 
-		if (entity.isPlayer) {
-			target.AI.BecomeHostile();
-			entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
+        if (!target.isPlayer)
+            target.AI.SetTarget(entity);
 
-            if (grapp != null)
-			    grapp.AddXP(entity.stats.Intelligence);
-		}
+        if (entity.isPlayer)
+        {
+            target.AI.BecomeHostile();
+            entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
 
-		entity.stats.UseStamina(2);
-		entity.EndTurn(0.02f, 10);
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
+        }
+
+        entity.EndTurn(0.02f, 10);
 	}
 
-	public void Grapple_Strangle(Stats target, Skill grapp) {
+	public void Grapple_Strangle(Stats target) {
 		int skill = entity.stats.Strength;
 
 		if (entity.isPlayer)
 			skill += grappleLevel;
 		
-		if (SeedManager.combatRandom.Next(15) <= skill) {
+		if (SeedManager.combatRandom.Next(30) <= skill) {
 			target.AddStatusEffect("Unconscious", SeedManager.combatRandom.Next(5, 11));
 			string message = LocalizationManager.GetContent("Gr_Strangle");
-			message = message.Replace("[ATTACKER]", ObjectManager.player.gameObject.name);
-			message = message.Replace("[DEFENDER]", target.gameObject.name);
+			message = message.Replace("[ATTACKER]", entity.MyName);
+			message = message.Replace("[DEFENDER]", target.entity.MyName);
 			CombatLog.NewMessage(message);
 		} else {
 			string message = LocalizationManager.GetContent("Gr_Strangle_Fail");
-			message = message.Replace("[ATTACKER]", ObjectManager.player.gameObject.name);
-			message = message.Replace("[DEFENDER]", target.gameObject.name);
+			message = message.Replace("[ATTACKER]", entity.MyName);
+			message = message.Replace("[DEFENDER]", target.entity.MyName);
 			CombatLog.NewMessage(message);
-		} 
-				
-		if (entity.isPlayer) {
-			target.entity.AI.BecomeHostile();
+		}
 
-            if (grapp != null)
-                grapp.AddXP(entity.stats.Intelligence);
+        if (!target.entity.isPlayer)
+            target.entity.AI.SetTarget(entity);
+
+        if (entity.isPlayer)
+        {
+            target.entity.AI.BecomeHostile();
+            entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
+
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
         }
 
-		entity.stats.UseStamina(2);
-		entity.EndTurn(0.02f, 10);
+        entity.EndTurn(0.02f, 10);
 	}
 
-	public void Grapple_Pull(BodyPart.Grip grip, Skill grapp) {
+	public void Grapple_Pull(BodyPart.Grip grip) {
 		Body otherBody = grip.HeldBody;
-		BodyPart targetLimb = grip.HeldPart;
+		BodyPart targetLimb = grip.heldPart;
 		string message = "";
 
 		int pullStrength = entity.stats.Strength + grappleLevel;
@@ -209,29 +210,52 @@ public class EntitySkills : MonoBehaviour {
 		if (targetLimb.severable && targetLimb.isAttached && SeedManager.combatRandom.Next(100) <= pullStrength) {
 			otherBody.RemoveLimb(targetLimb);
 			grip.Release();
-			otherBody.entity.stats.AddStatusEffect("Stun", 4);
+			otherBody.entity.stats.AddStatusEffect("Stun", 3);
 
 			message = LocalizationManager.GetContent("Gr_Pull_Success");
 		} else {
 			message = LocalizationManager.GetContent("Gr_Pull_Fail");
 		}
 
-		message = message.Replace("[ATTACKER]", ObjectManager.player.name);
-		message = message.Replace("[DEFENDER]", otherBody.gameObject.name);
+		message = message.Replace("[ATTACKER]", entity.MyName);
+		message = message.Replace("[DEFENDER]", otherBody.entity.MyName);
 		message = message.Replace("[DEFENDER_LIMB]", targetLimb.displayName);
 		CombatLog.NewMessage(message);
 
-		if (entity.isPlayer) {
-			otherBody.entity.AI.BecomeHostile();
-			entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
+        if (!otherBody.entity.isPlayer)
+            otherBody.entity.AI.SetTarget(entity);
 
-            if (grapp != null)
-                grapp.AddXP(entity.stats.Intelligence);
+        if (entity.isPlayer)
+        {
+            otherBody.entity.AI.BecomeHostile();
+            entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
+
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
         }
 
-		entity.stats.UseStamina(2);
-		entity.EndTurn(0.02f, 10);
+        entity.EndTurn(0.02f, 10);
 	}
+
+    public void Grapple_Pressure(BodyPart.Grip grip)
+    {
+        int pullStrength = entity.stats.Strength + grappleLevel;
+
+        if (SeedManager.combatRandom.Next(100) < pullStrength)
+        {
+            grip.heldPart.InflictPhysicalWound();
+        }
+
+        if (!grip.HeldBody.entity.isPlayer)
+            grip.HeldBody.entity.AI.SetTarget(entity);
+
+        if (entity.isPlayer)
+        {
+            grip.HeldBody.entity.AI.BecomeHostile();
+            entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
+
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
+        }
+    }
 
 	public void CallForHelp() {
 		if (entity.AI.InSightOfPlayer()) {
@@ -275,7 +299,7 @@ public class EntitySkills : MonoBehaviour {
 
 		Inventory otherInventory = ent.inventory;
 
-		if (otherInventory == null || !ent.body.MainHand.equippedItem.lootable)
+		if (otherInventory == null || !ent.body.MainHand.EquippedItem.lootable)
 			return false;
 
 		CombatLog.CombatMessage("Message_Disarm", attacker.name, gameObject.name, entity.isPlayer);

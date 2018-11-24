@@ -1,45 +1,36 @@
 ﻿using System.Collections.Generic;
 
 [System.Serializable]
-public class NPCCharacter : Character {
-	public bool Host;
-    public string Fac, Spr;
+public class NPCCharacter : Character
+{
+    public string ID, UID, Fac, Spr, QN;
     public List<NPC_Flags> Flags = new List<NPC_Flags>();
-	public List<NPCItem> Inv;
-	public SItem F;
-	public string QN;
-	public string ID;
-	public string UID;
+    public List<SItem> Inv;
+    public SItem F;
+    public bool Host;
 
-	public NPCCharacter(string _name, string id, string uid, Coord worldPos, Coord localPos, int elevation,
-		List<NPCItem> items, List<SItem> handItems, SItem firearm, bool hostile, string sprite, string faction, List<NPC_Flags> flags,
-		string questName) {
+    public NPCCharacter(string _name, string id, string uid, Coord worldPos, Coord localPos, int elevation,
+        List<SItem> items, List<SItem> handItems, SItem firearm, bool hostile, string sprite, string faction, List<NPC_Flags> flags,
+        string questName)
+    {
 
-		Name = _name;
-		ID = id;
-		UID = uid;
-		Fac = faction;
+        Name = _name;
+        ID = id;
+        UID = uid;
+        Fac = faction;
 
-        Coord wp = (worldPos == null) ? new Coord(0, 0) : worldPos;
-		
-		WP = new int[3] { wp.x, wp.y, elevation };
-		LP = new int[2] { localPos.x, localPos.y };
+        Coord wp = worldPos ?? new Coord(0, 0);
 
-		HIt = handItems;
-		F = firearm;
-		Inv = items;
-		Flags = flags;
+        WP = new int[3] { wp.x, wp.y, elevation };
+        LP = new int[2] { localPos.x, localPos.y };
 
-		Host = hostile;
-		Spr = sprite;
-		QN = questName;
-	}
-}
+        HIt = handItems;
+        F = firearm;
+        Inv = items;
+        Flags = flags;
 
-public class NPCItem {
-	public string[] n;
-
-	public NPCItem(string[] nn) {
-		n = nn;
-	}
+        Host = hostile;
+        Spr = sprite;
+        QN = questName;
+    }
 }

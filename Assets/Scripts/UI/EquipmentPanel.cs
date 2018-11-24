@@ -1,98 +1,105 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class EquipmentPanel : MonoBehaviour {
+public class EquipmentPanel : UIPanel
+{
+    [Header("Prefabs")]
+    public GameObject equipmentButton;
+    [Header("Children")]
+    public Transform equipmentBase;
+    public Scrollbar scrollBar;
 
-	[Header("Prefabs")]
-	public GameObject equipmentButton;
-	[Header("Children")]
-	public Transform equipmentBase;
-	public Scrollbar scrollBar;
+    public Inventory curInv;
 
-	public Inventory curInv;
 
-	public int SelectedMax {
-		get {
-			if (curInv == null)
-				return 0;
-			return curInv.entity.body.bodyParts.Count + curInv.entity.body.Hands.Count;
-		}
-	}
+    public void Init(Inventory inv)
+    {
+        curInv = inv;
+        UpdateEquipment();
+        initialized = true;
+    }
 
-	public void Init(Inventory inv) {
-		curInv = inv;
-		UpdateEquipment();
-	}
+    void UpdateEquipment()
+    {
+        equipmentBase.DespawnChildren();
 
-	void UpdateEquipment() {
-		equipmentBase.DestroyChildren();
+        SelectedMax = 0;
 
-		if (!gameObject.activeSelf)
-			return;
+        List<BodyPart.Hand> hands = curInv.entity.body.Hands;
 
-		List<BodyPart.Hand> hands = curInv.entity.body.Hands;
+        for (int i = 0; i < hands.Count; i++)
+        {
+            GameObject wep = SimplePool.Spawn(equipmentButton, equipmentBase);
+            wep.GetComponentInChildren<Text>().text = hands[i].EquippedItem.InvDisplay(curInv.baseWeapon, false, true, false);
 
-		for (int i = 0; i < hands.Count; i++) {
-			GameObject wep = (GameObject)Instantiate(equipmentButton, equipmentBase);
-			wep.GetComponentInChildren<Text>().text = hands[i].equippedItem.InvDisplay(curInv.baseWeapon, false, true, false);
+            string n = LocalizationManager.GetContent("Slot_Hand") + " " + ((i % 2 == 0) ? LocalizationManager.GetContent("Limb_Right") : LocalizationManager.GetContent("Limb_Left"));
 
-			string n = LocalizationManager.GetContent("Slot_Hand") + " " + ((i % 2 == 0) ? LocalizationManager.GetContent("Limb_Right") : LocalizationManager.GetContent("Limb_Left"));
+            n = ((hands[i] == curInv.entity.body.MainHand) ? "<color=yellow>" : "<color=orange>") + n + "</color>";
 
-			n = ((hands[i] == curInv.entity.body.MainHand) ? "<color=yellow>" : "<color=orange>") + n + "</color>";
+            wep.transform.GetChild(1).GetComponent<Text>().text = n;
+            wep.GetComponent<Button>().onClick.AddListener(() => OnSelect(wep.transform.GetSiblingIndex()));
+            wep.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
+            SelectedMax++;
+        }
 
-			wep.transform.GetChild(1).GetComponent<Text>().text = n;
-			wep.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(wep.transform.GetSiblingIndex()); });
-			wep.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
+        GameObject fire = SimplePool.Spawn(equipmentButton, equipmentBase);
+        fire.GetComponentInChildren<Text>().text = (curInv.firearm == null) ? ItemList.GetNone().Name : curInv.firearm.InvDisplay(curInv.baseWeapon, false, true, true);
+        fire.transform.GetChild(1).GetComponent<Text>().text = "<color=orange>" + LocalizationManager.GetContent("TT_Ranged") + "</color>";
+        fire.GetComponent<Button>().onClick.AddListener(() => OnSelect(fire.transform.GetSiblingIndex()));
+        fire.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
+        SelectedMax++;
 
-		}
+        foreach (BodyPart bp in curInv.entity.body.bodyParts)
+        {
+            GameObject g = SimplePool.Spawn(equipmentButton, equipmentBase);
+            g.GetComponentInChildren<Text>().text = bp.equippedItem.InvDisplay(curInv.baseWeapon, true, false);
+            g.transform.GetChild(1).GetComponent<Text>().text = bp.displayName;
+            g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex()));
+            g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
+            SelectedMax++;
+        }
+    }
 
-		GameObject fire = (GameObject)Instantiate(equipmentButton, equipmentBase);
-		fire.GetComponentInChildren<Text>().text = (curInv.firearm == null) ? ItemList.GetNone().Name : curInv.firearm.InvDisplay(curInv.baseWeapon, false, true, true);
-		fire.transform.GetChild(1).GetComponent<Text>().text = "<color=orange>" + LocalizationManager.GetLocalizedContent("TT_Ranged")[0] + "</color>";
-		fire.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(fire.transform.GetSiblingIndex()); } );
-		fire.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
+    public override void Update()
+    {
+        if (World.userInterface.column != 0 || World.userInterface.CurrentState() != UIWindow.Inventory || 
+            World.userInterface.SelectBodyPart || World.userInterface.SelectItemActions)
+            return;
 
-		for (int i = 0; i < curInv.entity.body.bodyParts.Count; i++) {
-			GameObject g = (GameObject)Instantiate(equipmentButton, equipmentBase);
-			g.GetComponentInChildren<Text>().text = curInv.entity.body.bodyParts[i].equippedItem.InvDisplay(curInv.baseWeapon, true, false);
-			g.transform.GetChild(1).GetComponent<Text>().text = curInv.entity.body.bodyParts[i].displayName;
-			g.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(g.transform.GetSiblingIndex()); } );
-			g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
-		}
-	}
+        if (SelectedMax > 0)
+        {
+            EventSystem.current.SetSelectedGameObject(equipmentBase.GetChild(SelectedNum).gameObject);
+        }
 
-	void SelectPressed(int selectedNum) {
-		if (World.userInterface.column != 0 || World.userInterface.selectBodyPart || World.userInterface.selectedItemActions)
-			return;
-		List<BodyPart.Hand> hands = curInv.entity.body.Hands;
+        base.Update();
+    }
 
-		if (selectedNum < hands.Count) {
-			curInv.UnEquipWeapon(hands[selectedNum].equippedItem, selectedNum);
-		} else if (selectedNum == hands.Count) {
-			curInv.UnEquipFirearm(true);
-		} else {
-			curInv.UnEquipArmor(curInv.entity.body.bodyParts[selectedNum - curInv.entity.body.Hands.Count - 1], true);
-		}
+    public override void ChangeSelectedNum(int newIndex)
+    {
+        base.ChangeSelectedNum(newIndex);
 
-		World.userInterface.InvPanel.Init(curInv);
-		World.userInterface.InitializeAllWindows(curInv);
-		Init(curInv);
-	}
+        if (SelectedMax > 0)
+            scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
+    }
 
-	void Update() {
-		if (World.userInterface.CurrentState() != UIWindow.Inventory || World.userInterface.selectBodyPart || World.userInterface.selectedItemActions)
-			return;
+    protected override void OnSelect(int index)
+    {
+        if (World.userInterface.column != 0 || World.userInterface.SelectBodyPart || World.userInterface.SelectItemActions)
+            return;
 
-		if (World.userInterface.column == 0) {
-			if (equipmentBase.childCount > 0 && equipmentBase.childCount > UserInterface.selectedItemNum)
-				EventSystem.current.SetSelectedGameObject(equipmentBase.GetChild(UserInterface.selectedItemNum).gameObject);
+        List<BodyPart.Hand> hands = curInv.entity.body.Hands;
 
-			if (World.playerInput.keybindings.GetKey("Enter"))
-				SelectPressed(UserInterface.selectedItemNum);
+        if (index < hands.Count)
+            curInv.UnEquipWeapon(hands[index].EquippedItem, index);
+        else if (index == hands.Count)
+            curInv.UnEquipFirearm(true);
+        else
+            curInv.UnEquipArmor(curInv.entity.body.bodyParts[index - curInv.entity.body.Hands.Count - 1], true);
 
-			scrollBar.value = 1f - ((float)UserInterface.selectedItemNum / (float)(curInv.entity.body.bodyParts.Count + curInv.entity.body.Hands.Count + 1));	
-		}
-	}
+        World.userInterface.InitializeAllWindows(curInv);
+
+        base.OnSelect(index);
+    }
 }

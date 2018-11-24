@@ -16,7 +16,7 @@ public class LiquidActionsPanel : MonoBehaviour {
 	public void Init(Item i) {
 		cont = i;
 
-		CLiquidContainer cl = cont.GetItemComponent<CLiquidContainer>();
+		CLiquidContainer cl = cont.GetCComponent<CLiquidContainer>();
 
 		if (cl == null) {
 			World.userInterface.CloseWindows();
@@ -32,7 +32,7 @@ public class LiquidActionsPanel : MonoBehaviour {
 	}
 
 	void OnGround() {
-		CLiquidContainer cl = cont.GetItemComponent<CLiquidContainer>();
+		CLiquidContainer cl = cont.GetCComponent<CLiquidContainer>();
 		World.objectManager.CreatePoolOfLiquid(ObjectManager.playerEntity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, cl.liquid.ID, cl.liquid.units);
 
 		cl.liquid.units = 0;
@@ -41,7 +41,7 @@ public class LiquidActionsPanel : MonoBehaviour {
 	}
 
 	void OnSelf() {
-		CLiquidContainer cl = cont.GetItemComponent<CLiquidContainer>();
+		CLiquidContainer cl = cont.GetCComponent<CLiquidContainer>();
 		cl.liquid.units--;
 
 		cl.CheckLiquid();

@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 using System.Collections.Generic;
 
-public class ThrowItemPanel : MonoBehaviour {
+public class ThrowItemPanel : UIPanel {
 	[Header("Prefabs")]
 	public GameObject inventoryButton;
 	[Header("Children")]
@@ -13,45 +12,75 @@ public class ThrowItemPanel : MonoBehaviour {
 	public Scrollbar scrollBar;
 
 	Inventory playerInventory;
+    List<Item> throwingItems;
 
-	public void Init() {
-		playerInventory = ObjectManager.player.GetComponent<Inventory>();
-		UpdateInventory();
-	}
+    public override void Initialize()
+    {
+        playerInventory = ObjectManager.playerEntity.inventory;
+        UpdateInventory();
+        base.Initialize();
+    }
 
-	public void UpdateInventory() {
-		inventoryBase.DestroyChildren();
+    public override void ChangeSelectedNum(int newIndex)
+    {
+        if (World.userInterface.column == 1 && SelectedMax > 0 && SelectedMax > SelectedNum)
+        {
+            EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(SelectedNum).gameObject);
+            scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
+        }
 
-		if (!gameObject.activeSelf)
-			return;
+        base.ChangeSelectedNum(newIndex);
+    }
 
-		List<Item> throwingItems = playerInventory.Items_ThrowingFirst();
+    protected override void OnSelect(int index)
+    {
+        base.OnSelect(index);
+
+        playerInventory.entity.fighter.SelectItemToThrow(playerInventory.Items_ThrowingFirst()[SelectedNum]);
+        playerInventory.GetComponent<PlayerInput>().ToggleThrow();
+        World.userInterface.CloseWindows();
+    }
+
+	void UpdateInventory() {
+		inventoryBase.DespawnChildren();
+
+        SelectedMax = 0;
+        SelectedNum = 0;
+		throwingItems = playerInventory.Items_ThrowingFirst();
 		
 		for (int i = 0; i < throwingItems.Count; i++) {
-			GameObject g = (GameObject)Instantiate(inventoryButton, inventoryBase);
+			GameObject g = SimplePool.Spawn(inventoryButton, inventoryBase);
+            g.GetComponent<ItemButton>().icon.sprite = SwitchSprite(throwingItems[i]);
 			g.GetComponentInChildren<Text>().text = throwingItems[i].InvDisplay(playerInventory.baseWeapon);
-			g.GetComponent<Button>().onClick.AddListener(() => { World.userInterface.SelectPressed(g.transform.GetSiblingIndex()); } );
-			g.GetComponent<Button>().onClick.AddListener(() => { World.userInterface.InitializeAllWindows(); } );
+            g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex() ));
+            SelectedMax++;
 		}
 
-		UpdateTooltip();
+        if (SelectedMax > 0)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(0).gameObject);
+            scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
+        }
+
+        UpdateTooltip();
 	}
 
-	public void UpdateTooltip() {
+    Sprite SwitchSprite(Item item)
+    {
+        string id = (string.IsNullOrEmpty(item.renderer.onGround)) ? "item-empty.png" : item.renderer.onGround;
+
+        return SpriteManager.GetObjectSprite(id);
+    }
+
+    public void UpdateTooltip() {
 		if (playerInventory.items.Count == 0) {
 			ToolTipPanel.gameObject.SetActive(false);
 			return;
 		}
 
 		ToolTipPanel.gameObject.SetActive(playerInventory.items.Count > 0);
-		bool display = (playerInventory.items.Count > 0 && UserInterface.selectedItemNum < playerInventory.items.Count);
-		ToolTipPanel.UpdateTooltip(playerInventory.Items_ThrowingFirst()[UserInterface.selectedItemNum], display);
-	}
-
-	void Update() {
-		if (World.userInterface.column == 1 && inventoryBase.childCount > 0 && inventoryBase.childCount > UserInterface.selectedItemNum)
-			EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(UserInterface.selectedItemNum).gameObject);
-
-		scrollBar.value = 1f - ((float)UserInterface.selectedItemNum / (float)playerInventory.items.Count);
+		bool display = (playerInventory.items.Count > 0 && SelectedNum < SelectedMax);
+		ToolTipPanel.UpdateTooltip(playerInventory.Items_ThrowingFirst()[SelectedNum], display);
 	}
 }

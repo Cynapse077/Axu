@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public static class StatInitializer {
 
@@ -39,5 +38,5 @@ public static class StatInitializer {
 			t.effects.Add(TraitEffects.Bleed_Resist);
 			s.AddTrait(t);
 		}
-	}
+    }
 }

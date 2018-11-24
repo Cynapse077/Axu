@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
 using LitJson;
-using System.Collections;
 
 public static class GameSettings {
 	public static InputKeys Keybindings;
@@ -15,7 +14,7 @@ public static class GameSettings {
 
 	public static string version {
 		get {
-			return "0.7.0 Experimental";
+			return "0.7.1";
 		}
 	}
 

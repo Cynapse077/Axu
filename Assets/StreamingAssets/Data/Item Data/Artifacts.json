@@ -231,18 +231,6 @@
         },
 
         {
-            "ID" : "tome_calledshot",
-            "Name" : "Master's Manual",
-            "Type" : "Misc_Object",
-            "Material" : "Paper",
-            "FlavorText" : "A manual that teaches controlled, patient attacks.",
-            "Cost" : 300,
-            "Components" : [
-                { "ID" : "Ability", "Ability" : "calledshot"  }
-            ],
-            "Properties" : [ "Artifact", "Legible", "Tome" ]
-        },
-        {
             "ID" : "tome_charge",
             "Name" : "Berserker's Manual",
             "Type" : "Misc_Object",
@@ -263,18 +251,6 @@
             "Cost" : 200,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "juke"  }
-            ],
-            "Properties" : [ "Artifact", "Legible", "Tome" ]
-        },
-        {
-            "ID" : "tome_wrestling",
-            "Name" : "Wrestler's Manual",
-            "Type" : "Misc_Object",
-            "Material" : "Paper",
-            "FlavorText" : "A manual that teaches one various grappling moves.",
-            "Cost" : 200,
-            "Components" : [
-                { "ID" : "Ability", "Ability" : "grapple"  }
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
@@ -390,7 +366,7 @@
             "Properties" : [ "Weapon", "Two_Handed", "Unique" ],
             "DmgTypes" : [ "Slash", "Cleave" ],
             "Display" : {
-                "On Ground" : "item-axe.png",
+                "On Ground" : "item-mancleaver.png",
                 "On Player" : "/Data/Art/Player/Weapons/char-scythe.png",
                 "Layer" : "Weapon"
             }
@@ -410,7 +386,7 @@
             "Properties" : [ "Weapon", "Quick" ],
             "DmgTypes" : [ "Slash" ],
             "Display" : {
-                "On Ground" : "item-knife.png",
+                "On Ground" : "item-ritualdagger.png",
                 "On Player" : "/Data/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
@@ -496,7 +472,7 @@
             "Properties" : [ "Weapon", "Two_Handed", "Unique" ],
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
-                "On Ground" : "item-staff.png",
+                "On Ground" : "item-spear.png",
                 "On Player" : "/Data/Art/Player/Weapons/char-arthomasspear.png",
                 "Layer" : "Weapon"
             }
@@ -516,7 +492,7 @@
             ],
             "Properties" : [ "Ranged", "Slow", "Unique" ],
             "Display" : {
-                "On Ground" : "item-firearm.png"
+                "On Ground" : "item-rifle.png"
             }
         },
         {
@@ -529,7 +505,7 @@
             "Cost" : 0,
             "Properties" : [ "Quest_Item", "Unique" ],
             "Display" : {
-                "On Ground" : "item-artifact.png"
+                "On Ground" : "item-artifact0.png"
             }
         },
         {
@@ -565,11 +541,11 @@
             "Material" : "Metal",
             "Rarity" : 100,
             "Stackable" : true,
-            "FlavorText" : "A chuck on ore. Its properties are unknown to you, but someone may have use for it.",
+            "FlavorText" : "A chuck of ore. Its properties are unknown to you, but someone may have use for it.",
             "Cost" : 50,
             "Properties" : [ "Quest_Item" ],
             "Display" : {
-                "On Ground" : "item-artifact.png"
+                "On Ground" : "item-artifact2.png"
             }
         },
         {
@@ -582,7 +558,7 @@
             "Cost" : 0,
             "Properties" : [ "Quest_Item", "Unique" ],
             "Display" : {
-                "On Ground" : "item-artifact.png"
+                "On Ground" : "item-radheart.png"
             }
         },
         {

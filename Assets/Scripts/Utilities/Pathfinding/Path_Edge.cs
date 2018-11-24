@@ -1,8 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿
+namespace Pathfinding
+{
+    public class Path_Edge
+    {
 
-public class Path_Edge {
-
-	public Path_Node node;
-	public float cost;
+        public Path_Node node;
+        public float cost;
+    }
 }

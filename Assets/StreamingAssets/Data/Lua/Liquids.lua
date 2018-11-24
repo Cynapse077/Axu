@@ -1,3 +1,5 @@
+--Functions for handling what happens when liquids are consumed or splashed on a creature.
+
 --Default
 function OnSplash_Base(stats)
 	if (stats.HasEffect("Aflame")) then
@@ -17,16 +19,12 @@ end
 
 --Fresh Water
 function OnDrink_Water(stats) 
-	if (stats.entity.isPlayer) then
-		stats.Hunger = stats.Hunger + 100
-	end
+
 end
 
 --Salt Water
 function OnDrink_SaltWater(stats) 
-	if (stats.entity.isPlayer) then
-		stats.Hunger = stats.Hunger - 200
-	end
+
 end
 
 --Salamandis
@@ -59,13 +57,13 @@ function OnDrink_Mutagen(stats)
 	if (stats.entity.isPlayer) then
 		stats.Radiate(Random(60, 90))
 	else
-		stats.AddStatusEffect("Poison", 15)
+		stats.AddStatusEffect("Poison", 5)
 	end
 end
 
 function OnSplash_Mutagen(stats)
 	if (stats.entity.isPlayer) then
-		stats.Radiate(Random(20, 55))
+		stats.Radiate(100)
 	else
 		stats.AddStatusEffect("Poison", 7)
 	end
@@ -124,9 +122,7 @@ end
 
 --Blood
 function OnDrink_Blood(stats)
-	if (stats.hasTraitEffect(TraitEffects.Vampirism)) then
-		stats.Hunger = stats.Hunger + 3000
-	end
+
 end
 
 --Vampiric Blood

@@ -1,5 +1,3 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -9,12 +7,8 @@ public struct Profession {
 	public string ID;
 	public string description;
 
-	public int HP;
-	public int ST;
-	public int strength;
-	public int dexterity;
-	public int intelligence;
-	public int endurance;
+	public int HP, ST;
+	public int STR, DEX, INT, END;
 
 	public string[] traits;
 	public int[] proficiencies;
@@ -22,5 +16,4 @@ public struct Profession {
 	public List<StringInt> items;
 	public int startingMoney;
     public string bodyStructure;
-
 }

@@ -88,7 +88,7 @@ function OnTurn_PreVamp(entity, trait)
 	local progress = TurnManager.turn - trait.turnAcquired
 
 	if (progress > 4500) then
-		Alert.CustomAlert("<color=red>You have become a full Vampire!</color>\nYou feel stronger, despite the nagging hunger for fresh blood. Your diseased body will not improve on its own.")
+		Alert.CustomAlert("<color=red>You have become a full Vampire!</color>\nYou feel stronger, but your diseased body will not improve on its own.")
 		entity.stats.InitializeNewTrait(TraitList.GetTraitByID("vampirism"))
 		entity.stats.RemoveTrait(trait.ID)
 	end

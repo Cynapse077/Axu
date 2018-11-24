@@ -158,7 +158,7 @@
             "Rarity" : 1,
             "FlavorText" : "The femur of some creature, repurposed into a crude club.",
             "Cost" : 6,
-            "Properties" : [ "Weapon" ],
+            "Properties" : [ "Weapon", "NoMods" ],
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-femur.png",
@@ -192,7 +192,7 @@
             "Rarity" : 2,
             "FlavorText" : "A weak branch with several nails protruding through its surface.",
             "Cost" : 10,
-            "Properties" : [ "Weapon" ],
+            "Properties" : [ "Weapon", "NoMods" ],
             "DmgTypes" : [ "Blunt", "Bleed" ],
             "Display" : {
                 "On Ground" : "item-spiked.png",
@@ -622,7 +622,7 @@
             "Properties" : [ "Weapon", "Two_Handed", "Quick" ],
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
-                "On Ground" : "item-staff.png",
+                "On Ground" : "item-spear.png",
                 "On Player" : "/Data/Art/Player/Weapons/char-spear.png",
                 "Layer" : "Weapon"
             }
@@ -731,7 +731,7 @@
             "Properties" : [ "Weapon", "Two_Handed" ],
             "DmgTypes" : [ "Slash", "Cleave" ],
             "Display" : {
-                "On Ground" : "item-staff.png",
+                "On Ground" : "item-scythe.png",
                 "On Player" : "/Data/Art/Player/Weapons/char-scythe.png",
                 "Layer" : "Weapon"
             }
@@ -816,7 +816,10 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Slow" ]
+            "Properties" : [ "Ranged", "Slow" ],
+			"Display" : {
+                "On Ground" : "item-rifle.png"
+            }
         },
         {
         	"ID" : "sniperrifle",
@@ -830,7 +833,10 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Very_Slow" ]
+            "Properties" : [ "Ranged", "Very_Slow" ],
+			"Display" : {
+                "On Ground" : "item-rifle.png"
+            }
         },
         {
         	"ID" : "assaultrifle",
@@ -845,7 +851,10 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 3, "Max" : 12, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Burst" ]
+            "Properties" : [ "Ranged", "Burst" ],
+			"Display" : {
+                "On Ground" : "item-rifle.png"
+            }
         },
         {
         	"ID" : "shotgun",
@@ -860,7 +869,10 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 4, "Max" : 1, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Slow" ]
+            "Properties" : [ "Ranged", "Slow" ],
+			"Display" : {
+                "On Ground" : "item-rifle.png"
+            }
         },
         {
         	"ID" : "throwingknife",
@@ -1166,7 +1178,7 @@
             "Stat Mods" : [
                 { "Stat" : "Light", "Amount" : 5 }
             ],
-            "Properties" : [ "Weapon" ],
+            "Properties" : [ "Weapon", "NoMods" ],
             "Display" : {
                 "On Ground" : "item-prism.png"
             }
@@ -1182,7 +1194,7 @@
             "Stat Mods" : [
                 { "Stat" : "Intelligence", "Amount" : 1 }
             ],
-            "Properties" : [ "Weapon" ],
+            "Properties" : [ "Weapon", "NoMods" ],
             "Display" : {
                 "On Ground" : "item-orb2.png"
             }
@@ -1198,7 +1210,7 @@
             "Stat Mods" : [
                 { "Stat" : "Heat Resist", "Amount" : 50 }
             ],
-            "Properties" : [ "Weapon" ],
+            "Properties" : [ "Weapon", "NoMods" ],
             "Display" : {
                 "On Ground" : "item-orb.png"
             }
@@ -1476,7 +1488,7 @@
             "Rarity" : 1,
             "FlavorText" : "A flimsy piece of footwear providing little to no protection. Don't put on socks while wearing these.",
             "Cost" : 5,
-            "Properties" : [ "Armor", "Slot_Leg" ],
+            "Properties" : [ "Armor", "Slot_Leg", "NoMods" ],
             "Display" : {
                 "On Ground" : "item-sandal.png"
             }
@@ -2040,170 +2052,11 @@
             "Properties" : [ "Edible", "Addictive" ]
         },
         {
-        	"ID" : "fleshcooked",
-            "Name" : "Cooked Flesh",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 3,
-            "FlavorText" : "A lump of unidentifiable flesh, slightly charred by a makeshift grill.",
-            "Cost" : 35,
-            "Stackable" : true,
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 3500 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-food.png"
-            }
-        },
-        {
-        	"ID" : "fleshraw",
-            "Name" : "Raw Flesh",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 2,
-            "FlavorText" : "A lump of unidentifiable flesh.",
-            "Cost" : 2,
-            "Stackable" : true,
-            "Components" : [
-                { "ID" : "Rot", "Max" : 2000  }
-            ],
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 2000 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-food.png"
-            }
-        },
-        {
-        	"ID" : "militaryration",
-            "Name" : "Military Ration",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 2,
-            "FlavorText" : "A military-grade meal. Contains everything the body needs. (Well, not everything...)",
-            "Cost" : 45,
-            "Stackable" : true,
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 8000 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-food.png"
-            }
-        },
-        {
-        	"ID" : "candiedfish",
-            "Name" : "Candied Fish",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 2,
-            "FlavorText" : "A delicious treat.",
-            "Cost" : 24,
-            "Stackable" : true,
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 5000 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-food.png"
-            }
-        },
-        {
-        	"ID" : "bread",
-            "Name" : "Loaf of Bread",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 1,
-            "FlavorText" : "A simple loaf of tough bread. If nothing else, this baked good eases hunger pains.",
-            "Cost" : 14,
-            "Stackable" : true,
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 2500 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-food.png"
-            }
-        },
-        {
-        	"ID" : "driedmeat",
-            "Name" : "Dried Meat",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 1,
-            "FlavorText" : "Dried strips of an unknown meat.",
-            "Cost" : 14,
-            "Stackable" : true,
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 3000 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-food.png"
-            }
-        },
-        {
-        	"ID" : "berries",
-            "Name" : "Wild Berries",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 1,
-            "FlavorText" : "Forraged berries. I sure hope they're edible..",
-            "Cost" : 10,
-            "Components" : [
-                { "ID" : "Rot", "Max" : 2000  }
-            ],
-            "Stackable" : true,
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 1500 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-berries.png"
-            }
-        },
-        {
-        	"ID" : "driedration",
-            "Name" : "Dried Ration",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 1,
-            "FlavorText" : "An assortment of dried foods. Bland, but edible.",
-            "Cost" : 20,
-            "Stackable" : true,
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 6000 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-food.png"
-            }
-        },
-        {
-        	"ID" : "lishgarroot",
-            "Name" : "Lishgar Root",
-            "Type" : "Misc_Object",
-            "Material" : "Organic",
-            "Rarity" : 3,
-            "FlavorText" : "A tough, yet filling root from local fauna.",
-            "Cost" : 34,
-            "Stackable" : true,
-            "Stat Mods" : [
-                { "Stat" : "Hunger", "Amount" : 2500 }
-            ],
-            "Properties" : [ "Edible" ],
-            "Display" : {
-                "On Ground" : "item-food.png"
-            }
-        },
-        {
         	"ID" : "explosive",
             "Name" : "Explosive",
             "Type" : "Misc_Object",
             "Material" : "Plastic",
-            "Rarity" : 2,
+            "Rarity" : 3,
             "FlavorText" : "Throw this item at enemies to turn them into a fine mist.",
             "Cost" : 35,
             "Stackable" : true,
@@ -2319,24 +2172,11 @@
             }
         },
         {
-        	"ID" : "escapetele",
-            "Name" : "Escape Teleporter",
-            "Type" : "Misc_Object",
-            "Material" : "Plastic",
-            "Rarity" : 3,
-            "FlavorText" : "A special device which allows the user to escape harm by teleporting them to a random nearby position.",
-            "Cost" : 250,
-            "Components" : [
-                { "ID" : "Charges", "Max" : 10  }
-            ],
-            "Properties" : [ "Teleport" ]
-        },
-        {
         	"ID" : "blinkamulet",
             "Name" : "Blink Stone",
             "Type" : "Misc_Object",
             "Material" : "Plastic",
-            "Rarity" : 2,
+            "Rarity" : 4,
             "FlavorText" : "A special device that allows the user to teleport to a selected viewed area.",
             "Cost" : 250,
             "Components" : [

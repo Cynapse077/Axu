@@ -179,7 +179,7 @@ public class Trait {
 			List<BodyPart.Hand> hands = entity.body.Hands;
 
 			for (int i = 0; i < hands.Count; i++) {
-				if (hands[i].equippedItem.ID == entity.inventory.baseWeapon)
+				if (hands[i].EquippedItem.ID == entity.inventory.baseWeapon)
 					hands[i].SetEquippedItem(ItemList.GetItemByID(replaceBodyPart.newEquippedItem), entity);
 			}
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Pathfinding;
 using System.Collections.Generic;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
@@ -11,20 +12,19 @@ public class BaseAI : MonoBehaviour
     public GameObject explosive;
     public Entity entity;
     public EntitySkills entitySkills;
+    public Path_AStar path { get; protected set; }
 
     public Entity target { get; protected set; }
     Body body;
-    int sightRange = 17, perception = 10;
+    readonly int sightRange = 17;
+    int perception = 10;
     bool hasSeenPlayer = false;
     List<Entity> possibleTargets = new List<Entity>();
     NPCSprite spriteComponent;
     EntitySkills skills;
     bool canAct, hasAskedForHelp = false, doneInit = false;
-    float distanceToTarget;
+    readonly float distanceToTarget;
     Coord walkDirection = null;
-    Path_AStar path;
-    Coord targetPos;
-    bool hostilityOverride;
 
     System.Random RNG
     {
@@ -33,7 +33,7 @@ public class BaseAI : MonoBehaviour
 
     public bool isHostile
     {
-        get { return npcBase.isHostile || hostilityOverride; }
+        get { return npcBase.isHostile || npcBase.hostilityOverride; }
     }
 
     public bool isStationary
@@ -43,26 +43,7 @@ public class BaseAI : MonoBehaviour
 
     public void OverrideHostility(bool hostile)
     {
-        hostilityOverride = hostile;
-    }
-
-    public Coord TargetPosition
-    {
-        get
-        {
-            if (target != null)
-                return target.myPos;
-
-            if (targetPos == null)
-                targetPos = World.tileMap.GetRandomPosition();
-
-            return targetPos;
-        }
-
-        set
-        {
-            targetPos = value;
-        }
+        npcBase.hostilityOverride = hostile;
     }
 
     public void Init()
@@ -81,7 +62,8 @@ public class BaseAI : MonoBehaviour
         entity.stats.onDeath += OnDeath;
         GetComponent<DialogueController>().SetupDialogueOptions();
 
-        hostilityOverride = isHostile;
+        npcBase.hostilityOverride = isHostile;
+        npcBase.onScreen = true;
 
         passiveMarker.SetActive(!npcBase.isHostile && InSightOfPlayer());
 
@@ -97,6 +79,11 @@ public class BaseAI : MonoBehaviour
             target = t;
     }
 
+    public void SetPath(Path_AStar newPath)
+    {
+        path = newPath;
+    }
+
     //FIXME: This is doing more than 1 function.
     bool CanDoAnAction()
     {
@@ -110,7 +97,7 @@ public class BaseAI : MonoBehaviour
         }
 
         if (npcBase.faction != null && npcBase.faction.HostileToPlayer())
-            hostilityOverride = true;
+            npcBase.hostilityOverride = true;
 
         if (!canAct)
         {
@@ -125,6 +112,7 @@ public class BaseAI : MonoBehaviour
         {
             if (isHostile)
                 Hostile_Action();
+
             return false;
         }
 
@@ -196,7 +184,7 @@ public class BaseAI : MonoBehaviour
                 if (!InSightOfPlayer() && RNG.Next(100) > hearing)
                 {
                     hasSeenPlayer = false;
-                    Wander(false);
+                    Wander();
                 }
                 else
                     Hostile_Action();
@@ -211,7 +199,7 @@ public class BaseAI : MonoBehaviour
                     return;
                 }
 
-                Wander(false);
+                Wander();
             }
         }
         else if (npcBase.HasFlag(NPC_Flags.Follower))
@@ -250,13 +238,12 @@ public class BaseAI : MonoBehaviour
         hasSeenPlayer = false;
     }
 
-    public bool ShouldAttack(BaseAI ai)
+    public bool ShouldAttack(BaseAI other)
     {
-        if (ai == null)
+        if (other == null)
             return false;
 
-        return (npcBase.faction.isHostileTo(ai.npcBase.faction) && hostilityOverride ||
-            isFollower() && ai.isHostile || ai.isFollower() && isHostile || ai.target == entity);
+        return (npcBase.faction.isHostileTo(other.npcBase.faction) || isFollower() && other.isHostile || other.isFollower() && isHostile || other.target == entity);
     }
 
     public bool isFollower()
@@ -279,7 +266,7 @@ public class BaseAI : MonoBehaviour
 
         float dist = GetDistance(target);
 
-        if (RNG.Next(100) > 40 && dist < sightRange - 1)
+        if (RNG.Next(100) > 40 && dist < sightRange)
         {
             RangedAttack(target.myPos);
             return true;
@@ -294,7 +281,7 @@ public class BaseAI : MonoBehaviour
             SearchForTarget();
 
         if (target == null)
-            Wander(false);
+            Wander();
         else
             Hostile_Action();
     }
@@ -306,11 +293,11 @@ public class BaseAI : MonoBehaviour
 
         if (target == null)
         {
-            Wander(false);
+            Wander();
             return;
         }
 
-        if (RNG.Next(100) < 35 && UseSkills(target) && InSightOfPlayer())
+        if (RNG.Next(100) < 35 && UseSkills(target) && TargetInSight())
         {
             entity.Wait();
             return;
@@ -327,7 +314,7 @@ public class BaseAI : MonoBehaviour
             }
         }
 
-        if (HasThrowingItem(target) && distance < 7 && RNG.Next(100) < 5 && InSightOfPlayer())
+        if (HasThrowingItem(target) && distance < 7 && RNG.Next(100) < 5 && TargetInSight())
         {
             ThrowItem();
             return;
@@ -335,7 +322,7 @@ public class BaseAI : MonoBehaviour
         else if (HasRanged(target))
             return;
 
-        path = new Path_AStar(entity.myPos, target.myPos);
+        path = new Path_AStar(entity.myPos, target.myPos, entity.inventory.CanFly());
         Coord next = path.GetNextStep();
 
         if (next.x == entity.posX && next.y == entity.posY)
@@ -343,45 +330,11 @@ public class BaseAI : MonoBehaviour
 
         int moveX = next.x - entity.posX, moveY = next.y - entity.posY;
 
-        //Check for open tiles that may contain entities or map objects that obstruct the path.
-        bool getNewDirection = false;
-
-        if (World.tileMap.WalkableTile(entity.posX + moveX, entity.posY + moveY))
-        {
-            Cell c = World.tileMap.GetCellAt(entity.posX + moveX, entity.posY + moveY);
-
-            if (c.Walkable_IgnoreEntity && c.entity != null)
-            {
-                BaseAI otherAI = c.entity.AI;
-
-                if ((otherAI == null || otherAI.npcBase.HasFlag(NPC_Flags.Follower)) && !npcBase.faction.HostileToPlayer() && !isHostile ||
-                    !c.entity.isPlayer && !npcBase.faction.isHostileTo(otherAI.npcBase.faction))
-                    getNewDirection = true;
-            }
-        }
-        else
-            getNewDirection = true;
-
-        if (getNewDirection && !isStationary)
-        {
-            List<Coord> possibleMoves = OpenTilesInSameDirection(moveX, moveY);
-
-            if (possibleMoves.Count <= 0)
-                possibleMoves = entity.GetEmptyCoords();
-
-            if (possibleMoves.Count > 0)
-            {
-                Coord picked = possibleMoves.GetRandom(SeedManager.combatRandom);
-                moveX = picked.x;
-                moveY = picked.y;
-            }
-        }
-
-        if (npcBase.HasFlag(NPC_Flags.Aquatic) && !World.tileMap.EntityWaterCheck(entity.posX + moveX, entity.posY + moveY))
+        if (npcBase.HasFlag(NPC_Flags.Aquatic) && !World.tileMap.IsWaterTile(entity.posX + moveX, entity.posY + moveY))
         {
             if (target.myPos != new Coord(entity.posX + moveX, entity.posY + moveY))
             {
-                Wander(false);
+                Wander();
                 return;
             }
         }
@@ -407,14 +360,14 @@ public class BaseAI : MonoBehaviour
 
         foreach (Entity ent in World.objectManager.onScreenNPCObjects)
         {
-            if (ShouldAttack(ent.AI))
+            if (ShouldAttack(ent.AI) && entity.inSight(ent.myPos))
                 possibleTargets.Add(ent);
         }
 
         target = (possibleTargets.Count == 0) ? null : GetClosestTarget(possibleTargets);
     }
 
-    void Wander(bool canOverride = true)
+    void Wander()
     {
         if (entity == null)
         {
@@ -423,7 +376,7 @@ public class BaseAI : MonoBehaviour
         }
 
         int posX = entity.posX, posY = entity.posY;
-        if (target != null && target != ObjectManager.playerEntity && canOverride)
+        if (target != null && target != ObjectManager.playerEntity)
         {
             Hostile_Action();
             return;
@@ -442,7 +395,7 @@ public class BaseAI : MonoBehaviour
         if (walkDirection != null && World.tileMap.WalkableTile(posX + walkDirection.x, posY + walkDirection.y))
         {
             if ((!World.tileMap.GetCellAt(entity.myPos + walkDirection).Walkable) ||
-                (npcBase.HasFlag(NPC_Flags.Aquatic) && !World.tileMap.EntityWaterCheck(entity.posX + walkDirection.x, entity.posY + walkDirection.y)))
+                (npcBase.HasFlag(NPC_Flags.Aquatic) && !World.tileMap.IsWaterTile(entity.posX + walkDirection.x, entity.posY + walkDirection.y)))
             {
                 walkDirection = null;
 
@@ -483,7 +436,7 @@ public class BaseAI : MonoBehaviour
 
         if (target == ObjectManager.playerEntity && GetDistance(ObjectManager.playerEntity) < 3 || npcBase.HasFlag(NPC_Flags.At_Home))
         {
-            Wander(false);
+            Wander();
             walkDirection = null;
             return;
         }
@@ -491,7 +444,7 @@ public class BaseAI : MonoBehaviour
         if (HasRanged(target))
             return;
 
-        path = new Path_AStar(entity.myPos, target.myPos);
+        path = new Path_AStar(entity.myPos, target.myPos, entity.inventory.CanFly());
         Coord next = path.GetNextStep();
 
         if (next.x == entity.posX && next.y == entity.posY)
@@ -501,6 +454,22 @@ public class BaseAI : MonoBehaviour
         int moveY = next.y - entity.posY;
 
         ConfirmAction(moveX, moveY);
+    }
+
+    public void FollowPath()
+    {
+        if (path != null)
+        {
+            Coord next = path.GetNextStep();
+
+            if (next == entity.myPos)
+                next = path.GetNextStep();
+
+            int moveX = next.x - entity.posX;
+            int moveY = next.y - entity.posY;
+
+            entity.Action(moveX, moveY);
+        }
     }
 
     List<Coord> OpenTilesInSameDirection(int x, int y)
@@ -527,19 +496,19 @@ public class BaseAI : MonoBehaviour
 
     void RangedAttack(Coord targetPosition)
     {
+        float dist = GetDistance(target);
         //Fleeing
-        if (GetDistance(target) < 3 && RNG.Next(100) < 20 && !isStationary)
+        if (dist < 3 && RNG.Next(100) < 20 && !isStationary)
         {
             int dirX = entity.posX - targetPosition.x, dirY = entity.posY - targetPosition.y;
             dirX = Mathf.Clamp(dirX, -1, 1);
             dirY = Mathf.Clamp(dirY, -1, 1);
             ConfirmAction(dirX, dirY);
-            return;
         }
         else
         {
             //Out of sight
-            if (!entity.inSight(targetPosition))
+            if (!entity.inSight(targetPosition) || dist > 10)
                 entity.Wait();
             else
             {
@@ -602,7 +571,7 @@ public class BaseAI : MonoBehaviour
 
         if (bai.npcBase.faction == npcBase.faction)
         {
-            hostilityOverride = true;
+            npcBase.hostilityOverride = true;
             bai.hasSeenPlayer = true;
         }
     }
@@ -610,7 +579,7 @@ public class BaseAI : MonoBehaviour
     public void BecomeHostile()
     {
         hasSeenPlayer = true;
-        hostilityOverride = true;
+        npcBase.hostilityOverride = true;
 
         if (isHostile)
             return;
@@ -682,17 +651,14 @@ public class BaseAI : MonoBehaviour
         return entity.myPos.DistanceTo(targetEntity.myPos);
     }
 
-    public Entity GetClosestTarget(List<Entity> entities)
+    Entity GetClosestTarget(List<Entity> entities)
     {
         Entity closest = ObjectManager.playerEntity;
         float distance = Mathf.Infinity;
 
-        if (GetDistance(closest) > 8)
-            return closest;
-
         foreach (Entity en in entities)
         {
-            if (!en.isPlayer && !en.AI.InSightOfPlayer())
+            if (!entity.inSight(en.myPos))
                 continue;
 
             float dist = GetDistance(en);
@@ -745,6 +711,7 @@ public class BaseAI : MonoBehaviour
 
             World.soundManager.Explosion();
         }
+
         if (npcBase.HasFlag(NPC_Flags.OnDeath_PoisonGas))
         {
             for (int x = entity.posX - 1; x <= entity.posX + 1; x++)
@@ -778,7 +745,8 @@ public class BaseAI : MonoBehaviour
         entity.stats.Attributes["Accuracy"] = npcBase.Attributes["Accuracy"];
 
         if (npcBase.faction != null && npcBase.faction.HostileToPlayer())
-            hostilityOverride = true;
+            npcBase.hostilityOverride = true;
+
         if (!isHostile && npcBase.faction.isHostileTo("player"))
             BecomeHostile();
 
@@ -802,7 +770,7 @@ public class BaseAI : MonoBehaviour
 
     public void CacheAll()
     {
-        if (entity != null && entity.stats != null && entity.inventory != null && npcBase != null)
+        if (entity != null && entity.stats != null && entity.inventory != null && npcBase != null && entity.body != null)
         {
             npcBase.isAlive = (entity.stats.health > 0);
             npcBase.onScreen = false;
@@ -820,17 +788,15 @@ public class BaseAI : MonoBehaviour
             {
                 for (int i = 0; i < body.Hands.Count; i++)
                 {
-                    if (body.Hands[i].equippedItem == null)
-                    {
+                    if (body.Hands[i].EquippedItem == null)
                         body.Hands[i].SetEquippedItem(ItemList.GetItemByID(entity.inventory.baseWeapon), entity);
-                    }
 
-                    npcBase.handItems.Add(body.Hands[i].equippedItem);
+                    npcBase.handItems.Add(body.Hands[i].EquippedItem);
                 }
             }
             else
             {
-                npcBase.handItems = new List<Item>() { body.defaultHand.equippedItem };
+                npcBase.handItems = new List<Item>() { body.defaultHand.EquippedItem };
             }
 
             npcBase.firearm = inv.firearm;
@@ -861,6 +827,14 @@ public class BaseAI : MonoBehaviour
         spriteRenderer.enabled = sight;
 
         return sight;
+    }
+
+    public bool TargetInSight()
+    {
+        if (target == null)
+            return false;
+
+        return entity.inSight(target.myPos);
     }
 
     bool UseSkills(Entity targetEntity)
@@ -975,25 +949,25 @@ public class BaseAI : MonoBehaviour
         {
             if (body.AllGrips() == null || body.AllGrips().Count == 0)
             {
-                skills.Grapple_GrabPart(target.GetComponent<Body>().SeverableBodyParts().GetRandom(), null);
+                skills.Grapple_GrabPart(target.GetComponent<Body>().SeverableBodyParts().GetRandom());
                 return true;
             }
             else
             {
-                if (body.AllGrips()[0].HeldPart.slot == ItemProperty.Slot_Head && RNG.Next(100) < 20 && entity.stats.Strength > 6)
+                if (body.AllGrips()[0].heldPart.slot == ItemProperty.Slot_Head && RNG.Next(100) < 20 && entity.stats.Strength > 6)
                 {
-                    skills.Grapple_Strangle(target.stats, null);
+                    skills.Grapple_Strangle(target.stats);
                 }
                 else
                 {
                     int ran = RNG.Next(100);
 
                     if (ran <= 40)
-                        skills.Grapple_TakeDown(target.stats, body.AllGrips()[0].HeldPart.displayName, null);
+                        skills.Grapple_TakeDown(target.stats, body.AllGrips()[0].heldPart.displayName);
                     else if (ran <= 60)
-                        skills.Grapple_Shove(target, null);
-                    else if (ran <= 90 && entity.stats.Strength >= 8)
-                        skills.Grapple_Pull(body.AllGrips()[0], null);
+                        skills.Grapple_Shove(target);
+                    else if (ran <= 90 && entity.stats.Strength >= 5)
+                        skills.Grapple_Pull(body.AllGrips()[0]);
                 }
 
                 return true;
@@ -1046,7 +1020,7 @@ public class BaseAI : MonoBehaviour
 
     public void OnHitEffects(Stats target, int damage)
     {
-        if (npcBase.HasFlag(NPC_Flags.Radiation) && SeedManager.combatRandom.Next(100) < 5)
+        if (target.entity.isPlayer && npcBase.HasFlag(NPC_Flags.Radiation) && SeedManager.combatRandom.Next(100) < 5)
             target.Radiate(SeedManager.combatRandom.Next(1, 6));
     }
 }

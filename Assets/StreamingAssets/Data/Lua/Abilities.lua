@@ -373,7 +373,6 @@ function DrainBlood(caster, direction, skill)
 		target.stats.AddStatusEffect("Bleed", Random(3, 6))
 
 		caster.stats.Heal(amount)
-		caster.stats.Hunger = 8000
 
 		--Give player vampirism
 		if (target.isPlayer and Random(0, 100) < 100) then
@@ -518,7 +517,6 @@ function ApplyChanges(caster, skill)
 	skill.InitializeCooldown()
 
 	if (caster.isPlayer) then
-		caster.stats.Hunger = caster.stats.Hunger - skill.hungerCost
 		skill.AddXP(caster.stats.Intelligence)
 	end
 

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using LitJson;
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -20,15 +19,22 @@ public class InputKeys {
 		List<KeyValuePair<string, ShiftKeyCode>> keyPairList = new List<KeyValuePair<string, ShiftKeyCode>>(MyKeys);
 
 		foreach (KeyValuePair<string, ShiftKeyCode> kvp in keyPairList) {
-			MyKeys[kvp.Key] = GetValueFromData(data, kvp.Key);
+            ShiftKeyCode kc = GetValueFromData(data, kvp.Key);
+
+            if (kc != null)
+			    MyKeys[kvp.Key] = GetValueFromData(data, kvp.Key);
 		}
 	}
 
 	ShiftKeyCode GetValueFromData(JsonData data, string keyName) {
-		bool sh = (data["Input"]["MyKeys"][keyName].ContainsKey("Shift")) ? (bool)data["Input"]["MyKeys"][keyName]["Shift"] : false;
-		int kc = (int)data["Input"]["MyKeys"][keyName]["keyCode"];
+        if (data["Input"]["MyKeys"].ContainsKey(keyName))
+        {
+            bool sh = (data["Input"]["MyKeys"][keyName].ContainsKey("Shift")) ? (bool)data["Input"]["MyKeys"][keyName]["Shift"] : false;
+            int kc = (int)data["Input"]["MyKeys"][keyName]["keyCode"];
+            return new ShiftKeyCode(sh, (KeyCode)kc);
+        }
 
-		return new ShiftKeyCode(sh,(KeyCode)kc);
+        return null;
 	}
 
 	public KeyCode GetKeyCode(string search) {
@@ -79,82 +85,84 @@ public class InputKeys {
 	}
 
 	public void Defaults() {
-		MyKeys = new Dictionary<string, ShiftKeyCode>();
+        MyKeys = new Dictionary<string, ShiftKeyCode>
+        {
+            { "North", new ShiftKeyCode(false, KeyCode.Keypad8) },
+            { "NorthEast", new ShiftKeyCode(false, KeyCode.Keypad9) },
+            { "East", new ShiftKeyCode(false, KeyCode.Keypad6) },
+            { "SouthEast", new ShiftKeyCode(false, KeyCode.Keypad3) },
+            { "South", new ShiftKeyCode(false, KeyCode.Keypad2) },
+            { "SouthWest", new ShiftKeyCode(false, KeyCode.Keypad1) },
+            { "West", new ShiftKeyCode(false, KeyCode.Keypad4) },
+            { "NorthWest", new ShiftKeyCode(false, KeyCode.Keypad7) },
+            { "Wait", new ShiftKeyCode(false, KeyCode.Keypad5) },
 
-		MyKeys.Add("North", new ShiftKeyCode(false, KeyCode.Keypad8));
-		MyKeys.Add("NorthEast", new ShiftKeyCode(false, KeyCode.Keypad9));
-		MyKeys.Add("East", new ShiftKeyCode(false, KeyCode.Keypad6));
-		MyKeys.Add("SouthEast", new ShiftKeyCode(false, KeyCode.Keypad3));
-		MyKeys.Add("South", new ShiftKeyCode(false, KeyCode.Keypad2));
-		MyKeys.Add("SouthWest", new ShiftKeyCode(false, KeyCode.Keypad1));
-		MyKeys.Add("West", new ShiftKeyCode(false, KeyCode.Keypad4));
-		MyKeys.Add("NorthWest", new ShiftKeyCode(false, KeyCode.Keypad7));
-		MyKeys.Add("Wait", new ShiftKeyCode(false, KeyCode.Keypad5));
+            { "GoUpStairs", new ShiftKeyCode(false, KeyCode.KeypadPlus) },
+            { "GoDownStairs", new ShiftKeyCode(false, KeyCode.KeypadMinus) },
 
-		MyKeys.Add("GoUpStairs", new ShiftKeyCode(false, KeyCode.KeypadPlus));
-		MyKeys.Add("GoDownStairs", new ShiftKeyCode(false, KeyCode.KeypadMinus));
+            { "Enter", new ShiftKeyCode(false, KeyCode.Return) },
+            { "Pause", new ShiftKeyCode(false, KeyCode.Escape) },
 
-		MyKeys.Add("Enter", new ShiftKeyCode(false, KeyCode.Return));
-		MyKeys.Add("Pause", new ShiftKeyCode(false, KeyCode.Escape));
+            { "Pickup", new ShiftKeyCode(false, KeyCode.G) },
+            { "Interact", new ShiftKeyCode(false, KeyCode.Space) },
+            { "Look", new ShiftKeyCode(false, KeyCode.L) },
+            { "Switch Target", new ShiftKeyCode(false, KeyCode.Tab) },
+            { "AlternateAttack", new ShiftKeyCode(false, KeyCode.LeftControl) },
+            { "Walk", new ShiftKeyCode(false, KeyCode.W) },
+            { "Throw", new ShiftKeyCode(false, KeyCode.T) },
+            { "Reload", new ShiftKeyCode(false, KeyCode.R) },
+            { "Rest", new ShiftKeyCode(false, KeyCode.E) },
+            { "Fire", new ShiftKeyCode(false, KeyCode.F) },
 
-		MyKeys.Add("Pickup", new ShiftKeyCode(false, KeyCode.G));
-		MyKeys.Add("Interact", new ShiftKeyCode(false, KeyCode.Space));
-        MyKeys.Add("Contextual Actions", new ShiftKeyCode(true, KeyCode.Space));
-		MyKeys.Add("Look", new ShiftKeyCode(false, KeyCode.L));
-        MyKeys.Add("Switch Target", new ShiftKeyCode(false, KeyCode.Tab));
-        MyKeys.Add("ForceAttack", new ShiftKeyCode(false, KeyCode.LeftControl));
-		MyKeys.Add("Walk", new ShiftKeyCode(false, KeyCode.W));
-		MyKeys.Add("Throw", new ShiftKeyCode(false, KeyCode.T));
-		MyKeys.Add("Reload", new ShiftKeyCode(false, KeyCode.R));
-		MyKeys.Add("Rest", new ShiftKeyCode(false, KeyCode.E));
-		MyKeys.Add("Fire", new ShiftKeyCode(false, KeyCode.F));
-
-		MyKeys.Add("Inventory", new ShiftKeyCode(false, KeyCode.I));
-		MyKeys.Add("Character", new ShiftKeyCode(false, KeyCode.C));
-		MyKeys.Add("Abilities", new ShiftKeyCode(false, KeyCode.A));
-		MyKeys.Add("Map", new ShiftKeyCode(false, KeyCode.M));
-		MyKeys.Add("Journal", new ShiftKeyCode(false, KeyCode.J));
-		MyKeys.Add("Toggle Mouse", new ShiftKeyCode(false, KeyCode.None));
-	}
+            { "Inventory", new ShiftKeyCode(false, KeyCode.I) },
+            { "Character", new ShiftKeyCode(false, KeyCode.C) },
+            { "Abilities", new ShiftKeyCode(false, KeyCode.A) },
+            { "Map", new ShiftKeyCode(false, KeyCode.M) },
+            { "Journal", new ShiftKeyCode(false, KeyCode.J) },
+            { "Contextual Actions", new ShiftKeyCode(false, KeyCode.None) },
+            { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) }
+        };
+    }
 
 	public void VIKeys() {
-		MyKeys = new Dictionary<string, ShiftKeyCode>();
+        MyKeys = new Dictionary<string, ShiftKeyCode>
+        {
+            { "North", new ShiftKeyCode(false, KeyCode.K) },
+            { "NorthEast", new ShiftKeyCode(false, KeyCode.U) },
+            { "East", new ShiftKeyCode(false, KeyCode.L) },
+            { "SouthEast", new ShiftKeyCode(false, KeyCode.N) },
+            { "South", new ShiftKeyCode(false, KeyCode.J) },
+            { "SouthWest", new ShiftKeyCode(false, KeyCode.B) },
+            { "West", new ShiftKeyCode(false, KeyCode.H) },
+            { "NorthWest", new ShiftKeyCode(false, KeyCode.Y) },
+            { "Wait", new ShiftKeyCode(false, KeyCode.Period) },
 
-		MyKeys.Add("North", new ShiftKeyCode(false, KeyCode.K));
-		MyKeys.Add("NorthEast", new ShiftKeyCode(false, KeyCode.U));
-		MyKeys.Add("East", new ShiftKeyCode(false, KeyCode.L));
-		MyKeys.Add("SouthEast", new ShiftKeyCode(false, KeyCode.N));
-		MyKeys.Add("South", new ShiftKeyCode(false, KeyCode.J));
-		MyKeys.Add("SouthWest", new ShiftKeyCode(false, KeyCode.B));
-		MyKeys.Add("West", new ShiftKeyCode(false, KeyCode.H));
-		MyKeys.Add("NorthWest", new ShiftKeyCode(false, KeyCode.Y));
-		MyKeys.Add("Wait", new ShiftKeyCode(false, KeyCode.Period));
+            { "GoUpStairs", new ShiftKeyCode(true, KeyCode.Comma) },
+            { "GoDownStairs", new ShiftKeyCode(true, KeyCode.Period) },
 
-		MyKeys.Add("GoUpStairs", new ShiftKeyCode(true, KeyCode.Comma));
-		MyKeys.Add("GoDownStairs", new ShiftKeyCode(true, KeyCode.Period));
+            { "Enter", new ShiftKeyCode(false, KeyCode.Return) },
+            { "Pause", new ShiftKeyCode(false, KeyCode.Escape) },
 
-		MyKeys.Add("Enter", new ShiftKeyCode(false, KeyCode.Return));
-		MyKeys.Add("Pause", new ShiftKeyCode(false, KeyCode.Escape));
+            { "Pickup", new ShiftKeyCode(false, KeyCode.Comma) },
+            { "Interact", new ShiftKeyCode(false, KeyCode.Space) },
+            { "Look", new ShiftKeyCode(false, KeyCode.X) },
+            { "Switch Target", new ShiftKeyCode(false, KeyCode.Tab) },
+            { "AlternateAttack", new ShiftKeyCode(false, KeyCode.LeftControl) },
+            { "Walk", new ShiftKeyCode(false, KeyCode.W) },
+            { "Throw", new ShiftKeyCode(false, KeyCode.T) },
+            { "Reload", new ShiftKeyCode(false, KeyCode.R) },
+            { "Rest", new ShiftKeyCode(false, KeyCode.E) },
+            { "Fire", new ShiftKeyCode(false, KeyCode.F) },
 
-		MyKeys.Add("Pickup", new ShiftKeyCode(false, KeyCode.Comma));
-		MyKeys.Add("Interact", new ShiftKeyCode(false, KeyCode.Space));
-        MyKeys.Add("Contextual Actions", new ShiftKeyCode(true, KeyCode.Space));
-        MyKeys.Add("Look", new ShiftKeyCode(false, KeyCode.X));
-        MyKeys.Add("Switch Target", new ShiftKeyCode(false, KeyCode.Tab));
-        MyKeys.Add("ForceAttack", new ShiftKeyCode(false, KeyCode.LeftControl));
-		MyKeys.Add("Walk", new ShiftKeyCode(false, KeyCode.W));
-		MyKeys.Add("Throw", new ShiftKeyCode(false, KeyCode.T));
-		MyKeys.Add("Reload", new ShiftKeyCode(false, KeyCode.R));
-		MyKeys.Add("Rest", new ShiftKeyCode(false, KeyCode.E));
-		MyKeys.Add("Fire", new ShiftKeyCode(false, KeyCode.F));
-
-		MyKeys.Add("Inventory", new ShiftKeyCode(false, KeyCode.I));
-		MyKeys.Add("Character", new ShiftKeyCode(false, KeyCode.C));
-		MyKeys.Add("Abilities", new ShiftKeyCode(false, KeyCode.A));
-		MyKeys.Add("Map", new ShiftKeyCode(false, KeyCode.M));
-		MyKeys.Add("Journal", new ShiftKeyCode(false, KeyCode.Q));
-		MyKeys.Add("Toggle Mouse", new ShiftKeyCode(false, KeyCode.None));
-	}
+            { "Inventory", new ShiftKeyCode(false, KeyCode.I) },
+            { "Character", new ShiftKeyCode(false, KeyCode.C) },
+            { "Abilities", new ShiftKeyCode(false, KeyCode.A) },
+            { "Map", new ShiftKeyCode(false, KeyCode.M) },
+            { "Journal", new ShiftKeyCode(false, KeyCode.Q) },
+            { "Contextual Actions", new ShiftKeyCode(false, KeyCode.None) },
+            { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) }
+        };
+    }
 }
 
 public class ShiftKeyCode {

@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System.IO;
-using LitJson;
-using System.Collections.Generic;
 
 public static class Manager {
 
@@ -13,16 +11,13 @@ public static class Manager {
 	public static bool noEncounters = false;
 
 	public static int worldSeed;
-	public static string customSeedInput = "Cynapse";
 	public static string playerName, profName;
 
-    public static Coord localStartPos = new Coord(22, -28);
+    public static Coord localStartPos = new Coord(22, 2);
     public static int startElevation = 0;
     public static Weather startWeather = Weather.Clear;
 	public static PlayerBuilder playerBuilder;
 	public static int tileResolution = 16;
-
-	public static bool noHunger = false;
 
     public static bool InWorldBounds(Coord pos) {
 		return !(pos.x < 0 || pos.x > worldMapSize.y || pos.y > -1 || pos.y < -worldMapSize.y);
@@ -33,10 +28,10 @@ public static class Manager {
     }
 
 	public static void ClearFiles() {
-        startElevation = 0;
-
         MyConsole.ClearLog();
-        localStartPos = new Coord(22, -28);
+
+        startElevation = 0;
+        localStartPos = new Coord(22, 2);
 
 		DeleteFileIfExists(SaveDirectory);
     }

@@ -59,7 +59,13 @@ public class ObjectManager : MonoBehaviour
             GetComponent<SaveData>().LoadPlayer();
 
         CreateWorldMap();
-        yield return (worldMap.worldMapData.doneLoading);
+
+        while (!worldMap.worldMapData.doneLoading)
+        {
+            yield return null;
+        }
+
+        worldMap.BuildTexture();
 
         CreateLocalMap();
         SpawnPlayer();
@@ -70,7 +76,7 @@ public class ObjectManager : MonoBehaviour
         turnManager.Init();
 
         UserInterface.loading = false;
-        World.tileMap.onScreenChange += CheckArrowsEnabled;
+        World.tileMap.OnScreenChange += CheckArrowsEnabled;
         CheckArrowsEnabled(null, World.tileMap.CurrentMap);
         GameObject.FindObjectOfType<SidePanelUI>().Init();
         MyConsole.NewMessageColor("Type \"?\" or \"help\" to show a list of commands", Color.cyan);
@@ -98,7 +104,7 @@ public class ObjectManager : MonoBehaviour
         tileMap.SetMapSize(Manager.localMapSize.x, Manager.localMapSize.y);
 
         if (!Manager.newGame)
-            tileMap.worldData = new OldScreen();
+            tileMap.worldData = new OldScreens();
 
         tileMap.Init();
     }
@@ -207,7 +213,7 @@ public class ObjectManager : MonoBehaviour
 
     public bool NPCExists(string id)
     {
-        return npcClasses.Find(x => x.ID == "arenamaster") != null;
+        return npcClasses.Find(x => x.ID == id) != null;
     }
 
     //to spawn one on the current screen
@@ -220,7 +226,7 @@ public class ObjectManager : MonoBehaviour
         {
             if (npcB.HasFlag(NPC_Flags.Boss))
             {
-                npcB.maxHealth += (World.DangerLevel() / 3);
+                npcB.maxHealth += (World.DangerLevel() / 10);
                 npcB.health = npcB.maxHealth;
             }
 
@@ -229,12 +235,13 @@ public class ObjectManager : MonoBehaviour
 
         if (npcB.worldPosition == tileMap.WorldPosition && npcB.elevation == tileMap.currentElevation)
         {
+            //Apparently this check is important.
             for (int i = 0; i < onScreenNPCObjects.Count; i++)
             {
                 if (onScreenNPCObjects[i] == null)
                     continue;
 
-                if (npcB.localPosition == onScreenNPCObjects[i].GetComponent<BaseAI>().npcBase.localPosition)
+                if (npcB.localPosition == onScreenNPCObjects[i].myPos)
                     return null;
             }
 
@@ -281,7 +288,7 @@ public class ObjectManager : MonoBehaviour
     {
         for (int i = 0; i < onScreenNPCObjects.Count; i++)
         {
-            Entity entity = onScreenNPCObjects[i].GetComponent<Entity>();
+            Entity entity = onScreenNPCObjects[i];
 
             if (entity.posX == posX && entity.posY == posY)
             {
@@ -397,7 +404,7 @@ public class ObjectManager : MonoBehaviour
     //Spawn an object at a specific screen
     public MapObject NewObjectAtOtherScreen(string type, Coord locPos, Coord worPos, int elevation = 0)
     {
-        MapObject mapOb = new MapObject(type, new Coord(locPos.x, locPos.y), worPos, elevation, "");
+        MapObject mapOb = new MapObject(type, new Coord(locPos.x, locPos.y), worPos, elevation);
         mapObjects.Add(mapOb);
 
         if (mapOb.onScreen)
@@ -415,16 +422,16 @@ public class ObjectManager : MonoBehaviour
         if (newLiq == null || c == null)
             return;
 
-        if (c.GetPool() == null && !World.tileMap.isWaterTile(localPos.x, localPos.y + Manager.localMapSize.y))
+        if (c.GetPool() == null && !World.tileMap.IsWaterTile(localPos.x, localPos.y + Manager.localMapSize.y))
         {
             MapObject m = NewObjectAtOtherScreen("Loot", localPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
             Item i = ItemList.GetItemByID("pool");
-            i.GetItemComponent<CLiquidContainer>().liquid = newLiq;
+            i.GetCComponent<CLiquidContainer>().liquid = newLiq;
             m.inv.Insert(0, i);
         }
         else
         {
-            c.GetPool().GetItemComponent<CLiquidContainer>().Fill(newLiq);
+            c.GetPool().GetCComponent<CLiquidContainer>().Fill(newLiq);
         }
     }
 
@@ -439,10 +446,10 @@ public class ObjectManager : MonoBehaviour
                 return null;
         }
 
-        if (type == "Tall_Grass" && World.tileMap.isWaterTile(locPos.x, locPos.y))
+        if (type == "Tall_Grass" && World.tileMap.IsWaterTile(locPos.x, locPos.y))
             return null;
 
-        MapObject mapOb = new MapObject(type, locPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, "");
+        MapObject mapOb = new MapObject(type, locPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
         mapObjects.Add(mapOb);
 
         if (mapOb.onScreen)
@@ -469,7 +476,7 @@ public class ObjectManager : MonoBehaviour
             return null;
         }
 
-        MapObject mapOb = new MapObject(type, new Coord(locPos.x, locPos.y), worPos, World.tileMap.currentElevation, "");
+        MapObject mapOb = new MapObject(type, new Coord(locPos.x, locPos.y), worPos, World.tileMap.currentElevation);
 
         if (items != null)
             mapOb.inv = items;
@@ -480,7 +487,6 @@ public class ObjectManager : MonoBehaviour
         GameObject newObject = Instantiate(objectPrefab, new Vector3(locPos.x, locPos.y, 0), Quaternion.identity);
         MapObjectSprite mos = newObject.GetComponent<MapObjectSprite>();
         mos.objectBase = mapOb;
-        mos.Setup();
         onScreenMapObjects.Add(newObject);
 
         Inventory myInv = newObject.GetComponent<Inventory>();
@@ -544,14 +550,18 @@ public class ObjectManager : MonoBehaviour
     //remove all map objects on screen
     public void RemoveObjectInstances()
     {
+
         for (int i = 0; i < onScreenMapObjects.Count; i++)
         {
-            MapObjectSprite objectInstance = onScreenMapObjects[i].GetComponent<MapObjectSprite>();
-
-            if (objectInstance.objectBase != null)
+            if (onScreenMapObjects[i] != null)
             {
-                objectInstance.objectBase.onScreen = false;
-                DestroyImmediate(onScreenMapObjects[i]);
+                MapObjectSprite objectInstance = onScreenMapObjects[i].GetComponent<MapObjectSprite>();
+
+                if (objectInstance.objectBase != null)
+                {
+                    objectInstance.objectBase.onScreen = false;
+                    Destroy(onScreenMapObjects[i]);
+                }
             }
         }
 
@@ -575,17 +585,11 @@ public class ObjectManager : MonoBehaviour
         SpawnNPC(newNPC);
 
         if (newNPC.HasFlag(NPC_Flags.Merchant))
-        {
             ShopObjects(h, worldPos);
-            return;
-        }
         else if (newNPC.HasFlag(NPC_Flags.Doctor))
-        {
             HospitalObjects(h, worldPos);
-            return;
-        }
-
-        HouseObjects(h, worldPos);
+        else
+            HouseObjects(h, worldPos);
     }
 
     void HouseObjects(House h, Coord worldPos)
@@ -598,6 +602,13 @@ public class ObjectManager : MonoBehaviour
             c2 = h.GetRandomPosition();
 
         NewObjectAtOtherScreen("Table", c2, worldPos);
+
+        Coord c3 = h.GetRandomPosition();
+
+        if (c3 == c || c3 == c2)
+            c3 = h.GetRandomPosition();
+
+        NewObjectAtOtherScreen((SeedManager.localRandom.CoinFlip() ? "Chair_Left" : "Chair_Right"), c3, worldPos);
     }
 
     void ShopObjects(House h, Coord worldPos)
@@ -810,7 +821,7 @@ public class ObjectManager : MonoBehaviour
     {
         World.userInterface.loadingGO.SetActive(true);
         World.userInterface.loadingGO.GetComponentInChildren<UnityEngine.UI.Text>().text = "Saving...";
-        World.tileMap.onScreenChange -= CheckArrowsEnabled;
+        World.tileMap.OnScreenChange -= CheckArrowsEnabled;
 
         yield return new WaitForSeconds(0.01f);
         if (playerEntity != null)
@@ -818,7 +829,7 @@ public class ObjectManager : MonoBehaviour
             tileMap.CurrentMap.lastTurnSeen = World.turnManager.turn;
 
             if (PlayerInput.fullMap)
-                playerEntity.GetComponent<PlayerInput>().TriggerLocalOrWorldMap();
+                World.playerInput.TriggerLocalOrWorldMap();
 
             for (int i = 0; i < onScreenNPCObjects.Count; i++)
             {
