@@ -901,6 +901,16 @@
             "Display" : "Drunk",
             "Tooltip" : "Drunk: You are intoxicated and have trouble walking straight. May cause vomiting."
         },
+		{
+            "ID" : "SE_Sick",
+            "Display" : "Sick",
+            "Tooltip" : "Sick: You may vomit until this effect clears."
+        },
+		{
+			"ID" : "SE_Over",
+			"Display" : "Overburdened",
+			"Tooltip" : "Overburdened: You are carrying more than you should. Speed is reduced."
+		},
         {
             "ID" : "SE_Burning",
             "Display" : "Aflame",
@@ -1427,11 +1437,6 @@
             "Message" : "Your party cannot support another mouth to feed."
         },
         {
-            "ID" : "Inv_Full",
-            "Title" : "Overburdened!",
-            "Message" : "You are carrying too much to move."
-        },
-        {
             "ID" : "Inv_Full_Follower",
             "Title" : "Carrying Too Much",
             "Message" : "They cannot hold any more!"
@@ -1573,6 +1578,10 @@
         }
     ],
     "Log" : [
+		{
+			"ID" : "Message_Overburdened",
+			"Display" : "Your movement is slowed from carrying so much."
+		},
 		{
 			"ID" : "Message_FireWeapon",
 			"Display" : "[NAME] fires their [ITEM]."

@@ -80,6 +80,7 @@ public class InventoryPanel : UIPanel
     {
         if (SelectedNum < curInv.entity.body.Hands.Count)
             return curInv.entity.body.Hands[SelectedNum].EquippedItem;
+
         else if (SelectedNum == curInv.entity.body.Hands.Count)
             return curInv.firearm;
         else

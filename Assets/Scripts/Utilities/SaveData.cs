@@ -290,7 +290,7 @@ public class SaveData : MonoBehaviour
         NPC questGiver = null;
 
         if (qData.ContainsKey("QG"))
-            questGiver = World.objectManager.npcClasses.Find(x => x.UID == qData["QG"].ToString());
+            questGiver = World.objectManager.npcClasses.Find(x => x.UID == (int)qData["QG"]);
 
         Quest newQuest = new Quest(bp.Name, qData["ID"].ToString(), questGiver);
 
@@ -328,7 +328,7 @@ public class SaveData : MonoBehaviour
         {
             for (int j = 0; j < qData["Spwnd"].Count; j++)
             {
-                newQuest.AddUIDToSpawnList(qData["Spwnd"][j].ToString());
+                newQuest.AddUIDToSpawnList((int)qData["Spwnd"][j]);
             }
         }
 

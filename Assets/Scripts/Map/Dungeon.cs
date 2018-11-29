@@ -267,18 +267,21 @@ public class Dungeon
 
     void UndergroundRiver()
     {
-        Coord sPos = new Coord(Manager.localMapSize.x / 2 + RNG.Next(-10, 10), 0);
-        Coord ePos = new Coord(Manager.localMapSize.x / 2 + RNG.Next(-10, 10), Manager.localMapSize.y - 1);
+        int width = 2;
+        Coord sPos = new Coord(RNG.Next(width, Manager.localMapSize.x - width - 1), -1);
+        Coord ePos = new Coord(RNG.Next(width, Manager.localMapSize.x - width - 1), Manager.localMapSize.y - 1);
+        float offset = 1.0f;
+        float sinXAmount = RNG.Next(50, 100) / 100f;
 
         Line l = new Line(sPos, ePos);
         List<Coord> points = l.GetPoints();
 
         foreach (Coord seg in points)
         {
-            if (RNG.Next(100) < 20)
-                seg.x += RNG.Next(-1, 2);
+            seg.x += (int)(Mathf.Sin(seg.y / 3.0f) * sinXAmount * offset);
+            offset += RNG.ZeroToOne() * 0.15f;
 
-            for (int x = seg.x - 2; x <= seg.x + 2; x++)
+            for (int x = seg.x - width; x <= seg.x + width; x++)
             {
                 if (x < 0 || x >= Manager.localMapSize.x)
                     continue;

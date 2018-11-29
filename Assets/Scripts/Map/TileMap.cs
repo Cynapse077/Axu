@@ -225,7 +225,8 @@ public class TileMap : MonoBehaviour
     }*/
     
     /*
-     * USING SHADOW CASTING. Strange artifacts when far away from pillars.*/
+     * USING SHADOW CASTING. Strange artifacts when far away from pillars.
+     */
     public void LightCheck(Entity playerEntity)
     {
         for (int y = 0; y < size_y; y++)

@@ -460,11 +460,10 @@ public class CModKit : CComponent
 public class CItemLevel : CComponent
 {
     private const double xpToNext = 1000.0;
-    private const int maxLevel = 10;
-    public int level;
-    public double xp;
+    private const int maxLevel = 5;
 
-    Item itemBase;
+    public int level = 1;
+    public double xp = 0.0;
 
     public CItemLevel()
     {
@@ -473,19 +472,15 @@ public class CItemLevel : CComponent
         xp = 0.0;
     }
 
-    public CItemLevel(Item i, int _lvl, int _xp, int _xpTN)
+    public CItemLevel(int _lvl, int _xp)
     {
         ID = "ItemLevel";
-        itemBase = i;
         level = _lvl;
         xp = _xp;
     }
 
-    public void AddXP(Item i, double _amount)
+    public void AddXP(double _amount)
     {
-        if (itemBase == null)
-            itemBase = i;
-
         if (level < maxLevel)
         {
             double amount = (_amount / level) + 0.1;
@@ -500,20 +495,20 @@ public class CItemLevel : CComponent
                 }
 
                 xp -= xpToNext;
-                LevelUp();
+                level++;
             }
 
         }
         else
         {
+            level = maxLevel;
             xp = 0;
         }
     }
 
-    void LevelUp()
+    public int DamageBonus()
     {
-        level++;
-        itemBase.damage += new Damage(0, 1, 1, itemBase.modifier.damageType);
+        return level - 1;
     }
 
     public string Display()
@@ -521,7 +516,7 @@ public class CItemLevel : CComponent
         if (level < maxLevel)
         {
             double xpPercent = Math.Round(xp / 10.0, 2);
-            return string.Format("Level {0} ({1}%xp)", level, xpPercent);
+            return string.Format("<color=cyan>Level</color> <color=yellow>{0}</color> <color=grey>({1} %xp)</color>", level, xpPercent);
         }
         else
         {

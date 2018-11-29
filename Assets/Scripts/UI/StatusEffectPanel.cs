@@ -2,6 +2,7 @@
 
 public class StatusEffectPanel : MonoBehaviour
 {
+    public GameObject overburdened;
     public GameObject flying;
     public GameObject poison;
     public GameObject bleed;
@@ -27,6 +28,7 @@ public class StatusEffectPanel : MonoBehaviour
         if (stats == null)
             return;
 
+        overburdened.SetActive(stats.entity.inventory.overCapacity());
         flying.SetActive(stats.IsFlying());
         poison.SetActive(stats.HasEffect("Poison"));
         bleed.SetActive(stats.HasEffect("Bleed"));

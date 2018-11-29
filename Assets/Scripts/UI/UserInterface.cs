@@ -783,7 +783,7 @@ public class UserInterface : MonoBehaviour
 
             int cost = shopInv.items[selectedItemNum].buyCost(charisma);
 
-            if ((playerInventory.canAfford(cost) || friendly) && !playerInventory.atMaxCapacity())
+            if ((playerInventory.canAfford(cost) || friendly))
             {
                 Item newItem = new Item(shopInv.items[selectedItemNum]);
 

@@ -125,7 +125,7 @@ public static class QuestList
         if (q.ContainsKey("Chained Quest"))
             quest.chainedQuestID = q["Chained Quest"].ToString();
         if (q.ContainsKey("Quest Giver"))
-            quest.questGiver = World.objectManager.npcClasses.Find(x => x.ID == q["Quest Giver"].ToString());
+            quest.questGiver = (World.objectManager.npcClasses.Find(x => x.ID == q["Quest Giver"].ToString()));
 
         if (q.ContainsKey("Flag"))
         {
@@ -243,13 +243,6 @@ public static class QuestList
                 QuestEvent.SubEvent moveNPC = new QuestEvent.SubEvent("Move NPC", npcToMove, wPos, elevation, null, localPos);
                 newEvent.SubEvents.Add(moveNPC);
             }
-            if (d.ContainsKey("Mod Item"))
-            {
-                string item = d["Mod Item"]["Item"].ToString();
-                string mod = d["Mod Item"]["Mod"].ToString();
-                QuestEvent.SubEvent modItem = new QuestEvent.SubEvent("Mod Item", item, null, 0, mod);
-                newEvent.SubEvents.Add(modItem);
-            }
             if (d.ContainsKey("Console Command"))
             {
                 string consoleCommand = d["Console Command"].ToString();
@@ -294,6 +287,7 @@ public static class QuestList
     {
         if (quests == null)
             Init();
+
         if (quests.Find(x => x.ID == search) == null)
             return null;
 

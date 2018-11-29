@@ -46,6 +46,7 @@ public class Inventory : MonoBehaviour
                 _firearm.OnUnequip(entity);
 
             _firearm = value;
+
             if (entity != null && entity.isPlayer)
                 GameObject.FindObjectOfType<AmmoPanel>().Display(_firearm.ID != "none");
 
@@ -70,7 +71,6 @@ public class Inventory : MonoBehaviour
     public void AddRemoveStorage(int amount)
     {
         _maxItems += amount;
-        ManageCapacity();
     }
 
     public static List<Item> GetDrops(int numItems)
@@ -96,22 +96,6 @@ public class Inventory : MonoBehaviour
         }
 
         return inv;
-    }
-
-    //This is called when capacity changes. If you have more items than you can carry, some will drop on the ground.
-    public void ManageCapacity()
-    {
-        if (items.Count <= maxItems)
-            return;
-
-        int numToDrop = items.Count - maxItems;
-
-        for (int i = 0; i < numToDrop; i++)
-        {
-            Drop(items[i]);
-        }
-
-        Alert.NewAlert("Inv_Full", UIWindow.Inventory);
     }
 
     public bool CanFly()
@@ -246,7 +230,7 @@ public class Inventory : MonoBehaviour
             }
 
             if (firearm.amount > 0)
-                PickupItem(firearm, false, true);
+                PickupItem(firearm, true);
 
             firearm = ItemList.GetNone();
         }
@@ -267,6 +251,14 @@ public class Inventory : MonoBehaviour
             return false;
 
         return (body.FreeHands().Count == 0 && hand.arm.GetStatMod("Strength").Amount < 5);
+    }
+
+    public int BurdenPenalty()
+    {
+        if (!overCapacity())
+            return 0;
+
+        return Mathf.Min((items.Count - maxItems) * 2, 10);
     }
 
     public void Wield(Item i, int armSlot)
@@ -445,13 +437,10 @@ public class Inventory : MonoBehaviour
         if (!i.lootable || i.HasProp(ItemProperty.Pool))
             return false;
 
-        if (i.stackable && items.Find(x => x.ItemName() == i.ItemName() && x.MyComponents() == i.MyComponents()) != null)
-            return true;
-
-        return !atMaxCapacity();
+        return true;
     }
 
-    public void PickupItem(Item i, bool canExceedMaxCapacity = false, bool fromFirearm = false)
+    public void PickupItem(Item i, bool fromFirearm = false)
     {
         if (i == null || !i.lootable)
             return;
@@ -497,18 +486,13 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        if (atMaxCapacity() && !canExceedMaxCapacity)
-        {
-            if (entity != null && entity.isPlayer)
-            {
-                Alert.NewAlert("Inv_Full", UIWindow.Inventory);
-                Drop(i);
-            }
-            return;
-        }
-
         World.objectManager.UpdateDialogueOptions();
         items.Add(i);
+
+        if (overCapacity())
+        {
+            CombatLog.SimpleMessage("Message_Overburdened");
+        }
     }
 
     public void RemoveInstance(Item i)
@@ -928,11 +912,6 @@ public class Inventory : MonoBehaviour
     public bool overCapacity()
     {
         return (items.Count > maxItems);
-    }
-
-    public bool atMaxCapacity()
-    {
-        return (items.Count >= maxItems);
     }
 
     public bool isNoneItem(Item i)

@@ -203,9 +203,9 @@ public class Body : MonoBehaviour
             {
                 if (bp.grip.GripBroken(2))
                 {
-                    string message = LocalizationManager.GetLocalizedContent("Gr_BreakGrip")[0];
-                    message = message.Replace("[ATTACKER]", gameObject.name);
-                    message = message.Replace("[DEFENDER]", bp.grip.HeldBody.name);
+                    string message = LocalizationManager.GetContent("Gr_BreakGrip");
+                    message = message.Replace("[ATTACKER]", entity.MyName);
+                    message = message.Replace("[DEFENDER]", bp.grip.HeldBody.entity.MyName);
                     message = (!entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message;
                     CombatLog.NewMessage(message + "</color>");
 

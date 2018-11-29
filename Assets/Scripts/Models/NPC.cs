@@ -6,7 +6,7 @@ using MoonSharp.Interpreter;
 [MoonSharpUserData]
 public class NPC
 {
-    public string name = "", ID, UID, spriteID;
+    public string name = "", ID, spriteID;
     public Coord worldPosition, localPosition;
     public int elevation;
     public Faction faction;
@@ -21,6 +21,7 @@ public class NPC
     public string questID, dialogueID;
     public int health, stamina, maxHealth, maxStamina;
     public int weaponSkill;
+    public int UID;
 
     Random RNG
     {
@@ -124,7 +125,7 @@ public class NPC
         isAlive = true;
         onScreen = false;
 
-        UID = ObjectManager.SpawnedNPCs.ToString();
+        UID = ObjectManager.SpawnedNPCs;
         ObjectManager.SpawnedNPCs++;
     }
 

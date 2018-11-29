@@ -222,7 +222,6 @@
         {
             "Name" : "Living",
             "ID" : "growing",
-            "Damage" : "0d0-1",
             "Components" : [
                 { "ID" : "ItemLevel" }
             ],

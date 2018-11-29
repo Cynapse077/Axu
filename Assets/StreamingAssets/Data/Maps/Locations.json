@@ -483,7 +483,11 @@
 			"Depth" : 15,
 			"Light" : 3,
 			"Rules" : {
-				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ]
+				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ],
+				"Feature" : {
+					"ID" : "River",
+					"Chance" : 5
+				}
 			},
 			"Wall Tile" : "Mountain",
 			"Floor Tiles" : [ 
@@ -501,7 +505,11 @@
 			"Depth" : 15,
 			"Light" : 4,
 			"Rules" : {
-				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ]
+				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ],
+				"Feature" : {
+					"ID" : "River",
+					"Chance" : 5
+				}
 			},
 			"Wall Tile" : "Mountain",
 			"Floor Tiles" : [ 
@@ -517,7 +525,11 @@
 			"Depth" : 7,
 			"Light" : 3,
 			"Rules" : {
-				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ]
+				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ],
+				"Feature" : {
+					"ID" : "River",
+					"Chance" : 5
+				}
 			},
 			"Wall Tile" : "Mountain",
 			"Floor Tiles" : [ 

@@ -33,7 +33,7 @@ public static class ItemTooltip
             displayItems.Add(GetContent("IT_Firearm", true));
             displayItems.Add(GetContent_Input("IT_Type", WeaponType(item)));
 
-            string damageString = GetContent_Input("IT_Damage", (item.damage + item.modifier.damage).ToString());
+            string damageString = GetContent_Input("IT_Damage", item.TotalDamage().ToString());
             displayItems.Add(damageString);
 
             CFirearm cf = item.GetCComponent<CFirearm>();
@@ -57,12 +57,12 @@ public static class ItemTooltip
                     displayItems.Add(GetContent("IT_Weapon", true));
             }
 
-            displayItems.Add(GetContent_Input("IT_Type", WeaponType(item)));
-
             if (item.HasCComponent<CItemLevel>())
                 displayItems.Add(item.GetCComponent<CItemLevel>().Display());
 
-            string damageString = GetContent_Input("IT_Damage", (item.damage + item.modifier.damage).ToString());
+            displayItems.Add(GetContent_Input("IT_Type", WeaponType(item)));
+
+            string damageString = GetContent_Input("IT_Damage", item.TotalDamage().ToString());
             if (item.ContainsDamageType(DamageTypes.Cold))
                 damageString += "  " + GetContent("IT_Dmg_Cold");
             else if (item.ContainsDamageType(DamageTypes.Heat))

@@ -10,12 +10,12 @@ public class Quest
     public List<QuestStep> steps;
     public List<QuestEvent> events;
     public Coord destination;
-    public NPC questGiver;
     public ProgressFlags flag = ProgressFlags.None;
     public QuestRewards rewards;
     public bool failOnDeath;
+    public NPC questGiver;
 
-    List<string> spawnedNPCIDs;
+    List<int> spawnedNPCIDs;
 
     public Quest(string _name, string _id, NPC _questGiver)
     {
@@ -24,7 +24,7 @@ public class Quest
         questGiver = _questGiver;
         steps = new List<QuestStep>();
         events = new List<QuestEvent>();
-        spawnedNPCIDs = new List<string>();
+        spawnedNPCIDs = new List<int>();
         rewards.XP = 0;
         rewards.items = new List<string>();
         destination = null;
@@ -82,6 +82,7 @@ public class Quest
         if (destination != null)
         {
             int iconNum = (NextStep.goal == "KillAt" || NextStep.goal == "KillAllAt" || NextStep.goal == "KillAllSpawned") ? 1 : 0;
+
             World.objectManager.NewMapIcon(iconNum, destination);
         }
         else if (NextStep.goal == "Fetch" && questGiver != null)
@@ -90,10 +91,10 @@ public class Quest
         }
     }
 
-    public void AddUIDToSpawnList(string uid)
+    public void AddUIDToSpawnList(int uid)
     {
         if (spawnedNPCIDs == null)
-            spawnedNPCIDs = new List<string>();
+            spawnedNPCIDs = new List<int>();
 
         spawnedNPCIDs.Add(uid);
     }
@@ -178,7 +179,7 @@ public class Quest
             else if (myEvent.Type == "SpawnGroup")
             {
                 Coord worldPosition = GetZone(myEvent.WorldPos);
-                List<NPC> ns = SpawnController.SpawnFromGroupNameAt(myEvent.Name, myEvent.Elevation, worldPosition);
+                List<NPC> ns = SpawnController.SpawnFromGroupNameAt(myEvent.Name, myEvent.Elevation, worldPosition, 0);
 
                 foreach (NPC n in ns)
                 {
@@ -230,11 +231,6 @@ public class Quest
                 }
             }
 
-            if (myEvent.Type == "Mod Item" && ItemList.GetModByID(myEvent.GiveItem) != null)
-            {
-                ObjectManager.playerEntity.body.MainHand.EquippedItem.AddModifier(ItemList.GetModByID(myEvent.GiveItem));
-            }
-
             //Remove an item from an NPC (In the case that they gave you something special. Replace it with something else.
             if (myEvent.Type == "Remove Item" && questGiver != null)
             {
@@ -252,7 +248,6 @@ public class Quest
                     if (questGiver.bodyParts[b].equippedItem != null && questGiver.bodyParts[b].equippedItem.ID == myEvent.Name)
                         questGiver.bodyParts[b].equippedItem = ItemList.GetNone();
                 }
-
 
                 World.tileMap.HardRebuild();
                 World.tileMap.LightCheck(ObjectManager.playerEntity);
@@ -292,7 +287,7 @@ public class Quest
             //Removes all spawned NPCs 
             if (myEvent.Type == "Remove Spawns")
             {
-                foreach (string s in spawnedNPCIDs)
+                foreach (int s in spawnedNPCIDs)
                 {
                     NPC n = World.objectManager.npcClasses.Find(x => x.UID == s);
 
@@ -386,7 +381,7 @@ public class Quest
                 break;
 
             case ("KillAllSpawned"):
-                foreach (string s in spawnedNPCIDs)
+                foreach (int s in spawnedNPCIDs)
                 {
                     if (s == n.UID)
                     {
@@ -806,7 +801,8 @@ public class Quest
 
     public SQuest ToSQuest()
     {
-        return new SQuest(ID, steps, events, (questGiver != null) ? questGiver.UID : null, spawnedNPCIDs);
+        int[] spwns = (spawnedNPCIDs == null) ? null : spawnedNPCIDs.ToArray();
+        return new SQuest(ID, steps, events, (questGiver != null) ? questGiver.UID : -1, spwns);
     }
 
     public enum QuestType

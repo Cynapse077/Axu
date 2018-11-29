@@ -179,6 +179,12 @@ public class Stat_Modifier
     public string Stat { get; set; }
     public int Amount { get; set; }
 
+    public Stat_Modifier()
+    {
+        Stat = "";
+        Amount = 0;
+    }
+
     public Stat_Modifier(string name, int amt)
     {
         Stat = name;
@@ -198,10 +204,10 @@ public struct SQuest
     public string ID;
     public List<QuestStep> Steps;
     public List<QuestEvent> Events;
-    public List<string> Spwnd;
-    public string QG;
+    public int[] Spwnd;
+    public int QG;
 
-    public SQuest(string id, List<QuestStep> stps, List<QuestEvent> events, string qgiver, List<string> spwnd)
+    public SQuest(string id, List<QuestStep> stps, List<QuestEvent> events, int qgiver, int[] spwnd)
     {
         ID = id;
         Steps = stps;

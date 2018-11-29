@@ -499,28 +499,14 @@ public class Entity : MonoBehaviour
         if (!World.tileMap.WalkableTile(posX + x, posY + y) || !World.tileMap.GetCellAt(posX + x, posY + y).Walkable_IgnoreEntity)
         {
             if (!isPlayer)
-                EndTurn(0.01f, 10);
+                EndTurn(0.01f);
 
             return;
         }
-            
-        if (isPlayer)
-        {
-            if (inventory.overCapacity())
-            {
-                Alert.NewAlert("Inv_Full");
-                return;
-            }
-        }
-        else if (AI.isStationary)
+
+        if (!isPlayer && AI.isStationary || stats.HasEffect("Stuck") || stats.HasEffect("Topple") || !body.FreeToMove())
         {
             EndTurn(0.01f);
-            return;
-        }
-
-        if (stats.HasEffect("Stuck") || stats.HasEffect("Topple") || !body.FreeToMove())
-        {
-            EndTurn(0.01f, 10);
             return;
         }
 
@@ -992,7 +978,7 @@ public class Entity : MonoBehaviour
         if (swimming)
         {
             if (!isPlayer && AI.npcBase.HasFlag(NPC_Flags.Aquatic))
-                spd *= 1;
+                spd *= 1.0f;
             else
             {
                 if (stats.FasterSwimmer())
@@ -1007,6 +993,7 @@ public class Entity : MonoBehaviour
         if (stats.HasEffect("Topple"))
             spd -= 5;
 
+        spd -= inventory.BurdenPenalty();
         spd = Mathf.Clamp(spd, 0, 100);
 
         return (int)spd;

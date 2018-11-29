@@ -14,12 +14,23 @@ public class Item : ComponentHolder
     public HashSet<DamageTypes> damageTypes = new HashSet<DamageTypes>();
     public List<Stat_Modifier> statMods = new List<Stat_Modifier>();
     public AttackType attackType;
-
-    public Damage damage;
     public ItemModifier modifier;
     public ItemRenderer renderer;
+    public Damage damage;
 
     int cost;
+
+    public Damage TotalDamage()
+    {
+        Damage dmg = damage + modifier.damage;
+
+        if (HasCComponent<CItemLevel>())
+        {
+            dmg.Sides += GetCComponent<CItemLevel>().DamageBonus();
+        }
+
+        return dmg;
+    }
 
     public int Accuracy
     {
@@ -76,18 +87,18 @@ public class Item : ComponentHolder
 
     public void UpdateUserSprite(Stats stats, bool wield)
     {
-        if (!string.IsNullOrEmpty(renderer.onPlayer) && stats.entity.isPlayer)
+        if (stats.entity.isPlayer && !string.IsNullOrEmpty(renderer.onPlayer))
         {
             DynamicSpriteController dsc = stats.GetComponent<DynamicSpriteController>();
 
             if (HasProp(ItemProperty.Weapon))
             {
                 if (wield || itemType == Proficiencies.Shield)
-                    dsc.SetSprite(renderer);
+                    dsc.SetSprite(renderer, false);
             }
             else
             {
-                dsc.SetSprite(renderer);
+                dsc.SetSprite(renderer, false);
             }
         }
     }
@@ -103,8 +114,7 @@ public class Item : ComponentHolder
 
         if (HasCComponent<CAbility>())
         {
-            CAbility cab = GetCComponent<CAbility>();
-            Skill sk = SkillList.GetSkillByID(cab.abID);
+            Skill sk = SkillList.GetSkillByID(GetCComponent<CAbility>().abID);
             sk.fromItem = true;
             stats.entity.skills.AddSkill_Item(sk);
         }
@@ -124,7 +134,7 @@ public class Item : ComponentHolder
 
                 if (HasProp(ItemProperty.Weapon))
                 {
-                    if (wield || HasCComponent<CBlock>())
+                    if (wield || itemType == Proficiencies.Shield)
                         dsc.SetSprite(renderer, true);
                 }
                 else
@@ -163,7 +173,7 @@ public class Item : ComponentHolder
 
         //Item level
         if (HasCComponent<CItemLevel>())
-            GetCComponent<CItemLevel>().AddXP(this, SeedManager.combatRandom.Next(3, 11));
+            GetCComponent<CItemLevel>().AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
     }
 
     public void OnBlock(Entity myEntity, Entity targetEntity)
@@ -256,6 +266,12 @@ public class Item : ComponentHolder
     public int CalculateDamage(int strength, int proficiency)
     {
         Damage nDmg = damage + modifier.damage;
+
+        if (HasCComponent<CItemLevel>())
+        {
+            nDmg.Sides += GetCComponent<CItemLevel>().DamageBonus();
+        }
+
         int newDamage = nDmg.Roll() + (strength / 2 - 1) + proficiency + 1;
 
         return newDamage;
@@ -342,13 +358,16 @@ public class Item : ComponentHolder
             CombatLog.SimpleMessage("Drink_Poison");
             stats.AddStatusEffect("Poison", SeedManager.combatRandom.Next(6, 10));
         }
+
         if (HasProp(ItemProperty.Confusion))
             stats.AddStatusEffect("Confuse", SeedManager.combatRandom.Next(5, 11));
+
         if (HasProp(ItemProperty.Stun))
             stats.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 3));
 
         if (HasProp(ItemProperty.Radiate))
             stats.Radiate(SeedManager.combatRandom.Next(10, 40));
+
         if (HasProp(ItemProperty.Cure_Radiation))
         {
             stats.radiation = 0;
@@ -683,12 +702,12 @@ public class Item : ComponentHolder
 
     public string DisplayDamage()
     {
-        Damage d = damage + modifier.damage;
+        if (damage == null)
+        {
+            return "";
+        }
 
-        if (damage != null)
-            return "<color=silver>(" + d.ToString() + ")</color>";
-
-        return "";
+        return "<color=silver>(" + TotalDamage().ToString() + ")</color>";
     }
 
     public string DisplayArmor()

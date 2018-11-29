@@ -292,7 +292,7 @@ public static class SpawnController
         SpawnSingleGroup(gbp, amount);
     }
 
-    public static List<NPC> SpawnFromGroupNameAt(string name, int amount, Coord position)
+    public static List<NPC> SpawnFromGroupNameAt(string name, int amount, Coord position, int elevation)
     {
         GroupBlueprint gbp = NPCGroupList.GetGroupByName(name);
         SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
@@ -311,7 +311,7 @@ public static class SpawnController
 
             if (stPos != null)
             {
-                NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, position, stPos);
+                NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, position, stPos, elevation);
                 n.AddFlag(NPC_Flags.SpawnedFromQuest);
                 World.objectManager.SpawnNPC(n);
                 spawned.Add(n);

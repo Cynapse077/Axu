@@ -691,7 +691,7 @@ public static class ItemList
             }
             else if (ID == "ItemLevel")
             {
-                CItemLevel ci = new CItemLevel(null, 1, 0, 1000);
+                CItemLevel ci = new CItemLevel();
                 comps.Add(ci);
             }
             else

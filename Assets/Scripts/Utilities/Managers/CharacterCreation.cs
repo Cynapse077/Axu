@@ -669,7 +669,8 @@ public class CharacterCreation : MonoBehaviour
             Manager.playerBuilder.items.Add(it);
         }
 
-        Manager.playerBuilder.handItems = new List<Item>() { ItemList.GetItemByID(GetWepFromProfs()) };
+        Item wep = ItemList.GetItemByID(GetWepFromProfs());
+        Manager.playerBuilder.handItems = new List<Item>() { wep };
 
         StartCoroutine("StartGame");
     }

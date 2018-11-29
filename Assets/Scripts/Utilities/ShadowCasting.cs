@@ -3,25 +3,56 @@ using System.Collections.Generic;
 
 public static class ShadowCasting
 {
-
     static List<Coord> VisiblePoints;
     static int VisualRange = 5;
-    static int[][] multipliers;
+    readonly static int[][] multipliers = new int[4][] {
+        new int[8] {1, 0, 0, -1, -1, 0, 0, 1},
+        new int[8] {0, 1, -1, 0, 0, -1, 1, 0},
+        new int[8] {0, 1, 1, 0, 0, -1, -1, 0},
+        new int[8] {1, 0, 0, 1, -1, 0, 0, -1} };
 
     public static List<Coord> GetVisibleCells()
     {
         Entity e = ObjectManager.playerEntity;
 
-        VisiblePoints = new List<Coord>
+        if (Manager.lightingOn)
         {
-            new Coord(e.posX, e.posY)
-        };
+            if (VisiblePoints == null)
+            {
+                VisiblePoints = new List<Coord> { new Coord(e.posX, e.posY) };
+            }
+            else
+            {
+                VisiblePoints.Clear();
+                VisiblePoints.Add(new Coord(e.posX, e.posY));
+            }
 
-        VisualRange = e.sightRange;
+            VisualRange = e.sightRange;
 
-        DoFOV(e.posX, e.posY, VisualRange);
+            DoFOV(e.posX, e.posY, VisualRange);
+        }
+        else
+        {
+            VisiblePoints = new List<Coord>();
+
+            for (int x = 0; x < Manager.localMapSize.x; x++)
+            {
+                for (int y = 0; y < Manager.localMapSize.y; y++)
+                {
+                    VisiblePoints.Add(new Coord(x, y));
+                }
+            }
+        }
 
         return VisiblePoints;
+    }
+
+    static void DoFOV(int x, int y, int radius)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            CastLight(x, y, radius, 1, 1.0f, 0.0f, multipliers[0][i], multipliers[1][i], multipliers[2][i], multipliers[3][i]);
+        }
     }
 
     static void CastLight(int x, int y, int radius, int row, float start_slope, float end_slope, int xx, int xy, int yx, int yy)
@@ -81,21 +112,6 @@ public static class ShadowCasting
 
             if (blocked)
                 break;
-        }
-    }
-
-    static void DoFOV(int x, int y, int radius)
-    {
-        multipliers = new int[4][] {
-        new int[8] {1, 0, 0, -1, -1, 0, 0, 1},
-        new int[8] {0, 1, -1, 0, 0, -1, 1, 0},
-        new int[8] {0, 1, 1, 0, 0, -1, -1, 0},
-        new int[8] {1, 0, 0, 1, -1, 0, 0, -1}
-        };
-
-        for (int i = 0; i < 8; i++)
-        {
-            CastLight(x, y, radius, 1, 1.0f, 0.0f, multipliers[0][i], multipliers[1][i], multipliers[2][i], multipliers[3][i]);
         }
     }
 

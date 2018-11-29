@@ -130,15 +130,15 @@ public class OldWorld
         for (int i = 0; i < wData["NPCs"].Count; i++)
         {
             JsonData npcData = wData["NPCs"][i];
-            Coord worldPos = (npcData["WP"] == null) ? new Coord(0, 0) : new Coord((int)(npcData["WP"][0]), (int)(npcData["WP"][1]));
-            Coord localPos = new Coord((int)(npcData["LP"][0]), (int)(npcData["LP"][1]));
+            Coord worldPos = (npcData["WP"] == null) ? new Coord(0, 0) : new Coord((int)npcData["WP"][0], (int)npcData["WP"][1]);
+            Coord localPos = new Coord((int)npcData["LP"][0], (int)npcData["LP"][1]);
             NPC n = new NPC(npcData["ID"].ToString(), worldPos, localPos, (int)wData["NPCs"][i]["WP"][2]);
 
-            if (n.faction.ID == "followers")
+            if (n.faction.ID == "followers" && !n.flags.Contains(NPC_Flags.Follower))
                 n.flags.Add(NPC_Flags.Follower);
 
             n.name = npcData["Name"].ToString();
-            n.UID = npcData["UID"].ToString();
+            n.UID = (int)npcData["UID"];
             n.faction = FactionList.GetFactionByID(npcData["Fac"].ToString());
             n.isHostile = (bool)npcData["Host"];
             n.inventory = SetUpInventory(i);
@@ -260,7 +260,7 @@ public class OldScreens
 
         for (int i = 0; i < sData["Sc"].Count; i++)
         {
-            if ((int)(sData["Sc"][i]["P"][0]) == pos.x && (int)(sData["Sc"][i]["P"][1]) == pos.y)
+            if ((int)sData["Sc"][i]["P"][0] == pos.x && (int)sData["Sc"][i]["P"][1] == pos.y)
             {
                 if (sData["Sc"][i]["Ch"] != null)
                 {

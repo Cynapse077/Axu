@@ -216,6 +216,11 @@ public class ObjectManager : MonoBehaviour
         return npcClasses.Find(x => x.ID == id) != null;
     }
 
+    public NPC GetNPCByID(string id)
+    {
+        return npcClasses.Find(x => x.ID == id);
+    }
+
     //to spawn one on the current screen
     public BaseAI SpawnNPC(NPC npcB)
     {

@@ -30,18 +30,22 @@ function OnTurn_Leprosy(entity, trait)
 
 	local progress = TurnManager.turn - trait.turnAcquired
 
-	if (progress > 500 and Random(0, 100) < 10) then
+	if (progress > 1 and Random(0, 100) < 100) then
 		local bps = entity.body.SeverableBodyParts()
 
-		if (#bps == 0) then
-			return
+		if (#bps > 0) then
+			bp = bps[Random(1, #bps)]
+
+			if (bp.slot == ItemProperty.Slot_Head) then 
+				trait.turnAcquired = TurnManager.turn
+				return
+			end
+
+			Log("<color=red>Your " .. bp.displayName .. " has fallen off...</color>")
+			entity.body.RemoveLimb(bp)
+
+			trait.turnAcquired = TurnManager.turn
 		end
-
-		bp = bps[Random(1, #bps)]
-		Log("<color=red>Your " .. np.displayName + " has fallen off...")
-		entity.body.RemoveLimb(bp)
-
-		trait.turnAcquired = TurnManager.turn
 	end
 end
 
@@ -54,28 +58,26 @@ function OnTurn_Crystallization(entity, trait)
 	local progress = TurnManager.turn - trait.turnAcquired
 	local bps = entity.stats.UnCrystallizedParts()
 
-	if (#bps == 0) then
-		return
-	end
+	if (#bps > 0) then
+		if (progress > 2000 and Random(0, 100) < 5) then
+			bpToChange = bps[Random(1, #bps)]
 
-	if (progress > 2000 and Random(0, 100) < 5) then
-		bpToChange = bps[Random(1, #bps)]
+			bpToChange.armor = bpToChange.armor + 1
+			bpToChange.effect = TraitEffects.Crystallization
+			bpToChange.severable = false
+			bpToChange.name = "<color=cyan>" .. bpToChange.name .. "</color>"
 
-		bpToChange.armor = bpToChange.armor + 1
-		bpToChange.effect = TraitEffects.Crystallization
-		bpToChange.severable = false
-		bpToChange.name = "<color=cyan>" .. bpToChange.name .. "</color>"
+			Log("Your " .. bpToChange.displayName .. " has solidified into crystal.")
 
-		Log("Your " .. bpToChange.displayName .. " has solidified into crystal.")
+			if (entity.stats.Dexterity > 3 and Random(0, 100) < 70) then
+				bpToChange.AddAttribute("Dexterity", -1)
+				entity.stats.ChangeAttribute("Dexterity", -1)
 
-		if (entity.stats.Dexterity > 3 and Random(0, 100) < 70) then
-			bpToChange.AddAttribute("Dexterity", -1)
-			entity.stats.ChangeAttribute("Dexterity", -1)
+				Log("<color=red>Your " .. bpToChange.displayName .. " feels less Dexterous.</color>")
+			end
 
-			Log("<color=red>Your " .. bpToChange.displayName .. " feels less Dexterous.</color>")
+			trait.turnAcquired = TurnManager.turn
 		end
-
-		trait.turnAcquired = TurnManager.turn
 	end
 end	
 

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class CursorControl : MonoBehaviour
 {
-
     public GameObject explosive;
     public GameObject pathObject;
 

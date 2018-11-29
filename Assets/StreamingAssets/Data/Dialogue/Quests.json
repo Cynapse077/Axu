@@ -7,12 +7,11 @@
             "Start Dialogue" : "You there, are you okay? (PLAYERNAME) is it? You must have been dropped off here not long ago. Here, take these.\n<color=grey>(Akk-Lune hands you multiple items)</color>\nI represent The <color=yellow>Ensis</color>, a group of individuals dedicated to creating a thriving civilization on Axu. I can help you get an audience with our leader if you wish. There is a cave in this building here. At the bottom lays an item we need. Grab it for me, and I may be able to help you. We could use a person of skill.",
             "Description" : "Explore the underground caverns. There are stairs down inside the <color=yellow>building</color> you started in front of.",
             "Quest Giver" : "akklune",
-			"Fail On Death Of" : [ "akklune" ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "deephunter_start", "Coordinate" : "Current", "Elevation" : -4, "Give Item" : "artifact1" }
+                        { "NPC" : "deephunter_start", "Coordinate" : "Abandoned Building", "Elevation" : -4, "Give Item" : "artifact1" }
                     ],
                     "Console Command" : "give cloak1|give flask/liquid_regenitrol|log You were given a few items by Akk-Lune."
                 } 
@@ -21,7 +20,7 @@
                 { "XP" : 20 }
             ],
             "Steps" : [
-                { "Goal" : "Go", "Coordinate" : "Current", "Elevation" : -1 }
+                { "Goal" : "Go", "Coordinate" : "Abandoned Building", "Elevation" : -1 }
             ],
 
             "Chained Quest" : "ensis1"
@@ -37,7 +36,7 @@
                 { "XP" : 50 }
             ],
             "Steps" : [
-                { "Goal" : "Go",  "Coordinate" : "Current",  "Elevation" : -4  }
+                { "Goal" : "Go",  "Coordinate" : "Abandoned Building",  "Elevation" : -4  }
             ],
 
             "Chained Quest" : "ensis2"
@@ -209,7 +208,7 @@
             ],
             "Steps" : [
                 { "Goal" : "Go", "Coordinate" : "Kin Hideout", "Elevation" : -5 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Ensis Interior", "Elevation" : 0 }
             ],
             "End Dialogue" : "Living statues? Altars? I fear we have no time to lose. The Kindred wish to summon the <color=yellow>Deep Ones</color>, their dieties, here as physical entities. If this were to happen, I can't say the Ensis would survive. They wish to destroy every ounce of our past. Starting with our libraries, our archives, and even keepsakes held by mourning family members. These statues must be their initial experiments with transfering living essence ito physical bodies. I must ask you to visit their <color=yellow>Cathedral</color>, and see if you can gather information.",
 
@@ -241,7 +240,7 @@
                 { "XP" : 0 }
             ],
             "Steps" : [
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Cathedral", "Elevation" : 0 }
             ],
             "End Dialogue" : "Let me ask you one thing: How are we to forge ahead while looking over our shoulder, drilling the mistakes of others into our skull? Our founder, <color=cyan>Isazna</color> spoke to ancient dieties presiding over this planet, and was offered the chance to make a new start. Not only surviving as we do now, we will thrive with the aid of <color=yellow>The Deep Ones</color>, our gods. Their influence is great, but not as powerful as it will become. Soon the first Deep One, Xzol will be transferred into a physical body. The rest will follow. The ritual may begin soon. \n\nNow... kill me if you must, and return to your master. Perhaps the facts I've given you will be useful. I do hope you see what right we are doing, however.",
 
@@ -374,29 +373,7 @@
 			"Steps" : [
 				{ "Goal" : "Return", "Coordinate" : "Ensis Exterior", "Elevation" : 0 }
 			],
-			"End Dialogue" : "Gone? Damn... We were too late. That means the Deep One's body has been constructed and may now be waiting on a consciousness transfer. Thankfully, we now know where this is going to take place. Beneath the Cathedral, where you met Corith previously, there is some kind of facility. Go there and stop the Kin before it is too late!",
-
-			"Chained Quest" : "ensis22"
-		},
-		{
-			"Name" : "Confrontation",
-			"ID" : "ensis22",
-			"Type" : "Main",
-			"Quest Giver" : "arthomas",
-			"Description" : "Go beneath the Cathedral and confront the Kin of the Deep before Xzol has been transferred into his new body.",
-			"Rewards" : [
-				{ "XP" : 200 }
-			],
-			"Events" : [
-				{
-                    "Event" : "OnStart",
-                    "Remove Blockers" : { "Coordinate" : "Cathedral", "Elevation" : 0 }
-                }
-			],
-			"Steps" : [
-				{ "Goal" : "Go", "Coordinate" : "Cathedral", "Elevation" : -3 }
-			],
-			"End Dialogue" : ""
+			"End Dialogue" : "Gone? Damn... We were too late. That means the Deep One's body has been constructed and may now be waiting on a consciousness transfer. Thankfully, we now know where this is going to take place. Beneath the Cathedral, where you met Corith previously, there is some kind of facility. Go there and stop the Kin before it is too late! \n(Not yet implemented. To be continued...)"
 		},
 
         {
@@ -427,32 +404,11 @@
             ],
             "Steps" : [
                 { "Goal" : "Kill", "Name" : "snake", "Amount" : 5 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Xul Camp", "Elevation" : 0 }
             ],
             "End Dialogue" : "Good timing! A group of Lepers has come to raid our wares! Please get rid of them for us! I beg you!",
 
             "Chained Quest" : "blacksmith2"
-        },
-        {
-        	"Name" : "Missing Person II",
-        	"ID" : "missingperson2",
-        	"Type" : "Side",
-        	"Description" : "Take the missing person back to Har'Kallem.",
-        	"Quest Giver" : "harkallem",
-        	"Rewards" : [
-        		{ "XP" : 300 },
-        		{ "Gold" : 100 }
-        	],
-        	"Events" : [
-        		{
-        			"Event" : "OnFail",
-        			"Give Quest" : { "NPC" : "harkallem", "Quest" : "missingperson" }
-        		}
-        	],
-        	"Steps" : [
-        		{ "Goal" : "Go", "Coordinate" : "Current", "Elevation" : 0 }
-        	],
-        	"End Dialogue" : "You have my thanks, (PLAYERNAME). Here's some money for your trouble. I'll make my way back to Har'Kallem right away!"
         },
         {
             "Name" : "Leper Attack",
@@ -466,7 +422,7 @@
             ],
             "Steps" : [
                 { "Goal" : "Kill", "Name" : "infected", "Amount" : 6 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Xul Camp", "Elevation" : 0 }
             ],
             "Events" : [
                 {
@@ -513,7 +469,7 @@
             "Steps" : [
                 { "Goal" : "Go", "Coordinate" : "Power Plant", "Elevation" : -3 },
                 { "Goal" : "KillAllSpawned" },
-                { "Goal" : "Return", "Coordinate" : "Current" }
+                { "Goal" : "Return", "Coordinate" : "Oasis" }
             ],
             "Events" : [
                 {
@@ -580,7 +536,7 @@
             "Steps" : [
 				{ "Goal" : "Go", "Coordinate" : "Random_Close", "Elevation" : 0 },
                 { "Goal" : "KillAllSpawned" },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Ensis Interior", "Elevation" : 0 }
             ],
             "End Dialogue" : "How did you fare? Interesting creature, eh? My thanks for performing that task. Hopefully this makes it worth your while. I've been told you've taken down a Deep Hunter. Would you like to try your luck against something even more interesting? Virash Saints are noble warriors devoted to the \"gods\" of the planet. I'd like you to take one down for me.",
             "Chained Quest" : "ensis_sub1"
@@ -606,7 +562,7 @@
             "Steps" : [
 				{ "Goal" : "Go", "Coordinate" : "Random_Close", "Elevation" : 0 },
                 { "Goal" : "KillAllSpawned" },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Ensis Interior", "Elevation" : 0 }
             ],
             "End Dialogue" : "Another one down. You're quite good at this. I have one more mark for you, a Demigod. Now, the name isn't exactly accurate. These guys are quite like the Deep Hunters you'll find roaming caves, only stronger. Take it down, and show the Kin that men will rise above gods.",
             "Chained Quest" : "ensis_sub2"
@@ -632,7 +588,7 @@
             "Steps" : [
 				{ "Goal" : "Go", "Coordinate" : "Random_Close", "Elevation" : 0 },
                 { "Goal" : "KillAllSpawned" },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Ensis Interior", "Elevation" : 0 }
             ],
             "End Dialogue" : "Well done! Here's some money for your troubles."
         },
@@ -775,7 +731,7 @@
             ],
 			"Steps" : [
                 { "Goal" : "Go", "Coordinate" : "Xul Camp", "Elevation" : 0 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Kin Hideout", "Elevation" : 0 }
             ],
             "End Dialogue" : "No resistance from the south? Perfect. Thank you, (PLAYERNAME). We have the dagger, the artifacts, and now we need the ritual area. There's a place of power out in the water. A betrayer of the Ensis lives in solitude inside the city of Magna Dwyll. The man's name is <color=yellow>Oromir</color>, but he now calls himself \"<color=yellow>The Duke of Lies</color>\". Be wary, as this crafty fellow has amassed some kind of army. We hope to harness the source's power instead. Kill him, and return here.",
 
@@ -843,7 +799,7 @@
         	"Steps" : [
         		{ "Goal" : "Go", "Coordinate" : "Spider Den", "Elevation" : -5 },
         		{ "Goal" : "KillAllSpawned" },
-        		{ "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+        		{ "Goal" : "Return", "Coordinate" : "Xul Camp", "Elevation" : 0 }
         	],
         	"End Dialogue" : "You have my thanks! Here's something for your troubles."
         },
@@ -892,13 +848,13 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "bandit0", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
+                        { "NPC" : "bandit0", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -937,14 +893,14 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "bandit1", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 16 }  },
-                        { "NPC" : "bandit1", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 }  }
+                        { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 16 }  },
+                        { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -983,15 +939,15 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "bandit1", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 16 }  },
-                        { "NPC" : "bandit1", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 }  },
-                        { "NPC" : "bandit0", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
+                        { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 16 }  },
+                        { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 }  },
+                        { "NPC" : "bandit0", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -1030,14 +986,14 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "bandit1", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
-                        { "NPC" : "bandit2", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 } }
+                        { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+                        { "NPC" : "bandit2", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 } }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -1076,14 +1032,14 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "wastewalker", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  },
-                        { "NPC" : "wastewalker", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 }  }
+                        { "NPC" : "wastewalker", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  },
+                        { "NPC" : "wastewalker", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -1122,13 +1078,13 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "phlogistonist", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
+                        { "NPC" : "phlogistonist", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -1169,13 +1125,13 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "nightmare", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
+                        { "NPC" : "nightmare", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -1211,13 +1167,13 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "nightmare", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
+                        { "NPC" : "nightmare", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -1252,15 +1208,15 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "bandit4", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 29, "y" : 14 }  },
-                        { "NPC" : "bandit2", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  },
-                        { "NPC" : "bandit2", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 }  }
+                        { "NPC" : "bandit4", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 29, "y" : 14 }  },
+                        { "NPC" : "bandit2", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 }  },
+                        { "NPC" : "bandit2", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -1295,14 +1251,14 @@
                         }
                     ]
                 },
-                { "Goal" : "Return", "Coordinate" : "Current", "Elevation" : 0 }
+                { "Goal" : "Return", "Coordinate" : "Arena", "Elevation" : 0 }
             ],
             "Events" : [
                 {
                     "Event" : "OnStart",
                     "Spawn" : [
-                        { "NPC" : "plant3", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 }  },
-                        { "NPC" : "plant3", "Coordinate" : "Current", "Elevation" : -1, "Local Position" : { "x" : 26, "y" : 16 }  }
+                        { "NPC" : "plant3", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 }  },
+                        { "NPC" : "plant3", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 26, "y" : 16 }  }
                     ],
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
@@ -1331,7 +1287,7 @@
             ],
             "Steps" : [
                 { "Goal" : "Kill", "Name" : "wastewalker", "Amount" : 4 },
-                { "Goal" : "Return", "Coordinate" : "Current" }
+                { "Goal" : "Return", "Coordinate" : "Oasis" }
             ],
             "End Dialogue" : "Good show. Come back tomorrow for another hunt."
         },
@@ -1348,7 +1304,7 @@
             ],
             "Steps" : [
                 { "Goal" : "Kill", "Name" : "neant0", "Amount" : 6 },
-                { "Goal" : "Return", "Coordinate" : "Current" }
+                { "Goal" : "Return", "Coordinate" : "Oasis" }
             ],
             "End Dialogue" : "Good show. Come back tomorrow for another hunt."
         },
@@ -1365,7 +1321,7 @@
             ],
             "Steps" : [
                 { "Goal" : "Kill", "Name" : "slime0", "Amount" : 5 },
-                { "Goal" : "Return", "Coordinate" : "Current" }
+                { "Goal" : "Return", "Coordinate" : "Oasis" }
             ],
             "End Dialogue" : "Good show. Come back tomorrow for another hunt."
         }

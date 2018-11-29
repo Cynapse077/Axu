@@ -181,17 +181,11 @@ public class CombatComponent
         //Instantiate
         entity.InstatiateThrowingEffect(destination);
 
-        if (itemForThrowing.HasProp(ItemProperty.Explosive))
-        {
-            damageScript.destroy = true;
-            damageScript.damage = SeedManager.combatRandom.Next(8, 21);
-            damageScript.nameOfDamage = "Explosion";
-        }
-        else
+        if (!itemForThrowing.HasProp(ItemProperty.Explosive))
         {
             int throwingLevel = (entity.isPlayer) ? MyStats.proficiencies.Throwing.level : Mathf.Clamp((World.DangerLevel() / 10) + 1, 0, 3);
             damageScript.damage = itemForThrowing.ThrownDamage(throwingLevel, MyStats.Dexterity);
-            damageScript.nameOfDamage = itemForThrowing.Name;
+            damageScript.SetName(itemForThrowing.DisplayName());
         }
 
         damageScript.localPosition = destination;

@@ -669,12 +669,6 @@ public class PlayerInput : MonoBehaviour
 
         if (fullMap)
         {
-            if (playerInventory.overCapacity())
-            {
-                Alert.NewAlert("Inv_Full");
-                return;
-            }
-
             stats.health = stats.maxHealth;
             stats.stamina = stats.maxStamina;
 
@@ -687,6 +681,11 @@ public class PlayerInput : MonoBehaviour
 
             if (playerInventory.CanFly())
                 timePass /= 2;
+
+            if (playerInventory.overCapacity())
+            {
+                timePass += 5;
+            }
 
             for (int i = 0; i < timePass / 2; i++)
             {
