@@ -251,7 +251,7 @@ namespace MissionSystem
     {
         public string ID { get; private set; }
         public string Name { get; private set; }
-        public string description { get; private set; }
+        public string Description { get; private set; }
         public Goal[] goals { get; private set; }
         public QuestReward rewards { get; private set; }
         public List<int> spawnedNPCs { get; protected set; }
@@ -303,14 +303,12 @@ namespace MissionSystem
         public Quest(Quest other)
         {
             CopyFrom(other);
-            Init();
         }
 
         public Quest(JsonData dat)
         {
             spawnedNPCs = new List<int>();
             FromJson(dat);
-            Init();
         }
 
         public Quest(SQuest s)
@@ -328,15 +326,13 @@ namespace MissionSystem
             {
                 spawnedNPCs.Add(s.sp[i]);
             }
-
-            Init();
         }
 
         void CopyFrom(Quest other)
         {
             ID = other.ID;
             Name = other.Name;
-            description = other.description;
+            Description = other.Description;
             rewards = other.rewards;
             goals = new Goal[other.goals.Length];
             onStart = other.onStart;
@@ -348,15 +344,13 @@ namespace MissionSystem
             {
                 goals[i] = other.goals[i].Clone();
             }
-
-            Init();
         }
 
         void FromJson(JsonData q)
         {
             Name = q["Name"].ToString();
             ID = q["ID"].ToString();
-            description = q["Description"].ToString();
+            Description = q["Description"].ToString();
 
             goals = new Goal[q["Steps"].Count];
 
@@ -477,14 +471,14 @@ namespace MissionSystem
             }
         }
 
-        void Init()
+        public void Start(bool skipEvent = false)
         {
             if (!isComplete)
             {
                 if (goals == null || goals.Length == 0)
                     return;
 
-                ActiveGoal.Init();
+                ActiveGoal.Init(skipEvent);
             }
 
             RunEvent(QuestEvent.EventType.OnStart);
@@ -496,7 +490,7 @@ namespace MissionSystem
             {
                 if (!g.isComplete)
                 {
-                    g.Init();
+                    g.Init(false);
                     return;
                 }
             }
@@ -515,6 +509,7 @@ namespace MissionSystem
             }
 
             RunEvent(QuestEvent.EventType.OnComplete);
+            ObjectManager.playerJournal.CompleteQuest(this);
         }
 
         public void Fail()
@@ -550,9 +545,12 @@ namespace MissionSystem
             return (Goal)MemberwiseClone();
         }
 
-        public virtual void Init()
+        public virtual void Init(bool skipEvent)
         {
-            RunEvent(QuestEvent.EventType.OnStart);
+            if (!skipEvent)
+            {
+                RunEvent(QuestEvent.EventType.OnStart);
+            }
         }
 
         public virtual void Complete()
@@ -595,9 +593,9 @@ namespace MissionSystem
             isComplete = false;
         }
 
-        public override void Init()
+        public override void Init(bool skipEvent)
         {
-            base.Init();
+            base.Init(skipEvent);
             EventHandler.instance.NPCDied += NPCKilled;
         }
 
@@ -662,10 +660,10 @@ namespace MissionSystem
             isComplete = false;
         }
 
-        public override void Init()
+        public override void Init(bool skipEvent)
         {
             EventHandler.instance.NPCDied += NPCKilled;
-            base.Init();
+            base.Init(skipEvent);
         }
 
         void NPCKilled(NPC n)
@@ -706,9 +704,9 @@ namespace MissionSystem
             isComplete = false;
         }
 
-        public override void Init()
+        public override void Init(bool skipEvent)
         {
-            base.Init();
+            base.Init(skipEvent);
             EventHandler.instance.NPCDied += NPCKilled;
         }
 
@@ -750,9 +748,9 @@ namespace MissionSystem
             coordDest = q.GetZone(destination);
         }
 
-        public override void Init()
+        public override void Init(bool skipEvent)
         {
-            base.Init();
+            base.Init(skipEvent);
             EventHandler.instance.EnteredScreen += EnteredArea;
         }
 
@@ -791,9 +789,9 @@ namespace MissionSystem
             isComplete = false;
         }
 
-        public override void Init()
+        public override void Init(bool skipEvent)
         {
-            base.Init();
+            base.Init(skipEvent);
             EventHandler.instance.TalkedToNPC += TalkToNPC;
         }
 
@@ -844,10 +842,9 @@ namespace MissionSystem
             isComplete = false;
         }
 
-        public override void Init()
+        public override void Init(bool skipEvent)
         {
-            base.Init();
-
+            base.Init(skipEvent);
             EventHandler.instance.TalkedToNPC += TalkToNPC;
         }
 

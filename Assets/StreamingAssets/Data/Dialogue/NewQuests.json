@@ -18,7 +18,7 @@
                         { "NPC" : "deephunter_start", "Coordinate" : "Abandoned Building", "Elevation" : -4, "Give Item" : "artifact1" }
                     ],
                     "Console Command" : "give cloak1|give flask/liquid_regenitrol|log You were given a few items by Akk-Lune."
-                } 
+                }
             ],
 
             "Chained Quest" : "ensis1"
