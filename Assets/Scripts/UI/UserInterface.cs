@@ -196,7 +196,7 @@ public class UserInterface : MonoBehaviour
     {
         if (inv == null)
             inv = playerInventory;
-        
+
         CloseWindows();
         uiState = UIWindow.Inventory;
         InvPanel.gameObject.SetActive(true);
@@ -568,6 +568,8 @@ public class UserInterface : MonoBehaviour
         DPanel.gameObject.SetActive(true);
         DPanel.Display(diaController);
         shopInv = diaController.GetComponent<Inventory>();
+
+        EventHandler.instance.OnTalkTo(diaController.GetComponent<BaseAI>().npcBase);
     }
 
     public void Dialogue_Chat(Faction faction, string npcID)
@@ -587,7 +589,7 @@ public class UserInterface : MonoBehaviour
             CloseWindows();
             return;
         }
-            
+
         DialogueList.DialogueNode node = DialogueList.GetNode(nodeID);
         DPanel.Display(node);
     }
@@ -728,8 +730,7 @@ public class UserInterface : MonoBehaviour
                 else
                 {
                     CloseWindows();
-                    YesNoAction("YN_Amputate", () =>
-                    {
+                    YesNoAction("YN_Amputate", () => {
                         CloseWindows();
                         playerInventory.entity.body.RemoveLimb(parts[indexToUse]);
                     }, null, parts[indexToUse].displayName);

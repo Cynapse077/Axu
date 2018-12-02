@@ -91,6 +91,8 @@ public class TileMap : MonoBehaviour
             InitializeVaults();
         }
 
+        QuestList.InitializeFromJson();
+
         HardRebuild();
         CheckNPCTiles();
         doneSetup = true;
@@ -206,27 +208,6 @@ public class TileMap : MonoBehaviour
         currentElevation = elev;
     }
 
-    //rebuild for lighting
-    /*public void LightCheck(Entity playerEntity)
-    {
-        for (int y = 0; y < size_y; y++)
-        {
-            for (int x = 0; x < size_x; x++)
-            {
-                bool inSight = playerEntity.inSight(x, y);
-
-                if (inSight)
-                    CurrentMap.has_seen[x, y] = true;
-
-                tileRenderers[x, y].SetParams(inSight, CurrentMap.has_seen[x, y]);
-                cells[x, y].UpdateInSight(inSight, CurrentMap.has_seen[x, y]);
-            }
-        }
-    }*/
-    
-    /*
-     * USING SHADOW CASTING. Strange artifacts when far away from pillars.
-     */
     public void LightCheck(Entity playerEntity)
     {
         for (int y = 0; y < size_y; y++)
@@ -297,7 +278,7 @@ public class TileMap : MonoBehaviour
 
         if (currentElevation != 0)
         {
-            bool exists = (worldData != null && worldData.dataExists(mx, my, Mathf.Abs(elevation)));
+            bool exists = (worldData != null && worldData.dataExists(mx, my, Mathf.Abs(currentElevation)));
             CurrentMap = GetVaultAt(worldPos).GetLevel(Mathf.Abs(currentElevation), exists);
         }
         else
@@ -313,7 +294,7 @@ public class TileMap : MonoBehaviour
                 CurrentMap = screens[mx, my];
         }
 
-        if (!CurrentMap.visited || World.objectManager.NPCsAt(WorldPosition, currentElevation).Count <= 1 && World.turnManager.turn > CurrentMap.lastTurnSeen + 3000)
+        if (!CurrentMap.visited)
             SpawnController.BiomeSpawn(mx, my, CurrentMap);
 
         CurrentMap.visited = true;

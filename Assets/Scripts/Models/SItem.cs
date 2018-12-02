@@ -199,25 +199,6 @@ public class Stat_Modifier
 }
 
 [Serializable]
-public struct SQuest
-{
-    public string ID;
-    public List<QuestStep> Steps;
-    public List<QuestEvent> Events;
-    public int[] Spwnd;
-    public int QG;
-
-    public SQuest(string id, List<QuestStep> stps, List<QuestEvent> events, int qgiver, int[] spwnd)
-    {
-        ID = id;
-        Steps = stps;
-        Events = events;
-        QG = qgiver;
-        Spwnd = spwnd;
-    }
-}
-
-[Serializable]
 public class SSettings
 {
     public double Master_Volume { get; set; }

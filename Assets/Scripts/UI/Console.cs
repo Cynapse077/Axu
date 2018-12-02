@@ -751,7 +751,7 @@ public class Console : MonoBehaviour
                 }
             }
 
-            if (item != null)
+            if (item != null && playerInventory != null)
             {
                 playerInventory.PickupItem(item);
                 MyConsole.NewMessage("    Gave 1x " + item.Name);
@@ -995,7 +995,18 @@ public class Console : MonoBehaviour
         else if (parsedText[0] == "completequest")
         {
             if (ObjectManager.playerJournal.trackedQuest != null)
-                ObjectManager.playerJournal.CompleteQuest(ObjectManager.playerJournal.trackedQuest);
+            {
+                Quest tr = ObjectManager.playerJournal.trackedQuest;
+
+                for (int i = 0; i < tr.goals.Length; i++)
+                {
+                    if (!tr.goals[i].isComplete)
+                    {
+                        tr.goals[i].Complete();
+                    }
+                }
+            }
+                
             return;
         }
 

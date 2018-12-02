@@ -317,10 +317,7 @@ public class CombatComponent
 
             for (int i = 0; i < questsToFail.Count; i++)
             {
-                if (questsToFail[i].questGiver != null)
-                    questsToFail[i].questGiver.questID = questsToFail[i].ID;
-
-                questsToFail[i].FailSilently();
+                questsToFail[i].Fail();
             }
         }
         else

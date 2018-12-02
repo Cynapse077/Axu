@@ -28,12 +28,9 @@ public class MapPointer : MonoBehaviour {
 		if (playerInput == null)
 			playerInput = ObjectManager.player.GetComponent<PlayerInput>();
 
-		if (journal != null && journal.quests != null && journal.quests.Count > 0) {
-			Coord destination = journal.trackedQuest.destination;
+		if (journal != null && journal.quests != null && journal.quests.Count > 0 && journal.trackedQuest != null && journal.trackedQuest.ActiveGoal != null) {
+			Coord destination = journal.trackedQuest.ActiveGoal.Destination();
 
-			if (destination == null && journal.trackedQuest != null && journal.trackedQuest.questGiver != null)
-				destination = journal.trackedQuest.questGiver.worldPosition;
-			
 			bool show = (journal.trackedQuest != null && destination != null);
 
 			questPointer.SetActive(show);

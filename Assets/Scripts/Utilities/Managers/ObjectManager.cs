@@ -221,6 +221,11 @@ public class ObjectManager : MonoBehaviour
         return npcClasses.Find(x => x.ID == id);
     }
 
+    public NPC GetNPCByUID(int uid)
+    {
+        return npcClasses.Find(x => x.UID == uid);
+    }
+
     //to spawn one on the current screen
     public BaseAI SpawnNPC(NPC npcB)
     {
@@ -657,7 +662,7 @@ public class ObjectManager : MonoBehaviour
             return;
 
         Vector3 pointerPos = new Vector3(mapCoord.x + 50, -200 + mapCoord.y + 0.1f, -0.001f);
-        GameObject i = (GameObject)Instantiate(mapIcon, pointerPos, Quaternion.identity);
+        GameObject i = Instantiate(mapIcon, pointerPos, Quaternion.identity);
         i.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
         i.name = "Map Icon";
         SpriteRenderer sp = i.GetComponentInChildren<SpriteRenderer>();

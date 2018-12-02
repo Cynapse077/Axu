@@ -118,13 +118,20 @@ public class NPC_Blueprint
         }
 
         if (dat.ContainsKey("Weapon Skill"))
+        {
             weaponSkill = (int)dat["Weapon Skill"];
+        }
 
         if (dat.ContainsKey("Firearm"))
+        {
             firearm = dat["Firearm"].ToString();
+        }
+            
 
         if (dat.ContainsKey("Corpse_Item"))
+        {
             Corpse_Item = dat["Corpse_Item"].ToString();
+        }
 
         if (dat.ContainsKey("Quest"))
             quest = dat["Quest"].ToString();
@@ -132,7 +139,7 @@ public class NPC_Blueprint
         if (dat.ContainsKey("Dialogue"))
             dialogue = dat["Dialogue"].ToString();
 
-        if (flags.Contains(NPC_Flags.Static) && dat.ContainsKey("Posision"))
+        if (dat.ContainsKey("Position"))
         {
             localPosition = new Coord((int)dat["Position"]["x"], (int)dat["Position"]["y"]);
             elevation = (int)dat["Position"]["z"];

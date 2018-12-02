@@ -5,9 +5,10 @@ using System;
 public class DialogueController : MonoBehaviour
 {
     public List<DialogueChoice> dialogueChoices { get; protected set; }
+    public NPC myNPC { get; protected set; }
+
     Action acceptQuest;
     Quest myQuest;
-    NPC myNPC;
     Journal journal;
 
     public void SetupDialogueOptions()
@@ -23,8 +24,6 @@ public class DialogueController : MonoBehaviour
         if (!string.IsNullOrEmpty(myNPC.questID))
         {
             myQuest = QuestList.GetByID(myNPC.questID);
-            myQuest.PlaceNameInDescription();
-            myQuest.ReplaceNameInDialogue();
         }
 
         if (!myNPC.HasFlag(NPC_Flags.Can_Speak))
@@ -47,22 +46,6 @@ public class DialogueController : MonoBehaviour
                 };
                 World.userInterface.YesNoAction("\n" + myQuest.startDialogue, acceptQuest, null, "");
             }));
-        }
-        else if (journal.quests.Find(x => x.questGiver != null && x.questGiver.name == myNPC.name) != null)
-        {
-            Quest questToComplete = journal.quests.Find(x => x.questGiver != null && x.questGiver.name == myNPC.name);
-            bool canComplete = questToComplete.CanComplete();
-            GetComponent<NPCSprite>().questIcon.SetActive(canComplete);
-
-            if (canComplete)
-            {
-                string diaTag = LocalizationManager.GetContent("Dialogue_Turn In Quest");
-
-                if (diaTag.Contains("[INPUT]"))
-                    diaTag = diaTag.Replace("[INPUT]", questToComplete.Name);
-
-                dialogueChoices.Add(new DialogueChoice(diaTag, () => { TurnInQuest(questToComplete); }));
-            }
         }
 
         dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => { World.userInterface.Dialogue_Chat(myNPC.faction, myNPC.ID); }));
@@ -132,6 +115,7 @@ public class DialogueController : MonoBehaviour
 
     bool QuestIconActive()
     {
+        //TODO: Enable green marker when a quest can be turned in.
         return (!myNPC.isHostile && !myNPC.HasFlag(NPC_Flags.Follower) && myQuest != null);
     }
 
@@ -144,7 +128,7 @@ public class DialogueController : MonoBehaviour
     {
         int cost = 300;
 
-        if (ObjectManager.player.GetComponent<Inventory>().gold < cost)
+        if (ObjectManager.playerEntity.inventory.gold < cost)
         {
             Alert.NewAlert("Hire_No_Money", UIWindow.Dialogue);
         }
@@ -158,12 +142,6 @@ public class DialogueController : MonoBehaviour
         {
             Alert.NewAlert("Hire_Too_Many_Followers", UIWindow.Dialogue);
         }
-    }
-
-    void TurnInQuest(Quest q)
-    {
-        if (q.TryComplete())
-            World.objectManager.UpdateDialogueOptions();
     }
 
     public struct DialogueChoice

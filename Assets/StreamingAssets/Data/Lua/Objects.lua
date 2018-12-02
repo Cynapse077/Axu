@@ -49,12 +49,7 @@ function Interact_Cryopod(obj)
 end
 
 function Interact_Terminal(obj)
-	if (Journal.OnActivateTerminal_CheckQuestProgress()) then
-		obj.SetTypeAndSwapSprite("Terminal_On")
-		Log("<color=green>The terminal switches on, and begins its bootup sequence.</color>")
-	else
-		Log("<color=grey>You fiddle with the terminal, but nothing happens.</color>")
-	end
+	Log("<color=grey>You fiddle with the terminal.</color>")
 end
 
 function Interact_Stairlock(obj)

@@ -7,7 +7,6 @@ public class JournalPanel : UIPanel
     public Transform journalBase;
     public GameObject questObject;
     public Text tooltip;
-    public Text ttTitle;
     public GameObject tooltipGO;
 
     Journal journal;
@@ -64,31 +63,14 @@ public class JournalPanel : UIPanel
 
             string desc = "<i>" + q.Description + "</i>", goal = "";
 
-            if (journal.trackedQuest == q)
-                desc = "<color=magenta>> Tracked <</color>\n\n" + desc;
-
-            if (q.steps.Count > 0)
+            if (q.goals.Length > 0)
             {
-                QuestStep step = q.NextStep;
-
-                if (step.am > 0)
+                for (int i = 0; i < q.goals.Length; i++)
                 {
-                    goal = ("<b><color=orange>(" + step.amC + " / " + step.am + ")</color></b>");
-                }
-                else
-                {
-                    Coord dest = q.destination, curr = World.tileMap.WorldPosition;
-                    int currElev = World.tileMap.currentElevation, toElev = q.NextStep.e;
-                    string toDestination = Direction.Heading(curr, dest, currElev, toElev);
-
-                    if (step.goal == "Go")
-                        goal = ("<color=lightblue>  To Destination: ") + toDestination + "</color>";
-                    else if (step.goal == "Return")
-                        goal = "<color=orange>Speak to " + q.questGiver.name + ".</color>";
+                    goal += (q.goals[i].isComplete ? "- (<color=yellow>DONE</color>) <color=grey>" : "- <color=white>") + q.goals[i].ToString() + "</color>\n";
                 }
             }
 
-            ttTitle.text = q.Name;
             tooltip.text = desc + "\n\n" + goal;
         }
         else
@@ -99,10 +81,11 @@ public class JournalPanel : UIPanel
 
     public override void ChangeSelectedNum(int newIndex)
     {
+        base.ChangeSelectedNum(newIndex);
+
         if (SelectedMax > 0)
             EventSystem.current.SetSelectedGameObject(journalBase.GetChild(SelectedNum).gameObject);
 
-        base.ChangeSelectedNum(newIndex);
         UpdateTooltip();
     }
 

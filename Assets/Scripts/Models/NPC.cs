@@ -28,8 +28,6 @@ public class NPC
         get { return SeedManager.combatRandom; }
     }
 
-    public event Action onDeath;
-
     public NPC(string _npcID, Coord wPos, Coord lPos, int ele)
     {
         Attributes = NPC_Blueprint.DefaultAttributes();

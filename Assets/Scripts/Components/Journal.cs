@@ -22,16 +22,7 @@ public class Journal : MonoBehaviour {
 
 		if (!Manager.newGame) {
 			foreach (Quest q in Manager.playerBuilder.quests) {
-				if (quests.Find(x => x.ID == q.ID) != null)
-					continue;
-
-				StartQuest(q, false, true);
-				Quest otherQuest = QuestList.GetByID(q.ID);
-				List<QuestEvent> events = otherQuest.events;
-
-				for (int e = 0; e < events.Count; e++) {
-					q.events.Add(events[e]);
-				}
+                StartQuest(q, false, true);
 			}
 
 			for (int i = 0; i < Manager.playerBuilder.progressFlags.Count; i++) {
@@ -92,26 +83,17 @@ public class Journal : MonoBehaviour {
 		}
 	}
 
-	public void StartQuest(Quest q, bool showInLog = true, bool loading = false) {
-		if (q == null || (q.questType == Quest.QuestType.Main || q.questType == Quest.QuestType.Side) && quests.Find(x => x.ID == q.ID) != null)
-			return;
-
-		q.PlaceNameInDescription();
-		q.ReplaceNameInDialogue();
-
+	public void StartQuest(Quest q, bool showInLog = true, bool skipEvent = false) {
 		quests.Add(q);
 
 		if (showInLog)
 			CombatLog.NameMessage("Start_Quest", q.Name);	
 		
-		q.StartQuest();
+		q.Start(skipEvent);
 		trackedQuest = q;
 	}
 
 	public void CompleteQuest(Quest q) {
-		if (!quests.Contains(q))
-			return;
-		
 		if (q == trackedQuest) {
 			if (quests.Count > 1)
 				trackedQuest = (quests[0] == q) ? quests[1] : quests[0];
@@ -119,16 +101,12 @@ public class Journal : MonoBehaviour {
 				trackedQuest = null;
 		}
 
-		q.Complete();
-		quests.Remove(q);
+        quests.Remove(q);
 	}
 
 	//Called when an NPC dies, checks all quests to see if their faction or name was in the steps. If so, add one to the amount
 	public void OnNPCDeath_CheckQuestProgress(NPC n) {
-		foreach (Quest q in quests)
-        {
-            q.NPCDied(n);
-        }
+        EventHandler.instance.OnNPCDeath(n);
 	}
 
 	//Called when the local map changes, checks all quests to see if there is a destination here.
@@ -152,60 +130,12 @@ public class Journal : MonoBehaviour {
 			}
 		}
 
-		if (quests != null && quests.Count > 0) {
-			yield return new WaitForSeconds(0.1f);
-
-			for (int i = 0; i < quests.Count; i++) {
-				if (quests[i].steps.Count > 0 && quests[i].NextStep.goal == "Go") {
-					if (newMap.mapInfo.position == quests[i].destination && newMap.elevation == Mathf.Abs(quests[i].NextStep.e))
-						quests[i].CompleteStep(quests[i].NextStep);
-				}
-			}
-		}
-	}
-
-	public bool OnSeen_CheckQuestProgress() {
-		bool hasQuest = false;
-
-		for (int i = 0; i < quests.Count; i++) {
-			if (quests[i].steps.Count > 0 && quests[i].NextStep.goal == "View Altar") {
-				quests[i].NextStep.amC ++;
-				quests[i].TryComplete();
-				hasQuest = true;
-			}
-		}
-
-		return hasQuest;
-	}
-
-	public bool OnActivateTerminal_CheckQuestProgress() {
-		bool hasQuest = false;
-
-		for (int i = 0; i < quests.Count; i++) {
-			if (quests[i].steps.Count > 0 && quests[i].NextStep.goal == "Use Terminal") {
-				quests[i].NextStep.amC ++;
-				quests[i].TryComplete();
-				hasQuest = true;
-			}
-		}
-
-		return hasQuest;
-	}
+        EventHandler.instance.OnEnterScreen(newMap);
+        yield return null;
+    }
 
 	public bool OnDestroyShrine_CheckQuestProgress() {
 		bool hasQuest = false;
-
-		for (int i = 0; i < quests.Count; i++) {
-			if (quests[i].steps.Count > 0 && quests[i].NextStep.goal == "Destroy Shrine") {
-				quests[i].NextStep.amC ++;
-
-				if (quests[i].NextStep.amC >= quests[i].NextStep.am)
-					quests[i].CompleteStep(quests[i].NextStep);
-
-				hasQuest = true;
-			}
-		}
-
 		return hasQuest;
 	}
 }

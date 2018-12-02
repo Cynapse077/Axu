@@ -1,35 +1,60 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using MoonSharp.Interpreter;
+﻿using System.Collections.Generic;
+using LitJson;
 
-[MoonSharpUserData]
-public class Quest
+public class Quest : EventContainer
 {
-    public string Name, ID, Description, startDialogue, endDialogue, chainedQuestID, followRules;
-    public QuestType questType;
-    public List<QuestStep> steps;
-    public List<QuestEvent> events;
-    public Coord destination;
-    public ProgressFlags flag = ProgressFlags.None;
-    public QuestRewards rewards;
+    public string ID { get; private set; }
+    public string Name { get; private set; }
+    public string Description { get; private set; }
+    public Goal[] goals { get; private set; }
+    public QuestReward rewards { get; private set; }
+    public List<int> spawnedNPCs { get; protected set; }
+
+    public string chainedQuest;
+    public string startDialogue;
+    public string endDialogue;
+
     public bool failOnDeath;
-    public NPC questGiver;
 
-    List<int> spawnedNPCIDs;
-
-    public Quest(string _name, string _id, NPC _questGiver)
+    public bool isComplete
     {
-        Name = _name;
-        ID = _id;
-        questGiver = _questGiver;
-        steps = new List<QuestStep>();
-        events = new List<QuestEvent>();
-        spawnedNPCIDs = new List<int>();
-        rewards.XP = 0;
-        rewards.items = new List<string>();
-        destination = null;
-        flag = ProgressFlags.None;
-        failOnDeath = false;
+        get
+        {
+            if (goals == null)
+                return false;
+
+            for (int i = 0; i < goals.Length; i++)
+            {
+                if (!goals[i].isComplete)
+                    return false;
+            }
+
+            return true;
+        }
+    }
+
+    public Goal ActiveGoal
+    {
+        get
+        {
+            for (int i = 0; i < goals.Length; i++)
+            {
+                if (!goals[i].isComplete)
+                    return goals[i];
+            }
+
+            return null;
+        }
+    }
+
+    public Coord GetZone(string zone)
+    {
+        if (zone == "Destination")
+        {
+            return ActiveGoal.Destination();
+        }
+
+        return World.worldMap.worldMapData.GetLandmark(zone);
     }
 
     public Quest(Quest other)
@@ -37,865 +62,324 @@ public class Quest
         CopyFrom(other);
     }
 
-    public QuestStep NextStep
+    public Quest(JsonData dat)
     {
-        get
-        {
-            if (steps.Count <= 0)
-                return null;
-
-            return steps[0];
-        }
+        spawnedNPCs = new List<int>();
+        FromJson(dat);
     }
 
-    public void StartQuest()
+    public Quest(SQuest s)
     {
-        if (questGiver != null)
-        {
-            questGiver.onDeath += Fail;
+        CopyFrom(QuestList.GetByID(s.ID));
 
-            if (followRules == "Permanent" || followRules == "Until Completion")
-                MakeFollower();
+        for (int i = 0; i < s.comp.Length; i++)
+        {
+            goals[i].isComplete = s.comp[i].c;
+            goals[i].amount = s.comp[i].amt;
         }
 
-        Initialize();
-        OnStart();
-        OnStepStart();
-    }
+        spawnedNPCs.Clear();
 
-    public void Initialize()
-    {
-        if (steps.Count > 0)
+        for (int i = 0; i < s.sp.Length; i++)
         {
-            for (int i = 0; i < steps.Count; i++)
-            {
-                if (!string.IsNullOrEmpty(steps[i].dest))
-                    steps[i].destination = GetZone(steps[i].dest);
-            }
-
-            destination = NextStep.destination;
+            spawnedNPCs.Add(s.sp[i]);
         }
-
-        if (NextStep == null)
-            return;
-
-        if (destination != null)
-        {
-            int iconNum = (NextStep.goal == "KillAt" || NextStep.goal == "KillAllAt" || NextStep.goal == "KillAllSpawned") ? 1 : 0;
-
-            World.objectManager.NewMapIcon(iconNum, destination);
-        }
-        else if (NextStep.goal == "Fetch" && questGiver != null)
-        {
-            World.objectManager.NewMapIcon(0, questGiver.worldPosition);
-        }
-    }
-
-    public void AddUIDToSpawnList(int uid)
-    {
-        if (spawnedNPCIDs == null)
-            spawnedNPCIDs = new List<int>();
-
-        spawnedNPCIDs.Add(uid);
-    }
-
-    void OnStart()
-    {
-        foreach (QuestEvent e in events)
-        {
-            if (e.EventName == QuestEvent.QEventNames.OnStart)
-                RunEvent(e);
-        }
-    }
-
-    void RunEvent(QuestEvent ev)
-    {
-        foreach (QuestEvent.SubEvent myEvent in ev.SubEvents)
-        {
-            //Run a console command
-            if (myEvent.Type == "Console Command")
-            {
-                string[] cons = myEvent.Name.Split("|"[0]);
-
-                for (int i = 0; i < cons.Length; i++)
-                {
-                    World.objectManager.GetComponent<Console>().ParseTextField(cons[i]);
-                }
-            }
-
-            //Run a Lua script.
-            if (myEvent.Type == "Run Lua")
-                LuaManager.CallScriptFunction(myEvent.Name, myEvent.GiveItem);
-
-            //Set the player's world position.
-            if (myEvent.Type == "WorldPos" && myEvent.WorldPos != null)
-            {
-                Coord worldPosition = GetZone(myEvent.WorldPos);
-                World.tileMap.worldCoordX = worldPosition.x;
-                World.tileMap.worldCoordY = worldPosition.y;
-                World.tileMap.HardRebuild();
-
-                if (ev.EventName == QuestEvent.QEventNames.OnStart)
-                    World.userInterface.CloseWindows();
-            }
-
-            //Set the player's local position.
-            if (myEvent.Type == "LocalPos" && myEvent.LocalPos != null)
-            {
-                ObjectManager.playerEntity.ForcePosition(new Coord(myEvent.LocalPos.x, myEvent.LocalPos.y));
-                ObjectManager.playerEntity.BeamDown();
-                World.tileMap.SoftRebuild();
-
-                if (ev.EventName == QuestEvent.QEventNames.OnStart)
-                    World.userInterface.CloseWindows();
-            }
-
-            //Spawn an NPC.
-            if (myEvent.Type == "NPC")
-            {
-                Coord worldPosition = GetZone(myEvent.WorldPos);
-                Coord lp = null;
-
-                if (myEvent.LocalPos != null)
-                    lp = new Coord(myEvent.LocalPos.x, myEvent.LocalPos.y);
-
-                NPC n = SpawnController.SpawnNPCByID(myEvent.Name, worldPosition, myEvent.Elevation, lp);
-                n.AddFlag(NPC_Flags.SpawnedFromQuest);
-
-                if (Name.Contains("arena"))
-                    n.inventory.Clear();
-
-                if (!string.IsNullOrEmpty(myEvent.GiveItem))
-                {
-                    if (myEvent.GiveItem == "SETQGIVER")
-                        questGiver = n;
-                    else if (ItemList.GetItemByID(myEvent.GiveItem) != null)
-                        n.inventory.Add(ItemList.GetItemByID(myEvent.GiveItem));
-                }
-
-                AddUIDToSpawnList(n.UID);
-            }
-            //Spawns a group of NPCs.
-            else if (myEvent.Type == "SpawnGroup")
-            {
-                Coord worldPosition = GetZone(myEvent.WorldPos);
-                List<NPC> ns = SpawnController.SpawnFromGroupNameAt(myEvent.Name, myEvent.Elevation, worldPosition, 0);
-
-                foreach (NPC n in ns)
-                {
-                    AddUIDToSpawnList(n.UID);
-                }
-            }
-            //Spawns a specified object.
-            else if (myEvent.Type == "Object")
-            {
-                Coord worldPosition = GetZone(myEvent.WorldPos);
-                MapObject m = World.objectManager.NewObjectAtOtherScreen(myEvent.Name, myEvent.LocalPos, worldPosition, myEvent.Elevation);
-
-                if (myEvent.GiveItem != null && myEvent.GiveItem != "")
-                    m.inv.Add(ItemList.GetItemByID(myEvent.GiveItem));
-            }
-
-            //Give an NPC a quest
-            if (myEvent.Type == "Give Quest")
-            {
-                if (questGiver != null)
-                {
-                    if (World.objectManager.npcClasses.Find(x => x.ID == myEvent.GiveItem) != null)
-                    {
-                        World.objectManager.npcClasses.Find(x => x.ID == myEvent.GiveItem).questID = myEvent.Name;
-                        World.tileMap.HardRebuild();
-                    }
-                }
-            }
-
-            //Move a specific NPC to a specific coordinate
-            if (myEvent.Type == "Move NPC")
-            {
-                if (World.objectManager.npcClasses.Find(x => x.ID == myEvent.Name) != null)
-                {
-                    NPC n = World.objectManager.npcClasses.Find(x => x.ID == myEvent.Name);
-
-                    if (n != null)
-                    {
-                        if (myEvent.WorldPos != null)
-                            n.worldPosition = GetZone(myEvent.WorldPos);
-
-                        if (myEvent.LocalPos != null)
-                            n.localPosition = new Coord(myEvent.LocalPos.x, myEvent.LocalPos.y);
-
-                        n.elevation = myEvent.Elevation;
-
-                        World.tileMap.HardRebuild();
-                    }
-                }
-            }
-
-            //Remove an item from an NPC (In the case that they gave you something special. Replace it with something else.
-            if (myEvent.Type == "Remove Item" && questGiver != null)
-            {
-                for (int e = 0; e < questGiver.handItems.Count; e++)
-                {
-                    if (questGiver.handItems[e].ID == myEvent.Name)
-                        questGiver.handItems[e] = ItemList.GetItemByID(myEvent.GiveItem);
-                }
-
-                if (questGiver.firearm != null && questGiver.firearm.ID == myEvent.Name)
-                    questGiver.firearm = ItemList.GetNone();
-
-                for (int b = 0; b < questGiver.bodyParts.Count; b++)
-                {
-                    if (questGiver.bodyParts[b].equippedItem != null && questGiver.bodyParts[b].equippedItem.ID == myEvent.Name)
-                        questGiver.bodyParts[b].equippedItem = ItemList.GetNone();
-                }
-
-                World.tileMap.HardRebuild();
-                World.tileMap.LightCheck(ObjectManager.playerEntity);
-            }
-
-            //Remove stair blockers. All on one screen.
-            if (myEvent.Type == "Remove Blockers")
-            {
-                Coord wp = GetZone(myEvent.WorldPos);
-                List<MapObject> mos = World.objectManager.ObjectsAt(wp, myEvent.Elevation);
-                List<MapObject> toDelete = mos.FindAll(x => x.objectType == "Stair_Lock" && (x.localPosition == myEvent.LocalPos || myEvent.LocalPos == null));
-
-                while (toDelete.Count > 0)
-                {
-                    World.objectManager.mapObjects.Remove(toDelete[0]);
-                    toDelete.RemoveAt(0);
-                }
-
-                if (World.tileMap.WorldPosition == wp && World.tileMap.currentElevation == myEvent.Elevation)
-                    World.tileMap.HardRebuild();
-            }
-
-            //Creates a blocker object.
-            if (myEvent.Type == "Create Blocker")
-            {
-                Coord wp = GetZone(myEvent.WorldPos);
-                World.objectManager.NewObjectAtOtherScreen("Stair_Lock", myEvent.LocalPos, wp, myEvent.Elevation);
-            }
-
-            //Sets the current world elevation, bringing the player with it.
-            if (myEvent.Type == "Set Elevation")
-            {
-                World.tileMap.currentElevation = myEvent.Elevation;
-                World.tileMap.HardRebuild();
-            }
-
-            //Removes all spawned NPCs 
-            if (myEvent.Type == "Remove Spawns")
-            {
-                foreach (int s in spawnedNPCIDs)
-                {
-                    NPC n = World.objectManager.npcClasses.Find(x => x.UID == s);
-
-                    if (n != null)
-                        World.objectManager.npcClasses.Remove(n);
-                }
-            }
-        }
-    }
-
-    void MakeFollower()
-    {
-        questGiver.MakeFollower();
-        CombatLog.NameMessage("Message_Hire", questGiver.name);
-    }
-
-    Coord GetRandomCloseDestination(int radius, int minDistance)
-    {
-        List<Coord> possibleCoords = WalkableNearbyTiles(radius, minDistance);
-        int rad = radius, mdis = minDistance;
-
-        while (possibleCoords.Count <= 0)
-        {
-            rad++;
-
-            if (mdis > 1)
-                mdis--;
-
-            possibleCoords = WalkableNearbyTiles(rad, mdis);
-        }
-
-        if (possibleCoords.Count > 0)
-            return possibleCoords.GetRandom();
-        else
-        {
-            Debug.LogError("Could not find random close point at destination.");
-            return null;
-        }
-    }
-
-    List<Coord> WalkableNearbyTiles(int radius, int minDistance)
-    {
-        Coord currPos = World.tileMap.WorldPosition;
-        List<Coord> possibleCoords = new List<Coord>();
-
-        for (int x = -radius; x <= radius; x++)
-        {
-            for (int y = -radius; y <= radius; y++)
-            {
-                if (currPos.x + x < 0 || currPos.y + y < 0 || currPos.x + x >= Manager.worldMapSize.x || currPos.y >= Manager.worldMapSize.y)
-                    continue;
-
-                if (Mathf.Abs(x) + Mathf.Abs(y) < minDistance || World.tileMap.IsOceanWorldTile(currPos.x + x, currPos.y + y))
-                    continue;
-                if (World.tileMap.WalkableWorldTile(currPos.x + x, currPos.y + y))
-                    possibleCoords.Add(new Coord(currPos.x + x, currPos.y + y));
-            }
-        }
-
-        return possibleCoords;
-    }
-
-    public void NPCDied(NPC n)
-    {
-        if (questGiver != null && questGiver == n)
-        {
-            Fail();
-            return;
-        }
-
-        QuestStep step = NextStep;
-
-        switch (step.goal)
-        {
-            case ("Kill"):
-                if (step.of == n.faction.ID || step.of == n.ID)
-                    IncrementAmount();
-                break;
-
-            case ("KillAll"):
-                if (NextStep.destination == n.worldPosition && NextStep.e == n.elevation)
-                    IncrementAmount();
-                break;
-
-            case ("KillAllAt"):
-                if (NextStep.destination == n.worldPosition && NextStep.e == n.elevation)
-                {
-                    if (World.objectManager.NPCsAt(NextStep.destination, NextStep.e).FindAll(x => x.isHostile).Count == 0)
-                        CompleteStep(NextStep);
-                }
-                break;
-
-            case ("KillAllSpawned"):
-                foreach (int s in spawnedNPCIDs)
-                {
-                    if (s == n.UID)
-                    {
-                        spawnedNPCIDs.Remove(s);
-                        NextStep.amC++;
-
-                        if (spawnedNPCIDs.Count == 0)
-                            CompleteStep(NextStep);
-
-                        break;
-                    }
-                }
-                break;
-        }
-    }
-
-    void IncrementAmount()
-    {
-        NextStep.amC++;
-
-        if (NextStep.amC >= NextStep.am)
-            CompleteStep(NextStep);
-    }
-
-    public void Fail()
-    {
-        if (!ObjectManager.playerJournal.quests.Contains(this))
-            return;
-
-        if (destination != null)
-            World.objectManager.RemoveMapIconAt(destination);
-
-        Alert.NewAlert("Quest_Failed", Name, null);
-        ObjectManager.playerJournal.quests.Remove(this);
-
-        UnregisterCallbacks();
-        OnFail();
-    }
-
-    public void FailSilently()
-    {
-        if (!ObjectManager.playerJournal.quests.Contains(this))
-            return;
-
-        if (destination != null)
-            World.objectManager.RemoveMapIconAt(destination);
-
-        ObjectManager.playerJournal.quests.Remove(this);
-        UnregisterCallbacks();
-        OnFail();
-    }
-
-    void OnFail()
-    {
-        foreach (QuestEvent e in events)
-        {
-            if (e.EventName == QuestEvent.QEventNames.OnFail)
-                RunEvent(e);
-        }
-    }
-
-    bool CanCompleteStep(int i)
-    {
-        QuestStep step = steps[i];
-
-        if (step.goal == "Go" || step.goal == "Return")
-            return (step.destination == World.tileMap.WorldPosition && step.e == World.tileMap.currentElevation);
-
-        if (step.goal == "Fetch")
-        {
-            Inventory playerInventory = ObjectManager.player.GetComponent<Inventory>();
-            List<Item> relItems = new List<Item>();
-            int amountHeld = 0;
-
-            if (ItemList.GetItemByID(step.of) != null)
-            {
-                relItems = playerInventory.items.FindAll(x => x.ID == step.of);
-            }
-            else
-            {
-                ItemProperty prop = step.of.ToEnum<ItemProperty>();
-                relItems = playerInventory.items.FindAll(x => x.HasProp(prop));
-            }
-
-            if (relItems != null && relItems.Count > 0)
-            {
-                for (int j = 0; j < relItems.Count; j++)
-                {
-                    amountHeld += relItems[j].amount;
-                }
-            }
-
-            return amountHeld >= step.am;
-        }
-
-        if (step.goal == "Give BPs")
-        {
-            Inventory playerInventory = ObjectManager.player.GetComponent<Inventory>();
-            List<Item> relevantItems = playerInventory.items.FindAll(x => x.HasProp(ItemProperty.Replacement_Limb));
-            return (relevantItems.Count >= step.am);
-        }
-
-        if (step.goal == "Kill" || step.goal == "KillAt" || NextStep.goal == "Use Terminal" || NextStep.goal == "Destroy Shrine")
-            return (step.amC >= step.am);
-
-        if (step.goal == "KillAllSpawned")
-            return spawnedNPCIDs.Count == 0;
-
-        return true;
-    }
-
-
-    public bool CanComplete()
-    {
-        for (int i = 0; i < steps.Count; i++)
-        {
-            if (!CanCompleteStep(i))
-                return false;
-        }
-
-        return true;
-    }
-
-    public bool TryComplete()
-    {
-        if (CanComplete())
-        {
-            for (int i = 0; i < steps.Count; i++)
-            {
-                CompleteStep(steps[i]);
-            }
-
-            ObjectManager.playerJournal.CompleteQuest(this);
-            return true;
-        }
-
-        return false;
-    }
-
-    public void OnComplete()
-    {
-        foreach (QuestEvent e in events)
-        {
-            if (e.EventName == QuestEvent.QEventNames.OnComplete)
-                RunEvent(e);
-        }
-    }
-
-    public void Complete()
-    {
-        if (!string.IsNullOrEmpty(endDialogue))
-            Alert.NewAlert("Quest_Complete", null, endDialogue + RewardDescription());
-        else
-            Alert.NewAlert("Quest_Complete2", Name, RewardDescription());
-
-        if (ObjectManager.player != null)
-        {
-            ObjectManager.playerEntity.stats.GainExperience(rewards.XP);
-            ObjectManager.playerEntity.inventory.gold += rewards.gold;
-
-            if (rewards.items.Count > 0)
-            {
-                List<Item> items = new List<Item>();
-
-                for (int i = 0; i < rewards.items.Count; i++)
-                {
-                    items.Add(ItemList.GetItemByID(rewards.items[i]));
-                }
-
-                World.objectManager.NewInventory("Loot", ObjectManager.playerEntity.myPos, World.tileMap.WorldPosition, items);
-            }
-
-            if (flag != ProgressFlags.None)
-                ObjectManager.playerJournal.AddFlag(flag);
-
-            if (followRules == "Upon Completion" && questGiver != null)
-                questGiver.MakeFollower();
-
-            OnComplete();
-
-            if (chainedQuestID != null && chainedQuestID != "")
-            {
-                Quest q = QuestList.GetByID(chainedQuestID);
-
-                if (q != null)
-                    ObjectManager.playerJournal.StartQuest(new Quest(q));
-            }
-        }
-
-        World.objectManager.UpdateDialogueOptions();
-        UnregisterCallbacks();
-    }
-
-    public void CompleteStep(QuestStep qs)
-    {
-        if (destination != null)
-            World.objectManager.RemoveMapIconAt(destination);
-        else if (qs.goal == "Return" || qs.goal == "Fetch")
-            World.objectManager.RemoveMapIconAt(questGiver.worldPosition);
-        else if (qs.goal == "Kill" || qs.goal == "KillAt")
-            World.objectManager.RemoveMapIconAt(World.tileMap.WorldPosition);
-
-        if (qs.goal == "Fetch" || qs.goal == "Give BPs")
-            GiveInventory(qs);
-
-        OnCompleteStep();
-        steps.Remove(qs);
-
-        if (steps.Count > 0)
-        {
-            destination = NextStep.destination;
-            CombatLog.NameMessage("Quest_Update", Name);
-
-            if (destination != null)
-            {
-                if (NextStep.goal == "KillAt")
-                    World.objectManager.NewMapIcon(1, destination);
-                else
-                    World.objectManager.NewMapIcon(0, destination);
-            }
-            else if (NextStep.goal == "Kill")
-                World.objectManager.NewMapIcon(1, World.tileMap.WorldPosition);
-
-            if (NextStep.goal == "Return" || NextStep.goal == "Fetch")
-            {
-                if (questGiver != null)
-                    World.objectManager.NewMapIcon(0, questGiver.worldPosition);
-            }
-
-            OnStepStart();
-        }
-
-        TryComplete();
-    }
-
-    void GiveInventory(QuestStep qs)
-    {
-        Inventory playerInventory = ObjectManager.player.GetComponent<Inventory>();
-        List<Item> relevantItems = new List<Item>();
-        int amountRemoved = 0;
-
-        if (qs.goal == "Fetch")
-        {
-            relevantItems = (ItemList.GetItemByID(qs.of) != null) ? playerInventory.items.FindAll(x => x.ID == qs.of)
-                : playerInventory.items.FindAll(x => x.HasProp(qs.of.ToEnum<ItemProperty>()));
-        }
-        else if (qs.goal == "Give BPs")
-        {
-            relevantItems = playerInventory.items.FindAll(x => x.HasProp(ItemProperty.Replacement_Limb));
-        }
-
-        for (int i = 0; i < relevantItems.Count; i++)
-        {
-            Item newItem = new Item(relevantItems[i])
-            {
-                amount = 1
-            };
-
-            for (int j = 0; j < relevantItems[i].amount; j++)
-            {
-                playerInventory.RemoveInstance(relevantItems[i]);
-                amountRemoved++;
-
-                if (j != 0)
-                    newItem.amount++;
-
-                if (amountRemoved >= qs.am)
-                    break;
-            }
-
-            CombatLog.NameItemMessage("Quest_GiveItem", questGiver.name, relevantItems[i].Name);
-
-            //Add item to NPC's inventory, on-screen or not.
-            Entity qg = World.objectManager.GetEntityFromNPC(questGiver);
-            if (qg != null)
-                qg.inventory.PickupItem(newItem);
-            else
-                questGiver.inventory.Add(newItem);
-
-            if (amountRemoved >= qs.am)
-                break;
-        }
-
-        World.tileMap.HardRebuild();
-        World.tileMap.LightCheck(ObjectManager.playerEntity);
-    }
-
-    void OnStepStart()
-    {
-        if (NextStep != null && NextStep.evnt != null)
-        {
-            foreach (QuestEvent e in NextStep.evnt)
-            {
-                if (e.EventName == QuestEvent.QEventNames.OnStepStart)
-                    RunEvent(e);
-            }
-        }
-    }
-
-    void OnCompleteStep()
-    {
-        if (NextStep != null && NextStep.evnt != null)
-        {
-            foreach (QuestEvent e in NextStep.evnt)
-            {
-                if (e.EventName == QuestEvent.QEventNames.OnStepComplete)
-                    RunEvent(e);
-            }
-        }
-    }
-
-    string RewardDescription()
-    {
-        if (rewards.XP == 0 && rewards.gold == 0)
-            return (rewards.items.Count > 0) ? "\n<color=yellow>Some items have dropped beneath your feet!</color>" : "";
-
-        string des = "\n<color=yellow>You received ";
-
-        if (rewards.XP > 0)
-            des += rewards.XP + " XP" + ((rewards.gold > 0) ? "" : ".");
-
-        if (rewards.gold > 0)
-            des += " and $" + rewards.gold.ToString();
-
-        if (rewards.items.Count > 0)
-            des += "\nSome items have dropped beneath your feet!";
-
-        des += "</color>";
-
-        return des;
-    }
-
-    public Coord GetZone(string zone)
-    {
-        switch (zone)
-        {
-            case "Current":
-                return World.tileMap.WorldPosition;
-            case "Random_Close":
-                return World.tileMap.worldMap.GetOpenPosition(World.tileMap.WorldPosition, 10);
-            case "Random_Landmark":
-                return World.tileMap.GetRandomLandmark().position;
-            case "Quest Giver Location":
-                return questGiver.worldPosition;
-            case "Destination":
-                return NextStep.destination;
-        }
-
-        return World.worldMap.worldMapData.GetLandmark(zone);
-    }
-
-    public void PlaceNameInDescription()
-    {
-        if (!string.IsNullOrEmpty(Description) && Description.Contains("(QUESTGIVERNAME)"))
-            Description = Description.Replace("(QUESTGIVERNAME)", questGiver.name);
-    }
-
-    public void ReplaceNameInDialogue()
-    {
-        if (!string.IsNullOrEmpty(startDialogue) && startDialogue.Contains("(PLAYERNAME)"))
-            startDialogue = startDialogue.Replace("(PLAYERNAME)", Manager.playerName);
-
-        if (!string.IsNullOrEmpty(endDialogue) && endDialogue.Contains("(PLAYERNAME)"))
-            endDialogue = endDialogue.Replace("(PLAYERNAME)", Manager.playerName);
-
     }
 
     void CopyFrom(Quest other)
     {
-        if (other == null)
-        {
-            Debug.Log("null quest");
-            return;
-        }
-
-        Name = other.Name;
         ID = other.ID;
+        Name = other.Name;
         Description = other.Description;
+        rewards = other.rewards;
+        goals = new Goal[other.goals.Length];
+        onStart = other.onStart;
+        onComplete = other.onComplete;
+        onFail = other.onFail;
+        spawnedNPCs = other.spawnedNPCs;
         startDialogue = other.startDialogue;
         endDialogue = other.endDialogue;
-        questGiver = other.questGiver;
-
-        rewards.XP = other.rewards.XP;
-        rewards.gold = other.rewards.gold;
-        rewards.items = new List<string>(other.rewards.items);
-
-        steps = new List<QuestStep>();
-        for (int i = 0; i < other.steps.Count; i++)
-        {
-            steps.Add(new QuestStep(other.steps[i]));
-        }
-
-        events = new List<QuestEvent>(other.events);
-        chainedQuestID = other.chainedQuestID;
-
-        questType = other.questType;
-        flag = other.flag;
-        followRules = other.followRules;
+        chainedQuest = other.chainedQuest;
         failOnDeath = other.failOnDeath;
+
+        for (int i = 0; i < other.goals.Length; i++)
+        {
+            goals[i] = other.goals[i].Clone();
+        }
     }
 
-    void UnregisterCallbacks()
+    void FromJson(JsonData q)
     {
-        if (questGiver != null)
-        {
-            questGiver.onDeath -= Fail;
+        spawnedNPCs = new List<int>();
 
-            if (followRules != "" && followRules != "Permanent" && followRules != "Upon Completion")
+        Name = q["Name"].ToString();
+        ID = q["ID"].ToString();
+        Description = q["Description"].ToString();
+
+        goals = new Goal[q["Steps"].Count];
+
+        for (int i = 0; i < q["Steps"].Count; i++)
+        {
+            goals[i] = GetQuestGoalFromJson(q["Steps"][i]);
+
+            if (goals[i] != null && q["Steps"][i].ContainsKey("Events"))
             {
-                Coord empty = new Coord(0, 0);
-                NPC template = EntityList.GetNPCByID(questGiver.ID, empty, empty);
-                questGiver.faction = template.faction;
-                questGiver.flags = template.flags;
+                JsonData events = q["Steps"][i]["Events"];
+
+                for (int j = 0; j < events.Count; j++)
+                {
+                    QuestEvent.EventType eventType = (events[j]["Event"].ToString()).ToEnum<QuestEvent.EventType>();
+                    List<string> keys = new List<string>(events[j].Keys);
+
+                    for (int k = 1; k < events[j].Count; k++)
+                    {
+                        QuestEvent questEvent = QuestList.GetEvent(keys[k], events[j][k]);
+                        goals[i].AddEvent(eventType, questEvent);
+                    }
+                }
             }
         }
+
+        if (q.ContainsKey("Events"))
+        {
+            for (int i = 0; i < q["Events"].Count; i++)
+            {
+                QuestEvent.EventType eventType = (q["Events"][i]["Event"].ToString()).ToEnum<QuestEvent.EventType>();
+                List<string> keys = new List<string>(q["Events"][i].Keys);
+
+                for (int j = 1; j < q["Events"][i].Count; j++)
+                {
+                    QuestEvent questEvent = QuestList.GetEvent(keys[j], q["Events"][i][j]);
+                    AddEvent(eventType, questEvent);
+                }
+            }
+        }
+
+        if (q.ContainsKey("Start Dialogue"))
+        {
+            startDialogue = q["Start Dialogue"].ToString();
+        }
+
+        if (q.ContainsKey("End Dialogue"))
+        {
+            endDialogue = q["End Dialogue"].ToString();
+        }
+
+        if (q.ContainsKey("Chained Quest"))
+        {
+            chainedQuest = q["Chained Quest"].ToString();
+        }
+
+        if (q.ContainsKey("Fail On Death"))
+        {
+            failOnDeath = (bool)q["Fail On Death"];
+        }
+
+        if (q.ContainsKey("Rewards"))
+        {
+            int xp = (q["Rewards"].ContainsKey("XP")) ? (int)q["Rewards"]["XP"] : 0;
+            int money = (q["Rewards"].ContainsKey("Money")) ? (int)q["Rewards"]["Money"] : 0;
+            string[] items = new string[0];
+
+            if (q["Rewards"].ContainsKey("Items"))
+            {
+                items = new string[q["Rewards"]["Items"].Count];
+
+                for (int i = 0; i < items.Length; i++)
+                {
+                    items[i] = q["Rewards"]["Items"][i].ToString();
+                }
+            }
+
+            rewards = new QuestReward(xp, money, items);
+        }
+    }
+
+    Goal GetQuestGoalFromJson(JsonData q)
+    {
+        string goal = q["Goal"].ToString();
+
+        switch (goal)
+        {
+            case "Go":
+                string locID = q["To"][0].ToString();
+                int ele = (q["To"].Count > 1) ? (int)q["To"][1] : 0;
+
+                return new GoToGoal(this, locID, ele);
+
+            case "Fetch":
+                string itemID = q["Item"][0].ToString();
+                string giveTo = q["Give To"].ToString();
+                int fetchAmt = (q["Item"].Count > 1) ? (int)q["Item"][1] : 1;
+
+                return new FetchGoal(this, giveTo, itemID, fetchAmt);
+
+            case "Fetch Property":
+                string prop = q["ItemProperty"][0].ToString();
+                string propGiveTo = q["Give To"].ToString();
+                int propAmt = (q["ItemProperty"].Count > 1) ? (int)q["ItemProperty"][1] : 1;
+
+                return new FetchPropertyGoal(this, propGiveTo, prop, propAmt);
+
+            case "Talk To":
+                string npcToTalkTo = q["NPC"].ToString();
+
+                return new TalkToGoal(this, npcToTalkTo);
+
+            case "Kill Spawned":
+                return new SpecificKillGoal(this);
+
+            case "Kill NPC":
+                string npcID = q["NPC"][0].ToString();
+                int killAmt = (q["NPC"].Count > 1) ? (int)q["NPC"][1] : 1;
+
+                return new NPCKillGoal(this, npcID, killAmt);
+
+            case "Kill Faction":
+                string facID = q["Faction"][0].ToString();
+                int facKillAmt = (q["Faction"].Count > 1) ? (int)q["Faction"][1] : 1;
+
+                return new FactionKillGoal(this, facID, facKillAmt);
+
+            case "Interact":
+                Coord interactPos = GetZone(q["Coordinate"].ToString());
+                int interactEle = (int)q["Elevation"];
+                string objType = q["Object Type"].ToString();
+                int interactAmount = (int)q["Amount"];
+
+                return new InteractGoal(objType, interactPos, interactEle, interactAmount);
+
+            default:
+                UnityEngine.Debug.LogError("Quest::GetQuestGoalFromJson - No quest goal type " + goal + "!");
+                return null;
+        }
+    }
+
+    public void SpawnNPC(NPC n)
+    {
+        spawnedNPCs.Add(n.UID);
+        World.objectManager.SpawnNPC(n);
+    }
+
+    public void Start(bool skipEvent = false)
+    {
+        if (!isComplete)
+        {
+            if (goals == null || goals.Length == 0)
+                return;
+
+            for (int i = 0; i < goals.Length; i++)
+            {
+                goals[i].Setup(this);
+            }
+
+            ActiveGoal.Init(skipEvent);
+        }
+
+        if (!skipEvent)
+            RunEvent(this, QuestEvent.EventType.OnStart);
+    }
+
+    public void CompleteGoal(Goal goal)
+    {
+        foreach (Goal g in goals)
+        {
+            if (!g.isComplete)
+            {
+                g.Init(false);
+                return;
+            }
+        }
+
+        Complete();
+    }
+
+    public void Complete()
+    {
+        ObjectManager.playerEntity.stats.GainExperience(rewards.xp);
+        ObjectManager.playerEntity.inventory.gold += rewards.money;
+
+        foreach (string i in rewards.itemRewards)
+        {
+            ObjectManager.playerEntity.inventory.PickupItem(ItemList.GetItemByID(i));
+        }
+
+        RunEvent(this, QuestEvent.EventType.OnComplete);
+        ObjectManager.playerJournal.CompleteQuest(this);
+
+        if (!string.IsNullOrEmpty(chainedQuest))
+        {
+            ObjectManager.playerJournal.StartQuest(QuestList.GetByID(chainedQuest), true);
+        }
+
+        if (!string.IsNullOrEmpty(endDialogue))
+        {
+            Alert.CustomAlert_WithTitle("Quest Complete", endDialogue);
+        }
+    }
+
+    public void Fail()
+    {
+        RunEvent(this, QuestEvent.EventType.OnFail);
     }
 
     public SQuest ToSQuest()
     {
-        int[] spwns = (spawnedNPCIDs == null) ? null : spawnedNPCIDs.ToArray();
-        return new SQuest(ID, steps, events, (questGiver != null) ? questGiver.UID : -1, spwns);
+        return new SQuest(this);
     }
 
-    public enum QuestType
+    public struct QuestReward
     {
-        Main, Side, Daily
-    }
+        public int money;
+        public int xp;
+        public string[] itemRewards;
 
-    public struct QuestRewards
-    {
-        public int XP;
-        public List<string> items;
-        public int gold;
+        public QuestReward(int _xp, int _money, string[] _items)
+        {
+            xp = _xp;
+            money = _money;
+            itemRewards = _items;
+        }
     }
 }
 
 [System.Serializable]
-public class QuestStep
+public class SQuest
 {
-    public string goal, of;
-    public int am, amC, e;
-    public string dest;
-    public List<QuestEvent> evnt;
+    public string ID;
+    public SQuestStep[] comp; //Completeness of steps
+    public int[] sp; //Spawned npcs
 
-    Coord revisedDestination;
+    public SQuest() { }
 
-    public Coord destination
+    public SQuest(Quest q)
     {
-        get
+        ID = q.ID;
+
+        comp = new SQuestStep[q.goals.Length];
+
+        for (int i = 0; i < q.goals.Length; i++)
         {
-            return revisedDestination;
+            comp[i] = new SQuestStep(q.goals[i].isComplete, q.goals[i].amount);
         }
-        set
+
+        sp = new int[q.spawnedNPCs.Count];
+
+        for (int i = 0; i < q.spawnedNPCs.Count; i++)
         {
-            revisedDestination = new Coord(value.x, value.y);
-        }
-    }
-
-    public QuestStep() { }
-
-    public QuestStep(QuestStep other)
-    {
-        goal = other.goal;
-        of = other.of;
-        am = other.am;
-        amC = other.amC;
-        dest = other.dest;
-        e = other.e;
-        evnt = new List<QuestEvent>(other.evnt);
-    }
-}
-
-[System.Serializable]
-public class QuestEvent
-{
-    public QEventNames EventName;
-    public List<SubEvent> SubEvents;
-
-    public QuestEvent(QEventNames eName)
-    {
-        EventName = eName;
-        SubEvents = new List<SubEvent>();
-    }
-
-    public QuestEvent(QEventNames name, List<SubEvent> sEvents)
-    {
-        EventName = name;
-        SubEvents = sEvents;
-    }
-
-    [System.Serializable]
-    public class SubEvent
-    {
-        public string Type;
-        public string Name;
-        public Coord LocalPos;
-        public string WorldPos;
-        public int Elevation;
-        public string GiveItem;
-
-        public SubEvent(string ty, string na, string wp, int ele = 0, string item = null, Coord lp = null)
-        {
-            Type = ty;
-            Name = na;
-            WorldPos = wp;
-            LocalPos = lp;
-            Elevation = ele;
-            GiveItem = item;
+            sp[i] = q.spawnedNPCs[i];
         }
     }
 
-    [System.Serializable]
-    public enum QEventNames
+    public struct SQuestStep
     {
-        OnStart, OnComplete, OnFail, OnStepComplete, OnStepStart
+        public bool c; //completeness
+        public int amt; //amount
+
+        public SQuestStep(bool complete, int amount)
+        {
+            c = complete;
+            amt = amount;
+        }
     }
 }

@@ -268,8 +268,7 @@ public class SaveData : MonoBehaviour
     {
         for (int i = 0; i < playerJson["Quests"].Count; i++)
         {
-            JsonData qData = playerJson["Quests"][i];
-            Manager.playerBuilder.quests.Add(GetQuest(qData));
+            Manager.playerBuilder.quests.Add(GetQuest(playerJson["Quests"][i]));
         }
 
         Manager.playerBuilder.progressFlags = new List<ProgressFlags>();
@@ -286,60 +285,10 @@ public class SaveData : MonoBehaviour
 
     Quest GetQuest(JsonData qData)
     {
-        Quest bp = QuestList.GetByID(qData["ID"].ToString());
-        NPC questGiver = null;
+        JsonReader reader = new JsonReader(qData.ToJson());
+        SQuest sq = JsonMapper.ToObject<SQuest>(reader);
 
-        if (qData.ContainsKey("QG"))
-            questGiver = World.objectManager.npcClasses.Find(x => x.UID == (int)qData["QG"]);
-
-        Quest newQuest = new Quest(bp.Name, qData["ID"].ToString(), questGiver);
-
-        for (int j = 0; j < qData["Steps"].Count; j++)
-        {
-            QuestStep qstep = new QuestStep
-            {
-                goal = qData["Steps"][j]["goal"].ToString()
-            };
-
-            if (qData["Steps"][j].ContainsKey("of"))
-                qstep.of = qData["Steps"][j]["of"].ToString();
-
-            if (qData["Steps"][j].ContainsKey("am"))
-                qstep.am = (int)qData["Steps"][j]["am"];
-
-            if (qData["Steps"][j].ContainsKey("amC"))
-                qstep.amC = (int)qData["Steps"][j]["amC"];
-
-            if (qData["Steps"][j].ContainsKey("dest"))
-            {
-                int destX = (int)qData["Steps"][j]["destination"][0];
-                int destY = (int)qData["Steps"][j]["destination"][1];
-
-                qstep.destination = new Coord(destX, destY);
-            }
-
-            if (qData["Steps"][j].ContainsKey("e"))
-                qstep.e = (int)qData["Steps"][j]["e"];
-
-            newQuest.steps.Add(qstep);
-        }
-
-        if (qData.ContainsKey("Spwnd"))
-        {
-            for (int j = 0; j < qData["Spwnd"].Count; j++)
-            {
-                newQuest.AddUIDToSpawnList((int)qData["Spwnd"][j]);
-            }
-        }
-
-        newQuest.rewards = bp.rewards;
-        newQuest.Description = bp.Description;
-        newQuest.endDialogue = bp.endDialogue;
-        newQuest.flag = bp.flag;
-        newQuest.chainedQuestID = bp.chainedQuestID;
-        newQuest.followRules = bp.followRules;
-
-        return newQuest;
+        return new Quest(sq);
     }
 
     void SetUpSkills()

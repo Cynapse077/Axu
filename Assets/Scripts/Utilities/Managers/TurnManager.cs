@@ -116,22 +116,6 @@ public class TurnManager : MonoBehaviour {
 	void NewDay() {
 		TimeOfDay = 0;
 		World.BaseDangerLevel++;
-		List<Quest> dailyQuests = ObjectManager.playerJournal.quests.FindAll(x => x.questType == Quest.QuestType.Daily);
-
-		//Remove daily quests
-		for (int i = 0; i < dailyQuests.Count; i++) {
-			ObjectManager.playerJournal.quests.Remove(dailyQuests[i]);
-		}
-
-		//Give NPCs their daily quests.
-		if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Arena_Available) && World.objectManager.NPCExists("arenamaster")) {
-			World.objectManager.npcClasses.Find(x => x.ID == "arenamaster").questID = QuestList.GetRandomDailyArenaID();
-			CombatLog.SimpleMessage("Message_Arena_Available");
-		}
-		if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hunts_Available) && World.objectManager.NPCExists("saira")) {
-			World.objectManager.npcClasses.Find(x => x.ID == "saira").questID = QuestList.GetRandomDailyHuntID();
-			CombatLog.SimpleMessage("Message_Hunt_Available");
-		}
 
 		//Shuffle merchant inventories.
 		foreach (NPC n in World.objectManager.npcClasses) {

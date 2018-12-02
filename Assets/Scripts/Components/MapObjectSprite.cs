@@ -486,6 +486,7 @@ public class MapObjectSprite : MonoBehaviour
 
     public void Interact()
     {
+        EventHandler.instance.OnInteract(objectBase);
 
         if (objectBase.HasEvent("OnInteract"))
         {
