@@ -5,7 +5,7 @@ using LitJson;
 
 public class NewWorld
 {
-    const int Cutoffthreshold = 3001;
+    const int Cutoffthreshold = 6000;
 
     readonly int Turn_Num;
     readonly string Version;
@@ -15,19 +15,17 @@ public class NewWorld
 
     public NewWorld(List<NPCCharacter> c, int turn)
     {
-        chars = c;
+        chars = new List<NPCCharacter>(c);
         tileMap = World.tileMap;
         Turn_Num = turn;
         Version = GameSettings.version;
+
         SetWorldData();
     }
 
-    public void SetWorldData()
+    void SetWorldData()
     {
         Entity playerEntity = ObjectManager.playerEntity;
-
-        if (tileMap == null)
-            tileMap = GameObject.FindObjectOfType<TileMap>();
 
         //player
         PlayerCharacter player = playerEntity.ToCharacter();
@@ -46,12 +44,12 @@ public class NewWorld
 
                 if (tmData != null)
                 {
-                    AddDataToArray(holder, new ScreenToJson(tmData, 0));
+                    AddDataToArray(ref holder, new ScreenToJson(tmData, 0));
                 }
                 else if (tileMap.worldData != null && tileMap.worldData.dataExists(x, y))
                 {
                     tmData = new TileMap_Data(x, y, 0, true) { lastTurnSeen = tileMap.worldData.LastTurnSeen(x, y) };
-                    AddDataToArray(holder, new ScreenToJson(tmData, 0));
+                    AddDataToArray(ref holder, new ScreenToJson(tmData, 0));
                 }
             }
         }
@@ -64,43 +62,42 @@ public class NewWorld
                 TileMap_Data tmd = World.tileMap.Vaults[i].screens[j];
 
                 if (tmd != null)
-                    AddDataToArray(holder, new ScreenToJson(tmd, tmd.elevation));
+                    AddDataToArray(ref holder, new ScreenToJson(tmd, tmd.elevation));
             }
         }
 
         GameSave save = new GameSave(Version, player, w2json, holder);
         JsonData saveJson = JsonMapper.ToJson(save);
-        File.WriteAllText(Manager.SaveDirectory, saveJson.ToString());
+        string saveFilePath = Manager.SaveDirectory + "/" + player.Name + ".axu";
+
+        File.WriteAllText(saveFilePath, saveJson.ToString());
     }
 
-    void RemoveStuffAt(int x, int y)
+    void RemoveStuffAt(int x, int y, int z)
     {
         List<NPCCharacter> npcs = new List<NPCCharacter>(chars);
         List<WorldObject> wObjects = new List<WorldObject>(w2json.Objects);
 
         foreach (NPCCharacter n in npcs)
         {
-            if (n.WP[2] == 0 && n.WP[0] == x && n.WP[1] == y && !n.Flags.Contains(NPC_Flags.Static))
+            if (n.WP[2] == 0 && n.WP[0] == x && n.WP[1] == y && n.WP[2] == z && n.CanDiscard())
                 chars.Remove(n);
         }
 
         foreach (WorldObject w in wObjects)
         {
-            if (w.WP == null || w.WP.Length < 3 || w.WP[2] == 0 && w.WP[0] == x && w.WP[1] == y)
+            if (w.WP[0] == x && w.WP[1] == y && w.WP[2] == z)
                 w2json.Objects.Remove(w);
         }
-
-        w2json.Objects = wObjects;
-        chars = npcs;
     }
 
-    void AddDataToArray(ScreenHolder holder, ScreenToJson s2json)
+    void AddDataToArray(ref ScreenHolder holder, ScreenToJson s2json)
     {
-        /*if (s2json.LTS != 0 && s2json.P[2] == 0 && World.objectManager.CanDiscard(s2json.P[0], s2json.P[1]) && Turn_Num - s2json.LTS > Cutoffthreshold) {
-			//Debug.Log(Turn_Num.ToString() + " - " + s2json.LTS.ToString() + " = " + (Turn_Num - s2json.LTS).ToString());
-			RemoveStuffAt(s2json.P[0], s2json.P[1]);
-		} else*/
-        holder.Sc.Add(s2json);
+        if (s2json.LTS > 0 && s2json.P[2] == 0 && World.objectManager.CanDiscard(s2json.P[0], s2json.P[1], s2json.P[2]) && Turn_Num - s2json.LTS >= Cutoffthreshold)
+        {
+			RemoveStuffAt(s2json.P[0], s2json.P[1], s2json.P[2]);
+		} else
+            holder.Sc.Add(s2json);
     }
 }
 
@@ -117,7 +114,7 @@ public class OldWorld
 
     public void LoadWorldData()
     {
-        loadJson = File.ReadAllText(Manager.SaveDirectory);
+        loadJson = File.ReadAllText(Manager.SaveDirectory + "/" + Manager.playerName + ".axu");
         wData = JsonMapper.ToObject(loadJson)["World"];
         ObjectManager objM = GameObject.FindObjectOfType<ObjectManager>();
         objM.GetComponent<TurnManager>().turn = (int)wData["Turn_Num"];
@@ -153,6 +150,7 @@ public class OldWorld
             n.firearm = SaveData.GetItemFromJsonData(wData["NPCs"][i]["F"]);
 
             objM.CreateNPC(n);
+            ObjectManager.SpawnedNPCs--;
 
             if (npcData["QN"] != null)
                 n.questID = npcData["QN"].ToString();
@@ -168,9 +166,6 @@ public class OldWorld
             string type = obj["Type"].ToString();
 
             MapObject m = new MapObject(type, new Coord(lp.x, lp.y), wp, elevation);
-
-            if (m.objectType == "Bloodstain" || m.objectType == "Bloodstain_Wall")
-                continue;
 
             //Inventory
             if (obj["Items"] != null)
@@ -214,18 +209,20 @@ public class OldScreens
 
     public OldScreens()
     {
-        loadJson = File.ReadAllText(Manager.SaveDirectory);
+        loadJson = File.ReadAllText(Manager.SaveDirectory + "/" + Manager.playerName + ".axu");
         sData = JsonMapper.ToObject(loadJson)["Local"];
     }
 
     public int LastTurnSeen(int x, int y, int z = 0)
     {
-        for (int i = 0; i < sData["Sc"].Count; i++)
+        JsonData sc = sData["Sc"];
+
+        for (int i = 0; i < sc.Count; i++)
         {
-            if ((int)sData["Sc"][i]["P"][0] == x && (int)sData["Sc"][i]["P"][1] == y)
+            if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y)
             {
-                if ((int)sData["Sc"][i]["P"][2] == z)
-                    return (int)sData["Sc"][i]["LTS"];
+                if ((int)sc[i]["P"][2] == z)
+                    return (int)sc[i]["LTS"];
             }
         }
 
@@ -234,11 +231,13 @@ public class OldScreens
 
     public bool dataExists(int x, int y, int z = 0)
     {
-        for (int i = 0; i < sData["Sc"].Count; i++)
+        JsonData sc = sData["Sc"];
+
+        for (int i = 0; i < sc.Count; i++)
         {
-            if ((int)sData["Sc"][i]["P"][0] == x && (int)sData["Sc"][i]["P"][1] == y)
+            if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y)
             {
-                if ((int)sData["Sc"][i]["P"][2] == z)
+                if ((int)sc[i]["P"][2] == z)
                     return true;
             }
         }
@@ -286,6 +285,7 @@ public class WorldToJson
     public List<WorldObject> Objects;
     public int Turn_Num, Danger_Level, Spawned_NPCs;
     public Difficulty Diff;
+    public string Time;
 
     public WorldToJson(List<NPCCharacter> npcs, List<MapObject> objects, int tn, int dl, int spwned, Difficulty diff)
     {
@@ -294,6 +294,7 @@ public class WorldToJson
         Danger_Level = dl;
         Spawned_NPCs = spwned;
         Diff = diff;
+        Time = System.DateTime.Now.ToString();
 
         Objects = new List<WorldObject>();
 

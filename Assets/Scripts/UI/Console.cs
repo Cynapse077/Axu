@@ -536,8 +536,6 @@ public class Console : MonoBehaviour
             }
 
             tileMap.HardRebuild();
-            tileMap.LightCheck(playerEntity);
-
             return;
         }
         else if (parsedText[0] == "danger")
@@ -879,22 +877,27 @@ public class Console : MonoBehaviour
         {
             if (parsedText.Length < 2)
             {
-                MyConsole.Error("Select a body part integer to sever.");
+                MyConsole.Error("Select a body part integer to sever, or type random.");
                 return;
             }
+
             if (parsedText[1] == "random")
             {
                 int limbNum = Random.Range(0, playerEntity.body.bodyParts.Count);
+
                 if (playerEntity.body.bodyParts[limbNum].severable)
                 {
                     playerEntity.body.RemoveLimb(limbNum);
                     MyConsole.NewMessage("    Removed Limb " + limbNum.ToString());
                 }
+
                 return;
             }
+
             int ln = int.Parse(parsedText[1]);
             playerEntity.body.RemoveLimb(ln);
             MyConsole.NewMessage("    Removed Limb " + ln.ToString());
+
             return;
         }
 
@@ -1026,63 +1029,63 @@ public class Console : MonoBehaviour
             MyConsole.NewMessage(" Note: Spaces are used to parse the string.");
             MyConsole.NewMessageColor("  <b>Commands:</b>", Color.red);
 
-            MyConsole.NewMessage("  -<b>unstuck/unstick</b>\n    Teleports you to a random floor tile if stuck.");
+            MyConsole.NewMessage("  - <b>unstuck/unstick</b>\n    Teleports you to a random floor tile if stuck.");
             MyConsole.NewHelpLine("location", "Displays the current world coordinate.");
             MyConsole.NewHelpLine("go [direction]", "Travel one screen in a direction. [direction] = \"up\", \"down\", \"north\", \"south\", \"east\", \"west\", \"surface\".\n" +
                 "You can also travel to any landmark. Use: \"arena\", \"ensis\", \"cult\", \"cathedral\", \"powerplant\", \"xul\", \"volcano\", \"frostborne\", \"oasis\", \"magna\". or specify a biome ID.");
-            MyConsole.NewHelpLine("setpos [x] [y]", "Travel to a specific world position. Constraints: 0-199 on each axis.");
-            MyConsole.NewMessage("  -<b>godmode</b> <i>[0-1]</i>\n      [0] = off\n      [1] = on");
-            MyConsole.NewMessage("  -<b>fov</b> <i>[0-1]</i>\n      Whether to show fog of war or not. \n0 = off  1 = on");
-            MyConsole.NewMessage("  -<b>explore</b> <i>[0-1]</i>\n      [0] = off\n      [1] = on\n      Enables or disables map encounters.");
-            MyConsole.NewMessage("  -<b>gold</b> <i>[amount]</i>\n      Gives [amount] gold to the player.");
-            MyConsole.NewMessage("  -<b>spawn npc</b> <i>[ID] [x] [y]</i>\n      Spawns an NPC at a position relative to the player.");
-            MyConsole.NewMessage("  -<b>spawn object</b> <i>[ID] [x] [y]</i>\n      Spawns an object at a position relative to the player.");
-
-            MyConsole.NewMessage("  -<b>set <i>[stat] [value]</i></b>\n      Sets a specific stat to the selected value.");
-            MyConsole.NewMessage("  -<b>xp <i>[amount]</i></b>\n      gain [amount] XP.");
-            MyConsole.NewMessage("  -<b>sever</b> <i>[limb index] or \"random\"</i>\n      Severs numbered limb, or random.");
-            MyConsole.NewMessage("  -<b>reattach</b> <i>[limb index] or \"all\"</i>\n      Re-attaches limb at index, or all.");
-
-            MyConsole.NewMessage("  -<b>items</b>\n      Displays all item names with their IDs.");
-            MyConsole.NewMessage("  -<b>give/grant</b> <i>[item name]</i>\n      Give a specified item to the player.");
-            MyConsole.NewMessage("  -<b>multigive/multigrant</b> <i>[amount] [item name]</i>\n      Give a specific number of a specified item to the player.");
-            MyConsole.NewMessage("  -<b>mods</b>\n    Lists all the item modifiers.");
-            MyConsole.NewMessage("  -<b>modwep</b> <i>[mod ID]</i>\n    Modifies the first non-severed hand's equipped weapon with the selected modifier ID.");
-
-            MyConsole.NewMessage("  -<b>abilities</b>\n      Displays all ability names with their IDs.");
-            MyConsole.NewMessage("  -<b>levelabilities</b>\n    Gives all current abilities enough XP to level up. Does not work on abilities that do not gain XP.");
-            MyConsole.NewMessage("  -<b>traits</b>\n      Displays all the trait names with their IDs.");
-            MyConsole.NewMessage("  -<b>givetrait</b> <i>[trait ID]</i>\n      Give a specified trait or mutation to the player.");
-            MyConsole.NewMessage("  -<b>removetrait</b> <i>[trait ID]</i>\n      Remove a specified trait or mutation from the player.");
-            MyConsole.NewMessage("  -<b>mutate</b> <i>[mutation ID]</i>\n      Gives the player the specified mutation.");
-            MyConsole.NewMessage("  -<b>unmutate</b>\n      Removes a random mutation.");
-            MyConsole.NewMessage("  -<b>unmutate all</b>\n      Removes all mutations.");
-            MyConsole.NewMessage("  -<b>giveskill/giveability</b> <i>[ability ID]</i>\n      Give a specified ability to the player.");
-            MyConsole.NewMessage("  -<b>levelabilities</b>\n    Increases the level of all abilities by one.");
-
-            MyConsole.NewMessage("  -<b>danger</b>\n      Displays the current world danger level.");
-            MyConsole.NewMessage("  -<b>killme</b>\n      Kills your character.");
-            MyConsole.NewMessage("  -<b>heal</b>\n      Heals the player fully.");
-            MyConsole.NewMessage("  -<b>injure</b> <i>[amount]</i>\n      Injures the player by a certain amount.");
-            MyConsole.NewMessage("  -<b>givestatus</b> <i>[effect name] [amount]</i>\n    Gives the player a particular status effect. Poison, Blind, Bleed, Haste, Regen, etc...");
-            MyConsole.NewMessage("  -<b>followme</b>\n    All on-screen NPCs become followers.");
-
-            MyConsole.NewMessage("  -<b>removeblockers<b>\n    Removes all blockers from the current screen.");
-            MyConsole.NewMessage("  -<b>opendoors<b>\n    Opens all doors on the current screen, regardless of permissions.");
-            MyConsole.NewMessage("  -<b>closedoors<b>\n    Closes all doors on the current screen, regardless of permissions.");
-
-            MyConsole.NewMessage("  -<b>load <i>[map name]</i></b>\n    Loads a map by its name.");
-            MyConsole.NewMessage("  -<b>detonate</b>\n      Kills all NPCs on the screen.");
-            MyConsole.NewMessage("  -<b>reveal</b>\n      Reveals all tiles on the map");
-            MyConsole.NewMessage("  -<b>wizard</b>\n      Combines the previous two commands. Kills all NPCs on screen, and reveals the map. Cuz... Cynapse is lazy.");
-            MyConsole.NewMessage("  -<b>completequest</b>\n    Completes the current tracked quest.");
-            MyConsole.NewMessage("  -<b>startquest</b> <i>[ID]</i>\n    Starts the quest with the input ID.");
-            MyConsole.NewMessage("  -<b>questflag <i>[flag]</i></b>\n    Gives the player the input quest flag. Possibilities: " +
+            MyConsole.NewHelpLine("  - <b>setpos [x] [y]</b>", "Travel to a specific world position. Constraints: 0-199 on each axis.");
+            MyConsole.NewMessage("  - <b>godmode</b> <i>[0-1]</i>\n      [0] = off\n      [1] = on");
+            MyConsole.NewMessage("  - <b>fov</b> <i>[0-1]</i>\n      Whether to show fog of war or not. \n0 = off  1 = on");
+            MyConsole.NewMessage("  - <b>explore</b> <i>[0-1]</i>\n      [0] = off\n      [1] = on\n      Enables or disables map encounters.");
+            MyConsole.NewMessage("  - <b>gold</b> <i>[amount]</i>\n      Gives [amount] gold to the player.");
+            MyConsole.NewMessage("  - <b>spawn npc</b> <i>[ID] [x] [y]</i>\n      Spawns an NPC at a position relative to the player.");
+            MyConsole.NewMessage("  - <b>spawn object</b> <i>[ID] [x] [y]</i>\n      Spawns an object at a position relative to the player.");
+                                      
+            MyConsole.NewMessage("  - <b>set <i>[stat] [value]</i></b>\n      Sets a specific stat to the selected value.");
+            MyConsole.NewMessage("  - <b>xp <i>[amount]</i></b>\n      gain [amount] XP.");
+            MyConsole.NewMessage("  - <b>sever</b> <i>[limb index] or \"random\"</i>\n      Severs numbered limb, or random.");
+            MyConsole.NewMessage("  - <b>reattach</b> <i>[limb index] or \"all\"</i>\n      Re-attaches limb at index, or all.");
+                                      
+            MyConsole.NewMessage("  - <b>items</b>\n      Displays all item names with their IDs.");
+            MyConsole.NewMessage("  - <b>give/grant</b> <i>[item name]</i>\n      Give a specified item to the player.");
+            MyConsole.NewMessage("  - <b>multigive/multigrant</b> <i>[amount] [item name]</i>\n      Give a specific number of a specified item to the player.");
+            MyConsole.NewMessage("  - <b>mods</b>\n    Lists all the item modifiers.");
+            MyConsole.NewMessage("  - <b>modwep</b> <i>[mod ID]</i>\n    Modifies the first non-severed hand's equipped weapon with the selected modifier ID.");
+                                      
+            MyConsole.NewMessage("  - <b>abilities</b>\n      Displays all ability names with their IDs.");
+            MyConsole.NewMessage("  - <b>levelabilities</b>\n    Gives all current abilities enough XP to level up. Does not work on abilities that do not gain XP.");
+            MyConsole.NewMessage("  - <b>traits</b>\n      Displays all the trait names with their IDs.");
+            MyConsole.NewMessage("  - <b>givetrait</b> <i>[trait ID]</i>\n      Give a specified trait or mutation to the player.");
+            MyConsole.NewMessage("  - <b>removetrait</b> <i>[trait ID]</i>\n      Remove a specified trait or mutation from the player.");
+            MyConsole.NewMessage("  - <b>mutate</b> <i>[mutation ID]</i>\n      Gives the player the specified mutation.");
+            MyConsole.NewMessage("  - <b>unmutate</b>\n      Removes a random mutation.");
+            MyConsole.NewMessage("  - <b>unmutate all</b>\n      Removes all mutations.");
+            MyConsole.NewMessage("  - <b>giveskill/giveability</b> <i>[ability ID]</i>\n      Give a specified ability to the player.");
+            MyConsole.NewMessage("  - <b>levelabilities</b>\n    Increases the level of all abilities by one.");
+                                      
+            MyConsole.NewMessage("  - <b>danger</b>\n      Displays the current world danger level.");
+            MyConsole.NewMessage("  - <b>killme</b>\n      Kills your character.");
+            MyConsole.NewMessage("  - <b>heal</b>\n      Heals the player fully.");
+            MyConsole.NewMessage("  - <b>injure</b> <i>[amount]</i>\n      Injures the player by a certain amount.");
+            MyConsole.NewMessage("  - <b>givestatus</b> <i>[effect name] [amount]</i>\n    Gives the player a particular status effect. Poison, Blind, Bleed, Haste, Regen, etc...");
+            MyConsole.NewMessage("  - <b>followme</b>\n    All on-screen NPCs become followers.");
+                                      
+            MyConsole.NewMessage("  - <b>removeblockers</b>\n    Removes all blockers from the current screen.");
+            MyConsole.NewMessage("  - <b>opendoors</b>\n    Opens all doors on the current screen, regardless of permissions.");
+            MyConsole.NewMessage("  - <b>closedoors</b>\n    Closes all doors on the current screen, regardless of permissions.");
+                                      
+            MyConsole.NewMessage("  - <b>load <i>[map name]</i></b>\n    Loads a map by its name.");
+            MyConsole.NewMessage("  - <b>detonate</b>\n      Kills all NPCs on the screen.");
+            MyConsole.NewMessage("  - <b>reveal</b>\n      Reveals all tiles on the map");
+            MyConsole.NewMessage("  - <b>wizard</b>\n      Combines the previous two commands. Kills all NPCs on screen, and reveals the map. Cuz... Cynapse is lazy.");
+            MyConsole.NewMessage("  - <b>completequest</b>\n    Completes the current tracked quest.");
+            MyConsole.NewMessage("  - <b>startquest</b> <i>[ID]</i>\n    Starts the quest with the input ID.");
+            MyConsole.NewMessage("  - <b>questflag <i>[flag]</i></b>\n    Gives the player the input quest flag. Possibilities: " +
                 "\n\tCan_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Break_Prisoner_Inhibitor, Hostile_To_Kin, Hostile_To_Ensis, Hunts_Available, Arena_Available");
-            MyConsole.NewMessage("  -<b>weather <i>[amount (0-3)]</i></b>\n    Sets the world weather to the appropriate number.");
-            MyConsole.NewMessage("  -<b>5k</b>\n    Increases the turn counter by 5000.");
-            MyConsole.NewMessage("  -<b>log</b>\n    Write a message to the combat log.");
-            MyConsole.NewMessage("  -<b>limbtest</b>\n    Test for severing/attaching limbs.");
+            MyConsole.NewMessage("  - <b>weather <i>[amount (0-3)]</i></b>\n    Sets the world weather to the appropriate number.");
+            MyConsole.NewMessage("  - <b>5k</b>\n    Increases the turn counter by 5000.");
+            MyConsole.NewMessage("  - <b>log</b>\n    Write a message to the combat log.");
+            MyConsole.NewMessage("  - <b>limbtest</b>\n    Test for severing/attaching limbs.");
 
             MyConsole.DoubleLine();
             return;

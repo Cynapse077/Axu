@@ -4,7 +4,6 @@ using UnityEngine.EventSystems;
 
 public class OnHover_ShowTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-
     public Transform tooltip;
     public string textToDisplay;
 

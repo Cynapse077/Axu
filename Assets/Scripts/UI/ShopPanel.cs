@@ -76,9 +76,13 @@ public class ShopPanel : MonoBehaviour
         Item item = null;
 
         if (World.userInterface.column == 0 && merchantBase.childCount > 0 && merchantBase.childCount > UserInterface.selectedItemNum)
+        {
             item = merchantInventory.items[UserInterface.selectedItemNum];
+        }
         else if (inventoryBase.childCount > 0 && inventoryBase.childCount > UserInterface.selectedItemNum)
+        {
             item = playerInventory.items[UserInterface.selectedItemNum];
+        }
 
         ToolTip.UpdateTooltip(item, true, true);
     }

@@ -127,7 +127,7 @@ end
 
 --Vampiric Blood
 function OnDrink_Blood_Vamp(stats)
-	if (stats.entity.isPlayer) then
+	if (stats.entity.isPlayer and not stats.hasTrait("pre_vamp")) then
 		stats.InitializeNewTrait(TraitList.GetTraitByID("pre_vamp"))
 		Alert.CustomAlert_WithTitle("Vampirism!", "You have contracted Fledgling Vampirism from drinking tainted blood!")
 		OnDrink_Blood(stats)
@@ -147,7 +147,7 @@ end
 
 --Leprosic Blood
 function OnDrink_Blood_Lep(stats)
-	if (stats.entity.isPlayer) then
+	if (stats.entity.isPlayer and not stats.hasTrait("leprosy")) then
 		stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"))
 		Alert.CustomAlert_WithTitle("Leprosy!", "You have contracted Leprosy from drinking tainted blood!")
 		OnDrink_Blood(stats)

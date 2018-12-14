@@ -39,7 +39,7 @@ public class ObjectManager : MonoBehaviour
 
         World.objectManager = this;
         onScreenNPCObjects = new List<Entity>();
-        StartCoroutine("Initialize");
+        StartCoroutine("Initialize", Manager.playerName);
     }
 
     void GetVars()
@@ -50,13 +50,13 @@ public class ObjectManager : MonoBehaviour
 
     }
 
-    IEnumerator Initialize()
+    IEnumerator Initialize(string playerName)
     {
         Alert.LoadAlerts();
         GetComponent<UserInterface>().loadingGO.SetActive(true);
 
         if (!Manager.newGame)
-            GetComponent<SaveData>().LoadPlayer();
+            GetComponent<SaveData>().LoadPlayer(playerName);
 
         CreateWorldMap();
 
@@ -109,30 +109,21 @@ public class ObjectManager : MonoBehaviour
         tileMap.Init();
     }
 
-    public bool CanDiscard(int x, int y)
+    public bool CanDiscard(int x, int y, int z)
     {
-        if (x == World.tileMap.worldCoordX && y == World.tileMap.worldCoordY)
+        if (x == World.tileMap.worldCoordX && y == World.tileMap.worldCoordY && z == World.tileMap.currentElevation)
+        {
             return false;
+        }
 
+        Coord homePos = World.tileMap.worldMap.GetLandmark("Home");
 
-        //TODO: Check if recently open, or has important quest details.
-        /*List<NPC> ns = NPCsAt(new Coord(x, y));
+        if (homePos.x == x && homePos.y == y && z == 0)
+        {
+            return false;
+        }
 
-        for (int i = 0; i < ns.Count; i++) {
-            if (ns[i].HasFlag(NPC_Flags.Static) || ns[i].HasFlag(NPC_Flags.Follower) || ns[i].questID != "")
-                return false;
-
-
-            if (ns[i].HasFlag(NPC_Flags.Doctor) || ns[i].HasFlag(NPC_Flags.Merchant) || ns[i].HasFlag(NPC_Flags.SpawnedFromQuest))
-                return false;
-
-            for (int j = 0; j < playerJournal.quests.Count; j++) {
-                if (ns[i] == playerJournal.quests[j].questGiver)
-                    return false;
-            }
-        }*/
-
-        return false;
+        return true;
     }
 
     public void SpawnPlayer()
@@ -314,7 +305,9 @@ public class ObjectManager : MonoBehaviour
     public void CreateNPC(NPC npcB)
     {
         if (!npcClasses.Contains(npcB))
+        {
             npcClasses.Add(npcB);
+        }
     }
 
     //Clears the screen of NPCs
@@ -625,7 +618,7 @@ public class ObjectManager : MonoBehaviour
     {
         List<Coord> takenPositions = new List<Coord>();
 
-        for (int i = 0; i < SeedManager.localRandom.Next(2, 6); i++)
+        for (int i = 0; i < SeedManager.localRandom.Next(2, 5); i++)
         {
             Coord c = h.GetRandomPosition();
 
@@ -640,18 +633,14 @@ public class ObjectManager : MonoBehaviour
 
     void HospitalObjects(House h, Coord worldPos)
     {
-        List<Coord> takenPositions = new List<Coord>();
+        List<Coord> poses = h.Interior();
 
-        for (int i = 0; i < SeedManager.localRandom.Next(4, 6); i++)
+        for (int i = 0; i < poses.Count; i++)
         {
-            Coord c = h.GetRandomPosition();
-
-            if (takenPositions.Contains(c))
-                c = h.GetRandomPosition();
-
-            takenPositions.Add(c);
-
-            NewObjectAtOtherScreen("Barrel", c, worldPos);
+            if (poses[i].x % 2 == 0 && poses[i].y % 2 == 0)
+            {
+                NewObjectAtOtherScreen("Bed", poses[i], worldPos);
+            }
         }
     }
 
@@ -849,7 +838,7 @@ public class ObjectManager : MonoBehaviour
             Manager.playerBuilder.quests.Clear();
             Manager.playerBuilder.progressFlags.Clear();
             GameSettings.Save();
-            GetComponent<SaveData>().SaveNPCs(npcClasses, true);
+            GetComponent<SaveData>().SaveNPCs(npcClasses);
             World.Reset();
         }
 

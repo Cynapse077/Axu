@@ -48,7 +48,8 @@
             "Place At" : {
                 "Biome" : "Any Land",
                 "Location" : "Village"
-            }
+            },
+			"Underground" : "Crypt"
         },
         {
             "ID" : "Rich District",
@@ -616,6 +617,15 @@
 			"Display" : "Magna Dwyll",
 			"Depth" : 10,
 			"Light" : 6,
+			"Rules" : {
+				"Load" : true
+			}
+		},
+		{
+			"ID" : "Crypt",
+			"Display" : "Crypt",
+			"Depth" : 6,
+			"Light" : 3,
 			"Rules" : {
 				"Load" : true
 			}

@@ -1,42 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class LocalizedText : MonoBehaviour {
+public class LocalizedText : MonoBehaviour
+{
+    public string key;
+    public bool setBySelf = false;
+    string _baseText;
 
-	public string key;
-	public bool setBySelf = false;
-	string _baseText;
+    public string BaseText
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_baseText))
+                GetLocalizedText(key);
 
-	public string BaseText {
-		get {
-			if (string.IsNullOrEmpty(_baseText))
-				GetLocalizedText(key);
+            return _baseText;
+        }
+    }
 
-			return _baseText;
-		}
-	}
+    void Start()
+    {
+        if (setBySelf && GetComponent<Text>())
+            GetComponent<Text>().text = BaseText;
+    }
 
-	void Start() {
-		if (setBySelf && GetComponent<Text>())
-			GetComponent<Text>().text = BaseText;
-	}
+    public void GetLocalizedText(string searchKey = "")
+    {
+        if (searchKey == "")
+            searchKey = key;
 
-	public void GetLocalizedText(string searchKey = "") {
-		if (searchKey == "")
-			searchKey = key;
-		
-		string[] content = LocalizationManager.GetLocalizedContent(searchKey);
+        string[] content = LocalizationManager.GetLocalizedContent(searchKey);
 
-		_baseText = content[0];
+        _baseText = content[0];
 
-		if (GetComponent<OnHover_ShowTooltip>() != null)
-			GetComponent<OnHover_ShowTooltip>().textToDisplay = content[1];
-	}
+        if (GetComponent<OnHover_ShowTooltip>() != null)
+            GetComponent<OnHover_ShowTooltip>().textToDisplay = content[1];
+    }
 
-	public void SetText(string searchKey) {
-		GetLocalizedText(searchKey);
-		GetComponent<Text>().text = BaseText;
-	}
+    public void SetText(string searchKey)
+    {
+        GetLocalizedText(searchKey);
+        GetComponent<Text>().text = BaseText;
+    }
 }

@@ -107,7 +107,6 @@ public class MapCreatorTool : MonoBehaviour
 
             n++;
         }
-
     }
 
     void SetupTiles()
@@ -117,8 +116,7 @@ public class MapCreatorTool : MonoBehaviour
         if (Tile.tiles == null || Tile.tiles.Count <= 0)
             Tile.InitializeTileDictionary();
 
-        CurrentTile = 32;
-
+        CurrentTile = 0;
         Sprites = TileMap.LoadImageFromStreamingAssets(10, 12);
 
         List<string> tileIDs = new List<string>();
@@ -482,6 +480,16 @@ public class MapCreatorTool : MonoBehaviour
                     else if (tile.HasTag("Construct_Kin"))
                     {
                         tIndex = 22;
+                        eightWay = true;
+                    }
+                    else if (tile.HasTag("Construct_Store"))
+                    {
+                        tIndex = 5;
+                        eightWay = true;
+                    }
+                    else if (tile.HasTag("Construct_Hospital"))
+                    {
+                        tIndex = 2;
                         eightWay = true;
                     }
 

@@ -178,8 +178,11 @@ public class CombatComponent
                 destination = newPos;
         }
 
+        if (entity.isPlayer || entity.AI.InSightOfPlayer())
+            CombatLog.NameItemMessage("Message_ThrowItem", entity.MyName, itemForThrowing.DisplayName());
+
         //Instantiate
-        entity.InstatiateThrowingEffect(destination);
+        entity.InstatiateThrowingEffect(destination, 1.0f);
 
         if (!itemForThrowing.HasProp(ItemProperty.Explosive))
         {
@@ -193,7 +196,9 @@ public class CombatComponent
         itemForThrowing = null;
 
         if (entity.isPlayer)
+        {
             MyStats.AddProficiencyXP(MyStats.proficiencies.Throwing, MyStats.Intelligence);
+        }
 
         entity.EndTurn(0.3f);
     }
@@ -216,7 +221,8 @@ public class CombatComponent
             td.pos.y += SeedManager.combatRandom.Next(-1, 2);
         }
 
-        entity.BulletTrail(entity.myPos.toVector2(), td.pos.toVector2());
+        //entity.BulletTrail(entity.myPos.toVector2(), td.pos.toVector2());
+        entity.InstatiateThrowingEffect(td.pos, 2.0f);
 
         td.damage = entity.inventory.firearm.CalculateDamage(entity.stats.Dexterity - 4, entity.stats.CheckProficiencies(entity.inventory.firearm).level);
         td.crit = entity.inventory.firearm.AttackCrits(entity.stats.proficiencies.Firearm.level + 1);

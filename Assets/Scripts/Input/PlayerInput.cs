@@ -168,12 +168,8 @@ public class PlayerInput : MonoBehaviour
         questPointer.OnChangeWorldMapPosition();
         World.userInterface.ChangeMapNameInSideBar();
 
-        if (KeyDown("Map") && World.tileMap.currentElevation == 0 && World.userInterface.NoWindowsOpen)
-        {
-            TriggerLocalOrWorldMap();
-            return;
-        }
-        else if (fullMap && (KeyDown("GoDownStairs") || KeyDown("Enter") || KeyDown("Pause")))
+        if (KeyDown("Map") && World.tileMap.currentElevation == 0 && World.userInterface.NoWindowsOpen 
+            || fullMap && (KeyDown("GoDownStairs") || KeyDown("Enter") || KeyDown("Pause")))
         {
             TriggerLocalOrWorldMap();
             return;
@@ -255,6 +251,8 @@ public class PlayerInput : MonoBehaviour
             HoldKeys();
         else
             SingleInput();
+
+        AbilityHotkeys();
 
         if (KeyDown("Look") && !fireWeapon)
         {
@@ -505,6 +503,50 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    void AbilityHotkeys()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) && skills.abilities.Count > 0)
+        {
+            skills.abilities[0].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && skills.abilities.Count > 1)
+        {
+            skills.abilities[1].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && skills.abilities.Count > 2)
+        {
+            skills.abilities[2].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4) && skills.abilities.Count > 3)
+        {
+            skills.abilities[3].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5) && skills.abilities.Count > 4)
+        {
+            skills.abilities[4].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6) && skills.abilities.Count > 5)
+        {
+            skills.abilities[5].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha7) && skills.abilities.Count > 6)
+        {
+            skills.abilities[6].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8) && skills.abilities.Count > 8)
+        {
+            skills.abilities[7].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha9) && skills.abilities.Count > 9)
+        {
+            skills.abilities[8].Cast(entity);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha0) && skills.abilities.Count > 10)
+        {
+            skills.abilities[9].Cast(entity);
+        }
+    }
+
     void Refresh()
     {
         waitForRefresh = false;
@@ -680,7 +722,9 @@ public class PlayerInput : MonoBehaviour
                 timePass = (y != 0) ? 20 : 30;
 
             if (playerInventory.CanFly())
+            {
                 timePass /= 2;
+            }
 
             if (playerInventory.overCapacity())
             {
@@ -708,7 +752,7 @@ public class PlayerInput : MonoBehaviour
                 sidePanelUI.SetActive(!fullMap);
 
                 Item item = null;
-                int goldAmount = (playerInventory.gold > 0) ? UnityEngine.Random.Range(playerInventory.gold / 2, playerInventory.gold + 1) : 100;
+                int goldAmount = (playerInventory.gold > 0) ? Random.Range(playerInventory.gold / 2, playerInventory.gold + 1) : 100;
 
                 if (playerInventory.items.Count > 0 && SeedManager.combatRandom.CoinFlip())
                     item = playerInventory.items.GetRandom();
@@ -796,7 +840,7 @@ public class PlayerInput : MonoBehaviour
 
         BringNPCs2();
         World.objectManager.NoStickNPCs(entity.posX, entity.posY);
-        World.tileMap.LightCheck(ObjectManager.playerEntity);
+        World.tileMap.LightCheck();
 
         entity.EndTurn(0.1f, entity.GetSpeed());
         CheckMinimap();
@@ -876,11 +920,13 @@ public class PlayerInput : MonoBehaviour
         if (!fullMap)
         {
             if (storedTravelPos != World.tileMap.WorldPosition)
+            {
                 World.tileMap.HardRebuild();
+                World.tileMap.CheckNPCTiles();
+                entity.ForcePosition();
+            }
 
-            World.tileMap.CheckNPCTiles();
-            World.tileMap.LightCheck(GetComponent<Entity>());
-            entity.ForcePosition();
+            World.tileMap.LightCheck();
         }
     }
 

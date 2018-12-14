@@ -407,7 +407,7 @@
             "Name" : "Vampire Nest 1",
             "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 13,
-            "Depth" : 12,
+            "Depth" : 5,
             "Possibilities" : [
                 { "Weight" : 10, "Amount" : "2d3", "Blueprint" : "vamp" }
 

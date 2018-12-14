@@ -78,13 +78,14 @@ public class InventoryPanel : UIPanel
 
     Item GetEquipmentSlot()
     {
-        if (SelectedNum < curInv.entity.body.Hands.Count)
-            return curInv.entity.body.Hands[SelectedNum].EquippedItem;
+        int handCount = curInv.entity.body.Hands.Count;
 
-        else if (SelectedNum == curInv.entity.body.Hands.Count)
+        if (SelectedNum < handCount)
+            return curInv.entity.body.Hands[SelectedNum].EquippedItem;
+        else if (SelectedNum == handCount)
             return curInv.firearm;
         else
-            return curInv.entity.body.bodyParts[SelectedNum - curInv.entity.body.Hands.Count - 1].equippedItem;
+            return curInv.entity.body.bodyParts[SelectedNum - handCount - 1].equippedItem;
     }
 
     public override void Update()

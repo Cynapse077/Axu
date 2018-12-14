@@ -13,27 +13,11 @@ public class Liquid : IWeighted
     public int addictiveness;
     public int Weight { get; set; }
     public Color32 color;
+    public List<CLuaEvent> events;
 
-    List<CLuaEvent> events;
-
-    public Liquid() { }
-
-    public Liquid(string id, string name, string desc, int rar, int ppu, int adct, List<CLuaEvent> ev, Color32 col)
+    public Liquid()
     {
-        ID = id;
-        Name = name;
-        Description = desc;
-        Weight = rar;
-        pricePerUnit = ppu;
-        addictiveness = adct;
-        events = ev;
-        color = col;
-        units = 0;
-    }
-
-    public Liquid(Liquid other)
-    {
-        CopyFrom(other);
+        events = new List<CLuaEvent>();
     }
 
     public Liquid(Liquid other, int un)

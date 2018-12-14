@@ -917,59 +917,6 @@
             "Tooltip" : "Aflame: You will take damage every turn, unless doused with water or wait for flames to sputter out."
         }
     ],
-    "Display Hunger" : [
-        {
-            "ID" : "Food_1",
-            "Display" : "Full",
-            "Tooltip" : "Hunger: Full. You cannot fit anything more into your stomach."
-        },
-        {
-            "ID" : "Food_2",
-            "Display" : "Satiated",
-            "Tooltip" : "Hunger: Satiated. You could eat more, but much of it would go to waste."
-        },
-        {
-            "ID" : "Food_3",
-            "Display" : "Hungry",
-            "Tooltip" : "Hunger: Hungry. Your body is craving nutrition."
-        },
-        {
-            "ID" : "Food_4",
-            "Display" : "Ravenous!",
-            "Tooltip" : "Hunger: Ravenous. It would be a very good idea to eat something."
-        },
-        {
-            "ID" : "Food_5",
-            "Display" : "Starving!!",
-            "Tooltip" : "Hunger: Starving. You will start to take damage after starving for too long."
-        },
-
-        {
-            "ID" : "Thirst_1",
-            "Display" : "Slaked",
-            "Tooltip" : "Thirst: Slaked. You cannot drink any more blood."
-        },
-        {
-            "ID" : "Thirst_2",
-            "Display" : "Satiated",
-            "Tooltip" : "Thirst: Satiated. You could drink more, but much of it would go to waste."
-        },
-        {
-            "ID" : "Thirst_3",
-            "Display" : "Thirsty",
-            "Tooltip" : "Thirst: Thirsty. Your body is craving blood."
-        },
-        {
-            "ID" : "Thirst_4",
-            "Display" : "Withering!",
-            "Tooltip" : "Thirst: Withering. You need blood!"
-        },
-        {
-            "ID" : "Thirst_5",
-            "Display" : "Bone Dry!!",
-            "Tooltip" : "Thirst: Bone Dry. You will start to take damage if you do not get blood soon."
-        }
-    ],
     "Difficulties" : [
         {
             "ID" : "Difficulty",
@@ -1118,7 +1065,7 @@
         },
         {
             "ID" : "Title_Felony",
-            "Display" : "FELONY"
+            "Display" : "Felony"
         },
         {
             "ID" : "Title_Name",
@@ -1579,6 +1526,10 @@
     ],
     "Log" : [
 		{
+			"ID" : "Message_ThrowItem",
+			"Display" : "[NAME] throws a [ITEM]."
+		},
+		{
 			"ID" : "Message_Overburdened",
 			"Display" : "Your movement is slowed from carrying so much."
 		},
@@ -1829,6 +1780,10 @@
         {
             "ID" : "Message_Action_Drink",
             "Display" : "You drink from the [NAME]."
+        },
+		{
+            "ID" : "Message_Action_Consume",
+            "Display" : "You consume the [NAME]."
         },
         {
             "ID" : "Message_SE_Confuse",

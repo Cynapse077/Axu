@@ -377,7 +377,7 @@ public class Entity : MonoBehaviour
                                 OpenDoor(targetCell.mapObjects[i]);
 
                                 if (isPlayer)
-                                    World.tileMap.LightCheck(this);
+                                    World.tileMap.LightCheck();
                             }
                             else
                                 Wait();
@@ -534,7 +534,7 @@ public class Entity : MonoBehaviour
         if (isPlayer)
         {
             playerInput.SearchArea(myPos, true);
-            World.tileMap.LightCheck(this);
+            World.tileMap.LightCheck();
         }
 
         EndTurn();
@@ -629,7 +629,7 @@ public class Entity : MonoBehaviour
                     SetCell();
 
                     if (isPlayer)
-                        World.tileMap.LightCheck(this);
+                        World.tileMap.LightCheck();
                 }
                 else
                 {
@@ -701,7 +701,7 @@ public class Entity : MonoBehaviour
                 break;
 
             if (isPlayer)
-                World.tileMap.LightCheck(this);
+                World.tileMap.LightCheck();
 
             yield return new WaitForSeconds(0.01f);
         }
@@ -733,7 +733,7 @@ public class Entity : MonoBehaviour
         otherEntity.SetCell();
 
         if (isPlayer)
-            World.tileMap.LightCheck(this);
+            World.tileMap.LightCheck();
     }
 
     void OpenDoor(MapObjectSprite door)
@@ -862,10 +862,10 @@ public class Entity : MonoBehaviour
         lr.SetPosition(1, end + new Vector2(0.5f, 0.5f));
     }
 
-    public void InstatiateThrowingEffect(Coord destination)
+    public void InstatiateThrowingEffect(Coord destination, float spdMul)
     {
         GameObject lo = Instantiate(World.poolManager.throwEffect, transform.position, Quaternion.identity);
-        lo.GetComponent<LerpPos>().Init(destination);
+        lo.GetComponent<LerpPos>().Init(destination, spdMul);
     }
 
     public void Wait()

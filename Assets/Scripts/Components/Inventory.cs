@@ -208,7 +208,7 @@ public class Inventory : MonoBehaviour
         PickupItem(itemToPickup, false);
 
         if (entity.isPlayer && i.statMods.Find(x => x.Stat == "Light") != null)
-            World.tileMap.LightCheck(entity);
+            World.tileMap.LightCheck();
 
         if (World.soundManager != null)
             World.soundManager.UseItem();
@@ -255,7 +255,7 @@ public class Inventory : MonoBehaviour
 
     public int BurdenPenalty()
     {
-        if (!overCapacity())
+        if (!overCapacity() || !entity.isPlayer)
             return 0;
 
         return Mathf.Min((items.Count - maxItems) * 2, 10);
@@ -295,7 +295,7 @@ public class Inventory : MonoBehaviour
         RemoveInstance(i);
 
         if (entity.isPlayer && i.statMods.Find(x => x.Stat == "Light") != null)
-            World.tileMap.LightCheck(entity);
+            World.tileMap.LightCheck();
 
         if (World.soundManager != null)
             World.soundManager.UseItem();
@@ -489,7 +489,7 @@ public class Inventory : MonoBehaviour
         World.objectManager.UpdateDialogueOptions();
         items.Add(i);
 
-        if (overCapacity())
+        if (overCapacity() && entity.isPlayer)
         {
             CombatLog.SimpleMessage("Message_Overburdened");
         }
@@ -672,7 +672,7 @@ public class Inventory : MonoBehaviour
         else
         {
             RemoveInstance(i);
-            CombatLog.Action("Message_Action_Drink", LocalizationManager.GetContent("Action_Eat"), i.DisplayName());
+            CombatLog.NameMessage("Message_Action_Consume", i.DisplayName());
         }
 
         entity.Wait();
@@ -779,7 +779,7 @@ public class Inventory : MonoBehaviour
             return;
 
         //drop corpse
-        if (!entity.isPlayer && SeedManager.combatRandom.Next(100) < 20)
+        if (!entity.isPlayer && SeedManager.combatRandom.Next(100) < 5)
         {
             BaseAI bai = entity.AI ?? GetComponent<BaseAI>();
             Item corpseItem;

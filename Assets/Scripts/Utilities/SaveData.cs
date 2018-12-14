@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using LitJson;
 using System.IO;
@@ -8,7 +7,7 @@ public class SaveData : MonoBehaviour
 {
     JsonData playerJson;
 
-    public void SaveNPCs(List<NPC> npcs, bool correctOrientation)
+    public void SaveNPCs(List<NPC> npcs)
     {
         List<NPCCharacter> chars = new List<NPCCharacter>();
 
@@ -43,19 +42,17 @@ public class SaveData : MonoBehaviour
             chars.Add(character);
         }
 
-        int currentTurn = World.turnManager.turn;
-        //save the map data
-        new NewWorld(chars, currentTurn);
+        new NewWorld(chars, World.turnManager.turn);
     }
 
     /// <summary>
     /// Loads the player.
     /// </summary>
-    public void LoadPlayer()
+    public void LoadPlayer(string charName)
     {
         Manager.playerBuilder = new PlayerBuilder();
 
-        string jsonString = File.ReadAllText(Manager.SaveDirectory);
+        string jsonString = File.ReadAllText(Manager.SaveDirectory + "/" + charName + ".axu");
         playerJson = JsonMapper.ToObject(jsonString)["Player"];
 
         //Name
@@ -68,7 +65,8 @@ public class SaveData : MonoBehaviour
             null,
             (int)playerJson["xpLevel"]["CurrentLevel"],
             (int)playerJson["xpLevel"]["XP"],
-            (int)playerJson["xpLevel"]["XPToNext"]);
+            (int)playerJson["xpLevel"]["XPToNext"]
+        );
 
         //Positions
         Manager.localStartPos.x = (int)playerJson["LP"][0];
@@ -129,6 +127,7 @@ public class SaveData : MonoBehaviour
             string tName = playerJson["Traits"][i]["id"].ToString();
             Trait nTrait = TraitList.GetTraitByID(tName);
             nTrait.turnAcquired = (int)playerJson["Traits"][i]["tAc"];
+
             Manager.playerBuilder.traits.Add(nTrait);
         }
 

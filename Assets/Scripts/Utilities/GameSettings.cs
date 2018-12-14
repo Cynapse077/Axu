@@ -14,7 +14,7 @@ public static class GameSettings {
 
 	public static string version {
 		get {
-			return "0.7.1";
+			return "0.7.1 (Experimental)";
 		}
 	}
 

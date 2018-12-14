@@ -113,7 +113,7 @@ public class SlotSelectPanel : MonoBehaviour
 
         for (int i = 0; i < numActions; i++)
         {
-            GameObject g = (GameObject)Instantiate(button, transform);
+            GameObject g = Instantiate(button, transform);
             g.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(i); });
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(2, UIWindow.Inventory, true, false);
 
@@ -124,6 +124,7 @@ public class SlotSelectPanel : MonoBehaviour
             g.GetComponentInChildren<Text>().text = n + " - " + inv.entity.body.Hands[i].EquippedItem.InvDisplay(inv.baseWeapon);
         }
 
+        EventSystem.current.SetSelectedGameObject(null);
         SetSelectedNum(0);
     }
 }

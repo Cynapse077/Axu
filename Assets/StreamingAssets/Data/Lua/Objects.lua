@@ -49,7 +49,13 @@ function Interact_Cryopod(obj)
 end
 
 function Interact_Terminal(obj)
-	Log("<color=grey>You fiddle with the terminal.</color>")
+	if (obj.objectType == "Terminal_Off") then
+		obj.SetTypeAndSwapSprite("Terminal_On")
+		Log("You turn the terminal on.")
+	elseif (obj.objectType == "Terminal_On") then
+		obj.SetTypeAndSwapSprite("Terminal_Off")
+		Log("You turn the terminal off.")
+	end
 end
 
 function Interact_Stairlock(obj)

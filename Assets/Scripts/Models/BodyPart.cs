@@ -154,56 +154,42 @@ public class BodyPart : IWeighted
 
         level++;
         CombatLog.NameMessage("Limb_Stat_Gain", name);
+        string stat = "";
 
-        if (slot == ItemProperty.Slot_Arm)
+        switch (slot)
         {
-            if (level % 2 == 0)
-            {
-                GetStatMod("Dexterity").Amount++;
-                entity.stats.Attributes["Dexterity"]++;
-            }
-            else
-            {
-                GetStatMod("Strength").Amount++;
-                entity.stats.Attributes["Strength"]++;
-            }
+            case ItemProperty.Slot_Arm:
+                stat = (level % 2 == 0) ? "Dexterity" : "Strength";
+                break;
+            case ItemProperty.Slot_Chest:
+            case ItemProperty.Slot_Back:
+                stat = "Endurance";
+                entity.stats.maxHealth += 3;
+                entity.stats.maxStamina += 2;
+                break;
+            case ItemProperty.Slot_Head:
+                stat = "Intelligence";
+                break;
+            case ItemProperty.Slot_Leg:
+            case ItemProperty.Slot_Wing:
+                stat = "Speed";
+                break;
+            case ItemProperty.Slot_Tail:
+                stat = (level % 2 == 0) ? "Dexterity" : "Strength";
+                break;
         }
-        else if (slot == ItemProperty.Slot_Tail)
-        {
-            if (level % 2 == 0)
-            {
-                GetStatMod("Speed").Amount++;
-                entity.stats.Attributes["Speed"]++;
-            }
-            else if (entity.isPlayer)
-            {
-                GetStatMod("Stealth").Amount++;
-                entity.stats.Attributes["Stealth"]++;
-            }
-        }
-        else if (slot == ItemProperty.Slot_Chest || slot == ItemProperty.Slot_Back)
-        {
-            GetStatMod("Endurance").Amount++;
-            entity.stats.Attributes["Endurance"]++;
 
-            entity.stats.maxHealth += 3;
-            entity.stats.maxStamina += 2;
-        }
-        else if (slot == ItemProperty.Slot_Leg || slot == ItemProperty.Slot_Wing)
+        if (!string.IsNullOrEmpty(stat))
         {
-            GetStatMod("Speed").Amount++;
-            entity.stats.Attributes["Speed"]++;
-        }
-        else if (slot == ItemProperty.Slot_Head)
-        {
-            GetStatMod("Intelligence").Amount++;
-            entity.stats.Attributes["Intelligence"]++;
+            GetStatMod(stat).Amount++;
+            entity.stats.Attributes[stat]++;
         }
     }
 
     public void Sever(Entity entity)
     {
         _attached = false;
+        organic = true;
         equippedItem.OnUnequip(entity, false);
         Remove(entity.stats);
     }
@@ -275,8 +261,8 @@ public class BodyPart : IWeighted
             if (g.GripBroken())
             {
                 string message = LocalizationManager.GetLocalizedContent("Gr_BreakGrip")[0];
-                message = message.Replace("[ATTACKER]", g.myPart.myBody.gameObject.name);
-                message = message.Replace("[DEFENDER]", myBody.gameObject.name);
+                message = message.Replace("[ATTACKER]", g.myPart.myBody.entity.MyName);
+                message = message.Replace("[DEFENDER]", myBody.entity.MyName);
                 message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message;
                 CombatLog.NewMessage(message + "</color>");
                 gripsToBreak.Add(g);
@@ -303,9 +289,9 @@ public class BodyPart : IWeighted
             grip.Grab(part);
         }
 
-        string message = LocalizationManager.GetLocalizedContent("Gr_Grab")[0];
-        message = message.Replace("[ATTACKER]", myBody.gameObject.name);
-        message = message.Replace("[DEFENDER]", part.myBody.gameObject.name);
+        string message = LocalizationManager.GetContent("Gr_Grab");
+        message = message.Replace("[ATTACKER]", myBody.entity.MyName);
+        message = message.Replace("[DEFENDER]", part.myBody.entity.MyName);
         message = message.Replace("[ATTACKER_LIMB]", displayName);
         message = message.Replace("[DEFENDER_LIMB]", part.displayName);
         message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message + "</color>";
@@ -319,9 +305,9 @@ public class BodyPart : IWeighted
 
         if (!forced)
         {
-            string message = LocalizationManager.GetLocalizedContent("Gr_Release")[0];
-            message = message.Replace("[ATTACKER]", myBody.gameObject.name);
-            message = message.Replace("[DEFENDER]", grip.heldPart.myBody.gameObject.name);
+            string message = LocalizationManager.GetContent("Gr_Release");
+            message = message.Replace("[ATTACKER]", myBody.entity.MyName);
+            message = message.Replace("[DEFENDER]", grip.heldPart.myBody.entity.MyName);
             message = message.Replace("[DEFENDER_LIMB]", grip.heldPart.name);
             message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message + "</color>";
             CombatLog.NewMessage(message);

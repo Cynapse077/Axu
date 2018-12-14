@@ -343,6 +343,16 @@ public class TileMap_Data
                         tIndex = 22;
                         eightWay = true;
                     }
+                    else if (tile.HasTag("Construct_Store"))
+                    {
+                        tIndex = 5;
+                        eightWay = true;
+                    }
+                    else if (tile.HasTag("Construct_Hospital"))
+                    {
+                        tIndex = 2;
+                        eightWay = true;
+                    }
 
                     BitwiseAutotile(x, y, tIndex, (z => Tile.GetByID(z).HasTag("Wall") && !Tile.isMountain(z)), eightWay);
                 }
@@ -539,7 +549,21 @@ public class TileMap_Data
 
         Room room1 = new Room(width, height, left, bottom);
         Room room2 = new Room(height + RNG.Next(-2, 1), width + RNG.Next(-2, 1), RNG.Next(left, room1.right), RNG.Next(bottom, room1.top));
-        House h = new House(room1, room2);
+        House.HouseType ht = House.HouseType.Villager;
+        string wallType = "Wall_Brick";
+
+        if (RNG.Next(100) < 25)
+        {
+            ht = House.HouseType.Merchant;
+            wallType = "Wall_Store";
+        }
+        else if (RNG.Next(100) < 15)
+        {
+            ht = House.HouseType.Doctor;
+            wallType = "Wall_Hospital";
+        }
+
+        House h = new House(room1, room2, ht);
 
         for (int i = 0; i < houses.Count; i++)
         {
@@ -547,8 +571,11 @@ public class TileMap_Data
             {
                 for (int k = 0; k < houses[i].rooms.Length; k++)
                 {
-                    if (h.rooms[j].CollidesWith(houses[i].rooms[k]))
+                    if (h.rooms[j].CollidesWith(houses[i].rooms[k]) ||h.houseType == House.HouseType.Doctor && ht == House.HouseType.Doctor 
+                        || h.houseType == House.HouseType.Merchant && ht == House.HouseType.Merchant)
+                    {
                         return false;
+                    }
                 }
             }
         }
@@ -584,7 +611,7 @@ public class TileMap_Data
         {
             for (int y = h.Bottom() - 1; y <= h.Top(); y++)
             {
-                if (World.OutOfLocalBounds(x, y) || map_data[x, y] == Tile.tiles["Floor_Brick"] || map_data[x, y] == Tile.tiles["Wall_Brick"])
+                if (World.OutOfLocalBounds(x, y) || map_data[x, y] == Tile.tiles["Floor_Brick"] || map_data[x, y] == Tile.tiles[wallType])
                     continue;
 
                 bool visited = false;
@@ -600,7 +627,7 @@ public class TileMap_Data
 
                         if (map_data[x + ex, y + ey] == Tile.tiles["Floor_Brick"])
                         {
-                            map_data[x, y] = Tile.tiles["Wall_Brick"];
+                            map_data[x, y] = Tile.tiles[wallType];
                             Coord newWall = new Coord(x, y);
 
                             if (x == h.Left() - 1 || x == h.Right() || y == h.Bottom() - 1 || y == h.Top())
@@ -784,39 +811,44 @@ public class TileMap_Data
             }
         }
 
-        if (data.ContainsKey("objects") && !visited)
+        if (!visited)
         {
-            for (int i = 0; i < data["objects"].Count; i++)
+            if (data.ContainsKey("objects"))
             {
-                int x = (int)data["objects"][i]["Pos"][0], y = (int)data["objects"][i]["Pos"][1];
-                string oType = data["objects"][i]["Name"].ToString();
-                World.objectManager.NewObjectAtOtherScreen(oType, new Coord(x, y), mapInfo.position, -elevation);
-            }
-        }
-
-        if (data.ContainsKey("npcs") && !visited)
-        {
-            for (int i = 0; i < data["npcs"].Count; i++)
-            {
-                int x = (int)data["npcs"][i]["Pos"][0], y = (int)data["npcs"][i]["Pos"][1];
-                string nType = data["npcs"][i]["Name"].ToString();
-                NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
-                
-                if (World.objectManager.NPCExists(nType) && bp.flags.Contains(NPC_Flags.Static))
+                for (int i = 0; i < data["objects"].Count; i++)
                 {
-                    NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
-                    npc.worldPosition = new Coord(mapInfo.position);
-                    npc.elevation = -elevation;
-                    npc.localPosition = new Coord(x, y);
-                }
-                else
-                {
-                    NPC n = new NPC(bp, new Coord(mapInfo.position), new Coord(x, y), -elevation);
-                    World.objectManager.CreateNPC(n);
+                    int x = (int)data["objects"][i]["Pos"][0], y = (int)data["objects"][i]["Pos"][1];
+                    string oType = data["objects"][i]["Name"].ToString();
+                    World.objectManager.NewObjectAtOtherScreen(oType, new Coord(x, y), mapInfo.position, -elevation);
                 }
             }
-        }
 
+            if (data.ContainsKey("npcs"))
+            {
+                for (int i = 0; i < data["npcs"].Count; i++)
+                {
+                    int x = (int)data["npcs"][i]["Pos"][0], y = (int)data["npcs"][i]["Pos"][1];
+                    string nType = data["npcs"][i]["Name"].ToString(); //Actually the ID of the NPC.
+                    NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
+
+                    if (World.objectManager.NPCExists(nType) && bp.flags.Contains(NPC_Flags.Static))
+                    {
+                        NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
+                        npc.worldPosition = new Coord(mapInfo.position);
+                        npc.elevation = -elevation;
+                        npc.localPosition = new Coord(x, y);
+                    }
+                    else
+                    {
+                        NPC n = new NPC(bp, new Coord(mapInfo.position), new Coord(x, y), -elevation);
+                        World.objectManager.CreateNPC(n);
+
+                        Debug.Log(nType + " does not exist.");
+                    }
+                }
+            }
+        }
+        
         SetUpTileData();
         return true;
     }

@@ -205,9 +205,35 @@ public class NPC
     {
         ShuffleInventory(EntityList.GetBlueprintByID(ID));
     }
+
+    public bool CanDiscard()
+    {
+        if (worldPosition == World.tileMap.CurrentMap.mapInfo.position)
+        {
+            return false;
+        }
+
+        if (HasFlag(NPC_Flags.Static) || HasFlag(NPC_Flags.Merchant) || HasFlag(NPC_Flags.Book_Merchant) 
+            || HasFlag(NPC_Flags.Doctor) || HasFlag(NPC_Flags.Follower) || HasFlag(NPC_Flags.Named_NPC))
+        {
+            return false;
+        }
+
+        List<Quest> quests = ObjectManager.playerJournal.quests;
+
+        for (int i = 0; i < quests.Count; i++)
+        {
+            if (quests[i].spawnedNPCs.Contains(UID))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
-[System.Serializable]
+[Serializable]
 public enum NPC_Flags
 {
     Static, Stationary, Stationary_While_Passive, Merchant,

@@ -2,49 +2,55 @@
 
 public class StatusEffectPanel : MonoBehaviour
 {
-    public GameObject overburdened;
-    public GameObject flying;
-    public GameObject poison;
-    public GameObject bleed;
-    public GameObject confuse;
-    public GameObject topple;
-    public GameObject stun;
-    public GameObject slow;
-    public GameObject regen;
-    public GameObject haste;
-    public GameObject stuck;
-    public GameObject held;
-    public GameObject unconscious;
-    public GameObject shield;
-    public GameObject drunk;
-    public GameObject burning;
-    public GameObject sick;
-    public GameObject blind;
-
-    public Sprite[] hungerSprites;
+    public StatusEffectObject overburdened;
+    public StatusEffectObject flying;
+    public StatusEffectObject poison;
+    public StatusEffectObject bleed;
+    public StatusEffectObject confuse;
+    public StatusEffectObject topple;
+    public StatusEffectObject stun;
+    public StatusEffectObject slow;
+    public StatusEffectObject regen;
+    public StatusEffectObject haste;
+    public StatusEffectObject stuck;
+    public StatusEffectObject held;
+    public StatusEffectObject unconscious;
+    public StatusEffectObject shield;
+    public StatusEffectObject drunk;
+    public StatusEffectObject burning;
+    public StatusEffectObject sick;
+    public StatusEffectObject blind;
 
     public void UpdateEnabledStatuses(Stats stats)
     {
         if (stats == null)
+        {
             return;
+        }
 
-        overburdened.SetActive(stats.entity.inventory.overCapacity());
-        flying.SetActive(stats.IsFlying());
-        poison.SetActive(stats.HasEffect("Poison"));
-        bleed.SetActive(stats.HasEffect("Bleed"));
-        confuse.SetActive(stats.HasEffect("Confuse"));
-        topple.SetActive(stats.HasEffect("Topple"));
-        stun.SetActive(stats.HasEffect("Stun"));
-        slow.SetActive(stats.HasEffect("Slow"));
-        regen.SetActive(stats.HasEffect("Regen"));
-        haste.SetActive(stats.HasEffect("Haste"));
-        stuck.SetActive(stats.HasEffect("Stuck"));
-        held.SetActive(stats.entity.body.AllGripsAgainst().Count > 0);
-        shield.SetActive(stats.HasEffect("Shield"));
-        unconscious.SetActive(stats.HasEffect("Unconscious"));
-        drunk.SetActive(stats.HasEffect("Drunk"));
-        burning.SetActive(stats.HasEffect("Aflame"));
-        sick.SetActive(stats.HasEffect("Sick"));
-        blind.SetActive(stats.HasEffect("Blind"));
+        overburdened.UpdateSE(stats.entity.inventory.overCapacity(), 0);
+        flying.UpdateSE(stats.IsFlying(), 0);
+        held.UpdateSE(stats.entity.body.AllGripsAgainst().Count > 0, 0);
+
+        poison.UpdateSE(stats.HasEffect("Poison"), NumTurns(stats, "Poison"));
+        bleed.UpdateSE(stats.HasEffect("Bleed"), NumTurns(stats, "Bleed"));
+        confuse.UpdateSE(stats.HasEffect("Confuse"), NumTurns(stats, "Confuse"));
+        topple.UpdateSE(stats.HasEffect("Topple"), NumTurns(stats, "Topple"));
+        stun.UpdateSE(stats.HasEffect("Stun"), NumTurns(stats, "Stun"));
+        slow.UpdateSE(stats.HasEffect("Slow"), NumTurns(stats, "Slow"));
+        regen.UpdateSE(stats.HasEffect("Regen"), NumTurns(stats, "Regen"));
+        haste.UpdateSE(stats.HasEffect("Haste"), NumTurns(stats, "Haste"));
+        stuck.UpdateSE(stats.HasEffect("Stucj"), NumTurns(stats, "Stuck"));
+        shield.UpdateSE(stats.HasEffect("Shield"), NumTurns(stats, "Shield"));
+        unconscious.UpdateSE(stats.HasEffect("Unconscious"), NumTurns(stats, "Unconscious"));
+        drunk.UpdateSE(stats.HasEffect("Drunk"), NumTurns(stats, "Drunk"));
+        burning.UpdateSE(stats.HasEffect("Aflame"), NumTurns(stats, "Aflame"));
+        sick.UpdateSE(stats.HasEffect("Sick"), NumTurns(stats, "Sick"));
+        blind.UpdateSE(stats.HasEffect("Blind"), NumTurns(stats, "Blind"));
+    }
+
+    int NumTurns(Stats stats, string se)
+    {
+        return (stats.HasEffect(se) ? stats.statusEffects[se] + 1 : 0);
     }
 }

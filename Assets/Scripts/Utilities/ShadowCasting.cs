@@ -13,6 +13,9 @@ public static class ShadowCasting
 
     public static List<Coord> GetVisibleCells()
     {
+        if (ObjectManager.playerEntity == null)
+            return new List<Coord>();
+
         Entity e = ObjectManager.playerEntity;
 
         if (Manager.lightingOn)
@@ -62,7 +65,7 @@ public static class ShadowCasting
 
         float next_start_slope = start_slope;
 
-        for (int i = row; i <= radius; i++)
+        for (int i = row; i <= Manager.localMapSize.x; i++)
         {
             bool blocked = false;
             for (int dx = -i, dy = -i; dx <= 0; dx++)
@@ -86,8 +89,10 @@ public static class ShadowCasting
 
                 int radius2 = radius * radius;
 
-                if ((dx * dx + dy * dy) < radius2)
+                if ((dx * dx + dy * dy) < radius2 || World.tileMap.IsTileLit(ax, ay))
+                {
                     VisiblePoints.Add(new Coord(ax, ay));
+                }
 
                 if (blocked)
                 {

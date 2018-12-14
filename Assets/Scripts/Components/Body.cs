@@ -249,7 +249,6 @@ public class Body : MonoBehaviour
                 if (item.lootable)
                 {
                     MyInventory.PickupItem(item, true);
-                    MyInventory.Drop(item);
                     CombatLog.NameItemMessage("Lose_Hold", entity.Name, item.DisplayName());
                 }
 
@@ -292,17 +291,19 @@ public class Body : MonoBehaviour
                     partToDrop.AddProperty(ItemProperty.Cannibalism);
 
                 partToDrop.displayName = gameObject.name + " " + partToDrop.Name;
+
                 CEquipped ce = new CEquipped(bodyParts[id].equippedItem.ID);
                 partToDrop.AddComponent(ce);
                 partToDrop.armor = bodyParts[id].armor;
 
                 if (entity.isPlayer)
                 {
+                    partToDrop.statMods.Clear();
+
                     foreach (Stat_Modifier sm in bodyParts[id].Attributes)
                     {
                         partToDrop.statMods.Add(new Stat_Modifier(sm.Stat, sm.Amount));
                     }
-
                 }
                 else
                 {
@@ -317,7 +318,9 @@ public class Body : MonoBehaviour
                 }
             }
             else
+            {
                 partToDrop = ItemList.GetItemByID("scrap");
+            }
 
             MyInventory.PickupItem(partToDrop, true);
             MyInventory.DropBodyPart(partToDrop);
@@ -368,29 +371,12 @@ public class Body : MonoBehaviour
 
     public List<BodyPart.Hand> FreeHands()
     {
-        List<BodyPart.Hand> free = new List<BodyPart.Hand>();
-        List<BodyPart.Hand> AllHands = Hands;
-
-        for (int i = 0; i < AllHands.Count; i++)
-        {
-            if (AllHands[i].IsAttached && AllHands[i].EquippedItem.ID == MyInventory.baseWeapon)
-                free.Add(AllHands[i]);
-        }
-
-        return free;
+        return Hands.FindAll(x => x.IsAttached && x.EquippedItem.ID == MyInventory.baseWeapon);
     }
 
     public List<BodyPart> AttachedArms()
     {
-        List<BodyPart> arms = new List<BodyPart>();
-
-        for (int i = 0; i < bodyParts.Count; i++)
-        {
-            if (bodyParts[i].slot == ItemProperty.Slot_Arm && bodyParts[i].isAttached)
-                arms.Add(bodyParts[i]);
-        }
-
-        return arms;
+        return bodyParts.FindAll(x => x.slot == ItemProperty.Slot_Arm && x.isAttached);
     }
 
     public List<BodyPart> GrippableLimbs()

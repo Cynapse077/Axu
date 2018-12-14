@@ -159,10 +159,20 @@ public static class SpawnController
 
         for (int r = 0; r < numHouses; r++)
         {
-            string npcID = (r == 0 && rng.Next(100) < 25) ? "merch" : "villager";
+            string npcID = "villager";
 
-            if (r == 1 && rng.Next(100) < 15)
-                npcID = "doctor";
+            switch (World.tileMap.CurrentMap.houses[r].houseType)
+            {
+                case House.HouseType.Villager:
+                    npcID = "villager";
+                    break;
+                case House.HouseType.Merchant:
+                    npcID = "merch";
+                    break;
+                case House.HouseType.Doctor:
+                    npcID = "doctor";
+                    break;
+            }
 
             World.objectManager.BuildingObjects(World.tileMap.CurrentMap.houses[r], World.tileMap.CurrentMap.mapInfo.position, npcID);
         }
@@ -280,10 +290,12 @@ public static class SpawnController
 
     public static bool HasFoundEncounter(float chanceMultiplier = 1.0f)
     {
-        if (Manager.noEncounters || Random.value >= 0.015f * chanceMultiplier || World.tileMap.worldMap.GetTileAt(World.tileMap.worldCoordX, World.tileMap.worldCoordY).friendly)
+        if (Manager.noEncounters || Random.value >= (0.015f * chanceMultiplier))
             return false;
 
-        return true;
+        MapInfo mi = World.tileMap.worldMap.GetTileAt(World.tileMap.worldCoordX, World.tileMap.worldCoordY);
+
+        return (mi.biome != WorldMap.Biome.Ocean && !mi.friendly);
     }
 
     public static void SpawnFromGroupName(string name, int amount = 1)

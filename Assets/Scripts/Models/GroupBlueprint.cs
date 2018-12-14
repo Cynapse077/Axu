@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class GroupBlueprint {
@@ -24,7 +23,7 @@ public class GroupBlueprint {
 
         //Underground
         if (tileMapData.elevation != 0 && tileMapData.vault != null) {
-            if (vaultTypes == null)
+            if (vaultTypes == null || level > ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
                 return false;
 
             for (int i = 0; i < vaultTypes.Length; i++) {

@@ -14,6 +14,7 @@ public class TimedDestroy : MonoBehaviour {
 		if (deactivate) {
 			if (transform.parent != null)
 				transform.parent = null;
+
 			SimplePool.Despawn(gameObject);
 		} else
 			Destroy(gameObject); 

@@ -458,6 +458,7 @@ public class CharacterCreation : MonoBehaviour
         CharPanel.SetActive(false);
         loadingGO.SetActive(true);
         Manager.newGame = false;
+        Manager.playerName = "";
 
         AsyncOperation async = SceneManager.LoadSceneAsync(0);
 
@@ -585,17 +586,17 @@ public class CharacterCreation : MonoBehaviour
         loading = true;
 
         World.difficulty = currentDiff;
+
         if (World.difficulty.Level == Difficulty.DiffLevel.Hunted)
             World.BaseDangerLevel += 2;
 
+        Manager.profName = currentProf.name;
         Manager.ClearFiles();
 
         Manager.playerBuilder.money = currentProf.startingMoney;
-
         Manager.playerName = characterName;
         GameSettings.LastName = characterName;
         Manager.worldSeed = System.DateTime.Now.GetHashCode();
-        Manager.profName = currentProf.name;
         Manager.playerBuilder.attributes["Strength"] = currentProf.STR;
         Manager.playerBuilder.attributes["Dexterity"] = currentProf.DEX;
         Manager.playerBuilder.attributes["Intelligence"] = currentProf.INT;
@@ -678,7 +679,7 @@ public class CharacterCreation : MonoBehaviour
     IEnumerator StartGame()
     {
         yield return done;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        SceneManager.LoadScene(2);
     }
 
     void SetupEquipment()

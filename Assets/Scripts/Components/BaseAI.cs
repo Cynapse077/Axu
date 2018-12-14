@@ -181,25 +181,25 @@ public class BaseAI : MonoBehaviour
             {
                 int hearing = (npcBase.HasFlag(NPC_Flags.Quantum_Locked)) ? 99 : 91;
 
-                if (!InSightOfPlayer() && RNG.Next(100) > hearing)
+                if (!InSightOfPlayer() && RNG.Next(100) + ObjectManager.playerEntity.stats.StealthCheck() / 2 > hearing)
                 {
                     hasSeenPlayer = false;
                     Wander();
                 }
                 else
+                {
                     Hostile_Action();
-
-                return;
+                }
             }
             else
             {
                 if (HasDetectedPlayer())
                 {
                     NoticePlayer();
-                    return;
                 }
-
-                Wander();
+                else {
+                    Wander();
+                }
             }
         }
         else if (npcBase.HasFlag(NPC_Flags.Follower))
@@ -216,7 +216,7 @@ public class BaseAI : MonoBehaviour
     {
         if (spriteRenderer.enabled)
         {
-            Transform g = Instantiate(World.poolManager.exclamationMark, transform.position + new Vector3(0.5f, 0.5f, 0), Quaternion.identity).transform;
+            Transform g = SimplePool.Spawn(World.poolManager.exclamationMark, transform.position + new Vector3(0.5f, 0.5f, 0)).transform;
             g.parent = transform;
             hasSeenPlayer = true;
 
@@ -320,7 +320,9 @@ public class BaseAI : MonoBehaviour
             return;
         }
         else if (HasRanged(target))
+        {
             return;
+        }
 
         path = new Path_AStar(entity.myPos, target.myPos, entity.inventory.CanFly());
         Coord next = path.GetNextStep();
@@ -350,10 +352,7 @@ public class BaseAI : MonoBehaviour
 
     void SearchForTarget()
     {
-        if (possibleTargets == null)
-            possibleTargets = new List<Entity>();
-        else
-            possibleTargets.Clear();
+        possibleTargets.Refresh();
 
         if (npcBase.faction.isHostileTo("player") || isHostile)
             possibleTargets.Add(ObjectManager.playerEntity);
@@ -445,15 +444,7 @@ public class BaseAI : MonoBehaviour
             return;
 
         path = new Path_AStar(entity.myPos, target.myPos, entity.inventory.CanFly());
-        Coord next = path.GetNextStep();
-
-        if (next.x == entity.posX && next.y == entity.posY)
-            next = path.GetNextStep();
-
-        int moveX = next.x - entity.posX;
-        int moveY = next.y - entity.posY;
-
-        ConfirmAction(moveX, moveY);
+        FollowPath();
     }
 
     public void FollowPath()
@@ -465,10 +456,7 @@ public class BaseAI : MonoBehaviour
             if (next == entity.myPos)
                 next = path.GetNextStep();
 
-            int moveX = next.x - entity.posX;
-            int moveY = next.y - entity.posY;
-
-            entity.Action(moveX, moveY);
+            ConfirmAction(next.x - entity.posX, next.y - entity.posY);
         }
     }
 
@@ -548,7 +536,7 @@ public class BaseAI : MonoBehaviour
         int playerStealth = ObjectManager.playerEntity.stats.StealthCheck();
 
         int stealthRoll = RNG.Next(playerStealth);
-        int perceptionRoll = RNG.Next(perception + 1 + perceptionBonus);
+        int perceptionRoll = RNG.Next(1, perception + perceptionBonus + 1);
 
         if (isStationary && dist < 1.6f && stealthRoll < perceptionRoll + 2)
             return true;
@@ -571,8 +559,8 @@ public class BaseAI : MonoBehaviour
 
         if (bai.npcBase.faction == npcBase.faction)
         {
+            hasSeenPlayer = true;
             npcBase.hostilityOverride = true;
-            bai.hasSeenPlayer = true;
         }
     }
 
@@ -582,7 +570,9 @@ public class BaseAI : MonoBehaviour
         npcBase.hostilityOverride = true;
 
         if (isHostile)
+        {
             return;
+        }
 
         if (GetComponent<DialogueController>() != null)
             GetComponent<DialogueController>().SetupDialogueOptions();
@@ -592,9 +582,6 @@ public class BaseAI : MonoBehaviour
 
         for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
         {
-            if (World.objectManager.onScreenNPCObjects[i].isPlayer)
-                continue;
-
             if (World.objectManager.onScreenNPCObjects[i].AI.npcBase.faction == npcBase.faction)
             {
                 if (World.objectManager.onScreenNPCObjects[i].AI.InSightOfPlayer())
@@ -605,13 +592,14 @@ public class BaseAI : MonoBehaviour
             }
         }
     }
-
+    
     void ConfirmAction(int x, int y)
     {
         if (entity.posX + x < 0 || entity.posX + x >= Manager.localMapSize.x)
             x = 0;
         if (entity.posY + y < 0 || entity.posY + y >= Manager.localMapSize.y)
             y = 0;
+
         x = Mathf.Clamp(x, -1, 1);
         y = Mathf.Clamp(y, -1, 1);
 
@@ -631,7 +619,6 @@ public class BaseAI : MonoBehaviour
             if (World.tileMap.InSightCoords().Contains(new Coord(entity.posX + x, entity.posY + y)))
             {
                 entity.Wait();
-                entity.canAct = false;
                 return;
             }
         }
@@ -718,7 +705,7 @@ public class BaseAI : MonoBehaviour
             {
                 for (int y = entity.posY - 1; y <= entity.posY + 1; y++)
                 {
-                    if (x == entity.posX || y == entity.posY)
+                    if (x == entity.posX || y == entity.posY && World.tileMap.WalkableTile(x, y))
                         World.objectManager.SpawnPoisonGas(entity, new Coord(x, y));
                 }
             }
@@ -824,6 +811,7 @@ public class BaseAI : MonoBehaviour
             entity.SetCell();
 
         bool sight = entity.cell.InSight;
+
         spriteRenderer.enabled = sight;
 
         return sight;
@@ -839,18 +827,16 @@ public class BaseAI : MonoBehaviour
 
     bool UseSkills(Entity targetEntity)
     {
-        if (entity.stats.HasEffect("Stun") || entity.stats.HasEffect("Topple") || entity.stats.Frozen() || entity.stats.HasEffect("Blind"))
+        if (entity.stats.stamina <= 0 || entity.stats.HasEffect("Stun") || entity.stats.HasEffect("Topple") ||
+            entity.stats.Frozen() || entity.stats.HasEffect("Blind"))
             return false;
 
-        if (entity.stats.stamina <= 0)
+        if (!InSightOfPlayer())
             return false;
 
         EntitySkills mySkills = GetComponent<EntitySkills>();
         float distance = GetDistance(targetEntity);
         int randomNumber = RNG.Next(100);
-
-        if (!InSightOfPlayer())
-            return false;
 
         //Call for help
         if (!hasAskedForHelp && skills.HasAndCanUseSkill("help") && randomNumber < 10)

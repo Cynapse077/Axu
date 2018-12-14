@@ -36,7 +36,6 @@ public static class LocalizationManager {
 		AddWithTooltip("Proficiencies");
 		AddWithTooltip("Status Effects");
 		AddWithTooltip("Display Radiation");
-		AddWithTooltip("Display Hunger");
 		AddWithTooltip("Difficulties");
 
 		done = true;

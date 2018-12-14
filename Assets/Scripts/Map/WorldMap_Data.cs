@@ -51,7 +51,9 @@ public class WorldMap_Data
         ocean = new List<Coord>();
 
         if (!newGame)
+        {
             new OldWorld();
+        }
 
         LoadZoneBlueprints();
 

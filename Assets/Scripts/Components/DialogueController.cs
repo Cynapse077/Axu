@@ -116,7 +116,7 @@ public class DialogueController : MonoBehaviour
     bool QuestIconActive()
     {
         //TODO: Enable green marker when a quest can be turned in.
-        return (!myNPC.isHostile && !myNPC.HasFlag(NPC_Flags.Follower) && myQuest != null);
+        return (!myNPC.isHostile && !myNPC.hostilityOverride && !myNPC.HasFlag(NPC_Flags.Follower) && myQuest != null);
     }
 
     void Hire()

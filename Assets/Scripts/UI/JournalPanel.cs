@@ -44,7 +44,7 @@ public class JournalPanel : UIPanel
         if (SelectedMax > 0)
         {
             EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(journalBase.GetChild(0).gameObject);
+            EventSystem.current.SetSelectedGameObject(journalBase.GetChild(SelectedNum).gameObject);
         }
     }
 
@@ -93,6 +93,27 @@ public class JournalPanel : UIPanel
     {
         base.OnSelect(index);
         journal.trackedQuest = journal.quests[SelectedNum];
-        Initialize();
+
+        journalBase.DespawnChildren();
+        SelectedMax = 0;
+        SelectedNum = 0;
+
+        for (int i = 0; i < journal.quests.Count; i++)
+        {
+            GameObject g = SimplePool.Spawn(questObject, journalBase);
+            g.GetComponentInChildren<Text>().text = (journal.quests[i].ID == journal.trackedQuest.ID)
+                ? "<color=magenta>></color> " + journal.quests[i].Name + " <color=magenta><</color>" : journal.quests[i].Name;
+            g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex()));
+
+            SelectedMax++;
+        }
+
+        SelectedNum = index;
+
+        if (SelectedMax > 0)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(journalBase.GetChild(SelectedNum).gameObject);
+        }
     }
 }

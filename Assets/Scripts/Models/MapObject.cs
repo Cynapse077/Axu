@@ -131,4 +131,10 @@ public class MapObject
     {
         return luaEvents[eventName];
     }
+
+    public bool CanDiscard()
+    {
+
+        return true;
+    }
 }

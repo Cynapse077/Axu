@@ -659,9 +659,6 @@
             "Weight" : 1,
             "Stackable" : true,
             "FlavorText" : "A frond from local fauna, covered in small, sharp spines. After removing the spines, the taste almost resembles celery from back home.",
-            "Properties" : [
-                "Edible"
-            ],
             "Display" : {
                 "On Ground" : "item-frond.png"
             }
@@ -710,7 +707,7 @@
             "Type" : "Misc_Object",
             "Material" : "Organic",
             "Weight" : 4,
-            "FlavorText" : "The corpse of a sick creature. Be cautious when eating this.",
+            "FlavorText" : "The corpse of a sick creature.",
             "Components" : [
                 { "ID" : "Rot", "Max" : 1500  }
             ],            

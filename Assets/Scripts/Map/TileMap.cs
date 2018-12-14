@@ -10,7 +10,8 @@ public class TileMap : MonoBehaviour
     public static string imagePath;
     public static bool doneSetup = false;
 
-    public int worldCoordX, worldCoordY, currentElevation;
+    public int worldCoordX, worldCoordY;
+    public int currentElevation;
     public Path_TileGraph tileGraph;
     public TileRenderer[,] tileRenderers;
     public List<Vault> Vaults { get; protected set; }
@@ -39,12 +40,15 @@ public class TileMap : MonoBehaviour
             {
                 if (World.turnManager != null && currentMap != null)
                     currentMap.lastTurnSeen = World.turnManager.turn;
+
                 TileMap_Data old = currentMap;
 
                 currentMap = value;
 
                 if (OnScreenChange != null)
+                {
                     OnScreenChange(old, currentMap);
+                }
             }
 
             tileGraph = null;
@@ -169,8 +173,8 @@ public class TileMap : MonoBehaviour
                 continue;
 
             ZoneBlueprint_Underground vault = worldMap.GetUndergroundFromLandmark(zb.id);
-
             Vault v = new Vault(worldMap.vaultAreas[i], vault);
+
             Vaults.Add(v);
 
         }
@@ -208,7 +212,7 @@ public class TileMap : MonoBehaviour
         currentElevation = elev;
     }
 
-    public void LightCheck(Entity playerEntity)
+    public void LightCheck()
     {
         for (int y = 0; y < size_y; y++)
         {
@@ -249,9 +253,7 @@ public class TileMap : MonoBehaviour
     {
         Rebuild(mx, my, elevation);
         DrawTiles(false);
-
-        if (ObjectManager.player != null)
-            LightCheck(ObjectManager.playerEntity);
+        LightCheck();
     }
 
     //normal rebuild. Rebuilds map, destroys all objects on screen, and respawns them.
@@ -262,45 +264,47 @@ public class TileMap : MonoBehaviour
 
         Rebuild(mx, my, elevation, lightCheck);
         DrawTiles(true);
-
-        currentMap.visited = true;
         CheckNPCTiles();
 
-        if (lightCheck && ObjectManager.player != null)
-            LightCheck(ObjectManager.playerEntity);
+        if (lightCheck)
+            LightCheck();
     }
 
     //The base rebuild function
     void Rebuild(int mx, int my, int elevation, bool lightCheck = true)
     {
         Coord worldPos = new Coord(mx, my);
+        bool exists = false;
         currentElevation = elevation;
 
         if (currentElevation != 0)
         {
-            bool exists = (worldData != null && worldData.dataExists(mx, my, Mathf.Abs(currentElevation)));
+            exists = (worldData != null && worldData.dataExists(mx, my, Mathf.Abs(currentElevation)));
             CurrentMap = GetVaultAt(worldPos).GetLevel(Mathf.Abs(currentElevation), exists);
         }
         else
         {
             if (screens[mx, my] == null)
             {
-                bool exists = (worldData != null && worldData.dataExists(mx, my));
+                exists = (worldData != null && worldData.dataExists(mx, my));
                 screens[mx, my] = CurrentMap = new TileMap_Data(mx, my, currentElevation, exists);
 
                 ApplyMapChanges(exists, mx, my, worldPos);
             }
             else
+            {
                 CurrentMap = screens[mx, my];
+                exists = true;
+            }
         }
 
-        if (!CurrentMap.visited)
+        if (!exists)
             SpawnController.BiomeSpawn(mx, my, CurrentMap);
 
         CurrentMap.visited = true;
 
-        if (lightCheck && ObjectManager.player != null)
-            LightCheck(ObjectManager.playerEntity);
+        if (lightCheck)
+            LightCheck();
     }
 
     void ApplyMapChanges(bool exists, int mx, int my, Coord worldPos)
@@ -648,7 +652,7 @@ public class TileMap : MonoBehaviour
 
         CurrentMap.ChangeTile(x, y, tile);
         tileRenderers[x, y].SetSprite(sprites[tile.ID]);
-        LightCheck(ObjectManager.playerEntity);
+        LightCheck();
         CurrentMap.SetUpTileData();
         return true;
     }
@@ -791,7 +795,7 @@ public class TileMap : MonoBehaviour
     public TileMap_Data GetScreen(int x, int y)
     {
         if (screens[x, y] == null && worldData != null && worldData.dataExists(x, y))
-            screens[x, y] = new TileMap_Data(0, x, y, worldData.dataExists(x, y));
+            screens[x, y] = new TileMap_Data(x, y, 0, worldData.dataExists(x, y));
 
         return screens[x, y];
     }

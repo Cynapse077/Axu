@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -33,11 +32,11 @@ public class ReplaceLimb_Panel : MonoBehaviour
         bpTitle.text = LocalizationManager.GetContent("Title_ReplaceLimb");
         itTitle.text = LocalizationManager.GetContent("Title_ReplaceLimb_Item");
 
-        severableBodyParts = inv.entity.body.bodyParts.FindAll(x => x.severable && x.slot != ItemProperty.Slot_Head);
+        severableBodyParts = inv.entity.body.bodyParts.FindAll(x => x.severable && x.slot != ItemProperty.Slot_Head && !x.external);
 
         foreach (BodyPart b in severableBodyParts)
         {
-            GameObject bp = (GameObject)Instantiate(bodyPartObject, bpAnchor);
+            GameObject bp = Instantiate(bodyPartObject, bpAnchor);
             string myText = (b.isAttached ? "<color=green>" : "<color=red>") + b.displayName + "</color>";
 
             if (b.isAttached)
@@ -58,7 +57,7 @@ public class ReplaceLimb_Panel : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(bpAnchor.GetChild(selectedNum).gameObject);
-        SwitchSelectedNum(0);
+        SetSelectedNum(0);
     }
 
     void UpdateItemPanel()
@@ -74,7 +73,7 @@ public class ReplaceLimb_Panel : MonoBehaviour
 
         foreach (Item i in items)
         {
-            GameObject it = (GameObject)Instantiate(bodyPartObject, itAnchor);
+            GameObject it = Instantiate(bodyPartObject, itAnchor);
             string myText = i.Name + " : ";
 
             for (int j = 0; j < i.statMods.Count; j++)
@@ -95,9 +94,9 @@ public class ReplaceLimb_Panel : MonoBehaviour
         return SpriteManager.GetObjectSprite(id);
     }
 
-    public void SwitchMode(int _mode)
+    public void SwitchMode(int newMode)
     {
-        if (_mode == 0 && mode == Mode.Item)
+        if (newMode == 0 && mode == Mode.Item)
         {
             bpID = 0;
             selectedNum = 0;
@@ -105,10 +104,31 @@ public class ReplaceLimb_Panel : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(bpAnchor.GetChild(selectedNum).gameObject);
             UpdateItemPanel();
         }
-        else if (_mode == 1 && mode == Mode.BodyPart)
+        else if (newMode == 1 && mode == Mode.BodyPart)
         {
             SelectPressed();
         }
+    }
+
+    public void SetSelectedNum(int num)
+    {
+        selectedNum = num;
+
+        if (mode == Mode.BodyPart)
+        {
+            selectedNum = Mathf.Clamp(selectedNum, 0, severableBodyParts.Count - 1);
+
+            EventSystem.current.SetSelectedGameObject(bpAnchor.GetChild(selectedNum).gameObject);
+            UpdateItemPanel();
+            bpScroll.value = 1f / (selectedNum / (float)severableBodyParts.Count);
+        }
+        else if (mode == Mode.Item)
+        {
+            selectedNum = Mathf.Clamp(selectedNum, 0, items.Count - 1);
+            EventSystem.current.SetSelectedGameObject(itAnchor.GetChild(selectedNum).gameObject);
+        }
+
+        itScroll.value = 1f / (selectedNum / (float)items.Count);
     }
 
     public void SwitchSelectedNum(int num)
@@ -123,12 +143,12 @@ public class ReplaceLimb_Panel : MonoBehaviour
             UpdateItemPanel();
             bpScroll.value = 1f / (selectedNum / (float)severableBodyParts.Count);
         }
-
         else if (mode == Mode.Item)
         {
             selectedNum = Mathf.Clamp(selectedNum, 0, items.Count - 1);
             EventSystem.current.SetSelectedGameObject(itAnchor.GetChild(selectedNum).gameObject);
         }
+
         itScroll.value = 1f / (selectedNum / (float)items.Count);
     }
 

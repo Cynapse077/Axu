@@ -96,6 +96,7 @@ public class EventContainer
                         onStart[i].RunEvent();
                     }
                 }
+
                 break;
 
             case QuestEvent.EventType.OnComplete:
@@ -107,6 +108,7 @@ public class EventContainer
                         onComplete[i].RunEvent();
                     }
                 }
+
                 break;
 
             case QuestEvent.EventType.OnFail:
@@ -118,6 +120,7 @@ public class EventContainer
                         onFail[i].RunEvent();
                     }
                 }
+
                 break;
         }
     }
@@ -484,7 +487,8 @@ public class GoToGoal : Goal
 
     public override string ToString()
     {
-        return "Go to the marked destination.";
+        string dest = (elevation == 0) ? "Go to the marked destination." : "Go to the marked destination at elevation " + elevation + ".";
+        return dest;
     }
 }
 

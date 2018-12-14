@@ -65,7 +65,6 @@ public class AbilityPanel : UIPanel
         {
             if (SelectedMax > 0)
             {
-                
                 if (GameSettings.Keybindings.GetKey("GoUpStairs") && SelectedNum < SelectedMax - 1)
                 {
                     skills.abilities.Move(SelectedNum, SelectedNum + 1);
@@ -86,13 +85,14 @@ public class AbilityPanel : UIPanel
 
     public override void ChangeSelectedNum(int newIndex)
     {
+        base.ChangeSelectedNum(newIndex);
+
         if (SelectedMax > 0)
         {
             EventSystem.current.SetSelectedGameObject(abilityBase.GetChild(SelectedNum).gameObject);
             scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
         }
 
-        base.ChangeSelectedNum(newIndex);
         UpdateTooltip();
     }
 

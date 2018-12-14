@@ -86,7 +86,7 @@
                     "Move NPC" : { "NPC" : "akklune", "Coordinate" : "Ensis Exterior", "Local Position" : { "x" : 28, "y" : 13 }, "Elevation" : 0 }
                 }
             ],
-            "End Dialogue" : "You hear machines hum beneath you. The plant has come back to life. A crackle can be heard, and suddenly a voice from speakers above says:\n<color=lightblue>\"(PLAYERNAME), my friend. I thank you for getting the power plant back online. My name is Arthomas, and I have heard your deeds from Akk-Lune. Come see me. We can work something mutually beneficial.\"</color>",
+            "End Dialogue" : "You hear machines hum beneath you. The plant has come back to life. A crackle can be heard, and suddenly a voice from speakers above says:\n<color=lightblue>\"My friend. I thank you for getting the power plant back online. My name is Arthomas, and I have heard your deeds from Akk-Lune. Come see me. We can work something mutually beneficial.\"</color>",
 
             "Chained Quest" : "ensis5"
         },
@@ -113,7 +113,7 @@
         {
             "Name" : "Speak with Lomis",
             "ID" : "ensis6",
-            "Description" : "Arthomas told you to <color=yellow>meet</color> Lomis, head of the Ensis. He will answer any questions you may have.",
+            "Description" : "Arthomas told you to <color=yellow>meet</color> Lomis, head of the Ensis.",
             "Rewards" : {
                 "XP" : 5,
 				"Items" : [ "pickaxe" ]
@@ -490,7 +490,7 @@
                 { "Goal" : "Go", "To" : [ "Xul Camp" ] },
                 { "Goal" : "Talk To", "NPC" : "gemskhet" }
             ],
-            "End Dialogue" : "No resistance from the south? Perfect. Thank you, (PLAYERNAME). We have the dagger, the artifacts, and now we need the ritual area. There's a place of power out in the water. A betrayer of the Ensis lives in solitude inside the city of Magna Dwyll. The man's name is <color=yellow>Oromir</color>, but he now calls himself \"<color=yellow>The Duke of Lies</color>\". Be wary, as this crafty fellow has amassed some kind of army. We hope to harness the source's power instead. Kill him, and return here.",
+            "End Dialogue" : "No resistance from the south? Perfect. We have the dagger, the artifacts, and now we need the ritual area. There's a place of power out in the water. A betrayer of the Ensis lives in solitude inside the city of Magna Dwyll. The man's name is <color=yellow>Oromir</color>, but he now calls himself \"<color=yellow>The Duke of Lies</color>\". Be wary, as this crafty fellow has amassed some kind of army. We hope to harness the source's power instead. Kill him, and return here.",
 
 			"Chained Quest" : "kin6"
         },
@@ -575,7 +575,7 @@
             "Name" : "Saira's Hunt",
             "ID" : "sairashunt1",
             "Description" : "Kill Parasects for Saira.",
-            "Start Dialogue" : "(PLAYERNAME), I presume? I heard from the Blacksmith that you were coming to help me on a few errands. I have to get some meat off the Parasects around these parts. Shall we hunt say.. 5? Then we move onto something tougher.",
+            "Start Dialogue" : "Hello, wanderer. I heard from the Blacksmith that you were coming to help me on a few errands. I have to get some meat off the Parasects around these parts. Shall we hunt say.. 5? Then we can move onto something tougher.",
             "Rewards" : {
                 "XP" : 250
 			},

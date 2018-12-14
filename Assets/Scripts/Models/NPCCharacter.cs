@@ -34,4 +34,34 @@ public class NPCCharacter : Character
         Spr = sprite;
         QN = questName;
     }
+
+    bool HasFlag(NPC_Flags flag)
+    {
+        return Flags != null && Flags.Contains(flag);
+    }
+
+    public bool CanDiscard()
+    {
+        if (WP[0] == World.tileMap.CurrentMap.mapInfo.position.x && WP[0] == World.tileMap.CurrentMap.mapInfo.position.y)
+        {
+            return false;
+        }
+
+        if (HasFlag(NPC_Flags.Static) || HasFlag(NPC_Flags.Follower))
+        {
+            return false;
+        }
+
+        List<Quest> quests = ObjectManager.playerJournal.quests;
+
+        for (int i = 0; i < quests.Count; i++)
+        {
+            if (quests[i].spawnedNPCs.Contains(UID))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

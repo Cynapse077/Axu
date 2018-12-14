@@ -48,5 +48,10 @@ public class OnHover_SetSelectedIndex : MonoBehaviour, IPointerEnterHandler
 
             World.userInterface.InvPanel.UpdateTooltip();
         }
+
+        if (window == UIWindow.ReplacePartWithItem)
+        {
+            World.userInterface.RLPanel.SetSelectedNum(transform.GetSiblingIndex() + offset);
+        }
     }
 }

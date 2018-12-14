@@ -209,7 +209,7 @@
             "ID" : "liquid_cytopke",
             "Name" : "<color=green>Cytopke</color>",
             "Description" : "Heals the user over a long period of time. Very addictive.",
-            "Frequency" : 2,
+            "Frequency" : 1,
             "Color" : [ 0, 255, 0 ],
             "Addictiveness" : 30,
             "Price Per Unit" : 650,
@@ -234,7 +234,7 @@
             "ID" : "liquid_mutagen_bird",
             "Name" : "<color=magenta>Bird Mutagen</color>",
             "Description" : "Causes the consumer to mutate with bird-like traits.",
-            "Frequency" : 2,
+            "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
             "Events" : [
@@ -246,7 +246,7 @@
             "ID" : "liquid_mutagen_spider",
             "Name" : "<color=magenta>Spider Mutagen</color>",
             "Description" : "Causes the consumer to mutate with spider-like traits.",
-            "Frequency" : 2,
+            "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
             "Events" : [
@@ -258,7 +258,7 @@
             "ID" : "liquid_mutagen_reptile",
             "Name" : "<color=magenta>Reptile Mutagen</color>",
             "Description" : "Causes the consumer to mutate with reptile-like traits.",
-            "Frequency" : 2,
+            "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
             "Events" : [
@@ -270,7 +270,7 @@
             "ID" : "liquid_mutagen_chimera",
             "Name" : "<color=magenta>Chimera Mutagen</color>",
             "Description" : "Causes the consumer to mutate with chimera-like traits.",
-            "Frequency" : 2,
+            "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
             "Events" : [
@@ -282,7 +282,7 @@
             "ID" : "liquid_mutagen_aquatic",
             "Name" : "<color=magenta>Aquatic Mutagen</color>",
             "Description" : "Causes the consumer to mutate with aquatic traits.",
-            "Frequency" : 2,
+            "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
             "Events" : [

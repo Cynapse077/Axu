@@ -8,7 +8,6 @@ public class WeaponProficiency
     public int level;
     Proficiencies prof;
     double _xp;
-    public string desc;
     const int xpToNext = 1000;
     const int MaxLevel = 10;
 

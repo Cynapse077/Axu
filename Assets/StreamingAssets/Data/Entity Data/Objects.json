@@ -558,6 +558,22 @@
 			],
 			"Description" : "",
 			"RecievePulse" : true
+		},
+		{
+			"Name" : "Coffin",
+			"ObjectType" : "Coffin",
+			"Sprite" : "object-coffin.png",
+			"Physics" : "Solid",
+			"Render In Front" : true,
+			"Description" : "Storage for the dead."
+		},
+		{
+			"Name" : "Forge",
+			"ObjectType" : "Forge",
+			"Sprite" : "object-forge.png",
+			"Physics" : "Solid",
+			"Render In Front" : true,
+			"Description" : "A hearth used for heating metals for blacksmithing."
 		}
     ]
 }

@@ -553,10 +553,34 @@
         "Tags" : [ "Dream" ],
         "Biome" : "None"
     },
-    {
-        "ID" : "_Empty5",
-        "TileIndex" : 111,
-        "Tags" : [],
+	{
+        "ID" : "Wall_Store",
+        "TileIndex" : 63,
+        "Tags" : [ "Construct_Store", "Wall", "Breakable_Explosion" ],
         "Biome" : "None"
-    }
+	},
+	{
+        "ID" : "Wall_Hospital",
+        "TileIndex" : 64,
+        "Tags" : [ "Construct_Hospital", "Wall" ],
+        "Biome" : "None"
+    },
+	{
+		"ID" : "Floor_Stone_1",
+		"TileIndex" : 40,
+		"Tags" : [ "Crypt", "Flooring", "Walkable" ],
+		"Biome" : "None"
+	},
+	{
+		"ID" : "Floor_Stone_2",
+		"TileIndex" : 41,
+		"Tags" : [ "Crypt", "Flooring", "Walkable" ],
+		"Biome" : "None"
+	},
+	{
+		"ID" : "Floor_Stone_3",
+		"TileIndex" : 42,
+		"Tags" : [ "Crypt", "Flooring", "Walkable" ],
+		"Biome" : "None"
+	}
 ]

@@ -71,6 +71,18 @@ public static class Utility
         return s;
     }
 
+    public static void Refresh<T>(this List<T> l)
+    {
+        if (l == null)
+        {
+            l = new List<T>();
+        }
+        else
+        {
+            l.Clear();
+        }
+    }
+
     static int GetOctant(Coord direction)
     {
         if (direction.x == 0 && direction.y == 1)
