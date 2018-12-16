@@ -25,10 +25,7 @@ public class NewWorld
 
     void SetWorldData()
     {
-        Entity playerEntity = ObjectManager.playerEntity;
-
-        //player
-        PlayerCharacter player = playerEntity.ToCharacter();
+        PlayerCharacter player = ObjectManager.playerEntity.ToCharacter();
 
         //world
         List<MapObject> mapObjects = World.objectManager.mapObjects;
@@ -62,7 +59,9 @@ public class NewWorld
                 TileMap_Data tmd = World.tileMap.Vaults[i].screens[j];
 
                 if (tmd != null)
+                {
                     AddDataToArray(ref holder, new ScreenToJson(tmd, tmd.elevation));
+                }
             }
         }
 
@@ -76,28 +75,36 @@ public class NewWorld
     void RemoveStuffAt(int x, int y, int z)
     {
         List<NPCCharacter> npcs = new List<NPCCharacter>(chars);
-        List<WorldObject> wObjects = new List<WorldObject>(w2json.Objects);
 
         foreach (NPCCharacter n in npcs)
         {
-            if (n.WP[2] == 0 && n.WP[0] == x && n.WP[1] == y && n.WP[2] == z && n.CanDiscard())
+            if (n.WP[0] == x && n.WP[1] == y && n.WP[2] == z && n.CanDiscard())
+            {
                 chars.Remove(n);
+            }
         }
+
+        List<WorldObject> wObjects = new List<WorldObject>(w2json.Objects);
 
         foreach (WorldObject w in wObjects)
         {
             if (w.WP[0] == x && w.WP[1] == y && w.WP[2] == z)
+            {
                 w2json.Objects.Remove(w);
+            }
         }
     }
 
     void AddDataToArray(ref ScreenHolder holder, ScreenToJson s2json)
     {
-        if (s2json.LTS > 0 && s2json.P[2] == 0 && World.objectManager.CanDiscard(s2json.P[0], s2json.P[1], s2json.P[2]) && Turn_Num - s2json.LTS >= Cutoffthreshold)
+        if (s2json.LTS > 0 && s2json.P[2] == 0 && World.objectManager.CanDiscard(s2json.P[0], s2json.P[1], s2json.P[2]) && 
+            Turn_Num - s2json.LTS >= Cutoffthreshold)
         {
 			RemoveStuffAt(s2json.P[0], s2json.P[1], s2json.P[2]);
 		} else
+        {
             holder.Sc.Add(s2json);
+        }
     }
 }
 
@@ -132,7 +139,9 @@ public class OldWorld
             NPC n = new NPC(npcData["ID"].ToString(), worldPos, localPos, (int)wData["NPCs"][i]["WP"][2]);
 
             if (n.faction.ID == "followers" && !n.flags.Contains(NPC_Flags.Follower))
+            {
                 n.flags.Add(NPC_Flags.Follower);
+            }
 
             n.name = npcData["Name"].ToString();
             n.UID = (int)npcData["UID"];
@@ -153,7 +162,9 @@ public class OldWorld
             ObjectManager.SpawnedNPCs--;
 
             if (npcData["QN"] != null)
+            {
                 n.questID = npcData["QN"].ToString();
+            }
         }
 
         //Get map objects
@@ -175,10 +186,10 @@ public class OldWorld
                 for (int j = 0; j < obj["Items"].Count; j++)
                 {
 
-                    if (j > 20)
-                        continue;
-
-                    m.inv.Add(SaveData.GetItemFromJsonData(obj["Items"][j]));
+                    if (j < 50)
+                    {
+                        m.inv.Add(SaveData.GetItemFromJsonData(obj["Items"][j]));
+                    }
                 }
             }
 
@@ -222,7 +233,9 @@ public class OldScreens
             if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y)
             {
                 if ((int)sc[i]["P"][2] == z)
+                {
                     return (int)sc[i]["LTS"];
+                }
             }
         }
 
@@ -238,7 +251,9 @@ public class OldScreens
             if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y)
             {
                 if ((int)sc[i]["P"][2] == z)
+                {
                     return true;
+                }
             }
         }
 
@@ -301,7 +316,9 @@ public class WorldToJson
         for (int i = 0; i < objects.Count; i++)
         {
             if (objects[i].objectType != "Bloodstain" && objects[i].objectType != "Bloodstain_Wall")
+            {
                 Objects.Add(new WorldObject(objects[i].worldPosition, objects[i].localPosition, objects[i].elevation, objects[i].objectType, objects[i].inv));
+            }
         }
     }
 }
@@ -335,7 +352,9 @@ public struct ScreenToJson
         Ch = new List<TileMap_Data.TileChange>();
 
         if (dt.changes != null)
+        {
             Ch = dt.changes;
+        }
     }
 }
 
@@ -376,7 +395,9 @@ public struct WorldObject
             for (int i = 0; i < items.Count; i++)
             {
                 if (items[i] != null)
+                {
                     Items.Add(items[i].ToSimpleItem());
+                }
             }
         }
     }

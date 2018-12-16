@@ -47,7 +47,7 @@ public class NPCCharacter : Character
             return false;
         }
 
-        if (HasFlag(NPC_Flags.Static) || HasFlag(NPC_Flags.Follower))
+        if (HasFlag(NPC_Flags.Static) || HasFlag(NPC_Flags.Follower) || Fac == "followers")
         {
             return false;
         }

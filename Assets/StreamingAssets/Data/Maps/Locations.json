@@ -410,7 +410,7 @@
 		{
 			"ID" : "Puzzle",
 			"Display" : "???",
-			"Depth" : 3,
+			"Depth" : 4,
 			"Light" : 9,
 			"Rules" : {
 				"Load" : true
@@ -624,7 +624,7 @@
 		{
 			"ID" : "Crypt",
 			"Display" : "Crypt",
-			"Depth" : 6,
+			"Depth" : 3,
 			"Light" : 3,
 			"Rules" : {
 				"Load" : true

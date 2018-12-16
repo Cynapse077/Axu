@@ -397,7 +397,7 @@ public class CursorControl : MonoBehaviour
                     {
                         BaseAI bai = World.objectManager.onScreenNPCObjects[i].AI;
 
-                        if (bai.npcBase.HasFlag(NPC_Flags.Follower))
+                        if (bai.isFollower())
                             bai.ForceTarget(World.tileMap.GetCellAt(myPosX, myPosY).entity);
                     }
 

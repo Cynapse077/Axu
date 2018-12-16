@@ -212,17 +212,14 @@ public class SSettings
     public bool Weather { get; set; }
     public bool Particle_Effects { get; set; }
     public bool SimpleDmg { get; set; }
-    public string LastName { get; set; }
 
     public InputKeys Input;
 
     public SSettings() { }
 
-    public SSettings(string lName, bool fullscreen, Coord scSize, double masvol, double musvol, double sfxvol, bool mute,
+    public SSettings(bool fullscreen, Coord scSize, double masvol, double musvol, double sfxvol, bool mute,
         bool mouse, InputKeys keys, double animspeed, bool wea, bool part, bool sdmg)
     {
-
-        LastName = lName;
         Fullscreen = fullscreen;
         ScreenSize = scSize;
         Master_Volume = masvol;

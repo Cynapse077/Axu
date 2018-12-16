@@ -16,7 +16,7 @@ public class LookTooltipPanel : MonoBehaviour {
 		DisplayName.text = npc.npcBase.name;
 
 		string hostility = (npc.isHostile) ? "TT_Hostile" : "TT_Passive", awareness = (npc.HasSeenPlayer()) ? "TT_Aware" : "TT_Unaware";
-		if (npc.npcBase.HasFlag(NPC_Flags.Follower))
+		if (npc.isFollower())
 			hostility = "TT_Follower";
 
 		string localizedHos = LocalizationManager.GetLocalizedContent(hostility)[0];

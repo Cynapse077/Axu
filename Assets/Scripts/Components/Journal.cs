@@ -70,7 +70,7 @@ public class Journal : MonoBehaviour {
 
 	void BreakFollowersInFaction(string facID) {
 		foreach (NPC n in World.objectManager.npcClasses) {
-			if (n.HasFlag(NPC_Flags.Follower)) {
+			if (n.HasFlag(NPC_Flags.Follower) || n.faction.ID == "follower") {
 				string factionID = EntityList.GetBlueprintByID(n.ID).faction.ID;
 
 				if (factionID == facID) {

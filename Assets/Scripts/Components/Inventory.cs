@@ -779,7 +779,7 @@ public class Inventory : MonoBehaviour
             return;
 
         //drop corpse
-        if (!entity.isPlayer && SeedManager.combatRandom.Next(100) < 5)
+        if (!entity.isPlayer && SeedManager.combatRandom.Next(100) < 4)
         {
             BaseAI bai = entity.AI ?? GetComponent<BaseAI>();
             Item corpseItem;

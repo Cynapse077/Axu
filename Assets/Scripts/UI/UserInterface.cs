@@ -777,7 +777,7 @@ public class UserInterface : MonoBehaviour
 
         if (column == 0)
         { //Shop inventory
-            bool friendly = shopInv.entity.AI.npcBase.HasFlag(NPC_Flags.Follower);
+            bool friendly = shopInv.entity.AI.isFollower();
 
             if (selectedItemNum >= shopInv.items.Count || shopInv.items[selectedItemNum] == null)
                 return;
@@ -817,7 +817,7 @@ public class UserInterface : MonoBehaviour
             if (selectedItemNum >= playerInventory.items.Count || playerInventory.items[selectedItemNum] == null)
                 return;
 
-            bool friendly = shopInv.entity.AI.npcBase.HasFlag(NPC_Flags.Follower);
+            bool friendly = shopInv.entity.AI.isFollower();
             int cost = playerInventory.items[selectedItemNum].sellCost(charisma);
             Item newItem = new Item(playerInventory.items[selectedItemNum]);
 

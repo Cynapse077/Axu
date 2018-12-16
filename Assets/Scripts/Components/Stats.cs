@@ -466,7 +466,7 @@ public class Stats : MonoBehaviour
         {
             if (attacker == ObjectManager.playerEntity)
             {
-                if (!entity.AI.npcBase.HasFlag(NPC_Flags.Follower) && entity.AI.HasDetectedPlayer(5))
+                if (!entity.AI.isFollower() && entity.AI.HasDetectedPlayer(5))
                     entity.AI.BecomeHostile();
             }
 
@@ -666,7 +666,7 @@ public class Stats : MonoBehaviour
             int amount = maxHealth / 30;
             amount = Mathf.Clamp(amount, 1, 50);
 
-            if (entity.isPlayer || entity.AI.npcBase.HasFlag(NPC_Flags.Follower))
+            if (entity.isPlayer || entity.AI.isFollower())
                 health += amount;
             else if (World.turnManager.turn % 3 == 0)
                 health += amount;

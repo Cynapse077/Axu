@@ -29,7 +29,7 @@ public class CombatComponent
 
     public void Attack(Stats target, bool freeAction = false, BodyPart targetPart = null, int sevChance = 0)
     {
-        if (entity.isPlayer && target.entity.AI.npcBase.HasFlag(NPC_Flags.Follower))
+        if (entity.isPlayer && target.entity.AI.isFollower())
             return;
 
         //Main weapon

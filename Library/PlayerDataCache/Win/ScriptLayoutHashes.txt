@@ -164,6 +164,7 @@ ae780907ca966249f93e929859e301a0 Assembly-CSharp.dll:.WeaponHitEffect
 b2a1a76da86114aac47d18f2667f85b4 Assembly-CSharp.dll:.PauseMenuPanel
 1964e28f98c339aee89ca4582e2add72 Assembly-CSharp.dll:.MapObjectSprite
 1aa6b33b7d5f0204c01228188cd95d92 Assembly-CSharp.dll:.CameraControl
+5839c563db03d995e5ad27b7f5b3d225 Assembly-CSharp.dll:.StatusEffectObject
 635fb3e1beaaf4e46dd2eab0ea7445e3 Assembly-CSharp.dll:.TilesetManager
 f16835701e71dd5d6fb1fed4b7aff1d8 Unity.TextMeshPro.dll:TMPro.TMP_Asset
 ac9aafb7f2b60a7470c00d4d000e6fcd Assembly-CSharp.dll:.SR_EnabledBasedOnOther
@@ -218,6 +219,7 @@ f853e60c7c95f844b82506b751ef43ec Assembly-CSharp.dll:.ThrowItemPanel
 c811912abd41e7fd933534e999f1455d Assembly-CSharp.dll:.NPCSprite
 e53cc67d84060d628c7f03fc725766d8 Unity.TextMeshPro.dll:TMPro.TMP_FontAsset
 392c5b921098bd4c139d9146d0efa6d7 Unity.TextMeshPro.dll:TMPro.TMP_Settings
+00c928ed71310b43d5bb7221c49d5e60 Assembly-CSharp.dll:.LoadSaveMenu
 10b29b4498c78d132bcc7e486d60a9a2 Assembly-CSharp.dll:.HealthBarManager
 c00867a04c00de5bea0b016b91ff08b5 Assembly-CSharp.dll:.OnHover_MainMenu
 486cd95c82d8305219c352c06b776e1f UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
@@ -248,6 +250,7 @@ aac9c55ae7ba4b95b852a7d9c191acd1 Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 b22f30263ef6d2a7d542da93d23b424d Assembly-CSharp.dll:.SnapToPixelGrid
 b24c1a62addf33a832b260775fc15856 Assembly-CSharp.dll:.MapCreator_Cell
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.EntityAnimation
+486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.MainMenu_LoadButton
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.UITooltip
 9bfe27d6dc2f7736d751130de2e754d2 Assembly-CSharp.dll:.OnHover_ShowTooltip
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.DialogueController
@@ -270,6 +273,3 @@ c121485153926439d33bb877588de1b0 Assembly-CSharp.dll:.WorldMap_Test
 93307bd34e39d73fd24e00ec39c25a91 Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 fb0fa981286608ce12cefcd936c43539 Assembly-CSharp.dll:.LiquidActionsPanel
 c52a5e4f2ac3fcdabdc169ff0c28642e Assembly-CSharp.dll:.LevelUpButton
-5839c563db03d995e5ad27b7f5b3d225 Assembly-CSharp.dll:.StatusEffectObject
-00c928ed71310b43d5bb7221c49d5e60 Assembly-CSharp.dll:.LoadSaveMenu
-486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.MainMenu_LoadButton

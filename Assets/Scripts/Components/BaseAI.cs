@@ -202,7 +202,7 @@ public class BaseAI : MonoBehaviour
                 }
             }
         }
-        else if (npcBase.HasFlag(NPC_Flags.Follower))
+        else if (isFollower())
         {
             Follower();
         }
@@ -792,7 +792,7 @@ public class BaseAI : MonoBehaviour
 
     public void HireAsFollower()
     {
-        if (!npcBase.HasFlag(NPC_Flags.Follower))
+        if (!isFollower())
         {
             npcBase.MakeFollower();
             GetComponent<DialogueController>().SetupDialogueOptions();

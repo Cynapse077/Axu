@@ -346,7 +346,7 @@ public class TileMap : MonoBehaviour
         else if (name == "Frostborne")
             c = worldMap.GetLandmark("Frostborne Base");
         else if (name == "Cult")
-            c = worldMap.GetLandmark("Kindred Hideout");
+            c = worldMap.GetLandmark("Kin Hideout");
         else if (name == "Cathedral")
             c = worldMap.GetLandmark("Cathedral");
         else if (name == "Arena")

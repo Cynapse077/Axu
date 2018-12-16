@@ -755,7 +755,7 @@ public class ObjectManager : MonoBehaviour
 
         for (int i = 0; i < npcClasses.Count; i++)
         {
-            if (npcClasses[i].HasFlag(NPC_Flags.Follower) && !npcClasses[i].HasFlag(NPC_Flags.At_Home))
+            if ((npcClasses[i].HasFlag(NPC_Flags.Follower) || npcClasses[i].faction.ID == "followers") && !npcClasses[i].HasFlag(NPC_Flags.At_Home))
                 num++;
         }
 
@@ -766,7 +766,7 @@ public class ObjectManager : MonoBehaviour
     {
         for (int i = 0; i < npcClasses.Count; i++)
         {
-            if (npcClasses[i].HasFlag(NPC_Flags.Follower) && !npcClasses[i].onScreen && !npcClasses[i].HasFlag(NPC_Flags.At_Home))
+            if ((npcClasses[i].HasFlag(NPC_Flags.Follower) || npcClasses[i].faction.ID == "followers") && !npcClasses[i].onScreen && !npcClasses[i].HasFlag(NPC_Flags.At_Home))
             {
                 if (npcClasses[i].HasFlag(NPC_Flags.Deteriortate_HP))
                 {

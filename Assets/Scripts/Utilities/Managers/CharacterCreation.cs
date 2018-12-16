@@ -75,7 +75,7 @@ public class CharacterCreation : MonoBehaviour
         LoadProfessionsFromData();
         Manager.playerBuilder = new PlayerBuilder();
 
-        characterName = (string.IsNullOrEmpty(GameSettings.LastName)) ? NameGenerator.CharacterName(SeedManager.textRandom) : GameSettings.LastName;
+        characterName = NameGenerator.CharacterName(SeedManager.textRandom);
         field.text = characterName;
 
         SetupUI();
@@ -553,7 +553,9 @@ public class CharacterCreation : MonoBehaviour
                 for (int j = 0; j < appliedTraits[i].stats.Count; j++)
                 {
                     if (appliedTraits[i].stats[j].Stat == "Health")
+                    {
                         hp += appliedTraits[i].stats[j].Amount;
+                    }
                 }
             }
         }
@@ -572,7 +574,9 @@ public class CharacterCreation : MonoBehaviour
                 for (int j = 0; j < appliedTraits[i].stats.Count; j++)
                 {
                     if (appliedTraits[i].stats[j].Stat == "Stamina")
+                    {
                         st += appliedTraits[i].stats[j].Amount;
+                    }
                 }
             }
         }
@@ -588,14 +592,15 @@ public class CharacterCreation : MonoBehaviour
         World.difficulty = currentDiff;
 
         if (World.difficulty.Level == Difficulty.DiffLevel.Hunted)
+        {
             World.BaseDangerLevel += 2;
+        }
 
         Manager.profName = currentProf.name;
         Manager.ClearFiles();
 
         Manager.playerBuilder.money = currentProf.startingMoney;
         Manager.playerName = characterName;
-        GameSettings.LastName = characterName;
         Manager.worldSeed = System.DateTime.Now.GetHashCode();
         Manager.playerBuilder.attributes["Strength"] = currentProf.STR;
         Manager.playerBuilder.attributes["Dexterity"] = currentProf.DEX;

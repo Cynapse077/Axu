@@ -374,7 +374,7 @@
 				"Items" : [ "envirosuit" ]
 			},
             "Steps" : [
-                { "Goal" : "Talk To", "NPC" : "Isazna" }
+                { "Goal" : "Talk To", "NPC" : "isazna" }
             ],
             "End Dialogue" : "You're not exactly one of them, are you? Greetings, my name is Isazna. Did Gemskhet send you? Good, then everything is occuring as expected. We, The Kin of the Deep, represent a new era for this planet.  Look where our ancestors lead us, to a prison billions of miles away.\nI need you to do me a favor. Retrieve an artifact from the <color=yellow>Volcano</color> nearby, and I will show you marvelous things. There are forces at work that you cannot even comprehend. Take this suit. It will help you deal with the heat.",
 

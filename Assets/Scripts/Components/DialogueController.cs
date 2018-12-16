@@ -16,7 +16,8 @@ public class DialogueController : MonoBehaviour
         if (ObjectManager.playerJournal == null)
             return;
 
-        myNPC = GetComponent<BaseAI>().npcBase;
+        BaseAI bai = GetComponent<BaseAI>();
+        myNPC = bai.npcBase;
         journal = ObjectManager.playerJournal;
 
         GetComponent<NPCSprite>().questIcon.SetActive(QuestIconActive());
@@ -63,10 +64,12 @@ public class DialogueController : MonoBehaviour
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Amputate Limb"), () => { World.userInterface.Dialogue_AmputateLimb(); }));
         }
 
-        if (myNPC.HasFlag(NPC_Flags.Mercenary) && !myNPC.HasFlag(NPC_Flags.Follower))
+        if (myNPC.HasFlag(NPC_Flags.Mercenary) && !bai.isFollower())
+        {
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Hire"), () => { Hire(); }));
+        }
 
-        if (myNPC.HasFlag(NPC_Flags.Follower) && !myNPC.HasFlag(NPC_Flags.Deteriortate_HP) && !myNPC.HasFlag(NPC_Flags.Static))
+        if (bai.isFollower() && !myNPC.HasFlag(NPC_Flags.Deteriortate_HP) && !myNPC.HasFlag(NPC_Flags.Static))
         {
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Trade"), () => {
                 World.userInterface.Dialogue_Shop();
@@ -100,7 +103,7 @@ public class DialogueController : MonoBehaviour
                 {
                     dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Send_Home"), () => {
                         myNPC.flags.Add(NPC_Flags.At_Home);
-                        myNPC.worldPosition = World.tileMap.worldMap.GetClosestLandmark("Home Base");
+                        myNPC.worldPosition = World.tileMap.worldMap.GetClosestLandmark("Home");
                         GetComponent<BaseAI>().worldPos = myNPC.worldPosition;
                         CombatLog.NameMessage("Message_Sent_Home", myNPC.name);
                         World.tileMap.HardRebuild();
@@ -142,6 +145,8 @@ public class DialogueController : MonoBehaviour
         {
             Alert.NewAlert("Hire_Too_Many_Followers", UIWindow.Dialogue);
         }
+
+        SetupDialogueOptions();
     }
 
     public struct DialogueChoice
