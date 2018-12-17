@@ -28,15 +28,12 @@ public static class QuestList
     {
         Quest q = quests.Find(x => x.ID == id);
 
-        if (q != null)
-        {
-            return new Quest(quests.Find(x => x.ID == id));
-        }
-        else
+        if (q == null)
         {
             MyConsole.Error("No quest with ID of \"" + id);
-            return null;
         }
+
+        return q;
     }
 
     static Coord GetZone(string zone)
@@ -44,41 +41,41 @@ public static class QuestList
         return World.worldMap.worldMapData.GetLandmark(zone);
     }
 
-    public static QuestEvent GetEvent(string key, JsonData e)
+    public static QuestEvent GetEvent(string key, JsonData data)
     {
-        //TODO: Move this to a ToJson function in each class.
+        //TODO: Move this to a FromJson function in each class.
         switch (key)
         {
             case "Spawn NPC":
-                string npcID = e["NPC"].ToString();
-                Coord npcWorldPos = GetZone(e["Coordinate"].ToString());
-                int npcElevation = (int)e["Elevation"];
+                string npcID = data["NPC"].ToString();
+                Coord npcWorldPos = GetZone(data["Coordinate"].ToString());
+                int npcElevation = (int)data["Elevation"];
                 Coord npcLocalPos = new Coord(SeedManager.combatRandom.Next(2, Manager.localMapSize.x - 2), SeedManager.combatRandom.Next(2, Manager.localMapSize.y - 2));
 
-                if (e.ContainsKey("Local Position"))
+                if (data.ContainsKey("Local Position"))
                 {
-                    npcLocalPos.x = (int)e["Local Position"]["x"];
-                    npcLocalPos.y = (int)e["Local Position"]["y"];
+                    npcLocalPos.x = (int)data["Local Position"]["x"];
+                    npcLocalPos.y = (int)data["Local Position"]["y"];
                 }
 
-                string giveItem = e.ContainsKey("Give Item") ? e["Give Item"].ToString() : "";
+                string giveItem = data.ContainsKey("Give Item") ? data["Give Item"].ToString() : "";
 
                 return new SpawnNPCEvent(npcID, npcWorldPos, npcLocalPos, npcElevation, giveItem);
 
             case "Spawn Group":
-                string groupID = e["Group"].ToString();
-                Coord groupWorldPos = GetZone(e["Coordinate"].ToString());
-                int groupElevation = (int)e["Elevation"];
-                int groupAmount = (int)e["Amount"];
+                string groupID = data["Group"].ToString();
+                Coord groupWorldPos = GetZone(data["Coordinate"].ToString());
+                int groupElevation = (int)data["Elevation"];
+                int groupAmount = (int)data["Amount"];
 
                 return new SpawnNPCGroupEvent(groupID, groupWorldPos, groupElevation, groupAmount);
 
             case "Spawn Object":
-                string objectID = e["Object"].ToString();
-                Coord objectWorldPos = GetZone(e["Coordinate"].ToString());
-                Coord objectLocalPos = new Coord((int)e["Local Position"][0], (int)e["Local Position"][1]);
-                int objectElevation = (int)e["Elevation"];
-                string objectGiveItem = e.ContainsKey("Give Item") ? e["Give Item"].ToString() : "";
+                string objectID = data["Object"].ToString();
+                Coord objectWorldPos = GetZone(data["Coordinate"].ToString());
+                Coord objectLocalPos = new Coord((int)data["Local Position"][0], (int)data["Local Position"][1]);
+                int objectElevation = (int)data["Elevation"];
+                string objectGiveItem = data.ContainsKey("Give Item") ? data["Give Item"].ToString() : "";
 
                 return new SpawnObjectEvent(objectID, objectWorldPos, objectLocalPos, objectElevation, objectGiveItem);
 
@@ -86,55 +83,55 @@ public static class QuestList
                 return new RemoveAllSpawnedNPCsEvent();
 
             case "Move NPC":
-                Coord npcMoveWorldPos = GetZone(e["Coordinate"].ToString());
-                Coord npcMoveLocalPos = new Coord((int)e["Local Position"][0], (int)e["Local Position"][1]);
-                int moveNPCEle = (int)e["Elevation"];
-                string npcMoveID = e["NPC"].ToString();
+                Coord npcMoveWorldPos = GetZone(data["Coordinate"].ToString());
+                Coord npcMoveLocalPos = new Coord((int)data["Local Position"][0], (int)data["Local Position"][1]);
+                int moveNPCEle = (int)data["Elevation"];
+                string npcMoveID = data["NPC"].ToString();
 
                 return new MoveNPCEvent(npcMoveID, npcMoveWorldPos, npcMoveLocalPos, moveNPCEle);
 
             case "Give Quest":
-                string giveQuestNPC = e["NPC"].ToString();
-                string giveQuestID = e["Quest"].ToString();
+                string giveQuestNPC = data["NPC"].ToString();
+                string giveQuestID = data["Quest"].ToString();
 
                 return new GiveNPCQuestEvent(giveQuestNPC, giveQuestID);
 
             case "Spawn Blocker":
-                Coord blockerWorldPos = GetZone(e["Coordinate"].ToString());
-                Coord blockerLocalPos = new Coord((int)e["Local Position"][0], (int)e["Local Position"][1]);
-                int blockerEle = (int)e["Elevation"];
+                Coord blockerWorldPos = GetZone(data["Coordinate"].ToString());
+                Coord blockerLocalPos = new Coord((int)data["Local Position"][0], (int)data["Local Position"][1]);
+                int blockerEle = (int)data["Elevation"];
 
                 return new PlaceBlockerEvent(blockerWorldPos, blockerLocalPos, blockerEle);
 
             case "Remove Blockers":
-                Coord remBlockerPos = GetZone(e["Coordinate"].ToString());
-                int remBlockEle = (int)e["Elevation"];
+                Coord remBlockerPos = GetZone(data["Coordinate"].ToString());
+                int remBlockEle = (int)data["Elevation"];
 
                 return new RemoveBlockersEvent(remBlockerPos, remBlockEle);
 
             case "Console Command":
-                return new ConsoleCommandEvent(e.ToString());
+                return new ConsoleCommandEvent(data.ToString());
 
             case "Remove Item":
-                string removeNPC = e["NPC"].ToString();
-                string removeItem = e["Item"].ToString();
-                string replacement = e.ContainsKey("Replacement") ? e["Replacement"].ToString() : "";
+                string removeNPC = data["NPC"].ToString();
+                string removeItem = data["Item"].ToString();
+                string replacement = data.ContainsKey("Replacement") ? data["Replacement"].ToString() : "";
 
                 return new ReplaceItemOnNPCEvent(removeNPC, removeItem, replacement);
 
             case "Set Local Position":
-                Coord lp = new Coord((int)e["x"], (int)e["y"]);
+                Coord lp = new Coord((int)data["x"], (int)data["y"]);
 
                 return new LocalPosChangeEvent(lp);
 
             case "Set World Position":
-                Coord wp = GetZone(e["Coordinate"].ToString());
-                int ele = (int)e["Elevation"];
+                Coord wp = GetZone(data["Coordinate"].ToString());
+                int ele = (int)data["Elevation"];
 
                 return new WorldPosChangeEvent(wp, ele);
 
             case "Set Elevation":
-                int newEle = (int)e;
+                int newEle = (int)data;
 
                 return new ElevationChangeEvent(newEle);
 

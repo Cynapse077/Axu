@@ -9,6 +9,8 @@ using System.IO;
 
 public class CharacterCreation : MonoBehaviour
 {
+    public static string felonyPath;
+
     public string characterName { get; set; }
     [HideInInspector]
     public List<Trait> appliedTraits = new List<Trait>();
@@ -48,9 +50,6 @@ public class CharacterCreation : MonoBehaviour
 
     void Awake()
     {
-        if (ItemList.items == null)
-            SceneManager.LoadScene(0);
-
         DiffPanel.SetActive(false);
         CharPanel.SetActive(true);
 
@@ -145,7 +144,7 @@ public class CharacterCreation : MonoBehaviour
         loading = true;
 
         professions = new List<Profession>();
-        string jsonString = File.ReadAllText(Application.streamingAssetsPath + "/Data/Entity Data/Felonies.json");
+        string jsonString = File.ReadAllText(Application.streamingAssetsPath + felonyPath);
         JsonData data = JsonMapper.ToObject(jsonString);
 
         for (int i = 0; i < data["Felonies"].Count; i++)

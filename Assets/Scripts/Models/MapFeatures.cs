@@ -1,31 +1,38 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class MapFeatures {
-	public Coord pos;
-	List<string> features;
+public class MapFeatures
+{
+    public Coord pos;
+    List<string> features;
     List<string> customFeatures;
 
-	public MapFeatures(int x, int y) {
-		pos = new Coord(x, y);
-		features = new List<string>();
+    public MapFeatures(int x, int y)
+    {
+        pos = new Coord(x, y);
+        features = new List<string>();
         customFeatures = new List<string>();
-	}
+    }
 
-    public void AddFeature(string s) {
+    public void AddFeature(string s)
+    {
         customFeatures.Add(s);
     }
 
-    public void RemoveFeature(string s) {
+    public void RemoveFeature(string s)
+    {
         customFeatures.Remove(s);
     }
 
-	public void SetupFeatureList(TileMap_Data tmd, List<GameObject> mos, List<NPC> ais) {
-		features.Clear();
-		features.Add(World.tileMap.TileName());
+    public void SetupFeatureList(TileMap_Data tmd, List<GameObject> mos, List<NPC> ais)
+    {
+        features.Clear();
+        features.Add(World.tileMap.TileName());
 
-        if (ais != null) {
-            for (int i = 0; i < ais.Count; i++) {
+        if (ais != null)
+        {
+            for (int i = 0; i < ais.Count; i++)
+            {
                 if (ais[i].HasFlag(NPC_Flags.Merchant))
                     features.Add(LocalizationManager.GetContent("MF_Merchant"));
 
@@ -43,6 +50,6 @@ public class MapFeatures {
             }
         }
 
-		World.userInterface.mapFeaturePanel.UpdateFeatureList(features, customFeatures);
-	}
+        World.userInterface.mapFeaturePanel.UpdateFeatureList(features, customFeatures);
+    }
 }

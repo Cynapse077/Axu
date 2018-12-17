@@ -100,7 +100,9 @@ public class SlotSelectPanel : MonoBehaviour
         displayingBP = false;
 
         if (!gameObject.activeSelf)
+        {
             return;
+        }
 
         selectedItem = it;
         curInv = inv;
@@ -123,8 +125,5 @@ public class SlotSelectPanel : MonoBehaviour
 
             g.GetComponentInChildren<Text>().text = n + " - " + inv.entity.body.Hands[i].EquippedItem.InvDisplay(inv.baseWeapon);
         }
-
-        EventSystem.current.SetSelectedGameObject(null);
-        SetSelectedNum(0);
     }
 }

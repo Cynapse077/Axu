@@ -92,7 +92,7 @@
             "Walkable" : true,
             "Place At" : {
                 "Biome" : "Any Land",
-                "Distance From Start" : 10
+                "Distance From Start" : 20
             },
             "Underground" : "PowerPlant"
         },
@@ -428,7 +428,7 @@
 		{
 			"ID" : "Temple of Xzol",
 			"Display" : "Temple of Xzol",
-			"Depth" : 10,
+			"Depth" : 8,
 			"Light" : 4,
 			"Rules" : {
 				"Load" : true

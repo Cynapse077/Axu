@@ -679,8 +679,7 @@ public class BaseAI : MonoBehaviour
 
     void OnDeath(Entity ent)
     {
-        if (ObjectManager.playerJournal != null)
-            ObjectManager.playerJournal.OnNPCDeath_CheckQuestProgress(npcBase);
+        EventHandler.instance.OnNPCDeath(npcBase);
 
         if (npcBase.HasFlag(NPC_Flags.OnDeath_Explode))
         {
@@ -828,7 +827,7 @@ public class BaseAI : MonoBehaviour
     bool UseSkills(Entity targetEntity)
     {
         if (entity.stats.stamina <= 0 || entity.stats.HasEffect("Stun") || entity.stats.HasEffect("Topple") ||
-            entity.stats.Frozen() || entity.stats.HasEffect("Blind"))
+            entity.stats.HasEffect("Frozen") || entity.stats.HasEffect("Blind"))
             return false;
 
         if (!InSightOfPlayer())

@@ -15,7 +15,7 @@ public static class GameSettings
     {
         get
         {
-            return "0.7.1";
+            return "0.7.1b";
         }
     }
 
@@ -38,7 +38,7 @@ public static class GameSettings
             if (dat.Keys.Contains("ScreenSize") && dat["ScreenSize"].Count == 2)
                 ScreenSize = new Coord((int)dat["ScreenSize"][0], (int)dat["ScreenSize"][1]);
             else
-                ScreenSize = new Coord(1600, 900);
+                ScreenSize = new Coord(1280, 720);
 
             if (dat.Keys.Contains("Master_Volume"))
                 Master_Volume = (dat["Master_Volume"].IsDouble) ? (double)dat["Master_Volume"] : 1.0;
@@ -99,7 +99,6 @@ public static class GameSettings
                 if (ObjectManager.player != null)
                     ObjectManager.player.GetComponent<PlayerInput>().NewKeybindingClass();
             }
-
         }
         else
         {

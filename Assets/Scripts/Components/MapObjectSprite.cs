@@ -47,6 +47,11 @@ public class MapObjectSprite : MonoBehaviour
         if (cell != null)
             cell.RemoveObject(this);
 
+        if (objectBase.HasEvent("OnTurn"))
+        {
+            World.turnManager.incrementTurnCounter -= OnTurn;
+        }
+
         if (objectType == "Loot" || objectType == "Brazier" || objectType == "Campfire")
             World.turnManager.incrementTurnCounter -= UpdateVisuals;
 
@@ -59,29 +64,39 @@ public class MapObjectSprite : MonoBehaviour
 
     void GrabFromBlueprint(MapObjectBlueprint bp) 
     {
-        if (gameObject != null)
+        if (gameObject)
         {
             gameObject.name = bp.Name;
             spriteRenderer.sprite = SpriteManager.GetObjectSprite(bp.spriteID);
+        }
+        else
+        {
+            return;
         }
         
         spriteRenderer.sortingLayerName = "Items";
         spriteRenderer.sortingOrder = 2;
 
         if (bp.renderInFront)
+        {
             spriteRenderer.sortingLayerName = "Characters";
-
-        if (bp.renderInBack) {
+        }
+        else if (bp.renderInBack)
+        {
             spriteRenderer.sortingLayerName = "Items";
             spriteRenderer.sortingOrder = 0;
             renderInBack = true;
         }
 
         if (objectBase.solid)
+        {
             cell.SetUnwalkable();
+        }
 
         if (bp.tint != Vector4.one)
+        {
             myColor = bp.tint;
+        }
 
         if (bp.light != 0) {
             lightSource = new LightSource(bp.light);
@@ -96,10 +111,14 @@ public class MapObjectSprite : MonoBehaviour
         }
 
         if (bp.container != null)
+        {
             SetInventory(bp.container.capacity);
+        }
 
         if (objectBase.HasEvent("OnTurn"))
+        {
             World.turnManager.incrementTurnCounter += OnTurn;
+        }
     }
 
     void Initialize()
@@ -150,38 +169,51 @@ public class MapObjectSprite : MonoBehaviour
 
     public void ReceivePulse(Coord previous, int moveCount, bool pulseOn)
     {
-        if (objectBase.recievePulse)
+        if (objectBase.pulseInfo.receive)
         {
-            if (on != pulseOn)
+            if (isDoor_Closed && pulseOn)
             {
-                if (isDoor_Closed)
-                    ForceOpen();
-                else
-                    Interact();
+                ForceOpen();
+            }
+
+            if (objectBase.HasEvent("OnPulseReceived"))
+            {
+                LuaManager.CallScriptFunction(objectBase.GetEvent("OnPulseReceived"), pulseOn, this);
             }
 
             on = pulseOn;
 
-            if (objectBase.sendPulse)
-                SendPulses(previous, ++moveCount, pulseOn);
+            if (objectBase.pulseInfo.send)
+            {
+                if (objectBase.pulseInfo.reverse)
+                {
+                    on = !on;
+                }
+
+                SendPulses(previous, ++moveCount, on);
+            }
         }
     }
 
     public void OnEntityEnter(Entity e)
     {
-        if (objectBase.HasEvent("OnEntityEnter"))
+        if (objectBase.HasEvent("OnEntityEnter") && e != null)
+        {
             LuaManager.CallScriptFunction(objectBase.GetEvent("OnEntityEnter"), e, this);
+        }
     }
 
     public void OnEntityExit(Entity e)
     {
-        if (objectBase.HasEvent("OnEntityExit"))
+        if (objectBase.HasEvent("OnEntityExit") && e != null)
+        {
             LuaManager.CallScriptFunction(objectBase.GetEvent("OnEntityExit"), e, this);
+        }
     }
 
     void OnTurn()
     {
-        LuaManager.CallScriptFunction(objectBase.GetEvent("OnTurn"));
+        LuaManager.CallScriptFunction(objectBase.GetEvent("OnTurn"), this);
     }
 
     public void Autotile(bool initial)
@@ -205,9 +237,16 @@ public class MapObjectSprite : MonoBehaviour
                     continue;
 
                 if (NeighborAt(localPos.x + x, localPos.y + y))
-                    World.tileMap.GetCellAt(localPos.x + x, localPos.y + y).mapObjects.Find(z => z.objectType == objectType).Autotile(false);
+                {
+                    World.tileMap.GetCellAt(localPos.x + x, localPos.y + y).mapObjects.Find(z => z.CanAutotile(objectBase)).Autotile(false);
+                }
             }
         }
+    }
+
+    bool CanAutotile(MapObject other)
+    {
+        return (other.objectType == objectType);
     }
 
     int BitwiseNeighbors()
@@ -225,9 +264,11 @@ public class MapObjectSprite : MonoBehaviour
     bool NeighborAt(int x, int y)
     {
         if (World.OutOfLocalBounds(x, y))
+        {
             return false;
+        }
 
-        return World.tileMap.GetCellAt(x, y).mapObjects.Find(z => z.objectType == objectType);
+        return World.tileMap.GetCellAt(x, y).mapObjects.Find(z => z.CanAutotile(objectBase));
     }
 
     public void SetTypeAndSwapSprite(string t)
@@ -238,10 +279,22 @@ public class MapObjectSprite : MonoBehaviour
         if (bp != null)
         {
             if (objectBase.HasEvent("OnTurn"))
+            {
                 World.turnManager.incrementTurnCounter -= OnTurn;
+            }
+
+            if (objectBase.pathfindingCost != 0)
+            {
+                World.tileMap.GetCellAt(localPos.x, localPos.y).EditPathCost(-objectBase.pathfindingCost);
+            }
 
             objectBase.ReInitialize(bp);
             GrabFromBlueprint(bp);
+
+            if (objectBase.pathfindingCost != 0)
+            {
+                World.tileMap.GetCellAt(localPos.x, localPos.y).EditPathCost(objectBase.pathfindingCost);
+            }
         }
     }
 
@@ -502,16 +555,6 @@ public class MapObjectSprite : MonoBehaviour
 
             case "Chest":
                 SetTypeAndSwapSprite("Chest_Open");
-                break;
-
-            case "Statue":
-                if (ObjectManager.playerJournal.OnDestroyShrine_CheckQuestProgress())
-                {
-                    SetTypeAndSwapSprite("Statue_Broken");
-                    CombatLog.SimpleMessage("Break_Statue");
-                    World.soundManager.BreakArea();
-                }
-
                 break;
 
             case "Crystal":

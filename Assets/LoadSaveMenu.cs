@@ -34,11 +34,25 @@ public class LoadSaveMenu : MonoBehaviour
             {
                 GameObject button = Instantiate(loadButtonPrefab, loadButtonAnchor);
                 button.GetComponentInChildren<Text>().text = sg.charName + " - <color=grey>" + sg.time + "</color>";
-                button.GetComponent<MainMenu_LoadButton>().Init(this);
+                MainMenu_LoadButton mmlb = button.GetComponent<MainMenu_LoadButton>();
+                mmlb.Init(this);
+                mmlb.deleteButton.onClick.AddListener(() => { DeleteSaveFile(button.transform.GetSiblingIndex()); });
                 button.GetComponent<Button>().onClick.AddListener(() => { LoadGame(button.transform.GetSiblingIndex()); });
             }
 
             HoverFile(0);
+        }
+    }
+
+    public void DeleteSaveFile(int index)
+    {
+        int m = index;
+        string modPath = (Manager.SaveDirectory + "/" + savedGames[m].charName + ".axu");
+
+        if (File.Exists(modPath))
+        {
+            File.Delete(modPath);
+            SetupButtons();
         }
     }
 

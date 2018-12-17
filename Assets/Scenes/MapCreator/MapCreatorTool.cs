@@ -663,9 +663,10 @@ public class MapCreatorTool : MonoBehaviour
             GameObject button = SimplePool.Spawn(loadButtonPrefab, loadButtonAnchor);
             button.GetComponentInChildren<Text>().text = "> " + m.Name + ".map";
             string mapInfo = string.Format(" File: {0}\n\n Location ID: {1}\n\n Elevation: {2}", m.Name, m.locationID, m.elev.ToString());
-            button.GetComponent<MapCreator_LoadButton>().Init(this, mapInfo);
+            MapCreator_LoadButton lb = button.GetComponent<MapCreator_LoadButton>();
+            lb.Init(this, mapInfo);
             button.GetComponent<Button>().onClick.AddListener(() => { LoadMap(button.transform.GetSiblingIndex()); });
-            button.GetComponentsInChildren<Button>()[1].onClick.AddListener(() => { mapToDeleteIndex = button.transform.GetSiblingIndex(); OpenYesNoDialogue(); });
+            lb.deleteButton.onClick.AddListener(() => { mapToDeleteIndex = button.transform.GetSiblingIndex(); OpenYesNoDialogue(); });
         }
 
         selectType = MC_Selection_Type.Save;
@@ -749,17 +750,18 @@ public class MapCreatorTool : MonoBehaviour
 
     public void DeleteMap()
     {
-        int m = mapToDeleteIndex;
-        string modPath = (TileMap_Data.defaultMapPath + "/" + savedMaps[m].Name + ".map");
+        string mapToDeletePath = (Application.streamingAssetsPath + TileMap_Data.defaultMapPath + "/" + savedMaps[mapToDeleteIndex].Name + ".map");
 
-        if (!File.Exists(modPath))
-            modPath = (Application.persistentDataPath + "/Maps/" + savedMaps[m].Name + ".map");
-
-        if (File.Exists(modPath))
+        if (File.Exists(mapToDeletePath))
         {
-            File.Delete(modPath);
+            File.Delete(mapToDeletePath);
             CloseYesNoDialogue();
             LoadMenuActive();
+        }
+        else
+        {
+            Debug.LogError("No map at path \"" + mapToDeletePath + "\"!");
+            CloseYesNoDialogue();
         }
     }
 

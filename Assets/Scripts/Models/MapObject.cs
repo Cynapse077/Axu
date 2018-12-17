@@ -12,8 +12,7 @@ public class MapObject
     public List<Item> inv;
     public string objectType;
     public Coord localPosition, worldPosition;
-    public bool sendPulse;
-    public bool recievePulse;
+    public ObjectPulseInfo pulseInfo;
 
     Dictionary<string, LuaCall> luaEvents;
 
@@ -37,7 +36,6 @@ public class MapObject
 
     void Init(MapObjectBlueprint bp)
     {
-        pathfindingCost = bp.pathCost;
         ReInitialize(bp);
 
         if (objectType.Contains("Bloodstain_"))
@@ -57,10 +55,9 @@ public class MapObject
         description = bp.description;
         solid = (bp.solid == MapObjectBlueprint.MapOb_Interactability.Solid);
         opaque = bp.opaque;
-
+        pathfindingCost = bp.pathCost;
         luaEvents = bp.luaEvents;
-        sendPulse = bp.sendPulse;
-        recievePulse = bp.recievePulse;
+        pulseInfo = bp.pulseInfo;
     }
 
     void SetRotation()

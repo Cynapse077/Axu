@@ -8,13 +8,12 @@ public class Quest : EventContainer
     public string Description { get; private set; }
     public Goal[] goals { get; private set; }
     public QuestReward rewards { get; private set; }
-    public List<int> spawnedNPCs { get; protected set; }
+    public List<int> spawnedNPCs { get; private set; }
 
-    public string chainedQuest;
-    public string startDialogue;
-    public string endDialogue;
-
-    public bool failOnDeath;
+    public string chainedQuest { get; private set; }
+    public string startDialogue { get; private set; }
+    public string endDialogue { get; private set; }
+    public bool failOnDeath { get; private set; }
 
     public bool isComplete
     {
@@ -321,6 +320,7 @@ public class Quest : EventContainer
     public void Fail()
     {
         RunEvent(this, QuestEvent.EventType.OnFail);
+        ObjectManager.playerJournal.FailQuest(this);
     }
 
     public SQuest ToSQuest()

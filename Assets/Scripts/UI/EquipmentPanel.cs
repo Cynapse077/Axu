@@ -78,10 +78,15 @@ public class EquipmentPanel : UIPanel
 
     public override void ChangeSelectedNum(int newIndex)
     {
-        base.ChangeSelectedNum(newIndex);
+        if (!World.userInterface.SelectItemActions && !World.userInterface.SelectBodyPart)
+        {
+            base.ChangeSelectedNum(newIndex);
 
-        if (SelectedMax > 0)
-            scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
+            if (SelectedMax > 0)
+                scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
+
+            World.userInterface.InvPanel.UpdateTooltip(SelectedNum);
+        }
     }
 
     protected override void OnSelect(int index)
@@ -99,6 +104,7 @@ public class EquipmentPanel : UIPanel
             curInv.UnEquipArmor(curInv.entity.body.bodyParts[index - curInv.entity.body.Hands.Count - 1], true);
 
         World.userInterface.InitializeAllWindows(curInv);
+        World.userInterface.InvPanel.UpdateTooltip(SelectedNum);
 
         base.OnSelect(index);
     }

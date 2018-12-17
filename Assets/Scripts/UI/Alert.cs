@@ -15,7 +15,7 @@ public static class Alert {
 	public static void LoadAlerts() {
 		Alerts = new Dictionary<string, string[]>();
 
-		string myFile = File.ReadAllText(Application.streamingAssetsPath + "/Data/UI/Text.json");
+		string myFile = File.ReadAllText(Application.streamingAssetsPath + LocalizationManager.filePath);
 		JsonData data = JsonMapper.ToObject(myFile);
 
 		for (int i = 0; i < data["Alerts"].Count; i++) {

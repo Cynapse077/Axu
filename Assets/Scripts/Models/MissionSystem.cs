@@ -307,7 +307,7 @@ public class SpecificKillGoal : Goal
             }
         }
 
-        UnityEngine.Debug.LogError("Quest step is either complete, or NPC UID is zero.");
+        Debug.LogError("Quest step is either complete, or NPC UID is zero.");
         return null;
     }
 
@@ -426,7 +426,7 @@ public class FactionKillGoal : Goal
 
     public override string ToString()
     {
-        return string.Format("Kill {0}x members of the {1} faction.", max.ToString(), FactionList.GetFactionByID(faction).Name);
+        return string.Format("Kill {0}x members of the {1} faction. ({2}/{1})", max.ToString(), FactionList.GetFactionByID(faction).Name, amount.ToString());
     }
 }
 
@@ -456,7 +456,7 @@ public class GoToGoal : Goal
 
     void EnteredArea(Coord c, int ele)
     {
-        if (c == coordDest && UnityEngine.Mathf.Abs(ele) == UnityEngine.Mathf.Abs(elevation))
+        if (c == coordDest && Mathf.Abs(ele) == Mathf.Abs(elevation))
         {
             Complete();
         }
@@ -607,7 +607,7 @@ public class TalkToGoal : Goal
 
         if (n == null)
         {
-            UnityEngine.Debug.LogError("TalkToGoal: NPC Target is null. Cannot get destination position.");
+            Debug.LogError("TalkToGoal: NPC Target is null. Cannot get destination position.");
             return null;
         }
 
@@ -704,7 +704,7 @@ public class FetchPropertyGoal : Goal
 
         if (n == null)
         {
-            UnityEngine.Debug.LogError("FetchPropertyGoal: NPC Target is null. Cannot get destination position.");
+            Debug.LogError("FetchPropertyGoal: NPC Target is null. Cannot get destination position.");
             return null;
         }
 
@@ -1192,6 +1192,8 @@ public class RemoveBlockersEvent : QuestEvent
         }
 
         if (World.tileMap.WorldPosition == worldPos && World.tileMap.currentElevation == elevation)
+        {
             World.tileMap.HardRebuild();
+        }
     }
 }

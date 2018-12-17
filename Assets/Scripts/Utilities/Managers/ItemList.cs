@@ -27,7 +27,9 @@ public static class ItemList
     public static void CreateItems()
     {
         if (items != null)
+        {
             return;
+        }
 
         noneItem = new Item("<color=grey>None</color>")
         {
@@ -772,10 +774,24 @@ public static class ItemList
                 mob.randomRotation = (bool)newData["Random Rotation"];
             if (newData.ContainsKey("Light"))
                 mob.light = (int)newData["Light"];
-            if (newData.ContainsKey("SendPulse"))
-                mob.sendPulse = (bool)newData["SendPulse"];
-            if (newData.ContainsKey("RecievePulse"))
-                mob.recievePulse = (bool)newData["RecievePulse"];
+
+            if (newData.ContainsKey("Pulse"))
+            {
+                if (newData["Pulse"].ContainsKey("Send"))
+                {
+                    mob.pulseInfo.send = (bool)newData["Pulse"]["Send"];
+                }
+
+                if (newData["Pulse"].ContainsKey("Receive"))
+                {
+                    mob.pulseInfo.receive = (bool)newData["Pulse"]["Receive"];
+                }
+
+                if (newData["Pulse"].ContainsKey("Reverse"))
+                {
+                    mob.pulseInfo.reverse = (bool)newData["Pulse"]["Reverse"];
+                }
+            }
 
             if (newData.ContainsKey("LuaEvents"))
             {

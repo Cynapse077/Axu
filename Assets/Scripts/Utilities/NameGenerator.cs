@@ -21,13 +21,10 @@ public static class NameGenerator
         string prefix = Prefixes.GetRandom(SeedManager.textRandom), suffix = Suffixes.GetRandom(SeedManager.textRandom);
         string mid = "";
 
-        int ranNum = rand.Next(31);
-        if (ranNum < 1)
-            mid = "-";
-        else if (ranNum <= 1)
-            mid = "'";
-        else if (ranNum <= 3)
-            return CityName(rand);
+        int ranNum = rand.Next(100);
+
+        if (ranNum < 10)
+            mid = Suffixes.GetRandom(SeedManager.textRandom);
 
         return prefix + mid + suffix;
     }

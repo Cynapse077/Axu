@@ -43,7 +43,9 @@ public class ItemActionsPanel : MonoBehaviour
     void Update()
     {
         if (World.playerInput.keybindings.GetKey("Enter"))
+        {
             SelectPressed(UserInterface.selectedItemNum);
+        }
     }
 
     void SelectPressed(int index)
@@ -51,7 +53,6 @@ public class ItemActionsPanel : MonoBehaviour
         Item item = World.userInterface.IAPanel.selectedItem;
         ItemActions actions = new ItemActions(item);
         string actionName = actions.Actions[World.userInterface.IAPanel.selectedNum].Key;
-        bool closeWindow = false;
 
         if (actionName == "Throw")
         {
@@ -62,13 +63,12 @@ public class ItemActionsPanel : MonoBehaviour
             }
 
             World.userInterface.CloseWindows();
-            closeWindow = true;
+            return;
         }
         else if (actionName == "Equip" && curInv.entity.body.GetBodyPartsBySlot(item.GetSlot()).Count > 1)
         {
             World.userInterface.SSPanel.gameObject.SetActive(true);
             World.userInterface.SSPanel.Display(item, curInv);
-            closeWindow = true;
         }
         else if (actionName == "Wield")
         {
@@ -78,35 +78,35 @@ public class ItemActionsPanel : MonoBehaviour
                 World.userInterface.SSPanel.Wield(item, curInv);
             }
             else if (curInv.entity.body.AttachedArms().Count > 0)
+            {
                 curInv.Wield(item, curInv.entity.body.MainIndex);
-
-            closeWindow = true;
+            }
         }
         else if (actionName == "Drop All")
         {
             curInv.DropAllOfType(item);
-            closeWindow = true;
         }
         else
         {
             System.Reflection.MethodInfo mi = curInv.GetType().GetMethod(actionName);
 
             if (mi != null)
+            {
                 mi.Invoke(curInv, new object[] { item });
-
-            closeWindow = true;
+            }
         }
 
-        if (actionName == "Use" && curInv == ObjectManager.player.GetComponent<Inventory>())
+        if (actionName == "Use" && curInv == ObjectManager.playerEntity.inventory)
         {
             if (item.HasProp(ItemProperty.Blink) || item.HasProp(ItemProperty.Surface_Tele))
+            {
                 World.userInterface.CloseWindows();
+                return;
+            }
         }
 
         World.userInterface.InitializeAllWindows(curInv);
-
-        if (closeWindow)
-            gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     public void SetSelectedNum(int num)

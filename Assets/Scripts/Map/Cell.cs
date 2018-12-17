@@ -53,7 +53,9 @@ public class Cell
     public void SetUnwalkable()
     {
         if (World.tileMap.CurrentMap != null)
+        {
             World.tileMap.CurrentMap.SetWalkable(position.x, position.y, false);
+        }
     }
 
     public void SetEntity(Entity e)
@@ -65,7 +67,9 @@ public class Cell
             entity = e;
             
             if (World.tileMap.CurrentMap != null)
+            {
                 World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, 10);
+            }
 
             foreach (MapObjectSprite mos in mapObjects)
             {
@@ -88,7 +92,9 @@ public class Cell
             entity = null;
 
             if (World.tileMap.CurrentMap != null)
+            {
                 World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, -10);
+            }
         }
     }
 
@@ -100,16 +106,28 @@ public class Cell
         mos.SetParams(InSight, hasSeen);
 
         if (World.tileMap.CurrentMap != null)
+        {
             World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, mos.objectBase.pathfindingCost);
+        }
     }
 
     public void RemoveObject(MapObjectSprite mos)
     {
         if (World.tileMap.CurrentMap != null)
+        {
             World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, -mos.objectBase.pathfindingCost);
+        }
 
         mapObjects.Remove(mos);
         mos.cell = null;
+    }
+
+    public void EditPathCost(int editAmount)
+    {
+        if (World.tileMap.CurrentMap != null)
+        {
+            World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, editAmount);
+        }
     }
 
     public bool Reset(TileMap_Data oldMap, TileMap_Data newMap)
@@ -146,7 +164,9 @@ public class Cell
                 foreach (Item i in m.inv.items)
                 {
                     if (i.HasProp(ItemProperty.Pool) && i.HasCComponent<CLiquidContainer>())
+                    {
                         return i;
+                    }
                 }
             }
         }
@@ -159,10 +179,10 @@ public class Cell
         World.tileMap.OnScreenChange -= Reset;
     }
 
-    public void UpdateInSight(bool inSight, bool hasSeen)
+    public void UpdateInSight(bool _inSight, bool _hasSeen)
     {
-        this.InSight = inSight;
-        this.hasSeen = hasSeen;
+        InSight = _inSight;
+        hasSeen = _hasSeen;
 
         foreach (MapObjectSprite mos in mapObjects)
         {

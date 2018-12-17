@@ -831,7 +831,7 @@ public class TileMap_Data
                     string nType = data["npcs"][i]["Name"].ToString(); //Actually the ID of the NPC.
                     NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
 
-                    if (World.objectManager.NPCExists(nType) && bp.flags.Contains(NPC_Flags.Static))
+                    if (bp.flags.Contains(NPC_Flags.Static) && World.objectManager.NPCExists(nType))
                     {
                         NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
                         npc.worldPosition = new Coord(mapInfo.position);
@@ -842,8 +842,6 @@ public class TileMap_Data
                     {
                         NPC n = new NPC(bp, new Coord(mapInfo.position), new Coord(x, y), -elevation);
                         World.objectManager.CreateNPC(n);
-
-                        Debug.Log(nType + " does not exist.");
                     }
                 }
             }

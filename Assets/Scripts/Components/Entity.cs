@@ -291,7 +291,7 @@ public class Entity : MonoBehaviour
     {
         get
         {
-            return (!stats.HasEffect("Frozen") && !stats.HasEffect("Stun") && !stats.HasEffect("Unconscious"));
+            return !stats.SkipTurn();
         }
     }
 
@@ -341,7 +341,9 @@ public class Entity : MonoBehaviour
             }
 
             if (targetCell == null)
+            {
                 return false;
+            }
 
             if (targetCell.entity != null || targetCell.mapObjects.Count > 0)
             {
@@ -375,12 +377,11 @@ public class Entity : MonoBehaviour
                             if (isPlayer || AI.npcBase.HasFlag(NPC_Flags.Can_Open_Doors))
                             {
                                 OpenDoor(targetCell.mapObjects[i]);
-
-                                if (isPlayer)
-                                    World.tileMap.LightCheck();
                             }
                             else
+                            {
                                 Wait();
+                            }
 
                             return true;
                         }
@@ -391,7 +392,9 @@ public class Entity : MonoBehaviour
             {
                 //try other tiles if you have a spear
                 if (body.MainHand == null || body.MainHand.EquippedItem == null)
+                {
                     return false;
+                }
 
                 if (body.MainHand.EquippedItem.attackType == Item.AttackType.Spear)
                 {
@@ -403,13 +406,9 @@ public class Entity : MonoBehaviour
 
                     Cell tCell = World.tileMap.GetCellAt(posX + (x * 2), posY + (y * 2));
 
-                    if (tCell != null)
+                    if (tCell != null && tCell.entity != null)
                     {
-                        if (tCell.entity != null)
-                        {
-                            EntityBasedDecision(tCell, x * 2, y * 2, true);
-                            return true;
-                        }
+                        return EntityBasedDecision(tCell, x * 2, y * 2, true);
                     }
                 }
             }
@@ -435,6 +434,11 @@ public class Entity : MonoBehaviour
     bool EntityBasedDecision(Cell targetCell, int x, int y, bool stopSwap = false)
     {
         Entity otherEntity = targetCell.entity;
+
+        if (otherEntity == null)
+        {
+            return false;
+        }
 
         if (isPlayer)
         {
@@ -542,7 +546,7 @@ public class Entity : MonoBehaviour
 
     void Swipe(int x, int y)
     {
-        if (stats.HasEffect("Stun") || stats.Frozen())
+        if (stats.SkipTurn())
             return;
 
         int wepNum = fighter.CheckWepType();

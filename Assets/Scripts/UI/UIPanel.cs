@@ -2,7 +2,7 @@
 
 public class UIPanel : MonoBehaviour
 {
-    protected int SelectedNum;
+    public int SelectedNum { get; protected set; }
     protected int SelectedMax;
     protected bool initialized;
 

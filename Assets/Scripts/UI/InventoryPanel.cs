@@ -50,7 +50,7 @@ public class InventoryPanel : UIPanel
             EventSystem.current.Highlight(inventoryBase.GetChild(SelectedNum).gameObject);
         }
 
-        UpdateTooltip();
+        UpdateTooltip(SelectedNum);
     }
 
     public static Sprite SwitchSprite(Item item)
@@ -60,7 +60,7 @@ public class InventoryPanel : UIPanel
         return SpriteManager.GetObjectSprite(id);
     }
 
-    public void UpdateTooltip()
+    public void UpdateTooltip(int index)
     {
         ToolTipPanel.gameObject.SetActive(true);
         Item i = null;
@@ -71,21 +71,24 @@ public class InventoryPanel : UIPanel
                 i = curInv.items[SelectedNum];
         }
         else
-            i = GetEquipmentSlot();
+            i = GetEquipmentSlot(index);
 
-        ToolTipPanel.UpdateTooltip(i, World.userInterface.ShowItemTooltip());
+        if (i != null)
+        {
+            ToolTipPanel.UpdateTooltip(i, World.userInterface.ShowItemTooltip());
+        }
     }
 
-    Item GetEquipmentSlot()
+    Item GetEquipmentSlot(int index)
     {
         int handCount = curInv.entity.body.Hands.Count;
 
-        if (SelectedNum < handCount)
+        if (index < handCount)
             return curInv.entity.body.Hands[SelectedNum].EquippedItem;
-        else if (SelectedNum == handCount)
+        else if (index == handCount)
             return curInv.firearm;
         else
-            return curInv.entity.body.bodyParts[SelectedNum - handCount - 1].equippedItem;
+            return curInv.entity.body.bodyParts[index - handCount - 1].equippedItem;
     }
 
     public override void Update()
@@ -128,7 +131,7 @@ public class InventoryPanel : UIPanel
                 SelectedNum = 0;
                 World.userInterface.column--;
                 EventSystem.current.SetSelectedGameObject(null);
-                UpdateTooltip();
+                UpdateTooltip(SelectedNum);
                 World.soundManager.MenuTick();
             }
         }
@@ -141,7 +144,7 @@ public class InventoryPanel : UIPanel
                 EventSystem.current.SetSelectedGameObject(null);
                 EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(0).gameObject);
 
-                UpdateTooltip();
+                UpdateTooltip(SelectedNum);
                 World.soundManager.MenuTick();
             }
         }
@@ -157,21 +160,26 @@ public class InventoryPanel : UIPanel
 
     public override void ChangeSelectedNum(int newIndex)
     {
-        base.ChangeSelectedNum(newIndex);
-
-        if (SelectedMax > 0 && SelectedMax > SelectedNum)
+        if (!World.userInterface.SelectItemActions && !World.userInterface.SelectBodyPart)
         {
-            scrollBar.value = 1f - (SelectedNum / (float)curInv.items.Count);
-            EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(SelectedNum).gameObject);
-        }
+            base.ChangeSelectedNum(newIndex);
 
-        UpdateTooltip();
+            if (SelectedMax > 0 && SelectedMax > SelectedNum)
+            {
+                scrollBar.value = 1f - (SelectedNum / (float)curInv.items.Count);
+                EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(SelectedNum).gameObject);
+            }
+
+            UpdateTooltip(SelectedNum);
+        }
     }
 
     protected override void OnSelect(int index)
     {
-        if (World.userInterface.column != 1 || curInv.items.Count < 1 || World.userInterface.SelectBodyPart || World.userInterface.SelectItemActions)
+        if (World.userInterface.column != 1 || curInv.items.Count <= 0 || World.userInterface.SelectBodyPart || World.userInterface.SelectItemActions)
+        {
             return;
+        }
 
         World.userInterface.IAPanel.gameObject.SetActive(true);
         World.userInterface.IAPanel.Display(curInv.items[index], curInv);

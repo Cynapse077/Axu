@@ -41,12 +41,20 @@ public class OnHover_SetSelectedIndex : MonoBehaviour, IPointerEnterHandler
 
         if (window == UIWindow.Inventory)
         {
-            if (World.userInterface.column == 0)
-                World.userInterface.EqPanel.ChangeSelectedNum(transform.GetSiblingIndex() + offset);
-            else if (World.userInterface.column == 1)
-                World.userInterface.InvPanel.ChangeSelectedNum(transform.GetSiblingIndex() + offset);
+            int index = 0;
 
-            World.userInterface.InvPanel.UpdateTooltip();
+            if (World.userInterface.column == 0)
+            {
+                World.userInterface.EqPanel.ChangeSelectedNum(transform.GetSiblingIndex() + offset);
+                index = World.userInterface.EqPanel.SelectedNum;
+            }
+            else if (World.userInterface.column == 1)
+            {
+                World.userInterface.InvPanel.ChangeSelectedNum(transform.GetSiblingIndex() + offset);
+                index = World.userInterface.InvPanel.SelectedNum;
+            }
+
+            World.userInterface.InvPanel.UpdateTooltip(index);
         }
 
         if (window == UIWindow.ReplacePartWithItem)

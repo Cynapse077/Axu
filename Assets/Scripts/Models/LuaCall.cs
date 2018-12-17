@@ -2,14 +2,16 @@
 using MoonSharp.Interpreter;
 
 [MoonSharpUserData]
-public class LuaCall {
-	public string scriptName { get; protected set; }
-	public string functionName { get; protected set; }
-	public string variable { get; protected set; }
+public class LuaCall
+{
+    public string scriptName { get; private set; }
+    public string functionName { get; private set; }
+    public string variable { get; private set; }
 
-	public LuaCall(string sc, string fn, string v = null) {
-		this.scriptName = sc;
-		this.functionName = fn;
-		variable = v;
-	}
+    public LuaCall(string sc, string fn, string v = null)
+    {
+        scriptName = sc;
+        functionName = fn;
+        variable = v;
+    }
 }

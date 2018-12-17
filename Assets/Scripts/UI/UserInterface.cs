@@ -946,7 +946,7 @@ public class UserInterface : MonoBehaviour
         {
             if (SelectItemActions)
             {
-                InvPanel.UpdateTooltip();
+                InvPanel.UpdateTooltip(num);
                 return;
             }
 

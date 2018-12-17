@@ -130,12 +130,7 @@ public static class AIManager
                 return false;
         }
 
-        Stats s = ai.entity.stats;
-
-        if (s.HasEffect("Stun") || s.HasEffect("Unconscious") || s.Frozen())
-            return false;
-
-        return true;
+        return !ai.entity.stats.SkipTurn();
     }
 
     static void PickTarget(BaseAI ai)

@@ -281,17 +281,19 @@ public class TurnManager : MonoBehaviour
         npcs.AddRange(World.objectManager.onScreenNPCObjects);
         npcs.OrderBy(o => o.stats.Speed);
         int numTries = 0;
+        int chars = 0;
 
-        while (npcs.Count > 0)
+        while (npcs.Count > 0 && chars < 100)
         {
             Entity nextNPC = npcs[0];
+            chars++;
 
             if (nextNPC != null)
             {
                 nextNPC.RefreshActionPoints();
                 numTries = 0;
 
-                while (nextNPC.actionPoints >= costPerAction)
+                while (nextNPC != null && nextNPC.actionPoints >= costPerAction)
                 {
                     nextNPC.AI.Decision();
                     numTries++;
@@ -304,7 +306,7 @@ public class TurnManager : MonoBehaviour
                     }
                 }
 
-                if (playerEntity != null)
+                if (playerEntity != null && nextNPC != null)
                 {
                     nextNPC.gameObject.BroadcastMessage("SetEnabled", nextNPC.AI.InSightOfPlayer());
                 }

@@ -69,11 +69,17 @@ function Interact_Grave(obj)
 	end
 end
 
-function Interact_Light(obj)
-	if (obj.objectType == "Light_Off") then
+function Light_PulseReceived(on, obj)
+	if (obj.objectType == "Light_Off" and on) then
 		obj.SetTypeAndSwapSprite("Light_On")
-	elseif (obj.objectType == "Light_On") then
+	elseif (obj.objectType == "Light_On" and not on) then
 		obj.SetTypeAndSwapSprite("Light_Off")
+	end
+end
+
+function Door_OnPulseReceived(on, obj)
+	if (not on) then
+		Interact_Door(obj)
 	end
 end
 
@@ -143,4 +149,19 @@ end
 
 function OnExit_PressurePlate(entity, obj)
 	obj.StartPulse(false)
+end
+
+function OnTurn_Spike(obj)
+	if (obj.objectType == "Spike_Down") then
+		obj.SetTypeAndSwapSprite("Spike_Up")
+
+		local cell = TileMap.GetCellAt(obj.localPos.x, obj.localPos.y)
+
+		if (cell ~= nil and cell.entity ~= nil) then 
+			OnEnter_SpikeTrap(cell.entity, obj)
+		end
+
+	elseif (obj.objectType == "Spike_Up") then
+		obj.SetTypeAndSwapSprite("Spike_Down")
+	end
 end

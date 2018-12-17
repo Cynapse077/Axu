@@ -12,7 +12,7 @@ public class MapObjectBlueprint
     public MapOb_Interactability solid;
     public Container container;
     public Dictionary<string, LuaCall> luaEvents;
-    public bool sendPulse, recievePulse;
+    public ObjectPulseInfo pulseInfo;
 
     public MapObjectBlueprint()
     {
@@ -52,4 +52,11 @@ public class MapObjectBlueprint
             capacity = _capacity;
         }
     }
+}
+
+public struct ObjectPulseInfo
+{
+    public bool send;
+    public bool receive;
+    public bool reverse;
 }

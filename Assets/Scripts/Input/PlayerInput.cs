@@ -777,7 +777,7 @@ public class PlayerInput : MonoBehaviour
                 SetStoredTravelPosition();
                 World.tileMap.HardRebuild();
                 SpawnController.SpawnAttackers();
-                World.tileMap.SoftRebuild();
+                World.tileMap.HardRebuild();
                 World.objectManager.NoStickNPCs(entity.posX, entity.posY);
             }
         }

@@ -152,54 +152,54 @@ public class MainMenu : MonoBehaviour
     void ReadSettings()
     {
         GameSettings.InitializeFromFile();
+        Tile.filePath = Application.streamingAssetsPath + "/Data/Maps/LocalTiles.json";
 
-        if (File.Exists(Application.streamingAssetsPath + "/Data/Game.json"))
+        string campaignPath = Application.streamingAssetsPath + "/Data/Game.json";
+        string gData = File.ReadAllText(campaignPath);
+        JsonData dat = JsonMapper.ToObject(gData);
+
+        if (dat.ContainsKey("World"))
         {
-            string gData = File.ReadAllText(Application.streamingAssetsPath + "/Data/Game.json");
-            JsonData dat = JsonMapper.ToObject(gData);
-
-            if (dat.ContainsKey("World"))
-            {
-                Manager.worldMapSize = new Coord(200, 200);
-                WorldMap.BiomePath = dat["World"]["Tileset"].ToString();
-                WorldMap.LandmarkPath = dat["World"]["Location Sprites"].ToString();
-                WorldMap_Data.ZonePath = dat["World"]["Locations"].ToString();
-            }
-
-            if (dat.ContainsKey("Local"))
-            {
-                Manager.localMapSize = new Coord((int)dat["Local"]["Size"][0], (int)dat["Local"]["Size"][1]);
-                Manager.localMapSize.x = Mathf.Clamp(Manager.localMapSize.x, 15, 100);
-                Manager.localMapSize.y = Mathf.Clamp(Manager.localMapSize.y, 15, 100);
-                TileMap.imagePath = dat["Local"]["Tileset"].ToString();
-                Manager.localStartPos = new Coord((int)dat["Local"]["Start Position"][0], (int)dat["Local"]["Start Position"][1] - Manager.localMapSize.y);
-            }
-
-            if (dat.ContainsKey("Day Length"))
-            {
-                TurnManager.dayLength = (int)dat["Day Length"]["Day"];
-                TurnManager.nightLength = (int)dat["Day Length"]["Night"];
-            }
-
-            if (dat.ContainsKey("Data"))
-            {
-                EntityList.dataPath = dat["Data"]["NPCs"].ToString();
-                EntityList.bodyDataPath = dat["Data"]["Body Structures"].ToString();
-                NPCGroupList.dataPath = dat["Data"]["Spawn Tables"].ToString();
-                TileMap_Data.defaultMapPath = dat["Data"]["Default Maps"].ToString();
-                QuestList.dataPath = dat["Data"]["Quests"].ToString();
-                FactionList.dataPath = dat["Data"]["Factions"].ToString();
-                SkillList.dataPath = dat["Data"]["Abilities"].ToString();
-
-                ItemList.artDataPath = dat["Data"]["Artifacts"].ToString();
-                ItemList.itemDataPath = dat["Data"]["Items"].ToString();
-                ItemList.natItemDataPath = dat["Data"]["Natural Items"].ToString();
-                ItemList.modDataPath = dat["Data"]["Item Modifiers"].ToString();
-                ItemList.objDataPath = dat["Data"]["Objects"].ToString();
-                ItemList.liqDataPath = dat["Data"]["Liquids"].ToString();
-            }
+            Manager.worldMapSize = new Coord(200, 200);
+            WorldMap.BiomePath = dat["World"]["Tileset"].ToString();
+            WorldMap.LandmarkPath = dat["World"]["Location Sprites"].ToString();
+            WorldMap_Data.ZonePath = dat["World"]["Locations"].ToString();
         }
 
-        Tile.filePath = Application.streamingAssetsPath + "/Data/Maps/LocalTiles.json";
+        if (dat.ContainsKey("Local"))
+        {
+            Manager.localMapSize = new Coord((int)dat["Local"]["Size"][0], (int)dat["Local"]["Size"][1]);
+            Manager.localMapSize.x = Mathf.Clamp(Manager.localMapSize.x, 15, 100);
+            Manager.localMapSize.y = Mathf.Clamp(Manager.localMapSize.y, 15, 100);
+            TileMap.imagePath = dat["Local"]["Tileset"].ToString();
+            Manager.localStartPos = new Coord((int)dat["Local"]["Start Position"][0], (int)dat["Local"]["Start Position"][1] - Manager.localMapSize.y);
+        }
+
+        if (dat.ContainsKey("Day Length"))
+        {
+            TurnManager.dayLength = (int)dat["Day Length"]["Day"];
+            TurnManager.nightLength = (int)dat["Day Length"]["Night"];
+        }
+
+        if (dat.ContainsKey("Data"))
+        {
+            EntityList.dataPath = dat["Data"]["NPCs"].ToString();
+            EntityList.bodyDataPath = dat["Data"]["Body Structures"].ToString();
+            NPCGroupList.dataPath = dat["Data"]["Spawn Tables"].ToString();
+            TileMap_Data.defaultMapPath = dat["Data"]["Maps"].ToString();
+            QuestList.dataPath = dat["Data"]["Quests"].ToString();
+            FactionList.dataPath = dat["Data"]["Factions"].ToString();
+            SkillList.dataPath = dat["Data"]["Abilities"].ToString();
+
+            ItemList.artDataPath = dat["Data"]["Artifacts"].ToString();
+            ItemList.itemDataPath = dat["Data"]["Items"].ToString();
+            ItemList.natItemDataPath = dat["Data"]["Natural Items"].ToString();
+            ItemList.modDataPath = dat["Data"]["Item Modifiers"].ToString();
+            ItemList.objDataPath = dat["Data"]["Objects"].ToString();
+            ItemList.liqDataPath = dat["Data"]["Liquids"].ToString();
+            TraitList.traitPath = dat["Data"]["Traits"].ToString();
+            TraitList.woundPath = dat["Data"]["Wounds"].ToString();
+            CharacterCreation.felonyPath = dat["Data"]["Classes"].ToString();
+        }
     }
 }

@@ -22,8 +22,6 @@ public static class LuaManager
         {   
             AddFile(pathToLua, s);
         }
-
-        ModManager.LoadLua();
     }
 
     public static void AddFile(string pathToLua, string s)

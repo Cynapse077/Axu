@@ -56,7 +56,9 @@
         "Than",
         "Hila",
         "Ka",
-        "Akk"
+        "Akk",
+		"Bam",
+		"Isa"
     ],
 
     "Suffixes" : [
@@ -99,6 +101,12 @@
         "bar",
         "or'on",
         "-Lune",
-        "-Nil"
+        "-Nil",
+		"-Feh",
+		"'fey",
+		"zna",
+		"-rune",
+		"-pei",
+		"'ish"
     ]
 }

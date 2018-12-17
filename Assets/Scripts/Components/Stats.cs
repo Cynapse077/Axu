@@ -93,15 +93,15 @@ public class Stats : MonoBehaviour
 
     public int HeatResist
     {
-        get { return Attributes["Heat Resist"]; }
+        get { return Mathf.Min(Attributes["Heat Resist"], 90); }
     }
     public int ColdResist
     {
-        get { return Attributes["Cold Resist"]; }
+        get { return Mathf.Min(Attributes["Cold Resist"], 90); }
     }
     public int EnergyResist
     {
-        get { return Attributes["Energy Resist"]; }
+        get { return Mathf.Min(Attributes["Energy Resist"], 90); }
     }
     public int HPRegen
     {
@@ -157,6 +157,11 @@ public class Stats : MonoBehaviour
             addictions.Add(new Addiction(id, (liquid ? ItemList.GetLiquidByID(id).addictiveness : 5)));
     }
 
+    public bool SkipTurn()
+    {
+        return HasEffect("Frozen") || HasEffect("Stun") || HasEffect("Unconscious");
+    }
+
     public void AddStatusEffect(string effectName, int turns)
     {
         if (effectName == "Stun" && hasTraitEffect(TraitEffects.Stun_Resist) || effectName == "Confuse" && hasTraitEffect(TraitEffects.Confusion_Resist))
@@ -181,6 +186,12 @@ public class Stats : MonoBehaviour
                 if (LocalizationManager.GetContent("Message_SE_" + effectName) != LocalizationManager.defaultText)
                     CombatLog.NameMessage("Message_SE_" + effectName, entity.MyName);
             }
+
+            if (effectName == "Slow" && statusEffects["Slow"] > Speed - 3)
+            {
+                statusEffects["Slow"] = 0;
+                AddStatusEffect("Frozen", SeedManager.combatRandom.Next(2, 6));
+            }
         }
 
         CheckEffectsObjects();
@@ -204,7 +215,7 @@ public class Stats : MonoBehaviour
         poisonEffectObject.SetActive(HasEffect("Poison"));
         stunEffectObject.SetActive(HasEffect("Stun"));
         confuseEffectObject.SetActive(HasEffect("Confuse"));
-        freezeEffect.SetActive(Frozen());
+        freezeEffect.SetActive(HasEffect("Frozen"));
 
         if (entity.isPlayer)
             World.userInterface.UpdateStatusEffects(this);
@@ -485,16 +496,21 @@ public class Stats : MonoBehaviour
 
         int damage = 0;
         int targettedPartArmor = (targetPart == null) ? 0 : targetPart.equippedItem.armor + targetPart.armor;
-        int def = (ignoreArmor) ? 0 : targettedPartArmor + Defense;
+        int def = targettedPartArmor + Defense;
 
-        if (damageTypes.Contains(DamageTypes.Heat) || damageTypes.Contains(DamageTypes.Cold) || damageTypes.Contains(DamageTypes.Energy))
+        if (ignoreArmor || damageTypes.Contains(DamageTypes.Heat) || damageTypes.Contains(DamageTypes.Cold) || damageTypes.Contains(DamageTypes.Energy))
+        {
             def = 0;
+        }
+        else if (HasEffect("Shield"))
+        {
+            def *= 2;
+        }
 
         if (!entity.isPlayer && !entity.AI.HasSeenPlayer())
+        {
             crit = true;
-
-        if (HasEffect("Shield"))
-            def *= 2;
+        }
 
         damage = amount - def + (crit ? (damage / 2) : 0);
         damage = Mathf.Clamp(damage, 0, 999);
@@ -502,37 +518,39 @@ public class Stats : MonoBehaviour
         if (damage > 0 && !ignoreArmor)
         {
             if (RNG.Next(100) < MyInventory.ArmorProfLevelFromBP(targetPart))
+            {
                 return 0;
+            }
 
             //resistances.
             if (!ignoreResists)
             {
                 if (damageTypes.Contains(DamageTypes.Heat))
                 {
-                    float dm = damage;
-                    dm *= (-HeatResist * 0.01f);
-                    damage += (int)dm;
+                    ApplyResist(ref damage, HeatResist);
 
                     if (SeedManager.combatRandom.Next(100) < 3)
+                    {
                         AddStatusEffect("Aflame", SeedManager.combatRandom.Next(2, 6));
+                    }
                 }
                 else if (damageTypes.Contains(DamageTypes.Cold))
                 {
-                    float dm = damage;
-                    dm *= (-ColdResist * 0.01f);
-                    damage += (int)dm;
+                    ApplyResist(ref damage, ColdResist);
 
                     if (SeedManager.combatRandom.Next(100) < 3)
+                    {
                         AddStatusEffect("Slow", SeedManager.combatRandom.Next(2, 5));
+                    }
                 }
                 else if (damageTypes.Contains(DamageTypes.Energy))
                 {
-                    float dm = damage;
-                    dm *= (-EnergyResist * 0.01f);
-                    damage += (int)dm;
+                    ApplyResist(ref damage, EnergyResist);
 
                     if (SeedManager.combatRandom.Next(100) < 3)
+                    {
                         AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 3));
+                    }
                 }
             }
         }
@@ -540,12 +558,21 @@ public class Stats : MonoBehaviour
         if (damage > 0)
         {
             if (entity.isPlayer && damage >= maxHealth / 5 && SeedManager.combatRandom.Next(1000) < 5)
+            {
                 targetPart.WoundMe(damageTypes);
+            }
 
             ApplyDamage(damage, crit, Color.white);
         }
 
         return damage;
+    }
+
+    int ApplyResist(ref int damage, int resist)
+    {
+        float dm = damage;
+        dm *= (resist * -0.01f);
+        return damage + Mathf.RoundToInt(dm);
     }
 
     //The actual application of damage, from Damage()
@@ -564,16 +591,22 @@ public class Stats : MonoBehaviour
         }
 
         if (RNG.Next(100) < 20 && bloodstain)
+        {
             entity.CreateBloodstain();
+        }
 
         if (health <= 0)
+        {
             Die();
+        }
     }
 
     public void Die()
     {
         if (onDeath != null)
+        {
             onDeath(entity);
+        }
 
         entity.fighter.Die();
     }
@@ -611,15 +644,26 @@ public class Stats : MonoBehaviour
         Color c = Color.red;
 
         if (damageType == DamageTypes.Venom)
+        {
             c = Color.green;
+        }
         else if (damageType == DamageTypes.Bleed)
         {
             c = Color.magenta;
             
             if (entity.isPlayer || !entity.AI.npcBase.HasFlag(NPC_Flags.No_Blood))
-                World.objectManager.CreatePoolOfLiquid(entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, BloodType(), 1);
+            {
+                string bloodType = BloodType();
 
-            entity.CreateBloodstain(false, 30);
+                if (bloodType != "liquid_bloow")
+                {
+                    World.objectManager.CreatePoolOfLiquid(entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, bloodType, 1);
+                }
+                else
+                {
+                    entity.CreateBloodstain(false, 30);
+                }
+            }
         }
 
         if (entity.isPlayer)
@@ -692,11 +736,6 @@ public class Stats : MonoBehaviour
 
         characterSpriteObject.transform.localRotation = Quaternion.Euler(0f, 0f, zRot);
         characterSpriteObject.transform.localPosition = new Vector3(offset + 0.5f, offset, 0f);
-    }
-
-    public bool Frozen()
-    {
-        return (HasEffect("Slow") && statusEffects["Slow"] >= Speed - 3);
     }
 
     public void InitializeNewTrait(Trait t)

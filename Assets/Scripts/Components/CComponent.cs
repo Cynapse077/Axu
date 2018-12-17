@@ -393,14 +393,20 @@ public class CLiquidContainer : CComponent
 
     public void Pour(Entity ent)
     {
-        liquid.Splash(ent.stats);
-        liquid = null;
+        if (liquid != null)
+        {
+            liquid.Splash(ent.stats);
+            liquid = null;
+        }
     }
 
     public void Drink(Entity ent)
     {
-        liquid.Drink(ent.stats);
-        liquid.units--;
+        if (liquid != null)
+        {
+            liquid.Drink(ent.stats);
+            liquid.units--;
+        }
 
         CheckLiquid();
     }
