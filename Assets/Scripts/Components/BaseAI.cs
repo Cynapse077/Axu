@@ -15,16 +15,16 @@ public class BaseAI : MonoBehaviour
     public Path_AStar path { get; protected set; }
 
     public Entity target { get; protected set; }
-    Body body;
+
     readonly int sightRange = 17;
-    int perception = 10;
-    bool hasSeenPlayer = false;
+    readonly float distanceToTarget;
+
+    Body body;
     List<Entity> possibleTargets = new List<Entity>();
     NPCSprite spriteComponent;
     EntitySkills skills;
-    bool canAct, hasAskedForHelp = false, doneInit = false;
-    readonly float distanceToTarget;
-    Coord walkDirection = null;
+    int perception = 10;
+    bool hasSeenPlayer = false, canAct, hasAskedForHelp = false, doneInit = false;
 
     System.Random RNG
     {
@@ -54,10 +54,14 @@ public class BaseAI : MonoBehaviour
         GetComponent<NPCSprite>().SetSprite(npcBase.spriteID);
 
         if (npcBase.worldPosition.x < 0 || npcBase.worldPosition.y < 0)
+        {
             npcBase.worldPosition = worldPos;
+        }
 
         if (ObjectManager.playerEntity != null)
+        {
             target = ObjectManager.playerEntity;
+        }
 
         entity.stats.onDeath += OnDeath;
         GetComponent<DialogueController>().SetupDialogueOptions();
@@ -68,7 +72,9 @@ public class BaseAI : MonoBehaviour
         passiveMarker.SetActive(!npcBase.isHostile && InSightOfPlayer());
 
         if (!World.tileMap.WalkableTile(entity.myPos))
+        {
             entity.ForcePosition(World.tileMap.CurrentMap.GetRandomFloorTile());
+        }
 
         doneInit = true;
     }
@@ -76,7 +82,9 @@ public class BaseAI : MonoBehaviour
     public void SetTarget(Entity t)
     {
         if (target == null)
+        {
             target = t;
+        }
     }
 
     public void SetPath(Path_AStar newPath)
@@ -88,7 +96,9 @@ public class BaseAI : MonoBehaviour
     bool CanDoAnAction()
     {
         if (entity == null)
+        {
             return false;
+        }
 
         if (!doneInit || ObjectManager.playerEntity == null || entity.stats.HasEffect("Blind"))
         {
@@ -111,7 +121,9 @@ public class BaseAI : MonoBehaviour
         if (isStationary)
         {
             if (isHostile)
+            {
                 Hostile_Action();
+            }
 
             return false;
         }
@@ -123,16 +135,16 @@ public class BaseAI : MonoBehaviour
     {
         Item i = entity.inventory.items.FindAll(x => x.HasProp(ItemProperty.Throwing_Wep) || x.HasProp(ItemProperty.Explosive)).GetRandom();
 
-        if (i == null)
-            return;
+        if (i != null)
+        {
+            entity.fighter.SelectItemToThrow(i);
+            GameObject ex = (GameObject)Instantiate(explosive, target.transform.position, Quaternion.identity);
+            Explosive exScript = ex.GetComponent<Explosive>();
+            exScript.localPosition = target.myPos;
+            entity.fighter.ThrowItem(target.myPos, exScript);
 
-        entity.fighter.SelectItemToThrow(i);
-        GameObject ex = (GameObject)Instantiate(explosive, target.transform.position, Quaternion.identity);
-        Explosive exScript = ex.GetComponent<Explosive>();
-        exScript.localPosition = target.myPos;
-        entity.fighter.ThrowItem(target.myPos, exScript);
-
-        FaceMe(target.myPos);
+            FaceMe(target.myPos);
+        }
     }
 
     void Update()
@@ -161,7 +173,9 @@ public class BaseAI : MonoBehaviour
         if (!CanDoAnAction() || npcBase.HasFlag(NPC_Flags.Inactive))
         {
             if (entity != null)
+            {
                 entity.Wait();
+            }
 
             return;
         }
@@ -324,11 +338,18 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        path = new Path_AStar(entity.myPos, target.myPos, entity.inventory.CanFly());
+        GetNewPath(target.myPos);
+    }
+
+    void GetNewPath(Coord dest)
+    {
+        path = new Path_AStar(entity.myPos, dest, entity.inventory.CanFly());
         Coord next = path.GetNextStep();
 
         if (next.x == entity.posX && next.y == entity.posY)
+        {
             next = path.GetNextStep();
+        }
 
         int moveX = next.x - entity.posX, moveY = next.y - entity.posY;
 
@@ -355,12 +376,16 @@ public class BaseAI : MonoBehaviour
         possibleTargets.Refresh();
 
         if (npcBase.faction.isHostileTo("player") || isHostile)
+        {
             possibleTargets.Add(ObjectManager.playerEntity);
+        }
 
         foreach (Entity ent in World.objectManager.onScreenNPCObjects)
         {
             if (ShouldAttack(ent.AI) && entity.inSight(ent.myPos))
+            {
                 possibleTargets.Add(ent);
+            }
         }
 
         target = (possibleTargets.Count == 0) ? null : GetClosestTarget(possibleTargets);
@@ -374,41 +399,31 @@ public class BaseAI : MonoBehaviour
             entity.myPos = new Coord((int)transform.position.x, (int)transform.position.y);
         }
 
-        int posX = entity.posX, posY = entity.posY;
         if (target != null && target != ObjectManager.playerEntity)
         {
             Hostile_Action();
             return;
         }
 
-        if (RNG.Next(100) > 40 || (!isHostile && npcBase.HasFlag(NPC_Flags.Stationary_While_Passive)))
+        if (RNG.Next(100) > 30 || (!isHostile && npcBase.HasFlag(NPC_Flags.Stationary_While_Passive)) || npcBase.HasFlag(NPC_Flags.Aquatic))
         {
             entity.Wait();
             return;
         }
 
-        if (walkDirection == null || RNG.Next(100) < 20)
-            walkDirection = new Coord(RNG.Next(-1, 2), RNG.Next(-1, 2));
-
-
-        if (walkDirection != null && World.tileMap.WalkableTile(posX + walkDirection.x, posY + walkDirection.y))
+        if (path == null || path.path == null || path.path.Count <= 0)
         {
-            if ((!World.tileMap.GetCellAt(entity.myPos + walkDirection).Walkable) ||
-                (npcBase.HasFlag(NPC_Flags.Aquatic) && !World.tileMap.IsWaterTile(entity.posX + walkDirection.x, entity.posY + walkDirection.y)))
+            Coord targetPosition = World.tileMap.CurrentMap.GetRandomFloorTile();
+
+            if (targetPosition != null)
             {
-                walkDirection = null;
-
-                entity.Wait();
-                return;
+                GetNewPath(targetPosition);
             }
-
-            ConfirmAction(walkDirection.x, walkDirection.y);
         }
         else
-            walkDirection = null;
-
-        if (walkDirection == new Coord(0, 0))
-            walkDirection = null;
+        {
+            FollowPath();
+        }
     }
 
     public void ForceTarget(Entity newTarget)
@@ -427,7 +442,9 @@ public class BaseAI : MonoBehaviour
                 Entity ent = World.objectManager.onScreenNPCObjects[i].GetComponent<Entity>();
 
                 if (ent.AI.isHostile)
+                {
                     possibleTargets.Add(ent);
+                }
             }
 
             target = (possibleTargets.Count > 0) ? GetClosestTarget(possibleTargets) : ObjectManager.playerEntity;
@@ -436,15 +453,15 @@ public class BaseAI : MonoBehaviour
         if (target == ObjectManager.playerEntity && GetDistance(ObjectManager.playerEntity) < 3 || npcBase.HasFlag(NPC_Flags.At_Home))
         {
             Wander();
-            walkDirection = null;
             return;
         }
 
         if (HasRanged(target))
+        {
             return;
+        }
 
-        path = new Path_AStar(entity.myPos, target.myPos, entity.inventory.CanFly());
-        FollowPath();
+        GetNewPath(target.myPos);
     }
 
     public void FollowPath()
@@ -454,32 +471,12 @@ public class BaseAI : MonoBehaviour
             Coord next = path.GetNextStep();
 
             if (next == entity.myPos)
+            {
                 next = path.GetNextStep();
+            }
 
             ConfirmAction(next.x - entity.posX, next.y - entity.posY);
         }
-    }
-
-    List<Coord> OpenTilesInSameDirection(int x, int y)
-    {
-        List<Coord> adjacentToOther = new List<Coord>();
-
-        //iterate through the destination tile and find open adjacent tiles.
-        for (int tx = x - 1; tx < x + 1; tx++)
-        {
-            for (int ty = y - 1; ty < y + 1; ty++)
-            {
-                if (Mathf.Abs(tx) < 2 && Mathf.Abs(ty) < 2)
-                {
-                    int dx = entity.posX + tx, dy = entity.posY + ty;
-
-                    if (World.tileMap.WalkableTile(dx, dy) && World.tileMap.GetCellAt(new Coord(dx, dy)).Walkable)
-                        adjacentToOther.Add(new Coord(tx, ty));
-                }
-            }
-        }
-
-        return adjacentToOther;
     }
 
     void RangedAttack(Coord targetPosition)
@@ -524,22 +521,27 @@ public class BaseAI : MonoBehaviour
         List<Coord> emptyCoords = entity.GetEmptyCoords();
 
         if (emptyCoords != null && emptyCoords.Count > 0)
+        {
             SpawnController.SummonFromGroup(groupName, emptyCoords.GetRandom());
+        }
     }
 
     public bool HasDetectedPlayer(int perceptionBonus = 0)
     {
         if (ObjectManager.playerEntity == null)
+        {
             return false;
+        }
 
         float dist = GetDistance(target);
         int playerStealth = ObjectManager.playerEntity.stats.StealthCheck();
-
         int stealthRoll = RNG.Next(playerStealth);
         int perceptionRoll = RNG.Next(1, perception + perceptionBonus + 1);
 
         if (isStationary && dist < 1.6f && stealthRoll < perceptionRoll + 2)
+        {
             return true;
+        }
 
         int newSightRange = sightRange;
 
@@ -547,7 +549,9 @@ public class BaseAI : MonoBehaviour
             newSightRange -= 4;
 
         if (dist >= newSightRange / 2)
+        {
             perceptionRoll--;
+        }
 
         return (dist < newSightRange && stealthRoll < perceptionRoll);
     }
@@ -578,7 +582,9 @@ public class BaseAI : MonoBehaviour
             GetComponent<DialogueController>().SetupDialogueOptions();
 
         if (npcBase.ID == "oromir")
+        {
             ObjectManager.playerJournal.AddFlag(ProgressFlags.Hostile_To_Oromir);
+        }
 
         for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
         {
@@ -734,7 +740,9 @@ public class BaseAI : MonoBehaviour
             npcBase.hostilityOverride = true;
 
         if (!isHostile && npcBase.faction.isHostileTo("player"))
-            BecomeHostile();
+        {
+            OverrideHostility(true);
+        }
 
         if (npcBase.worldPosition.x != World.tileMap.worldCoordX || npcBase.worldPosition.y != World.tileMap.worldCoordY)
         {
@@ -770,6 +778,7 @@ public class BaseAI : MonoBehaviour
             npcBase.bodyParts = body.bodyParts;
 
             npcBase.handItems = new List<Item>();
+
             if (body.Hands.Count > 0)
             {
                 for (int i = 0; i < body.Hands.Count; i++)
@@ -807,7 +816,9 @@ public class BaseAI : MonoBehaviour
     public bool InSightOfPlayer()
     {
         if (entity.cell == null)
+        {
             entity.SetCell();
+        }
 
         bool sight = entity.cell.InSight;
 
@@ -819,7 +830,9 @@ public class BaseAI : MonoBehaviour
     public bool TargetInSight()
     {
         if (target == null)
+        {
             return false;
+        }
 
         return entity.inSight(target.myPos);
     }

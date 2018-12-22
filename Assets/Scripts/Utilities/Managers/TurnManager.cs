@@ -131,7 +131,9 @@ public class TurnManager : MonoBehaviour
     void CheckWorldEvents()
     {
         if (TimeOfDay >= FullDayLength)
+        {
             NewDay();
+        }
     }
 
     void NewDay()

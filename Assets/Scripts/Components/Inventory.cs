@@ -387,7 +387,10 @@ public class Inventory : MonoBehaviour
 
                 if (eSkills.abilities.Find(x => x.ID == skill.ID) == null)
                 {
-                    eSkills.AddSkill(new Skill(SkillList.GetSkillByID(abName)));
+                    Skill s = SkillList.GetSkillByID(abName);
+                    s.SetFlag(Skill.AbilityOrigin.Book);
+
+                    eSkills.AddSkill(s, Skill.AbilityOrigin.Book);
                     CombatLog.NameMessage("Learn_Skill", skill.Name);
                 }
                 else
@@ -741,14 +744,17 @@ public class Inventory : MonoBehaviour
 
         if (otherInventory == null)
         {
-            MapObject m = World.objectManager.NewObject("Loot", dropPos);
-            m.inv.Add(i);
+            World.objectManager.NewInventory("Loot", dropPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, new List<Item>() { i });
         }
         else
+        {
             otherInventory.PickupItem(i);
+        }
 
         if (items.Contains(i))
+        {
             items.Remove(i);
+        }
     }
 
     public void DropAllOfType(Item i)
@@ -765,8 +771,7 @@ public class Inventory : MonoBehaviour
                 otherInventory.PickupItem(newItem);
             else
             {
-                MapObject m = World.objectManager.NewObjectAtOtherScreen("Loot", entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
-                m.inv.Add(newItem);
+                World.objectManager.NewInventory("Loot", entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, new List<Item>() { newItem });
             }
         }
 

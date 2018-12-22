@@ -19,12 +19,19 @@ public class MainMenuPanel : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
             CloseOptionsMenu();
+        }
     }
 
     public void StartGame()
     {
         titleAndButtons.SetActive(false);
+    }
+
+    public void BackToMain()
+    {
+        titleAndButtons.SetActive(true);
     }
 
     public void GoToURL(string url)

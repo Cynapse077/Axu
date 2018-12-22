@@ -337,5 +337,3 @@ C:\Users\mritc\Documents\Axu\Axu\obj\Debug\Assembly-CSharp.csproj.CoreCompileInp
 C:\Users\mritc\Documents\Axu\Axu\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\mritc\Documents\Axu\Axu\obj\Debug\Assembly-CSharp.dll
 C:\Users\mritc\Documents\Axu\Axu\obj\Debug\Assembly-CSharp.pdb
-C:\Users\mritc\Documents\Axu\Axu\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
-C:\Users\mritc\Documents\Axu\Axu\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.xml

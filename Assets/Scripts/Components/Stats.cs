@@ -56,26 +56,43 @@ public class Stats : MonoBehaviour
 
     public int Strength
     {
-        get { return Mathf.Max(Attributes["Strength"], 1); }
+        get
+        {
+            int str = Mathf.Max(Attributes["Strength"], 1);
+            return Mathf.Min(str, 50);
+        }
     }
     public int Dexterity
     {
-        get { return Mathf.Max(Attributes["Dexterity"], 1); }
+        get
+        {
+            int dex = Mathf.Max(Attributes["Dexterity"], 1);
+            return Mathf.Min(dex, 50);
+        }
     }
     public int Intelligence
     {
-        get { return Mathf.Max(Attributes["Intelligence"], 1); }
+        get
+        {
+            int intel = Mathf.Max(Attributes["Intelligence"], 1);
+            return Mathf.Min(intel, 50);
+        }
     }
     public int Endurance
     {
-        get { return Mathf.Max(Attributes["Endurance"], 1); }
+        get
+        {
+            int end = Mathf.Max(Attributes["Endurance"], 1);
+            return Mathf.Min(end, 50);
+        }
     }
 
     public int Speed
     {
         get
         {
-            return (HasEffect("Haste")) ? Attributes["Speed"] * 2 : Attributes["Speed"];
+            int spd = (HasEffect("Haste")) ? Attributes["Speed"] * 2 : Attributes["Speed"];
+            return Mathf.Min(spd, 50);
         }
     }
     public int Accuracy
@@ -767,7 +784,9 @@ public class Stats : MonoBehaviour
         Trait t = TraitList.GetTraitByID(traitID);
 
         if (t != null)
+        {
             InitializeNewTrait(t);
+        }
     }
 
     public void ForceMutation()
@@ -775,7 +794,6 @@ public class Stats : MonoBehaviour
         Mutate();
     }
 
-    //Cause a random mutation to occur. Less likely as you have more.
     public void Mutate(string mutID = "")
     {
         if (mutID == "" && TraitList.GetAvailableMutations(this).Count <= 0)
@@ -787,27 +805,37 @@ public class Stats : MonoBehaviour
         if (hasTraitEffect(TraitEffects.Rad_Resist) && RNG.Next(100) < 10)
         {
             radiation /= 2;
+            CombatLog.SimpleMessage("Message_MutFail");
             return;
         }
 
-        Trait mutation = (mutID == "") ? TraitList.GetAvailableMutations(this).GetRandom(SeedManager.combatRandom) : TraitList.GetTraitByID(mutID);
+        if (string.IsNullOrEmpty(mutID))
+        {
+            List<Trait> availableMuts = TraitList.GetAvailableMutations(this);
 
-        if (mutation == null)
+            if (availableMuts.Count <= 0)
+            {
+                radiation = 0;
+                return;
+            }
+            else
+            {
+                mutID = availableMuts.GetRandom(RNG).ID;
+            }
+        }
+
+        Trait mutation = TraitList.GetTraitByID(mutID);
+
+        if (mutation == null || !mutation.stackable && hasTrait(mutation.ID) && string.IsNullOrEmpty(mutation.nextTier) 
+            || mutation.stackable && TraitStacks(mutation.ID) >= mutation.maxStacks)
         {
             radiation = 0;
             return;
         }
 
-        if (!mutation.stackable && hasTrait(mutation.ID) && string.IsNullOrEmpty(mutation.nextTier))
-        {
-            radiation = RNG.Next(2, 31);
-            return;
-        }
-        else
-
-        //Evolve mutation
         if (!mutation.stackable && hasTrait(mutation.ID) && !string.IsNullOrEmpty(mutation.nextTier))
         {
+            //Evolve mutation
             Trait newMut = TraitList.GetTraitByID(mutation.nextTier);
             RemoveTrait(mutation.ID);
 
@@ -816,9 +844,24 @@ public class Stats : MonoBehaviour
 
         CheckMutationIntegrity(mutation);
         InitializeNewTrait(mutation);
-        radiation = RNG.Next(2, 31);
+        radiation = RNG.Next(2, 7);
 
         CombatLog.NameMessage("Message_Mutate", mutation.name);
+    }
+
+    public int TraitStacks(string id)
+    {
+        int amt = 0;
+
+        for (int i = 0; i < traits.Count; i++)
+        {
+            if (traits[i].ID == id)
+            {
+                amt++;
+            }
+        }
+
+        return amt;
     }
 
     void CheckMutationIntegrity(Trait newMut)
@@ -851,7 +894,9 @@ public class Stats : MonoBehaviour
             for (int i = 0; i < t.abilityIDs.Count; i++)
             {
                 if (SkillList.GetSkillByID(t.abilityIDs[i]) != null && skills.abilities.Find(x => x.ID == t.abilityIDs[i]) != null)
-                    skills.RemoveSkill(t.abilityIDs[i]);
+                {
+                    skills.RemoveSkill(t.abilityIDs[i], Skill.AbilityOrigin.Trait);
+                }
             }
 
             t.Initialize(this, true);
@@ -975,8 +1020,10 @@ public class Stats : MonoBehaviour
         healTimer--;
         restoreTimer--;
 
-        if (entity.resting && healTimer % 3 == 0)
+        if ((entity.resting || ObjectManager.playerEntity.resting && !entity.isPlayer && entity.AI.isFollower()) && healTimer % 3 == 0)
+        {
             healTimer--;
+        }
 
         if (healTimer <= 0)
         {
@@ -1195,8 +1242,13 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < t.abilityIDs.Count; i++)
         {
-            if (SkillList.GetSkillByID(t.abilityIDs[i]) != null)
-                skills.AddSkill(SkillList.GetSkillByID(t.abilityIDs[i]));
+            Skill s = SkillList.GetSkillByID(t.abilityIDs[i]);
+
+            if (s != null)
+            {
+                s.SetFlag(Skill.AbilityOrigin.Trait);
+                skills.AddSkill(SkillList.GetSkillByID(t.abilityIDs[i]), Skill.AbilityOrigin.Trait);
+            }
         }
     }
 
@@ -1278,7 +1330,7 @@ public class Stats : MonoBehaviour
 
     int TurnsToHeal()
     {
-        int turns = 20 - Endurance;
+        int turns = 22 - Endurance;
 
         turns -= HPRegen;
 
@@ -1290,16 +1342,16 @@ public class Stats : MonoBehaviour
                 turns += 2;
         }
 
-        return Mathf.Clamp(turns, 1, 50);
+        return Mathf.Clamp(turns, 3, 50);
     }
 
     int TurnsToRestore()
     {
-        int turns = 20 - Endurance;
+        int turns = 22 - Endurance;
 
         turns -= STRegen;
 
-        return Mathf.Clamp(turns, 1, 50);
+        return Mathf.Clamp(turns, 3, 50);
     }
 
     public int CostToCureWounds()

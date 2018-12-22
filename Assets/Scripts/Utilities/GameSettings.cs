@@ -15,7 +15,7 @@ public static class GameSettings
     {
         get
         {
-            return "0.7.1b";
+            return "0.7.1c";
         }
     }
 
@@ -26,13 +26,6 @@ public static class GameSettings
         if (File.Exists(Manager.SettingsDirectory))
         {
             string jsonString = File.ReadAllText(Manager.SettingsDirectory);
-
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                Debug.LogError("Settings file null.");
-                return;
-            }
-
             JsonData dat = JsonMapper.ToObject(jsonString);
 
             if (dat.Keys.Contains("ScreenSize") && dat["ScreenSize"].Count == 2)

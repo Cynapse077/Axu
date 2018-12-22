@@ -67,8 +67,9 @@ public class CharacterPanel : MonoBehaviour
             if (p.level > 1 || p.xp > 0)
             {
                 GameObject pr = SimplePool.Spawn(profGO, profAnchor);
-                pr.GetComponent<Text>().text = p.name + " - " + p.LevelName() + " <color=orange>(" + (p.level - 1).ToString() +
-                    ")</color> " + "\n  <color=silver>(" + (p.xp / 10.0) + "% xp)</color>";
+                string pXP = (p.xp / 10.0).ToString();
+                string levelText = (p.level - 1).ToString();
+                pr.GetComponent<Text>().text = string.Format("{0} - {1} <color=orange>({2})</color>\n  <color=silver>({3}%x p)</color>", p.name, p.LevelName(), levelText, pXP);
             }
         }
 
@@ -84,7 +85,7 @@ public class CharacterPanel : MonoBehaviour
             else
                 tName = "<color=yellow>" + tName + "</color>";
 
-            tr.GetComponent<Text>().text = tName + " - <i>\n" + t.description + "</i>";
+            tr.GetComponent<Text>().text = string.Format("{0} - \n<i>{1}</i>", tName, t.description);
         }
 
         foreach (BodyPart b in stats.entity.body.bodyParts)

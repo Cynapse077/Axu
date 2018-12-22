@@ -44,7 +44,9 @@ public class PlayerInput : MonoBehaviour
         Initialize();
 
         if (questPointer == null)
+        {
             questPointer = GameObject.FindObjectOfType<MapPointer>();
+        }
 
         questPointer.OnChangeWorldMapPosition();
         World.tileMap.UpdateMapFeatures();
@@ -73,7 +75,9 @@ public class PlayerInput : MonoBehaviour
         cursorControlScript.enabled = (cursorMode == CursorMode.Tile);
 
         if (!cursorControlScript.enabled)
+        {
             Camera.main.GetComponent<CameraControl>().SetTargetTransform(entity.transform);
+        }
     }
 
     Vector3 PointerPos
@@ -185,15 +189,17 @@ public class PlayerInput : MonoBehaviour
             ChangeCursorMode(CursorMode.None);
             return;
         }
-        else if (KeyDown("Throw"))
+        else if (KeyDown("Throw") && World.userInterface.NoWindowsOpen)
         {
             if (playerInventory.items.Count <= 0 && !playerInventory.firearm.HasProp(ItemProperty.Throwing_Wep))
             {
                 Alert.NewAlert("No_Throw");
-                return;
             }
-
-            World.userInterface.OpenRelevantWindow(UIWindow.SelectItemToThrow);
+            else
+            {
+                World.userInterface.OpenRelevantWindow(UIWindow.SelectItemToThrow);
+            }
+            
             return;
         }
         else if (KeyDown("Toggle Mouse"))
@@ -213,7 +219,9 @@ public class PlayerInput : MonoBehaviour
             }
 
             if (entity.path != null)
+            {
                 entity.path = null;
+            }
         }
     }
 
@@ -662,6 +670,8 @@ public class PlayerInput : MonoBehaviour
     {
         if (npcsToMove == null)
             npcsToMove = new List<NPC>();
+        else
+            npcsToMove.Clear();
 
         if (!fullMap)
         {
@@ -681,7 +691,9 @@ public class PlayerInput : MonoBehaviour
                             continue;
 
                         if (other.AI.isHostile && other.AI.HasSeenPlayer() && !other.AI.isStationary && other.CanMove)
+                        {
                             npcsToMove.Add(other.AI.npcBase);
+                        }
                     }
                 }
             }

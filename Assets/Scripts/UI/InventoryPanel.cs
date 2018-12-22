@@ -81,14 +81,25 @@ public class InventoryPanel : UIPanel
 
     Item GetEquipmentSlot(int index)
     {
+        if (index < 0)
+        {
+            return null;
+        }
+
         int handCount = curInv.entity.body.Hands.Count;
 
         if (index < handCount)
-            return curInv.entity.body.Hands[SelectedNum].EquippedItem;
+        {
+            return curInv.entity.body.Hands[index].EquippedItem;
+        }
         else if (index == handCount)
+        {
             return curInv.firearm;
+        }
         else
+        {
             return curInv.entity.body.bodyParts[index - handCount - 1].equippedItem;
+        }
     }
 
     public override void Update()
@@ -131,7 +142,7 @@ public class InventoryPanel : UIPanel
                 SelectedNum = 0;
                 World.userInterface.column--;
                 EventSystem.current.SetSelectedGameObject(null);
-                UpdateTooltip(SelectedNum);
+                UpdateTooltip(World.userInterface.EqPanel.SelectedNum);
                 World.soundManager.MenuTick();
             }
         }
@@ -160,7 +171,7 @@ public class InventoryPanel : UIPanel
 
     public override void ChangeSelectedNum(int newIndex)
     {
-        if (!World.userInterface.SelectItemActions && !World.userInterface.SelectBodyPart)
+        if (!World.userInterface.SelectItemActions && !World.userInterface.SelectBodyPart && World.userInterface.column == 1)
         {
             base.ChangeSelectedNum(newIndex);
 

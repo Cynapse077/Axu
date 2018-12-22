@@ -12,10 +12,14 @@ namespace Pathfinding
         public Path_AStar(Coord startCoord, Coord endCoord, bool ignoreCosts)
         {
             if (World.tileMap.tileGraph == null)
+            {
                 World.tileMap.tileGraph = new Path_TileGraph(World.tileMap.CurrentMap);
+            }
 
             if (startCoord == null || endCoord == null)
+            {
                 return;
+            }
 
             Path_TileData start = World.tileMap.CurrentMap.GetTileData(startCoord.x, startCoord.y);
             Path_TileData end = World.tileMap.CurrentMap.GetTileData(endCoord.x, endCoord.y);
@@ -28,7 +32,7 @@ namespace Pathfinding
 
             if (end == null)
             {
-                Debug.LogError("Path end null");
+                Debug.LogError("Path end null.");
                 return;
             }
 
@@ -38,10 +42,14 @@ namespace Pathfinding
         public Path_AStar(Coord startCoord, Coord endCoord, WorldMap_Data gr)
         {
             if (World.worldMap.tileGraph == null)
+            {
                 World.worldMap.tileGraph = new Path_TileGraph(World.worldMap.worldMapData);
+            }
 
             if (startCoord == null || endCoord == null)
+            {
                 return;
+            }
 
             Path_TileData start = gr.GetPathDataAt(startCoord.x, startCoord.y), end = gr.GetPathDataAt(endCoord.x, endCoord.y);
 
@@ -104,22 +112,30 @@ namespace Pathfinding
                     Path_Node neighbor = edge_neighbor.node;
 
                     if (ClosedSet.Contains(neighbor))
+                    {
                         continue;
+                    }
 
-                    float tentative_g_score = g_score[current] + DistBetween(current, neighbor) + neighbor.data.costToEnter;
+                    float tentative_g_score = g_score[current] + GetDistance(current, neighbor) + neighbor.data.costToEnter;
 
                     if (!ignoreCosts)
+                    {
                         tentative_g_score = neighbor.data.costToEnter;
+                    }
 
                     if (OpenSet.Contains(neighbor) && tentative_g_score >= g_score[neighbor])
+                    {
                         continue;
+                    }
 
                     Came_From[neighbor] = current;
                     g_score[neighbor] = tentative_g_score;
                     f_score[neighbor] = g_score[neighbor] + HeuristicCostEstimate(neighbor.data.position, nodes[end].data.position);
 
                     if (!OpenSet.Contains(neighbor))
+                    {
                         OpenSet.Enqueue(neighbor, f_score[neighbor]);
+                    }
                 }
             }
         }
@@ -134,7 +150,6 @@ namespace Pathfinding
                 return 1.01f;
 
             return Mathf.Sqrt(Mathf.Pow(a.data.position.x - b.data.position.x, 2) + Mathf.Pow(a.data.position.y - b.data.position.y, 2));
-
         }
 
         void ReconstructPath(Dictionary<Path_Node, Path_Node> Came_From, Path_Node current)
@@ -156,6 +171,19 @@ namespace Pathfinding
             return Mathf.Sqrt(Mathf.Pow(a.x - b.x, 2) + Mathf.Pow(a.y - b.y, 2));
         }
 
+        float GetDistance(Path_Node nodeA, Path_Node nodeB)
+        {
+            int dstX = Mathf.Abs(nodeA.data.position.x - nodeB.data.position.x);
+            int dstY = Mathf.Abs(nodeA.data.position.y - nodeB.data.position.y);
+
+            if (dstX > dstY)
+            {
+                return 14.0f * dstY + 10.0f * (dstX - dstY);
+            }
+
+            return 14.0f * dstX + 10.0f * (dstY - dstX);
+        }
+
         public Coord GetNextStep()
         {
             if (path == null || path.Count == 0)
@@ -163,6 +191,14 @@ namespace Pathfinding
 
             Coord nextPosition = path.Dequeue().data.position;
             return nextPosition;
+        }
+    }
+
+    public static class PathRequestManager
+    {
+        public static void RequestPath(Coord start, Coord end, bool ignoreCosts)
+        {
+
         }
     }
 }

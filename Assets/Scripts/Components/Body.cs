@@ -465,7 +465,7 @@ public class Body : MonoBehaviour
             {
                 for (int i = 0; i < SeedManager.localRandom.Next(2, 4); i++)
                 {
-                    MyStats.Mutate();
+                    MyStats.ForceMutation();
                 }
             }
 

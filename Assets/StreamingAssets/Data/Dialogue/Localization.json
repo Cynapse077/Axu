@@ -1729,6 +1729,10 @@
             "ID" : "Message_Mutate",
             "Display" : "<color=magenta>Your body changes. You now have the mutation \"<color=yellow>[NAME]</color>\".</color>"
         },
+		{
+			"ID" : "Message_MutFail",
+			"Display" : "You resist the radiation."
+		},
         {
             "ID" : "Message_Lep",
             "Display" : "<color=red>[NAME]'s [ITEM] has fallen off...</color>"

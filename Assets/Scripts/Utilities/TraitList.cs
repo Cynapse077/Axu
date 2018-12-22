@@ -170,6 +170,8 @@ public static class TraitList
         if (tData.ContainsKey("Stackable"))
             t.stackable = (bool)tData["Stackable"];
 
+        t.maxStacks = (tData.ContainsKey("Max Stacks")) ? (int)tData["Max Stacks"] : 1;
+
         return t;
     }
 
@@ -194,7 +196,11 @@ public static class TraitList
         {
             if (stats.hasTrait(muts[i].ID) && !muts[i].stackable || stats.hasTrait(muts[i].nextTier) || stats.hasTrait(muts[i].prerequisite))
                 continue;
+
             if (muts[i].slot != "" && stats.traits.Find(x => x.slot == muts[i].slot) != null)
+                continue;
+
+            if (muts[i].stackable && stats.TraitStacks(muts[i].ID) >= muts[i].maxStacks)
                 continue;
 
             possibilities.Add(muts[i]);

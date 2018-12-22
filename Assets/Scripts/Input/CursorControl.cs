@@ -28,6 +28,7 @@ public class CursorControl : MonoBehaviour
     ObjectManager objectManager;
     SpriteRenderer spriteRenderer;
     CameraControl camControl;
+    MouseController mouseController;
 
     List<Entity> allTargets;
     public int targetIndex;
@@ -78,6 +79,7 @@ public class CursorControl : MonoBehaviour
         playerEntity = ObjectManager.playerEntity;
         skills = playerEntity.gameObject.GetComponent<EntitySkills>();
         input = playerEntity.gameObject.GetComponent<PlayerInput>();
+        mouseController = Camera.main.GetComponent<MouseController>();
         spriteRenderer.enabled = false;
         this.enabled = false;
     }
@@ -110,13 +112,12 @@ public class CursorControl : MonoBehaviour
     {
         if (GameSettings.UseMouse)
         {
-            MouseController mouseController = Camera.main.GetComponent<MouseController>();
             mouseController.CursorIsActive = false;
 
             if (input.cursorMode == PlayerInput.CursorMode.Tile)
             {
                 myPosX = (int)mouseController.cursorPosition.x;
-                myPosY = (int)mouseController.cursorPosition.y;
+                myPosY = (int)mouseController.cursorPosition.y + Manager.localMapSize.y;
             }
         }
 

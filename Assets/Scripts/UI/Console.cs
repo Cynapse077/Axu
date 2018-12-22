@@ -98,6 +98,12 @@ public class Console : MonoBehaviour
             World.tileMap.HardRebuild();
             return;
         }
+        else if (parsedText[0] == "10k")
+        {
+            World.turnManager.IncrementTime(10000);
+            World.tileMap.HardRebuild();
+            return;
+        }
         else if (parsedText[0] == "set")
         {
             int o = 0;
@@ -643,7 +649,7 @@ public class Console : MonoBehaviour
             if (SkillList.GetSkillByID(n) != null)
             {
                 Skill s = new Skill(SkillList.GetSkillByID(n));
-                ObjectManager.player.GetComponent<EntitySkills>().AddSkill(s);
+                ObjectManager.player.GetComponent<EntitySkills>().AddSkill(s, Skill.AbilityOrigin.Book);
                 MyConsole.NewMessage("Gave the player the ability \"" + s.Name + "\".");
             }
             else
@@ -774,30 +780,24 @@ public class Console : MonoBehaviour
             if (int.TryParse(parsedText[1], out o))
             {
                 string n = parsedText[2];
-                if (parsedText.Length > 3)
-                    n += " " + parsedText[3];
-                if (parsedText.Length > 4)
-                    n += " " + parsedText[4];
-                if (parsedText.Length > 5)
-                    n += " " + parsedText[5];
+                Item item = ItemList.GetItemByID(n);
 
-                if (ItemList.GetItemByName(n) != null)
+                if (item != null)
                 {
-                    Item newItem = ItemList.GetItemByName(n);
-                    if (newItem.stackable)
+                    if (item.stackable)
                     {
-                        newItem.amount = o;
-                        playerInventory.PickupItem(newItem);
+                        item.amount = o;
+                        playerInventory.PickupItem(item);
                     }
                     else
                     {
                         for (int x = 0; x < o; x++)
                         {
-                            playerInventory.PickupItem(newItem);
+                            playerInventory.PickupItem(item);
                         }
                     }
 
-                    MyConsole.NewMessage("    Gave " + o.ToString() + "x " + newItem.Name);
+                    MyConsole.NewMessage("    Gave " + o.ToString() + "x " + item.Name);
                 }
             }
             else
@@ -1084,6 +1084,7 @@ public class Console : MonoBehaviour
                 "\n\tCan_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Break_Prisoner_Inhibitor, Hostile_To_Kin, Hostile_To_Ensis, Hunts_Available, Arena_Available");
             MyConsole.NewMessage("  - <b>weather <i>[amount (0-3)]</i></b>\n    Sets the world weather to the appropriate number.");
             MyConsole.NewMessage("  - <b>5k</b>\n    Increases the turn counter by 5000.");
+            MyConsole.NewMessage("  - <b>10k</b>\n    Increases the turn counter by 10000.");
             MyConsole.NewMessage("  - <b>log</b>\n    Write a message to the combat log.");
             MyConsole.NewMessage("  - <b>limbtest</b>\n    Test for severing/attaching limbs.");
 

@@ -70,6 +70,7 @@
             "Name" : "Deactivate the Terminals",
             "ID" : "ensis4",
             "Description" : "Turn on the five terminals inside the Power Plant. There is one on each floor.",
+			"Sequential" : false,
             "Rewards" : {
                 "XP" : 150
             },

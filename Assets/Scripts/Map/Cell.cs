@@ -68,7 +68,7 @@ public class Cell
             
             if (World.tileMap.CurrentMap != null)
             {
-                World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, 10);
+                World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, 2);
             }
 
             foreach (MapObjectSprite mos in mapObjects)
@@ -93,7 +93,7 @@ public class Cell
 
             if (World.tileMap.CurrentMap != null)
             {
-                World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, -10);
+                World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, -2);
             }
         }
     }

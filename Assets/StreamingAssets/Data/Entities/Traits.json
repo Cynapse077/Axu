@@ -499,7 +499,8 @@
             	]
             },
             "Tags" : [ "Mutation" ],
-            "Stackable" : true
+            "Stackable" : true,
+			"Max Stacks" : 2
         },
         {
             "Name" : "Extra Leg",
@@ -516,7 +517,8 @@
             	]
             },
             "Tags" : [ "Mutation" ],
-            "Stackable" : true
+            "Stackable" : true,
+			"Max Stacks" : 2
         },
         {
             "Name" : "Extra Arm",
@@ -533,7 +535,8 @@
             	]
             },
             "Tags" : [ "Mutation" ],
-            "Stackable" : true
+            "Stackable" : true,
+			"Max Stacks" : 2
         },
         {
             "Name" : "Claws",
@@ -944,7 +947,7 @@
         {
             "Name" : "Vampirism",
             "ID" : "vampirism",
-            "Description" : "You crave the blood of living creatures. Your strength and speed are unmatched, but your body is stagnant and cannot improve trough training.",
+            "Description" : "You crave the blood of living creatures. Your strength and speed are unmatched, but your body is stagnant and cannot improve through training.",
             "Tags" : [ "Disease", "Vampirism", "No_Cure" ],
             "Stats" : [
                 { "Stat" : "Speed", "Amount" : 5 },

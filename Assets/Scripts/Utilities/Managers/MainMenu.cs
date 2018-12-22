@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.IO;
 using LitJson;
@@ -6,8 +7,11 @@ using LitJson;
 public class MainMenu : MonoBehaviour
 {
     public GameObject menuScreen;
+    public GameObject partSys;
     public Transform canvas;
     public LoadSaveMenu loadMenu;
+    public Image background;
+    public Image background2;
 
     [Space(20)]
     public int localMapWidth = 45;
@@ -23,10 +27,14 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+        background.CrossFadeAlpha(0.1f, 0.01f, false);
+        background2.CrossFadeAlpha(0.05f, 0.01f, false);
+
         LocalizationManager.LoadLocalizedData();
         loadMenu.gameObject.SetActive(false);
         Manager.playerName = "";
-        StartCoroutine("Init");
+
+        StartCoroutine(Init());
     }
 
     IEnumerator Init()
@@ -47,14 +55,21 @@ public class MainMenu : MonoBehaviour
 
         ReadSettings();
         FillDataLists();
+        soundManager.PlayMusic();
+        partSys.SetActive(true);
     }
 
     void FillDataLists()
     {
         if (Manager.localMapSize == null)
+        {
             Manager.localMapSize = new Coord(localMapWidth, localMapHeight);
+        }
+
         if (Manager.worldMapSize == null)
+        {
             Manager.worldMapSize = new Coord(worldMapWidth, worldMapHeight);
+        }
 
         SpriteManager.Init();
         LuaManager.LoadScripts();
@@ -81,6 +96,9 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
+        background.CrossFadeAlpha(0.75f, 3.0f, false);
+        background2.CrossFadeAlpha(0.4f, 3.0f, false);
+
         if (!canUseInput)
             return;
 
@@ -141,6 +159,14 @@ public class MainMenu : MonoBehaviour
         loadMenu.gameObject.SetActive(true);
         loadMenu.SetupButtons();
         canUseInput = false;
+    }
+
+    public void EndContinue()
+    {
+        canUseInput = true;
+        mmp.BackToMain();
+        loadMenu.gameObject.SetActive(false);
+        loadMenu.gameObject.SetActive(false);
     }
 
     public void Quit()

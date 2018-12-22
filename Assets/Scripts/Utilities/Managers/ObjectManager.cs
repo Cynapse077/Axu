@@ -56,7 +56,9 @@ public class ObjectManager : MonoBehaviour
         GetComponent<UserInterface>().loadingGO.SetActive(true);
 
         if (!Manager.newGame)
+        {
             GetComponent<SaveData>().LoadPlayer(playerName);
+        }
 
         CreateWorldMap();
 
@@ -104,7 +106,9 @@ public class ObjectManager : MonoBehaviour
         tileMap.SetMapSize(Manager.localMapSize.x, Manager.localMapSize.y);
 
         if (!Manager.newGame)
+        {
             tileMap.worldData = new OldScreens();
+        }
 
         tileMap.Init();
     }
@@ -221,7 +225,9 @@ public class ObjectManager : MonoBehaviour
     public BaseAI SpawnNPC(NPC npcB)
     {
         if (npcB == null || npcB.onScreen || npcB.localPosition == null)
+        {
             return null;
+        }
 
         if (!npcClasses.Contains(npcB))
         {
@@ -463,7 +469,7 @@ public class ObjectManager : MonoBehaviour
     }
 
     //Create a new object with an inventory. Return its inventory component.
-    public Inventory NewInventory(string type, Coord locPos, Coord worPos, List<Item> items = null)
+    public Inventory NewInventory(string type, Coord locPos, Coord worPos, int elevation, List<Item> items = null)
     {
         Cell c = World.tileMap.GetCellAt(locPos);
 
@@ -755,8 +761,10 @@ public class ObjectManager : MonoBehaviour
 
         for (int i = 0; i < npcClasses.Count; i++)
         {
-            if ((npcClasses[i].HasFlag(NPC_Flags.Follower) || npcClasses[i].faction.ID == "followers") && !npcClasses[i].HasFlag(NPC_Flags.At_Home))
+            if (npcClasses[i].IsFollower() && !npcClasses[i].HasFlag(NPC_Flags.At_Home))
+            {
                 num++;
+            }
         }
 
         return num;
@@ -766,7 +774,7 @@ public class ObjectManager : MonoBehaviour
     {
         for (int i = 0; i < npcClasses.Count; i++)
         {
-            if ((npcClasses[i].HasFlag(NPC_Flags.Follower) || npcClasses[i].faction.ID == "followers") && !npcClasses[i].onScreen && !npcClasses[i].HasFlag(NPC_Flags.At_Home))
+            if (npcClasses[i].IsFollower() && !npcClasses[i].HasFlag(NPC_Flags.At_Home))
             {
                 if (npcClasses[i].HasFlag(NPC_Flags.Deteriortate_HP))
                 {
@@ -776,8 +784,10 @@ public class ObjectManager : MonoBehaviour
 
                 npcClasses[i].worldPosition = tileMap.WorldPosition;
                 npcClasses[i].elevation = tileMap.currentElevation;
-                npcClasses[i].localPosition = (playerEntity.GetEmptyCoords().Count > 0) ? playerEntity.GetEmptyCoords().GetRandom() : playerEntity.myPos;
-                SpawnNPC(npcClasses[i]);
+
+                List<Coord> empties = (playerEntity != null) ? playerEntity.GetEmptyCoords() : new List<Coord>();
+
+                npcClasses[i].localPosition = (empties.Count > 0) ? empties.GetRandom() : World.tileMap.CurrentMap.GetRandomFloorTile();
             }
         }
     }
@@ -796,7 +806,9 @@ public class ObjectManager : MonoBehaviour
         }
 
         if (checkobjects)
+        {
             CheckOnScreenObjects();
+        }
     }
 
     public void CheckOnScreenObjects()

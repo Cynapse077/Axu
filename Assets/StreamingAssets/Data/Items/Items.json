@@ -2799,7 +2799,7 @@
             "Name" : "Frozen Mod Kit",
             "Type" : "Misc_Object",
             "Rarity" : 5,
-            "FlavorText" : "A kit to outfit an item with the \"Runed\" modifier. Replaces all other mods.",
+            "FlavorText" : "A kit to outfit an item with the \"Frozen\" modifier. Replaces all other mods.",
             "Cost" : 300,
             "Components" : [
                 {

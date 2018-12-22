@@ -14,6 +14,7 @@ public class Quest : EventContainer
     public string startDialogue { get; private set; }
     public string endDialogue { get; private set; }
     public bool failOnDeath { get; private set; }
+    public bool sequential { get; private set; }
 
     public bool isComplete
     {
@@ -25,7 +26,9 @@ public class Quest : EventContainer
             for (int i = 0; i < goals.Length; i++)
             {
                 if (!goals[i].isComplete)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -39,7 +42,9 @@ public class Quest : EventContainer
             for (int i = 0; i < goals.Length; i++)
             {
                 if (!goals[i].isComplete)
+                {
                     return goals[i];
+                }
             }
 
             return null;
@@ -100,6 +105,7 @@ public class Quest : EventContainer
         endDialogue = other.endDialogue;
         chainedQuest = other.chainedQuest;
         failOnDeath = other.failOnDeath;
+        sequential = other.sequential;
 
         for (int i = 0; i < other.goals.Length; i++)
         {
@@ -173,6 +179,8 @@ public class Quest : EventContainer
         {
             failOnDeath = (bool)q["Fail On Death"];
         }
+
+        sequential = q.ContainsKey("Sequential") ? (bool)q["Sequential"] : true;
 
         if (q.ContainsKey("Rewards"))
         {
@@ -272,11 +280,23 @@ public class Quest : EventContainer
                 goals[i].Setup(this);
             }
 
-            ActiveGoal.Init(skipEvent);
+            if (sequential)
+            {
+                ActiveGoal.Init(skipEvent);
+            }
+            else
+            {
+                for (int i = 0; i < goals.Length; i++)
+                {
+                    goals[i].Init(skipEvent);
+                }
+            }
         }
 
         if (!skipEvent)
+        {
             RunEvent(this, QuestEvent.EventType.OnStart);
+        }
     }
 
     public void CompleteGoal(Goal goal)
@@ -285,7 +305,11 @@ public class Quest : EventContainer
         {
             if (!g.isComplete)
             {
-                g.Init(false);
+                if (sequential)
+                {
+                    g.Init(false);
+                }
+
                 return;
             }
         }

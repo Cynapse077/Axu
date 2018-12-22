@@ -50,6 +50,13 @@ public class CharacterCreation : MonoBehaviour
 
     void Awake()
     {
+        if (ItemList.items == null)
+        {
+            Debug.LogError("Permissions error: Could not access paths to load data.");
+            SceneManager.LoadScene(0);
+            return;
+        }
+
         DiffPanel.SetActive(false);
         CharPanel.SetActive(true);
 
@@ -220,8 +227,9 @@ public class CharacterCreation : MonoBehaviour
         for (int s = 0; s < dat["Skills"].Count; s++)
         {
             string skillName = dat["Skills"][s].ToString();
-            p.skills.Add(new SSkill(skillName, 1, 0));
+            p.skills.Add(new SSkill(skillName, 1, 0, 0));
         }
+
         return p;
     }
 
@@ -664,7 +672,10 @@ public class CharacterCreation : MonoBehaviour
 
         for (int i = 0; i < currentProf.skills.Count; i++)
         {
-            Manager.playerBuilder.skills.Add(SkillList.GetSkillByID(currentProf.skills[i].Name));
+            Skill s = SkillList.GetSkillByID(currentProf.skills[i].Name);
+            FlagsHelper.Set(ref s.origin, Skill.AbilityOrigin.Book);
+
+            Manager.playerBuilder.skills.Add(s);
         }
 
         for (int i = 0; i < currentProf.items.Count; i++)

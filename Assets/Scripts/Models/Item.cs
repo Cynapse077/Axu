@@ -115,8 +115,11 @@ public class Item : ComponentHolder
         if (HasCComponent<CAbility>())
         {
             Skill sk = SkillList.GetSkillByID(GetCComponent<CAbility>().abID);
-            sk.fromItem = true;
-            stats.entity.skills.AddSkill_Item(sk);
+            
+            if (sk != null)
+            {
+                stats.entity.skills.AddSkill(sk, Skill.AbilityOrigin.Item);
+            }
         }
 
         RunCommands("OnEquip");
@@ -150,7 +153,9 @@ public class Item : ComponentHolder
 
             //Remove the ability if it is not present on other equipment.
             if (entity.inventory.EquippedItems().Find(x => x.HasCComponent<CAbility>() && x.GetCComponent<CAbility>().abID == cab.abID && x != this) == null)
-                entity.skills.RemoveSkill(cab.abID);
+            {
+                entity.skills.RemoveSkill(cab.abID, Skill.AbilityOrigin.Item);
+            }
         }
 
         RunCommands("OnUnequip");

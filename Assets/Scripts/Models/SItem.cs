@@ -241,11 +241,13 @@ public class SSkill
     public string Name { get; protected set; }
     public int Lvl { get; protected set; }
     public double XP { get; protected set; }
+    public int Flg { get; protected set; }
 
-    public SSkill(string _name, int lvl, double xp)
+    public SSkill(string _name, int lvl, double xp, int origin)
     {
         Name = _name;
         Lvl = lvl;
         XP = xp;
+        Flg = origin;
     }
 }

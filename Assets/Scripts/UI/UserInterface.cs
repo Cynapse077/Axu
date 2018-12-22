@@ -387,7 +387,7 @@ public class UserInterface : MonoBehaviour
             }
         }
 
-        if (!paused && uiState != UIWindow.Alert)
+        if (!paused && uiState != UIWindow.Alert && uiState != UIWindow.LevelUp)
         {
             if (playerInput.keybindings.GetKey("Inventory"))
                 OpenInventory();

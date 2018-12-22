@@ -39,7 +39,9 @@ public class TileMap : MonoBehaviour
             if (currentMap != value)
             {
                 if (World.turnManager != null && currentMap != null)
+                {
                     currentMap.lastTurnSeen = World.turnManager.turn;
+                }
 
                 TileMap_Data old = currentMap;
 
@@ -52,9 +54,6 @@ public class TileMap : MonoBehaviour
             }
 
             tileGraph = null;
-
-            if (World.objectManager != null && ObjectManager.playerEntity != null)
-                World.objectManager.CheckFollowers();
         }
     }
 
@@ -267,7 +266,9 @@ public class TileMap : MonoBehaviour
         CheckNPCTiles();
 
         if (lightCheck)
+        {
             LightCheck();
+        }
     }
 
     //The base rebuild function
@@ -298,13 +299,18 @@ public class TileMap : MonoBehaviour
             }
         }
 
-        if (!exists)
+        if (!CurrentMap.visited)
+        {
             SpawnController.BiomeSpawn(mx, my, CurrentMap);
+        }
 
         CurrentMap.visited = true;
+        World.objectManager.CheckFollowers();
 
         if (lightCheck)
+        {
             LightCheck();
+        }
     }
 
     void ApplyMapChanges(bool exists, int mx, int my, Coord worldPos)

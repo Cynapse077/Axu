@@ -78,7 +78,7 @@ public class EquipmentPanel : UIPanel
 
     public override void ChangeSelectedNum(int newIndex)
     {
-        if (!World.userInterface.SelectItemActions && !World.userInterface.SelectBodyPart)
+        if (!World.userInterface.SelectItemActions && !World.userInterface.SelectBodyPart && World.userInterface.column == 0)
         {
             base.ChangeSelectedNum(newIndex);
 

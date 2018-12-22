@@ -300,6 +300,7 @@ public class SaveData : MonoBehaviour
             Skill s = SkillList.GetSkillByID(sID);
             s.level = (int)playerJson["Skills"][i]["Lvl"];
             s.XP = (double)playerJson["Skills"][i]["XP"];
+            s.origin = playerJson["Skills"][i].ContainsKey("Flg") ? (Skill.AbilityOrigin)(int)playerJson["Skills"][i]["Flg"] : Skill.AbilityOrigin.None;
 
             skills.Add(s);
         }

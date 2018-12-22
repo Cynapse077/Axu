@@ -72,6 +72,11 @@ public class NPC
         return (flags.Contains(flag));
     }
 
+    public bool IsFollower()
+    {
+        return HasFlag(NPC_Flags.Follower) || faction.ID == "followers";
+    }
+
     public SStats GetSimpleStats()
     {
         return new SStats(new Coord(health, maxHealth), new Coord(stamina, maxStamina), new Dictionary<string, int>(Attributes), new Dictionary<string, int>(), 0, null);

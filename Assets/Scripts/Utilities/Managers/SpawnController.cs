@@ -199,7 +199,9 @@ public static class SpawnController
     static void SpawnUndergroundEnemies(TileMap_Data map)
     {
         if (map.visited)
+        {
             return;
+        }
 
         Vault v = World.tileMap.GetVaultAt(World.tileMap.WorldPosition);
 
@@ -209,7 +211,9 @@ public static class SpawnController
             int ele = Mathf.Abs(map.elevation);
 
             if (ele >= 5 || ele == 1)
+            {
                 return;
+            }
         }
 
         List<GroupBlueprint> gbs = GroupsThatCanSpawnHere(map);
@@ -218,21 +222,24 @@ public static class SpawnController
         {
             GroupBlueprint gb = gbs.GetRandom(rng);
             int amountSpawned = 0;
-            int maxSpawns = 25;
+            int maxSpawns = 20;
 
             for (int i = 0; i < rng.Next(1, 4); i++)
             {
                 if (amountSpawned >= maxSpawns)
+                {
                     break;
+                }
 
                 SpawnBlueprint s = Utility.WeightedChoice(gb.npcs);
-                int amount = s.AmountToSpawn() + Mathf.Abs(map.elevation);
-                amount = Mathf.Clamp(amount, 0, 6);
+                int amount = Mathf.Clamp(s.AmountToSpawn(), 1, 7);
 
                 for (int j = 0; j < amount; j++)
                 {
                     if (amountSpawned >= maxSpawns)
+                    {
                         break;
+                    }
 
                     Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
 
@@ -247,10 +254,14 @@ public static class SpawnController
         }
 
         if (v != null && v.blueprint.id == "Cave_Ice")
+        {
             SpawnObject("Ore", SeedManager.localRandom.Next(2, 5));
+        }
 
-        if (rng.Next(100) < 10)
+        if (rng.Next(100) < 5)
+        {
             SpawnObject("Chest", (SeedManager.combatRandom.Next(100) < 10) ? 2 : 1);
+        }
     }
 
     public static void SpawnObject(string obT, int amount = 1)

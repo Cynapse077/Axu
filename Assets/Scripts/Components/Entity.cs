@@ -60,7 +60,9 @@ public class Entity : MonoBehaviour
             targetPosition = new Vector3(_posX, _posY - Manager.localMapSize.y, _posY * 0.01f);
 
             if (isPlayer)
+            {
                 SetCamera();
+            }
         }
     }
 
@@ -75,7 +77,9 @@ public class Entity : MonoBehaviour
             GetComponentInChildren<SpriteRenderer>().sortingOrder = -_posY;
 
             if (isPlayer)
+            {
                 SetCamera();
+            }
         }
     }
 
@@ -92,7 +96,9 @@ public class Entity : MonoBehaviour
                 Vault v = World.tileMap.GetVaultAt(World.tileMap.WorldPosition);
 
                 if (v != null)
+                {
                     lgt = v.blueprint.light;
+                }
             }
 
             int l = (World.tileMap.currentElevation != 0) ? lgt : Manager.localMapSize.x - (int)World.turnManager.VisionInhibit();
@@ -126,7 +132,9 @@ public class Entity : MonoBehaviour
     void SetCamera()
     {
         if (cControl == null)
+        {
             cControl = Camera.main.GetComponent<CameraControl>();
+        }
 
         cControl.SetTargetTransform(transform);
     }
@@ -160,11 +168,8 @@ public class Entity : MonoBehaviour
 
         if (isPlayer)
         {
-            SetCamera();
             LuaManager.SetGlobals();
-
-            if (!Manager.newGame)
-                inventory.GetFromBuilder(Manager.playerBuilder);
+            SetCamera();
         }
     }
 
@@ -173,7 +178,9 @@ public class Entity : MonoBehaviour
         Cell c = World.tileMap.GetCellAt(myPos);
         
         if (c != null)
+        {
             c.SetEntity(this);
+        }
     }
 
     public bool OnScreenChange(TileMap_Data oldMap, TileMap_Data newMap)
@@ -185,10 +192,14 @@ public class Entity : MonoBehaviour
     void OnDisable()
     {
         if (cell != null)
+        {
             cell.UnSetEntity(this);
+        }
 
         if (isPlayer)
+        {
             World.tileMap.OnScreenChange -= OnScreenChange; 
+        }
     }
 
     //Go directly to a tile without lerping
@@ -206,7 +217,9 @@ public class Entity : MonoBehaviour
         targetPosition = transform.position = new Vector3(_posX, posY - Manager.localMapSize.y, 0);
 
         if (isPlayer)
+        {
             Camera.main.SendMessage("ForcePosition", SendMessageOptions.DontRequireReceiver);
+        }
     }
 
     float LerpSpeed
@@ -221,7 +234,9 @@ public class Entity : MonoBehaviour
     void Update()
     {
         if (isPlayer)
+        {
             ContinuousActions();
+        }
 
         if (transform.position != targetPosition)
         {
@@ -229,10 +244,28 @@ public class Entity : MonoBehaviour
         }
     }
 
+    bool FollowersNeedHealing()
+    {
+        foreach (Entity npc in World.objectManager.onScreenNPCObjects)
+        {
+            if (npc.AI.isFollower() && !npc.AI.npcBase.HasFlag(NPC_Flags.Deteriortate_HP))
+            {
+                if (npc.stats.health < npc.stats.maxHealth || npc.stats.stamina < npc.stats.maxStamina)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     void ContinuousActions()
     {
         if (playerInput != null)
+        {
             playerInput.restingIcon.SetActive(resting);
+        }
 
         if (canAct)
         {
@@ -244,9 +277,12 @@ public class Entity : MonoBehaviour
                     Coord c = path.GetNextStep();
 
                     if (c.x == posX && c.y == posY)
+                    {
                         c = path.GetNextStep();
+                    }
 
                     int moveX = c.x - posX, moveY = c.y - posY;
+
                     playerInput.CheckFacingDirection(posX + moveX);
                     Action(moveX, moveY);
                 }
@@ -261,9 +297,11 @@ public class Entity : MonoBehaviour
             else if (resting)
             {
                 if (!World.objectManager.SafeToRest())
+                {
                     resting = false;
+                }
 
-                if (stats.health < stats.maxHealth || stats.stamina < stats.maxStamina)
+                if (stats.health < stats.maxHealth || stats.stamina < stats.maxStamina || FollowersNeedHealing())
                     Wait();
                 else
                     resting = false;

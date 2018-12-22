@@ -98,7 +98,8 @@ public class MapObjectSprite : MonoBehaviour
             myColor = bp.tint;
         }
 
-        if (bp.light != 0) {
+        if (bp.light != 0)
+        {
             lightSource = new LightSource(bp.light);
             SetLit(true);
         }
@@ -454,7 +455,6 @@ public class MapObjectSprite : MonoBehaviour
             else if (objectType == "Elec_Door_Closed")
                 SetTypeAndSwapSprite("Elec_Door_Open");
 
-            World.tileMap.SoftRebuild();
             World.soundManager.OpenDoor();
         }
     }
@@ -597,9 +597,10 @@ public class MapObjectSprite : MonoBehaviour
                 {
                     List<Item> newInv = new List<Item> { ItemList.GetItemByID("artifact4") };
 
-                    World.objectManager.NewInventory("Loot", new Coord(localPos.x, localPos.y), World.tileMap.WorldPosition, newInv);
+                    World.objectManager.NewInventory("Loot", new Coord(localPos.x, localPos.y), World.tileMap.WorldPosition, World.tileMap.currentElevation, newInv);
                     World.soundManager.BreakArea();
                     DestroyMe();
+                    return;
                 }
                 else
                     Alert.NewAlert("Need_Dig");
@@ -611,7 +612,9 @@ public class MapObjectSprite : MonoBehaviour
             inv = GetComponent<Inventory>();
 
             if (objectType == "Chest" || objectType == "Chest_Open" || inv.items.Count > 0)
+            {
                 World.userInterface.OpenLoot(inv);
+            }
         }
     }
 

@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class UIPanel : MonoBehaviour
 {
     public int SelectedNum { get; protected set; }
     protected int SelectedMax;
     protected bool initialized;
-
-    float scroll;
+    bool canHoldKeys = false;
+    bool waitForRefresh = false;
+    float moveTimer = 0.0f;
 
     void OnDisable()
     {
@@ -16,6 +18,8 @@ public class UIPanel : MonoBehaviour
     public virtual void Initialize()
     {
         initialized = true;
+        moveTimer = 0.0f;
+        waitForRefresh = false;
     }
 
     public virtual void Update()
@@ -23,12 +27,65 @@ public class UIPanel : MonoBehaviour
         if (!initialized)
             return;
 
-        if (GameSettings.Keybindings.GetKey("North"))
-            ChangeSelectedNum(SelectedNum - 1);
-        else if (GameSettings.Keybindings.GetKey("South"))
-            ChangeSelectedNum(SelectedNum + 1);
-        else if (GameSettings.Keybindings.GetKey("Enter"))
+        if (GameSettings.Keybindings.GetKey("Enter"))
+        {
             OnSelect(SelectedNum);
+        }
+
+        if (GameSettings.Keybindings.GetKey("North", KeyPress.Up) || GameSettings.Keybindings.GetKey("South", KeyPress.Up))
+        {
+            moveTimer = 0;
+        }
+        else if (GameSettings.Keybindings.GetKey("North", KeyPress.Held) || GameSettings.Keybindings.GetKey("South", KeyPress.Held))
+        {
+            moveTimer += Time.deltaTime;
+            canHoldKeys = moveTimer >= 0.25f;
+        }
+
+        if (canHoldKeys)
+        {
+            HeldKeys();
+        }
+        else
+        {
+            PressedKeys();
+        }
+    }
+
+    void PressedKeys()
+    {
+        if (GameSettings.Keybindings.GetKey("North"))
+        {
+            ChangeSelectedNum(SelectedNum - 1);
+        }
+        else if (GameSettings.Keybindings.GetKey("South"))
+        {
+            ChangeSelectedNum(SelectedNum + 1);
+        }
+    }
+
+    void HeldKeys()
+    {
+        if (!waitForRefresh)
+        {
+            if (GameSettings.Keybindings.GetKey("North", KeyPress.Held))
+            {
+                ChangeSelectedNum(SelectedNum - 1);
+                StartCoroutine(HeldKeyRefresh());
+            }
+            else if (GameSettings.Keybindings.GetKey("South", KeyPress.Held))
+            {
+                ChangeSelectedNum(SelectedNum + 1);
+                StartCoroutine(HeldKeyRefresh());
+            }
+        }
+    }
+
+    IEnumerator HeldKeyRefresh()
+    {
+        waitForRefresh = true;
+        yield return new WaitForSeconds(0.1f);
+        waitForRefresh = false;
     }
 
     protected virtual void OnSelect(int index) {}
