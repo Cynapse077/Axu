@@ -112,7 +112,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152162}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -81.64789, y: 416.21478, z: 0}
+  m_LocalPosition: {x: 29.754517, y: 234.5946, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 492750}
@@ -243,13 +243,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionPoints: 10
-  body: {fileID: 114062372754548206}
-  stats: {fileID: 11495470}
-  inventory: {fileID: 11425858}
-  AI: {fileID: 11484426}
-  skills: {fileID: 11436392}
-  healTimer: 11
-  restoreTimer: 11
   isPlayer: 0
   canAct: 0
   resting: 0
@@ -270,7 +263,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gold: 0
   items: []
-  baseWeapon: fists
   entity: {fileID: 11422148}
 --- !u!114 &11436392
 MonoBehaviour:
@@ -284,7 +276,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilities: []
-  innateAbilities: []
   entity: {fileID: 11422148}
 --- !u!114 &11442388
 MonoBehaviour:
@@ -312,7 +303,6 @@ MonoBehaviour:
   npcBase:
     name: 
     ID: 
-    UID: 
     spriteID: 
     worldPosition:
       _x: 0
@@ -324,6 +314,7 @@ MonoBehaviour:
     faction:
       hostileTo: []
     isHostile: 0
+    hostilityOverride: 0
     onScreen: 0
     isAlive: 0
     hasSeenPlayer: 0
@@ -353,18 +344,21 @@ MonoBehaviour:
     flags: 
     corpseItem: 
     questID: 
+    dialogueID: 
     health: 0
     stamina: 0
     maxHealth: 0
     maxStamina: 0
+    weaponSkill: 0
+    UID: 0
   worldPos:
     _x: 0
     _y: 0
   passiveMarker: {fileID: 1000012969397488}
   spriteRenderer: {fileID: 21254362}
   explosive: {fileID: 162132, guid: 6e17ae1c9c95db34db7cbcf2a7b3e3e1, type: 2}
-  entity: {fileID: 0}
-  entitySkills: {fileID: 0}
+  entity: {fileID: 11422148}
+  entitySkills: {fileID: 11436392}
 --- !u!114 &11495470
 MonoBehaviour:
   m_ObjectHideFlags: 1

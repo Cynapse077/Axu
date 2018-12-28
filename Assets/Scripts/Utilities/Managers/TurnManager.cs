@@ -172,7 +172,7 @@ public class TurnManager : MonoBehaviour
                 if (!h.EquippedItem.UseCharge() && h.EquippedItem.HasProp(ItemProperty.DestroyOnZeroCharges))
                 {
                     CombatLog.NameMessage("Item_Rot", h.EquippedItem.Name);
-                    h.SetEquippedItem(ItemList.GetItemByID(ObjectManager.playerEntity.inventory.baseWeapon), ObjectManager.playerEntity);
+                    h.SetEquippedItem(ItemList.GetItemByID(h.baseItem), ObjectManager.playerEntity);
                 }
             }
         }

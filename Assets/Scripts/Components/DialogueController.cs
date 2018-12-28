@@ -14,7 +14,9 @@ public class DialogueController : MonoBehaviour
     public void SetupDialogueOptions()
     {
         if (ObjectManager.playerJournal == null)
+        {
             return;
+        }
 
         BaseAI bai = GetComponent<BaseAI>();
         myNPC = bai.npcBase;
@@ -22,13 +24,16 @@ public class DialogueController : MonoBehaviour
 
         GetComponent<NPCSprite>().questIcon.SetActive(QuestIconActive());
 
-        if (!string.IsNullOrEmpty(myNPC.questID))
+        if (!string.IsNullOrEmpty(myNPC.questID) && !ObjectManager.playerJournal.HasCompletedQuest(myNPC.questID) 
+            && ObjectManager.playerJournal.quests.Find(x => x.ID == myNPC.questID) == null)
         {
             myQuest = QuestList.GetByID(myNPC.questID);
         }
 
         if (!myNPC.HasFlag(NPC_Flags.Can_Speak))
+        {
             return;
+        }
 
         if (dialogueChoices == null)
             dialogueChoices = new List<DialogueChoice>();

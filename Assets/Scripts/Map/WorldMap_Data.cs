@@ -748,7 +748,9 @@ public class WorldMap_Data
             return null;
 
         if (tileData[x, y] == null)
+        {
             tileData[x, y] = new Path_TileData(tiles[x, y].Walkable(), new Coord(x, y), 0);
+        }
 
         return tileData[x, y];
     }
@@ -790,14 +792,15 @@ public class WorldMap_Data
                 Debug.LogError("Underground area \"" + search + "\" does not exist.");
         }
 
-
         return null;
     }
 
     public ZoneBlueprint_Underground GetUnderground(string search)
     {
         if (ugZoneBlueprints.ContainsKey(search))
+        {
             return ugZoneBlueprints[search];
+        }
 
         Debug.LogError("No ZoneBlueprint_Underground with the ID \"" + search + "\".");
         return null;
@@ -806,7 +809,9 @@ public class WorldMap_Data
     public string GetZoneNameAt(int x, int y, int ele)
     {
         if (ele != 0)
-            return World.tileMap.GetVaultAt(new Coord(x, y)).blueprint.name + " " + Mathf.Abs(ele).ToString();
+        {
+            return World.tileMap.GetVaultAt(new Coord(x, y)).blueprint.name + " -" + Mathf.Abs(ele).ToString();
+        }
 
         MapInfo mi = tiles[x, y];
 
@@ -821,7 +826,9 @@ public class WorldMap_Data
                 string s = LocalizationManager.GetContent("loc_village");
 
                 if (s.Contains("[NAME]"))
+                {
                     s = s.Replace("[NAME]", GetVillageAt(x, y).name);
+                }
 
                 return s;
             }

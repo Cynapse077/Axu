@@ -50,7 +50,7 @@ public class BodyPartTargetPanel : MonoBehaviour
         switch (selType)
         {
             case SelectionType.Amputate:
-                if (bp.slot == ItemProperty.Slot_Head)
+                if (bp.slot == ItemProperty.Slot_Head && bp.myBody.bodyParts.FindAll(x => x.slot == ItemProperty.Slot_Head).Count <= 1)
                 {
                     World.userInterface.CloseWindows();
                     Alert.NewAlert("Cannot_Amputate", UIWindow.AmputateLimb);

@@ -33,7 +33,6 @@ public class PlayerInput : MonoBehaviour
     Path_AStar worldPath;
 
     [HideInInspector] public Skill activeSkill;
-    [HideInInspector] public bool activeSkillUseStam = true;
     [HideInInspector] public CursorMode cursorMode = CursorMode.None;
     public GameObject restingIcon;
     public InputKeys keybindings;
@@ -92,27 +91,30 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator FollowPath()
     {
-        if (worldPath == null)
-            yield break;
-
-        canWorldMove = false;
-
-        if (World.tileMap.WorldPosition == targetPosition)
+        if (worldPath == null || worldPath.path == null)
         {
-            worldPath = null;
-            targetPosition = null;
-            canWorldMove = true;
             yield break;
         }
 
-        Coord next = worldPath.GetNextStep();
+        canWorldMove = false;
 
-        if (next == World.tileMap.WorldPosition)
-            next = worldPath.GetNextStep();
+        while (World.tileMap.WorldPosition != targetPosition && worldPath != null && targetPosition != null)
+        {
+            if (worldPath.path.Count <= 0)
+            {
+                break;
+            }
 
-        ChangeWorldPosition(next.x - World.tileMap.worldCoordX, next.y - World.tileMap.worldCoordY);
+            Coord next = worldPath.GetNextStep();
+            int wx = next.x - World.tileMap.worldCoordX;
+            int wy = next.x - World.tileMap.worldCoordY;
 
-        yield return new WaitForSeconds(0.05f);
+            Action(wx, wy);
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        worldPath = null;
+        targetPosition = null;
         canWorldMove = true;
     }
 
@@ -122,8 +124,12 @@ public class PlayerInput : MonoBehaviour
         {
             targetPosition = targetPos;
             Path_AStar path = new Path_AStar(World.tileMap.WorldPosition, targetPosition, World.tileMap.worldMap);
-            worldPath = path;
-            canWorldMove = true;
+
+            if (path.path != null)
+            {
+                worldPath = path;
+                canWorldMove = true;
+            }
         }
     }
 
@@ -137,7 +143,9 @@ public class PlayerInput : MonoBehaviour
     void Update()
     {
         if (stats.dead || lockInput)
+        {
             return;
+        }
 
         //Contextual actions
         if (KeyDown("Contextual Actions"))
@@ -153,14 +161,16 @@ public class PlayerInput : MonoBehaviour
         if (World.userInterface.NoWindowsOpen)
         {
             if (!UserInterface.paused && cursorMode != CursorMode.Tile)
+            {
                 HandleKeys();
+            }
         }
         else
             MenuKeys();
 
         if (fullMap && worldPath != null && canWorldMove)
         {
-            StartCoroutine("FollowPath");
+            StartCoroutine(FollowPath());
             return;
         }
 
@@ -232,8 +242,11 @@ public class PlayerInput : MonoBehaviour
             moveTimer += Time.deltaTime;
             canHoldKeys = (moveTimer >= 0.25f);
         }
+
         if (AnyInputUp())
+        {
             moveTimer = 0;
+        }
 
         if (canHoldKeys)
         {
@@ -335,29 +348,69 @@ public class PlayerInput : MonoBehaviour
         }
 
         if (AnyInputUp())
+        {
             moveTimer = 0;
+        }
+    }
+
+    Coord GetNewLocalPosFromWorldMove(int x, int y)
+    {
+        Coord c = new Coord(0, 0);
+
+        if (x == 0 && y == 0)
+        {
+            return new Coord(entity.posX, entity.posY);
+        }
+
+        switch (x)
+        {
+            case -1:
+                c.x = Manager.localMapSize.x - 2;
+                break;
+            case 0:
+                c.x = Manager.localMapSize.x / 2;
+                break;
+            case 1:
+                c.x = 1;
+                break;
+        }
+
+        switch (y)
+        {
+            case -1:
+                c.y = Manager.localMapSize.y - 2;
+                break;
+            case 0:
+                c.y = Manager.localMapSize.y / 2;
+                break;
+            case 1:
+                c.y = 1;
+                break;
+        }
+
+        return c;
     }
 
     void SingleInput()
     {
         if (KeyDown("North"))
-            Action(0, 1, Manager.localMapSize.x / 2, 2);
+            Action(0, 1);
         else if (KeyDown("East"))
-            Action(1, 0, 1, Manager.localMapSize.y / 2);
+            Action(1, 0);
         else if (KeyDown("South"))
-            Action(0, -1, Manager.localMapSize.x / 2, Manager.localMapSize.y - 2);
+            Action(0, -1);
         else if (KeyDown("West"))
-            Action(-1, 0, Manager.localMapSize.x - 2, Manager.localMapSize.y / 2);
+            Action(-1, 0);
         else if (KeyDown("NorthEast"))
-            Action(1, 1, 1, 2);
+            Action(1, 1);
         else if (KeyDown("SouthEast"))
-            Action(1, -1, 1, Manager.localMapSize.y - 2);
+            Action(1, -1);
         else if (KeyDown("SouthWest"))
-            Action(-1, -1, Manager.localMapSize.x - 2, Manager.localMapSize.y - 2);
+            Action(-1, -1);
         else if (KeyDown("NorthWest"))
-            Action(-1, 1, Manager.localMapSize.x - 2, 2);
+            Action(-1, 1);
         else if (KeyDown("Wait"))
-            Action(0, 0, entity.posX, entity.posY);
+            Action(0, 0);
     }
 
     void HoldKeys()
@@ -365,23 +418,23 @@ public class PlayerInput : MonoBehaviour
         if (!waitForRefresh)
         {
             if (KeyHeld("North"))
-                HeldKeyAction(0, 1, Manager.localMapSize.x / 2, 2);
+                HeldKeyAction(0, 1);
             else if (KeyHeld("East"))
-                HeldKeyAction(1, 0, 1, Manager.localMapSize.y / 2);
+                HeldKeyAction(1, 0);
             else if (KeyHeld("South"))
-                HeldKeyAction(0, -1, Manager.localMapSize.x / 2, Manager.localMapSize.y - 2);
+                HeldKeyAction(0, -1);
             else if (KeyHeld("West"))
-                HeldKeyAction(-1, 0, Manager.localMapSize.x - 2, Manager.localMapSize.y / 2);
+                HeldKeyAction(-1, 0);
             else if (KeyHeld("NorthEast"))
-                HeldKeyAction(1, 1, 1, 2);
+                HeldKeyAction(1, 1);
             else if (KeyHeld("SouthEast"))
-                HeldKeyAction(1, -1, 1, Manager.localMapSize.y - 2);
+                HeldKeyAction(1, -1);
             else if (KeyHeld("SouthWest"))
-                HeldKeyAction(-1, -1, Manager.localMapSize.x - 2, Manager.localMapSize.y - 2);
+                HeldKeyAction(-1, -1);
             else if (KeyHeld("NorthWest"))
-                HeldKeyAction(-1, 1, Manager.localMapSize.x - 2, 2);
+                HeldKeyAction(-1, 1);
             else if (KeyHeld("Wait"))
-                HeldKeyAction(0, 0, entity.posX, entity.posY);
+                HeldKeyAction(0, 0);
         }
     }
 
@@ -400,28 +453,33 @@ public class PlayerInput : MonoBehaviour
 
     public void UseDirectionalSkill(Skill newSkill)
     {
-        if (stats.HasEffect("Stun"))
+        if (stats.SkipTurn())
+        {
             return;
+        }
 
         activeSkill = newSkill;
         ChangeCursorMode(CursorMode.Direction);
     }
 
-    public void UseSelectTileSkill(Skill newSkill, bool useStam = true)
+    public void UseSelectTileSkill(Skill newSkill)
     {
-        if (stats.HasEffect("Stun"))
+        if (stats.SkipTurn())
+        {
             return;
+        }
 
         activeSkill = newSkill;
-        activeSkillUseStam = useStam;
         ChangeCursorMode(CursorMode.Tile);
         cursorControlScript.FindClosestEnemy(0);
     }
 
-    void Action(int x, int y, int wx, int wy)
+    void Action(int x, int y)
     {
         if (x != 0)
+        {
             FlipX(x < 0);
+        }
 
         if (!fullMap)
         {
@@ -432,7 +490,9 @@ public class PlayerInput : MonoBehaviour
             }
 
             if (!entity.canAct)
+            {
                 return;
+            }
 
             if (KeyHeld("AlternateAttack") && !(x == 0 && y == 0))
             {
@@ -459,7 +519,8 @@ public class PlayerInput : MonoBehaviour
         }
         else if (World.tileMap.WalkableWorldTile(World.tileMap.worldCoordX + x, World.tileMap.worldCoordY + y))
         {
-            SetLocalPosition(wx, wy);
+            Coord newLP = GetNewLocalPosFromWorldMove(x, y);
+            SetLocalPosition(newLP.x, newLP.y);
             ChangeWorldPosition(x, y);
             questPointer.OnChangeWorldMapPosition();
         }
@@ -479,7 +540,7 @@ public class PlayerInput : MonoBehaviour
             FlipX(otherXPos < entity.posX);
     }
 
-    void HeldKeyAction(int x, int y, int wx, int wy)
+    void HeldKeyAction(int x, int y)
     {
         float waitTime = 0.1f;
 
@@ -499,7 +560,8 @@ public class PlayerInput : MonoBehaviour
         }
         else if (World.tileMap.WalkableWorldTile(World.tileMap.worldCoordX + x, World.tileMap.worldCoordY + y))
         {
-            SetLocalPosition(wx, wy);
+            Coord newLP = GetNewLocalPosFromWorldMove(x, y);
+            SetLocalPosition(newLP.x, newLP.y);
             ChangeWorldPosition(x, y);
             questPointer.OnChangeWorldMapPosition();
         }
@@ -563,7 +625,9 @@ public class PlayerInput : MonoBehaviour
     public void SelectDirection(int x, int y)
     {
         if (DidDirectionalAction(x, y))
+        {
             return;
+        }
 
         CancelLook();
         entity.Interact(x, y);
@@ -752,7 +816,9 @@ public class PlayerInput : MonoBehaviour
             World.tileMap.UpdateMapFeatures();
 
             if (World.tileMap.CurrentMap.mapInfo.biome == WorldMap.Biome.Ocean || World.tileMap.CurrentMap.mapInfo.friendly)
+            {
                 return;
+            }
 
             //Encounters!
             float encRate = (World.difficulty.Level == Difficulty.DiffLevel.Adventurer || World.difficulty.Level == Difficulty.DiffLevel.Scavenger) ? 0.8f : 1.0f;
@@ -767,7 +833,9 @@ public class PlayerInput : MonoBehaviour
                 int goldAmount = (playerInventory.gold > 0) ? Random.Range(playerInventory.gold / 2, playerInventory.gold + 1) : 100;
 
                 if (playerInventory.items.Count > 0 && SeedManager.combatRandom.CoinFlip())
+                {
                     item = playerInventory.items.GetRandom();
+                }
 
                 if (item != null && SeedManager.combatRandom.CoinFlip())
                 {

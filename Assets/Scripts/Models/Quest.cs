@@ -254,7 +254,19 @@ public class Quest : EventContainer
                 string objType = q["Object Type"].ToString();
                 int interactAmount = (int)q["Amount"];
 
-                return new InteractGoal(objType, interactPos, interactEle, interactAmount);
+                return new InteractGoal(this, objType, interactPos, interactEle, interactAmount);
+
+            case "Choice":
+                List<Goal> goals = new List<Goal>();
+
+                for (int i = 0; i < q["Choices"].Count; i++)
+                {
+                    Goal g = GetQuestGoalFromJson(q["Choices"][i]);
+                    g.RemoveQuest();
+                    goals.Add(g);
+                }
+
+                return new ChoiceGoal(this, goals.ToArray());
 
             default:
                 UnityEngine.Debug.LogError("Quest::GetQuestGoalFromJson - No quest goal type " + goal + "!");
@@ -317,7 +329,7 @@ public class Quest : EventContainer
         Complete();
     }
 
-    public void Complete()
+    void Complete()
     {
         ObjectManager.playerEntity.stats.GainExperience(rewards.xp);
         ObjectManager.playerEntity.inventory.gold += rewards.money;

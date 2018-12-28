@@ -86,6 +86,7 @@ public class ObjectManager : MonoBehaviour
         World.userInterface.CloseWindows();
         World.userInterface.ShowInitialMessage(Manager.playerName);
         doneLoading = true;
+        GetComponent<MusicManager>().Init(World.tileMap.CurrentMap);
     }
 
     bool CheckArrowsEnabled(TileMap_Data oldMap, TileMap_Data newMap)
@@ -133,12 +134,13 @@ public class ObjectManager : MonoBehaviour
     public void SpawnPlayer()
     {
         if (!Manager.newGame)
+        {
             GetComponent<SaveData>().SetUpJournal();
+        }
 
         player = Instantiate(playerPrefab);
         player.name = "Player";
         playerEntity = player.GetComponent<Entity>();
-        playerJournal = player.GetComponent<Journal>();
         playerEntity.myPos = new Coord(Manager.localStartPos.x, Manager.localStartPos.y);
     }
     #endregion
@@ -165,7 +167,9 @@ public class ObjectManager : MonoBehaviour
         foreach (NPC n in npcClasses)
         {
             if (n.worldPosition == pos && n.elevation == z)
+            {
                 npcs.Remove(n);
+            }
         }
 
         npcClasses = npcs;
@@ -175,7 +179,9 @@ public class ObjectManager : MonoBehaviour
         foreach (Entity e in onScreenNPCObjects)
         {
             if (!npcClasses.Contains(e.AI.npcBase))
+            {
                 e.transform.SetParent(newObject.transform);
+            }
         }
 
         newObject.transform.DestroyChildren();
@@ -189,7 +195,9 @@ public class ObjectManager : MonoBehaviour
         foreach (MapObject m in mapObjects)
         {
             if (m.worldPosition == pos && m.elevation == z)
+            {
                 mos.Remove(m);
+            }
         }
 
         mapObjects = mos;
@@ -199,7 +207,9 @@ public class ObjectManager : MonoBehaviour
         foreach (GameObject g in onScreenMapObjects)
         {
             if (!mapObjects.Contains(g.GetComponent<MapObjectSprite>().objectBase))
+            {
                 g.transform.SetParent(newObject.transform);
+            }
         }
 
         newObject.transform.DestroyChildren();
@@ -233,7 +243,7 @@ public class ObjectManager : MonoBehaviour
         {
             if (npcB.HasFlag(NPC_Flags.Boss))
             {
-                npcB.maxHealth += (World.DangerLevel() / 10);
+                npcB.maxHealth += Mathf.Min(World.DangerLevel() / 10, 20);
                 npcB.health = npcB.maxHealth;
             }
 
@@ -270,7 +280,9 @@ public class ObjectManager : MonoBehaviour
     public void SummonNPC(NPC npcB, NPC summonerNPC)
     {
         if (npcB.onScreen)
+        {
             return;
+        }
 
         for (int i = 0; i < onScreenNPCObjects.Count; i++)
         {
@@ -282,12 +294,16 @@ public class ObjectManager : MonoBehaviour
 
         //Remove the summon flag, so you don't end up with a screen full of baddies.
         if (npcB.HasFlag(NPC_Flags.Summon_Adds))
+        {
             npcB.flags.Remove(NPC_Flags.Summon_Adds);
+        }
 
         npcB.faction = summonerNPC.faction;
 
         if (npcB.worldPosition == tileMap.WorldPosition && npcB.elevation == tileMap.currentElevation)
+        {
             SpawnNPC(npcB);
+        }
     }
 
     //Call this to check NPCs positions upon entering a screen, to make sure they don't overlap the player.
@@ -335,22 +351,26 @@ public class ObjectManager : MonoBehaviour
 
     public void SpawnExplosion(Entity spawner, Coord position)
     {
-        GameObject exp = Instantiate(World.poolManager.abilityEffects[6], position.toVector2(), Quaternion.identity);
+        Vector2 newPos = new Vector2(position.x, position.y - Manager.localMapSize.y);
+
+        Instantiate(World.poolManager.abilityEffects[6], newPos, Quaternion.identity);
         TileDamage td = new TileDamage(spawner, position, new HashSet<DamageTypes>() { DamageTypes.Heat })
         {
-            myName = exp.name = LocalizationManager.GetContent("Explosion"),
-            damage = Random.Range(14, 20)
+            myName = LocalizationManager.GetContent("Explosion"),
+            damage = Random.Range(4, 10)
         };
         td.ApplyDamage();
     }
 
     public void SpawnPoisonGas(Entity spawner, Coord position)
     {
-        GameObject exp = Instantiate(World.poolManager.abilityEffects[2], position.toVector2(), Quaternion.identity);
+        Vector2 newPos = new Vector2(position.x, position.y - Manager.localMapSize.y);
+
+        Instantiate(World.poolManager.abilityEffects[2], newPos, Quaternion.identity);
         TileDamage td = new TileDamage(spawner, position, new HashSet<DamageTypes>() { DamageTypes.Venom })
         {
-            myName = exp.name = LocalizationManager.GetContent("Poisonous Gas"),
-            damage = Random.Range(1, 3)
+            myName = LocalizationManager.GetContent("Poisonous Gas"),
+            damage = Random.Range(2, 5)
         };
         td.ApplyDamage();
     }
@@ -654,7 +674,9 @@ public class ObjectManager : MonoBehaviour
     public void NewMapIcon(int iconType, Coord mapCoord)
     {
         if (mapCoord == null || mapIconGameObjects.ContainsKey(mapCoord))
+        {
             return;
+        }
 
         Vector3 pointerPos = new Vector3(mapCoord.x + 50, -200 + mapCoord.y + 0.1f, -0.001f);
         GameObject i = Instantiate(mapIcon, pointerPos, Quaternion.identity);
@@ -840,7 +862,9 @@ public class ObjectManager : MonoBehaviour
             tileMap.CurrentMap.lastTurnSeen = World.turnManager.turn;
 
             if (PlayerInput.fullMap)
+            {
                 World.playerInput.TriggerLocalOrWorldMap();
+            }
 
             for (int i = 0; i < onScreenNPCObjects.Count; i++)
             {
@@ -850,7 +874,14 @@ public class ObjectManager : MonoBehaviour
             Manager.playerBuilder.quests.Clear();
             Manager.playerBuilder.progressFlags.Clear();
             GameSettings.Save();
+
             GetComponent<SaveData>().SaveNPCs(npcClasses);
+
+            while (!NewWorld.doneSaving)
+            {
+                yield return null;
+            }
+
             World.Reset();
         }
 

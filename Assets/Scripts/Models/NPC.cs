@@ -112,7 +112,9 @@ public class NPC
         handItems = new List<Item> { wep };
 
         if (!wep.lootable)
+        {
             handItems.Add(new Item(wep));
+        }
 
         ShuffleInventory(blueprint);
 
@@ -139,7 +141,9 @@ public class NPC
         if (blueprint.maxItems > 0)
         {
             if (RNG.Next(1000) <= (1.2f * blueprint.maxItemRarity))
+            {
                 inventory.Add(ItemList.GetRandomArtifact());
+            }
 
             int numItems = RNG.Next(HasFlag(NPC_Flags.Merchant) ? 4 : 0, blueprint.maxItems + 2);
 
@@ -198,7 +202,9 @@ public class NPC
         flags.Add(NPC_Flags.Follower);
 
         if (flags.Contains(NPC_Flags.Stationary_While_Passive))
+        {
             flags.Remove(NPC_Flags.Stationary_While_Passive);
+        }
     }
 
     public void AddFlag(NPC_Flags fl)
@@ -248,5 +254,5 @@ public enum NPC_Flags
 
     Skills_Leprosy, Summon_Adds, OnDeath_Explode, OnDeath_PoisonGas, Hit_And_Run, Inactive,
 
-    Can_Speak, Can_Open_Doors, Solid_Limbs, No_Melee, RPois, RBleed, Resist_Webs, OnDisable_Regen, SpawnedFromQuest
+    Can_Speak, Can_Open_Doors, Solid_Limbs, No_Melee, RPois, RBleed, Resist_Webs, OnDisable_Regen
 }

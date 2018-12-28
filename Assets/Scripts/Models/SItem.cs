@@ -38,59 +38,6 @@ public class SItem
 }
 
 [Serializable]
-public class SBodyPart
-{
-    public string Name { get; set; }
-    public SItem item { get; set; }
-    public int Lvl;
-    public double[] XP;
-    public int Ar { get; set; }
-    public bool Sev { get; set; }
-    public bool Att { get; set; }
-    public bool Ext { get; set; }
-    public bool Org { get; set; }
-    public ItemProperty Slot { get; set; }
-    public List<Stat_Modifier> Stats { get; set; }
-    public List<Wound> Wounds { get; set; }
-    public bool CWG { get; set; }
-    public int Size { get; set; }
-    public TraitEffects Dis { get; set; }
-
-    public SBodyPart() { }
-    public SBodyPart(string name, SItem _item, bool severable, bool attached, ItemProperty slot, bool weargear, int size, List<Stat_Modifier> stats, int armor,
-        TraitEffects disease, bool external, bool organic, int level, double currXP, double maxXP, List<Wound> wnds)
-    {
-        Name = name;
-        item = _item;
-        Sev = severable;
-        Att = attached;
-        Slot = slot;
-        CWG = weargear;
-        Size = size;
-        Stats = stats;
-        Ar = armor;
-        Dis = disease;
-        Ext = external;
-        Org = organic;
-        Wounds = wnds;
-
-        Lvl = level;
-        XP = new double[] { currXP, maxXP };
-    }
-}
-
-[Serializable]
-public struct SHand
-{
-    public SItem item;
-
-    public SHand(SItem it)
-    {
-        item = it;
-    }
-}
-
-[Serializable]
 public struct StringInt
 {
     public string A;

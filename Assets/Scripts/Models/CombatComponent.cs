@@ -175,11 +175,15 @@ public class CombatComponent
             Coord newPos = AdjacentCoord(destination);
 
             if (newPos != null)
+            {
                 destination = newPos;
+            }
         }
 
         if (entity.isPlayer || entity.AI.InSightOfPlayer())
+        {
             CombatLog.NameItemMessage("Message_ThrowItem", entity.MyName, itemForThrowing.DisplayName());
+        }
 
         //Instantiate
         entity.InstatiateThrowingEffect(destination, 1.0f);
@@ -312,7 +316,9 @@ public class CombatComponent
                     Item iToDrop = MyInventory.items.GetRandom();
 
                     if (iToDrop.HasProp(ItemProperty.Quest_Item))
-                            continue;
+                    {
+                        continue;
+                    }
 
                     MyInventory.Drop(iToDrop);
                 }
@@ -330,11 +336,11 @@ public class CombatComponent
         {
             MyInventory.DropAll();
 
-            if (MyStats.lastHit != null)
+            if (MyStats.lastHit != null && (MyStats.lastHit.isPlayer || MyStats.lastHit.AI.isFollower()))
             {
                 //Add relevant XP to the character that struck this NPC last
                 //Maybe should add all XP to player unless it's a friendly NPC.
-                MyStats.lastHit.stats.GainExperience((MyStats.Strength + MyStats.Dexterity + MyStats.Intelligence + MyStats.Endurance * 2) / 2 + 1);
+                ObjectManager.playerEntity.stats.GainExperience((MyStats.Strength + MyStats.Dexterity + MyStats.Intelligence + MyStats.Endurance * 2) / 2 + 1);
             }
 
             World.objectManager.DemolishNPC(entity, entity.AI.npcBase);

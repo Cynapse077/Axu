@@ -12,6 +12,7 @@ public class LoadSaveMenu : MonoBehaviour
     public GameObject loadButtonPrefab;
     public Transform loadButtonAnchor;
     public Text infoText;
+    public YesNoPanel ynPanel;
 
     List<SaveGameObject> savedGames;
     int currentSelected = 0;
@@ -36,7 +37,12 @@ public class LoadSaveMenu : MonoBehaviour
                 button.GetComponentInChildren<Text>().text = sg.charName + " - <color=grey>" + sg.time + "</color>";
                 MainMenu_LoadButton mmlb = button.GetComponent<MainMenu_LoadButton>();
                 mmlb.Init(this);
-                mmlb.deleteButton.onClick.AddListener(() => { DeleteSaveFile(button.transform.GetSiblingIndex()); });
+                mmlb.deleteButton.onClick.AddListener(() => {
+                    ynPanel.gameObject.SetActive(true);
+                    ynPanel.Display("Really delete this file?",
+                        () => { DeleteSaveFile(button.transform.GetSiblingIndex()); ynPanel.gameObject.SetActive(false); },
+                        () => { ynPanel.gameObject.SetActive(false); }, "");
+                    });
                 button.GetComponent<Button>().onClick.AddListener(() => { LoadGame(button.transform.GetSiblingIndex()); });
             }
 

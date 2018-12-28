@@ -1107,7 +1107,7 @@ public class UserInterface : MonoBehaviour
         }
     }
 
-    //Select a body part with the "Called Shot" skill
+    //Select a body part with the "Called Shot" skill (using ctrl + direction)
     public void CalledShot(Body target)
     {
         uiState = UIWindow.TargetBodyPart;
@@ -1117,6 +1117,7 @@ public class UserInterface : MonoBehaviour
         BPPanel.TargetPart(target, BodyPartTargetPanel.SelectionType.CalledShot);
     }
 
+    //Selected a body part with the "Grapple" skill
     public void Grab(Body target)
     {
         uiState = UIWindow.TargetBodyPart;
@@ -1129,7 +1130,9 @@ public class UserInterface : MonoBehaviour
     public void PlayerDied(string killer)
     {
         if (killer == Manager.playerName)
+        {
             killer = "Yourself";
+        }
 
         dead = true;
         Alert.NewAlert("Dead", killer, null);

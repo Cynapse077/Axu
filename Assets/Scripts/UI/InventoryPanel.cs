@@ -28,10 +28,6 @@ public class InventoryPanel : UIPanel
 
         Currency.text = "<color=yellow>$</color> " + curInv.gold;
         Capacity.text = string.Format("<color=olive>({0} / {1})</color>", curInv.items.Count.ToString(), curInv.maxItems.ToString());
-
-        if (!gameObject.activeSelf)
-            return;
-
         SelectedNum = 0;
         SelectedMax = 0;
 
@@ -39,7 +35,7 @@ public class InventoryPanel : UIPanel
         {
             GameObject g = SimplePool.Spawn(inventoryButton, inventoryBase);
             g.GetComponent<ItemButton>().icon.sprite = SwitchSprite(it);
-            g.GetComponentInChildren<Text>().text = it.InvDisplay(curInv.baseWeapon);
+            g.GetComponentInChildren<Text>().text = it.InvDisplay("none");
             g.GetComponent<Button>().onClick.AddListener(() => { OnSelect(g.transform.GetSiblingIndex()); });
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(1, UIWindow.Inventory, false, false);
             SelectedMax++;

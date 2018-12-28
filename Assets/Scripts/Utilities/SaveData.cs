@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using LitJson;
 using System.IO;
+using System.Threading;
 
 public class SaveData : MonoBehaviour
 {
@@ -42,6 +43,15 @@ public class SaveData : MonoBehaviour
             chars.Add(character);
         }
 
+        ThreadStart threadStart = delegate {
+            CreateSave(chars, World.turnManager.turn);
+        };
+
+        threadStart.Invoke();
+    }
+
+    void CreateSave(List<NPCCharacter> chars, int turn)
+    {
         new NewWorld(chars, World.turnManager.turn);
     }
 
@@ -173,7 +183,6 @@ public class SaveData : MonoBehaviour
         }
 
         Manager.playerBuilder.items = items;
-        Manager.playerBuilder.baseWeapon = playerJson["BW"].ToString();
 
         //body parts
         JsonData bpJson = playerJson["BodyParts"];
@@ -181,6 +190,11 @@ public class SaveData : MonoBehaviour
 
         for (int i = 0; i < bpJson.Count; i++)
         {
+            if (!bpJson[i].ContainsKey("Name") || !bpJson[i].ContainsKey("Att"))
+            {
+                continue;
+            }
+
             BodyPart bp = new BodyPart(bpJson[i]["Name"].ToString(), (bool)bpJson[i]["Att"])
             {
                 severable = (bool)bpJson[i]["Sev"],
@@ -196,8 +210,11 @@ public class SaveData : MonoBehaviour
             if (bpJson[i].ContainsKey("Ext"))
                 bp.external = (bool)bpJson[i]["Ext"];
 
-            if (bp.slot == ItemProperty.Slot_Arm)
-                bp.hand = new BodyPart.Hand(bp, null);
+            if (bpJson[i].ContainsKey("Hnd"))
+            {
+                string baseItem = bpJson[i]["Hnd"]["bItem"].ToString();
+                bp.hand = new BodyPart.Hand(bp, ItemList.GetItemByID(baseItem), baseItem);
+            }
 
             bp.Attributes = new List<Stat_Modifier>();
             if (bpJson[i].ContainsKey("Stats") && bpJson[i]["Stats"].Count > 0)
@@ -278,6 +295,22 @@ public class SaveData : MonoBehaviour
                 int s = (int)playerJson["Flags"][i];
                 ProgressFlags p = (ProgressFlags)s;
                 Manager.playerBuilder.progressFlags.Add(p);
+            }
+        }
+
+        if (playerJson.ContainsKey("CQeusts"))
+        {
+            for (int i = 0; i < playerJson["CQuests"].Count; i++)
+            {
+                Manager.playerBuilder.completedQuests.Add(playerJson["CQuests"][i].ToString());
+            }
+        }
+
+        if (playerJson.ContainsKey("StaticNKills"))
+        {
+            for (int i = 0; i < playerJson["StaticNKills"].Count; i++)
+            {
+                Manager.playerBuilder.killedStaticNPCs.Add(playerJson["StaticNKills"][i].ToString());
             }
         }
     }

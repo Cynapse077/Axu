@@ -337,7 +337,9 @@ public class CursorControl : MonoBehaviour
             moveTimer += Time.deltaTime;
 
             if (moveTimer >= 0.3f)
+            {
                 canHoldKeys = true;
+            }
         }
         else if (input.AnyInputUp())
         {
@@ -349,11 +351,13 @@ public class CursorControl : MonoBehaviour
     void SelectTilePressed()
     {
         if (!World.tileMap.WalkableTile(myPosX, myPosY))
+        {
             return;
+        }
 
         if (throwingItem)
         {
-            GameObject ex = (GameObject)Instantiate(explosive, playerEntity.transform.position, Quaternion.identity);
+            GameObject ex = Instantiate(explosive, playerEntity.transform.position, Quaternion.identity);
             Explosive exScript = ex.GetComponent<Explosive>();
             exScript.localPosition = new Coord(myPosX, myPosY);
 

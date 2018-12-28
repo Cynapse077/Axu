@@ -32,7 +32,7 @@ public class ReplaceLimb_Panel : MonoBehaviour
         bpTitle.text = LocalizationManager.GetContent("Title_ReplaceLimb");
         itTitle.text = LocalizationManager.GetContent("Title_ReplaceLimb_Item");
 
-        severableBodyParts = inv.entity.body.bodyParts.FindAll(x => x.severable && x.slot != ItemProperty.Slot_Head && !x.external);
+        severableBodyParts = inv.entity.body.bodyParts.FindAll(x => x.severable && !x.external);
 
         foreach (BodyPart b in severableBodyParts)
         {
@@ -46,7 +46,9 @@ public class ReplaceLimb_Panel : MonoBehaviour
                 for (int i = 0; i < b.Attributes.Count; i++)
                 {
                     if (b.Attributes[i].Stat != "Hunger")
+                    {
                         myText += LocalizationManager.GetContent(b.Attributes[i].Stat) + " <color=orange>(" + b.Attributes[i].Amount + ")</color> ";
+                    }
                 }
             }
 
@@ -67,7 +69,9 @@ public class ReplaceLimb_Panel : MonoBehaviour
         BodyPart part = severableBodyParts[selectedNum];
 
         if (part == null)
+        {
             return;
+        }
 
         items = inv.items.FindAll(x => x.HasProp(ItemProperty.Replacement_Limb) && x.GetSlot() == part.slot);
 
@@ -79,7 +83,9 @@ public class ReplaceLimb_Panel : MonoBehaviour
             for (int j = 0; j < i.statMods.Count; j++)
             {
                 if (i.statMods[j].Stat != "Hunger" && i.statMods[j].Amount < 999)
+                {
                     myText += LocalizationManager.GetLocalizedContent(i.statMods[j].Stat)[0] + " (" + i.statMods[j].Amount + ") ";
+                }
             }
 
             it.GetComponent<ItemButton>().icon.sprite = SwitchSprite(i);

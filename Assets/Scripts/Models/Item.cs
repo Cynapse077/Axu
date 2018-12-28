@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MoonSharp.Interpreter;
 
 [System.Serializable]
@@ -188,7 +188,11 @@ public class Item : ComponentHolder
 
     public void OnConsume(Stats stats)
     {
-        ChangeStats(stats, false);
+        if (!HasCComponent<CRot>())
+        {
+            ChangeStats(stats, false);
+        }
+
         ApplyEffects(stats);
         RunCommands("OnConsume");
 
@@ -204,7 +208,9 @@ public class Item : ComponentHolder
         if (World.difficulty.Level == Difficulty.DiffLevel.Hunted || World.difficulty.Level == Difficulty.DiffLevel.Rogue)
         {
             if (ContainsProperty(ItemProperty.Addictive))
+            {
                 stats.ConsumedAddictiveSubstance(ID, false);
+            }
         }
     }
     #endregion
@@ -546,8 +552,11 @@ public class Item : ComponentHolder
                 return false;
 
             cr.current--;
+
             if (cr.current == 200)
+            {
                 CombatLog.NewMessage("Your " + displayName + " is about to spoil.");
+            }
 
             return true;
         }
@@ -712,15 +721,12 @@ public class Item : ComponentHolder
             return "";
         }
 
-        return "<color=silver>(" + TotalDamage().ToString() + ")</color>";
+        return "<color=silver> (" + TotalDamage().ToString() + ")</color>";
     }
 
     public string DisplayArmor()
     {
         string s = "<color=silver>[";
-
-        if (armor > -1)
-            s += "+";
 
         return s + armor.ToString() + "]</color>";
 

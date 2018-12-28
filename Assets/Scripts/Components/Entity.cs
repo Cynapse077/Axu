@@ -208,7 +208,9 @@ public class Entity : MonoBehaviour
         if (pos != null)
         {
             if (cell != null)
+            {
                 cell.UnSetEntity(this);
+            }
 
             myPos = pos;
             SetCell();
@@ -541,24 +543,30 @@ public class Entity : MonoBehaviour
         if (!World.tileMap.WalkableTile(posX + x, posY + y) || !World.tileMap.GetCellAt(posX + x, posY + y).Walkable_IgnoreEntity)
         {
             if (!isPlayer)
+            {
                 EndTurn(0.01f);
+            }
 
             return;
         }
 
-        if (!isPlayer && AI.isStationary || stats.HasEffect("Stuck") || stats.HasEffect("Topple") || !body.FreeToMove())
+        if (!isPlayer && AI.isStationary || stats.SkipTurn() || !body.FreeToMove() || stats.HasEffect("Stuck"))
         {
             EndTurn(0.01f);
             return;
         }
 
         if (cell != null)
+        {
             cell.UnSetEntity(this);
+        }
 
         body.CheckGripIntegrities();
 
         if (World.turnManager.turn % 4 == 0)
+        {
             body.TrainLimbOfType(new ItemProperty[] { ItemProperty.Slot_Leg, ItemProperty.Slot_Tail, ItemProperty.Slot_Wing });
+        }
 
         posX += x;
         posY += y;
@@ -585,7 +593,9 @@ public class Entity : MonoBehaviour
     void Swipe(int x, int y)
     {
         if (stats.SkipTurn())
+        {
             return;
+        }
 
         int wepNum = fighter.CheckWepType();
 
@@ -612,20 +622,22 @@ public class Entity : MonoBehaviour
                     y += y;
 
                     if (!AttackTile(posX + x, posY + y))
+                    {
                         EndTurn(0.01f, fighter.AttackAPCost());
+                    }
                 }
             }
         }
     }
-
-
 
     void Dig(int x, int y)
     {
         if (isPlayer && inventory.DiggingEquipped())
         {
             if (inventory.EquippedItems().Find(i => i.HasProp(ItemProperty.Dig)).UseCharge() && World.tileMap.DigTile(posX + x, posY + y, false))
+            {
                 EndTurn(0.01f, 20);
+            }
         }
     }
 
@@ -635,7 +647,9 @@ public class Entity : MonoBehaviour
     public void ForceMove(int x, int y, int strength)
     {
         if (!isPlayer && AI.isStationary)
+        {
             return;
+        }
 
         int amount = (strength - stats.Strength);
         amount = Mathf.Clamp(amount, 0, 4);
@@ -681,17 +695,23 @@ public class Entity : MonoBehaviour
             }
 
             if (stopMove)
+            {
                 stats.IndirectAttack(SeedManager.combatRandom.Next(1, amount + 2), DamageTypes.Blunt, null, LocalizationManager.GetContent("Impact"), true);
+            }
 
         }
         else if (SeedManager.combatRandom.Next(100) < 10)
-            stats.AddStatusEffect("Stun", 1);
+        {
+            stats.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 3));
+        }
     }
 
     bool IsOtherEntityInTheWay(int x, int y)
     {
         if (!World.tileMap.WalkableTile(posX + x, posY + y))
+        {
             return false;
+        }
 
         return (World.tileMap.GetCellAt(posX + x, posY + y).entity != null);
     }
@@ -762,10 +782,14 @@ public class Entity : MonoBehaviour
         direction.y = Mathf.Clamp(direction.y, -1, 1);
 
         if (cell != null)
+        {
             cell.UnSetEntity(this);
+        }
 
         if (otherEntity.cell != null)
+        {
             otherEntity.cell.UnSetEntity(otherEntity);
+        }
 
         Coord tempPos = new Coord(myPos.x, myPos.y);
         myPos += direction;
@@ -775,7 +799,10 @@ public class Entity : MonoBehaviour
         otherEntity.SetCell();
 
         if (isPlayer)
+        {
             World.tileMap.LightCheck();
+            playerInput.SearchArea(myPos, true);
+        }
     }
 
     void OpenDoor(MapObjectSprite door)
@@ -1333,10 +1360,10 @@ public class Entity : MonoBehaviour
             handItems.Add(body.Hands[i].EquippedItem.ToSimpleItem());
         }
 
-        PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, gameObject.name, Manager.profName, stats.MyLevel, myStats,
+        PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, MyName, Manager.profName, stats.MyLevel, myStats,
             World.tileMap.WorldPosition, myPos, World.tileMap.currentElevation, traits, stats.proficiencies.GetProfs(),
-            bodyParts, inventory.gold, items, handItems, inventory.firearm.ToSimpleItem(), sskills, stats.Attributes["Charisma"], quests,
-            World.turnManager.currentWeather, ObjectManager.playerJournal.AllFlags(), inventory.baseWeapon);
+            bodyParts, inventory.gold, items, handItems, inventory.firearm.ToSimpleItem(), sskills, stats.Attributes["Charisma"], 
+            quests, World.turnManager.currentWeather, ObjectManager.playerJournal.AllFlags());
 
         return me;
     }

@@ -45,7 +45,9 @@ public class MapObjectSprite : MonoBehaviour
     void OnDisable()
     {
         if (cell != null)
+        {
             cell.RemoveObject(this);
+        }
 
         if (objectBase.HasEvent("OnTurn"))
         {
@@ -53,13 +55,19 @@ public class MapObjectSprite : MonoBehaviour
         }
 
         if (objectType == "Loot" || objectType == "Brazier" || objectType == "Campfire")
+        {
             World.turnManager.incrementTurnCounter -= UpdateVisuals;
+        }
 
         if (inv != null)
+        {
             objectBase.inv = inv.items;
+        }
 
         if (lightSource != null)
+        {
             SetLit(false);
+        }
     }
 
     void GrabFromBlueprint(MapObjectBlueprint bp) 
@@ -158,12 +166,16 @@ public class MapObjectSprite : MonoBehaviour
             for (int y = -1; y <= 1; y++)
             {
                 if (x == 0 && y == 0 || Mathf.Abs(x) + Mathf.Abs(y) > 1)
+                {
                     continue;
+                }
 
                 Cell c = World.tileMap.GetCellAt(localPos.x + x, localPos.y + y);
 
                 if (c != null && c.position != previous)
+                {
                     c.RecievePulse(localPos, moveCount, pulseOn);
+                }
             }
         }
     }
@@ -222,7 +234,9 @@ public class MapObjectSprite : MonoBehaviour
         int xOffset = BitwiseNeighbors() * 16;
 
         if (initial)
+        {
             AutotileAdjacent();
+        }
 
         Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID).texture;
         spriteRenderer.sprite = Sprite.Create(t, new Rect(xOffset, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
@@ -235,9 +249,10 @@ public class MapObjectSprite : MonoBehaviour
             for (int y = -1; y <= 1; y++)
             {
                 if (x == 0 && y == 0 || Mathf.Abs(x) + Mathf.Abs(y) > 1)
+                {
                     continue;
-
-                if (NeighborAt(localPos.x + x, localPos.y + y))
+                }
+                else if (NeighborAt(localPos.x + x, localPos.y + y))
                 {
                     World.tileMap.GetCellAt(localPos.x + x, localPos.y + y).mapObjects.Find(z => z.CanAutotile(objectBase)).Autotile(false);
                 }
@@ -313,7 +328,9 @@ public class MapObjectSprite : MonoBehaviour
     void SetLit(bool lit)
     {
         if (lightSource == null)
+        {
             return;
+        }
 
         int rad = lightSource.radius;
 
@@ -322,15 +339,21 @@ public class MapObjectSprite : MonoBehaviour
             for (int y = objectBase.localPosition.y - rad; y <= objectBase.localPosition.y + rad; y++)
             {
                 if (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y)
+                {
                     continue;
+                }
 
                 float dist = objectBase.localPosition.DistanceTo(new Coord(x, y));
 
                 if (dist > rad)
+                {
                     continue;
+                }
 
                 if (Line.inSight(objectBase.localPosition, x, y))
+                {
                     World.tileMap.tileRenderers[x, y].lit = lit;
+                }
             }
         }
     }
@@ -338,7 +361,9 @@ public class MapObjectSprite : MonoBehaviour
     public bool InSight()
     {
         if (cell == null)
+        {
             return false;
+        }
 
         return (cell.InSight);
     }
@@ -352,7 +377,9 @@ public class MapObjectSprite : MonoBehaviour
         int renderLayer = -localPos.y;
 
         if (renderInBack)
+        {
             renderLayer--;
+        }
 
         childObject.GetComponent<SpriteRenderer>().sortingOrder = renderLayer;
         childObject.GetComponentInChildren<SpriteRenderer>().sortingOrder = renderLayer;
@@ -361,7 +388,9 @@ public class MapObjectSprite : MonoBehaviour
     public void UpdateVisuals()
     {
         if ((objectBase.objectType == "Campfire" || objectType == "Brazier") && fi != null)
+        {
             fi.enabled = inSight;
+        }
 
         if (objectType == "Loot" && spriteRenderer != null)
         {
@@ -384,10 +413,14 @@ public class MapObjectSprite : MonoBehaviour
     bool ShowMoreItemIcon()
     {
         if (objectType != "Loot")
+        {
             return false;
+        }
 
         if (inv == null)
+        {
             inv = GetComponent<Inventory>();
+        }
 
         return (inv.items.Count > 1);
     }
@@ -405,7 +438,9 @@ public class MapObjectSprite : MonoBehaviour
         inv2.SetStorage(capacity);
 
         if (objectBase.inv != null)
+        {
             inv2.items = objectBase.inv;
+        }
     }
 
     public void CheckInventory()
@@ -415,7 +450,9 @@ public class MapObjectSprite : MonoBehaviour
         if (objectType == "Loot" || objectType == "Body")
         {
             if (inv == null)
+            {
                 inv = GetComponent<Inventory>();
+            }
 
             if (inv != null)
             {
@@ -424,7 +461,7 @@ public class MapObjectSprite : MonoBehaviour
                     World.objectManager.RemoveObject(objectBase, gameObject);
                     Destroy(gameObject);
                 }
-                else if (inv.items.Count == 1 && inv.items[0].HasCComponent<CLiquidContainer>())
+                else if (objectBase.objectType == "Pool" && inv.items.Count == 1 && inv.items[0].HasCComponent<CLiquidContainer>())
                 {
                     CLiquidContainer cl = inv.items[0].GetCComponent<CLiquidContainer>();
 
@@ -444,7 +481,7 @@ public class MapObjectSprite : MonoBehaviour
         {
             if (objectType == "Door_Closed")
                 SetTypeAndSwapSprite("Door_Open");
-            if (objectType == "Ensis_Door_Closed")
+            else if (objectType == "Ensis_Door_Closed")
                 SetTypeAndSwapSprite("Ensis_Door_Open");
             else if (objectType == "Prison_Door_Closed")
                 SetTypeAndSwapSprite("Prison_Door_Open");
@@ -463,10 +500,14 @@ public class MapObjectSprite : MonoBehaviour
     {
         //Regular
         if (objectType == "Door_Closed")
+        {
             SetTypeAndSwapSprite("Door_Open");
+        }
 
         if (!isPlayer)
+        {
             return;
+        }
 
         //ensis
         if (objectType == "Ensis_Door_Closed")
@@ -476,6 +517,7 @@ public class MapObjectSprite : MonoBehaviour
             else
             {
                 Alert.NewAlert("Locked");
+                ObjectManager.playerEntity.CancelWalk();
                 return;
             }
         }
@@ -488,6 +530,7 @@ public class MapObjectSprite : MonoBehaviour
             else
             {
                 Alert.NewAlert("Locked");
+                ObjectManager.playerEntity.CancelWalk();
                 return;
             }
         }
@@ -500,6 +543,7 @@ public class MapObjectSprite : MonoBehaviour
             else
             {
                 Alert.NewAlert("Locked");
+                ObjectManager.playerEntity.CancelWalk();
                 return;
             }
         }
@@ -512,6 +556,7 @@ public class MapObjectSprite : MonoBehaviour
             else
             {
                 Alert.NewAlert("Locked");
+                ObjectManager.playerEntity.CancelWalk();
                 return;
             }
         }
@@ -520,6 +565,7 @@ public class MapObjectSprite : MonoBehaviour
         else if (objectType == "Elec_Door_Closed")
         {
             Alert.NewAlert("Locked");
+            ObjectManager.playerEntity.CancelWalk();
             return;
         }
 
@@ -621,10 +667,14 @@ public class MapObjectSprite : MonoBehaviour
     public void DestroyMe()
     {
         if (World.objectManager.mapObjects.Contains(objectBase))
+        {
             World.objectManager.mapObjects.Remove(objectBase);
+        }
 
         if (World.objectManager.onScreenMapObjects.Contains(gameObject))
+        {
             World.objectManager.onScreenMapObjects.Remove(gameObject);
+        }
 
         Destroy(gameObject);
     }
@@ -647,7 +697,9 @@ public class MapObjectSprite : MonoBehaviour
             inSight = sighted;
 
             if (inSight)
+            {
                 objectBase.seen = true;
+            }
         }
 
         SetSpriteColor();
@@ -656,7 +708,9 @@ public class MapObjectSprite : MonoBehaviour
     void SetSpriteColor()
     {
         if (spriteRenderer == null)
+        {
             return;
+        }
 
         if (!objectBase.seen)
         {

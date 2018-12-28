@@ -9,19 +9,17 @@
                 "XP" : 20
             },
             "Steps" : [
-                { "Goal" : "Go", "To" : [ "Abandoned Building", -1 ] }
+				{ "Goal" : "Go", "To" : [ "Abandoned Building", -1 ] }
             ],
 			"Events" : [
                 {
                     "Event" : "OnStart",
-                    "Spawn NPC" : { "NPC" : "deephunter_start", "Coordinate" : "Abandoned Building", "Elevation" : -4, "Give Item" : "artifact1" },
                     "Console Command" : "give cloak1|give flask/liquid_regenitrol|log You were given a few items by Akk-Lune."
                 }
             ],
 
             "Chained Quest" : "ensis1"
         },
-
         {
             "Name" : "Spelunking II",
             "ID" : "ensis1",
@@ -35,7 +33,6 @@
 
             "Chained Quest" : "ensis2"
         },
-
         {
             "Name" : "The Hunter's Artifact",
             "ID" : "ensis2",
@@ -44,14 +41,20 @@
                 "XP" : 100
             },
             "Flag" : "Can_Enter_Power_Plant",
+			"Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "deephunter_start", "Coordinate" : "Abandoned Building", "Elevation" : -4, "Give Item" : "artifact1" }
+                }
+            ],
             "Steps" : [
+				{ "Goal"  : "Kill Spawned" },
                 { "Goal" : "Fetch", "Item" : [ "artifact1" ], "Give To" : "akklune" }
             ],
             "End Dialogue" : "That took longer than expected! Did you encounter difficulties? A <color=red>Deep Hunter</color>? Here? My appologies for putting you in danger.\nThe item you retrieved for me is a special keycard, used to activate the terminals in the Power Plant. It was stolen from us not long ago, and has made communications a pain, as you can imagine. I need you to <color=cyan>turn the power on</color>. There are five sub-terranean levels, each with a <color=yellow>terminal</color>. Turn all of them on to give back power. I would go myself, but I have matters to attend to. You'll hear from us when you've completed this task.",
 
             "Chained Quest" : "ensis3"
         },
-
         {
             "Name" : "Find the Power Plant",
             "ID" : "ensis3",
@@ -142,7 +145,9 @@
             "Steps" : [
                 { "Goal" : "Talk To", "NPC" : "kanil" }
             ],
-            "End Dialogue" : "Ah yes, good day to you. Lomis told me to expect you. I'm the head Ensistic engineer and scientist. I'm afraid construction of the ship will take some time. In the meantime, could you help me with a bit of research? I need an <color=yellow>Irradiated Heart</color>. Don't you mind what it's for. I've managed to capture a specimen. It's <color=yellow>down one level</color>. All I need is for you to kill it, and tear out its heart."
+            "End Dialogue" : "Ah yes, good day to you. Lomis told me to expect you. I'm the head Ensistic engineer and scientist. I'm afraid construction of the ship will take some time. In the meantime, could you help me with a bit of research? I need an <color=yellow>Irradiated Heart</color>. Don't you mind what it's for. I've managed to capture a specimen. It's <color=yellow>down one level</color>. All I need is for you to kill it, and tear out its heart.",
+
+			"Chained Quest" : "ensis8"
         },
         {
             "Name" : "Heart Recovery",
@@ -398,7 +403,7 @@
                 { "Goal" : "Kill Spawned" },
                 { "Goal" : "Fetch", "Item" : [ "artifact2" ], "Give To" : "isazna" }
             ],
-            "End Dialogue" : "My thanks, wanderer. This will surely help us. You are worthy of the Ancient Ones' attention. If you wish, you can be of more use to us. Do not be frightened, child. There is another artifact in the Ensis Stronghold Exterior Area. Just one level up, then slightly south. Take it, by any means. With the two artifacts, the Deep Ones will heed our call, and raise us to their breast. All others will serve the Kin. We <b>need</b> that artifact.",
+            "End Dialogue" : "My thanks, wanderer. This will surely help us. You are worthy of the Ancient Ones' attention. If you wish, you can be of more use to us. Do not be frightened, child. There is another artifact in the Ensis Stronghold Exterior Area. Just one level up, then slightly south. Take it. With the two artifacts, the Deep Ones will heed our call, and raise us to their breast. All others will serve the Kin. We <i><b>need</b></i> that artifact.",
 
             "Chained Quest" : "kin2"
         },

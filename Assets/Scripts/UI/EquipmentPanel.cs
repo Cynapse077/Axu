@@ -32,7 +32,7 @@ public class EquipmentPanel : UIPanel
         for (int i = 0; i < hands.Count; i++)
         {
             GameObject wep = SimplePool.Spawn(equipmentButton, equipmentBase);
-            wep.GetComponentInChildren<Text>().text = hands[i].EquippedItem.InvDisplay(curInv.baseWeapon, false, true, false);
+            wep.GetComponentInChildren<Text>().text = hands[i].EquippedItem.InvDisplay(hands[i].baseItem, false, true, false);
 
             string n = LocalizationManager.GetContent("Slot_Hand") + " " + ((i % 2 == 0) ? LocalizationManager.GetContent("Limb_Right") : LocalizationManager.GetContent("Limb_Left"));
 
@@ -45,7 +45,7 @@ public class EquipmentPanel : UIPanel
         }
 
         GameObject fire = SimplePool.Spawn(equipmentButton, equipmentBase);
-        fire.GetComponentInChildren<Text>().text = (curInv.firearm == null) ? ItemList.GetNone().Name : curInv.firearm.InvDisplay(curInv.baseWeapon, false, true, true);
+        fire.GetComponentInChildren<Text>().text = (curInv.firearm == null) ? ItemList.GetNone().Name : curInv.firearm.InvDisplay("none", false, true, true);
         fire.transform.GetChild(1).GetComponent<Text>().text = "<color=orange>" + LocalizationManager.GetContent("TT_Ranged") + "</color>";
         fire.GetComponent<Button>().onClick.AddListener(() => OnSelect(fire.transform.GetSiblingIndex()));
         fire.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
@@ -54,7 +54,7 @@ public class EquipmentPanel : UIPanel
         foreach (BodyPart bp in curInv.entity.body.bodyParts)
         {
             GameObject g = SimplePool.Spawn(equipmentButton, equipmentBase);
-            g.GetComponentInChildren<Text>().text = bp.equippedItem.InvDisplay(curInv.baseWeapon, true, false);
+            g.GetComponentInChildren<Text>().text = bp.equippedItem.InvDisplay("none", true, false);
             g.transform.GetChild(1).GetComponent<Text>().text = bp.displayName;
             g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex()));
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);

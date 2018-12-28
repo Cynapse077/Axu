@@ -140,6 +140,7 @@
             "Size" : 6,
             "Stats" : [ { "Stat" : "Strength", "Amount" : 2 } ],
             "Tags" : [ "Grip" ],
+			"Wielding" : "fists",
             "Severable" : true,
             "Can Wear Gear" : true
         },
@@ -222,6 +223,7 @@
             "Size" : 8,
             "Tags" : [ "Grip" ],
             "Stats" : [ { "Stat" : "Strength", "Amount" : 1 } ],
+			"Wielding" : "tentacle",
             "Severable" : true,
             "Can Wear Gear" : false
         },
@@ -258,6 +260,8 @@
             "Size" : 5,
             "Stats" : [ { "Stat" : "Strength", "Amount" : 1 } ],
             "Tags" : [ "Grip" ],
+			"Default Equipped" : "vines",
+			"Wielding" : "vines",
             "Severable" : true,
             "Can Wear Gear" : false
         },
@@ -297,6 +301,7 @@
             "Size" : 5,
             "Stats" : [ { "Stat" : "Strength", "Amount" : 1 }, { "Stat" : "Dexterity", "Amount" : 1 } ],
             "Tags" : [ "Synthetic", "External", "Grip" ],
+			"Wielding" : "fists",
             "Severable" : true,
             "Can Wear Gear" : true
         },
@@ -362,6 +367,7 @@
             "Stats" : [ { "Stat" : "Strength", "Amount" : 4 } ],
             "Tags" : [ "Grip", "Synthetic" ],
             "Default Equipped" : "plating",
+			"Wielding" : "fists",
             "Severable" : true,
             "Can Wear Gear" : true
         },

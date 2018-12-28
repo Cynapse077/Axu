@@ -9,7 +9,7 @@ public class Skill
     public const int XPToNext = 1000;
 
     public string Name, ID, Description;
-    public int staminaCost, hungerCost, cooldown, maxCooldown, level, range = 20;
+    public int staminaCost, cooldown, maxCooldown, level, range = 20;
     public CastType castType;
     public DamageTypes damageType;
     public bool CanLevelUp = true;
@@ -80,7 +80,6 @@ public class Skill
         Name = other.Name;
         ID = other.ID;
         staminaCost = other.staminaCost;
-        hungerCost = other.hungerCost;
         cooldown = 0;
         maxCooldown = other.maxCooldown;
         Description = other.Description;

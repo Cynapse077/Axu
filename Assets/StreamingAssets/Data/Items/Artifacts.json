@@ -2,18 +2,6 @@
 
     "Artifacts" : [
         {
-            "ID" : "tome_energize",
-            "Name" : "Tome of Energy",
-            "Type" : "Misc_Object",
-            "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
-            "Cost" : 100,
-            "Components" : [
-                { "ID" : "Ability", "Ability" : "energize" }
-            ],
-            "Properties" : [ "Artifact", "Legible", "Tome" ]
-        },
-        {
             "ID" : "tome_hp",
             "Name" : "Lesser Tome of Health",
             "Type" : "Misc_Object",

@@ -3,49 +3,56 @@ using LitJson;
 using System.IO;
 using System.Collections.Generic;
 
-public static class FactionList {
-
+public static class FactionList
+{
     static List<Faction> factions;
-	public static string dataPath;
+    public static string dataPath;
 
-    public static void InitializeFactionList() {
-		if (factions != null)
-			return;
-		
+    public static void InitializeFactionList()
+    {
         factions = new List<Faction>();
-		string jsonString = File.ReadAllText(Application.streamingAssetsPath + dataPath);
+        string jsonString = File.ReadAllText(Application.streamingAssetsPath + dataPath);
 
-		if (string.IsNullOrEmpty(jsonString)) {
-			Debug.LogError("Faction List null.");
-		}
+        if (string.IsNullOrEmpty(jsonString))
+        {
+            Debug.LogError("Faction List null.");
+        }
 
         JsonData data = JsonMapper.ToObject(jsonString);
 
-        for (int i = 0; i < data["Factions"].Count; i++) {
-			JsonData factionJson = data["Factions"][i];
+        for (int i = 0; i < data["Factions"].Count; i++)
+        {
+            JsonData factionJson = data["Factions"][i];
 
-			factions.Add(FactionFromData(factionJson));
+            factions.Add(FactionFromData(factionJson));
         }
     }
 
-	public static Faction FactionFromData(JsonData factionJson) {
-		Faction newFaction = new Faction(factionJson["Name"].ToString(), factionJson["ID"].ToString());
+    public static Faction FactionFromData(JsonData factionJson)
+    {
+        Faction newFaction = new Faction(factionJson["Name"].ToString(), factionJson["ID"].ToString());
 
-		if (factionJson.ContainsKey("Hostile To")) {
-			for(int j = 0; j < factionJson["Hostile To"].Count; j++) {
-				newFaction.hostileTo.Add(factionJson["Hostile To"][j].ToString());
-			}
-		}
+        if (factionJson.ContainsKey("Hostile To"))
+        {
+            for (int j = 0; j < factionJson["Hostile To"].Count; j++)
+            {
+                newFaction.hostileTo.Add(factionJson["Hostile To"][j].ToString());
+            }
+        }
 
-		return newFaction;
-	}
+        return newFaction;
+    }
 
-	public static Faction GetFactionByID(string id) {
-		for (int i = 0; i < factions.Count; i++) {
-			if (id == factions[i].ID)
-				return factions[i];
-		}
+    public static Faction GetFactionByID(string id)
+    {
+        for (int i = 0; i < factions.Count; i++)
+        {
+            if (id == factions[i].ID)
+            {
+                return factions[i];
+            }
+        }
 
-		return factions[0];
-	}
+        return factions[0];
+    }
 }

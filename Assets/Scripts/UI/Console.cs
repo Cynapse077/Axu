@@ -78,6 +78,7 @@ public class Console : MonoBehaviour
     public void ParseTextField(string textToParse)
     {
         string[] parsedText = textToParse.Split(" "[0]);
+
         if (parsedText[0] == "load")
         {
             if (parsedText.Length < 2)
@@ -90,6 +91,20 @@ public class Console : MonoBehaviour
             World.objectManager.DeleteObjectsAt(World.tileMap.WorldPosition, World.tileMap.currentElevation);
             World.tileMap.LoadMap(parsedText[1]);
             MyConsole.NewMessage("Map " + parsedText[1] + " loaded.");
+            return;
+        }
+        else if (parsedText[0] == "bodydrop")
+        {
+            if (parsedText.Length < 2)
+            {
+                MyConsole.Error("Speify a drop chance (integer).");
+                return;
+            }
+
+            int o = int.Parse(parsedText[1]);
+            Inventory.BodyDropChance = o;
+
+            MyConsole.NewMessage("Set body drop chance to " + parsedText[1] + "%");
             return;
         }
         else if (parsedText[0] == "5k")
@@ -1086,7 +1101,7 @@ public class Console : MonoBehaviour
             MyConsole.NewMessage("  - <b>5k</b>\n    Increases the turn counter by 5000.");
             MyConsole.NewMessage("  - <b>10k</b>\n    Increases the turn counter by 10000.");
             MyConsole.NewMessage("  - <b>log</b>\n    Write a message to the combat log.");
-            MyConsole.NewMessage("  - <b>limbtest</b>\n    Test for severing/attaching limbs.");
+            MyConsole.NewMessage("  - <b>bodydrop <i>[percent]</i></b>\n    Sets the chance to drop bodies upon death.");
 
             MyConsole.DoubleLine();
             return;

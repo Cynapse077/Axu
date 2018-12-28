@@ -18,19 +18,19 @@ public class PlayerBuilder
     public List<Item> handItems;
     public Item firearm;
     public int money;
-    public string baseWeapon = "fists";
 
     public List<Quest> quests;
+    public List<string> completedQuests;
+    public List<string> killedStaticNPCs;
     public List<ProgressFlags> progressFlags;
      
     public PlayerBuilder()
     {
-        Manager.playerBuilder = this;
-
         proficiencies = new PlayerProficiencies();
         traits = new List<Trait>();
         skills = new List<Skill>();
         statusEffects = new Dictionary<string, int>();
+        killedStaticNPCs = new List<string>();
         addictions = new List<Addiction>();
 
         attributes = new Dictionary<string, int>() {
@@ -45,6 +45,7 @@ public class PlayerBuilder
         items = new List<Item>();
         handItems = new List<Item>();
         quests = new List<Quest>();
+        completedQuests = new List<string>();
         progressFlags = new List<ProgressFlags>();
     }
 }

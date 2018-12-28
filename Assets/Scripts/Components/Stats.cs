@@ -289,10 +289,7 @@ public class Stats : MonoBehaviour
             int ranNum = RNG.Next(100);
             float chance = proficiencies.Shield.level + 1;
 
-            if (hands[i].EquippedItem == null)
-                hands[i].SetEquippedItem(ItemList.GetItemByID(MyInventory.baseWeapon), entity);
-
-            if (hands[i].EquippedItem.GetCComponent<CBlock>() != null)
+            if (hands[i].EquippedItem.HasCComponent<CBlock>())
             {
                 chance += (hands[i].EquippedItem.GetCComponent<CBlock>().level * 5);
 
@@ -495,7 +492,9 @@ public class Stats : MonoBehaviour
             if (attacker == ObjectManager.playerEntity)
             {
                 if (!entity.AI.isFollower() && entity.AI.HasDetectedPlayer(5))
+                {
                     entity.AI.BecomeHostile();
+                }
             }
 
             entity.AI.SetTarget(attacker);
@@ -919,7 +918,9 @@ public class Stats : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             if (Mutations.Count > 0)
+            {
                 RemoveTrait(Mutations.GetRandom().ID);
+            }
         }
     }
 
@@ -930,7 +931,9 @@ public class Stats : MonoBehaviour
         for (int i = 0; i < traits.Count; i++)
         {
             if (traits[i].ContainsEffect(TraitEffects.Disease) && !traits[i].ContainsEffect(TraitEffects.No_Cure))
+            {
                 traitsToRemove.Add(traits[i]);
+            }
         }
 
         for (int i = 0; i < traitsToRemove.Count; i++)
@@ -941,7 +944,9 @@ public class Stats : MonoBehaviour
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
             if (MyBody.bodyParts[i].effect == TraitEffects.Leprosy || MyBody.bodyParts[i].effect == TraitEffects.PreVamp || MyBody.bodyParts[i].effect == TraitEffects.Crystallization)
+            {
                 MyBody.bodyParts[i].effect = TraitEffects.None;
+            }
 
             for (int j = 0; j < MyBody.bodyParts[i].wounds.Count; j++)
             {
@@ -953,15 +958,19 @@ public class Stats : MonoBehaviour
     public void ReplaceOneLimbByDoctor(int limbIndex, int itemIndex, bool fromDoctor)
     {
         if (MyBody.bodyParts[limbIndex].isAttached)
+        {
             MyBody.RemoveLimb(limbIndex);
+        }
 
         if (fromDoctor)
+        {
             MyInventory.gold -= CostToReplaceLimbs();
+        }
 
         Item replacementLimb = MyInventory.items[itemIndex];
         string newLimbName = (replacementLimb.displayName != "") ? replacementLimb.displayName : replacementLimb.Name;
 
-        BodyPart newPart = new BodyPart(MyBody.bodyParts[limbIndex].name, true, MyBody.bodyParts[limbIndex].slot, false, replacementLimb.GetCComponent<CRot>() != null)
+        BodyPart newPart = new BodyPart(MyBody.bodyParts[limbIndex].name, true, MyBody.bodyParts[limbIndex].slot, false, replacementLimb.HasCComponent<CRot>())
         {
             Attributes = replacementLimb.statMods,
             armor = replacementLimb.armor
@@ -988,24 +997,26 @@ public class Stats : MonoBehaviour
             if (MyBody.bodyParts[limbIndex].slot == ItemProperty.Slot_Arm)
             {
                 if (MyBody.bodyParts[limbIndex].hand == null)
-                    MyBody.bodyParts[limbIndex].hand = new BodyPart.Hand(MyBody.bodyParts[limbIndex], ItemList.GetItemByID(item.ID));
+                    MyBody.bodyParts[limbIndex].hand = new BodyPart.Hand(MyBody.bodyParts[limbIndex], ItemList.GetItemByID(item.ID), ce.baseItemID);
                 else
                     MyBody.bodyParts[limbIndex].hand.SetEquippedItem(ItemList.GetItemByID(item.ID), entity);
             }
         }
         else
+        {
             MyBody.bodyParts[limbIndex].equippedItem = ItemList.GetNone();
+        }
 
 
         if (MyBody.bodyParts[limbIndex].slot == ItemProperty.Slot_Arm)
         {
             if (MyBody.bodyParts[limbIndex].hand == null)
             {
-                MyBody.bodyParts[limbIndex].hand = new BodyPart.Hand(MyBody.bodyParts[limbIndex], ItemList.GetItemByID(MyInventory.baseWeapon));
+                MyBody.bodyParts[limbIndex].hand = new BodyPart.Hand(MyBody.bodyParts[limbIndex], ItemList.GetItemByID("fists"), "fists");
             }
             else
             {
-                MyBody.bodyParts[limbIndex].hand.SetEquippedItem(ItemList.GetItemByID(MyInventory.baseWeapon), entity);
+                MyBody.bodyParts[limbIndex].hand.SetEquippedItem(ItemList.GetItemByID(MyBody.bodyParts[limbIndex].hand.baseItem), entity);
             }
         }
 

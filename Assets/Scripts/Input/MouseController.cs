@@ -56,10 +56,12 @@ public class MouseController : MonoBehaviour
 
         if (PlayerInput.fullMap)
         {
-            WorldMapHandling();
+            //WorldMapHandling();
         }
         else if (CursorIsActive)
+        {
             LocalMapHandling(pos);
+        }
     }
 
     void LocalMapHandling(Vector3 pos)
@@ -76,7 +78,7 @@ public class MouseController : MonoBehaviour
             {
                 if (Vector2.Distance(cursor.position, playerEntity.transform.position) < 2)
                 {
-                    MoveOffScreen(new Coord((int)cursor.position.x, (int)cursor.position.y));
+                    MoveOffScreen(new Coord(Mathf.FloorToInt(cursor.position.x), Mathf.FloorToInt(cursor.position.y)));
                 }
                 else
                 {
@@ -127,12 +129,14 @@ public class MouseController : MonoBehaviour
             pos.x = Mathf.FloorToInt(pos.x);
             pos.y = Mathf.FloorToInt(pos.y);
 
-            Coord targetPos = new Coord((int)pos.x, (int)pos.y);
+            Coord targetPos = new Coord(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
             worldCursor.position = pos + new Vector3(0.5f, 0.5f, 0);
             cursor.position = pos;
 
             if (Input.GetMouseButtonUp(0))
+            {
                 MoveWorld(targetPos);
+            }
         }
     }
 
@@ -146,7 +150,10 @@ public class MouseController : MonoBehaviour
 
     void MoveOffScreen(Coord targetPos)
     {
-        Coord direction = new Coord(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
+        int playerPosX = playerEntity.posX;
+        int playerPosY = playerEntity.posY - Manager.localMapSize.y;
+
+        Coord direction = new Coord(targetPos.x - playerPosX, targetPos.y - playerPosY);
         World.tileMap.CheckEdgeLocalMap(playerEntity.posX + direction.x, playerEntity.posY + direction.y);
     }
 

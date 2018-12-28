@@ -163,15 +163,20 @@ public static class EntityList
 
                             if (tag == BodyPart.BPTags.Grip && bodyPart.slot == ItemProperty.Slot_Arm)
                             {
-                                bodyPart.hand = new BodyPart.Hand(bodyPart, ItemList.GetItemByID("fists"));
+                                string baseWep = "fists";
+
+                                if (bpData.ContainsKey("Wielding"))
+                                {
+                                    baseWep = bpData["Wielding"].ToString();
+                                }
+
+                                bodyPart.hand = new BodyPart.Hand(bodyPart, ItemList.GetItemByID(baseWep), baseWep);
                             }
                         }
                     }
                 }
 
-                if (bpData.ContainsKey("Default Equipped"))
-                    bodyPart.equippedItem = ItemList.GetItemByID(bpData["Default Equipped"].ToString());
-
+                bodyPart.equippedItem = bpData.ContainsKey("Default Equipped") ? ItemList.GetItemByID(bpData["Default Equipped"].ToString()) : ItemList.GetItemByID("none");
                 return bodyPart;
             }
         }

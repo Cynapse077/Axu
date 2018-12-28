@@ -1,19 +1,26 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class Journal : MonoBehaviour
 {
     public List<Quest> quests;
-    List<ProgressFlags> progressFlags;
     public Quest trackedQuest;
+    public List<string> completedQuests { get; protected set; }
+    public List<string> staticNPCKills { get; set; }
+
+    List<ProgressFlags> progressFlags;
 
     void Start()
     {
+        ObjectManager.playerJournal = this;
         quests = new List<Quest>();
+        completedQuests = new List<string>();
         progressFlags = new List<ProgressFlags>();
+        staticNPCKills = new List<string>();
+
         World.tileMap.OnScreenChange += UpdateLocation;
+        EventHandler.instance.NPCDied += OnNPCKill;
         trackedQuest = null;
 
         if (!Manager.newGame)
@@ -27,12 +34,22 @@ public class Journal : MonoBehaviour
             {
                 AddFlag(Manager.playerBuilder.progressFlags[i]);
             }
+
+            completedQuests.AddRange(Manager.playerBuilder.completedQuests);
+            staticNPCKills.AddRange(Manager.playerBuilder.killedStaticNPCs);
         }
     }
 
     public void OnDisable()
     {
         World.tileMap.OnScreenChange -= UpdateLocation;
+        EventHandler.instance.NPCDied -= OnNPCKill;
+        progressFlags.Clear();
+    }
+
+    public bool HasCompletedQuest(string id)
+    {
+        return completedQuests.Contains(id);
     }
 
     public List<ProgressFlags> AllFlags()
@@ -62,12 +79,19 @@ public class Journal : MonoBehaviour
         Faction f = FactionList.GetFactionByID(facID);
 
         if (f == null)
+        {
             return;
+        }
 
         if (!f.hostileTo.Contains("player"))
+        {
             f.hostileTo.Add("player");
+        }
+
         if (!f.hostileTo.Contains("followers"))
+        {
             f.hostileTo.Add("followers");
+        }
 
         BreakFollowersInFaction(facID);
     }
@@ -96,7 +120,9 @@ public class Journal : MonoBehaviour
         quests.Add(q);
 
         if (showInLog)
+        {
             CombatLog.NameMessage("Start_Quest", q.Name);
+        }
 
         q.Start(skipEvent);
         trackedQuest = q;
@@ -112,12 +138,21 @@ public class Journal : MonoBehaviour
                 trackedQuest = null;
         }
 
+        completedQuests.Add(q.ID);
         quests.Remove(q);
     }
 
     public void FailQuest(Quest q)
     {
         quests.Remove(q);
+    }
+
+    void OnNPCKill(NPC n)
+    {
+        if (n.HasFlag(NPC_Flags.Static))
+        {
+            staticNPCKills.Add(n.ID);
+        }
     }
 
     //Called when the local map changes, checks all quests to see if there is a destination here.

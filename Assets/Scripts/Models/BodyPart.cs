@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MoonSharp.Interpreter;
 
 [MoonSharpUserData]
-[System.Serializable]
+[Serializable]
 public class BodyPart : IWeighted
 {
     const int maxLevel = 5;
@@ -25,7 +26,8 @@ public class BodyPart : IWeighted
     int _weight;
     public Item equippedItem;
     string _baseName;
-    bool _attached = true, _severable = false;
+    bool _attached = true;
+    bool _severable = false;
 
     public int Weight
     {
@@ -116,7 +118,9 @@ public class BodyPart : IWeighted
     public Stat_Modifier GetStatMod(string search)
     {
         if (Attributes.Find(x => x.Stat == search) == null)
+        {
             Attributes.Add(new Stat_Modifier(search, 0));
+        }
 
         return Attributes.Find(x => x.Stat == search);
     }
@@ -132,10 +136,14 @@ public class BodyPart : IWeighted
     public void AddXP(Entity entity, double amount)
     {
         if (myBody == null)
+        {
             myBody = entity.body;
+        }
 
         if (level >= 5 || !organic || !isAttached || external)
+        {
             return;
+        }
 
         currXP += amount;
 
@@ -149,8 +157,10 @@ public class BodyPart : IWeighted
 
     public void LevelUp(Entity entity)
     {
-        if (level >= 5)
+        if (level >= 4)
+        {
             return;
+        }
 
         level++;
         CombatLog.NameMessage("Limb_Stat_Gain", name);
@@ -204,14 +214,18 @@ public class BodyPart : IWeighted
         if (effect == TraitEffects.Leprosy && !stats.hasTrait("leprosy"))
         {
             if (showMessage)
+            {
                 Alert.NewAlert("Dis_Lep_Attach");
+            }
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
         }
         else if (effect == TraitEffects.Crystallization && !stats.hasTrait("crystal"))
         {
             if (showMessage)
+            {
                 Alert.NewAlert("Dis_Cry_Attach");
+            }
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
         }
@@ -219,7 +233,9 @@ public class BodyPart : IWeighted
         for (int i = 0; i < Attributes.Count; i++)
         {
             if (Attributes[i].Stat != "Hunger")
+            {
                 stats.Attributes[Attributes[i].Stat] += Attributes[i].Amount;
+            }
         }
     }
 
@@ -231,7 +247,9 @@ public class BodyPart : IWeighted
         for (int i = 0; i < Attributes.Count; i++)
         {
             if (Attributes[i].Stat != "Hunger")
+            {
                 stats.Attributes[Attributes[i].Stat] -= Attributes[i].Amount;
+            }
         }
     }
 
@@ -240,9 +258,16 @@ public class BodyPart : IWeighted
         if (equippedItem == null || equippedItem.ID == "none")
             equippedItem = ItemList.GetNone();
 
+        SHand hnd = null;
+
+        if (hand != null)
+        {
+            hnd = new SHand(hand.EquippedItem.ToSimpleItem(), hand.baseItem);
+        }
+
         SItem equipped = equippedItem.ToSimpleItem();
         SBodyPart simple = new SBodyPart(name, equipped, severable, _attached, slot, canWearGear,
-            Weight, Attributes, armor, effect, external, organic, level, currXP, maxXP, wounds);
+            Weight, Attributes, armor, effect, external, organic, level, currXP, maxXP, wounds, hnd);
 
         return simple;
     }
@@ -337,7 +362,9 @@ public class BodyPart : IWeighted
         wounds = other.wounds;
 
         if (other.hand != null)
+        {
             hand = new Hand(other.hand);
+        }
 
         bpTags = new BPTags[other.bpTags.Length];
 
@@ -352,33 +379,40 @@ public class BodyPart : IWeighted
     {
         public BodyPart arm;
         public Item EquippedItem;
+        public string baseItem = "fists";
 
         public bool IsAttached
         {
             get { return (arm != null && arm.isAttached); }
         }
 
-        public void SetEquippedItem(Item i, Entity entity)
-        {
-            if (EquippedItem != null && entity != null)
-                EquippedItem.OnUnequip(entity, this == entity.body.MainHand);
-
-            EquippedItem = i;
-
-            if (entity != null && EquippedItem != null)
-                EquippedItem.OnEquip(entity.stats, this == entity.body.MainHand);
-        }
-
-        public Hand(BodyPart _arm, Item _item)
+        public Hand(BodyPart _arm, Item _item, string _baseItem)
         {
             arm = _arm;
             EquippedItem = _item;
+            baseItem = _baseItem;
         }
 
         public Hand(Hand other)
         {
             arm = other.arm;
             EquippedItem = other.EquippedItem;
+            baseItem = other.baseItem;
+        }
+
+        public void SetEquippedItem(Item i, Entity entity)
+        {
+            if (EquippedItem != null && entity != null)
+            {
+                EquippedItem.OnUnequip(entity, this == entity.body.MainHand);
+            }
+
+            EquippedItem = i;
+
+            if (entity != null && EquippedItem != null)
+            {
+                EquippedItem.OnEquip(entity.stats, this == entity.body.MainHand);
+            }
         }
     }
 
@@ -405,7 +439,7 @@ public class BodyPart : IWeighted
 
         public int GripStrength()
         {
-            return myPart.myBody.entity.stats.Strength;
+            return (myPart.myBody.entity.stats.Strength / 3) * (myPart.myBody.FreeHands().Count + 1);
         }
 
         public bool GripBroken(int strPenalty = 0)
@@ -428,13 +462,15 @@ public class BodyPart : IWeighted
 
         public void Release()
         {
-            if (heldPart == null)
-                return;
+            if (heldPart != null)
+            {
+                if (heldPart.holdsOnMe.Contains(this))
+                {
+                    heldPart.holdsOnMe.Remove(this);
+                }
 
-            if (heldPart.holdsOnMe.Contains(this))
-                heldPart.holdsOnMe.Remove(this);
-
-            heldPart = null;
+                heldPart = null;
+            }
         }
 
         public void Grab(BodyPart part)
@@ -442,9 +478,65 @@ public class BodyPart : IWeighted
             heldPart = part;
 
             if (heldPart != null)
+            {
                 heldPart.holdsOnMe.Add(this);
+            }
         }
     }
 }
 
+[Serializable]
+public class SBodyPart
+{
+    public string Name { get; set; }
+    public SItem item { get; set; }
+    public int Lvl;
+    public double[] XP;
+    public int Ar { get; set; } //armor
+    public bool Sev { get; set; } //severable
+    public bool Att { get; set; } //attached
+    public bool Ext { get; set; } //external
+    public bool Org { get; set; } //organic
+    public ItemProperty Slot { get; set; }
+    public List<Stat_Modifier> Stats { get; set; }
+    public List<Wound> Wounds { get; set; }
+    public bool CWG { get; set; } //can wear gear
+    public int Size { get; set; }
+    public TraitEffects Dis { get; set; } //disease
+    public SHand Hnd;
 
+    public SBodyPart() { }
+    public SBodyPart(string name, SItem _item, bool severable, bool attached, ItemProperty slot, bool weargear, int size, List<Stat_Modifier> stats, int armor,
+        TraitEffects disease, bool external, bool organic, int level, double currXP, double maxXP, List<Wound> wnds, SHand hand)
+    {
+        Name = name;
+        item = _item;
+        Sev = severable;
+        Att = attached;
+        Slot = slot;
+        CWG = weargear;
+        Size = size;
+        Stats = stats;
+        Ar = armor;
+        Dis = disease;
+        Ext = external;
+        Org = organic;
+        Wounds = wnds;
+        Lvl = level;
+        Hnd = hand;
+        XP = new double[] { currXP, maxXP };
+    }
+}
+
+[Serializable]
+public class SHand
+{
+    public SItem item;
+    public string bItem;
+
+    public SHand(SItem it, string bi)
+    {
+        item = it;
+        bItem = bi;
+    }
+}

@@ -729,57 +729,7 @@ public class TileMap_Data
         if (data == null)
             return false;
 
-        int maxX = (int)data["width"], maxY = (int)data["height"];
-
-        for (int x = 0; x < maxX; x++)
-        {
-            for (int y = 0; y < maxY; y++)
-            {
-                if (x >= Width || y >= Height)
-                    continue;
-
-                int id = (int)data["IDs"][x * maxY + y];
-
-                if (id != Tile.tiles["Default"].ID)
-                    map_data[x, y] = Tile.GetByID(id);
-            }
-        }
-
-        if (data.ContainsKey("objects") && !visited)
-        {
-            for (int i = 0; i < data["objects"].Count; i++)
-            {
-                int x = (int)data["objects"][i]["Pos"][0], y = (int)data["objects"][i]["Pos"][1];
-                string oType = data["objects"][i]["Name"].ToString();
-                World.objectManager.NewObjectAtOtherScreen(oType, new Coord(x, y), mapInfo.position, -elevation);
-            }
-        }
-
-        if (data.ContainsKey("npcs") && !visited)
-        {
-            for (int i = 0; i < data["npcs"].Count; i++)
-            {
-                int x = (int)data["npcs"][i]["Pos"][0], y = (int)data["npcs"][i]["Pos"][1];
-                string nType = data["npcs"][i]["Name"].ToString();
-                NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
-
-                if (World.objectManager.NPCExists(nType) && bp.flags.Contains(NPC_Flags.Static))
-                {
-                    NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
-                    npc.worldPosition = new Coord(mapInfo.position);
-                    npc.elevation = -elevation;
-                    npc.localPosition = new Coord(x, y);
-                }
-                else
-                {
-                    NPC n = new NPC(bp, new Coord(mapInfo.position), new Coord(x, y), -elevation);
-                    World.objectManager.CreateNPC(n);
-                }
-            }
-        }
-
-        SetUpTileData();
-        return true;
+        return LoadMap(data);
     }
 
     bool LoadCustomMap()
@@ -795,6 +745,11 @@ public class TileMap_Data
         if (data == null)
             return false;
 
+        return LoadMap(data);
+    }
+
+    bool LoadMap(JsonData data)
+    {
         int maxX = (int)data["width"], maxY = (int)data["height"];
 
         for (int x = 0; x < maxX; x++)
@@ -831,6 +786,12 @@ public class TileMap_Data
                     string nType = data["npcs"][i]["Name"].ToString(); //Actually the ID of the NPC.
                     NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
 
+                    //If this NPC is static and has died, do not spawn it.
+                    if (bp.flags.Contains(NPC_Flags.Static) && ObjectManager.playerJournal != null && ObjectManager.playerJournal.staticNPCKills.Contains(bp.id))
+                    {
+                        continue;
+                    }
+
                     if (bp.flags.Contains(NPC_Flags.Static) && World.objectManager.NPCExists(nType))
                     {
                         NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
@@ -846,7 +807,7 @@ public class TileMap_Data
                 }
             }
         }
-        
+
         SetUpTileData();
         return true;
     }

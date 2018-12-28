@@ -50,7 +50,9 @@ public static class SpawnController
         }
 
         if (bps.Count <= 0)
+        {
             return;
+        }
 
         GroupBlueprint spawn = bps.GetRandom();
         int amount = rng.Next(2, 7);
@@ -65,14 +67,18 @@ public static class SpawnController
         if (mapData.elevation == 0)
         {
             if (mapData.houses.Count > 0)
+            {
                 HouseObjects();
+            }
 
             int numSpawns = mapData.mapInfo.friendly ? rng.Next(1, 4) : rng.Next(0, 4);
 
             if (!mapData.mapInfo.friendly)
             {
                 if (rng.Next(100) < 60)
+                {
                     numSpawns = 0;
+                }
 
                 Encounter();
             }
@@ -82,7 +88,9 @@ public static class SpawnController
                 List<GroupBlueprint> gbs = GroupsThatCanSpawnHere(mapData);
 
                 if (gbs.Count <= 0)
+                {
                     return;
+                }
 
                 GroupBlueprint gb = gbs.GetRandom(rng);
 
@@ -141,13 +149,16 @@ public static class SpawnController
                 GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
 
                 if (bp.Name.Contains("Minibosses") && bp.level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
+                {
                     bps.Add(bp);
+                }
             }
 
             if (bps.Count > 0)
+            {
                 SpawnFromGroupName(bps.GetRandom().Name);
+            }
         }
-
     }
 
     static void HouseObjects()
@@ -188,7 +199,9 @@ public static class SpawnController
         n.elevation = World.tileMap.currentElevation;
 
         if (n.HasFlag(NPC_Flags.Summon_Adds))
+        {
             n.flags.Remove(NPC_Flags.Summon_Adds);
+        }
 
         n.inventory = new List<Item>();
         n.isHostile = true;
@@ -271,7 +284,9 @@ public static class SpawnController
             Coord pos = World.tileMap.CurrentMap.GetRandomFloorTile();
 
             if (pos != null)
+            {
                 World.objectManager.NewObject(obT, pos);
+            }
         }
     }
 
@@ -302,7 +317,9 @@ public static class SpawnController
     public static bool HasFoundEncounter(float chanceMultiplier = 1.0f)
     {
         if (Manager.noEncounters || Random.value >= (0.015f * chanceMultiplier))
+        {
             return false;
+        }
 
         MapInfo mi = World.tileMap.worldMap.GetTileAt(World.tileMap.worldCoordX, World.tileMap.worldCoordY);
 
@@ -322,7 +339,9 @@ public static class SpawnController
         List<NPC> spawned = new List<NPC>();
 
         if (amount == 0)
+        {
             amount = chosenSpawn.AmountToSpawn();
+        }
 
         for (int j = 0; j < amount; j++)
         {
@@ -330,12 +349,13 @@ public static class SpawnController
             Coord stPos = World.tileMap.CurrentMap.GetRandomFloorTile();
 
             if (stPos == null)
+            {
                 stPos = new Coord(rng.Next(0, Manager.localMapSize.x - 1), rng.Next(0, Manager.localMapSize.y - 1));
+            }
 
             if (stPos != null)
             {
                 NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, position, stPos, elevation);
-                n.AddFlag(NPC_Flags.SpawnedFromQuest);
                 World.objectManager.SpawnNPC(n);
                 spawned.Add(n);
             }
@@ -347,8 +367,11 @@ public static class SpawnController
     static void SpawnSingleGroup(GroupBlueprint gbp, int amount = 1)
     {
         SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+
         if (amount == 0)
+        {
             amount = chosenSpawn.AmountToSpawn();
+        }
 
         for (int j = 0; j < amount; j++)
         {

@@ -1,10 +1,10 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using LitJson;
 
 public class NewWorld
 {
+    public static bool doneSaving = false;
     const int Cutoffthreshold = 6000;
 
     readonly int Turn_Num;
@@ -19,12 +19,14 @@ public class NewWorld
         tileMap = World.tileMap;
         Turn_Num = turn;
         Version = GameSettings.version;
+        doneSaving = false;
 
         SetWorldData();
     }
 
     void SetWorldData()
     {
+        doneSaving = false;
         PlayerCharacter player = ObjectManager.playerEntity.ToCharacter();
 
         //world
@@ -66,10 +68,16 @@ public class NewWorld
         }
 
         GameSave save = new GameSave(Version, player, w2json, holder);
+        SaveFile(save, player.Name);
+    }
+
+    void SaveFile(GameSave save, string playerName)
+    {
         JsonData saveJson = JsonMapper.ToJson(save);
-        string saveFilePath = Manager.SaveDirectory + "/" + player.Name + ".axu";
+        string saveFilePath = Manager.SaveDirectory + "/" + playerName + ".axu";
 
         File.WriteAllText(saveFilePath, saveJson.ToString());
+        doneSaving = true;
     }
 
     void RemoveStuffAt(int x, int y, int z)
@@ -97,7 +105,7 @@ public class NewWorld
 
     void AddDataToArray(ref ScreenHolder holder, ScreenToJson s2json)
     {
-        if (s2json.LTS > 0 && s2json.P[2] == 0 && World.objectManager.CanDiscard(s2json.P[0], s2json.P[1], s2json.P[2]) && 
+        if (s2json.LTS > 0 && World.objectManager.CanDiscard(s2json.P[0], s2json.P[1], s2json.P[2]) && 
             Turn_Num - s2json.LTS >= Cutoffthreshold)
         {
 			RemoveStuffAt(s2json.P[0], s2json.P[1], s2json.P[2]);
@@ -123,7 +131,7 @@ public class OldWorld
     {
         loadJson = File.ReadAllText(Manager.SaveDirectory + "/" + Manager.playerName + ".axu");
         wData = JsonMapper.ToObject(loadJson)["World"];
-        ObjectManager objM = GameObject.FindObjectOfType<ObjectManager>();
+        ObjectManager objM = World.objectManager;
         objM.GetComponent<TurnManager>().turn = (int)wData["Turn_Num"];
 
         World.BaseDangerLevel = (int)wData["Danger_Level"];

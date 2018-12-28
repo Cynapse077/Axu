@@ -13,7 +13,9 @@ public class Body : MonoBehaviour
         get
         {
             if (bodyParts.Find(x => x.slot == ItemProperty.Slot_Arm && x.isAttached) == null)
+            {
                 return defaultHand;
+            }
 
             return bodyParts.Find(x => x.slot == ItemProperty.Slot_Arm && x.isAttached).hand;
         }
@@ -28,7 +30,9 @@ public class Body : MonoBehaviour
             for (int i = 0; i < Hands.Count; i++)
             {
                 if (Hands[i] == mh)
+                {
                     return i;
+                }
             }
 
             return -1;
@@ -47,12 +51,16 @@ public class Body : MonoBehaviour
     void OnDisable()
     {
         if (bodyParts == null)
+        {
             return;
+        }
         
         for (int i = 0; i < bodyParts.Count; i++)
         {
             if (bodyParts[i].grip != null && bodyParts[i].grip.heldPart != null)
+            {
                 bodyParts[i].grip.Release();
+            }
         }
     }
 
@@ -61,21 +69,12 @@ public class Body : MonoBehaviour
         for (int i = 0; i < bodyParts.Count; i++)
         {
             if (bodyParts[i].equippedItem == null || bodyParts[i].equippedItem.Name == "")
+            {
                 bodyParts[i].equippedItem = ItemList.GetNone();
+            }
 
             bodyParts[i].myBody = this;
         }
-
-        bodyParts = CharacterCreation.SortBodyParts(bodyParts);
-    }
-
-    public void AddBodyPart(BodyPart bp)
-    {
-        bodyParts.Add(bp);
-        bp.myBody = this;
-
-        if (bp.slot == ItemProperty.Slot_Arm)
-            Hands.Add(new BodyPart.Hand(bp, new Item(defaultHand.EquippedItem)));
 
         bodyParts = CharacterCreation.SortBodyParts(bodyParts);
     }
@@ -87,7 +86,9 @@ public class Body : MonoBehaviour
         for (int i = 0; i < bodyParts.Count; i++)
         {
             if (bodyParts[i].severable)
+            {
                 bp.Add(i);
+            }
         }
 
         return bp;
@@ -100,7 +101,9 @@ public class Body : MonoBehaviour
         for (int i = 0; i < bodyParts.Count; i++)
         {
             if (bodyParts[i].severable && bodyParts[i].isAttached)
+            {
                 bp.Add(bodyParts[i]);
+            }
         }
 
         return bp;
@@ -119,7 +122,9 @@ public class Body : MonoBehaviour
     public void TrainLimbOfType(ItemProperty[] types)
     {
         if (!entity.isPlayer || types.Length == 0)
+        {
             return;
+        }
 
         List<BodyPart> parts = new List<BodyPart>();
 
@@ -129,14 +134,18 @@ public class Body : MonoBehaviour
         }
 
         if (parts.Count > 0)
+        {
             parts.GetRandom().AddXP(entity, SeedManager.combatRandom.NextDouble());
+        }
     }
     public void TrainLimbOfType(ItemProperty t)
     {
         List<BodyPart> parts = GetBodyPartsBySlot(t);
 
         if (parts.Count > 0)
+        {
             parts.GetRandom().AddXP(entity, SeedManager.combatRandom.NextDouble());
+        }
     }
 
     public List<BodyPart.Grip> AllGrips()
@@ -146,7 +155,9 @@ public class Body : MonoBehaviour
         for (int i = 0; i < bodyParts.Count; i++)
         {
             if (bodyParts[i].grip != null && bodyParts[i].grip.heldPart != null)
+            {
                 allGrips.Add(bodyParts[i].grip);
+            }
         }
 
         return allGrips;
@@ -156,13 +167,15 @@ public class Body : MonoBehaviour
     {
         List<BodyPart.Grip> allGrips = new List<BodyPart.Grip>();
 
-        if (bodyParts == null)
-            return allGrips;
-
-        for (int i = 0; i < bodyParts.Count; i++)
+        if (bodyParts != null)
         {
-            if (bodyParts[i].holdsOnMe != null && bodyParts[i].holdsOnMe.Count > 0)
-                allGrips.AddRange(bodyParts[i].holdsOnMe);
+            for (int i = 0; i < bodyParts.Count; i++)
+            {
+                if (bodyParts[i].holdsOnMe != null && bodyParts[i].holdsOnMe.Count > 0)
+                {
+                    allGrips.AddRange(bodyParts[i].holdsOnMe);
+                }
+            }
         }
 
         return allGrips;
@@ -196,8 +209,7 @@ public class Body : MonoBehaviour
     {
         foreach (BodyPart bp in bodyParts)
         {
-            bool goodIntegrity = (bp.grip != null && bp.grip.heldPart != null && bp.grip.HeldBody != null 
-                && bp.grip.HeldBody.entity.myPos.DistanceTo(entity.myPos) < 2);
+            bool goodIntegrity = (bp.grip != null && bp.grip.heldPart != null && bp.grip.HeldBody != null && bp.grip.HeldBody.entity.myPos.DistanceTo(entity.myPos) < 2);
 
             if (goodIntegrity)
             {
@@ -231,12 +243,17 @@ public class Body : MonoBehaviour
     public void RemoveLimb(BodyPart b)
     {
         if (bodyParts.Contains(b) && b.isAttached)
+        {
             RemoveLimb(bodyParts.FindIndex(x => x == b));
+        }
     }
+
     public void RemoveLimb(int id)
     {
         if (!bodyParts[id].isAttached || !bodyParts[id].severable)
+        {
             return;
+        }
 
         bodyParts[id].Sever(entity);
 
@@ -292,7 +309,14 @@ public class Body : MonoBehaviour
 
                 partToDrop.displayName = gameObject.name + " " + partToDrop.Name;
 
-                CEquipped ce = new CEquipped(bodyParts[id].equippedItem.ID);
+                string handBaseItemID = "";
+
+                if (bodyParts[id].hand != null)
+                {
+                    handBaseItemID = bodyParts[id].hand.baseItem;
+                }
+
+                CEquipped ce = new CEquipped(bodyParts[id].equippedItem.ID, handBaseItemID);
                 partToDrop.AddComponent(ce);
                 partToDrop.armor = bodyParts[id].armor;
 
@@ -371,7 +395,7 @@ public class Body : MonoBehaviour
 
     public List<BodyPart.Hand> FreeHands()
     {
-        return Hands.FindAll(x => x.IsAttached && x.EquippedItem.ID == MyInventory.baseWeapon);
+        return Hands.FindAll(x => x.IsAttached && x.EquippedItem.ID == x.baseItem);
     }
 
     public List<BodyPart> AttachedArms()
@@ -398,13 +422,17 @@ public class Body : MonoBehaviour
     public void AttachLimb(int id)
     {
         if (bodyParts[id].isAttached)
+        {
             return;
+        }
 
         bodyParts[id].Attach(MyStats);
         bodyParts[id].myBody = this;
 
         if (bodyParts[id].slot == ItemProperty.Slot_Arm)
+        {
             bodyParts[id].hand.SetEquippedItem(ItemList.GetItemByID("fists"), entity);
+        }
 
         bodyParts[id].equippedItem = ItemList.GetNone();
         bodyParts[id].SetXP(0.0, 1000.0);
@@ -434,10 +462,14 @@ public class Body : MonoBehaviour
             for (int i = 0; i < bodyParts.Count; i++)
             {
                 if (bodyParts[i] == null)
+                {
                     continue;
+                }
 
                 if (bodyParts[i].equippedItem == null)
+                {
                     bodyParts[i].equippedItem = ItemList.GetNone();
+                }
 
                 bodyParts[i].myBody = this;
                 bodyParts[i].equippedItem.UpdateUserSprite(MyStats, false);
@@ -457,7 +489,9 @@ public class Body : MonoBehaviour
                 for (int i = 0; i < Hands.Count; i++)
                 {
                     if (builder.handItems.Count > i && builder.handItems[i] != null)
+                    {
                         Hands[i].SetEquippedItem(new Item(builder.handItems[i]), entity);
+                    }
                 }
             }
 

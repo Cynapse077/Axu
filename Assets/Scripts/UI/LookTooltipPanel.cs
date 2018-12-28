@@ -31,20 +31,21 @@ public class LookTooltipPanel : MonoBehaviour {
 
 		if (hands.Count > 0) {
 			for (int i = 0; i < hands.Count; i++) {
-				if (hands[i].EquippedItem == null)
-					hands[i].SetEquippedItem(ItemList.GetItemByID(npc.entity.inventory.baseWeapon), npc.entity);
-
 				wepName += hands[i].EquippedItem.DisplayName();
 
 				if (i < hands.Count - 1)
+                {
 					wepName += ", ";
+                }
 			}
 		} else {
 			wepName = npcInv.entity.body.defaultHand.EquippedItem.DisplayName();
 		}
 
 		if (npc.entity.inventory.firearm != null && npc.entity.inventory.firearm.ID != "none")
+        {
 			wepName += ", " + npc.entity.inventory.firearm.DisplayName();
+        }
 
 		Content3.text = LocalizationManager.GetLocalizedContent("TT_Weapon")[0] + ": " + wepName + "\n"
 			+ LocalizationManager.GetLocalizedContent("TT_Armor")[0] + ": " + npc.npcBase.Attributes["Defense"].ToString();

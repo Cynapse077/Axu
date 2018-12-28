@@ -153,7 +153,9 @@ public class Trait
         {
             //Remove other mutations that affected the character's same body parts.
             if (replaceBodyPart.allOfType)
+            {
                 RemoveOtherMuts(entity.stats);
+            }
 
             List<BodyPart> bps = entity.body.GetBodyPartsBySlot(replaceBodyPart.slot);
 
@@ -161,7 +163,10 @@ public class Trait
             {
                 //If it's not organic, skip it.
                 if (!bps[i].organic || bps[i].external)
+                {
                     continue;
+                }
+
                 //Remove all parts of type (for serpentine)
                 if (replaceBodyPart.removeAll)
                 {
@@ -180,13 +185,18 @@ public class Trait
                         entity.inventory.PickupItem(bps[i].equippedItem);
                         bps[i].equippedItem = ItemList.GetNone();
                     }
+
                     if (replaceBodyPart.newEquippedItem != null)
+                    {
                         bps[i].equippedItem = ItemList.GetItemByID(replaceBodyPart.newEquippedItem);
+                    }
                 }
                 else
                 {
                     if (i == 0)
+                    {
                         bps[i].canWearGear = replaceBodyPart.canWearGear;
+                    }
                 }
             }
 
@@ -199,7 +209,7 @@ public class Trait
 
                     if (additionalPart.slot == ItemProperty.Slot_Arm)
                     {
-                        additionalPart.hand = new BodyPart.Hand(additionalPart, ItemList.GetItemByID(entity.inventory.baseWeapon));
+                        additionalPart.hand = new BodyPart.Hand(additionalPart, new Item(additionalPart.equippedItem), additionalPart.equippedItem.ID);
                     }
 
                     entity.body.bodyParts.Add(additionalPart);
@@ -212,19 +222,20 @@ public class Trait
             Remove(entity);
         }
 
+        //Setup Hands' equipped items
         if (replaceBodyPart.slot == ItemProperty.Slot_Arm && replaceBodyPart.extraLimbs == null)
         {
             List<BodyPart.Hand> hands = entity.body.Hands;
 
             for (int i = 0; i < hands.Count; i++)
             {
-                if (hands[i].EquippedItem.ID == entity.inventory.baseWeapon)
+                if (hands[i].EquippedItem.ID == hands[i].baseItem)
                 {
                     hands[i].SetEquippedItem(ItemList.GetItemByID(replaceBodyPart.newEquippedItem), entity);
                 }
-            }
 
-            entity.inventory.baseWeapon = replaceBodyPart.newEquippedItem;
+                hands[i].baseItem = replaceBodyPart.newEquippedItem;
+            }
         }
 
         //Sort limbs neatly.
@@ -268,7 +279,9 @@ public class Trait
 
             //Set the Can Wear Gear flag back to default.
             if (!replaceBodyPart.canWearGear)
+            {
                 entity.body.bodyParts[i].canWearGear = true;
+            }
 
             //Reset equipment
             if (replaceBodyPart.newEquippedItem != null && part.slot == replaceBodyPart.slot && part.equippedItem.ID == replaceBodyPart.newEquippedItem)
@@ -303,15 +316,6 @@ public class ReplaceBodyPart
     public bool canWearGear;
     public bool allOfType;
     public bool removeAll;
-
-    public ReplaceBodyPart()
-    {
-        slot = ItemProperty.Slot_Head;
-        bodyPartName = "";
-        newEquippedItem = "none";
-        canWearGear = true;
-        allOfType = true;
-    }
 
     public ReplaceBodyPart(ItemProperty _slot, string _bodyPartName, string _newEquippedItem, bool _canWearGear, bool _allOfType)
     {

@@ -51,7 +51,7 @@ public class ThrowItemPanel : UIPanel {
 		for (int i = 0; i < throwingItems.Count; i++) {
 			GameObject g = SimplePool.Spawn(inventoryButton, inventoryBase);
             g.GetComponent<ItemButton>().icon.sprite = SwitchSprite(throwingItems[i]);
-			g.GetComponentInChildren<Text>().text = throwingItems[i].InvDisplay(playerInventory.baseWeapon);
+			g.GetComponentInChildren<Text>().text = throwingItems[i].InvDisplay("none");
             g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex() ));
             SelectedMax++;
 		}

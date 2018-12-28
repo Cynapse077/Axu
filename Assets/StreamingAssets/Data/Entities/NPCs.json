@@ -331,7 +331,6 @@
                 "Can_Open_Doors"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 22, "y" : 16, "z" : -5 },
-            "Quest" : "ensis8",
             "Stats" : {
                 "Health" : 25,
                 "Stamina" : 55,
@@ -754,6 +753,39 @@
             "Equipped Items" : [ "hide" ],
             "MaxItems" : 0,
             "MaxItemRarity" : 0
+        },
+		{
+            "Name" : "Scritter",
+            "ID" : "scritter_follower",
+            "Faction" : "followers",
+            "Body Structure" : "Scritter",
+            "Sprite" : "npc-scritter.png",
+            "Flags" : [
+                "RPois",
+				"Follower",
+                "Deteriortate_HP",
+                "No_Blood"
+            ],
+            "Stats" : {
+                "Health" : 60,
+                "Stamina" : 30,
+
+                "Defense" : 4,
+                "Strength" : 5,
+                "Dexterity" : 8,
+                "Intelligence" : 4,
+                "Endurance" : 4,
+
+                "Speed" : 20,
+                "Perception" : 10,
+                "Accuracy" : 1
+            },
+            "Weapon_Choices" : [
+                "spiny_legs"
+            ],
+            "MaxItems" : 1,
+            "MaxItemRarity" : 4,
+            "Corpse_Item" : "corpse_rad"
         },
         {
             "Name" : "Spirit",

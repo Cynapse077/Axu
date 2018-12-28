@@ -39,7 +39,7 @@ public class SlotSelectPanel : MonoBehaviour
             GameObject g = Instantiate(button, transform);
             g.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(i); });
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(2, UIWindow.Inventory, true, false);
-            g.GetComponentInChildren<Text>().text = string.Format("{0} - {1}", parts[i].displayName, parts[i].equippedItem.InvDisplay(inv.baseWeapon, true));
+            g.GetComponentInChildren<Text>().text = string.Format("{0} - {1}", parts[i].displayName, parts[i].equippedItem.InvDisplay("none", true));
         }
 
         EventSystem.current.SetSelectedGameObject(null);
@@ -64,7 +64,9 @@ public class SlotSelectPanel : MonoBehaviour
             curInv.EquipDirectlyToBodyPart(selectedItem, bps[selectedNum]);
         }
         else
+        {
             curInv.Wield(selectedItem, selectedNum);
+        }
 
         World.userInterface.InitializeAllWindows(curInv);
         gameObject.SetActive(false);
@@ -98,24 +100,18 @@ public class SlotSelectPanel : MonoBehaviour
     public void Wield(Item it, Inventory inv)
     {
         displayingBP = false;
-
-        if (!gameObject.activeSelf)
-        {
-            return;
-        }
-
         selectedItem = it;
         curInv = inv;
 
-        transform.DestroyChildren();
+        transform.DespawnChildren();
 
-        Instantiate(title, transform);
+        SimplePool.Spawn(title, transform);
         parts = curInv.entity.body.GetBodyPartsBySlot(selectedItem.GetSlot());
         numActions = inv.entity.body.Hands.Count;
 
         for (int i = 0; i < numActions; i++)
         {
-            GameObject g = Instantiate(button, transform);
+            GameObject g = SimplePool.Spawn(button, transform);
             g.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(i); });
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(2, UIWindow.Inventory, true, false);
 
@@ -123,7 +119,7 @@ public class SlotSelectPanel : MonoBehaviour
 
             n = ((curInv.entity.body.Hands[i] == curInv.entity.body.MainHand) ? "<color=yellow>" : "<color=white>") + n + "</color>";
 
-            g.GetComponentInChildren<Text>().text = n + " - " + inv.entity.body.Hands[i].EquippedItem.InvDisplay(inv.baseWeapon);
+            g.GetComponentInChildren<Text>().text = n + " - " + inv.entity.body.Hands[i].EquippedItem.InvDisplay(inv.entity.body.Hands[i].baseItem);
         }
     }
 }

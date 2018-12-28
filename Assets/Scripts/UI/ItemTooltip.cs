@@ -112,19 +112,19 @@ public static class ItemTooltip
         }
 
         //Custom Components
-        if (item.GetCComponent<CCoordinate>() != null)
+        if (item.HasCComponent<CCoordinate>())
         {
             CCoordinate cc = item.GetCComponent<CCoordinate>();
             displayItems.Add(cc.GetInfo());
         }
 
-        if (item.GetCComponent<CLiquidContainer>() != null)
+        if (item.HasCComponent<CLiquidContainer>())
         {
             CLiquidContainer cl = item.GetCComponent<CLiquidContainer>();
             displayItems.Add(cl.GetInfo());
         }
 
-        if (item.GetCComponent<CBlock>() != null)
+        if (item.HasCComponent<CBlock>())
         {
             string s = LocalizationManager.GetLocalizedContent("IT_Block")[0];
 
@@ -134,7 +134,7 @@ public static class ItemTooltip
             displayItems.Add(s);
         }
 
-        if (item.GetCComponent<CModKit>() != null)
+        if (item.HasCComponent<CModKit>())
         {
             ItemModifier m = ItemList.GetModByID(item.GetCComponent<CModKit>().modID);
 
@@ -144,6 +144,14 @@ public static class ItemTooltip
             }
         }
 
+        if (item.HasCComponent<CEquipped>())
+        {
+            string eq = item.GetCComponent<CEquipped>().baseItemID;
+            if (!string.IsNullOrEmpty(eq))
+            {
+                displayItems.Add("Equipped: " + ItemList.GetItemByID(eq).DisplayName());
+            }
+        }
 
         //Disarm - not working.
         /*if (item.HasProp(ItemProperty.Disarm))

@@ -2,6 +2,8 @@
 #	-=[UPCOMING GOALS]=-																							    #
 -------------------------------------------------------------------------------------------------------------------------
 
+- Teleport items that don't disappear on use should not be useable when enemies are near.
+	- Or link all locations to the "Return" spell.
 - Mouse movement on world map - mouse cursor offset is wrong.
 - Blood slime familiar.
 - Hire NPCs to stay at your base to sell goods, provide medical services, etc.
@@ -16,7 +18,3 @@ CYBERNETICS:
 
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
-
-Bugs:
-
-	- Enemies do not consider terrain when wandering.

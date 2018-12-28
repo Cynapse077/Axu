@@ -40,7 +40,7 @@ public class StatusEffectPanel : MonoBehaviour
         slow.UpdateSE(stats.HasEffect("Slow"), NumTurns(stats, "Slow"));
         regen.UpdateSE(stats.HasEffect("Regen"), NumTurns(stats, "Regen"));
         haste.UpdateSE(stats.HasEffect("Haste"), NumTurns(stats, "Haste"));
-        stuck.UpdateSE(stats.HasEffect("Stucj"), NumTurns(stats, "Stuck"));
+        stuck.UpdateSE(stats.HasEffect("Stuck"), NumTurns(stats, "Stuck"));
         shield.UpdateSE(stats.HasEffect("Shield"), NumTurns(stats, "Shield"));
         unconscious.UpdateSE(stats.HasEffect("Unconscious"), NumTurns(stats, "Unconscious"));
         drunk.UpdateSE(stats.HasEffect("Drunk"), NumTurns(stats, "Drunk"));

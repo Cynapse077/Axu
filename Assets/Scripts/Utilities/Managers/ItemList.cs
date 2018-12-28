@@ -163,7 +163,7 @@ public static class ItemList
 
     public static Item GetItemByID(string id)
     {
-        if (id == "none" || id == "None" || id == GetNone().ID)
+        if (string.IsNullOrEmpty(id) || id == "none" || id == "None" || id == GetNone().ID)
             return GetNone();
         else if (id.Contains("Random"))
             return GetRarityByName(id);
@@ -387,7 +387,7 @@ public static class ItemList
             case ItemProperty.Slot_Arm: return GetItemByID("severed_arm");
             case ItemProperty.Slot_Leg: return GetItemByID("severed_leg");
 
-            default: return GetItemByID("fleshraw");
+            default: return null;
         }
     }
 

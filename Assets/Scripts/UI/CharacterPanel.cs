@@ -93,13 +93,13 @@ public class CharacterPanel : MonoBehaviour
             GameObject bp = SimplePool.Spawn(bpGO, bpAnchor);
             Text text = bp.GetComponent<Text>();
             text.alignment = TextAnchor.MiddleLeft;
-            text.text = (b.isAttached ? "<color=green>" : "<color=red>") + b.displayName + "</color> <color=grey>[" + (b.armor + b.equippedItem.armor + stats.Defense).ToString() + "]</color>";
+            text.text = (b.isAttached ? "<color=green>" : "<color=red>") + b.displayName + "</color>\n  Armor: <color=grey>[" + (b.armor + b.equippedItem.armor + stats.Defense).ToString() + "]</color>";
 
             if (b.isAttached && b.wounds.Count > 0)
             {
                 for (int i = 0; i < b.wounds.Count; i++)
                 {
-                    text.text += "\n    <color=red>[" + b.wounds[i].Name + ":";
+                    text.text += "\n  <color=red>[" + b.wounds[i].Name + ":";
 
                     for (int j = 0; j < b.wounds[i].statMods.Count; j++)
                     {
@@ -113,7 +113,9 @@ public class CharacterPanel : MonoBehaviour
             for (int i = 0; i < b.Attributes.Count; i++)
             {
                 if (b.Attributes[i].Stat != "Hunger" && b.Attributes[i].Stat != "Defense")
-                    text.text += "\n    " + LocalizationManager.GetLocalizedContent(b.Attributes[i].Stat)[0] + " <color=orange>(" + b.Attributes[i].Amount + ")</color>";
+                {
+                    text.text += "\n  " + LocalizationManager.GetContent(b.Attributes[i].Stat) + " <color=orange>(" + b.Attributes[i].Amount + ")</color>";
+                }
             }
         }
     }

@@ -400,6 +400,8 @@
     <Compile Include="Assets\Scripts\Models\PlayerProficiencies.cs" />
     <Compile Include="Assets\Scripts\Models\Profession.cs" />
     <Compile Include="Assets\Scripts\Models\Quest.cs" />
+    <Compile Include="Assets\Scripts\Models\QuestEvent.cs" />
+    <Compile Include="Assets\Scripts\Models\QuestGoal.cs" />
     <Compile Include="Assets\Scripts\Models\SItem.cs" />
     <Compile Include="Assets\Scripts\Models\Skill.cs" />
     <Compile Include="Assets\Scripts\Models\TileDamage.cs" />
@@ -484,6 +486,7 @@
     <Compile Include="Assets\Scripts\Utilities\Managers\ItemList.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\Manager.cs" />
+    <Compile Include="Assets\Scripts\Utilities\Managers\MusicManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\ObjectManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\PoolManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\SeedManager.cs" />

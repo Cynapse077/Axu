@@ -182,6 +182,8 @@ public class GrapplePanel : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(anchor.GetChild(selectedNum).gameObject);
 
         if (GameSettings.Keybindings.GetKey("Enter"))
+        {
             SelectPressed();
+        }
     }
 }

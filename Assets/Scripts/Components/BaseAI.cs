@@ -689,9 +689,9 @@ public class BaseAI : MonoBehaviour
 
         if (npcBase.HasFlag(NPC_Flags.OnDeath_Explode))
         {
-            for (int x = entity.posX - 2; x <= entity.posX + 2; x++)
+            for (int x = entity.posX - 1; x <= entity.posX + 1; x++)
             {
-                for (int y = entity.posY - 2; y <= entity.posY + 2; y++)
+                for (int y = entity.posY - 1; y <= entity.posY + 1; y++)
                 {
                     if (x == entity.posX && y == entity.posY)
                         continue;
@@ -779,14 +779,18 @@ public class BaseAI : MonoBehaviour
 
             npcBase.handItems = new List<Item>();
 
-            if (body.Hands.Count > 0)
-            {
-                for (int i = 0; i < body.Hands.Count; i++)
-                {
-                    if (body.Hands[i].EquippedItem == null)
-                        body.Hands[i].SetEquippedItem(ItemList.GetItemByID(entity.inventory.baseWeapon), entity);
+            List<BodyPart.Hand> hands = body.Hands;
 
-                    npcBase.handItems.Add(body.Hands[i].EquippedItem);
+            if (hands.Count > 0)
+            {
+                for (int i = 0; i < hands.Count; i++)
+                {
+                    if (hands[i].EquippedItem == null)
+                    {
+                        hands[i].SetEquippedItem(ItemList.GetItemByID(body.Hands[i].baseItem), entity);
+                    }
+
+                    npcBase.handItems.Add(hands[i].EquippedItem);
                 }
             }
             else

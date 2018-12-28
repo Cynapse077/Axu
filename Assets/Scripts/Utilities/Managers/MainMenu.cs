@@ -27,12 +27,14 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+        QualitySettings.vSyncCount = 1;
         background.CrossFadeAlpha(0.1f, 0.01f, false);
         background2.CrossFadeAlpha(0.05f, 0.01f, false);
 
         LocalizationManager.LoadLocalizedData();
         loadMenu.gameObject.SetActive(false);
         Manager.playerName = "";
+        ObjectManager.playerJournal = null;
 
         StartCoroutine(Init());
     }
@@ -55,7 +57,7 @@ public class MainMenu : MonoBehaviour
 
         ReadSettings();
         FillDataLists();
-        soundManager.PlayMusic();
+        soundManager.InitializeAndPlay();
         partSys.SetActive(true);
     }
 
@@ -100,7 +102,9 @@ public class MainMenu : MonoBehaviour
         background2.CrossFadeAlpha(0.4f, 3.0f, false);
 
         if (!canUseInput)
+        {
             return;
+        }
 
         if (!showOptions)
         {

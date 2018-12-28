@@ -155,6 +155,7 @@
             "ObjectType" : "Ensis_Door_Closed",
             "Sprite" : "object-door_ensis_closed.png",
             "Description" : "A door only the Ensis can open. Closed.",
+			"Permission" : "Door_Ensis",
 			"Opaque" : true,
 			"Pulse" : {
 				"Receive" : true
@@ -293,6 +294,9 @@
         {
             "Name" : "Terminal",
             "ObjectType" : "Terminal_On",
+			"LuaEvents" : [
+				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Terminal" }
+			],
             "Sprite" : "object-terminal_on.png",
             "Description" : "A computer terminal. Its screen flashes brightly with text."
         },
@@ -384,7 +388,7 @@
         {
             "Name" : "Web",
             "ObjectType" : "Web",
-			"Path Cost" : 10,
+			"Path Cost" : 3,
             "Sprite" : "object-web.png",
             "Render In Back" : true,
 			"LuaEvents" : [

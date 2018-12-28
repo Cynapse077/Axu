@@ -39,7 +39,6 @@ public class CComponent
             case "Coat": return JsonMapper.ToObject<CCoat>(reader);
             case "ModKit": return JsonMapper.ToObject<CModKit>(reader);
             case "ItemLevel": return JsonMapper.ToObject<CItemLevel>(reader);
-            case "Merchant": return JsonMapper.ToObject<CMerchant>(reader);
 
             default: return null;
         }
@@ -122,15 +121,17 @@ public class CCorpse : CComponent
 public class CEquipped : CComponent
 {
     public string itemID;
+    public string baseItemID;
 
     public CEquipped()
     {
         ID = "Equipped";
     }
-    public CEquipped(string _itemID)
+    public CEquipped(string _itemID, string _baseID)
     {
         ID = "Equipped";
         itemID = _itemID;
+        baseItemID = _baseID;
     }
 }
 
@@ -212,7 +213,7 @@ public class CCoordinate : CComponent
             World.userInterface.CloseWindows();
             entity.BeamDown();
         }
-        else
+        else if (World.objectManager.SafeToRest())
         {
             wPos = World.tileMap.WorldPosition;
             Ele = World.tileMap.currentElevation;
@@ -221,6 +222,10 @@ public class CCoordinate : CComponent
 
             CombatLog.SimpleMessage("Return_Link");
             isSet = true;
+        }
+        else
+        {
+
         }
 
         ObjectManager.player.GetComponent<PlayerInput>().CheckMinimap();
@@ -528,17 +533,5 @@ public class CItemLevel : CComponent
         {
             return "Level " + level.ToString() + "(MAX)";
         }
-    }
-}
-
-[Serializable]
-public class CMerchant : CComponent
-{
-    public int rep;
-
-    public CMerchant() { ID = "Merchant"; }
-    public CMerchant(int reputation)
-    {
-        rep = reputation;
     }
 }
