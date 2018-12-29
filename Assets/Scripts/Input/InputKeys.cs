@@ -4,29 +4,36 @@ using System.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class InputKeys {
-	public Dictionary<string, ShiftKeyCode> MyKeys;
+public class InputKeys
+{
+    public Dictionary<string, ShiftKeyCode> MyKeys;
 
-	public InputKeys(JsonData data = null) {
-		if (data == null)
-			Defaults();
-		else
-			Load(data);
-	}
-    
-	void Load(JsonData data) {
-		Defaults();
-		List<KeyValuePair<string, ShiftKeyCode>> keyPairList = new List<KeyValuePair<string, ShiftKeyCode>>(MyKeys);
+    public InputKeys(JsonData data = null)
+    {
+        if (data == null)
+            Defaults();
+        else
+            Load(data);
+    }
 
-		foreach (KeyValuePair<string, ShiftKeyCode> kvp in keyPairList) {
+    void Load(JsonData data)
+    {
+        Defaults();
+        List<KeyValuePair<string, ShiftKeyCode>> keyPairList = new List<KeyValuePair<string, ShiftKeyCode>>(MyKeys);
+
+        foreach (KeyValuePair<string, ShiftKeyCode> kvp in keyPairList)
+        {
             ShiftKeyCode kc = GetValueFromData(data, kvp.Key);
 
             if (kc != null)
-			    MyKeys[kvp.Key] = GetValueFromData(data, kvp.Key);
-		}
-	}
+            {
+                MyKeys[kvp.Key] = GetValueFromData(data, kvp.Key);
+            }
+        }
+    }
 
-	ShiftKeyCode GetValueFromData(JsonData data, string keyName) {
+    ShiftKeyCode GetValueFromData(JsonData data, string keyName)
+    {
         if (data["Input"]["MyKeys"].ContainsKey(keyName))
         {
             bool sh = (data["Input"]["MyKeys"][keyName].ContainsKey("Shift")) ? (bool)data["Input"]["MyKeys"][keyName]["Shift"] : false;
@@ -35,56 +42,71 @@ public class InputKeys {
         }
 
         return null;
-	}
+    }
 
-	public KeyCode GetKeyCode(string search) {
-		return MyKeys[search].keyCode;
-	}
+    public KeyCode GetKeyCode(string search)
+    {
+        return MyKeys[search].keyCode;
+    }
 
-	public bool ShiftHeld() {
-		return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-	}
+    public bool ShiftHeld()
+    {
+        return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+    }
 
-	public bool GetKey(string search, KeyPress press = KeyPress.Down) {
-		ShiftKeyCode kc1 = MyKeys[search];
+    public bool GetKey(string search, KeyPress press = KeyPress.Down)
+    {
+        ShiftKeyCode kc1 = MyKeys[search];
 
-		if (press == KeyPress.Held)
-			return (Input.GetKey(kc1.keyCode) && ShiftHeld() == kc1.Shift);
-		
-		else if (press == KeyPress.Down) {
-			if (search == "Enter")
-				return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.KeypadEnter));
-			if (search == "North")
-				return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.UpArrow));
-			if (search == "South")
-				return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.DownArrow));
-			if (search == "East")
-				return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.RightArrow));
-			if (search == "West")
-				return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.LeftArrow));
-			
-			return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift);
+        if (press == KeyPress.Held)
+        {
+            return (Input.GetKey(kc1.keyCode) && ShiftHeld() == kc1.Shift);
+        }
 
-		} else if (press == KeyPress.Up)
-			return (Input.GetKeyUp(kc1.keyCode) && ShiftHeld() == kc1.Shift);
-		
-		return false;
-	}
+        else if (press == KeyPress.Down)
+        {
+            if (search == "Enter")
+                return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.KeypadEnter));
+            if (search == "North")
+                return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.UpArrow));
+            if (search == "South")
+                return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.DownArrow));
+            if (search == "East")
+                return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.RightArrow));
+            if (search == "West")
+                return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.LeftArrow));
 
-	public bool KeyAlreadyUsed(KeyCode search) {
-		foreach (ShiftKeyCode keys in MyKeys.Values) {
-			if (keys.keyCode == search && ShiftHeld() == keys.Shift)
-				return true;
-		}
+            return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift);
 
-		return false;
-	}
+        }
+        else if (press == KeyPress.Up)
+        {
+            return (Input.GetKeyUp(kc1.keyCode) && ShiftHeld() == kc1.Shift);
+        }
 
-	public string SearchKey(KeyCode search) {
-		return MyKeys.First(x => (x.Value.keyCode == search)).Key;
-	}
+        return false;
+    }
 
-	public void Defaults() {
+    public bool KeyAlreadyUsed(KeyCode search)
+    {
+        foreach (ShiftKeyCode keys in MyKeys.Values)
+        {
+            if (keys.keyCode == search && ShiftHeld() == keys.Shift)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public string SearchKey(KeyCode search)
+    {
+        return MyKeys.First(x => (x.Value.keyCode == search)).Key;
+    }
+
+    public void Defaults()
+    {
         MyKeys = new Dictionary<string, ShiftKeyCode>
         {
             { "North", new ShiftKeyCode(false, KeyCode.Keypad8) },
@@ -108,6 +130,7 @@ public class InputKeys {
             { "Look", new ShiftKeyCode(false, KeyCode.L) },
             { "Switch Target", new ShiftKeyCode(false, KeyCode.Tab) },
             { "AlternateAttack", new ShiftKeyCode(false, KeyCode.LeftControl) },
+            { "GrappleAttack", new ShiftKeyCode(false, KeyCode.LeftAlt) },
             { "Walk", new ShiftKeyCode(false, KeyCode.W) },
             { "Throw", new ShiftKeyCode(false, KeyCode.T) },
             { "Reload", new ShiftKeyCode(false, KeyCode.R) },
@@ -124,7 +147,8 @@ public class InputKeys {
         };
     }
 
-	public void VIKeys() {
+    public void VIKeys()
+    {
         MyKeys = new Dictionary<string, ShiftKeyCode>
         {
             { "North", new ShiftKeyCode(false, KeyCode.K) },
@@ -148,6 +172,7 @@ public class InputKeys {
             { "Look", new ShiftKeyCode(false, KeyCode.X) },
             { "Switch Target", new ShiftKeyCode(false, KeyCode.Tab) },
             { "AlternateAttack", new ShiftKeyCode(false, KeyCode.LeftControl) },
+            { "GrappleAttack", new ShiftKeyCode(false, KeyCode.LeftAlt) },
             { "Walk", new ShiftKeyCode(false, KeyCode.W) },
             { "Throw", new ShiftKeyCode(false, KeyCode.T) },
             { "Reload", new ShiftKeyCode(false, KeyCode.R) },
@@ -165,17 +190,20 @@ public class InputKeys {
     }
 }
 
-public class ShiftKeyCode {
+public class ShiftKeyCode
+{
 
-	public bool Shift;
-	public KeyCode keyCode;
+    public bool Shift;
+    public KeyCode keyCode;
 
-	public ShiftKeyCode(bool sh, KeyCode kc) {
-		Shift = sh;
-		keyCode = kc;
-	}
+    public ShiftKeyCode(bool sh, KeyCode kc)
+    {
+        Shift = sh;
+        keyCode = kc;
+    }
 }
 
-public enum KeyPress {
-	Down, Up, Held
+public enum KeyPress
+{
+    Down, Up, Held
 }

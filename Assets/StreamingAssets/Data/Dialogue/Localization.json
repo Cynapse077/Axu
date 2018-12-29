@@ -556,6 +556,10 @@
             "ID" : "AlternateAttack",
             "Display" : "Targeted Attack"
         },
+		{
+			"ID" : "GrappleAttack",
+			"Display" : "Grapple Attack"
+		},
         {
             "ID" : "Walk",
             "Display" : "Continuous Walk"
@@ -1969,10 +1973,18 @@
             "ID" : "Gr_Shove",
             "Display" : "[ATTACKER] shoves [DEFENDER]."
         },
+		{
+			"ID" : "Gr_Shove_Fail",
+			"Display" : "[ATTACKER] tries to shove [DEFENDER], but it fails."
+		},
         {
             "ID" : "Gr_TakeDown",
             "Display" : "[ATTACKER] takes down [DEFENDER] by their [DEFENDER_LIMB]."
         },
+		{
+			"ID" : "Gr_TakeDown_Fail",
+			"Display" : "[ATTACKER] tries to take [DEFENDER] down, but it fails."
+		},
         {
             "ID" : "Gr_Strangle",
             "Display" : "[ATTACKER] strangles [DEFENDER]!"
@@ -2071,5 +2083,76 @@
             "ID" : "MF_Quest",
             "Display" : "Quest"
         }
-    ]
+    ],
+
+	"Help" : [
+		{
+			"ID" : "Help0",
+			"Display" : "TIP: Once Vampirism has passed beyond the Fledgling state, you can no longer cure it. Seek a doctor before you become a creature of the night!"
+		},
+		{
+			"ID" : "Help1",
+			"Display" : "TIP: Mutations can be cured with a very rare liquid called Lunium."
+		},
+		{
+			"ID" : "Help2",
+			"Display" : "TIP: If one of your limbs gets severed, visit a doctor to reattach it, or buy a prosthetic. This can be a costly operation though."
+		},
+		{
+			"ID" : "Help3",
+			"Display" : "TIP: Most diseases can be cured at a Doctor. Some may have positive effects that you won't want to get rid of."
+		},
+		{
+			"ID" : "Help4",
+			"Display" : "TIP: Every three levels, you can aquire a new trait."
+		},
+		{
+			"ID" : "Help5",
+			"Display" : "TIP: New abilities can be learned from Tomes. Some rare items may give you powerful abilities when equipped as well."
+		},
+		{
+			"ID" : "Help6",
+			"Display" : "TIP: Living weapons gain increased effectiveness with use."
+		},
+		{
+			"ID" : "Help7",
+			"Display" : "TIP: Mod Kits add special effects to a selected item. Only one can be applied at any time, so be careful when choosing!"
+		},
+		{
+			"ID" : "Help8",
+			"Display" : "TIP: You can coat your weapons in various liquids. The effects will be transferred to a target when they are struck."
+		},
+		{
+			"ID" : "Help9",
+			"Display" : "TIP: If you find yourself on fire, you can pour liquids onto yourself to douse the flames."
+		},
+		{
+			"ID" : "Help10",
+			"Display" : "TIP: Holding the Targeted Attack button (Default Left Ctrl) and pressing a movement key allows you to strike at a specific body part of an adjacent creature."
+		},
+		{
+			"ID" : "Help11",
+			"Display" : "TIP: Holding The Grappling Attack button (Default Left Alt) and pressing a movment key allows you to perform grappling moves on an adjacent target."
+		},
+		{
+			"ID" : "Help12",
+			"Display" : "TIP: Enemies can follow you up or down stairs, and between screens. Be sure to keep your distance if you plan to flee."
+		},
+		{
+			"ID" : "Help13",
+			"Display" : "TIP: Spending time in radioactive areas can cause you to mutate."
+		},
+		{
+			"ID" : "Help14",
+			"Display" : "TIP: Attacks with your off-hand weapons will be triggered more often with higher Dexterity."
+		},
+		{
+			"ID" : "Help15",
+			"Display" : "TIP: Digging tools like Shovels and Pickaxes have limited uses. Each time you dig through stone, it loses one point of durability."
+		},
+		{
+			"ID" : "Help16",
+			"Display" : "You can store items in chests at your base by dropping them while standing on the same tile."
+		}
+	]
 }

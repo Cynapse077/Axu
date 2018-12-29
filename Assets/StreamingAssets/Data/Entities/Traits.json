@@ -266,17 +266,9 @@
         {
             "Name" : "Fast Metabolism",
             "ID" : "fastmet",
-            "Description" : "Your fast metabolism allows you to heal quicker. However, you get hungry faster.",
+            "Description" : "Your fast metabolism allows you to heal quicker.",
             "Cancels" : "Metabolism",
             "Tags" : [ "Fast_Metabolism", "Random_Trait" ],
-            "Stackable" : false
-        },
-        {
-            "Name" : "Slow Metabolism",
-            "ID" : "slowmet",
-            "Description" : "Your metabolism is slowed, decreasing the rate you get hungry. However, you heal slower.",
-            "Cancels" : "Metabolism",
-            "Tags" : [ "Slow_Metabolism", "Random_Trait" ],
             "Stackable" : false
         },
         {

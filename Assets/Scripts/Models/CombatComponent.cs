@@ -40,8 +40,10 @@ public class CombatComponent
 
         for (int i = 0; i < hands.Count; i++)
         {
-            if (hands[i] != MyBody.MainHand && hands[i].IsAttached && SeedManager.combatRandom.Next(80) <= (MyStats.Dexterity + 1))
+            if (hands[i] != MyBody.MainHand && hands[i].IsAttached && SeedManager.combatRandom.Next(100) <= (MyStats.Dexterity * 2) - 2)
+            {
                 PerformAttack(target, hands[i]);
+            }
         }
 
         //TODO: Add extra attacks for bites, kicks, headbutts, etc.
@@ -49,13 +51,17 @@ public class CombatComponent
         lastTarget = target.entity;
 
         if (!freeAction)
+        {
             entity.EndTurn(0.1f, AttackAPCost());
+        }
     }
 
     bool PerformAttack(Stats target, BodyPart.Hand hand, BodyPart targetPart = null, int sevChance = 0)
     {
         if (hand == null || target == null || hand.EquippedItem == null)
+        {
             return false;
+        }
 
         Item wep = hand.EquippedItem;
         bool twoHandPenalty = wep.HasProp(ItemProperty.Two_Handed) && MyInventory.TwoHandPenalty(hand);
@@ -64,9 +70,14 @@ public class CombatComponent
         int profLevel = (entity.isPlayer) ? MyStats.CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
 
         if (MyStats.HasEffect("Topple"))
+        {
             missChance += 5;
+        }
+
         if (twoHandPenalty)
+        {
             missChance += 5;
+        }
 
         if (SeedManager.combatRandom.Next(100) < missChance)
         {
@@ -85,7 +96,9 @@ public class CombatComponent
         }
 
         if (targetPart == null)
+        {
             targetPart = target.entity.body.TargetableBodyParts().GetRandom(SeedManager.combatRandom);
+        }
 
         if (target.TakeDamage(wep, damage, dt, entity, wep.AttackCrits((profLevel - 1 + MyStats.Accuracy + wep.Accuracy) / 2), targetPart, sevChance))
         {
@@ -104,7 +117,9 @@ public class CombatComponent
 
             }
             else
+            {
                 ApplyNPCEffects(target, damage);
+            }
 
             ApplyWeaponEffects(target, wep);
         }
@@ -114,14 +129,15 @@ public class CombatComponent
 
     void ApplyWeaponEffects(Stats target, Item wep)
     {
-        if (wep.HasProp(ItemProperty.OnAttack_Radiation))
+        if (wep.HasProp(ItemProperty.OnAttack_Radiation) && SeedManager.combatRandom.Next(100) < 5)
         {
-            if (SeedManager.combatRandom.Next(100) < 5)
-                MyStats.Radiate(1);
+            MyStats.Radiate(1);
         }
 
         if (target == null || target.health <= 0 || target.dead)
+        {
             return;
+        }
 
         if (wep.damageTypes.Contains(DamageTypes.Venom) && SeedManager.combatRandom.Next(100) <= 3)
             target.AddStatusEffect("Poison", SeedManager.combatRandom.Next(2, 8));
@@ -136,7 +152,9 @@ public class CombatComponent
             Entity otherEntity = target.entity;
 
             if (otherEntity != null && otherEntity.myPos.DistanceTo(entity.myPos) < 2f)
+            {
                 otherEntity.ForceMove(otherEntity.posX - entity.posX, otherEntity.posY - entity.posY, MyStats.Strength - 1);
+            }
         }
     }
 
@@ -150,9 +168,14 @@ public class CombatComponent
         int timeCost = MyBody.MainHand.EquippedItem.GetAttackAPCost() + MyStats.AttackDelay;
 
         if (MyStats.HasEffect("Topple"))
+        {
             timeCost += 7;
+        }
+
         if (MyInventory.TwoHandPenalty(MyBody.MainHand))
+        {
             timeCost += 4;
+        }
 
         return timeCost;
     }
@@ -166,7 +189,9 @@ public class CombatComponent
     public void ThrowItem(Coord destination, Explosive damageScript)
     {
         if (itemForThrowing == null || destination == null || damageScript == null)
+        {
             return;
+        }
 
         bool miss = (SeedManager.combatRandom.Next(100) > 40 + MyStats.proficiencies.Throwing.level + MyStats.Accuracy);
 
@@ -214,7 +239,9 @@ public class CombatComponent
             Cell c = World.tileMap.GetCellAt(targetPos.x, targetPos.y);
 
             if (c != null && c.entity != null)
+            {
                 lastTarget = c.entity;
+            }
         }
 
         TileDamage td = new TileDamage(entity, targetPos, entity.inventory.firearm.damageTypes);
@@ -253,7 +280,9 @@ public class CombatComponent
             missChance *= 2.0f;
 
         if (!entity.inventory.firearm.HasProp(ItemProperty.Burst))
+        {
             maxMiss -= (3 * iteration);
+        }
 
         return maxMiss <= missChance;
     }
@@ -338,8 +367,6 @@ public class CombatComponent
 
             if (MyStats.lastHit != null && (MyStats.lastHit.isPlayer || MyStats.lastHit.AI.isFollower()))
             {
-                //Add relevant XP to the character that struck this NPC last
-                //Maybe should add all XP to player unless it's a friendly NPC.
                 ObjectManager.playerEntity.stats.GainExperience((MyStats.Strength + MyStats.Dexterity + MyStats.Intelligence + MyStats.Endurance * 2) / 2 + 1);
             }
 
@@ -354,7 +381,9 @@ public class CombatComponent
         MyStats.dead = true;
 
         if (entity.cell != null)
+        {
             entity.cell.UnSetEntity(entity);
+        }
 
         World.objectManager.DemolishNPC(entity, entity.AI.npcBase);
         GameObject.Destroy(entity.gameObject);

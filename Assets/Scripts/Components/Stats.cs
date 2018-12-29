@@ -241,7 +241,9 @@ public class Stats : MonoBehaviour
     public void GainExperience(int amount)
     {
         if (MyLevel != null && !hasTraitEffect(TraitEffects.Vampirism))
+        {
             MyLevel.AddXP(amount);
+        }
     }
 
     public void LevelUp(int currentLevel)
@@ -1372,7 +1374,9 @@ public class Stats : MonoBehaviour
         for (int i = 0; i < traits.Count; i++)
         {
             if (traits[i].ContainsEffect(TraitEffects.Disease) && !traits[i].ContainsEffect(TraitEffects.No_Cure))
+            {
                 cost += 500 - (Attributes["Charisma"] * 2);
+            }
         }
 
         for (int i = 0; i < MyBody.bodyParts.Count; i++)

@@ -235,9 +235,9 @@ public static class SpawnController
         {
             GroupBlueprint gb = gbs.GetRandom(rng);
             int amountSpawned = 0;
-            int maxSpawns = 20;
+            int maxSpawns = 15;
 
-            for (int i = 0; i < rng.Next(1, 4); i++)
+            for (int i = 0; i < rng.Next(1, 5); i++)
             {
                 if (amountSpawned >= maxSpawns)
                 {

@@ -133,13 +133,22 @@ public class Journal : MonoBehaviour
         if (q == trackedQuest)
         {
             if (quests.Count > 1)
+            {
                 trackedQuest = (quests[0] == q) ? quests[1] : quests[0];
+            }
             else
+            {
                 trackedQuest = null;
+            }
         }
 
         completedQuests.Add(q.ID);
         quests.Remove(q);
+
+        foreach (Entity npc in World.objectManager.onScreenNPCObjects)
+        {
+            npc.GetComponent<DialogueController>().SetupDialogueOptions();
+        }
     }
 
     public void FailQuest(Quest q)

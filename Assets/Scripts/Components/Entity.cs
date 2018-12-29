@@ -1088,10 +1088,11 @@ public class Entity : MonoBehaviour
         }
 
         World.tileMap.currentElevation = 0;
-        World.tileMap.HardRebuild();
+        World.tileMap.HardRebuild_NoLight();
         myPos = World.tileMap.FindStairsDown();
 
         ForcePosition();
+        World.tileMap.SoftRebuild();
         BeamDown();
         World.playerInput.CheckMinimap();
 

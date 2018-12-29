@@ -121,9 +121,18 @@ public class EntitySkills : MonoBehaviour
             target.AddStatusEffect("Topple", SeedManager.combatRandom.Next(3, 8));
             target.IndirectAttack(SeedManager.combatRandom.Next(1, 6), DamageTypes.Blunt, entity, LocalizationManager.GetContent("Takedown_Name"), true, false, false);
         }
+        else
+        {
+            string message = LocalizationManager.GetContent("Gr_TakeDown_Fail");
+            message = message.Replace("[ATTACKER]", entity.MyName);
+            message = message.Replace("[DEFENDER]", target.entity.MyName);
+            CombatLog.NewMessage(message);
+        }
 
         if (!target.entity.isPlayer)
+        {
             target.entity.AI.SetTarget(entity);
+        }
 
         if (entity.isPlayer)
         {
@@ -141,7 +150,9 @@ public class EntitySkills : MonoBehaviour
         int skill = entity.stats.Strength;
 
         if (entity.isPlayer)
+        {
             skill += grappleLevel;
+        }
 
         if (SeedManager.combatRandom.Next(20) <= skill)
         {
@@ -158,9 +169,18 @@ public class EntitySkills : MonoBehaviour
                 target.stats.AddStatusEffect("Topple", 2);
             }
         }
+        else
+        {
+            string message = LocalizationManager.GetContent("Gr_Shove_Fail");
+            message = message.Replace("[ATTACKER]", entity.MyName);
+            message = message.Replace("[DEFENDER]", target.MyName);
+            CombatLog.NewMessage(message);
+        }
 
         if (!target.isPlayer)
+        {
             target.AI.SetTarget(entity);
+        }
 
         if (entity.isPlayer)
         {

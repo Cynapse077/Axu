@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using LitJson;
@@ -15,6 +14,11 @@ public static class LocalizationManager
 
     public static void LoadLocalizedData()
     {
+        if (LocalizedContent != null)
+        {
+            return;
+        }
+
         LocalizedContent = new Dictionary<string, string[]>();
 
         string myFile = File.ReadAllText(Application.streamingAssetsPath + filePath);
@@ -35,6 +39,7 @@ public static class LocalizationManager
         QuickAdd_1Param("Locations");
         QuickAdd_1Param("Naming");
         QuickAdd_1Param("Map Features");
+        QuickAdd_1Param("Help");
 
         AddWithTooltip("Stats");
         AddWithTooltip("Proficiencies");
@@ -56,7 +61,9 @@ public static class LocalizationManager
             };
 
             if (!LocalizedContent.ContainsKey(key))
+            {
                 LocalizedContent.Add(key, value);
+            }
         }
     }
 
@@ -95,5 +102,32 @@ public static class LocalizationManager
     public static string GetContent(string key)
     {
         return GetLocalizedContent(key)[0];
+    }
+
+    public static string GetRandomHelpMessage()
+    {
+        List<string> helpMessages = new List<string>();
+
+        if (LocalizedContent == null)
+        {
+            LoadLocalizedData();
+        }
+
+        foreach (string s in LocalizedContent.Keys)
+        {
+            if (s.Contains("Help"))
+            {
+                helpMessages.Add(LocalizedContent[s][0]);
+            }
+        }
+
+        if (helpMessages.Count > 0)
+        {
+            return helpMessages.GetRandom();
+        }
+        else
+        {
+            return " ";
+        }
     }
 }

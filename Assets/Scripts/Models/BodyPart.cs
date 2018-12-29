@@ -256,13 +256,17 @@ public class BodyPart : IWeighted
     public SBodyPart ToSimpleBodyPart()
     {
         if (equippedItem == null || equippedItem.ID == "none")
+        {
             equippedItem = ItemList.GetNone();
+        }
 
         SHand hnd = null;
 
         if (hand != null)
         {
-            hnd = new SHand(hand.EquippedItem.ToSimpleItem(), hand.baseItem);
+            string baseItem = (!string.IsNullOrEmpty(hand.baseItem)) ? "fists" : hand.baseItem;
+
+            hnd = new SHand(hand.EquippedItem.ToSimpleItem(), baseItem);
         }
 
         SItem equipped = equippedItem.ToSimpleItem();
@@ -533,6 +537,12 @@ public class SHand
 {
     public SItem item;
     public string bItem;
+
+    public SHand()
+    {
+        item = ItemList.GetItemByID("fists").ToSimpleItem();
+        bItem = "fists";
+    }
 
     public SHand(SItem it, string bi)
     {

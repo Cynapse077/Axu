@@ -188,7 +188,13 @@ public class Item : ComponentHolder
 
     public void OnConsume(Stats stats)
     {
-        if (!HasCComponent<CRot>())
+        if (HasCComponent<CRot>())
+        {
+            //TODO: Add training for limbs here.
+            //List<ItemProperty> props = new List<ItemProperty>(properties);
+            //stats.entity.body.TrainLimbOfType(props.ToArray());
+        }
+        else
         {
             ChangeStats(stats, false);
         }

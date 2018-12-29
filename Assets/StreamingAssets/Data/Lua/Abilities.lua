@@ -376,7 +376,7 @@ function DrainBlood(caster, direction, skill)
 
 		--Give player vampirism
 		if (target.isPlayer and Random(0, 100) < 100) then
-			if (not target.stats.hasTrait("pre_vamp")) then
+			if (not target.stats.hasTrait("pre_vamp") and not target.stats.hasTrait("vampirism")) then
 				target.stats.InitializeNewTrait(TraitList.GetTraitByID("pre_vamp"))
 				Alert.CustomAlert("You have been bitten by a Vampire, and become a Fledgling Vampire yourself! Cure this disease or become one of them!")
 			end

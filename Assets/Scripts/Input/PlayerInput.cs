@@ -503,7 +503,20 @@ public class PlayerInput : MonoBehaviour
                     if (c.entity != null)
                     {
                         World.userInterface.CalledShot(c.entity.body);
-                        //World.userInterface.OpenGrapple(c.entity.body);
+                        return;
+                    }
+                }
+            }
+
+            if (KeyHeld("GrappleAttack") && !(x == 0 && y == 0))
+            {
+                if (World.tileMap.WalkableTile(entity.posX + x, entity.posY + y))
+                {
+                    Cell c = World.tileMap.GetCellAt(entity.posX + x, entity.posY + y);
+
+                    if (c.entity != null)
+                    {
+                        World.userInterface.OpenGrapple(c.entity.body);
                         return;
                     }
                 }

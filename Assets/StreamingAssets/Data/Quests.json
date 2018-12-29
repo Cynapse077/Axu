@@ -14,7 +14,7 @@
 			"Events" : [
                 {
                     "Event" : "OnStart",
-                    "Console Command" : "give cloak1|give flask/liquid_regenitrol|log You were given a few items by Akk-Lune."
+                    "Console Command" : "give cloak1|give flask/liquid_regenitrol|log You were given some items by Akk-Lune."
                 }
             ],
 
@@ -438,7 +438,7 @@
             "Events" : [
                 {
                     "Event" : "OnStart",
-                    "Move NPC" : { "NPC" : "isazna", "Coordinate" : "Destination", "Local Position" : { "x" : 23, "y" : 2 }, "Elevation" : 0 }
+                    "Move NPC" : { "NPC" : "isazna", "Coordinate" : "Kin Hideout", "Local Position" : { "x" : 23, "y" : 2 }, "Elevation" : 0 }
                 },
                 {
                     "Event" : "OnComplete",
@@ -611,10 +611,10 @@
                 },
 				{
 					"Event" : "OnComplete",
-					"Console Command" : "questflag Learned_Butcher"
+					"Console Command" : "questflag Learned_Butcher|log Saira has taught you the basics of Butchery."
 				}
             ],
-            "End Dialogue" : "Great! Let's move onto something tougher. There's a big beastie I like to call <color=yellow>\"Noggins\"</color> roaming around these parts. I call it that because well... It has two heads.",
+            "End Dialogue" : "Great! As promised, I'll show you how to butcher the corpses of your catches. \nLet's move onto something tougher. There's a big beastie I like to call <color=yellow>\"Noggins\"</color> roaming around these parts. I call it that because well... It has two heads.",
             "Chained Quest" : "sairashunt3"
         },
         {
