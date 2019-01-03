@@ -201,7 +201,7 @@
             "Description" : "You have higher health and resiliance to attacks, but your stamina and intelligence are lower. <color=green>+HP +DEF</color> <color=red>-ST -INT</color>",
             "Stats" : [
                 { "Stat" : "Health", "Amount" : 10 },
-                { "Stat" : "Stamina", "Amount" : -6 },
+                { "Stat" : "Stamina", "Amount" : -5 },
                 { "Stat" : "Defense", "Amount" : 1 },
                 { "Stat" : "Intelligence", "Amount" : -1 }
             ],
@@ -464,8 +464,10 @@
         {
             "Name" : "Tail",
             "ID" : "extail",
-            "Description" : "You have a small tail protruding from the base of your back. It keeps you slightly more steady.",
-            "Stats" : [],
+            "Description" : "You have a small tail protruding from the base of your back.",
+            "Stats" : [
+				{ "Stat" : "Speed", "Amount" : 1 }
+			],
             "Replace_Body_Part" : {
                 "Slot" : "Slot_Tail",
                 "NewEquippedItem" : "none",
@@ -474,7 +476,8 @@
                 ]
             },
             "Tags" : [ "Mutation" ],
-            "Stackable" : false
+            "Stackable" : false,
+			"Max Stacks" : 2
         },
         {
             "Name" : "Extra Head",
@@ -966,7 +969,7 @@
         {
             "Name" : "Brain Rot",
             "ID" : "brain_rot",
-            "Description" : "Your brain is slowly deteriorating over time.",
+            "Description" : "Your brain function is slowly deteriorating over time.",
             "Scripts" : [
                 { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_BrainRot" }
             ],

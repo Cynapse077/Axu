@@ -1072,7 +1072,16 @@ public class UserInterface : MonoBehaviour
         currentMapText.text = World.tileMap.TileName();
 
         if (miniMapObject.activeSelf)
-            miniMapObject.GetComponent<Animator>().SetBool("Hide", World.tileMap.currentElevation != 0);
+        {
+            bool show = World.tileMap.currentElevation == 0;
+
+            if (!playerInput.showMinimap)
+            {
+                show = false;
+            }
+
+            miniMapObject.GetComponent<Animator>().SetBool("Hide", !show);
+        }
     }
 
     void FillLevelTraits()

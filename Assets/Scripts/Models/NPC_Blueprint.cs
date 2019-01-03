@@ -76,7 +76,9 @@ public class NPC_Blueprint
         foreach (string a in keys)
         {
             if (dat["Stats"].ContainsKey(a))
+            {
                 attributes[a] = (int)dat["Stats"][a];
+            }
         }
 
         if (dat.ContainsKey("Skills"))

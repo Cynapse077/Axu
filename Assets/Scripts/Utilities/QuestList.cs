@@ -135,8 +135,18 @@ public static class QuestList
 
                 return new ElevationChangeEvent(newEle);
 
+            case "Remove NPC":
+                string remNPC = data["NPC"].ToString();
+
+                return new RemoveNPCEvent(remNPC);
+
+            case "Become Follower":
+                string folNPC = data["NPC"].ToString();
+
+                return new BecomeFollowerEvent(folNPC);
+
             default:
-                Debug.LogError("Get Quest Event - No event with ID " + key + ".");
+                Debug.LogError("QuestList::GetEvent() - No event with ID \"" + key + "\".");
                 return null;
         }
     }

@@ -143,7 +143,8 @@ public class InputKeys
             { "Map", new ShiftKeyCode(false, KeyCode.M) },
             { "Journal", new ShiftKeyCode(false, KeyCode.J) },
             { "Contextual Actions", new ShiftKeyCode(false, KeyCode.None) },
-            { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) }
+            { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) },
+            { "Toggle Minimap", new ShiftKeyCode(false, KeyCode.Backspace) }
         };
     }
 
@@ -185,7 +186,8 @@ public class InputKeys
             { "Map", new ShiftKeyCode(false, KeyCode.M) },
             { "Journal", new ShiftKeyCode(false, KeyCode.Q) },
             { "Contextual Actions", new ShiftKeyCode(false, KeyCode.None) },
-            { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) }
+            { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) },
+            { "Toggle Minimap", new ShiftKeyCode(false, KeyCode.Backspace) }
         };
     }
 }

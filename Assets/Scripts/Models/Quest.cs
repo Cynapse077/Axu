@@ -284,8 +284,16 @@ public class Quest : EventContainer
     {
         if (!isComplete)
         {
+
+            if (!skipEvent)
+            {
+                RunEvent(this, QuestEvent.EventType.OnStart);
+            }
+
             if (goals == null || goals.Length == 0)
+            {
                 return;
+            }
 
             for (int i = 0; i < goals.Length; i++)
             {
@@ -303,11 +311,6 @@ public class Quest : EventContainer
                     goals[i].Init(skipEvent);
                 }
             }
-        }
-
-        if (!skipEvent)
-        {
-            RunEvent(this, QuestEvent.EventType.OnStart);
         }
     }
 

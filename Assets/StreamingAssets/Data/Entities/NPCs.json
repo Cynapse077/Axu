@@ -659,7 +659,8 @@
                 "Static",
                 "RPois",
                 "Boss",
-                "OnDisable_Regen"
+                "OnDisable_Regen",
+				"Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Magna_C", "x" : 3, "y" : 6, "z" : 0 },
             "Stats" : {
@@ -690,14 +691,15 @@
 		{
             "Name" : "Uro-Ren the Pious",
             "ID" : "uroren",
-            "Faction" : "deepones",
+            "Faction" : "kin",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-uroren.png",
             "Flags" : [
 				"Human",
 				"Static",
                 "Can_Open_Doors",
-                "Boss"
+                "Boss",
+				"Stationary_While_Passive"
             ],
 			"Position" : { "Zone" : "Cathedral", "x" : 0, "y" : 0, "z" : -7 },
             "Stats" : {

@@ -50,7 +50,9 @@ public static class ItemList
     public static void RemoveItem(string name)
     {
         if (items.Find(x => x.Name == name) != null)
+        {
             items.Remove(items.Find(x => x.Name == name));
+        }
     }
 
     public static Item GetNone()

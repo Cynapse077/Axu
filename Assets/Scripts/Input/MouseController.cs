@@ -3,10 +3,11 @@ using Pathfinding;
 
 public class MouseController : MonoBehaviour
 {
-
     public Transform cursorObject;
     public Vector3 cursorPosition;
     public Sprite[] sprites;
+
+    GameObject arrow;
     UserInterface userInterface;
     Transform cursor, worldCursor;
     SpriteRenderer sRenderer;
@@ -17,6 +18,7 @@ public class MouseController : MonoBehaviour
     void Start()
     {
         cursor = Instantiate(cursorObject).transform;
+        arrow = cursor.GetChild(0).GetChild(0).gameObject;
         sRenderer = cursor.GetComponentInChildren<SpriteRenderer>();
         userInterface = GameObject.FindObjectOfType<UserInterface>();
     }
@@ -28,12 +30,17 @@ public class MouseController : MonoBehaviour
         else
         {
             playerEntity = ObjectManager.playerEntity;
+
             if (playerEntity != null)
+            {
                 playerInput = playerEntity.GetComponent<PlayerInput>();
+            }
         }
 
         if (GameSettings.UseMouse)
+        {
             HandleMouseInput();
+        }
     }
 
     void HandleMouseInput()
@@ -94,6 +101,50 @@ public class MouseController : MonoBehaviour
                     }
                 }
             }
+
+            arrow.SetActive(true);
+            Vector3 rot = new Vector3(0, 0, 0);
+
+            if (posX < 0)
+            {
+                if (posY >= 0)
+                {
+                    rot.z = 45;
+                }
+                else if (posY < -Manager.localMapSize.y)
+                {
+                    rot.z = 135;
+                }
+                else
+                {
+                    rot.z = 90;
+                }
+            }
+            else if (posX >= Manager.localMapSize.x)
+            {
+                if (posY >= 0)
+                {
+                    rot.z = -45;
+                }
+                else if (posY < -Manager.localMapSize.y)
+                {
+                    rot.z = -135;
+                }
+                else
+                {
+                    rot.z = -90;
+                }
+            }
+            else if (posY < -Manager.localMapSize.y)
+            {
+                rot.z = 180;
+            }
+            else if (posY >= 0)
+            {
+                rot.z = 0;
+            }
+
+            arrow.transform.localRotation = Quaternion.Euler(rot);
         }
         else
         {
@@ -109,6 +160,8 @@ public class MouseController : MonoBehaviour
                 if (Input.GetMouseButtonDown(1) && ObjectManager.playerEntity.inventory.firearm.HasProp(ItemProperty.Ranged))
                     ObjectManager.playerEntity.ShootAtTile(targetPos.x, targetPos.y);
             }
+
+            arrow.SetActive(false);
         }
     }
 

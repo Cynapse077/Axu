@@ -343,7 +343,9 @@ public class Entity : MonoBehaviour
         resting = false;
 
         if (walkDirection != null && !canCancelWalk)
+        {
             canCancelWalk = true;
+        }
 
         if (!CanMove)
         {
@@ -357,7 +359,7 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        if (stats.HasEffect("Confuse") && SeedManager.combatRandom.CoinFlip() || stats.HasEffect("Drunk") && SeedManager.combatRandom.Next(10) < 2)
+        if (stats.HasEffect("Confuse") && SeedManager.combatRandom.CoinFlip() || stats.HasEffect("Drunk") && SeedManager.combatRandom.Next(100) < 20)
         {
             x = SeedManager.combatRandom.Next(-1, 2);
             y = SeedManager.combatRandom.Next(-1, 2);
@@ -1034,7 +1036,9 @@ public class Entity : MonoBehaviour
     public int GetSpeed()
     {
         if (this == null || stats != null && stats.dead || inventory == null)
+        {
             return 0;
+        }
 
         if (stats == null)
         {
@@ -1058,12 +1062,17 @@ public class Entity : MonoBehaviour
         }
 
         if (stats.HasEffect("Slow"))
+        {
             spd -= stats.statusEffects["Slow"];
+        }
+
         if (stats.HasEffect("Topple"))
+        {
             spd -= 5;
+        }
 
         spd -= inventory.BurdenPenalty();
-        spd = Mathf.Clamp(spd, 0, 100);
+        spd = Mathf.Clamp(spd, 1, 100);
 
         return (int)spd;
     }

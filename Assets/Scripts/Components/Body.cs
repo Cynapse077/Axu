@@ -79,6 +79,13 @@ public class Body : MonoBehaviour
         bodyParts = CharacterCreation.SortBodyParts(bodyParts);
     }
 
+    //Called from Lua
+    public void AddBodyPart(BodyPart bp)
+    {
+        bodyParts.Add(bp);
+        bodyParts = CharacterCreation.SortBodyParts(bodyParts);
+    }
+
     public List<int> SeverableBodyPartsIDs()
     {
         List<int> bp = new List<int>();
@@ -112,6 +119,18 @@ public class Body : MonoBehaviour
     public List<BodyPart> TargetableBodyParts()
     {
         return bodyParts.FindAll(x => x.isAttached);
+    }
+
+    public int TotalBodyWeight()
+    {
+        int weight = 0;
+
+        for (int i = 0; i < bodyParts.Count; i++)
+        {
+            weight += bodyParts[i].Weight;
+        }
+
+        return weight;
     }
 
     public void TrainLimb(BodyPart part)
@@ -209,6 +228,11 @@ public class Body : MonoBehaviour
     {
         foreach (BodyPart bp in bodyParts)
         {
+            if (bp.grip == null)
+            {
+                continue;
+            }
+
             bool goodIntegrity = (bp.grip != null && bp.grip.heldPart != null && bp.grip.HeldBody != null && bp.grip.HeldBody.entity.myPos.DistanceTo(entity.myPos) < 2);
 
             if (goodIntegrity)

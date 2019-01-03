@@ -552,7 +552,9 @@ public class ObjectManager : MonoBehaviour
     public void SpawnObject(MapObject obj)
     {
         if (!mapObjects.Contains(obj))
+        {
             mapObjects.Add(obj);
+        }
 
         if (obj.onScreen)
             return;
@@ -600,7 +602,9 @@ public class ObjectManager : MonoBehaviour
     public Entity CheckEnitiyInTile(Coord pos)
     {
         if (World.tileMap.WalkableTile(pos.x, pos.y) && World.tileMap.GetCellAt(pos) != null)
+        {
             return World.tileMap.GetCellAt(pos).entity;
+        }
 
         return null;
     }

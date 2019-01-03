@@ -414,13 +414,17 @@ public class TileMap : MonoBehaviour
         {
             for (int y = c.y - 1; y <= c.y + 1; y++)
             {
-                if (cells[x, y].Walkable)
+                if (cells[x, y].Walkable && cells[x, y].entity == null)
+                {
                     empty.Add(new Coord(x, y));
+                }
             }
         }
 
         if (empty.Count <= 0)
+        {
             return null;
+        }
 
         return empty.GetRandom();
     }

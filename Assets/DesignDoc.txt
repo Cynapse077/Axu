@@ -4,14 +4,14 @@
 
 - Teleport items that don't disappear on use should not be useable when enemies are near.
 	- Or link all locations to the "Return" spell.
-- Mouse movement on world map - mouse cursor offset is wrong.
+- Mouse movement on world map.
 - Blood slime familiar.
 - Hire NPCs to stay at your base to sell goods, provide medical services, etc.
 
 
 CYBERNETICS:
 - One per body slot.
-	- Folding blade that takes up arm and weapon slot. - Equip to arm, and will unequip weapon, and set wep to itself. - or set default limb to folded blade? But only for one arm..?
+	- Folding blade that takes up arm and weapon slot. - Equip to arm, and sets default wep to folded blade.
 	- Increased vision at night.
 	- Radiation scrubber.
 	- Impact soles for extra stealth.

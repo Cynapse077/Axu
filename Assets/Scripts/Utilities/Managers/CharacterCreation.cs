@@ -705,7 +705,9 @@ public class CharacterCreation : MonoBehaviour
         Manager.playerBuilder.bodyParts = EntityList.GetBodyStructure(currentProf.bodyStructure);
 
         if (currentProf.ID == "experiment")
+        {
             ExperimentBodyParts();
+        }
 
         done = true;
     }

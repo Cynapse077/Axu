@@ -587,10 +587,14 @@ public class Inventory : MonoBehaviour
         ammo.amount -= i.Reload(ammoAmount);
 
         if (ammo.amount <= 0)
+        {
             RemoveInstance(ammo);
+        }
 
         if (!i.ContainsProperty(ItemProperty.Bow))
+        {
             World.soundManager.Reload();
+        }
 
         return true;
     }
@@ -598,7 +602,9 @@ public class Inventory : MonoBehaviour
     public bool Unload(Item it)
     {
         if (it.Charges() == 0)
+        {
             return false;
+        }
 
         Item bullet = ItemList.GetItemByID(it.GetCComponent<CFirearm>().ammoID);
         bullet.amount = it.Charges();
@@ -836,7 +842,7 @@ public class Inventory : MonoBehaviour
         }
 
         //drop corpse
-        if (!entity.isPlayer && SeedManager.combatRandom.Next(100) < BodyDropChance)
+        if (!entity.isPlayer && SeedManager.combatRandom.Next(100) < BodyDropChance + ObjectManager.playerEntity.stats.proficiencies.Butchery.level)
         {
             BaseAI bai = entity.AI ?? GetComponent<BaseAI>();
             Item corpseItem;
@@ -874,8 +880,10 @@ public class Inventory : MonoBehaviour
 
         PickupItem(firearm, true);
 
-        if (items.Count < 2 && SeedManager.combatRandom.Next(100) < 5)
+        if (!entity.isPlayer && entity.AI.npcBase.HasFlag(NPC_Flags.Human) && items.Count < 2 && SeedManager.combatRandom.Next(100) < 5)
+        {
             items = GetDrops(SeedManager.combatRandom.Next(0, 4));
+        }
 
         if (items.Count > 0)
         {

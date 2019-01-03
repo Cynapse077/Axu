@@ -29,20 +29,19 @@ function Interact_Cryopod(obj)
 	obj.SetTypeAndSwapSprite("Cryopod_Open")
 	local ranNum = Random(0, 100)
 
-	if (ranNum < 25) then
-		PlayerEntity.stats.Radiate(Random(10, 50))
-		Log("Radiation spills out from the pod!")
-	elseif (ranNum < 60) then
+	if (ranNum < 10) then
+		Log("<color=red>Radiation spills out from the pod!</color>")
+		PlayerEntity.stats.Radiate(Random(10, 50))		
+	elseif (ranNum < 40) then
 		local pos = TileMap.EmptyAdjacent(obj.localPos)
 
-		if (pos == nil) then 
+		if (pos == nil) then
 			Log("<color=grey>You open the cryopod. Nothing happens.</color>")
-			return 
+		else
+			SpawnController.SpawnNPCByID("subject", TileMap.WorldPosition, TileMap.currentElevation, pos)
+			Log("<color=red>A creature was inside the pod! It looks hostile!</color>")
+			TileMap.HardRebuild()
 		end
-
-		SpawnController.SpawnNPCByID("subject", TileMap.WorldPosition, TileMap.currentElevation, pos)
-		Log("<color=red>A creature was inside the pod! It looks hostile!</color>")
-		TileMap.SoftRebuild()
 	else
 		Log("<color=grey>You open the cryopod. Nothing happens.</color>")
 	end

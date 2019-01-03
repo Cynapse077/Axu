@@ -56,6 +56,25 @@ public class CombatComponent
         }
     }
 
+    public float MissChance(Stats target, BodyPart targetPart)
+    {
+        int miss = MyStats.MissChance(MyBody.MainHand.EquippedItem);
+        float percentage = 1.0f + (targetPart.Weight / (float)targetPart.myBody.TotalBodyWeight());
+        bool twoHandPenalty = MyBody.MainHand.EquippedItem.HasProp(ItemProperty.Two_Handed) && MyInventory.TwoHandPenalty(MyBody.MainHand);
+
+        if (MyStats.HasEffect("Topple"))
+        {
+            miss += 5;
+        }
+
+        if (twoHandPenalty)
+        {
+            miss += 5;
+        }
+
+        return Mathf.Floor(miss * percentage);
+    }
+
     bool PerformAttack(Stats target, BodyPart.Hand hand, BodyPart targetPart = null, int sevChance = 0)
     {
         if (hand == null || target == null || hand.EquippedItem == null)
@@ -113,49 +132,17 @@ public class CombatComponent
                     MyStats.AddProficiencyXP(wep, MyStats.Intelligence);
 
                 if (hand.arm != null)
+                {
                     MyBody.TrainLimb(hand.arm);
-
+                }
             }
             else
             {
                 ApplyNPCEffects(target, damage);
             }
-
-            ApplyWeaponEffects(target, wep);
         }
 
         return true;
-    }
-
-    void ApplyWeaponEffects(Stats target, Item wep)
-    {
-        if (wep.HasProp(ItemProperty.OnAttack_Radiation) && SeedManager.combatRandom.Next(100) < 5)
-        {
-            MyStats.Radiate(1);
-        }
-
-        if (target == null || target.health <= 0 || target.dead)
-        {
-            return;
-        }
-
-        if (wep.damageTypes.Contains(DamageTypes.Venom) && SeedManager.combatRandom.Next(100) <= 3)
-            target.AddStatusEffect("Poison", SeedManager.combatRandom.Next(2, 8));
-        if (wep.ContainsDamageType(DamageTypes.Bleed) && SeedManager.combatRandom.Next(100) <= 5)
-            target.AddStatusEffect("Bleed", SeedManager.combatRandom.Next(2, 8));
-        if (wep.HasProp(ItemProperty.Stun) && SeedManager.combatRandom.Next(100) <= 5)
-            target.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 4));
-        if (wep.HasProp(ItemProperty.Confusion) && SeedManager.combatRandom.Next(100) <= 5)
-            target.AddStatusEffect("Confuse", SeedManager.combatRandom.Next(2, 8));
-        if (wep.HasProp(ItemProperty.Knockback) && SeedManager.combatRandom.Next(100) <= 5)
-        {
-            Entity otherEntity = target.entity;
-
-            if (otherEntity != null && otherEntity.myPos.DistanceTo(entity.myPos) < 2f)
-            {
-                otherEntity.ForceMove(otherEntity.posX - entity.posX, otherEntity.posY - entity.posY, MyStats.Strength - 1);
-            }
-        }
     }
 
     void ApplyNPCEffects(Stats target, int damage)

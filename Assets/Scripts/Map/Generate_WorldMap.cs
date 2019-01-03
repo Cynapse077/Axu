@@ -13,7 +13,9 @@ public class Generate_WorldMap : MonoBehaviour
     static float stretchX;
     static float stretchY;
 
-    public static int[,] Generate(System.Random _rng, int _width, int _height, int layers, float outer, float inner)
+    readonly static int islandThreshold = 25;
+
+    public static MapGenInfo Generate(System.Random _rng, int _width, int _height, int layers, float outer, float inner)
     {
         width = _width;
         height = _height;
@@ -25,9 +27,9 @@ public class Generate_WorldMap : MonoBehaviour
         int centerX = width / 2 - 1 + rng.Next(-10, 11), centerY = height / 2 - 1 + rng.Next(-10, 11);
 
         float scale2 = outerScale / 2f;
-        float xOrg = rng.Next(-10000, 10000), yOrg = rng.Next(-10000, 10000);
-        float xOrg2 = rng.Next(-10000, 10000), yOrg2 = rng.Next(-10000, 10000);
-        float xOrg3 = rng.Next(-10000, 10000), yOrg3 = rng.Next(-10000, 10000);
+        float xOrg = GetOriginPoint(), yOrg = GetOriginPoint();
+        float xOrg2 = GetOriginPoint(), yOrg2 = GetOriginPoint();
+        float xOrg3 = GetOriginPoint(), yOrg3 = GetOriginPoint();
 
         stretchX = rng.Next(90, 110) * 0.01f;
         stretchY = rng.Next(90, 110) * 0.01f;
@@ -46,7 +48,7 @@ public class Generate_WorldMap : MonoBehaviour
                 {
                     float perlin = Mathf.PerlinNoise(xOrg + x / width * outerScale * i, yOrg + y / height * outerScale * i);
 
-                    b += perlin - DistanceToPoint(centerX, centerY, x, y) * 0.6f / (i * 0.5f);
+                    b += perlin - DistanceToPoint(centerX, centerY, x, y) * 0.55f / (i * 0.5f);
                 }
 
                 b *= (Mathf.PerlinNoise(xOrg2 + x / width * scale2, yOrg2 + y / height * scale2)) / (layers - 1);
@@ -59,12 +61,21 @@ public class Generate_WorldMap : MonoBehaviour
             y++;
         }
 
-        RemoveSmallIslands(ref map_data);
+        MapGenInfo mi = new MapGenInfo
+        {
+            biggestIsland = RemoveSmallIslands(ref map_data),
+            mapData = map_data
+        };
 
-        return map_data;
+        return mi;
     }
 
-    static void RemoveSmallIslands(ref int[,] data)
+    static float GetOriginPoint()
+    {
+        return rng.Next(-10000, 10000);
+    }
+
+    static List<Coord> RemoveSmallIslands(ref int[,] data)
     {
         List<List<Coord>> islands = new List<List<Coord>>();
 
@@ -87,21 +98,35 @@ public class Generate_WorldMap : MonoBehaviour
                     }
 
                     if (canAdd)
+                    {
                         islands.Add(GetIsland(data, c));
+                    }
                 }
             }
         }
 
-        foreach (List<Coord> islandTiles in islands)
+        List<Coord> biggestIsland = null;
+        int biggestSize = 0;
+
+        foreach (List<Coord> currIsland in islands)
         {
-            if (islandTiles.Count < 20)
+            int size = currIsland.Count;
+
+            if (size < islandThreshold)
             {
-                for (int i = 0; i < islandTiles.Count; i++)
+                for (int i = 0; i < currIsland.Count; i++)
                 {
-                    data[islandTiles[i].x, islandTiles[i].y] = 0;
+                    data[currIsland[i].x, currIsland[i].y] = 0;
                 }
             }
+            else if (size > biggestSize || biggestIsland == null)
+            {
+                biggestIsland = currIsland;
+                biggestSize = size;
+            }
         }
+
+        return biggestIsland;
     }
 
     static List<Coord> GetIsland(int[,] data, Coord startPos)
@@ -180,4 +205,10 @@ public class Generate_WorldMap : MonoBehaviour
         float distanceX = (x1 - x) * (x1 - x), distanceY = (y1 - y) * (y1 - y);
         return Mathf.Sqrt(distanceX + distanceY) / (height / 2 - 1);
     }
+}
+
+public struct MapGenInfo
+{
+    public int[,] mapData;
+    public List<Coord> biggestIsland;
 }

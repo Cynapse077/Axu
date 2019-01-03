@@ -20,6 +20,7 @@ public class WorldMap_Data
 
     readonly MapInfo[,] tiles;
     readonly JsonData worldTileData;
+    MapGenInfo mapGenInfo;
     List<Coord> mountains, ocean;
     Dictionary<string, ZoneBlueprint> zoneBlueprints;
     Dictionary<string, ZoneBlueprint_Underground> ugZoneBlueprints;
@@ -84,7 +85,8 @@ public class WorldMap_Data
 
     void GenerateTerrain()
     {
-        int[,] values = Generate_WorldMap.Generate(rng, width, height, 4, 8f, 20f);
+        mapGenInfo = Generate_WorldMap.Generate(rng, width, height, 4, 8f, 20f);
+        int[,] values = mapGenInfo.mapData;
 
         for (int x = 0; x < values.GetLength(0); x++)
         {
@@ -247,13 +249,15 @@ public class WorldMap_Data
         }
 
         if (neighbors <= 2 && rng.Next(100) < 65 || neighbors == 0)
+        {
             tiles[x, y].biome = WorldMap.Biome.Plains;
+        }
     }
 
     bool GrassTile(int x, int y)
     {
         return tiles[x, y].biome == WorldMap.Biome.Plains || tiles[x, y].biome == WorldMap.Biome.Forest ||
-            (tiles[x, y].biome == WorldMap.Biome.Tundra && rng.Next(100) < 20) || (tiles[x, y].biome == WorldMap.Biome.Desert && rng.Next(100) < 20);
+            (tiles[x, y].biome == WorldMap.Biome.Tundra && rng.Next(100) < 40) || (tiles[x, y].biome == WorldMap.Biome.Desert && rng.Next(100) < 40);
     }
 
     void SurroundWaterWithShore()
@@ -397,32 +401,55 @@ public class WorldMap_Data
             else
             {
                 if (zb.placement.zoneID == "Any Land")
-                    pos = (zb.placement.distFromStart != 0) ? GetOpenPosition(zb.placement.distFromStart) : GetOpenPosition();
+                {
+                    pos = (zb.placement.onMain) ? GetOpenMainPosition(zb.neighbors) : GetOpenPosition(zb.neighbors);
+
+                }
                 else
+                {
                     pos = GetOpenPosition(new List<WorldMap.Biome> { zb.placement.zoneID.ToEnum<WorldMap.Biome>() });
+                }
             }
         }
         else
+        {
             pos = parentPos + zb.placement.relativePosition;
+        }
 
-        if (pos == null || pos.x < 0 || pos.y < 0 || pos.x >= width || pos.y >= height)
+        if (pos == null)
+        {
+            Debug.LogError("Zone " + zb.name + " could not be placed.");
             return;
+        }
+
+        if (pos.x < 0 || pos.y < 0 || pos.x >= width || pos.y >= height)
+        {
+            return;
+        }
 
         if (tiles[pos.x, pos.y].biome == WorldMap.Biome.Mountain)
+        {
             tiles[pos.x, pos.y].biome = WorldMap.Biome.Shore;
+        }
 
         if (zb.radiation > 0)
+        {
             tiles[pos.x, pos.y].radiation = zb.radiation;
+        }
 
         tiles[pos.x, pos.y].landmark = zb.id;
         tiles[pos.x, pos.y].friendly = zb.friendly;
         tileData[pos.x, pos.y].walkable = zb.walkable;
 
         if (!string.IsNullOrEmpty(zb.underground))
+        {
             vaultAreas.Add(new Coord(pos.x, pos.y));
+        }
 
         if (zb.isStart)
+        {
             startPosition = pos;
+        }
 
         if (zb.neighbors != null)
         {
@@ -438,7 +465,9 @@ public class WorldMap_Data
             villages.Add(vd);
 
             if (zb.expand)
+            {
                 ExpandVillage(vd);
+            }
         }
 
         landmarks.Add(new Landmark(pos, (zb.id == "Village" ? "Village of " + zb.name : zb.name)));
@@ -483,11 +512,16 @@ public class WorldMap_Data
             for (int y = -yMax; y <= yMax; y++)
             {
                 if (x == 0 && y == 0)
+                {
                     continue;
+                }
 
                 int vx = vData.center.x + x, vy = vData.center.y + y;
+
                 if (tiles[vx, vy].biome != WorldMap.Biome.Ocean && tiles[vx, vy].biome != WorldMap.Biome.Mountain && !tiles[vx, vy].HasLandmark())
+                {
                     possibleLocations.Add(new Coord(vx, vy));
+                }
             }
         }
 
@@ -505,7 +539,7 @@ public class WorldMap_Data
         }
     }
 
-    public Coord GetOpenPosition(float maxDistance = 200f)
+    public Coord GetOpenPosition(ZoneBlueprint[] neighbors)
     {
         List<Coord> openPositions = new List<Coord>();
 
@@ -515,43 +549,87 @@ public class WorldMap_Data
             {
                 if (GrassTile(x, y) && !tiles[x, y].HasLandmark())
                 {
-                    if (maxDistance < 200 && GetLandmark("Abandoned Building").DistanceTo(new Coord(x, y)) <= maxDistance)
+                    bool canAdd = true;
+
+                    if (neighbors != null && neighbors.Length > 0)
+                    {
+                        for (int i = 0; i < neighbors.Length; i++)
+                        {
+                            int offX = x + neighbors[i].placement.relativePosition.x, offY = neighbors[i].placement.relativePosition.y;
+
+                            if (!GrassTile(offX, offY) || tiles[offX, offY].HasLandmark())
+                            {
+                                canAdd = false;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (canAdd)
+                    {
                         openPositions.Add(new Coord(x, y));
-                    else
-                        openPositions.Add(new Coord(x, y));
+                    }
                 }
             }
         }
 
-        if (openPositions.Count <= 0 && maxDistance < 190)
-            return GetOpenPosition();
+        if (openPositions.Count <= 0)
+        {
+            Debug.LogError("WorldMap_Data::GetOpenPosition() - No available open positions!");
+        }
 
         return openPositions.GetRandom(rng);
     }
 
-    public Coord GetOpenPosition(Coord start, int maxDistance)
+    public Coord GetOpenMainPosition(ZoneBlueprint[] neighbors)
     {
         List<Coord> openPositions = new List<Coord>();
 
-        for (int x = 1; x < width - 1; x++)
+        for (int i = 0; i < mapGenInfo.biggestIsland.Count; i++)
         {
-            for (int y = 1; y < height - 1; y++)
+            int x = mapGenInfo.biggestIsland[i].x, y = mapGenInfo.biggestIsland[i].y;
+
+            if (GrassTile(x, y) && !tiles[x, y].HasLandmark())
             {
-                if (GrassTile(x, y) && !tiles[x, y].HasLandmark())
+                bool canAdd = true;
+
+                if (neighbors != null && neighbors.Length > 0)
                 {
-                    if (start.DistanceTo(new Coord(x, y)) <= maxDistance)
-                        openPositions.Add(new Coord(x, y));
+                    for (int j = 0; j < neighbors.Length; j++)
+                    {
+                        int newX = x + neighbors[j].placement.relativePosition.x, newY = y + neighbors[j].placement.relativePosition.y;
+
+                        if (newX < 0 || newX >= Manager.worldMapSize.x || newY < 0 || newY >= Manager.worldMapSize.y)
+                        {
+                            canAdd = false;
+                            break;
+                        }
+
+                        if (!GrassTile(newX, newY) || tiles[newX, newY].HasLandmark())
+                        {
+                            canAdd = false;
+                            break;
+                        }
+                    }
+                }
+                
+
+                if (canAdd)
+                {
+                    openPositions.Add(mapGenInfo.biggestIsland[i]);
                 }
             }
         }
 
-        if (openPositions.Count <= 0 && maxDistance < 190)
-            return GetOpenPosition();
+        if (openPositions.Count <= 0)
+        {
+            Debug.LogError("WorldMap_Data::GetOpenMainPosition() - No available open positions!");
+        }
 
         return openPositions.GetRandom(rng);
     }
 
-    public Coord GetOpenPos_Conditional(System.Predicate<MapInfo> p)
+    public Coord GetOpenPos_Conditional(Predicate<MapInfo> p)
     {
         List<Coord> openPositions = new List<Coord>();
 
@@ -576,7 +654,9 @@ public class WorldMap_Data
             for (int y = 0; y < height; y++)
             {
                 if (tiles[x, y].landmark == search)
+                {
                     return new Coord(x, y);
+                }
             }
         }
 
@@ -592,7 +672,9 @@ public class WorldMap_Data
             for (int y = 0; y < height; y++)
             {
                 if (tiles[x, y].landmark == search)
+                {
                     cs.Add(new Coord(x, y));
+                }
             }
         }
 
@@ -689,7 +771,7 @@ public class WorldMap_Data
 
     void Swamp()
     {
-        Coord start = GetOpenPosition();
+        Coord start = GetOpenPosition(new ZoneBlueprint[0]);
         tiles[start.x, start.y].biome = WorldMap.Biome.Swamp;
         tiles[start.x, start.y].radiation = 3;
         int width = rng.Next(3, 8), height = rng.Next(3, 8);
@@ -770,7 +852,9 @@ public class WorldMap_Data
                     for (int i = 0; i < zb.neighbors.Length; i++)
                     {
                         if (zb.neighbors[i].id == search)
+                        {
                             return zb.neighbors[i];
+                        }
                     }
                 }
             }
@@ -840,12 +924,6 @@ public class WorldMap_Data
 
         string id = LocalizationManager.GetContent("Biome_" + mi.biome.ToString());
         return id;
-    }
-
-    struct Island
-    {
-        public int id;
-        public List<Coord> positions;
     }
 }
 

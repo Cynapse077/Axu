@@ -603,7 +603,11 @@
         {
             "ID" : "Toggle Mouse",
             "Display" : "Toggle Mouse"
-        }
+        },
+		{
+			"ID" : "Toggle Minimap",
+			"Display" : "Toggle Minimap"
+		}
     ],
     "Stats" : [
         {
@@ -644,7 +648,7 @@
         {
             "ID" : "Intelligence",
             "Display" : "Intelligence",
-            "Tooltip" : "Increases non-physical ability damage and effectiveness. Increases XP gain."
+            "Tooltip" : "Increases non-physical ability damage and effectiveness. Increases proficiency XP gain."
         },
         {
             "ID" : "Accuracy",

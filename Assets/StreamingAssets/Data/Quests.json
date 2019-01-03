@@ -357,16 +357,98 @@
 			"Rewards" : {
 				"XP" : 200 
 			},
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Cathedral", -8 ] }
+			],
+			"End Dialogue" : "[Isazna, the Kindred Prophet stands by the stairwell.]\nWell, look who it is, the Ensis' pet dog. I'm afraid you're too late. Xzol is already gone. I shall put you down. Goodbye, wanderer. I hope there's some peace for you in the afterlife.",
+
+			"Chained Quest" : "ensis21"
+		},
+		{
+			"Name" : "Death of the Prophet",
+			"ID" : "ensis21",
+			"Description" : "Kill Isaza.",
+			"Rewards" : {
+				"XP" : 300
+			},
 			"Events" : [
 				{
-                    "Event" : "OnStart",
-                    "Remove Blockers" : { "Coordinate" : "Cathedral", "Elevation" : 0 }
-                }
+					"Event" : "OnStart",
+					"Move NPC" : { "NPC" : "arthomas", "Coordinate" : "Home", "Local Position" : { "x" : 26, "y" : 13 }, "Elevation" : 0 },
+					"Remove NPC" : { "NPC" : "akklune" }
+				}
 			],
 			"Steps" : [
-				{ "Goal" : "Go", "To" : [ "Cathedral", -3 ] }
+				{ "Goal" : "Kill NPC", "NPC" : [ "isazna", 1 ] }
 			],
-			"End Dialogue" : "To be continued..."
+			"End Dialogue" : "[With her dying breath, Isazna chuckles.]\nYou really think killing me will do any good for your cause? Xzol has probably decimated The Ensis by now. You have lost.",
+
+			"Chained Quest" : "ensis22"
+		},
+		{
+			"Name" : "Dark Times",
+			"ID" : "ensis22",
+			"Description" : "Isazna claims Xzol has already made his way to the Ensis Stronghold. Return there to see if there are any survivors.",
+			"Rewards" : {
+				"XP" : 10,
+				"Items" : [ "swordoffate" ]
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Move NPC" : { "NPC" : "kanil", "Coordinate" : "Ensis Interior", "Local Position" : { "x" : 25, "y" : 6 }, "Elevation" : 0 },
+					"Remove NPC" : { "NPC" : "lomis" }
+				},
+				{
+					"Event" : "OnComplete",
+					"Give Quest" : { "NPC" : "arthomas", "Quest" : "ensis23" }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Ensis Interior" ] },
+				{ "Goal" : "Talk To", "NPC" : "kanil" }
+			],
+			"End Dialogue" : "Wanderer! Thank goodness you're okay! There was a brutal invasion not hours ago. Lomis and Akk-Lune perished in the fight. I was fortunate enough to be away from the Stronghold, and thus my life was spared. I have yet to find Arthomas' body though. I'm sure he is still alive somewhere. Poor Lomis... I don't know what The Ensis is going to do without him. Here, take his sword. I know he would have wanted you to have it. We need to find Arthomas if we have any hope of survival. Do you know of any safe places he might be hiding? Please search for him. I'll stay here in case he returns."
+		},
+		{
+			"Name" : "The Duke of Lies",
+			"ID" : "ensis23",
+			"Description" : "Find Oromir, the Duke of Lies at Magna Dwyll",
+			"Start Dialogue" : "You're alive! I can't believe how quickly we ended up in shambles. Lomis is dead, and now The Ensis is falling. There's only one person I know that could help us now. Oromir, the self-proclaimed \"Duke of Lies\", was one of us long ago. He betrayed us and now lives in exile. He may be a slimeball, but his knowledge was a great boon to us years ago. Perhaps he can help us overcome this threat. I dare not go, for I would surely be killed on sight... Will you talk to Oromir in my stead?",
+			"Rewards" : {
+				"XP" : 25
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Console Command" : "questflag Can_Enter_Magna"
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Magna_C" ] },
+				{ "Goal" : "Talk To", "NPC" : "oromir" }
+			],
+			"End Dialogue" : "Let me guess, the Ensis sent you to grovel at my feet? Yes, I know about the massacre at the Stronghold. I may be considered a traitor, but I never would have wished this kind of destruction against anyone. I've done my best to stay away from the conflict, but it seems the time has come for me to pick a side. Xzol and his Kindred are a cancer upon this planet and must be disposed of. This so-called god is nothing of the sort, but will be almost impossible to kill with conventional weapons. There is an artifact down the stairs here. Grab it for me, will you?",
+
+			"Chained Quest" : "ensis24"
+		},
+		{
+			"Name" : "Oromir's Artifact",
+			"ID" : "ensis24",
+			"Description" : "Grab the artifact from below Magna Dwyll and give it to Oromir. Apparently it will help.",
+			"Rewards" : {
+				"XP" : 50
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Spawn Object" : { "Object" : "Chest", "Coordinate" : "Magna_C", "Elevation" : 1, "Give Item" : "artifact5", "Local Position" : { "x" : 19, "y" : 9 } }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Fetch", "Item" : [ "artifact5" ], "Give To" : "oromir" }
+			],
+			"End Dialogue" : "This quest line ends here for now.\n\n[TO BE CONTINUED....]"
 		},
 
 		{

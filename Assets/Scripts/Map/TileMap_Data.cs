@@ -163,10 +163,11 @@ public class TileMap_Data
     public void ChangeTile(int x, int y, Tile_Data tile)
     {
         if (changes == null)
+        {
             changes = new List<TileChange>();
+        }
 
         changes.Add(new TileChange(x, y, tile.ID));
-
         map_data[x, y] = tile;
         Autotile();
     }
@@ -179,7 +180,9 @@ public class TileMap_Data
             for (int y = 0; y < Height; y++)
             {
                 if (map_data[x, y] == Tile.tiles["Door"])
+                {
                     PlaceDoor(x, y);
+                }
             }
         }
 
@@ -190,7 +193,9 @@ public class TileMap_Data
     void PlaceAdjacentBiomes()
     {
         if (mapInfo.biome == WorldMap.Biome.Ocean || mapInfo.biome == WorldMap.Biome.Mountain)
+        {
             return;
+        }
 
         //N
         if (mapInfo.position.y > 0)
@@ -737,13 +742,17 @@ public class TileMap_Data
         List<JsonData> datas = GetDataFromPath(Application.streamingAssetsPath + defaultMapPath);
 
         if (datas.Count == 0)
+        {
             return false;
+        }
 
         loadedFromData = true;
         JsonData data = datas.GetRandom(RNG);
 
         if (data == null)
+        {
             return false;
+        }
 
         return LoadMap(data);
     }
@@ -792,12 +801,18 @@ public class TileMap_Data
                         continue;
                     }
 
+                    //NPC already exists elsewhere. Should we really change its position?
                     if (bp.flags.Contains(NPC_Flags.Static) && World.objectManager.NPCExists(nType))
                     {
                         NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
-                        npc.worldPosition = new Coord(mapInfo.position);
-                        npc.elevation = -elevation;
-                        npc.localPosition = new Coord(x, y);
+                        //No longer moves the NPC around.
+                        //npc.worldPosition = new Coord(mapInfo.position);
+                        //npc.elevation = -elevation;
+
+                        if (npc.worldPosition == mapInfo.position)
+                        {
+                            npc.localPosition = new Coord(x, y);
+                        }
                     }
                     else
                     {
@@ -857,7 +872,9 @@ public class TileMap_Data
     void CreateVaultLevel(Vault v)
     {
         if (LoadCustomMap())
+        {
             return;
+        }
 
         Dungeon d = new Dungeon(v.blueprint);
 

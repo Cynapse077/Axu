@@ -263,6 +263,26 @@ public class MoveNPCEvent : QuestEvent
 
             World.tileMap.HardRebuild();
         }
+        else
+        {
+            //Create NPC
+            NPC_Blueprint bp = EntityList.GetBlueprintByID(npcID);
+
+            if (bp == null)
+            {
+                UnityEngine.Debug.LogError("NPC with ID " + npcID + " does not exist.");
+                return;
+            }
+
+            NPC npc = new NPC(bp, new Coord(0, 0), new Coord(0, 0), 0)
+            {
+                localPosition = localPos,
+                elevation = elevation,
+                worldPosition = worldPos
+            };
+
+            World.objectManager.CreateNPC(npc);
+        }
     }
 }
 
@@ -393,5 +413,26 @@ public class CompleteStepEvent : QuestEvent
     public override void RunEvent()
     {
         goal.Complete();
+    }
+}
+
+public class RemoveNPCEvent : QuestEvent
+{
+    readonly string npcID;
+
+    public RemoveNPCEvent(string nID)
+    {
+        npcID = nID;
+    }
+
+    public override void RunEvent()
+    {
+        NPC n = World.objectManager.npcClasses.Find(x => x.ID == npcID);
+
+        if (n != null)
+        {
+            ObjectManager.playerJournal.staticNPCKills.Add(n.ID);
+            World.objectManager.npcClasses.Remove(n);
+        }
     }
 }

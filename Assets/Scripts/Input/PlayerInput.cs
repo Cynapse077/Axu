@@ -29,13 +29,13 @@ public class PlayerInput : MonoBehaviour
     Vector3 mapOffset = Vector3.zero;
     MapPointer questPointer;
     List<NPC> npcsToMove;
-
     Path_AStar worldPath;
 
     [HideInInspector] public Skill activeSkill;
     [HideInInspector] public CursorMode cursorMode = CursorMode.None;
     public GameObject restingIcon;
     public InputKeys keybindings;
+    public bool showMinimap = true;
 
     void Start()
     {
@@ -216,6 +216,11 @@ public class PlayerInput : MonoBehaviour
         {
             GameSettings.UseMouse = !GameSettings.UseMouse;
             return;
+        }
+        else if (KeyDown("Toggle Minimap"))
+        {
+            showMinimap = !showMinimap;
+            World.userInterface.ChangeMapNameInSideBar();
         }
 
         if (AnyInputDown())
@@ -1006,7 +1011,7 @@ public class PlayerInput : MonoBehaviour
         fullMap = !fullMap;
         ResetPath();
         World.userInterface.ToggleFullMap(fullMap);
-        miniMap.Transition(fullMap);
+        CheckMinimap();
         sidePanelUI.SetActive(!fullMap);
         World.userInterface.mapFeaturePanel.gameObject.SetActive(fullMap);
 

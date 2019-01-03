@@ -269,9 +269,6 @@
             "Stat Mods" : [
                 { "Stat" : "Strength", "Amount" : 1 }
             ],
-            "Components" : [
-                { "ID" : "Ability", "Ability" : "calledshot", "Level" : 2 }
-            ],
             "Properties" : [ "Weapon", "Two_Handed" ],
             "DmgTypes" : [ "Pierce", "Venom", "Cleave" ],
             "Display" : {
@@ -547,6 +544,19 @@
             "Properties" : [ "Quest_Item" ],
             "Display" : {
                 "On Ground" : "item-artifact2.png"
+            }
+        },
+		{
+            "ID" : "artifact5",
+            "Name" : "Oromir's Artifact",
+            "Type" : "Misc_Object",
+            "Rarity" : 100,
+            "Stackable" : true,
+            "FlavorText" : "A cube of unknown metal. Its properties are unknown to you, but someone may have use for it.",
+            "Cost" : 50,
+            "Properties" : [ "Quest_Item" ],
+            "Display" : {
+                "On Ground" : "item-artifact.png"
             }
         },
         {

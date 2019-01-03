@@ -165,20 +165,59 @@ public class Item : ComponentHolder
     {
         RunCommands_Params("OnHit", attackedEntity, myEntity);
 
+        if (myEntity.isPlayer && HasProp(ItemProperty.OnAttack_Radiation) && SeedManager.combatRandom.Next(100) < 5)
+        {
+            myEntity.stats.Radiate(1);
+        }
+
         //Weapon coatings
         if (HasCComponent<CCoat>())
         {
             CCoat cc = GetCComponent<CCoat>();
 
             if (cc.strikes > 0)
+            {
                 cc.OnStrike(attackedEntity.stats);
+            }
             else
+            {
                 components.Remove(cc);
+            }
         }
 
         //Item level
         if (HasCComponent<CItemLevel>())
+        {
             GetCComponent<CItemLevel>().AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
+        }
+
+        if (damageTypes.Contains(DamageTypes.Venom) && SeedManager.combatRandom.Next(100) <= 3)
+        {
+            attackedEntity.stats.AddStatusEffect("Poison", SeedManager.combatRandom.Next(2, 8));
+        }
+
+        if (ContainsDamageType(DamageTypes.Bleed) && SeedManager.combatRandom.Next(100) <= 5)
+        {
+            attackedEntity.stats.AddStatusEffect("Bleed", SeedManager.combatRandom.Next(2, 8));
+        }
+
+        if (HasProp(ItemProperty.Stun) && SeedManager.combatRandom.Next(100) <= 5)
+        {
+            attackedEntity.stats.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 4));
+        }
+
+        if (HasProp(ItemProperty.Confusion) && SeedManager.combatRandom.Next(100) <= 5)
+        {
+            attackedEntity.stats.AddStatusEffect("Confuse", SeedManager.combatRandom.Next(2, 8));
+        }
+
+        if (HasProp(ItemProperty.Knockback) && SeedManager.combatRandom.Next(100) <= 5)
+        {
+            if (attackedEntity != null && attackedEntity.myPos.DistanceTo(myEntity.myPos) < 2f)
+            {
+                attackedEntity.ForceMove(attackedEntity.posX - myEntity.posX, attackedEntity.posY - myEntity.posY, myEntity.stats.Strength - 1);
+            }
+        }
     }
 
     public void OnBlock(Entity myEntity, Entity targetEntity)
@@ -188,7 +227,7 @@ public class Item : ComponentHolder
 
     public void OnConsume(Stats stats)
     {
-        if (HasCComponent<CRot>())
+        if (HasProp(ItemProperty.Replacement_Limb)) 
         {
             //TODO: Add training for limbs here.
             //List<ItemProperty> props = new List<ItemProperty>(properties);
@@ -494,11 +533,14 @@ public class Item : ComponentHolder
         int totCost = (cost + modifier.cost > 0) ? (cost + modifier.cost) : cost;
 
         if (HasProp(ItemProperty.Randart))
+        {
             totCost *= 5;
+        }
 
         if (HasCComponent<CLiquidContainer>())
         {
             CLiquidContainer cl = GetCComponent<CLiquidContainer>();
+
             if (cl.liquid != null)
             {
                 totCost += cl.liquid.pricePerUnit * cl.liquid.units;
@@ -510,18 +552,23 @@ public class Item : ComponentHolder
     public int sellCost(int bonus)
     {
         int totCost = (cost + modifier.cost > 0) ? (cost + modifier.cost) : cost;
+
         if (HasProp(ItemProperty.Randart))
+        {
             totCost *= 5;
+        }
 
         if (HasCComponent<CLiquidContainer>())
         {
             CLiquidContainer cl = GetCComponent<CLiquidContainer>();
 
             if (cl.liquid != null)
+            {
                 totCost += cl.liquid.pricePerUnit * cl.liquid.units;
+            }
         }
 
-        return (int)((100f + (bonus * 3f)) / 100f * totCost * 0.6f);
+        return UnityEngine.Mathf.FloorToInt((100.0f + (bonus * 3.0f)) / 100.0f * totCost * 0.5f);
     }
 
     public int Charges()
@@ -540,10 +587,10 @@ public class Item : ComponentHolder
     {
         CFirearm cf = GetCComponent<CFirearm>();
 
-        if (cf == null)
-            return;
-
-        cf.curr = 0;
+        if (cf != null)
+        {
+            cf.curr = 0;
+        }
     }
 
     public bool UseCharge()
@@ -555,7 +602,9 @@ public class Item : ComponentHolder
             CRot cr = GetCComponent<CRot>();
 
             if (cr == null || cr.current <= 0)
+            {
                 return false;
+            }
 
             cr.current--;
 
@@ -568,7 +617,9 @@ public class Item : ComponentHolder
         }
 
         if (cc.current <= 0)
+        {
             return false;
+        }
 
         cc.current--;
         return true;
@@ -579,7 +630,9 @@ public class Item : ComponentHolder
         CFirearm cf = GetCComponent<CFirearm>();
 
         if (cf == null)
+        {
             return true;
+        }
 
         return (cf.curr == cf.max);
     }
@@ -587,12 +640,16 @@ public class Item : ComponentHolder
     public bool Fire()
     {
         if (HasProp(ItemProperty.Cannot_Remove))
+        {
             return true;
+        }
 
         CFirearm fi = GetCComponent<CFirearm>();
 
         if (fi == null || fi.curr <= 0)
+        {
             return false;
+        }
 
         fi.curr--;
         return true;
@@ -603,29 +660,11 @@ public class Item : ComponentHolder
         CFirearm fi = GetCComponent<CFirearm>();
 
         if (fi == null)
-            return 0;
-
-        int maxAmmo = fi.max;
-        int amountInMag = fi.curr;
-        int amountUsed = 0;
-
-        while (amountInMag < maxAmmo)
         {
-            if (amount > 0)
-            {
-                amountUsed++;
-                amountInMag++;
-                amount--;
-            }
-            else
-            {
-                fi.curr = amountInMag;
-                return amountUsed;
-            }
+            return 0;
         }
 
-        fi.curr = amountInMag;
-        return amountUsed;
+        return fi.Reload(amount);
     }
 
     public ItemProperty GetSlot()
@@ -645,7 +684,6 @@ public class Item : ComponentHolder
         else if (properties.Contains(ItemProperty.Slot_Tail))
             return ItemProperty.Slot_Tail;
 
-        //Arbitrary catch
         return ItemProperty.None;
     }
 
@@ -713,8 +751,11 @@ public class Item : ComponentHolder
             int sh = GetCComponent<CFirearm>().shots;
             return baseName + " " + DisplayDamage() + "<color=olive>(x" + sh + ")</color>";
         }
+
         if (HasProp(ItemProperty.Armor))
+        {
             return baseName + " " + DisplayArmor();
+        }
 
         return baseName;
     }

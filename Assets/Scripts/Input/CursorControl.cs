@@ -90,7 +90,9 @@ public class CursorControl : MonoBehaviour
         spriteRenderer.enabled = true;
 
         if (input != null && input.activeSkill != null)
+        {
             activeSkill = input.activeSkill;
+        }
     }
 
     void OnDisable()
@@ -100,7 +102,9 @@ public class CursorControl : MonoBehaviour
         World.userInterface.LookTooltipOff();
 
         if (spriteRenderer == null)
+        {
             spriteRenderer = GetComponent<SpriteRenderer>();
+        }
 
         spriteRenderer.enabled = false;
         blinking = false;

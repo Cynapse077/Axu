@@ -6,7 +6,7 @@ function OnTurn_BrainRot(entity, trait)
 
 	local progress = TurnManager.turn - trait.turnAcquired
 
-	if (progress > 4000 and Random(0, 1000) < 5) then
+	if (progress > 4000 and Random(0, 150) < 1) then
 		local heads = entity.body.GetBodyPartsBySlot(ItemProperty.Slot_Head)
 
 		for key, val in pairs(heads) do
@@ -30,7 +30,7 @@ function OnTurn_Leprosy(entity, trait)
 
 	local progress = TurnManager.turn - trait.turnAcquired
 
-	if (progress > 1 and Random(0, 100) < 100) then
+	if (progress > 4000 and Random(0, 200) < 1) then
 		local bps = entity.body.SeverableBodyParts()
 
 		if (#bps > 0) then
@@ -59,7 +59,7 @@ function OnTurn_Crystallization(entity, trait)
 	local bps = entity.stats.UnCrystallizedParts()
 
 	if (#bps > 0) then
-		if (progress > 2000 and Random(0, 100) < 5) then
+		if (progress > 2000 and Random(0, 200) < 1) then
 			bpToChange = bps[Random(1, #bps)]
 
 			bpToChange.armor = bpToChange.armor + 1

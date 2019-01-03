@@ -22,7 +22,8 @@
             "Friendly" : true,
             "Place At" : {
                 "Biome" : "Any Land",
-                "Location" : "Village"
+                "Location" : "Village",
+                "Mainland" : true
             },
             "Underground" : "Cave_Start"
         },
@@ -70,7 +71,8 @@
             "Walkable" : true,
             "Friendly" : true,
             "Place At" : {
-                "Biome" : "Any Land"
+                "Biome" : "Any Land",
+                "Mainland" : true
             },
             "Underground" : "Arena"
         },
@@ -92,7 +94,7 @@
             "Walkable" : true,
             "Place At" : {
                 "Biome" : "Any Land",
-                "Distance From Start" : 20
+                "Mainland" : true
             },
             "Underground" : "PowerPlant"
         },
@@ -103,7 +105,8 @@
             "Walkable" : true,
             "Friendly" : true,
             "Place At" : {
-                "Biome" : "Any Land"
+                "Biome" : "Any Land",
+                "Mainland" : true
             },
             "Underground" : "SubKin"
         },
@@ -123,15 +126,9 @@
             "Tile Index" : 20,
             "Walkable" : false,
             "Friendly" : true,
-            "Border" : {
-                "Width" : 2,
-                "Exclude" : [
-                    { "x" : 0, "y" : -1 } 
-                ],
-                "Tile ID" : "Wall_Futuristic"
-            },
             "Place At" : {
-                "Biome" : "Any Land"
+                "Biome" : "Any Land",
+                "Mainland" : true
             },
             "Underground" : "Prison",
             "Neighbors" : [
@@ -143,7 +140,8 @@
                     "Friendly" : true,
                     "Place At" : {
                         "Biome" : "Any Land",
-                        "Relative" : { "x" : 0, "y" : -1 }
+                        "Relative" : { "x" : 0, "y" : -1 },
+						"Mainland" : true
                     }
                 }
             ]
@@ -186,7 +184,8 @@
             "Amount" : 1,
 			"Radiation" : 8,
             "Place At" : {
-                "Biome" : "Any Land"
+                "Biome" : "Any Land",
+                "Mainland" : true
             }
         },
         {
@@ -248,7 +247,8 @@
             "Walkable" : true,
             "Friendly" : true,
             "Place At" : {
-                "Biome" : "Any Land"
+                "Biome" : "Any Land",
+                "Mainland" : true
             }
         },
         {

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class MapObjectSprite : MonoBehaviour
 {
+    const int maxPulses = 300;
+
     public MapObject objectBase;
     public Transform childObject;
     public Coord localPos;
@@ -158,8 +160,10 @@ public class MapObjectSprite : MonoBehaviour
 
     void SendPulses(Coord previous, int moveCount, bool pulseOn)
     {
-        if (moveCount > 300)
+        if (moveCount > maxPulses)
+        {
             return;
+        }
 
         for (int x = -1; x <= 1; x++)
         {

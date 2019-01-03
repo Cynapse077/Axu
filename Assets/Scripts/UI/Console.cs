@@ -365,7 +365,7 @@ public class Console : MonoBehaviour
                 MapObjectBlueprint bp = ItemList.GetMOB(spawnName);
 
                 if (bp == null)
-                    MyConsole.Error("No NPC with ID \"" + spawnName + "\".");
+                    MyConsole.Error("No Object with ID \"" + spawnName + "\".");
                 else
                 {
                     MapObject m = new MapObject(bp, lp, wp, World.tileMap.currentElevation);
@@ -441,7 +441,7 @@ public class Console : MonoBehaviour
 
             if (parsedText.Length < 2)
             {
-                MyConsole.Error("Give a direction to travel. down/up.");
+                MyConsole.Error("Give a destination.");
                 return;
             }
             else if (parsedText[1] == "surface")
@@ -479,72 +479,6 @@ public class Console : MonoBehaviour
                 tileMap.worldCoordX--;
                 MyConsole.NewMessage("    Going West.");
             }
-
-            else if (parsedText[1] == "powerplant")
-            {
-                tileMap.GoToArea("Power Plant");
-                MyConsole.NewMessage("    Going to the Power Plant.");
-            }
-
-            else if (parsedText[1] == "volcano")
-            {
-                tileMap.GoToArea("Volcano");
-                MyConsole.NewMessage("    Going to the Volcano.");
-            }
-
-            else if (parsedText[1] == "magna")
-            {
-                tileMap.GoToArea("Magna");
-                MyConsole.NewMessage("    Going to the scary place.");
-            }
-
-            else if (parsedText[1] == "magna_center")
-            {
-                tileMap.GoToArea("Magna_Center");
-                MyConsole.NewMessage("    Going to the scary place.");
-            }
-
-            else if (parsedText[1] == "ensis")
-            {
-                tileMap.GoToArea("Ensis");
-                MyConsole.NewMessage("    Going to the Ensis Base.");
-            }
-            else if (parsedText[1] == "frostborne")
-            {
-                tileMap.GoToArea("Frostborne");
-                MyConsole.NewMessage("    Going to the Frostborne Village.");
-            }
-            else if (parsedText[1] == "cult")
-            {
-                tileMap.GoToArea("Cult");
-                MyConsole.NewMessage("    Going to the Kindred Hideout.");
-            }
-            else if (parsedText[1] == "cathedral")
-            {
-                tileMap.GoToArea("Cathedral");
-                MyConsole.NewMessage("    Going to the Cathedral.");
-            }
-            else if (parsedText[1] == "arena")
-            {
-                tileMap.GoToArea("Arena");
-                MyConsole.NewMessage("    Going to the Arena");
-            }
-            else if (parsedText[1] == "oasis")
-            {
-                tileMap.GoToArea("Oasis");
-                MyConsole.NewMessage("    Going to the Oasis");
-            }
-            else if (parsedText[1] == "xul")
-            {
-                tileMap.GoToArea("Xul");
-                MyConsole.NewMessage("    Going to the Xul Encampment.");
-            }
-            else if (parsedText[1] == "workshop")
-            {
-                tileMap.GoToArea("Workshop");
-                MyConsole.NewMessage("  Going to Ka-Nil");
-
-            }
             else if (parsedText[1] == "home")
             {
                 tileMap.GoToArea("Home");
@@ -552,8 +486,22 @@ public class Console : MonoBehaviour
             }
             else
             {
-                MyConsole.Error("No such place");
-                return;
+                string newArea = textToParse.Replace("go ", "");
+                ZoneBlueprint zb = World.tileMap.worldMap.GetZone(newArea);
+
+                if (zb == null)
+                {
+                    MyConsole.Error("No such place");
+                    return;
+                }
+                else
+                {
+                    Coord newLocation = World.tileMap.worldMap.GetLandmark(zb.id);
+                    World.tileMap.worldCoordX = newLocation.x;
+                    World.tileMap.worldCoordY = newLocation.y;
+
+                    MyConsole.NewMessage("    Entering " + newArea + ".");
+                }
             }
 
             tileMap.HardRebuild();
@@ -1046,8 +994,8 @@ public class Console : MonoBehaviour
 
             MyConsole.NewMessage("  - <b>unstuck/unstick</b>\n    Teleports you to a random floor tile if stuck.");
             MyConsole.NewHelpLine("location", "Displays the current world coordinate.");
-            MyConsole.NewHelpLine("go [direction]", "Travel one screen in a direction. [direction] = \"up\", \"down\", \"north\", \"south\", \"east\", \"west\", \"surface\".\n" +
-                "You can also travel to any landmark. Use: \"arena\", \"ensis\", \"cult\", \"cathedral\", \"powerplant\", \"xul\", \"volcano\", \"frostborne\", \"oasis\", \"magna\". or specify a biome ID.");
+            MyConsole.NewHelpLine("go [area/direction]", "Travel one screen in a direction. [direction] = \"up\", \"down\", \"north\", \"south\", \"east\", \"west\", \"surface\".\n" +
+                "You can also travel to any landmark by typing its ID.");
             MyConsole.NewHelpLine("  - <b>setpos [x] [y]</b>", "Travel to a specific world position. Constraints: 0-199 on each axis.");
             MyConsole.NewMessage("  - <b>godmode</b> <i>[0-1]</i>\n      [0] = off\n      [1] = on");
             MyConsole.NewMessage("  - <b>fov</b> <i>[0-1]</i>\n      Whether to show fog of war or not. \n0 = off  1 = on");

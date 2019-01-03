@@ -145,6 +145,7 @@ public class CFirearm : CComponent
     {
         ID = "Firearm";
     }
+
     public CFirearm(int _cur, int _max, int _shots, string _ammoID)
     {
         ID = "Firearm";
@@ -152,6 +153,31 @@ public class CFirearm : CComponent
         max = _max;
         shots = _shots;
         ammoID = _ammoID;
+    }
+
+    public int Reload(int amount)
+    {
+        int maxAmmo = max;
+        int amountInMag = curr;
+        int amountUsed = 0;
+
+        while (amountInMag < maxAmmo)
+        {
+            if (amount > 0)
+            {
+                amountUsed++;
+                amountInMag++;
+                amount--;
+            }
+            else
+            {
+                curr = amountInMag;
+                return amountUsed;
+            }
+        }
+
+        curr = amountInMag;
+        return amountUsed;
     }
 }
 

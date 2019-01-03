@@ -194,14 +194,18 @@ public class Stats : MonoBehaviour
             if (statusEffects.ContainsKey(effectName))
             {
                 if (effectName != "Unconscious")
+                {
                     statusEffects[effectName] += turns - 1;
+                }
             }
             else
             {
                 statusEffects.Add(effectName, turns - 1);
 
                 if (LocalizationManager.GetContent("Message_SE_" + effectName) != LocalizationManager.defaultText)
+                {
                     CombatLog.NameMessage("Message_SE_" + effectName, entity.MyName);
+                }
             }
 
             if (effectName == "Slow" && statusEffects["Slow"] > Speed - 3)
@@ -657,7 +661,9 @@ public class Stats : MonoBehaviour
     public void StatusEffectDamage(int amount, DamageTypes damageType)
     {
         if (invincible || amount <= 0)
+        {
             return;
+        }
 
         Color c = Color.red;
 
@@ -1064,38 +1070,54 @@ public class Stats : MonoBehaviour
             }
             else if (kvp.Key == "Poison")
             {
-                int amount = RNG.Next(1, 4);
+                int amount = RNG.Next(1, 5);
 
                 if (hasTraitEffect(TraitEffects.Poison_Resist))
+                {
                     amount = (SeedManager.combatRandom.Next(100) < 20) ? 0 : amount / 2;
+                }
 
                 if (health > amount)
+                {
                     StatusEffectDamage(amount, DamageTypes.Venom);
+                }
 
             }
             else if (kvp.Key == "Bleed")
             {
-                int amount = RNG.Next(2, 4);
+                int amount = RNG.Next(2, 5);
 
                 if (hasTraitEffect(TraitEffects.Bleed_Resist))
                     amount = (SeedManager.combatRandom.Next(100) < 20) ? 0 : amount / 2;
 
                 if (health > amount)
+                {
                     StatusEffectDamage(amount, DamageTypes.Bleed);
+                }
 
             }
             else if (kvp.Key == "Sick" && RNG.Next(100) < 5)
             {
-                int amount = RNG.Next(1, 4);
+                int amount = RNG.Next(1, 3);
                 World.objectManager.CreatePoolOfLiquid(entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, "liquid_vomit", amount);
             }
             else if (kvp.Key == "Aflame")
             {
-                int damage = RNG.Next(3, 6);
-                float dm = (float)damage;
-                dm *= (-HeatResist * 0.01f);
-                damage += (int)dm;
-                StatusEffectDamage(damage, DamageTypes.Heat);
+                int tileID = World.tileMap.CurrentMap.GetTileNumAt(entity.posX, entity.posY);
+
+                if (tileID == Tile.tiles["Water"].ID || tileID == Tile.tiles["Water_Swamp"].ID)
+                {
+                    statusEffects[kvp.Key] = 0;
+                }
+                else
+                {
+                    int damage = RNG.Next(3, 6);
+                    float dm = damage;
+                    dm *= (-HeatResist * 0.01f);
+                    damage += (int)dm;
+                    StatusEffectDamage(damage, DamageTypes.Heat);
+
+                }
             }
 
             if (HasEffect(kvp.Key))
@@ -1111,7 +1133,9 @@ public class Stats : MonoBehaviour
         }
 
         if (!entity.isPlayer && entity.AI.npcBase.HasFlag(NPC_Flags.Deteriortate_HP))
+        {
             ApplyDamage(1, false, Color.white, false, true);
+        }
 
         TerrainEffects();
         UpdateDiseases();
@@ -1347,12 +1371,9 @@ public class Stats : MonoBehaviour
 
         turns -= HPRegen;
 
-        if (entity != null && entity.isPlayer)
+        if (entity != null && entity.isPlayer && hasTraitEffect(TraitEffects.Fast_Metabolism))
         {
-            if (hasTraitEffect(TraitEffects.Fast_Metabolism))
-                turns -= 3;
-            if (hasTraitEffect(TraitEffects.Slow_Metabolism))
-                turns += 2;
+            turns -= 3;
         }
 
         return Mathf.Clamp(turns, 3, 50);

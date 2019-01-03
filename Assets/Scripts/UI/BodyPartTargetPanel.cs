@@ -24,13 +24,26 @@ public class BodyPartTargetPanel : MonoBehaviour
 
         foreach (BodyPart b in bodyParts)
         {
-            GameObject g = (GameObject)Instantiate(bpButton, bpAnchor);
+            GameObject g = Instantiate(bpButton, bpAnchor);
             Text buttonText = g.GetComponentInChildren<Text>();
 
             if (!b.isAttached || Amputate && !b.severable)
                 buttonText.text = "<color=grey>" + b.displayName + "</color>";
             else
-                buttonText.text = b.displayName;
+            {
+                if (selType == SelectionType.CalledShot)
+                {
+                    float hitChance = 100.0f - ObjectManager.playerEntity.fighter.MissChance(bod.entity.stats, b);
+                    string perc = UserInterface.ColorByPercent(hitChance.ToString() + "%", (int)hitChance);
+                    int armor = b.armor + b.equippedItem.armor;
+
+                    buttonText.text = b.displayName + " <color=silver>[" + armor.ToString() + "]</color>  -  (" + perc + ")";
+                }
+                else
+                {
+                    buttonText.text = b.displayName;
+                }
+            }
 
             g.GetComponent<ItemButton>().icon.enabled = false;
             g.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
@@ -63,7 +76,7 @@ public class BodyPartTargetPanel : MonoBehaviour
                 break;
 
             case SelectionType.CalledShot:
-                ObjectManager.playerEntity.fighter.Attack(targetBody.entity.stats, false, bp, 5);
+                ObjectManager.playerEntity.fighter.Attack(targetBody.entity.stats, false, bp, 1);
                 World.userInterface.CloseWindows();
                 break;
 

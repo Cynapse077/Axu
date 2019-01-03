@@ -1,6 +1,4 @@
 ﻿using LitJson;
-using System.Collections.Generic;
-using System;
 
 public class ZoneBlueprint
 {
@@ -8,7 +6,6 @@ public class ZoneBlueprint
     public int tileID, amount, radiation;
     public bool walkable, expand, isStart, friendly;
     public Placement placement;
-    public Border border;
     public ZoneBlueprint[] neighbors;
     public ZoneBlueprint parent;
 
@@ -23,7 +20,6 @@ public class ZoneBlueprint
         isStart = _isStart;
         friendly = _friendly;
 
-        border = null;
         placement = null;
         underground = null;
         radiation = 0;
@@ -55,26 +51,10 @@ public class ZoneBlueprint
                 zb.placement.relativePosition = new Coord((int)dat["Place At"]["Relative"][0], (int)dat["Place At"]["Relative"][1]);
             if (dat["Place At"].ContainsKey("Location"))
                 zb.placement.landmark = dat["Place At"]["Location"].ToString();
-            if (dat["Place At"].ContainsKey("Distance From Start"))
-                zb.placement.distFromStart = (int)dat["Place At"]["Distance From Start"];
-        }
 
-        if (dat.ContainsKey("Border"))
-        {
-            zb.border = new Border
+            if (dat["Place At"].ContainsKey("Mainland"))
             {
-                width = (int)dat["Border"]["Width"],
-                tileID = dat["Border"]["Tile ID"].ToString()
-            };
-
-            if (dat["Border"].ContainsKey("Exclude"))
-            {
-                zb.border.exclude = new Coord[dat["Border"]["Exclude"].Count];
-
-                for (int i = 0; i < dat["Border"]["Exclude"].Count; i++)
-                {
-                    zb.border.exclude[i] = new Coord((int)dat["Border"]["Exclude"][i][0], (int)dat["Border"]["Exclude"][i][1]);
-                }
+                zb.placement.onMain = (bool)dat["Place At"]["Mainland"];
             }
         }
 
@@ -106,14 +86,7 @@ public class ZoneBlueprint
         public string zoneID;
         public Coord relativePosition;
         public string landmark;
-        public int distFromStart;
-    }
-
-    public class Border
-    {
-        public int width;
-        public Coord[] exclude;
-        public string tileID;
+        public bool onMain;
     }
 }
 
