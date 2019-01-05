@@ -10,21 +10,32 @@ end
 
 --Unstable Liquid
 function OnDrink_Unstable(stats) 
+	Log("The unstable mixture explodes!")
 	ObjectManager.SpawnExplosion(nil, stats.entity.myPos)
 end
 
 function OnSplash_Unstable(stats) 
+	Log("The unstable mixture explodes!")
 	ObjectManager.SpawnExplosion(nil, stats.entity.myPos)
 end	
 
 --Fresh Water
 function OnDrink_Water(stats) 
-
+	Log("Very refreshing.")
 end
 
 --Salt Water
 function OnDrink_SaltWater(stats) 
+	Log("Yuck! It's very salty.")
+end
 
+--Preservative
+function OnCoat_Preservative(item)
+	item.Preserve()
+end
+
+function OnDrink_Preservative(stats)
+	stats.AddStatusEffect("Poison", 3)
 end
 
 --Salamandis
@@ -53,7 +64,7 @@ function OnSplash_Poison(stats)
 end
 
 --Mutagen
-function OnDrink_Mutagen(stats)
+function OnSplash_Mutagen(stats)
 	if (stats.entity.isPlayer) then
 		stats.Radiate(Random(60, 90))
 	else
@@ -61,7 +72,7 @@ function OnDrink_Mutagen(stats)
 	end
 end
 
-function OnSplash_Mutagen(stats)
+function OnDrink_Mutagen(stats)
 	if (stats.entity.isPlayer) then
 		stats.Radiate(100)
 	else
@@ -79,7 +90,7 @@ function OnDrink_Lunium(stats)
 end
 
 function OnSplash_Lunium(stats)
-	if (stats.entity.isPlayer and Random(0, 100) < 20) then
+	if (stats.entity.isPlayer and Random(0, 100) < 50) then
 		stats.CureRandomMutations(1)
 	end
 
@@ -88,7 +99,7 @@ end
 
 --Alcohol
 function OnDrink_Alcohol(stats)
-	stats.AddStatusEffect("Drunk", 100, 200)
+	stats.AddStatusEffect("Drunk", 20, 60)
 
 	if (Random(0, 100) < 10) then
 		stats.AddStatusEffect("Sick", Random(11, 30))
@@ -116,18 +127,17 @@ end
 --Vomit
 function OnDrink_Vomit(stats)
 	stats.AddStatusEffect("Sick", Random(11, 65))
-	ObjectManager.CreatePoolOfLiquid(stats.entity.myPos, TileMap.WorldPosition, TileMap.currentElevation, "liquid_vomit", 1);
 	Log("You retch.")
 end
 
 --Blood
 function OnDrink_Blood(stats)
-
+	
 end
 
 --Vampiric Blood
 function OnDrink_Blood_Vamp(stats)
-	if (stats.entity.isPlayer and not stats.hasTrait("pre_vamp")) then
+	if (stats.entity.isPlayer and not stats.hasTrait("pre_vamp") and not stats.hasTrait("vampirism")) then
 		stats.InitializeNewTrait(TraitList.GetTraitByID("pre_vamp"))
 		Alert.CustomAlert_WithTitle("Vampirism!", "You have contracted Fledgling Vampirism from drinking tainted blood!")
 		OnDrink_Blood(stats)

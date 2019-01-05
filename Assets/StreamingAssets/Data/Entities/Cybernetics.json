@@ -44,9 +44,6 @@
             "Stats" : [
                 { "Stat" : "Stealth", "Amount" : 3 }
             ]
-        },
-		{
-		
-		}
+        }
     ]
 }

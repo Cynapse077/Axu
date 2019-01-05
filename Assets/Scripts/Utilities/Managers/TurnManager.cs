@@ -145,21 +145,29 @@ public class TurnManager : MonoBehaviour
         foreach (NPC n in World.objectManager.npcClasses)
         {
             if (n.HasFlag(NPC_Flags.Merchant) || n.HasFlag(NPC_Flags.Book_Merchant) || n.HasFlag(NPC_Flags.Doctor))
+            {
                 n.ReshuffleInventory();
+            }
         }
+
+        World.objectManager.SaveGame();
     }
 
     void TurnAdvanceMethod()
     {
         if (playerEntity == null)
+        {
             return;
+        }
 
         turn++;
         TimeOfDay++;
         turnsSinceWeatherChange++;
 
         if (incrementTurnCounter != null)
+        {
             incrementTurnCounter();
+        }
 
 
         List<BodyPart.Hand> hands = ObjectManager.playerEntity.body.Hands;
@@ -167,7 +175,7 @@ public class TurnManager : MonoBehaviour
         //causes equipped items to degrade with charges
         foreach (BodyPart.Hand h in hands)
         {
-            if (h.EquippedItem != null && h.EquippedItem.HasProp(ItemProperty.Degrade))
+            if (h.EquippedItem != null && (h.EquippedItem.HasProp(ItemProperty.Degrade) || h.EquippedItem.HasCComponent<CRot>()))
             {
                 if (!h.EquippedItem.UseCharge() && h.EquippedItem.HasProp(ItemProperty.DestroyOnZeroCharges))
                 {

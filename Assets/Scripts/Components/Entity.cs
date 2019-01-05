@@ -87,9 +87,17 @@ public class Entity : MonoBehaviour
     {
         get
         {
+            if (stats != null && stats.HasEffect("Blind"))
+            {
+                return 0;
+            }
+
             int lgt = 4;
+
             if (World.turnManager == null)
+            {
                 return lgt;
+            }
 
             if (World.tileMap.currentElevation < 0)
             {
@@ -111,7 +119,9 @@ public class Entity : MonoBehaviour
         get
         {
             if (mPos == null)
+            {
                 mPos = new Coord(0, 0);
+            }
 
             mPos.x = posX;
             mPos.y = posY;
@@ -387,7 +397,7 @@ public class Entity : MonoBehaviour
                 return false;
             }
 
-            if (targetCell.entity != null || targetCell.mapObjects.Count > 0)
+            if (targetCell.entity != null || targetCell.BlocksSpearAttacks())
             {
                 if (targetCell.entity != null)
                 {
@@ -965,10 +975,14 @@ public class Entity : MonoBehaviour
     public bool inSight(int cX, int cY)
     {
         if (!Manager.lightingOn)
+        {
             return true;
+        }
 
         if (stats != null && stats.HasEffect("Blind") || myPos.DistanceTo(new Coord(cX, cY)) >= sightRange && !World.tileMap.IsTileLit(cX, cY))
+        {
             return false;
+        }
 
         int dx = cX - posX, dy = cY - posY;
         int nx = Mathf.Abs(dx), ny = Mathf.Abs(dy);
@@ -1172,7 +1186,9 @@ public class Entity : MonoBehaviour
         bool hitAnEnemy = false;
 
         if (!World.tileMap.WalkableTile(x, y))
+        {
             return false;
+        }
 
         Entity e = World.tileMap.GetCellAt(x, y).entity;
 
@@ -1245,7 +1261,9 @@ public class Entity : MonoBehaviour
     public int LightBonus()
     {
         if (inventory == null || stats == null || body.bodyParts == null)
+        {
             return 0;
+        }
 
         int lightAmount = 0;
         List<Item> equippedItems = inventory.EquippedItems();
@@ -1262,7 +1280,9 @@ public class Entity : MonoBehaviour
                     if (eq.HasProp(ItemProperty.Degrade))
                     {
                         if (eq.Charges() > 0)
+                        {
                             lightAmount += sm.Amount;
+                        }
                     }
                     else
                         lightAmount += sm.Amount;

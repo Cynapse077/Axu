@@ -47,6 +47,17 @@
                 { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
             ]
         },
+		{
+			"ID" : "liquid_preservative",
+			"Name" : "Preservative",
+			"Description" : "Coat organic matter with this to make it rot slower.",
+			"Frequency" : 10,
+			"Color" : [ 100, 187, 243 ],
+			"Price Per Unit" : 10,
+			"Events" : [
+				{ "Event" : "OnCoat", "File" : "Liquids", "Function" : "OnCoat_Preservative"}
+			]
+		},
         {
             "ID" : "liquid_salamandis",
             "Name" : "<color=red>Salamandis</color>",

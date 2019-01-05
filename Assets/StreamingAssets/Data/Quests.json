@@ -119,8 +119,7 @@
             "ID" : "ensis6",
             "Description" : "Arthomas told you to <color=yellow>meet</color> Lomis, head of the Ensis.",
             "Rewards" : {
-                "XP" : 5,
-				"Items" : [ "pickaxe" ]
+                "XP" : 5
             },
             "Steps" : [
                 { "Goal" : "Talk To", "NPC" : "lomis" }
@@ -210,7 +209,7 @@
             "Steps" : [
                 { "Goal" : "Talk To", "NPC" : "corith" }
             ],
-            "End Dialogue" : "Ensis? Here? Or simply a freelancer? How strange. Have you come to murder me and my kin? Perhaps you wish to view the situation from a less narrow-minded view? Forgive me, my name is Corith. I am the high priest of this cathedral, devoted to the <color=cyan>Deep Ones</color> I can tell you're new here, and the conflict goes a bit beyond your understanding. Do not fret, I understand your desire to return home. That's what they promised you, yes? If you hear out our side, I will tell you everything you wish to know. Talk to me again when you are ready.",
+            "End Dialogue" : "Ensis? Here? Or simply a freelancer? How strange. Have you come to murder me and my kin? Perhaps you wish to view the situation from a less narrow-minded perspective? Forgive me, my name is Corith. I am the high priest of this cathedral, devoted to the <color=cyan>Deep Ones</color> I can tell you're new here, and the conflict goes a bit beyond your understanding. Do not fret, I understand your desire to return home. That's what they promised you, yes? If you hear out our side, I will tell you everything you wish to know. Talk to me again when you are ready.",
 
             "Chained Quest" : "ensis12"
         },
@@ -224,7 +223,7 @@
             "Steps" : [
                 { "Goal" : "Talk To", "NPC" : "corith" }
             ],
-            "End Dialogue" : "Let me ask you one thing: How are we to forge ahead while looking over our shoulder, drilling the mistakes of others into our skull? Our founder, <color=cyan>Isazna</color> spoke to ancient dieties presiding over this planet, and was offered the chance to make a new start. Not only surviving as we do now, we will thrive with the aid of <color=yellow>The Deep Ones</color>, our gods. Their influence is great, but not as powerful as it will become. Soon the first Deep One, Xzol will be transferred into a physical body. The rest will follow. The ritual may begin soon. \n\nNow... kill me if you must, and return to your master. Perhaps the facts I've given you will be useful. I do hope you see what right we are doing, however.",
+            "End Dialogue" : "Let me ask you one thing: How are we to forge ahead while looking over our shoulder, drilling the mistakes of others into our skull? Our founder, <color=cyan>Isazna</color> spoke to ancient dieties presiding over this planet, and was offered the chance to make a new start. Not only surviving as we do now, we will thrive with the aid of <color=yellow>The Deep Ones</color>, our gods. Their influence is great, but not as powerful as it will become. Soon the first Deep One, Xzol will be transferred into a physical body. The rest will follow. The ritual may begin soon. \n\nNow... kill me if you must, and return to your master. Perhaps the facts I've given you will be useful. I do, however, hope you see what right we are doing,",
 
             "Chained Quest" : "ensis13"
         },

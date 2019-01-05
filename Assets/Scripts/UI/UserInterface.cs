@@ -42,6 +42,7 @@ public class UserInterface : MonoBehaviour
     public LookTooltipPanel LTPanel;
     public LiquidActionsPanel LAPanel;
     public ContextualActionsPanel CAPanel;
+    public GiveItemPanel GIPanel;
 
     public GameObject loadingGO;
     public Image fadePanel;
@@ -563,13 +564,14 @@ public class UserInterface : MonoBehaviour
 
     public void ShowNPCDialogue(DialogueController diaController)
     {
-        selectedItemNum = 0;
-        uiState = UIWindow.Dialogue;
-        DPanel.gameObject.SetActive(true);
-        DPanel.Display(diaController);
-        shopInv = diaController.GetComponent<Inventory>();
-
-        EventHandler.instance.OnTalkTo(diaController.GetComponent<BaseAI>().npcBase);
+        if (!EventHandler.instance.OnTalkTo(diaController.GetComponent<BaseAI>().npcBase))
+        {
+            selectedItemNum = 0;
+            uiState = UIWindow.Dialogue;
+            DPanel.gameObject.SetActive(true);
+            DPanel.Display(diaController);
+            shopInv = diaController.GetComponent<Inventory>();
+        }
     }
 
     public void Dialogue_Chat(Faction faction, string npcID)
@@ -1021,6 +1023,7 @@ public class UserInterface : MonoBehaviour
         UsePanel.gameObject.SetActive(false);
         LAPanel.gameObject.SetActive(false);
         CAPanel.gameObject.SetActive(false);
+        GIPanel.gameObject.SetActive(false);
         pausePanel.TogglePause(false);
     }
 

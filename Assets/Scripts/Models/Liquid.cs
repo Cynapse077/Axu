@@ -74,16 +74,30 @@ public class Liquid : IWeighted
     public void Drink(Stats stats)
     {
         if (events.Find(x => x.evName == "OnDrink") != null)
+        {
             events.Find(x => x.evName == "OnDrink").CallEvent_Params("OnDrink", stats);
+        }
 
         if (addictiveness > 0 && (World.difficulty.Level == Difficulty.DiffLevel.Rogue || World.difficulty.Level == Difficulty.DiffLevel.Hunted))
+        {
             stats.ConsumedAddictiveSubstance(ID, true);
+        }
     }
 
     public void Splash(Stats stats)
     {
         if (events.Find(x => x.evName == "OnSplash") != null)
+        {
             events.Find(x => x.evName == "OnSplash").CallEvent_Params("OnSplash", stats);
+        }
+    }
+
+    public void Coat(Item item)
+    {
+        if (events.Find(x => x.evName == "OnCoat") != null)
+        {
+            events.Find(x => x.evName == "OnCoat").CallEvent_Params("OnCoat", item);
+        }
     }
 
     struct MixingOutput

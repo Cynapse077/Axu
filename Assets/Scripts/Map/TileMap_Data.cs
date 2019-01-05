@@ -175,13 +175,16 @@ public class TileMap_Data
     //Final pass, defining details
     void FinalPass()
     {
-        for (int x = 0; x < Width; x++)
+        if (!visited)
         {
-            for (int y = 0; y < Height; y++)
+            for (int x = 0; x < Width; x++)
             {
-                if (map_data[x, y] == Tile.tiles["Door"])
+                for (int y = 0; y < Height; y++)
                 {
-                    PlaceDoor(x, y);
+                    if (map_data[x, y] == Tile.tiles["Door"])
+                    {
+                        PlaceDoor(x, y);
+                    }
                 }
             }
         }

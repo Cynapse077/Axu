@@ -32,6 +32,19 @@ public class Cell
         protected set { inSight = value; }
     }
 
+    public bool BlocksSpearAttacks()
+    {
+        for (int i = 0; i < mapObjects.Count; i++)
+        {
+            if (mapObjects[i].isDoor_Closed || mapObjects[i].objectBase.solid)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public bool Walkable
     {
         get { return (entity == null && mapObjects.FindAll(x => x.objectBase.solid).Count == 0); }

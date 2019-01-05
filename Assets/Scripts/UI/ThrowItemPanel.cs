@@ -3,15 +3,16 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-public class ThrowItemPanel : UIPanel {
-	[Header("Prefabs")]
-	public GameObject inventoryButton;
-	[Header("Children")]
-	public Transform inventoryBase;
-	public TooltipPanel ToolTipPanel;
-	public Scrollbar scrollBar;
+public class ThrowItemPanel : UIPanel
+{
+    [Header("Prefabs")]
+    public GameObject inventoryButton;
+    [Header("Children")]
+    public Transform inventoryBase;
+    public TooltipPanel ToolTipPanel;
+    public Scrollbar scrollBar;
 
-	Inventory playerInventory;
+    Inventory playerInventory;
     List<Item> throwingItems;
 
     public override void Initialize()
@@ -41,20 +42,22 @@ public class ThrowItemPanel : UIPanel {
         World.userInterface.CloseWindows();
     }
 
-	void UpdateInventory() {
-		inventoryBase.DespawnChildren();
+    void UpdateInventory()
+    {
+        inventoryBase.DespawnChildren();
 
         SelectedMax = 0;
         SelectedNum = 0;
-		throwingItems = playerInventory.Items_ThrowingFirst();
-		
-		for (int i = 0; i < throwingItems.Count; i++) {
-			GameObject g = SimplePool.Spawn(inventoryButton, inventoryBase);
+        throwingItems = playerInventory.Items_ThrowingFirst();
+
+        for (int i = 0; i < throwingItems.Count; i++)
+        {
+            GameObject g = SimplePool.Spawn(inventoryButton, inventoryBase);
             g.GetComponent<ItemButton>().icon.sprite = SwitchSprite(throwingItems[i]);
-			g.GetComponentInChildren<Text>().text = throwingItems[i].InvDisplay("none");
-            g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex() ));
+            g.GetComponentInChildren<Text>().text = throwingItems[i].InvDisplay("none");
+            g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex()));
             SelectedMax++;
-		}
+        }
 
         if (SelectedMax > 0)
         {
@@ -64,7 +67,7 @@ public class ThrowItemPanel : UIPanel {
         }
 
         UpdateTooltip();
-	}
+    }
 
     Sprite SwitchSprite(Item item)
     {
@@ -73,14 +76,16 @@ public class ThrowItemPanel : UIPanel {
         return SpriteManager.GetObjectSprite(id);
     }
 
-    public void UpdateTooltip() {
-		if (playerInventory.items.Count == 0) {
-			ToolTipPanel.gameObject.SetActive(false);
-			return;
-		}
+    public void UpdateTooltip()
+    {
+        if (playerInventory.items.Count == 0)
+        {
+            ToolTipPanel.gameObject.SetActive(false);
+            return;
+        }
 
-		ToolTipPanel.gameObject.SetActive(playerInventory.items.Count > 0);
-		bool display = (playerInventory.items.Count > 0 && SelectedNum < SelectedMax);
-		ToolTipPanel.UpdateTooltip(playerInventory.Items_ThrowingFirst()[SelectedNum], display);
-	}
+        ToolTipPanel.gameObject.SetActive(playerInventory.items.Count > 0);
+        bool display = (playerInventory.items.Count > 0 && SelectedNum < SelectedMax);
+        ToolTipPanel.UpdateTooltip(playerInventory.Items_ThrowingFirst()[SelectedNum], display);
+    }
 }

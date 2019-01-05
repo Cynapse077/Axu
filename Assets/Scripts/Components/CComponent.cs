@@ -398,10 +398,14 @@ public class CLiquidContainer : CComponent
     public int Fill(Liquid l)
     {
         if (currentAmount >= capacity)
+        {
             return 0;
+        }
 
         if (liquid == null)
+        {
             liquid = new Liquid(l, 0);
+        }
 
         int amount = l.units;
         int poured = 0;
@@ -413,11 +417,15 @@ public class CLiquidContainer : CComponent
             poured++;
 
             if (roomLeft <= 0 || currentAmount >= capacity)
+            {
                 break;
+            }
         }
 
         if (l.ID != liquid.ID)
+        {
             liquid = Liquid.Mix(new Liquid(l, 0), new Liquid(liquid, currentAmount));
+        }
 
         return poured;
     }
@@ -445,7 +453,9 @@ public class CLiquidContainer : CComponent
     public void CheckLiquid()
     {
         if (liquid != null && liquid.units <= 0)
+        {
             liquid = null;
+        }
     }
 
     public string GetInfo()
@@ -453,10 +463,14 @@ public class CLiquidContainer : CComponent
         string s = (liquid == null) ? LocalizationManager.GetContent("IT_LiquidUnits_Empty") : LocalizationManager.GetContent("IT_LiquidUnits") + "\n(" + liquid.Description + ")";
 
         if (s.Contains("[INPUT1]"))
+        {
             s = s.Replace("[INPUT1]", liquid.units.ToString());
+        }
 
         if (s.Contains("[INPUT2]"))
+        {
             s = s.Replace("[INPUT2]", liquid.Name);
+        }
 
         return s;
     }

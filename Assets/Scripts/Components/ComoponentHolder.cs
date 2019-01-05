@@ -28,6 +28,14 @@ public class ComponentHolder
         return t;
     }
 
+    public void RemoveCComponent<T>() where T : CComponent
+    {
+        if (components.Find(x => x.GetType() == typeof(T)) != null)
+        {
+            components.Remove(components.Find(x => x.GetType() == typeof(T)));
+        }
+    }
+
     public CComponent[] MyComponents()
     {
         return components.ToArray();

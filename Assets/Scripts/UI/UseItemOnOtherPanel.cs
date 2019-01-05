@@ -60,7 +60,9 @@ public class UseItemOnOtherPanel : MonoBehaviour
         inventoryBase.DespawnChildren();
 
         if (!gameObject.activeSelf)
+        {
             return;
+        }
 
         relevantItems = (p != null) ? inventory.items.FindAll(p) : relevantItems;
 
@@ -104,9 +106,15 @@ public class UseItemOnOtherPanel : MonoBehaviour
     void Coat(int index)
     {
         CLiquidContainer liq = itemToUse.GetCComponent<CLiquidContainer>();
+
+        if (liq == null)
+        {
+            return;
+        }
+
         Item target = relevantItems[index];
 
-        if (target.GetCComponent<CCoat>() != null)
+        if (target.HasCComponent<CCoat>())
         {
             CCoat cc = target.GetCComponent<CCoat>();
             cc.liquid = new Liquid(liq.liquid, 1);
@@ -118,8 +126,9 @@ public class UseItemOnOtherPanel : MonoBehaviour
             target.AddComponent(cc);
         }
 
-        itemToUse.GetCComponent<CLiquidContainer>().liquid.units--;
-        itemToUse.GetCComponent<CLiquidContainer>().CheckLiquid();
+        liq.liquid.Coat(target);
+        liq.liquid.units--;
+        liq.CheckLiquid();
     }
 
     void Fill(int index)

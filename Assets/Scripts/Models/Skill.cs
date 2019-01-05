@@ -132,6 +132,11 @@ public class Skill
         }
         else
         {
+            if (level == 1)
+            {
+                amount *= 2;
+            }
+
             XP += amount;
 
             while (XP >= XPToNext)

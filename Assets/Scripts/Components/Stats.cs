@@ -1200,7 +1200,9 @@ public class Stats : MonoBehaviour
             for (int j = 0; j < traits[i].stats.Count; j++)
             {
                 if (traits[i].stats[j].Stat == "Light")
+                {
                     light += traits[i].stats[j].Amount;
+                }
             }
         }
 
@@ -1235,16 +1237,22 @@ public class Stats : MonoBehaviour
     public void AddProficiencyXP(WeaponProficiency prof, int amount)
     {
         if (!entity.isPlayer)
+        {
             return;
+        }
 
         double divisible = (prof.level < 1) ? 1.0 : prof.level;
         double amt = amount / divisible;
 
         if (prof.level <= 1)
+        {
             amt *= 2;
+        }
 
         if (prof.AddXP(amt))
+        {
             CombatLog.NameItemMessage("Inc_Prof", prof.name, (prof.level - 1).ToString());
+        }
     }
 
     public void IncreaseArmorProfs(BodyPart part)

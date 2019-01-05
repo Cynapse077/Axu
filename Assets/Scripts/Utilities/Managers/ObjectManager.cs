@@ -860,7 +860,6 @@ public class ObjectManager : MonoBehaviour
         World.userInterface.loadingGO.GetComponentInChildren<UnityEngine.UI.Text>().text = "Saving...";
         World.tileMap.OnScreenChange -= CheckArrowsEnabled;
 
-        yield return new WaitForSeconds(0.01f);
         if (playerEntity != null)
         {
             tileMap.CurrentMap.lastTurnSeen = World.turnManager.turn;
@@ -892,6 +891,30 @@ public class ObjectManager : MonoBehaviour
         MyConsole.ClearLog();
 
         yield return ReturnToMainMenu();
+    }
+
+    public void SaveGame()
+    {
+        StartCoroutine(QuickSave());
+    }
+
+    IEnumerator QuickSave()
+    {
+        World.userInterface.loadingGO.SetActive(true);
+        World.userInterface.loadingGO.GetComponentInChildren<UnityEngine.UI.Text>().text = "Saving...";
+
+        if (playerEntity != null)
+        {
+            tileMap.CurrentMap.lastTurnSeen = World.turnManager.turn;
+            GetComponent<SaveData>().SaveNPCs(npcClasses);
+
+            while (!NewWorld.doneSaving)
+            {
+                yield return null;
+            }
+        }
+
+        World.userInterface.loadingGO.SetActive(false);
     }
 
     IEnumerator ReturnToMainMenu()

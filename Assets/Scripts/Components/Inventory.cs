@@ -459,6 +459,11 @@ public class Inventory : MonoBehaviour
         return tItems;
     }
 
+    public List<Item> FilteredItems(System.Predicate<Item> p)
+    {
+        return items.FindAll(p);
+    }
+
     public bool CanPickupItem(Item i)
     {
         if (!i.lootable || i.HasProp(ItemProperty.Pool))

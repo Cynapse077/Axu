@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class MapObjectSprite : MonoBehaviour
 {
-    const int maxPulses = 300;
+    const int MAX_PULSES = 300;
 
     public MapObject objectBase;
     public Transform childObject;
@@ -160,7 +160,7 @@ public class MapObjectSprite : MonoBehaviour
 
     void SendPulses(Coord previous, int moveCount, bool pulseOn)
     {
-        if (moveCount > maxPulses)
+        if (moveCount > MAX_PULSES)
         {
             return;
         }
@@ -572,7 +572,7 @@ public class MapObjectSprite : MonoBehaviour
             ObjectManager.playerEntity.CancelWalk();
             return;
         }
-
+        
         World.soundManager.OpenDoor();
         World.tileMap.SoftRebuild();
     }

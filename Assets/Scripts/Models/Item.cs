@@ -583,6 +583,15 @@ public class Item : ComponentHolder
             return 0;
     }
 
+    public void Preserve()
+    {
+        if (HasCComponent<CRot>())
+        {
+            RemoveCComponent<CRot>();
+            AddProperty(ItemProperty.Preserved);
+        }
+    }
+
     public void Unload()
     {
         CFirearm cf = GetCComponent<CFirearm>();
@@ -610,7 +619,7 @@ public class Item : ComponentHolder
 
             if (cr.current == 200)
             {
-                CombatLog.NewMessage("Your " + displayName + " is about to spoil.");
+                CombatLog.NewMessage("<color=grey>Your " + displayName + " is about to spoil.</color>");
             }
 
             return true;
@@ -701,6 +710,11 @@ public class Item : ComponentHolder
 
             string addition = " (" + ((cl.liquid != null) ? cl.liquid.Name : LocalizationManager.GetContent("IT_LiquidUnits_Empty")) + ")";
             baseName += addition;
+        }
+
+        if (HasProp(ItemProperty.Preserved))
+        {
+            baseName += " <color=silver>(Preserved)</color>";
         }
 
         return baseName;
@@ -917,7 +931,7 @@ public enum ItemProperty
     Weapon, Two_Handed, Ranged, Dig, Quick, Very_Quick, Slow, Very_Slow, Throwing_Wep, Disarm, Shock_Nearby, Burst, Quick_Reload,
     Legible, Explosive, Edible, Severed_BodyPart, Radiate, Cannibalism, Corpse,
     Tome, Replacement_Limb, Flying,
-    Quest_Item, Randart, Unique, Addictive, Bow, DrainHealth, Pool, NoMods
+    Quest_Item, Randart, Unique, Addictive, Bow, DrainHealth, Pool, NoMods, Preserved
 }
 
 [System.Serializable]

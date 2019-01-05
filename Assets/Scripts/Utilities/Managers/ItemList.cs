@@ -143,8 +143,7 @@ public static class ItemList
             if (SeedManager.combatRandom.Next(100) <= threshold)
             {
                 string[] sk = new string[] {
-                    "juke", "charge", "energize", "firestream", "icestream", "radblast", "firewall",
-                    "confsquare", "blink", "sprint"
+                    "juke", "charge", "firestream", "icestream", "radblast", "firewall", "confsquare", "sprint"
                 };
 
                 if (!newItem.HasCComponent<CAbility>())
@@ -157,7 +156,9 @@ public static class ItemList
             }
 
             if (threshold >= 20)
+            {
                 return i;
+            }
         }
 
         return newItem;

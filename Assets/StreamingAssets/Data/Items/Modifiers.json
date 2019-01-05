@@ -188,7 +188,7 @@
             "ID" : "scoped",
             "Cost" : 80,
             "Stat Mods" : [
-                { "Stat" : "Accuracy", "Amount" : 3 }
+                { "Stat" : "Accuracy", "Amount" : 2 }
             ],
             "Description" : "It has an attached scope.",
             "Mod Type" : "Ranged"

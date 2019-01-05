@@ -284,7 +284,6 @@ public class Quest : EventContainer
     {
         if (!isComplete)
         {
-
             if (!skipEvent)
             {
                 RunEvent(this, QuestEvent.EventType.OnStart);

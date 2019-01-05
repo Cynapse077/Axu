@@ -23,7 +23,9 @@ public class ShopPanel : MonoBehaviour
     public void Init(Inventory mInv)
     {
         if (playerInventory == null)
+        {
             playerInventory = ObjectManager.playerEntity.inventory;
+        }
 
         merchantInventory = mInv;
         UpdateInventories();
@@ -38,9 +40,6 @@ public class ShopPanel : MonoBehaviour
 
         invMoney.text = string.Format("<color=yellow>$</color>{0}", playerInventory.gold.ToString());
         invCap.text = string.Format("<color=olive>({0} / {1})</color>", playerInventory.items.Count.ToString(), playerInventory.maxItems.ToString());
-
-        if (!gameObject.activeSelf)
-            return;
 
         foreach (Item it in merchantInventory.items)
         {

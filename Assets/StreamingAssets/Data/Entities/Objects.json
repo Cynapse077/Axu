@@ -192,7 +192,7 @@
 				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" },
 				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Door_OnPulseReceived" }
 			],
-            "Description" : "A doorway commonly found in Magna Turrim. Open.",
+            "Description" : "A strange door. Open.",
 			"Pulse" : {
 				"Receive" : true
 			}

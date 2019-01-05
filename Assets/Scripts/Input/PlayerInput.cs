@@ -54,7 +54,9 @@ public class PlayerInput : MonoBehaviour
     void SetStoredTravelPosition()
     {
         if (storedTravelPos == null)
+        {
             storedTravelPos = new Coord(World.tileMap.worldCoordX, World.tileMap.worldCoordY);
+        }
         else
         {
             storedTravelPos.x = World.tileMap.worldCoordX;
