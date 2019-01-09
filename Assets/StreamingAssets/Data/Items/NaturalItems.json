@@ -585,7 +585,7 @@
             "Name" : "Hard Fist",
             "Type" : "Unarmed",
             "Damage" : "1d4",
-            "FlavorText" : "A pair of fists, tough as steel.",
+            "FlavorText" : "A clenched fist, tough as steel.",
             "Attack Type" : "Bash",
             "Properties" : [
                 "Weapon",
@@ -593,6 +593,22 @@
             ],
             "DmgTypes" : [
                 "Blunt"
+            ],
+            "Lootable" : false
+        },
+		{
+            "ID" : "foldingblade",
+            "Name" : "Folding Blade",
+            "Type" : "Unarmed",
+            "Damage" : "1d8",
+            "FlavorText" : "A blade that can be folded into your arm.",
+            "Attack Type" : "Slash",
+            "Properties" : [
+                "Weapon",
+                "Quick"
+            ],
+            "DmgTypes" : [
+                "Slash"
             ],
             "Lootable" : false
         },

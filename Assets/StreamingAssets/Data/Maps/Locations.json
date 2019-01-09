@@ -64,6 +64,16 @@
                 "Location" : "Village"
             }
         },
+		{
+            "ID" : "Bazaar",
+            "Display" : "Bazaar",
+            "Tile Index" : 23,
+            "Walkable" : true,
+            "Friendly" : true,
+            "Place At" : {
+                "Biome" : "Any Land"
+            }
+        },
         {
             "ID" : "Arena",
             "Display" : "Arena",
@@ -462,7 +472,7 @@
 			"Depth" : 4,
 			"Light" : 5,
 			"Rules" : {
-				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ],
+				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "CellAuto" ],
 				"Feature" : {
 					"ID" : "River",
 					"Chance" : 5
@@ -592,7 +602,7 @@
 		{
 			"ID" : "Prison",
 			"Display" : "Prison/Lab",
-			"Depth" : 6,
+			"Depth" : 7,
 			"Light" : 10,
 			"Rules" : {
 				"Load" : true

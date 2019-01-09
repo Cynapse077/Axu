@@ -84,7 +84,11 @@
         {
             "Name" : "Cyborg",
             "Parts" : [ "head", "back", "chest_robot", "arm", "arm_robot", "leg_robot", "leg" ]
-        }
+        },
+		{
+			"Name" : "Hauler",
+			"Parts" : [ "head_robot", "back_robot", "chest_robot", "arm_robot", "arm_robot", "leg_robot", "leg_robot" ]
+		}
     ],
 
     "Body Parts" : [
@@ -93,7 +97,7 @@
             "ID" : "head",
             "Slot" : "Slot_Head",
             "Size" : 3,
-            "Stats" : [ { "Stat" : "Intelligence", "Amount" : 4 } ],
+            "Stats" : [ { "Stat" : "Intelligence", "Amount" : 2 } ],
             "Tags" : [ "OnSeverLast_Die" ],
             "Severable" : true,
             "Can Wear Gear" : true
@@ -103,7 +107,6 @@
             "ID" : "chest",
             "Slot" : "Slot_Chest",
             "Size" : 20,
-            "Stats" : [ { "Stat" : "Endurance", "Amount" : 1 } ],
             "Severable" : false,
             "Can Wear Gear" : true
         },
@@ -112,7 +115,6 @@
             "ID" : "body",
             "Slot" : "Slot_Chest",
             "Size" : 20,
-            "Stats" : [ { "Stat" : "Endurance", "Amount" : 1 } ],
             "Severable" : false,
             "Can Wear Gear" : true
         },
@@ -121,7 +123,6 @@
             "ID" : "back",
             "Slot" : "Slot_Back",
             "Size" : 5,
-            "Stats" : [ { "Stat" : "Endurance", "Amount" : 1 } ],
             "Severable" : false,
             "Can Wear Gear" : true
         },
@@ -149,7 +150,7 @@
             "ID" : "leg",
             "Slot" : "Slot_Leg",
             "Size" : 8,
-            "Stats" : [ { "Stat" : "Speed", "Amount" : 4 } ],
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 3 } ],
             "Severable" : true,
             "Can Wear Gear" : true
         },
@@ -167,7 +168,7 @@
             "ID" : "wing",
             "Slot" : "Slot_Wing",
             "Size" : 8,
-            "Stats" : [ { "Stat" : "Speed", "Amount" : 5 } ],
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 3 } ],
             "Severable" : true,
             "Can Wear Gear" : false
         },
@@ -176,7 +177,7 @@
             "ID" : "sm_tail",
             "Slot" : "Slot_Tail",
             "Size" : 2,
-            "Stats" : [ { "Stat" : "Dexterity", "Amount" : 1 } ],
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 1 } ],
             "Severable" : true,
             "Can Wear Gear" : true
         }, 
@@ -341,8 +342,7 @@
             "Name" : "Chasis",
             "ID" : "chest_robot",
             "Slot" : "Slot_Chest",
-            "Size" : 15,
-            "Stats" : [ { "Stat" : "Endurance", "Amount" : 2 } ],
+            "Size" : 25,
             "Tags" : [ "Synthetic" ],
             "Default Equipped" : "plating",
             "Severable" : false,
@@ -353,7 +353,6 @@
             "ID" : "back_robot",
             "Slot" : "Slot_Back",
             "Size" : 6,
-            "Stats" : [ { "Stat" : "Endurance", "Amount" : 2 } ],
             "Tags" : [ "Synthetic" ],
             "Default Equipped" : "plating",
             "Severable" : false,
@@ -364,10 +363,10 @@
             "ID" : "arm_robot",
             "Slot" : "Slot_Arm",
             "Size" : 8,
-            "Stats" : [ { "Stat" : "Strength", "Amount" : 4 } ],
+            "Stats" : [ { "Stat" : "Strength", "Amount" : 2 } ],
             "Tags" : [ "Grip", "Synthetic" ],
             "Default Equipped" : "plating",
-			"Wielding" : "fists",
+			"Wielding" : "fists_hard",
             "Severable" : true,
             "Can Wear Gear" : true
         },
@@ -376,7 +375,7 @@
             "ID" : "leg_robot",
             "Slot" : "Slot_Leg",
             "Size" : 8,
-            "Stats" : [ { "Stat" : "Speed", "Amount" : 5 } ],
+            "Stats" : [ { "Stat" : "Speed", "Amount" : 3 } ],
             "Tags" : [ "Synthetic" ],
             "Default Equipped" : "plating",
             "Severable" : true,

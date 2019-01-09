@@ -296,6 +296,14 @@ public class UserInterface : MonoBehaviour
         UsePanel.Init(i, inv, cmod.ItemsICanAddTo(inv.items), "Mod_Item");
     }
 
+    public void GiveItem(ItemProperty prop)
+    {
+        CloseWindows();
+        uiState = UIWindow.UseItemOnItem;
+        UsePanel.gameObject.SetActive(true);
+        UsePanel.Init(null,  ObjectManager.playerEntity.inventory, (x => x.HasProp(prop)), "Give Item");
+    }
+
     public void PourActions(Item cl)
     {
         CloseWindows();
@@ -564,14 +572,13 @@ public class UserInterface : MonoBehaviour
 
     public void ShowNPCDialogue(DialogueController diaController)
     {
-        if (!EventHandler.instance.OnTalkTo(diaController.GetComponent<BaseAI>().npcBase))
-        {
-            selectedItemNum = 0;
-            uiState = UIWindow.Dialogue;
-            DPanel.gameObject.SetActive(true);
-            DPanel.Display(diaController);
-            shopInv = diaController.GetComponent<Inventory>();
-        }
+        selectedItemNum = 0;
+        uiState = UIWindow.Dialogue;
+        DPanel.gameObject.SetActive(true);
+        DPanel.Display(diaController);
+        shopInv = diaController.GetComponent<Inventory>();
+
+        EventHandler.instance.OnTalkTo(diaController.GetComponent<BaseAI>().npcBase);
     }
 
     public void Dialogue_Chat(Faction faction, string npcID)
@@ -584,7 +591,9 @@ public class UserInterface : MonoBehaviour
         selectedItemNum = 0;
 
         if (DialogueList.nodes == null)
+        {
             DialogueList.Init();
+        }
 
         if (nodeID == "End")
         {
@@ -667,8 +676,11 @@ public class UserInterface : MonoBehaviour
 
             for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
             {
-                BaseAI bai = World.objectManager.onScreenNPCObjects[i].GetComponent<BaseAI>();
-                bai.OverrideHostility(false);
+                if (World.objectManager.onScreenNPCObjects[i].AI.npcBase.faction.ID == "bandits")
+                {
+                    BaseAI bai = World.objectManager.onScreenNPCObjects[i].GetComponent<BaseAI>();
+                    bai.OverrideHostility(false);
+                }
             }
         }
         else
@@ -677,8 +689,11 @@ public class UserInterface : MonoBehaviour
 
             for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
             {
-                BaseAI bai = World.objectManager.onScreenNPCObjects[i].GetComponent<BaseAI>();
-                bai.NoticePlayer();
+                if (World.objectManager.onScreenNPCObjects[i].AI.npcBase.faction.ID == "bandits")
+                {
+                    BaseAI bai = World.objectManager.onScreenNPCObjects[i].GetComponent<BaseAI>();
+                    bai.NoticePlayer();
+                }
             }
         }
     }

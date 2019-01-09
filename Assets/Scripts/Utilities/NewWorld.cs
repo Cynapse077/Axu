@@ -164,6 +164,11 @@ public class OldWorld
                 n.handItems.Add(SaveData.GetItemFromJsonData(npcData["HIt"][j]));
             }
 
+            if (npcData.ContainsKey("BPs"))
+            {
+                n.bodyParts = SaveData.GetBodyPartsFromJson(npcData["BPs"]);
+            }
+
             n.firearm = SaveData.GetItemFromJsonData(wData["NPCs"][i]["F"]);
 
             objM.CreateNPC(n);

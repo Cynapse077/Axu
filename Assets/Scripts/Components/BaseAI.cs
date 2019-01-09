@@ -66,7 +66,7 @@ public class BaseAI : MonoBehaviour
         entity.stats.onDeath += OnDeath;
         GetComponent<DialogueController>().SetupDialogueOptions();
 
-        npcBase.hostilityOverride = isHostile;
+        npcBase.hostilityOverride = false;
         npcBase.onScreen = true;
 
         passiveMarker.SetActive(!npcBase.isHostile && InSightOfPlayer());
@@ -154,6 +154,11 @@ public class BaseAI : MonoBehaviour
 
     public void Decision()
     {
+        if (entity == null)
+        {
+            return;
+        }
+
         if (npcBase.worldPosition != World.tileMap.WorldPosition)
         {
             Destroy(gameObject);
@@ -222,7 +227,7 @@ public class BaseAI : MonoBehaviour
         }
         else
         {
-            Wander();
+            PeacefulAction();
         }
     }
 
@@ -255,7 +260,9 @@ public class BaseAI : MonoBehaviour
     public bool ShouldAttack(BaseAI other)
     {
         if (other == null)
+        {
             return false;
+        }
 
         return (npcBase.faction.isHostileTo(other.npcBase.faction) || isFollower() && other.isHostile || other.isFollower() && isHostile || other.target == entity);
     }
@@ -292,20 +299,28 @@ public class BaseAI : MonoBehaviour
     void PeacefulAction()
     {
         if (target == null)
+        {
             SearchForTarget();
+        }
 
         if (target == null)
+        {
             Wander();
+        }
         else
+        {
             Hostile_Action();
+        }
     }
 
     void Hostile_Action()
     {
         if (target == null || SeedManager.combatRandom.Next(100) < 20)
+        {
             SearchForTarget();
+        }
 
-        if (target == null)
+        if (target == null || !isHostile && target == ObjectManager.playerEntity)
         {
             Wander();
             return;
@@ -382,7 +397,7 @@ public class BaseAI : MonoBehaviour
 
         foreach (Entity ent in World.objectManager.onScreenNPCObjects)
         {
-            if (ShouldAttack(ent.AI) && entity.inSight(ent.myPos))
+            if (!ent.isPlayer && ShouldAttack(ent.AI) && entity.inSight(ent.myPos))
             {
                 possibleTargets.Add(ent);
             }
@@ -556,12 +571,12 @@ public class BaseAI : MonoBehaviour
         return (dist < newSightRange && stealthRoll < perceptionRoll);
     }
 
-    public void AnswerCallForHelp(BaseAI bai)
+    public void AnswerCallForHelp(BaseAI bai, Entity targ)
     {
-        target = ObjectManager.playerEntity;
+        target = targ;
         hasAskedForHelp = true;
 
-        if (bai.npcBase.faction == npcBase.faction)
+        if (bai.npcBase.faction == npcBase.faction && targ == ObjectManager.playerEntity)
         {
             hasSeenPlayer = true;
             npcBase.hostilityOverride = true;
@@ -739,7 +754,7 @@ public class BaseAI : MonoBehaviour
         if (npcBase.faction != null && npcBase.faction.HostileToPlayer())
             npcBase.hostilityOverride = true;
 
-        if (!isHostile && npcBase.faction.isHostileTo("player"))
+        if (npcBase.faction.isHostileTo("player"))
         {
             OverrideHostility(true);
         }
@@ -848,7 +863,9 @@ public class BaseAI : MonoBehaviour
             return false;
 
         if (!InSightOfPlayer())
+        {
             return false;
+        }
 
         EntitySkills mySkills = GetComponent<EntitySkills>();
         float distance = GetDistance(targetEntity);

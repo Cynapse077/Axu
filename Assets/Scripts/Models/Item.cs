@@ -112,7 +112,7 @@ public class Item : ComponentHolder
             UpdateUserSprite(stats, wield);
         }
 
-        if (HasCComponent<CAbility>())
+        if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
         {
             Skill sk = SkillList.GetSkillByID(GetCComponent<CAbility>().abID);
             
@@ -147,7 +147,7 @@ public class Item : ComponentHolder
             }
         }
 
-        if (HasCComponent<CAbility>())
+        if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
         {
             CAbility cab = GetCComponent<CAbility>();
 

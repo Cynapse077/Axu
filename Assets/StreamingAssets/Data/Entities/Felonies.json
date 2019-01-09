@@ -94,7 +94,7 @@
         {
             "Name" : "Experiment",
             "ID" : "experiment",
-            "Description" : "By some sick measure of mercy, a failed experiment such as yourself was exiled rather than killed on the spot.\n<color=yellow><i>(Starts with random body parts and mutations.)</i></color>",
+            "Description" : "By some sick measure of mercy, a failed experiment such as yourself was exiled rather than killed on the spot.\n<color=yellow><i>(Starts with random mutations.)</i></color>",
             "Body Structure" : "Humanoid",
             "Stats" : {
                 "HP Bonus" : 0,

@@ -90,7 +90,7 @@
                     "Move NPC" : { "NPC" : "akklune", "Coordinate" : "Ensis Exterior", "Local Position" : { "x" : 28, "y" : 13 }, "Elevation" : 0 }
                 }
             ],
-            "End Dialogue" : "You hear machines hum beneath you. The plant has come back to life. A crackle can be heard, and suddenly a voice from speakers above says:\n<color=lightblue>\"My friend. I thank you for getting the power plant back online. My name is Arthomas, and I have heard your deeds from Akk-Lune. Come see me. We can work something mutually beneficial.\"</color>",
+            "End Dialogue" : "You hear machines hum beneath you. The plant has come back to life. A crackle can be heard, and suddenly a voice from speakers above says:\n<color=lightblue>\"My friend. I thank you for getting the power plant back online. My name is Arthomas, and I have heard of your deeds from Akk-Lune. Come see me. We can work out something mutually beneficial.\"</color>",
 
             "Chained Quest" : "ensis5"
         },
@@ -110,7 +110,7 @@
                     "Console Command" : "questflag Can_Enter_Ensis"
                 }
 			],
-            "End Dialogue" : "A pleasure to meet you! My name is Arthomas. Please head inside. <color=yellow>Lomis</color> is waiting to speak with you. You've been granted permission to enter the facility. Don't cause trouble, now...",
+            "End Dialogue" : "A pleasure to meet you! My name is Arthomas. Please head inside. Our leader <color=yellow>Lomis</color> is waiting to speak with you. You've been granted permission to enter the facility. Don't cause trouble, now...",
 
             "Chained Quest" : "ensis6"                 
         },
@@ -139,7 +139,7 @@
             "ID" : "ensis7",
             "Description" : "Lomis asked you to speak with Ka-Nil, the head engineer. He can be found below the Ensis Stronghold.",
             "Rewards" : {
-                "XP" : 5
+                "XP" : 30
             },
             "Steps" : [
                 { "Goal" : "Talk To", "NPC" : "kanil" }
@@ -807,7 +807,7 @@
         	"Name" : "Creepy Crawlies",
         	"ID" : "neant_queen",
         	"Description" : "Kill the Neant Queen in her nest beneath an abandoned shrine.",
-        	"Start Dialogue" : "There's an abandoned Kin shrine out there, just waiting to be pillaged. The problem is the nest of Neants beneath it. If you kill the queen, I'd split the profit with you.",
+        	"Start Dialogue" : "There's an abandoned Kin shrine out there, just waiting to be pillaged. The problem is the nest of Neants beneath it. If you kill the queen, I'll split the profit with you. Deal?",
         	"Rewards" : {
 				"XP" : 200,
 				"Money" : 250
@@ -823,12 +823,39 @@
         		{ "Goal" : "Kill Spawned" },
         		{ "Goal" : "Talk To", "NPC" : "rojer" }
         	],
-        	"End Dialogue" : "You have my thanks! Here's something for your troubles."
+        	"End Dialogue" : "She is dead? Perfect. Here's something for your troubles. I come from a family of merchants, but caught a bit of the wanderlust some years ago. I think I'm ready to go back to my roots now. I've heard you have some kind of a base of operations. If you're willing to do a favor for me, I can set up right there. Convenience is key, after all! There is a group of bandits stalking the Bazaar, taking everything they please. My friends have set up shop there and could really use your help!",
+
+			"Chained Quest" : "merchantile"
         },
+		{
+			"Name" : "Merchantile",
+			"ID" : "merchantile",
+			"Description" : "Rojer needs a group of bandits at the Bazaar killed. He will set up shop at your home base once the quest has been completed.",
+			"Rewards" : {
+				"XP" : 200
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Spawn Group" :  { "Group" : "Bandits 5", "Amount" : 5, "Coordinate" : "Bazaar", "Elevation" : 0 }
+				},
+				{
+					"Event" : "OnComplete",
+					"Move NPC" : { "NPC" : "rojer", "Coordinate" : "Home", "Local Position" : { "x" : 10, "y" : 15 }, "Elevation" : 0 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Bazaar" ] },
+				{ "Goal" : "Kill Spawned" },
+				{ "Goal" : "Talk To", "NPC" : "rojer" }
+			],
+			"End Dialogue" : "They're dead? Amazing! I'll meet you at the Home Base, boss!"
+		},
+
 		{
         	"Name" : "Long Pig",
         	"ID" : "longpig",
-        	"Description" : "The man known as \"Kilovir\" asked you, as a fellow cannibal, to gather some flesh for him to prepare for like-minded allies. 5 pieces would be perfect.",
+        	"Description" : "The man known as \"Kilovir\" asked you to gather some human flesh for him to prepare for like-minded allies. 5 pieces would be perfect.",
         	"Start Dialogue" : "I've been watching you. You have a very... peculiar taste, don't you? Don't worry, I'm very much the same, and would like to make you a deal. I have a very nice weapon, perfect for segmenting flesh on humans. All you need to do is bring me some meat. How does that sound?",
 			"Rewards" : {
 				"XP" : 100,

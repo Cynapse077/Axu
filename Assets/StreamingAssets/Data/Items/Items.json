@@ -40,6 +40,19 @@
             	"On Ground" : "item-bullet.png"
             }
         },
+		{
+        	"ID" : "plasmacell",
+            "Name" : "Plasma Cell",
+            "Type" : "Misc_Object",
+            "Rarity" : 3,
+            "Stackable" : true,
+            "FlavorText" : "Ammunition for a plasma firearm.",
+            "Cost" : 5,
+            "Properties" : [ "Ammunition" ],
+            "Display" : {
+            	"On Ground" : "item-bullet.png"
+            }
+        },
         
         {
         	"ID" : "knuckles",
@@ -697,6 +710,23 @@
                 "Layer" : "Weapon"
             }
         },
+		{
+        	"ID" : "eversightaxe",
+            "Name" : "Axe of the Eversight",
+            "Type" : "Axe",
+            "Damage" : "1d10",
+            "Rarity" : 4,
+            "FlavorText" : "An axe wielded by the assassin group, The Eversight.",
+            "Cost" : 200,
+            "Attack Type" : "Slash",
+            "Properties" : [ "Weapon", "Two_Handed", "Slow" ],
+            "DmgTypes" : [ "Slash", "Cleave" ],
+            "Display" : {
+                "On Ground" : "item-axe.png",
+                "On Player" : "/Data/Art/Player/Weapons/char-axe.png",
+                "Layer" : "Weapon"
+            }
+        },
         {
             "ID" : "bow",
             "Name" : "Short Bow",
@@ -829,6 +859,23 @@
                 "On Ground" : "item-rifle.png"
             }
         },
+		{
+			"ID" : "plasmarifle",
+			"Name" : "Plasma Rifle",
+			"Type" : "Firearm",
+			"Damage" : "3d3",
+			"Rarity" : 4,
+			"FlavorText" : "A semi-automatic rifle that shoots plasma rounds.",
+			"Cost" : 200,
+			"Components" : [
+				{ "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 10, "AmmoID" : "plasmacell" }
+			],
+			"Properties" : [ "Ranged", "Slow" ],
+			"Display" : {
+                "On Ground" : "item-rifle.png"
+            }
+		},
+
         {
         	"ID" : "throwingknife",
             "Name" : "Throwing Knife",

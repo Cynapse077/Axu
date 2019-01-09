@@ -591,6 +591,14 @@ public class MapObjectSprite : MonoBehaviour
     {
         EventHandler.instance.OnInteract(objectBase);
 
+        /*for (int i = 0; i < objectBase.permissions.Length; i++)
+        {
+            if (!ObjectManager.playerJournal.HasFlag(objectBase.permissions[i]))
+            {
+                return;
+            }
+        }*/
+
         if (objectBase.HasEvent("OnInteract"))
         {
             LuaManager.CallScriptFunction(objectBase.GetEvent("OnInteract"), this);
@@ -653,7 +661,39 @@ public class MapObjectSprite : MonoBehaviour
                     return;
                 }
                 else
+                {
                     Alert.NewAlert("Need_Dig");
+                }
+
+                break;
+
+            case "Robot_Frame":
+                if (ObjectManager.playerEntity.inventory.HasItem("ai_core"))
+                {
+                    NPC_Blueprint bp = EntityList.GetBlueprintByID("hauler");
+
+                    if (bp == null)
+                    {
+                        break;
+                    }
+
+                    ObjectManager.playerEntity.inventory.RemoveInstance(ObjectManager.playerEntity.inventory.items.Find(x => x.ID == "ai_core"));
+                    NPC n = new NPC(bp, World.tileMap.WorldPosition, localPos, World.tileMap.currentElevation);
+
+                    n.MakeFollower();
+                    CombatLog.NewMessage("<color=green>You insert the AI Core into the Robotic Frame. After a short bootup, the Hauler begins to follow you!</color>");
+
+                    World.objectManager.SpawnNPC(n);
+                    World.objectManager.RemoveObject(objectBase, gameObject);
+                    Destroy(gameObject);
+
+                    return;
+                }
+                else
+                {
+                    CombatLog.NewMessage("This Hauler is currently offline. It seems to be missing something.");
+                }
+
                 break;
         }
 

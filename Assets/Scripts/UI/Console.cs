@@ -499,6 +499,7 @@ public class Console : MonoBehaviour
                     Coord newLocation = World.tileMap.worldMap.GetLandmark(zb.id);
                     World.tileMap.worldCoordX = newLocation.x;
                     World.tileMap.worldCoordY = newLocation.y;
+                    World.tileMap.currentElevation = 0;
 
                     MyConsole.NewMessage("    Entering " + newArea + ".");
                 }

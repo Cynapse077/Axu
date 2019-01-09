@@ -747,7 +747,9 @@ public static class ItemList
             };
 
             if (newData.ContainsKey("Container"))
+            {
                 mob.container = new MapObjectBlueprint.Container((int)newData["Container"]["Capacity"]);
+            }
 
             if (newData.ContainsKey("Tint"))
             {
@@ -757,7 +759,9 @@ public static class ItemList
             }
 
             if (newData.ContainsKey("Path Cost"))
+            {
                 mob.pathCost = (int)newData["Path Cost"];
+            }
 
             if (newData.ContainsKey("Physics"))
             {
@@ -793,6 +797,17 @@ public static class ItemList
                 if (newData["Pulse"].ContainsKey("Reverse"))
                 {
                     mob.pulseInfo.reverse = (bool)newData["Pulse"]["Reverse"];
+                }
+            }
+
+            if (newData.ContainsKey("Permissions"))
+            {
+                mob.permissions = new ProgressFlags[newData["Permissions"].Count];
+
+                for (int j = 0; j < newData["Permissions"].Count; j++)
+                {
+                    string perm = newData["Permissions"][j].ToString();
+                    mob.permissions[j] = perm.ToEnum<ProgressFlags>();
                 }
             }
 

@@ -187,6 +187,7 @@ f8b9aa9f320e404f3d4361bd69d622cf Assembly-CSharp.dll:.AbilityButton
 0957d219e6116ac9e27cf42148e31c7c Assembly-CSharp.dll:.JournalPanel
 fdea929bf189ae52a5c324deadd1b6cd Assembly-CSharp.dll:.MessageLogUI
 c2cf79e93ddf660a8f073b50c5e3f2ec Assembly-CSharp.dll:.TimedDestroy
+46f41c1167b5610172d116657067c4d7 Assembly-CSharp.dll:.GiveItemPanel
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:UnityStandardAssets.ImageEffects.PostEffectsHelper
 7b305fb22d8c120642813ce2e7850455 Assembly-CSharp.dll:.WorldMap
 c37e3a19f6483dc6ecc1b19bc2cc9b78 Assembly-CSharp.dll:.Body
@@ -206,7 +207,7 @@ e0ee4b3d4e27318934cc940a969d3d96 UnityEngine.Networking.dll:UnityEngine.Networki
 ad9173d3a69d99153f38ed4b62226129 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransform
 9b895dcabbc1faf095c000c32d471fd0 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 5887ef1bc706b22b773d253fd443ceef UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
-1d91f988264035715e7aa9f86c113896 Assembly-CSharp.dll:.ShopPanel
+526688dc9d353ed7fddec1c5a2c65cee Assembly-CSharp.dll:.ShopPanel
 f51308b0640b5d3780fee1ae9014f00f Assembly-CSharp.dll:.Options_KeyPanel
 59beff33a9e138d9afb3cbca0b8f52af Assembly-CSharp.dll:.MapCreatorTool
 41bb77f13a1ac288bfd4a1ddef7ecbd8 Assembly-CSharp.dll:.OptionsPanel
@@ -235,7 +236,7 @@ fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-6fb3e7b13baad8f6dbc0f6646b20defc Assembly-CSharp.dll:.BaseAI
+93fd46cf88fb2d82b39057b46f7dd694 Assembly-CSharp.dll:.BaseAI
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Journal
 a4f0a4f62100f1a4fb5cbe0e00dde83f Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 0e71e42a045d01fcfb93ccf7c3e00db2 Assembly-CSharp.dll:.MiniMap
@@ -256,7 +257,7 @@ d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
 b7d578a3934ba990a792eccad68d1752 Assembly-CSharp.dll:.LevelUpPanel
 25c391c825ebcd0d3d9622edd606cb84 Assembly-CSharp.dll:.SpriteOutline
 48b3f7e1e3d291fdbca87a600acb747c Assembly-CSharp.dll:.TooltipPanel
-e41e34cf6aec022a8766d35dd69749f7 Assembly-CSharp.dll:.ObjectManager
+7bcf8e6839d7df52807dc3b27650e027 Assembly-CSharp.dll:.ObjectManager
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.SimpleUI_Lvl
 ea55066dd1799d413c1595c6d8cb7db9 Assembly-CSharp.dll:.TurnManager
 c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
@@ -270,4 +271,3 @@ b007cedc02d8ba85134bff0a4edbaac1 Assembly-CSharp.dll:.WorldMap_Test
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 ed2f6cb02631bebcfb77f83ac93eaa1d Assembly-CSharp.dll:.LiquidActionsPanel
 62ea481ba6eb851d8b6d26eea3d53d10 Assembly-CSharp.dll:.LevelUpButton
-46f41c1167b5610172d116657067c4d7 Assembly-CSharp.dll:.GiveItemPanel

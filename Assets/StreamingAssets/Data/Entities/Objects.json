@@ -109,11 +109,8 @@
             "Name" : "Door",
             "ObjectType" : "Door_Closed",
             "Sprite" : "object-door_wood_closed.png",
-            "Description" : "A wood door, closed.",
-			"Opaque" : true,
-			"Pulse" : {
-				"Receive" : true
-			}
+            "Description" : "A wood door.",
+			"Opaque" : true
         },
         {
             "Name" : "Door",
@@ -122,16 +119,13 @@
 			"LuaEvents" : [
 				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" }
 			],
-            "Description" : "A wood door, open.",
-			"Pulse" : {
-				"Receive" : true
-			}
+            "Description" : "A wood door, open."
         },
         {
             "Name" : "Prison Door",
             "ObjectType" : "Prison_Door_Closed",
             "Sprite" : "object-door_metal_closed.png",
-            "Description" : "A steel door. Closed.",
+            "Description" : "A steel door.",
 			"Opaque" : true,
 			"Pulse" : {
 				"Receive" : true
@@ -145,7 +139,7 @@
 				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" },
 				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Door_OnPulseReceived" }
 			],
-            "Description" : "A steel door. Open.",
+            "Description" : "A steel door.",
 			"Pulse" : {
 				"Receive" : true
 			}
@@ -154,12 +148,13 @@
             "Name" : "Ensistic Door",
             "ObjectType" : "Ensis_Door_Closed",
             "Sprite" : "object-door_ensis_closed.png",
-            "Description" : "A door only the Ensis can open. Closed.",
+            "Description" : "A door only the Ensis can open.",
 			"Permission" : "Door_Ensis",
 			"Opaque" : true,
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+			"Permissions" : [ "Can_Enter_Ensis" ]
         },
         {
             "Name" : "Ensistic Door",
@@ -169,10 +164,11 @@
 				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" },
 				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Door_OnPulseReceived" }
 			],
-            "Description" : "A door only the Ensis can open. Open.",
+            "Description" : "A door only the Ensis can open.",
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+			"Permissions" : [ "Can_Enter_Ensis" ]
         },
         {
             "Name" : "Strange Door",
@@ -182,7 +178,8 @@
 			"Opaque" : true,
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+			"Permissions" : [ "Can_Enter_Magna" ]
         },
 		{
             "Name" : "Strange Door",
@@ -195,7 +192,8 @@
             "Description" : "A strange door. Open.",
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+			"Permissions" : [ "Can_Enter_Magna" ]
         },
 		{
 			"Name" : "Magnetic Door",
@@ -205,7 +203,8 @@
 			"Opaque" : true,
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+			"Permissions" : [ "Can_Enter_Fab" ]
 		},
 		{
 			"Name" : "Magnetic Door",
@@ -218,7 +217,8 @@
 			"Description" : "A steel door. Open.",
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+			"Permissions" : [ "Can_Enter_Fab" ]
 		},
 		{
 			"Name" : "Barred Door",
@@ -498,6 +498,8 @@
             "Name" : "Robotic Frame",
             "ObjectType" : "Robot_Frame",
             "Sprite" : "object-robot.png",
+			"Physics" : "Solid",
+			"Render In Front" : true,
             "Description" : "An empty robotic chasis. It requires an AI Core to interact with."
         },
 		{

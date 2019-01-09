@@ -4,7 +4,8 @@
 public class NPCCharacter : Character
 {
     public string ID, Fac, Spr, QN;
-    public List<NPC_Flags> Flags = new List<NPC_Flags>();
+    public List<NPC_Flags> Flags;
+    public List<SBodyPart> BPs;
     public List<SItem> Inv;
     public SItem F;
     public bool Host;
@@ -12,7 +13,7 @@ public class NPCCharacter : Character
 
     public NPCCharacter(string _name, string id, int uid, Coord worldPos, Coord localPos, int elevation,
         List<SItem> items, List<SItem> handItems, SItem firearm, bool hostile, string sprite, string faction, List<NPC_Flags> flags,
-        string questName)
+        string questName, List<SBodyPart> bps)
     {
 
         Name = _name;
@@ -30,6 +31,7 @@ public class NPCCharacter : Character
         Inv = items;
         Flags = flags;
 
+        BPs = bps;
         Host = hostile;
         Spr = sprite;
         QN = questName;

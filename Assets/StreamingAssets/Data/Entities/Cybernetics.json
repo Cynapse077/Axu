@@ -39,11 +39,18 @@
         {
             "Name" : "Impact Sole",
             "ID" : "stealthsole",
-            "Description" : "Cushion under the soles of your feet, reducing the amount of sound you make.",
+            "Description" : "Cushion under the sole of your foot, reducing the amount of sound you make.",
             "Slots" : [ "Slot_Leg" ],
             "Stats" : [
                 { "Stat" : "Stealth", "Amount" : 3 }
             ]
-        }
+        },
+		{
+			"Name" : "Folding Arm Blade",
+			"ID" : "armblade",
+			"Description" : "A blade that can be extended quickly into your hand for ease of use.",
+			"Slots" : [ "Slot_Arm" ],
+			"Base Weapon" : "foldingblade"
+		}
     ]
 }

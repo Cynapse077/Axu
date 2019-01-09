@@ -48,6 +48,26 @@ public class Body : MonoBehaviour
         get { return entity.inventory; }
     }
 
+    public int GetTotalStat(string id)
+    {
+        int total = 0;
+
+        foreach (BodyPart bp in bodyParts)
+        {
+            if (bp.isAttached)
+            {
+                Stat_Modifier sm = bp.Attributes.Find(x => x.Stat == id);
+
+                if (sm != null)
+                {
+                    total += sm.Amount;
+                }
+            }
+        }
+
+        return total;
+    }
+
     void OnDisable()
     {
         if (bodyParts == null)
@@ -66,6 +86,35 @@ public class Body : MonoBehaviour
 
     public void InitializeBody()
     {
+        bodyParts = new List<BodyPart>();
+
+        for (int i = 0; i < entity.AI.npcBase.bodyParts.Count; i++)
+        {
+            bodyParts.Add(new BodyPart(entity.AI.npcBase.bodyParts[i]));
+        }
+
+        Item handItem = (entity.AI.npcBase.handItems.Count > 0 && entity.AI.npcBase.handItems[0] != null) ? entity.AI.npcBase.handItems[0] : ItemList.GetItemByName("fists");
+
+        defaultHand = new BodyPart.Hand(GetBodyPartBySlot(ItemProperty.Slot_Head), handItem, handItem.ID);
+
+        for (int i = 0; i < entity.AI.npcBase.handItems.Count; i++)
+        {
+            if (Hands.Count > i && Hands[i] != null && Hands[i].IsAttached)
+            {
+                Hands[i].SetEquippedItem(entity.AI.npcBase.handItems[i], entity);
+
+                if (entity.AI.npcBase.handItems[i].HasProp(ItemProperty.Cannot_Remove))
+                {
+                    Hands[i].baseItem = entity.AI.npcBase.handItems[i].ID;
+                }
+            }
+        }
+
+        if (bodyParts == null || bodyParts.Count <= 0)
+        {
+            bodyParts = EntityList.DefaultBodyStructure();
+        }
+
         for (int i = 0; i < bodyParts.Count; i++)
         {
             if (bodyParts[i].equippedItem == null || bodyParts[i].equippedItem.Name == "")
@@ -237,7 +286,7 @@ public class Body : MonoBehaviour
 
             if (goodIntegrity)
             {
-                if (bp.grip.GripBroken(2))
+                if (bp.grip.GripBroken())
                 {
                     string message = LocalizationManager.GetContent("Gr_BreakGrip");
                     message = message.Replace("[ATTACKER]", entity.MyName);
@@ -399,8 +448,10 @@ public class Body : MonoBehaviour
 
             for (int i = 0; i < bodyParts.Count; i++)
             {
-                if (bodyParts[i].hand != null)
+                if (bodyParts[i].hand != null && bodyParts[i].isAttached)
+                {
                     hands.Add(bodyParts[i].hand);
+                }
             }
 
             return hands;
@@ -433,10 +484,9 @@ public class Body : MonoBehaviour
 
         for (int i = 0; i < bodyParts.Count; i++)
         {
-            if (bodyParts[i].isAttached)
+            if (bodyParts[i].isAttached && bodyParts[i].hand != null)
             {
-                if (bodyParts[i].slot == ItemProperty.Slot_Arm || bodyParts[i].slot == ItemProperty.Slot_Tail)
-                    parts.Add(bodyParts[i]);
+                parts.Add(bodyParts[i]);
             }
         }
 
@@ -479,6 +529,16 @@ public class Body : MonoBehaviour
 
     public void GetFromBuilder(PlayerBuilder builder)
     {
+        if (builder.bodyParts != null && builder.bodyParts.Count > 0)
+        {
+            bodyParts = new List<BodyPart>();
+
+            for (int i = 0; i < builder.bodyParts.Count; i++)
+            {
+                bodyParts.Add(new BodyPart(builder.bodyParts[i]));
+            }
+        }
+
         StatInitializer.GetPlayerStats(MyStats, Manager.playerBuilder);
 
         if (MyStats != null)
@@ -529,6 +589,8 @@ public class Body : MonoBehaviour
 
             Categorize(bodyParts);
         }
+
+        defaultHand = new BodyPart.Hand(GetBodyPartBySlot(ItemProperty.Slot_Head), ItemList.GetItemByID("stump"), "stump");
     }
 
     public enum LimbSlot

@@ -125,7 +125,7 @@
             "Dice" : "2d2",
             "Dice Scale" : "0d1",
         	"Stamina Cost" : 3,
-        	"Time Cost" : 10,
+        	"Time Cost" : 12,
         	"Cooldown" : 25,
         	"Cast Type" : "Direction",
         	"Script" : [ "Abilities", "Trip" ],

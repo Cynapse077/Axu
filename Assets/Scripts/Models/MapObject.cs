@@ -13,6 +13,7 @@ public class MapObject
     public string objectType;
     public Coord localPosition, worldPosition;
     public ObjectPulseInfo pulseInfo;
+    public ProgressFlags[] permissions;
 
     Dictionary<string, LuaCall> luaEvents;
 
@@ -58,6 +59,7 @@ public class MapObject
         pathfindingCost = bp.pathCost;
         luaEvents = bp.luaEvents;
         pulseInfo = bp.pulseInfo;
+        permissions = bp.permissions;
     }
 
     void SetRotation()

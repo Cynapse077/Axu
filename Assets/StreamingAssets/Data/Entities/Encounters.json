@@ -105,6 +105,13 @@
             ]
         },
 
+		{
+            "Name" : "Eversight 1",
+            "Level" : 1,
+            "Possibilities" : [
+                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "assassin0" }
+            ]
+        },
 
         {
         "Name" : "Friendly Wildlife 1",

@@ -7,6 +7,7 @@ using MoonSharp.Interpreter;
 public class NPC
 {
     public string name = "", ID, spriteID;
+    public int UID;
     public Coord worldPosition, localPosition;
     public int elevation;
     public Faction faction;
@@ -21,7 +22,6 @@ public class NPC
     public string questID, dialogueID;
     public int health, stamina, maxHealth, maxStamina;
     public int weaponSkill;
-    public int UID;
 
     Random RNG
     {
@@ -53,8 +53,10 @@ public class NPC
         health = maxHealth;
         stamina = maxStamina;
 
-        if (maxHealth <= 0)
+        if (maxHealth < 0)
+        {
             maxHealth = 0;
+        }
 
         isHostile = faction.HostileToPlayer();
     }

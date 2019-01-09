@@ -64,14 +64,22 @@ public class InventoryPanel : UIPanel
         if (World.userInterface.column == 1)
         {
             if (inventoryBase.childCount > 0 && curInv.items.Count > 0 && SelectedNum < curInv.items.Count)
+            {
                 i = curInv.items[SelectedNum];
+            }
         }
         else
+        {
             i = GetEquipmentSlot(index);
+        }
 
         if (i != null)
         {
             ToolTipPanel.UpdateTooltip(i, World.userInterface.ShowItemTooltip());
+        }
+        else
+        {
+            ToolTipPanel.gameObject.SetActive(false);
         }
     }
 

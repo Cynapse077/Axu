@@ -15,7 +15,9 @@ public class SaveData : MonoBehaviour
         for (int i = 0; i < npcs.Count; i++)
         {
             if (npcs[i] == null || !npcs[i].isAlive)
+            {
                 continue;
+            }
 
             NPC n = npcs[i];
 
@@ -28,6 +30,16 @@ public class SaveData : MonoBehaviour
                 }
             }
 
+            List<SBodyPart> bodyParts = (n.IsFollower()) ? new List<SBodyPart>() : null;
+
+            if (n.IsFollower())
+            {
+                for (int j = 0; j < n.bodyParts.Count; j++)
+                {
+                    bodyParts.Add(n.bodyParts[j].ToSimpleBodyPart());
+                }
+            }
+
             List<SItem> handItems = new List<SItem>();
             for (int j = 0; j < n.handItems.Count; j++)
             {
@@ -35,10 +47,12 @@ public class SaveData : MonoBehaviour
             }
 
             if (n.firearm == null)
+            {
                 n.firearm = ItemList.GetNone();
+            }
 
             NPCCharacter character = new NPCCharacter(n.name, n.ID, n.UID, n.worldPosition, n.localPosition, n.elevation, items, handItems, n.firearm.ToSimpleItem(),
-                n.isHostile, n.spriteID, n.faction.ID, n.flags, n.questID);
+                n.isHostile, n.spriteID, n.faction.ID, n.flags, n.questID, bodyParts);
 
             chars.Add(character);
         }
@@ -186,7 +200,19 @@ public class SaveData : MonoBehaviour
 
         //body parts
         JsonData bpJson = playerJson["BodyParts"];
-        Manager.playerBuilder.bodyParts = new List<BodyPart>();
+        Manager.playerBuilder.bodyParts = GetBodyPartsFromJson(bpJson);
+
+        for (int i = 0; i < playerJson["HIt"].Count; i++)
+        {
+            Manager.playerBuilder.handItems.Add(GetItemFromJsonData(playerJson["HIt"][i]));
+        }
+
+        Manager.playerBuilder.firearm = GetItemFromJsonData(playerJson["F"]);
+    }
+
+    public static List<BodyPart> GetBodyPartsFromJson(JsonData bpJson)
+    {
+        List<BodyPart> parts = new List<BodyPart>();
 
         for (int i = 0; i < bpJson.Count; i++)
         {
@@ -268,17 +294,11 @@ public class SaveData : MonoBehaviour
             }
 
             bp.equippedItem = GetItemFromJsonData(bpJson[i]["item"]);
-            Manager.playerBuilder.bodyParts.Add(bp);
+            parts.Add(bp);
         }
 
-        for (int i = 0; i < playerJson["HIt"].Count; i++)
-        {
-            Manager.playerBuilder.handItems.Add(GetItemFromJsonData(playerJson["HIt"][i]));
-        }
-
-        Manager.playerBuilder.firearm = GetItemFromJsonData(playerJson["F"]);
+        return parts;
     }
-
 
     public void SetUpJournal()
     {

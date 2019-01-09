@@ -7,6 +7,7 @@ public class Goal : EventContainer
     public bool isComplete = false;
     public int amount = 0;
     public string description;
+    public string goalType { get; protected set; }
 
     protected Quest myQuest;
 
@@ -116,6 +117,7 @@ public class ChoiceGoal : Goal
 
     public ChoiceGoal(Quest q, Goal[] gs)
     {
+        goalType = "ChoiceGoal";
         myQuest = q;
 
         goals = new Goal[gs.Length];
@@ -187,6 +189,7 @@ public class SpecificKillGoal : Goal
 {
     public SpecificKillGoal(Quest q)
     {
+        goalType = "SpecificKillGoal";
         myQuest = q;
         isComplete = false;
     }
@@ -280,6 +283,7 @@ public class NPCKillGoal : Goal
 
     public NPCKillGoal(Quest q, string nID, int amt)
     {
+        goalType = "NPCKillGoal";
         myQuest = q;
         npcID = nID;
         amount = 0;
@@ -337,6 +341,7 @@ public class FactionKillGoal : Goal
 
     public FactionKillGoal(Quest q, string _faction, int amt)
     {
+        goalType = "FactionKillGoal";
         myQuest = q;
         faction = _faction;
         amount = 0;
@@ -394,6 +399,7 @@ public class GoToGoal : Goal
 
     public GoToGoal(Quest q, string dest, int ele)
     {
+        goalType = "GoToGoal";
         myQuest = q;
         destination = dest;
         elevation = ele;
@@ -463,6 +469,7 @@ public class InteractGoal : Goal
 
     public InteractGoal(Quest q, string objType, Coord wPos, int ele, int amt)
     {
+        goalType = "InteractGoal";
         myQuest = q;
         worldPos = wPos;
         elevation = ele;
@@ -530,6 +537,7 @@ public class TalkToGoal : Goal
 
     public TalkToGoal(Quest q, string n)
     {
+        goalType = "TalkToGoal";
         myQuest = q;
         npcTarget = n;
         isComplete = false;
@@ -585,12 +593,13 @@ public class TalkToGoal : Goal
 
 public class FetchPropertyGoal : Goal
 {
-    readonly ItemProperty itemProperty;
-    readonly string npcTarget;
+    public readonly ItemProperty itemProperty;
+    public readonly string npcTarget;
     readonly int max;
 
     public FetchPropertyGoal(Quest q, string nid, string prop, int amt)
     {
+        goalType = "FetchPropertyGoal";
         myQuest = q;
         npcTarget = nid;
         itemProperty = prop.ToEnum<ItemProperty>();
@@ -602,7 +611,6 @@ public class FetchPropertyGoal : Goal
     public override void Init(bool skipEvent)
     {
         base.Init(skipEvent);
-        EventHandler.instance.TalkedToNPC += TalkToNPC;
         CheckNPCValidity(npcTarget);
         World.objectManager.NewMapIcon(0, Destination());
     }
@@ -615,22 +623,15 @@ public class FetchPropertyGoal : Goal
         }
     }
 
-    public override bool CanComplete()
+    public void AddAmount(int amt)
     {
-        return Current() >= max;
-    }
+        amount += amt;
 
-    public int Current()
-    {
-        amount = 0;
-        List<Item> relevantItems = ObjectManager.playerEntity.inventory.items.FindAll(x => x.HasProp(itemProperty));
-
-        for (int i = 0; i < relevantItems.Count; i++)
+        if (amount >= max)
         {
-            amount += relevantItems[i].amount;
+            World.userInterface.CloseWindows();
+            Complete();
         }
-
-        return amount;
     }
 
     public override void Complete()
@@ -650,14 +651,12 @@ public class FetchPropertyGoal : Goal
         }
 
         World.objectManager.RemoveMapIconAt(Destination());
-        EventHandler.instance.TalkedToNPC -= TalkToNPC;
         base.Complete();
     }
 
     public override void Fail()
     {
         World.objectManager.RemoveMapIconAt(Destination());
-        EventHandler.instance.TalkedToNPC -= TalkToNPC;
         base.Fail();
     }
 
@@ -678,18 +677,19 @@ public class FetchPropertyGoal : Goal
     {
         string npcName = EntityList.GetBlueprintByID(npcTarget).name;
 
-        return string.Format("Give {0} items of type \"{1}\" x{2}.", npcName, itemProperty.ToString(), max.ToString());
+        return string.Format("Give {0} items of type \"{1}\" x{2}.", npcName, itemProperty.ToString(), (max - amount).ToString());
     }
 }
 
 public class FetchGoal : Goal
 {
-    readonly string itemID;
+    public readonly string itemID;
     readonly string npcTarget;
     readonly int max;
 
     public FetchGoal(Quest q, string nid, string id, int amt)
     {
+        goalType = "FetchGoal";
         myQuest = q;
         npcTarget = nid;
         itemID = id;

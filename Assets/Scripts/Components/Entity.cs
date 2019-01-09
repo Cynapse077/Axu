@@ -380,18 +380,6 @@ public class Entity : MonoBehaviour
             //Break statues by moving into them.
             Cell targetCell = World.tileMap.GetCellAt(posX + x, posY + y);
 
-            if (inventory.DiggingEquipped() && targetCell != null)
-            {
-                if (targetCell.mapObjects.Count > 0)
-                {
-                    if (targetCell.mapObjects.Find(u => u.objectType == "Statue") != null)
-                    {
-                        targetCell.mapObjects.Find(u => u.objectType == "Statue").Interact();
-                        EndTurn(0.01f, 20);
-                    }
-                }
-            }
-
             if (targetCell == null)
             {
                 return false;
@@ -615,13 +603,13 @@ public class Entity : MonoBehaviour
             SweepAttack(x, y);
         else
         {
-            int ex = x, ey = y;
-            ex = Mathf.Clamp(ex, -1, 1);
-            ey = Mathf.Clamp(ey, -1, 1);
+            int offsetX = x, offsetY = y;
+            offsetX = Mathf.Clamp(offsetX, -1, 1);
+            offsetY = Mathf.Clamp(offsetY, -1, 1);
 
             if (ObjectManager.playerEntity.inSight(posX + x, posY + y))
             {
-                GameObject s = SimplePool.Spawn(World.poolManager.slashEffects[wepNum], targetPosition + new Vector3(ex, ey, 0));
+                GameObject s = SimplePool.Spawn(World.poolManager.slashEffects[wepNum], targetPosition + new Vector3(offsetX, offsetY, 0));
                 int playerDir = ((isPlayer) ? playerInput.childSprite.flipX : AI.spriteRenderer.flipX) ? -1 : 1;
                 s.GetComponent<WeaponHitEffect>().FaceChildOtherDirection(playerDir, x, y, body.MainHand.EquippedItem);
             }
@@ -664,7 +652,7 @@ public class Entity : MonoBehaviour
         }
 
         int amount = (strength - stats.Strength);
-        amount = Mathf.Clamp(amount, 0, 4);
+        amount = Mathf.Clamp(amount, 0, 3);
 
         if (amount > 0)
         {
@@ -673,7 +661,9 @@ public class Entity : MonoBehaviour
             for (int i = 0; i < amount; i++)
             {
                 if (stopMove)
+                {
                     break;
+                }
 
                 if (IsOtherEntityInTheWay(x, y))
                 {
@@ -697,7 +687,9 @@ public class Entity : MonoBehaviour
                     SetCell();
 
                     if (isPlayer)
+                    {
                         World.tileMap.LightCheck();
+                    }
                 }
                 else
                 {
@@ -749,14 +741,18 @@ public class Entity : MonoBehaviour
                 Cell targetCell = World.tileMap.GetCellAt(myPos + dir);
 
                 if (!targetCell.Walkable_IgnoreEntity)
+                {
                     break;
+                }
 
                 if (targetCell.entity != null)
                 {
                     AttackTile(posX + dir.x, posY + dir.y, true);
 
                     if (targetCell.entity != null)
+                    {
                         targetCell.entity.ForceMove(dir.x, dir.y, stats.Strength);
+                    }
 
                     break;
                 }
@@ -768,14 +764,20 @@ public class Entity : MonoBehaviour
                     SetCell();
 
                     if (i == numTiles - 1)
+                    {
                         AttackTile(posX + dir.x, posY + dir.y, true);
+                    }
                 }
             }
             else
+            {
                 break;
+            }
 
             if (isPlayer)
+            {
                 World.tileMap.LightCheck();
+            }
 
             yield return new WaitForSeconds(0.01f);
         }
@@ -1034,7 +1036,9 @@ public class Entity : MonoBehaviour
                     Cell c = World.tileMap.GetCellAt(posX + x, posY + y);
 
                     if (c.Walkable)
+                    {
                         emptyCoords.Add(new Coord(posX + x, posY + y));
+                    }
                 }
             }
         }
@@ -1060,18 +1064,24 @@ public class Entity : MonoBehaviour
             stats.entity = this;
         }
 
-        float spd = (stats.Attributes.ContainsKey("Speed")) ? (float)stats.Speed : 10f;
+        float spd = (stats.Attributes.ContainsKey("Speed")) ? stats.Speed : 10f;
 
         if (swimming)
         {
             if (!isPlayer && AI.npcBase.HasFlag(NPC_Flags.Aquatic))
+            {
                 spd *= 1.0f;
+            }
             else
             {
                 if (stats.FasterSwimmer())
+                {
                     spd *= 1.5f;
+                }
                 else if (!stats.FastSwimmer())
+                {
                     spd *= 0.5f;
+                }
             }
         }
 
@@ -1086,7 +1096,7 @@ public class Entity : MonoBehaviour
         }
 
         spd -= inventory.BurdenPenalty();
-        spd = Mathf.Clamp(spd, 1, 100);
+        spd = Mathf.Clamp(spd, 1, 50);
 
         return (int)spd;
     }

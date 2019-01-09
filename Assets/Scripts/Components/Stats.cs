@@ -239,7 +239,9 @@ public class Stats : MonoBehaviour
         freezeEffect.SetActive(HasEffect("Frozen"));
 
         if (entity.isPlayer)
+        {
             World.userInterface.UpdateStatusEffects(this);
+        }
     }
 
     public void GainExperience(int amount)
@@ -253,7 +255,14 @@ public class Stats : MonoBehaviour
     public void LevelUp(int currentLevel)
     {
         if (entity.isPlayer)
+        {
             CombatLog.NameMessage("Message_LevelUp", currentLevel.ToString());
+
+            if (currentLevel % 3 == 0)
+            {
+                World.userInterface.LevelUp();
+            }
+        }
 
         if (currentLevel % 2 == 0)
         {
@@ -263,9 +272,6 @@ public class Stats : MonoBehaviour
 
         health = maxHealth;
         stamina += maxStamina;
-
-        if (entity.isPlayer && currentLevel % 3 == 0)
-            World.userInterface.LevelUp();
     }
 
     public int MissChance(Item wep)
@@ -274,16 +280,26 @@ public class Stats : MonoBehaviour
         int profLevel = (entity.isPlayer) ? CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
 
         hitChance += (profLevel * 3) + (Accuracy * 5) + (wep.Accuracy * 5);
+
+        if (HasEffect("Topple"))
+        {
+            hitChance -= 5;
+        }
+
         return (100 - hitChance);
     }
 
     public void Miss(Entity attacker, Item weapon)
     {
         if (entity == null || attacker == null || dead)
+        {
             return;
+        }
 
-        if (entity.isPlayer || attacker.isPlayer || GetComponentInChildren<SpriteRenderer>().enabled)
+        if (entity.isPlayer || attacker.isPlayer || entity.AI.InSightOfPlayer())
+        {
             CombatLog.Combat_Full(entity.isPlayer, 0, false, gameObject.name, true, attacker.name, "", weapon.DisplayName());
+        }
     }
 
     bool BlockedWithShield(Entity attacker)
@@ -319,7 +335,9 @@ public class Stats : MonoBehaviour
     public bool TakeDamage(Item weapon, int amount, HashSet<DamageTypes> damTypes, Entity attacker, bool crit = false, BodyPart targetPart = null, int sevChance = 0)
     {
         if (invincible || dead)
+        {
             return false;
+        }
 
         if (!CanHit(attacker))
         {
@@ -328,15 +346,20 @@ public class Stats : MonoBehaviour
         }
 
         if (attacker != null)
+        {
             lastHit = attacker;
+        }
+
         if (targetPart == null)
+        {
             targetPart = Utility.WeightedChoice(MyBody.TargetableBodyParts());
-        if (targetPart.slot == ItemProperty.Slot_Head && RNG.CoinFlip())
-            crit = true;
+        }
 
         //Blocking with shields
         if (BlockedWithShield(attacker))
+        {
             amount = 0;
+        }
 
         //Calculate damage
         int damage = CalculateDamage(amount, damTypes, crit, targetPart);
@@ -354,14 +377,18 @@ public class Stats : MonoBehaviour
 
         }
         else if (!damTypes.Contains(DamageTypes.Cold) && damTypes.Contains(DamageTypes.Heat) && !damTypes.Contains(DamageTypes.Energy))
+        {
             World.soundManager.BlockSound();
+        }
 
         if (entity.isPlayer || entity.AI.InSightOfPlayer())
         {
             bool displayOrange = entity.isPlayer;
 
             if (damage <= 0)
+            {
                 displayOrange = !displayOrange;
+            }
 
             CombatLog.Combat_Full(entity.isPlayer, damage, crit, gameObject.name, false, attacker.name, targetPart.displayName, weapon.DisplayName());
         }
@@ -485,7 +512,9 @@ public class Stats : MonoBehaviour
     void PostDamage(Entity attacker, int damage, HashSet<DamageTypes> dt, BodyPart hitBodyPart)
     {
         if (damage > 0)
+        {
             entity.CancelWalk();
+        }
 
         if (health <= 0)
         {
@@ -507,7 +536,9 @@ public class Stats : MonoBehaviour
         }
 
         if (dt.Contains(DamageTypes.Blunt) || dt.Contains(DamageTypes.Slash) || dt.Contains(DamageTypes.Pierce))
+        {
             IncreaseArmorProfs(hitBodyPart);
+        }
     }
 
     //The Damage Calculation
@@ -1159,7 +1190,9 @@ public class Stats : MonoBehaviour
     public bool IsFlying()
     {
         if (MyInventory == null)
+        {
             return false;
+        }
 
         return (MyInventory.CanFly());
     }
@@ -1184,7 +1217,9 @@ public class Stats : MonoBehaviour
                     continue;
 
                 if (!World.tileMap.PassThroughableTile(entity.posX + x, entity.posY + y))
+                {
                     currentStealth++;
+                }
             }
         }
 
@@ -1258,16 +1293,22 @@ public class Stats : MonoBehaviour
     public void IncreaseArmorProfs(BodyPart part)
     {
         if (!entity.isPlayer)
+        {
             return;
+        }
 
         if (part != null && entity.isPlayer && part.isAttached && part.equippedItem.armor > 0)
+        {
             AddProficiencyXP(part.equippedItem, RNG.Next(5, 21));
+        }
     }
 
     public void AddTrait(Trait t)
     {
         if (t == null || traits.Contains(t) && !t.stackable)
+        {
             return;
+        }
 
         traits.Add(t);
 
@@ -1301,13 +1342,18 @@ public class Stats : MonoBehaviour
     {
         return (traits.Find(trait => trait.ContainsEffect(t)) != null);
     }
+
     public bool hasTrait(string id)
     {
         if (id == "" || id == null)
+        {
             return false;
+        }
 
         return (traits.Find(x => x.ID == id) != null);
     }
+
+    //Called from Lua.
     public string FindRandomUnheldMutation(string[] _traits)
     {
         List<string> newTraits = new List<string>();
@@ -1315,7 +1361,9 @@ public class Stats : MonoBehaviour
         for (int i = 0; i < _traits.Length; i++)
         {
             if (!hasTrait(_traits[i]))
+            {
                 newTraits.Add(_traits[i]);
+            }
         }
 
         return newTraits.GetRandom();
@@ -1337,7 +1385,9 @@ public class Stats : MonoBehaviour
             _health = value;
 
             if (hpChanged != null)
+            {
                 hpChanged();
+            }
 
             _health = Mathf.Clamp(_health, 0, maxHealth);
         }
@@ -1351,7 +1401,9 @@ public class Stats : MonoBehaviour
             _stamina = value;
 
             if (stChanged != null)
+            {
                 stChanged();
+            }
 
             _stamina = Mathf.Clamp(_stamina, 0, maxStamina);
         }
@@ -1360,7 +1412,9 @@ public class Stats : MonoBehaviour
     public bool FastSwimmer()
     {
         if (traits == null)
+        {
             return false;
+        }
 
         return (traits.Find(x => x.ContainsEffect(TraitEffects.Fast_Swimming)) != null);
     }
@@ -1368,7 +1422,9 @@ public class Stats : MonoBehaviour
     public bool FasterSwimmer()
     {
         if (traits == null)
+        {
             return false;
+        }
 
         return (traits.Find(x => x.ContainsEffect(TraitEffects.Faster_Swimming)) != null);
     }
@@ -1447,8 +1503,10 @@ public class Stats : MonoBehaviour
 
     void CreateDamageNumber(string text, Color col)
     {
-        if (!GameSettings.Particle_Effects || !entity.isPlayer && !GetComponentInChildren<SpriteRenderer>().enabled)
+        if (!GameSettings.Particle_Effects || !entity.isPlayer && !entity.AI.InSightOfPlayer())
+        {
             return;
+        }
 
         GameObject t = SimplePool.Spawn(World.poolManager.damageEffect, transform.position + new Vector3(0.5f, 0.5f, -1));
         t.transform.parent = transform;

@@ -11,7 +11,7 @@
         {
             "Name" : "Distorted Body",
             "ID" : "experiment",
-            "Description" : "Your body is a random assortment of limbs.",
+            "Description" : "You start with an assortment of mutations.",
             "Stats" : [],
             "Tags" : [],
             "Stackable" : false
@@ -520,7 +520,7 @@
             "ID" : "exarm",
             "Description" : "You have an extra arm protruding from your torso.",
             "Stats" : [
-                { "Stat" : "Dexterity", "Amount" : 1 }
+                { "Stat" : "Strength", "Amount" : 2 }
             ],
             "Replace_Body_Part" : {
             	"Slot" : "Slot_Arm",
@@ -761,7 +761,7 @@
             "ID" : "wings",
             "Description" : "You have wings sprouting from your back. <color=green>+SPD</color>",
             "Stats" : [
-                { "Stat" : "Speed", "Amount" : 4 }
+                { "Stat" : "Speed", "Amount" : 6 }
             ],
             "Replace_Body_Part" : {
             	"Slot" : "Slot_Back",

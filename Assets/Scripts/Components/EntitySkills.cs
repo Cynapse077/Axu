@@ -301,7 +301,7 @@ public class EntitySkills : MonoBehaviour
 
         foreach (Entity e in World.objectManager.onScreenNPCObjects)
         {
-            e.AI.AnswerCallForHelp(entity.AI);
+            e.AI.AnswerCallForHelp(entity.AI, entity.AI.target);
         }
 
         UseStaminaIfNotPlayer(2);
@@ -318,17 +318,6 @@ public class EntitySkills : MonoBehaviour
         entity.ForcePosition();
         entity.SetCell();
         CombatLog.NameMessage("Message_Teleport", gameObject.name);
-
-        if (entity.isPlayer)
-        {
-            World.tileMap.SoftRebuild();
-
-            foreach (Entity e in World.objectManager.onScreenNPCObjects)
-            {
-                if (SeedManager.combatRandom.CoinFlip())
-                    e.AI.ForgetPlayer();
-            }
-        }
     }
 
     public bool PassiveDisarm(Entity attacker)

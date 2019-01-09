@@ -149,8 +149,6 @@ public class TurnManager : MonoBehaviour
                 n.ReshuffleInventory();
             }
         }
-
-        World.objectManager.SaveGame();
     }
 
     void TurnAdvanceMethod()
@@ -202,7 +200,9 @@ public class TurnManager : MonoBehaviour
             MapInfo mi = World.tileMap.CurrentMap.mapInfo;
 
             if (mi.radiation > 0 && SeedManager.combatRandom.Next(100) < (mi.radiation / 2f))
+            {
                 playerEntity.stats.Radiate(SeedManager.combatRandom.Next(mi.radiation));
+            }
         }
     }
 
@@ -269,7 +269,9 @@ public class TurnManager : MonoBehaviour
     public void EndTurn(float waitTime, int actionPointCost)
     {
         if (playerEntity != null && playerEntity.stats.dead)
+        {
             return;
+        }
 
         CheckInSightObjectAndEntities();
         playerEntity.actionPoints -= actionPointCost;
@@ -286,7 +288,9 @@ public class TurnManager : MonoBehaviour
         npcs.Clear();
 
         if (World.objectManager.onScreenNPCObjects.Count > 0)
+        {
             yield return new WaitForSeconds(0);
+        }
 
         npcs.AddRange(World.objectManager.onScreenNPCObjects);
         npcs.OrderBy(o => o.stats.Speed);

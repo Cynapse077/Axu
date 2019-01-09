@@ -107,6 +107,7 @@ public static class ContextualMenu
                 {
                     case "Terminal_Off":
                     case "Crystal":
+                    case "Robot_Frame":
                         actions.Add(new ContextualAction(string.Format("Interact with {0} {1}", mos.name, dir), () => { mos.Interact(); }));
                         break;
                     case "Barrel":

@@ -179,6 +179,16 @@
                 "krish"
             ]
         },
+		{
+            "Name" : "The Eversight",
+            "ID" : "eversight",
+            "Hostile To" : [
+                "player",
+                "followers",
+                "mutants",
+                "krish"
+            ]
+        },
         {
             "Name" : "Wildlife",
             "ID" : "wildlife",

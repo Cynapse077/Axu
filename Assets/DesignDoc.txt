@@ -4,9 +4,20 @@
 
 - Teleport items that don't disappear on use should not be useable when enemies are near.
 	- Or link all locations to the "Return" spell.
+- Map Objects have permissions linked to them. If you don't have the permission, you get a failure message.
+	- Eg: Ensis Door locked until you're given permission to enter.
+- Body parts directly affect stats. Adding more parts outside mutations should convey stat bonuses.
 - Mouse movement on world map.
 - Blood slime familiar.
-- Hire NPCs to stay at your base to sell goods, provide medical services, etc.
+- Vampire god, Krish.
+- Rosoemnas, the Empty appearing deep under the Ensis base.
+- Enemies change forms, like the boss above. (Diving under water, cannot be hit)
+- Different forms of currency. One for cybernetics, like the Becoming Nooks in CoQ.
+- Familiar that starts off weak. Can feed it items to increase its stats.
+	- Stays in pen at your base until it grows up?
+- Quests for doctor to stay at your base.
+- Quest event that triggers dialogue to open.
+- Mounts + Riding
 
 
 CYBERNETICS:

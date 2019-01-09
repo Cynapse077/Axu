@@ -842,6 +842,7 @@ public class PlayerInput : MonoBehaviour
 
             //Encounters!
             float encRate = (World.difficulty.Level == Difficulty.DiffLevel.Adventurer || World.difficulty.Level == Difficulty.DiffLevel.Scavenger) ? 0.8f : 1.0f;
+
             if (SpawnController.HasFoundEncounter(encRate))
             {
                 entity.myPos = World.tileMap.CurrentMap.GetRandomFloorTile();
@@ -849,34 +850,46 @@ public class PlayerInput : MonoBehaviour
                 TriggerLocalOrWorldMap();
                 sidePanelUI.SetActive(!fullMap);
 
-                Item item = null;
-                int goldAmount = (playerInventory.gold > 0) ? Random.Range(playerInventory.gold / 2, playerInventory.gold + 1) : 100;
+                SetStoredTravelPosition();
+                World.tileMap.HardRebuild();
 
-                if (playerInventory.items.Count > 0 && SeedManager.combatRandom.CoinFlip())
+                if (World.difficulty.Level == Difficulty.DiffLevel.Hunted && SeedManager.combatRandom.Next(500) < World.DangerLevel())
                 {
-                    item = playerInventory.items.GetRandom();
-                }
-
-                if (item != null && SeedManager.combatRandom.CoinFlip())
-                {
-                    World.userInterface.YesNoAction("YN_BanditAmbush_Item", () =>
-                    {
-                        World.userInterface.BanditYes(goldAmount, item);
-                        playerInventory.RemoveInstance_All(item);
-                    }, () => World.userInterface.BanditNo(), item.DisplayName());
+                    //Spawn Eversight Assassins
+                    SpawnController.SpawnEversightAmbush();
+                    Alert.CustomAlert_WithTitle("Ambush!", "A group of Eversight Assassins have snuck up on you. Prepare to fight!");
                 }
                 else
                 {
-                    World.userInterface.YesNoAction("YN_BanditAmbush", () =>
-                    {
-                        World.userInterface.BanditYes(goldAmount, item);
-                        playerInventory.gold -= goldAmount;
-                    }, () => World.userInterface.BanditNo(), goldAmount.ToString());
-                }
+                    //Spawn Bandits
+                    Item item = null;
+                    int goldAmount = (playerInventory.gold > 0) ? Random.Range(playerInventory.gold / 2, playerInventory.gold + 1) : 100;
 
-                SetStoredTravelPosition();
-                World.tileMap.HardRebuild();
-                SpawnController.SpawnAttackers();
+                    if (playerInventory.items.Count > 0 && SeedManager.combatRandom.CoinFlip())
+                    {
+                        item = playerInventory.items.GetRandom();
+                    }
+
+                    if (item != null && SeedManager.combatRandom.CoinFlip())
+                    {
+                        World.userInterface.YesNoAction("YN_BanditAmbush_Item", () =>
+                        {
+                            World.userInterface.BanditYes(goldAmount, item);
+                            playerInventory.RemoveInstance_All(item);
+                        }, () => World.userInterface.BanditNo(), item.DisplayName());
+                    }
+                    else
+                    {
+                        World.userInterface.YesNoAction("YN_BanditAmbush", () =>
+                        {
+                            World.userInterface.BanditYes(goldAmount, item);
+                            playerInventory.gold -= goldAmount;
+                        }, () => World.userInterface.BanditNo(), goldAmount.ToString());
+                    }
+
+                    SpawnController.SpawnBanditAmbush();
+                }
+                
                 World.tileMap.HardRebuild();
                 World.objectManager.NoStickNPCs(entity.posX, entity.posY);
             }
@@ -942,7 +955,7 @@ public class PlayerInput : MonoBehaviour
         World.objectManager.NoStickNPCs(entity.posX, entity.posY);
         World.tileMap.LightCheck();
 
-        entity.EndTurn(0.1f, entity.GetSpeed());
+        entity.EndTurn(0.1f, 10);
         CheckMinimap();
         World.userInterface.CloseWindows();
     }

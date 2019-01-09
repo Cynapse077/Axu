@@ -13,6 +13,7 @@ public class MapObjectBlueprint
     public Container container;
     public Dictionary<string, LuaCall> luaEvents;
     public ObjectPulseInfo pulseInfo;
+    public ProgressFlags[] permissions;
 
     public MapObjectBlueprint()
     {
@@ -29,6 +30,7 @@ public class MapObjectBlueprint
         light = 0;
         solid = MapOb_Interactability.No;
         luaEvents = new Dictionary<string, LuaCall>();
+        permissions = new ProgressFlags[0];
     }
 
     public void SetTint(Vector4 color)

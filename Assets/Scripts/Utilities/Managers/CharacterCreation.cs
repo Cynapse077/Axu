@@ -236,7 +236,9 @@ public class CharacterCreation : MonoBehaviour
     void SetProf(ref Profession p, JsonData dat, string name, int id)
     {
         if (dat["Proficiencies"].ContainsKey(name))
+        {
             p.proficiencies[id] = (int)dat["Proficiencies"][name];
+        }
     }
 
     void SetProficiencies()
@@ -281,7 +283,9 @@ public class CharacterCreation : MonoBehaviour
     void HandleKeys()
     {
         if (!waitBufferFinished || !canSelectProf)
+        {
             return;
+        }
 
         if (GetKey("Enter") || GetKey("Interact"))
         {
@@ -395,9 +399,12 @@ public class CharacterCreation : MonoBehaviour
             g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", t.name, t.description);
         }
 
+        profAnchor.DespawnChildren();
+        abilAnchor.DespawnChildren();
+
         if (p.proficiencies.Length <= 0)
         {
-            GameObject g = Instantiate(textPrefab, profAnchor);
+            GameObject g = SimplePool.Spawn(textPrefab, profAnchor);
             g.GetComponent<Text>().text = "---";
         }
 
@@ -407,21 +414,21 @@ public class CharacterCreation : MonoBehaviour
 
             if (profs[y].level > 0)
             {
-                GameObject g = Instantiate(textPrefab, profAnchor);
+                GameObject g = SimplePool.Spawn(textPrefab, profAnchor);
                 g.GetComponent<Text>().text = string.Format("<b>" + profs[y].name + "</b> : " + profs[y].CCLevelName());
             }
         }
 
         if (p.skills.Count <= 0)
         {
-            GameObject g = Instantiate(textPrefab, abilAnchor);
+            GameObject g = SimplePool.Spawn(textPrefab, abilAnchor);
             g.GetComponent<Text>().text = "---";
         }
 
         for (int z = 0; z < p.skills.Count; z++)
         {
             Skill s = SkillList.GetSkillByID(p.skills[z].Name);
-            GameObject g = Instantiate(textPrefab, abilAnchor);
+            GameObject g = SimplePool.Spawn(textPrefab, abilAnchor);
             g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", s.Name, s.Description);
         }
 
@@ -615,7 +622,7 @@ public class CharacterCreation : MonoBehaviour
         Manager.playerBuilder.attributes["Endurance"] = currentProf.END;
         Manager.playerBuilder.attributes["Accuracy"] = 1;
         Manager.playerBuilder.attributes["Defense"] = 0;
-        Manager.playerBuilder.attributes["Stealth"] = 10;
+        Manager.playerBuilder.attributes["Stealth"] = 6;
         Manager.playerBuilder.attributes["Heat Resist"] = 0;
         Manager.playerBuilder.attributes["Cold Resist"] = 0;
         Manager.playerBuilder.attributes["Energy Resist"] = 0;
@@ -703,29 +710,7 @@ public class CharacterCreation : MonoBehaviour
         Manager.playerBuilder.bodyParts = new List<BodyPart>();
         Manager.playerBuilder.items = new List<Item>();
         Manager.playerBuilder.bodyParts = EntityList.GetBodyStructure(currentProf.bodyStructure);
-
-        if (currentProf.ID == "experiment")
-        {
-            ExperimentBodyParts();
-        }
-
         done = true;
-    }
-
-    void ExperimentBodyParts()
-    {
-        Manager.playerBuilder.bodyParts = new List<BodyPart>() {
-            EntityList.GetBodyPart("head"), EntityList.GetBodyPart("chest"), EntityList.GetBodyPart("back"), EntityList.GetBodyPart("arm")
-        };
-
-        for (int i = 0; i < Random.Range(3, 7); i++)
-        {
-            BodyPart b = EntityList.GetRandomExtremety();
-            Manager.playerBuilder.bodyParts.Add(b);
-        }
-
-        List<BodyPart> parts = new List<BodyPart>(Manager.playerBuilder.bodyParts);
-        Manager.playerBuilder.bodyParts = SortBodyParts(parts);
     }
 
     public static List<BodyPart> SortBodyParts(List<BodyPart> bps)

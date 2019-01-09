@@ -33,11 +33,11 @@ public class BodyPartTargetPanel : MonoBehaviour
             {
                 if (selType == SelectionType.CalledShot)
                 {
-                    float hitChance = 100.0f - ObjectManager.playerEntity.fighter.MissChance(bod.entity.stats, b);
+                    float hitChance = 100.0f - ObjectManager.playerEntity.fighter.MissChance(ObjectManager.playerEntity.body.MainHand, bod.entity.stats, b);
                     string perc = UserInterface.ColorByPercent(hitChance.ToString() + "%", (int)hitChance);
                     int armor = b.armor + b.equippedItem.armor;
 
-                    buttonText.text = b.displayName + " <color=silver>[" + armor.ToString() + "]</color>  -  (" + perc + ")";
+                    buttonText.text = string.Format("{0} <color=silver>[{1}]</color> - ({2})", b.displayName, armor.ToString(), perc);
                 }
                 else
                 {

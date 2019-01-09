@@ -50,7 +50,7 @@ public class DialogueController : MonoBehaviour
                     myQuest = null;
                     SetupDialogueOptions();
                 };
-                World.userInterface.YesNoAction("\n" + myQuest.startDialogue, acceptQuest, null, "");
+                World.userInterface.YesNoAction(myQuest.startDialogue, acceptQuest, null, "");
             }));
         }
 
@@ -85,40 +85,65 @@ public class DialogueController : MonoBehaviour
             }));
 
             //Send back to base/pick up
-            if (journal.HasFlag(ProgressFlags.Found_Base))
-            {
-                if (myNPC.HasFlag(NPC_Flags.At_Home))
-                {
-                    dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Follow_Me"), () => {
-                        if (World.objectManager.NumFollowers() < 3)
-                        {
-                            myNPC.flags.Remove(NPC_Flags.At_Home);
-                            World.userInterface.Dialogue_CustomChat(LocalizationManager.GetContent("Dialogue_Follow"));
+            CheckBase();
+        }
 
-                            CombatLog.NameMessage("Message_New_Follower", myNPC.name);
-                            World.userInterface.CloseWindows();
-                        }
-                        else
-                        {
-                            World.userInterface.Dialogue_CustomChat(LocalizationManager.GetContent("Dialogue_TooManyFollowers"));
-                        }
-                    }));
-                }
-                else
+        CheckQuests();
+
+        dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Leave"), () => { World.userInterface.CloseWindows(); }));
+    }
+
+    void CheckQuests()
+    {
+        List<Quest> quests = ObjectManager.playerJournal.quests;
+
+        for (int i = 0; i < quests.Count; i++)
+        {
+            if (quests[i].ActiveGoal != null && quests[i].ActiveGoal.goalType == "FetchPropertyGoal")
+            {
+                FetchPropertyGoal fpg = (FetchPropertyGoal)quests[i].ActiveGoal;
+
+                if (fpg.npcTarget == myNPC.ID)
                 {
-                    dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Send_Home"), () => {
-                        myNPC.flags.Add(NPC_Flags.At_Home);
-                        myNPC.worldPosition = World.tileMap.worldMap.GetClosestLandmark("Home");
-                        GetComponent<BaseAI>().worldPos = myNPC.worldPosition;
-                        CombatLog.NameMessage("Message_Sent_Home", myNPC.name);
-                        World.tileMap.HardRebuild();
-                        World.userInterface.CloseWindows();
-                    }));
+                    dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => { World.userInterface.GiveItem(fpg.itemProperty); }));
                 }
             }
         }
+    }
 
-        dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Leave"), () => { World.userInterface.CloseWindows(); }));
+    void CheckBase()
+    {
+        if (journal.HasFlag(ProgressFlags.Found_Base))
+        {
+            if (myNPC.HasFlag(NPC_Flags.At_Home))
+            {
+                dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Follow_Me"), () => {
+                    if (World.objectManager.NumFollowers() < 3)
+                    {
+                        myNPC.flags.Remove(NPC_Flags.At_Home);
+                        World.userInterface.Dialogue_CustomChat(LocalizationManager.GetContent("Dialogue_Follow"));
+
+                        CombatLog.NameMessage("Message_New_Follower", myNPC.name);
+                        World.userInterface.CloseWindows();
+                    }
+                    else
+                    {
+                        World.userInterface.Dialogue_CustomChat(LocalizationManager.GetContent("Dialogue_TooManyFollowers"));
+                    }
+                }));
+            }
+            else
+            {
+                dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Send_Home"), () => {
+                    myNPC.flags.Add(NPC_Flags.At_Home);
+                    myNPC.worldPosition = World.tileMap.worldMap.GetClosestLandmark("Home");
+                    GetComponent<BaseAI>().worldPos = myNPC.worldPosition;
+                    CombatLog.NameMessage("Message_Sent_Home", myNPC.name);
+                    World.tileMap.HardRebuild();
+                    World.userInterface.CloseWindows();
+                }));
+            }
+        }
     }
 
     bool QuestIconActive()

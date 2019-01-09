@@ -67,8 +67,7 @@ public class TileMap_Data
         elevation = elev;
         visited = _visited;
         CreateVaultLevel(vault);
-
-        FinalPassUnderground();
+        FinalPass();
     }
 
     /// <summary>
@@ -123,6 +122,8 @@ public class TileMap_Data
                     break;
                 case "Ruins":
                     Ruins();
+                    Coord stairs = GetRandomFloorTile();
+                    map_data[stairs.x, stairs.y] = Tile.tiles["Stairs_Down"];
                     break;
                 case "River":
                     CreateRiver(mapInfo.position.x, mapInfo.position.y);
@@ -154,10 +155,25 @@ public class TileMap_Data
                     break;
             }
         }
-        else
+        else if (mapInfo.biome != WorldMap.Biome.Ocean && mapInfo.biome != WorldMap.Biome.Mountain)
         {
+            int ranNum = RNG.Next(1000);
+
             //TODO: Random houses, rocks, etc.
+            if (ranNum <= 2)
+            {
+                Ruins();
+            }
+            else if (ranNum <= 50)
+            {
+                RandomRocks();
+            }
         }
+    }
+
+    void RandomRocks()
+    {
+        //Random rock formations.
     }
 
     public void ChangeTile(int x, int y, Tile_Data tile)
@@ -285,25 +301,9 @@ public class TileMap_Data
     void PlaceDoor(int x, int y)
     {
         if (!visited && !loadedFromData)
-            World.objectManager.NewObjectAtOtherScreen("Door_Closed", new Coord(x, y), mapInfo.position, -elevation);
-    }
-
-    void FinalPassUnderground()
-    {
-        if (!loadedFromData && !visited)
         {
-            for (int x = 0; x < Width; x++)
-            {
-                for (int y = 0; y < Height; y++)
-                {
-                    //Place doors down
-                    if (map_data[x, y] == Tile.tiles["Door"])
-                        PlaceDoor(x, y);
-                }
-            }
+            World.objectManager.NewObjectAtOtherScreen("Door_Closed", new Coord(x, y), mapInfo.position, -elevation);
         }
-
-        SetUpTileData();
     }
 
     public void Autotile()
@@ -1005,18 +1005,6 @@ public class TileMap_Data
                 Coord lp = GetRandomFloorTile();
                 World.objectManager.NewObjectAtOtherScreen("Barrel", lp, mapInfo.position, elevation);
             }
-        }
-
-        Coord stairs = GetRandomFloorTile();
-
-        if (stairs != null)
-        {
-            map_data[stairs.x, stairs.y] = Tile.tiles["Stairs_Down"];
-        }
-        else
-        {
-            stairs = GetRandomFloorTile();
-            map_data[stairs.x, stairs.y] = Tile.tiles["Stairs_Down"];
         }
     }
 

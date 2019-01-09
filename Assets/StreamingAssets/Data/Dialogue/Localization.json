@@ -934,7 +934,7 @@
         {
             "ID" : "Diff_0",
             "Display" : "Adventurer",
-            "Tooltip" : "A more relaxed experience.\n\n  - Death sends you back to your base. No items, money, or XP are taken away.\n  - Reduced encounter rate.\n  - XP +10%."
+            "Tooltip" : "A more relaxed experience.\n\n  - Death sends you back to your base. No items, money, or XP are taken away.\n  - Reduced encounter rate."
         },
         {
             "ID" : "Diff_1",
@@ -949,7 +949,7 @@
         {
             "ID" : "Diff_3",
             "Display" : "Hunted",
-            "Tooltip" : "A more challenging experience.\n\n  - Death is <color=red>final</color>, causing you to start from the beginning.\n  - More difficult enemies spawn earlier.\n  - Some substances may cause <color=red>addiction</color>. (More likely than Rogue difficulty)\n -  Being hit can cause <color=red>injuries</color>\n  - You are hunted by a mysterious group of assassins. <color=grey>(Coming soon)</color>\n  - XP -10%."
+            "Tooltip" : "A more challenging experience.\n\n  - Death is <color=red>final</color>, causing you to start from the beginning.\n  - More difficult enemies spawn earlier.\n  - Some substances may cause <color=red>addiction</color>. (More likely than Rogue difficulty)\n -  Being hit can cause <color=red>injuries</color>\n  - You are hunted by a mysterious group of assassins."
         }
     ],
     "Profs" : [
@@ -1051,6 +1051,10 @@
             "ID" : "Title_Use",
             "Display" : "Mix With What?"
         },
+		{
+			"ID" : "Title_Give",
+			"Display" : "Give What?"
+		},
         {
             "ID" : "Title_Throw",
             "Display" : "Throw What?"

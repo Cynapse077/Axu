@@ -12,6 +12,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
     public Transform inventoryBase;
     public TooltipPanel ToolTipPanel;
     public Scrollbar scrollBar;
+    public Text title;
 
     Inventory inventory;
     Item itemToUse;
@@ -29,7 +30,9 @@ public class UseItemOnOtherPanel : MonoBehaviour
     void OnDisable()
     {
         if (relevantItems != null)
+        {
             relevantItems.Clear();
+        }
 
         itemToUse = null;
         inventory = null;
@@ -57,6 +60,8 @@ public class UseItemOnOtherPanel : MonoBehaviour
 
     public void UpdateInventory(Predicate<Item> p)
     {
+        title.text = (actionName == "Give Item") ? LocalizationManager.GetContent("Title_Give") : LocalizationManager.GetContent("Title_Use");
+
         inventoryBase.DespawnChildren();
 
         if (!gameObject.activeSelf)
@@ -90,9 +95,35 @@ public class UseItemOnOtherPanel : MonoBehaviour
             case "Mod_Item":
                 ModItem(index);
                 break;
+            case "Give Item":
+                GiveItem(index);
+                return;
         }
 
         World.userInterface.CloseWindows();
+    }
+
+    void GiveItem(int index)
+    {
+        List<Quest> quests = ObjectManager.playerJournal.quests;
+        Item item = relevantItems[index];
+
+        for (int i = 0; i < quests.Count; i++)
+        {
+            if (quests[i].ActiveGoal.goalType == "FetchPropertyGoal")
+            {
+                FetchPropertyGoal fpg = (FetchPropertyGoal)quests[i].ActiveGoal;
+
+                if (item.HasProp(fpg.itemProperty))
+                {
+                    inventory.RemoveInstance(relevantItems[index]);
+                    relevantItems.Remove(item);
+                    UpdateInventory(null);
+                    fpg.AddAmount(1);
+                    break;
+                }
+            }
+        }
     }
 
     void ModItem(int index)
@@ -122,7 +153,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
         }
         else
         {
-            CCoat cc = new CCoat(10, new Liquid(liq.liquid, 1));
+            CCoat cc = new CCoat(5, new Liquid(liq.liquid, 1));
             target.AddComponent(cc);
         }
 

@@ -30,10 +30,13 @@ public class CombatComponent
     public void Attack(Stats target, bool freeAction = false, BodyPart targetPart = null, int sevChance = 0)
     {
         if (entity.isPlayer && target.entity.AI.isFollower())
+        {
             return;
+        }
 
         //Main weapon
         PerformAttack(target, MyBody.MainHand, targetPart, sevChance);
+        lastTarget = target.entity;
 
         //Attack with all other arms.
         List<BodyPart.Hand> hands = MyBody.Hands;
@@ -48,24 +51,17 @@ public class CombatComponent
 
         //TODO: Add extra attacks for bites, kicks, headbutts, etc.
 
-        lastTarget = target.entity;
-
         if (!freeAction)
         {
             entity.EndTurn(0.1f, AttackAPCost());
         }
     }
 
-    public float MissChance(Stats target, BodyPart targetPart)
+    public float MissChance(BodyPart.Hand hand, Stats target, BodyPart targetPart)
     {
-        int miss = MyStats.MissChance(MyBody.MainHand.EquippedItem);
+        int miss = MyStats.MissChance(hand.EquippedItem);
         float percentage = 1.0f + (targetPart.Weight / (float)targetPart.myBody.TotalBodyWeight());
-        bool twoHandPenalty = MyBody.MainHand.EquippedItem.HasProp(ItemProperty.Two_Handed) && MyInventory.TwoHandPenalty(MyBody.MainHand);
-
-        if (MyStats.HasEffect("Topple"))
-        {
-            miss += 5;
-        }
+        bool twoHandPenalty = hand.EquippedItem.HasProp(ItemProperty.Two_Handed) && MyInventory.TwoHandPenalty(hand);
 
         if (twoHandPenalty)
         {
@@ -82,21 +78,14 @@ public class CombatComponent
             return false;
         }
 
+        if (targetPart == null)
+        {
+            targetPart = target.entity.body.TargetableBodyParts().GetRandom(SeedManager.combatRandom);
+        }
+
         Item wep = hand.EquippedItem;
-        bool twoHandPenalty = wep.HasProp(ItemProperty.Two_Handed) && MyInventory.TwoHandPenalty(hand);
         HashSet<DamageTypes> dt = wep.damageTypes;
-        int missChance = MyStats.MissChance(wep);
-        int profLevel = (entity.isPlayer) ? MyStats.CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
-
-        if (MyStats.HasEffect("Topple"))
-        {
-            missChance += 5;
-        }
-
-        if (twoHandPenalty)
-        {
-            missChance += 5;
-        }
+        int missChance = Mathf.FloorToInt(MissChance(hand, target, targetPart));
 
         if (SeedManager.combatRandom.Next(100) < missChance)
         {
@@ -104,7 +93,9 @@ public class CombatComponent
             return false;
         }
 
+        int profLevel = (entity.isPlayer) ? MyStats.CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
         int damage = wep.CalculateDamage(MyStats.Strength, profLevel);
+        bool crit = wep.AttackCrits((profLevel - 1 + MyStats.Accuracy + wep.Accuracy) / 2);
 
         //firearms have reduced physical damage.
         if (wep.HasProp(ItemProperty.Ranged))
@@ -114,12 +105,7 @@ public class CombatComponent
             damage = d.Roll() + (MyStats.Strength / 2 - 1) + MyStats.proficiencies.Misc.level;
         }
 
-        if (targetPart == null)
-        {
-            targetPart = target.entity.body.TargetableBodyParts().GetRandom(SeedManager.combatRandom);
-        }
-
-        if (target.TakeDamage(wep, damage, dt, entity, wep.AttackCrits((profLevel - 1 + MyStats.Accuracy + wep.Accuracy) / 2), targetPart, sevChance))
+        if (target.TakeDamage(wep, damage, dt, entity, crit, targetPart, sevChance))
         {
             if (entity.isPlayer)
             {
@@ -239,7 +225,6 @@ public class CombatComponent
             td.pos.y += SeedManager.combatRandom.Next(-1, 2);
         }
 
-        //entity.BulletTrail(entity.myPos.toVector2(), td.pos.toVector2());
         entity.InstatiateThrowingEffect(td.pos, 2.0f);
 
         td.damage = entity.inventory.firearm.CalculateDamage(entity.stats.Dexterity - 4, entity.stats.CheckProficiencies(entity.inventory.firearm).level);
@@ -253,18 +238,18 @@ public class CombatComponent
     bool FirearmMiss(Coord targetPos, int iteration)
     {
         float denom = (float)entity.stats.proficiencies.Firearm.level + 2 + entity.stats.Accuracy / 2 - entity.inventory.firearm.Accuracy;
-
-        if (denom <= 0)
-            denom += 0.05f;
-
-        float missChance = (1.0f / denom) * 100f;
-        float maxMiss = SeedManager.combatRandom.Next(100);
+        denom = Mathf.Clamp(denom, 0.05f, 100.0f);
+        float missChance = (1.0f / denom) * 100f, maxMiss = SeedManager.combatRandom.Next(100);
 
         if (entity.myPos.DistanceTo(targetPos) >= entity.stats.FirearmRange)
+        {
             missChance *= 1.5f;
+        }
 
         if (entity.inventory.firearm.Accuracy < 0)
+        {
             missChance *= 2.0f;
+        }
 
         if (!entity.inventory.firearm.HasProp(ItemProperty.Burst))
         {
@@ -321,7 +306,7 @@ public class CombatComponent
 
         if (entity.isPlayer)
         {
-            World.userInterface.PlayerDied(((MyStats.lastHit == null) ? "<color=yellow>???</color>" : MyStats.lastHit.name));
+            World.userInterface.PlayerDied(((MyStats.lastHit == null) ? "<color=yellow>???</color>" : MyStats.lastHit.MyName));
 
             if (World.difficulty.Level == Difficulty.DiffLevel.Scavenger && MyInventory.items.Count > 0)
             {

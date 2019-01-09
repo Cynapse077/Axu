@@ -37,7 +37,7 @@ public static class SpawnController
         }
     }
 
-    public static void SpawnAttackers()
+    public static void SpawnBanditAmbush()
     {
         List<GroupBlueprint> bps = new List<GroupBlueprint>();
 
@@ -46,7 +46,9 @@ public static class SpawnController
             GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
 
             if (bp.Name.Contains("Bandits") && bp.level <= World.DangerLevel())
+            {
                 bps.Add(bp);
+            }
         }
 
         if (bps.Count <= 0)
@@ -56,6 +58,33 @@ public static class SpawnController
 
         GroupBlueprint spawn = bps.GetRandom();
         int amount = rng.Next(2, 7);
+
+        SpawnFromGroupName(spawn.Name, amount);
+
+        World.tileMap.CheckNPCTiles();
+    }
+
+    public static void SpawnEversightAmbush()
+    {
+        List<GroupBlueprint> bps = new List<GroupBlueprint>();
+
+        for (int i = 0; i < NPCGroupList.groupBlueprints.Count; i++)
+        {
+            GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
+
+            if (bp.Name.Contains("Eversight") && bp.level <= World.DangerLevel())
+            {
+                bps.Add(bp);
+            }
+        }
+
+        if (bps.Count <= 0)
+        {
+            return;
+        }
+
+        GroupBlueprint spawn = bps.GetRandom();
+        int amount = rng.Next(2, 5);
 
         SpawnFromGroupName(spawn.Name, amount);
 

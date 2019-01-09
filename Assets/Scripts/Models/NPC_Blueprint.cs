@@ -56,8 +56,7 @@ public class NPC_Blueprint
             }
             else
             {
-                spriteIDs = new string[1];
-                spriteIDs[0] = s;
+                spriteIDs = new string[1] { s };
             }
         }
         else
@@ -136,10 +135,14 @@ public class NPC_Blueprint
         }
 
         if (dat.ContainsKey("Quest"))
+        {
             quest = dat["Quest"].ToString();
+        }
 
         if (dat.ContainsKey("Dialogue"))
+        {
             dialogue = dat["Dialogue"].ToString();
+        }
 
         if (dat.ContainsKey("Position"))
         {

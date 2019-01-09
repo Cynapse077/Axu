@@ -572,6 +572,9 @@ public class ObjectManager : MonoBehaviour
         onScreenMapObjects.Add(newObject);
     }
 
+    /// <summary>
+    /// Removes the object from ObjectManager's lists. Does not destroy the GameObject!
+    /// </summary>
     public void RemoveObject(MapObject obj, GameObject go)
     {
         mapObjects.Remove(obj);

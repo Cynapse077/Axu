@@ -441,25 +441,43 @@ public class BodyPart : IWeighted
             get { return heldPart.myBody; }
         }
 
-        public int GripStrength()
+        int GripStrength()
         {
-            return (myPart.myBody.entity.stats.Strength / 3) * (myPart.myBody.FreeHands().Count + 1);
+            int str = 2;
+
+            Body b = myPart.myBody;
+
+            for (int i = 0; i < b.bodyParts.Count; i++)
+            {
+                if (b.bodyParts[i].hand != null && b.bodyParts[i].hand.EquippedItem.ID == b.bodyParts[i].hand.baseItem)
+                {
+                    str += b.bodyParts[i].GetStatMod("Strength").Amount;
+                }
+            }
+
+            return str;
         }
 
         public bool GripBroken(int strPenalty = 0)
         {
             if (heldPart == null)
+            {
                 return true;
+            }
 
-            int rollFor = SeedManager.combatRandom.Next(GripStrength() / 2, GripStrength() + 1) - strPenalty;
+            int rollFor = SeedManager.combatRandom.Next(0, GripStrength()) - strPenalty;
 
             if (myPart.Crippled)
+            {
                 rollFor -= 3;
+            }
 
             int rollAgainst = SeedManager.combatRandom.Next(-2, HeldBody.entity.stats.Strength - 1);
 
             if (heldPart.Crippled)
+            {
                 rollAgainst -= 3;
+            }
 
             return (rollAgainst > rollFor);
         }

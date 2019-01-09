@@ -10,7 +10,6 @@ public class ShopPanel : MonoBehaviour
 
     [Header("Children")]
     public Transform merchantBase;
-    public Text merchCap;
     public Transform inventoryBase;
     public Text invMoney;
     public Text invCap;
@@ -36,7 +35,6 @@ public class ShopPanel : MonoBehaviour
         DisableSpawned();
 
         int charisma = ObjectManager.player.GetComponent<Stats>().Attributes["Charisma"];
-        merchCap.text = string.Format("<color=olive>({0} / {1})</color>", merchantInventory.items.Count.ToString(), merchantInventory.maxItems.ToString());
 
         invMoney.text = string.Format("<color=yellow>$</color>{0}", playerInventory.gold.ToString());
         invCap.text = string.Format("<color=olive>({0} / {1})</color>", playerInventory.items.Count.ToString(), playerInventory.maxItems.ToString());
@@ -104,7 +102,6 @@ public class ShopPanel : MonoBehaviour
 
         AnimateIcons(merchInv, playerInv);
 
-        merchCap.text = string.Format("<color=olive>({0} / {1})</color>", merchantInventory.items.Count.ToString(), merchantInventory.maxItems.ToString());
         invMoney.text = string.Format("<color=yellow>$</color>{0}", playerInventory.gold.ToString());
         invCap.text = string.Format("<color=olive>({0} / {1})</color>", playerInventory.items.Count.ToString(), playerInventory.maxItems.ToString());
     }
