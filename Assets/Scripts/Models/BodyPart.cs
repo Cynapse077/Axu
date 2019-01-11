@@ -173,7 +173,6 @@ public class BodyPart : IWeighted
                 break;
             case ItemProperty.Slot_Chest:
             case ItemProperty.Slot_Back:
-                stat = "Endurance";
                 entity.stats.maxHealth += 3;
                 entity.stats.maxStamina += 2;
                 break;

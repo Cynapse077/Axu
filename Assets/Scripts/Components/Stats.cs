@@ -682,7 +682,7 @@ public class Stats : MonoBehaviour
         {
             if (entity.AI.npcBase.HasFlag(NPC_Flags.Skills_Leprosy))
                 bloodType = "liquid_blood_lep";
-            if (entity.AI.npcBase.ID == "vampire")
+            if (entity.AI.npcBase.ID == "vamp")
                 bloodType = "liquid_blood_vamp";
         }
 

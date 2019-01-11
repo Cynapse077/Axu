@@ -201,8 +201,12 @@ public class SpecificKillGoal : Goal
 
         for (int i = 0; i < myQuest.spawnedNPCs.Count; i++)
         {
-            Coord wp = World.objectManager.GetNPCByUID(myQuest.spawnedNPCs[i]).worldPosition;
-            World.objectManager.NewMapIcon(1, wp);
+            NPC n = World.objectManager.GetNPCByUID(myQuest.spawnedNPCs[i]);
+
+            if (n != null)
+            {
+                World.objectManager.NewMapIcon(1, n.worldPosition);
+            }
         }
     }
 
@@ -269,6 +273,11 @@ public class SpecificKillGoal : Goal
             if (n.elevation != 0)
             {
                 s += " Floor " + (-n.elevation).ToString() + ".";
+            }
+
+            if (i < myQuest.spawnedNPCs.Count)
+            {
+                s += "\n";
             }
         }
 
@@ -636,20 +645,6 @@ public class FetchPropertyGoal : Goal
 
     public override void Complete()
     {
-        int tmpMax = max;
-        List<Item> relevantItems = ObjectManager.playerEntity.inventory.items.FindAll(x => x.HasProp(itemProperty));
-
-        for (int i = 0; i < relevantItems.Count; i++)
-        {
-            if (tmpMax <= 0)
-            {
-                break;
-            }
-
-            ObjectManager.playerEntity.inventory.RemoveInstance(relevantItems[i]);
-            tmpMax--;
-        }
-
         World.objectManager.RemoveMapIconAt(Destination());
         base.Complete();
     }
@@ -684,7 +679,7 @@ public class FetchPropertyGoal : Goal
 public class FetchGoal : Goal
 {
     public readonly string itemID;
-    readonly string npcTarget;
+    public readonly string npcTarget;
     readonly int max;
 
     public FetchGoal(Quest q, string nid, string id, int amt)
@@ -701,62 +696,30 @@ public class FetchGoal : Goal
     public override void Init(bool skipEvent)
     {
         base.Init(skipEvent);
-        EventHandler.instance.TalkedToNPC += TalkToNPC;
         CheckNPCValidity(npcTarget);
         World.objectManager.NewMapIcon(0, Destination());
     }
 
-    void TalkToNPC(NPC n)
+    public void AddAmount(int amt)
     {
-        if (npcTarget == n.ID && CanComplete())
+        amount += amt;
+
+        if (amount >= max)
         {
+            World.userInterface.CloseWindows();
             Complete();
         }
     }
 
-    public override bool CanComplete()
-    {
-        return Current() >= max;
-    }
-
-    public int Current()
-    {
-        amount = 0;
-        List<Item> relevantItems = ObjectManager.playerEntity.inventory.items.FindAll(x => x.ID == itemID);
-
-        for (int i = 0; i < relevantItems.Count; i++)
-        {
-            amount += relevantItems[i].amount;
-        }
-
-        return amount;
-    }
-
     public override void Complete()
     {
-        int tmpMax = max;
-        List<Item> relevantItems = ObjectManager.playerEntity.inventory.items.FindAll(x => x.ID == itemID);
-
-        for (int i = 0; i < relevantItems.Count; i++)
-        {
-            if (tmpMax <= 0)
-            {
-                break;
-            }
-
-            ObjectManager.playerEntity.inventory.RemoveInstance(relevantItems[i]);
-            tmpMax--;
-        }
-
         World.objectManager.RemoveMapIconAt(Destination());
-        EventHandler.instance.TalkedToNPC -= TalkToNPC;
         base.Complete();
     }
 
     public override void Fail()
     {
         World.objectManager.RemoveMapIconAt(Destination());
-        EventHandler.instance.TalkedToNPC -= TalkToNPC;
         base.Fail();
     }
 

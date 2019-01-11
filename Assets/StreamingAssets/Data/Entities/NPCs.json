@@ -660,6 +660,7 @@
             "Faction" : "magna",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-oromir.png",
+			"Dialogue" : "oromir_init",
             "Flags" : [
                 "Can_Speak",
                 "Can_Open_Doors",
@@ -3048,7 +3049,44 @@
                 "Stamina" : 15,
 
                 "Defense" : 7,
-                "Strength" : 9,
+                "Strength" : 7,
+                "Dexterity" : 6,
+                "Intelligence" : 2,
+                "Endurance" : 5,
+
+                "Speed" : 15,
+                "Perception" : 15,
+                "Accuracy" : 2
+            },
+            "Skills" : [
+            	{ "ID" : "peck", "Level" : 2 }
+            ],
+            "Weapon_Choices" : [
+                "claws"
+            ],
+			"Weapon Skill" : 1,
+            "MaxItems" : 6,
+            "MaxItemRarity" : 4
+        },
+		{
+            "Name" : "Broken Cursed Statue",
+            "ID" : "statue2",
+            "Faction" : "deepones",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-cursedstatue2.png",
+            "Flags" : [
+                "Quantum_Locked",
+                "No_Blood",
+				"No_Body",
+                "RPois",
+                "RBleed"
+            ],
+            "Stats" : {
+                "Health" : 65,
+                "Stamina" : 15,
+
+                "Defense" : 5,
+                "Strength" : 7,
                 "Dexterity" : 6,
                 "Intelligence" : 2,
                 "Endurance" : 5,
@@ -3280,6 +3318,37 @@
             ],
 			"Weapon Skill" : 5,
             "MaxItems" : 2,
+            "MaxItemRarity" : 5
+        },
+		{
+            "Name" : "Corruptor",
+            "ID" : "corruptor",
+            "Faction" : "deepones",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-corruptor.png",
+            "Flags" : [
+                "Can_Open_Doors",
+                "Boss"
+            ],
+            "Stats" : {
+                "Health" : 130,
+                "Stamina" : 30,
+
+                "Defense" : 6,
+                "Strength" : 8,
+                "Dexterity" : 5,
+                "Intelligence" : 7,
+                "Endurance" : 9,
+
+                "Speed" : 20,
+                "Perception" : 10,
+                "Accuracy" : 3
+            },
+            "Weapon_Choices" : [
+                "tentacle"
+            ],
+			"Weapon Skill" : 5,
+            "MaxItems" : 3,
             "MaxItemRarity" : 5
         },
         {

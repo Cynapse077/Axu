@@ -580,10 +580,23 @@
             "Stackable" : false,
             "FlavorText" : "A chip containing an AI. It needs a body to be able to interact with you.",
             "Cost" : 0,
-            "Properties" : [ "Quest_Item", "Unique" ],
+            "Properties" : [ "Quest_Item" ],
             "Display" : {
                 "On Ground" : "item-artifact.png"
             }
-        }
+        },
+		{
+			"ID" : "animusstone",
+			"Name" : "Animus Stone",
+			"Type" : "Misc_Object",
+			"Rarity" : 101,
+			"Stackable" : true,
+			"FlavorText" : "A glistening perfect sphere, made of a substance unknown to you.",
+			"Cost" : 0,
+			"Properties" : [ "Quest_Item" ],
+			"Display" : {
+				"On Ground" : "item_artifact.png"
+			}
+		}
     ]
 }

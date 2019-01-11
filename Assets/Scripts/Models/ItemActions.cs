@@ -32,7 +32,7 @@ public struct ItemActions {
 		if (item.HasProp(ItemProperty.Edible) || CanAdd(item, "OnEat"))
 			Actions.Add(new ItemAction("Eat", "Action_Eat"));
 
-		if (item.HasCComponent<CLiquidContainer>() && item.GetCComponent<CLiquidContainer>().currentAmount > 0) {
+		if (item.HasCComponent<CLiquidContainer>() && item.GetCComponent<CLiquidContainer>().currentAmount() > 0) {
 			Actions.Add(new ItemAction("Drink", "Action_Drink"));
 			Actions.Add(new ItemAction("Mix", "Action_Mix"));
 			Actions.Add(new ItemAction("Pour", "Action_Pour"));

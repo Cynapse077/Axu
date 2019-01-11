@@ -241,7 +241,7 @@ public class Item : ComponentHolder
         ApplyEffects(stats);
         RunCommands("OnConsume");
 
-        if (HasCComponent<CLiquidContainer>() && GetCComponent<CLiquidContainer>().liquid != null)
+        if (HasCComponent<CLiquidContainer>() && !GetCComponent<CLiquidContainer>().isEmpty())
         {
             GetCComponent<CLiquidContainer>().Drink(stats.entity);
         }
@@ -541,9 +541,10 @@ public class Item : ComponentHolder
         {
             CLiquidContainer cl = GetCComponent<CLiquidContainer>();
 
-            if (cl.liquid != null)
+            if (!cl.isEmpty())
             {
-                totCost += cl.liquid.pricePerUnit * cl.liquid.units;
+                Liquid liquid = ItemList.GetLiquidByID(cl.liq.ID, cl.liq.units);
+                totCost += liquid.pricePerUnit * liquid.units;
             }
         }
 
@@ -562,9 +563,10 @@ public class Item : ComponentHolder
         {
             CLiquidContainer cl = GetCComponent<CLiquidContainer>();
 
-            if (cl.liquid != null)
+            if (!cl.isEmpty())
             {
-                totCost += cl.liquid.pricePerUnit * cl.liquid.units;
+                Liquid liquid = ItemList.GetLiquidByID(cl.liq.ID, cl.liq.units);
+                totCost += liquid.pricePerUnit * liquid.units;
             }
         }
 
@@ -707,9 +709,14 @@ public class Item : ComponentHolder
         else if (HasCComponent<CLiquidContainer>())
         {
             CLiquidContainer cl = GetCComponent<CLiquidContainer>();
+            string liqName = LocalizationManager.GetContent("IT_LiquidUnits_Empty");
 
-            string addition = " (" + ((cl.liquid != null) ? cl.liquid.Name : LocalizationManager.GetContent("IT_LiquidUnits_Empty")) + ")";
-            baseName += addition;
+            if (!cl.isEmpty())
+            {
+                liqName = ItemList.GetLiquidByID(cl.liq.ID).Name;
+            }
+
+            baseName += " (" + liqName + ")";
         }
 
         if (HasProp(ItemProperty.Preserved))

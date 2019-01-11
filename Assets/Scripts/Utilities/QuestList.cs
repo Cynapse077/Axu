@@ -140,10 +140,22 @@ public static class QuestList
 
                 return new RemoveNPCEvent(remNPC);
 
+            case "Remove NPCs At":
+                Coord remcoord = GetZone(data["Coordinate"].ToString());
+                int remele = (int)data["Elevation"];
+
+                return new RemoveNPCsAtEvent(remcoord, remele);
+
             case "Become Follower":
                 string folNPC = data["NPC"].ToString();
 
                 return new BecomeFollowerEvent(folNPC);
+
+            case "Set NPC Dialogue":
+                string dialogueNPC = data["NPC"].ToString();
+                string diaID = data["Dialogue"].ToString();
+
+                return new SetNPCDialogueTree(dialogueNPC, diaID);
 
             default:
                 Debug.LogError("QuestList::GetEvent() - No event with ID \"" + key + "\".");

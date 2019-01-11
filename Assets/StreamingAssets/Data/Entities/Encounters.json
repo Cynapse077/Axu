@@ -547,10 +547,10 @@
             "Name" : "Minibosses 2",
             "Level" : 10,
             "Possibilities" : [
-                { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "deephunter" },
-                { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "saint" },
-                { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "ranger" },
-                { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "deephunter" },
+                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "deephunter" },
+                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "saint" },
+                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "ranger" },
+                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "deephunter" },
                 { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "nightmare" },
 				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "scrag3" },
 				{ "Weight" : 4, "Amount" : "1d1", "Blueprint" : "spectre2" }
@@ -560,12 +560,13 @@
             "Name" : "Minibosses 3",
             "Level" : 15,
             "Possibilities" : [
-                { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "deephunter" },
-                { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "saint" },
-                { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "ranger" },
-                { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "deephunter" },
-                { "Weight" : 8, "Amount" : "1d2", "Blueprint" : "nightmare" },
-                { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "terror" }
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "deephunter" },
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "saint" },
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "ranger" },
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "deephunter" },
+                { "Weight" : 8, "Amount" : "1d1", "Blueprint" : "nightmare" },
+                { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "terror" },
+				{ "Weight" : 10, "Amount" : "1d1", "Blueprint" : "corruptor" }
             ]
         }
     ]            

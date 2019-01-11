@@ -291,7 +291,7 @@ public class Inventory : MonoBehaviour
         if (hand == null || body == null || hand.arm == null)
             return false;
 
-        return (body.FreeHands().Count == 0 && hand.arm.GetStatMod("Strength").Amount < 5);
+        return (body.FreeHands().Count == 0 && hand.arm.GetStatMod("Strength").Amount < 6);
     }
 
     public int BurdenPenalty()
@@ -439,7 +439,7 @@ public class Inventory : MonoBehaviour
 
         if (i.HasProp(ItemProperty.Tome))
         {
-            if (i.GetCComponent<CAbility>() != null)
+            if (i.HasCComponent<CAbility>())
             {
                 string abName = i.GetCComponent<CAbility>().abID;
 
@@ -485,7 +485,7 @@ public class Inventory : MonoBehaviour
 
         for (int i = 0; i < items.Count; i++)
         {
-            if (items[i].HasProp(ItemProperty.Throwing_Wep) || items[i].GetCComponent<CLiquidContainer>() != null)
+            if (items[i].HasProp(ItemProperty.Throwing_Wep) || items[i].HasCComponent<CLiquidContainer>())
                 tItems.Add(items[i]);
             else
                 ntItems.Add(items[i]);
@@ -949,7 +949,9 @@ public class Inventory : MonoBehaviour
                 for (int i = 0; i < items.Count; i++)
                 {
                     if (items[i] != null && items[i].lootable)
+                    {
                         otherInventory.PickupItem(items[i], true);
+                    }
                 }
             }
         }

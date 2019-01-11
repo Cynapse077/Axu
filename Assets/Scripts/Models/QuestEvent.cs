@@ -436,3 +436,48 @@ public class RemoveNPCEvent : QuestEvent
         }
     }
 }
+
+public class RemoveNPCsAtEvent : QuestEvent
+{
+    readonly Coord worldPos;
+    readonly int elevation;
+
+    public RemoveNPCsAtEvent(Coord wp, int ele)
+    {
+        worldPos = wp;
+        elevation = ele;
+    }
+
+    public override void RunEvent()
+    {
+        List<NPC> npcsAt = World.objectManager.NPCsAt(worldPos, elevation);
+
+        while (npcsAt.Count > 0)
+        {
+            World.objectManager.npcClasses.Remove(npcsAt[0]);
+            npcsAt.RemoveAt(0);
+        }
+    }
+}
+
+public class SetNPCDialogueTree : QuestEvent
+{
+    readonly string npcID;
+    readonly string dialogueID;
+
+    public SetNPCDialogueTree(string nID, string dID)
+    {
+        npcID = nID;
+        dialogueID = dID;
+    }
+
+    public override void RunEvent()
+    {
+        NPC n = World.objectManager.npcClasses.Find(x => x.ID == npcID);
+
+        if (n != null)
+        {
+            n.dialogueID = dialogueID;
+        }
+    }
+}

@@ -581,7 +581,7 @@ public class Body : MonoBehaviour
 
             if (Manager.newGame && Manager.profName == "Experiment")
             {
-                for (int i = 0; i < SeedManager.localRandom.Next(2, 4); i++)
+                for (int i = 0; i < 3; i++)
                 {
                     MyStats.ForceMutation();
                 }

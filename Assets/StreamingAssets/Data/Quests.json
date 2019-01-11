@@ -374,7 +374,13 @@
 				{
 					"Event" : "OnStart",
 					"Move NPC" : { "NPC" : "arthomas", "Coordinate" : "Home", "Local Position" : { "x" : 26, "y" : 13 }, "Elevation" : 0 },
-					"Remove NPC" : { "NPC" : "akklune" }
+					"Remove NPC" : { "NPC" : "akklune" },
+					"Remove NPCs At" : { "Coordinate" : "Ensis Exterior", "Elevation" : 0 }
+				},
+				{
+					"Event" : "OnComplete",
+					"Set NPC Dialogue" : { "NPC" : "arthomas", "Dialogue" : "arthomas_init2" },
+					"Remove NPCs At" : { "Coordinate" : "Ensis Interior", "Elevation" : 0 }
 				}
 			],
 			"Steps" : [
@@ -413,7 +419,7 @@
 			"Name" : "The Duke of Lies",
 			"ID" : "ensis23",
 			"Description" : "Find Oromir, the Duke of Lies at Magna Dwyll",
-			"Start Dialogue" : "You're alive! I can't believe how quickly we ended up in shambles. Lomis is dead, and now The Ensis is falling. There's only one person I know that could help us now. Oromir, the self-proclaimed \"Duke of Lies\", was one of us long ago. He betrayed us and now lives in exile. He may be a slimeball, but his knowledge was a great boon to us years ago. Perhaps he can help us overcome this threat. I dare not go, for I would surely be killed on sight... Will you talk to Oromir in my stead?",
+			"Start Dialogue" : "You're alive! I can't believe how quickly we ended up in shambles. Lomis is dead, and now The Ensis are falling. There's only one person I know that could help us now. Oromir, the self-proclaimed \"Duke of Lies\", was one of us long ago. He betrayed us and now lives in exile. He may be a slimeball, but his knowledge was a great boon to us years ago. Perhaps he can help us overcome this threat. I dare not go, for I would surely be killed on sight... Will you talk to Oromir in my stead?",
 			"Rewards" : {
 				"XP" : 25
 			},
@@ -427,7 +433,7 @@
 				{ "Goal" : "Go", "To" : [ "Magna_C" ] },
 				{ "Goal" : "Talk To", "NPC" : "oromir" }
 			],
-			"End Dialogue" : "Let me guess, the Ensis sent you to grovel at my feet? Yes, I know about the massacre at the Stronghold. I may be considered a traitor, but I never would have wished this kind of destruction against anyone. I've done my best to stay away from the conflict, but it seems the time has come for me to pick a side. Xzol and his Kindred are a cancer upon this planet and must be disposed of. This so-called god is nothing of the sort, but will be almost impossible to kill with conventional weapons. There is an artifact down the stairs here. Grab it for me, will you?",
+			"End Dialogue" : "Let me guess, the Ensis sent you to grovel at my feet? Yes, I know about the massacre at the Stronghold. I may be considered a traitor, but I never would have wished this kind of destruction against anyone. I've done my best to stay away from the conflict, but it seems the time has come for me to pick a side. Xzol and his Kindred are a cancer upon this planet and must be disposed of. This so-called god is nothing of the sort, but will be almost impossible to kill with conventional weapons. There is an artifact down the stairs here. Grab it for me, will you? I'll explain more about the Deep Ones upon your return.",
 
 			"Chained Quest" : "ensis24"
 		},
@@ -441,13 +447,78 @@
 			"Events" : [
 				{
 					"Event" : "OnStart",
-					"Spawn Object" : { "Object" : "Chest", "Coordinate" : "Magna_C", "Elevation" : 1, "Give Item" : "artifact5", "Local Position" : { "x" : 19, "y" : 9 } }
+					"Spawn Object" : { "Object" : "Chest", "Coordinate" : "Magna_C", "Elevation" : -1, "Give Item" : "artifact5", "Local Position" : { "x" : 19, "y" : 9 } }
 				}
 			],
 			"Steps" : [
 				{ "Goal" : "Fetch", "Item" : [ "artifact5" ], "Give To" : "oromir" }
 			],
-			"End Dialogue" : "This quest line ends here for now.\n\n[TO BE CONTINUED....]"
+			"End Dialogue" : "Thank you. Let me explain to the best of my ability. These Deep Ones the Kindred worship are not gods at all, but an ancient form of life native to Axu. Each \"entity\" is a piece of a larger consciousness which resides on a parallel plane to ours. They could not directly interact with us as they were, but since the Kindred manufactured a body for Xzol, he is able to walk among us. I believe they crave to be worshipped by us humans, and have been attempting to get our attention since our ancestors were dumped here. This is an Animus Stone, able to draw on energies created by the Deep Ones. I used them to create the creatures you see in Magna Dwyll. I need you to get more of these off the statues under the Kindred Hideout. Five should suffice.",
+
+			"Chained Quest" : "ensis25"
+		},
+		{
+			"Name" : "Animus Stones",
+			"ID" : "ensis25",
+			"Description" : "Retrieve 5 Animus Stones from Cursed Statues below the Kindred Hideout.",
+			"Rewards" : {
+				"XP" : 350
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -1, "Give Item" : "animusstone" },
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -1, "Give Item" : "animusstone" },
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -2, "Give Item" : "animusstone" },
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -2, "Give Item" : "animusstone" },
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -3, "Give Item" : "animusstone" }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Kin Hideout", -1 ] },
+				{ "Goal" : "Fetch", "Item" : [ "artifact5" ], "Give To" : "oromir" }
+			],
+			"End Dialogue" : "Excellent. I'm going to use these six Animus Stones to create a weapon unlike anything else on Axu. Xzol's body can be broken by conventional means, but that does not solve the main issue. His physical and spiritual prescences are still somewhat separate. With what I will create, you can trap Xzol in his stone body. Now, I need something from you since I am saving your people. I want the support of The Ensis again, but without their childish fear of The Deep. Since Lomis is dead, I would assume Arthomas will take the mantle of leader. Speak to him on my behalf, and I will entrust you with the power to kill a god.",
+
+			"Chained Quest" : "ensis26"
+		},
+		{
+			"Name" : "The Duke's Request",
+			"ID" : "ensis26",
+			"Description" : "Speak to Arthomas on Oromir's behalf. He wishes to have the support of The Ensis in his experiments.",
+			"Rewards" : {
+				"XP" : 10
+			},
+			"Events" : [
+				{
+					"Event" : "OnComplete",
+					"Move NPC" : { "NPC" : "kanil", "Coordinate" : "Magna_C", "Local Position" : { "x" : 5, "y" : 5 }, "Elevation" : 0 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Talk To", "NPC" : "arthomas" }
+			],
+			"End Dialogue" : "You spoke with the traitor? Of course he his holding his aid hostage, that bastard. I suppose we don't have a choice. Since Lomis is dead, that leaves me in charge of The Ensis. Oromir is once again one of us, with protections on his research. I'll gp get Ka-Nil and head to Magna Dwyll. We will meet you there.",
+
+			"Chained Quest" : "ensis27"
+		},
+		{
+			"Name" : "A New Ally",
+			"ID" : "ensis27",
+			"Description" : "Return to Magna Dwyll. Oromir, Ka-Nil and Arthomas are waiting there.",
+			"Rewards" : {
+				"XP" : 10
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Move NPC" : { "NPC" : "arthomas", "Coordinate" : "Magna_C", "Local Position" : { "x" : 5, "y" : 7 }, "Elevation" : 0 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Talk To", "NPC" : "oromir" }
+			],
+			"End Dialogue" : "I see you managed to convince Arthomas. He and Ka-Nil arrived moments before you. \n\n[TO BE CONTINUED...]"
 		},
 
 		{

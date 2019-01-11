@@ -4,9 +4,6 @@
 
 - Teleport items that don't disappear on use should not be useable when enemies are near.
 	- Or link all locations to the "Return" spell.
-- Map Objects have permissions linked to them. If you don't have the permission, you get a failure message.
-	- Eg: Ensis Door locked until you're given permission to enter.
-- Body parts directly affect stats. Adding more parts outside mutations should convey stat bonuses.
 - Mouse movement on world map.
 - Blood slime familiar.
 - Vampire god, Krish.

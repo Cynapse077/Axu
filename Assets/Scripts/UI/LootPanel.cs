@@ -42,7 +42,7 @@ public class LootPanel : MonoBehaviour
         else
         {
             relevantItems = inv.items.FindAll(x => !x.HasProp(ItemProperty.Pool) || x.HasProp(ItemProperty.Pool) && x.GetCComponent<CLiquidContainer>() != null
-                && !x.GetCComponent<CLiquidContainer>().isFull && x.GetCComponent<CLiquidContainer>().currentAmount > 0);
+                && !x.GetCComponent<CLiquidContainer>().isFull() && x.GetCComponent<CLiquidContainer>().currentAmount() > 0);
 
             if (relevantItems.Count <= 0)
             {
@@ -125,7 +125,7 @@ public class LootPanel : MonoBehaviour
         {
             CLiquidContainer old = relevantItems[index].GetCComponent<CLiquidContainer>();
 
-            if (old.liquid == null)
+            if (old.isEmpty())
             {
                 return;
             }

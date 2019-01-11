@@ -56,8 +56,10 @@ public class DialogueController : MonoBehaviour
 
         dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => { World.userInterface.Dialogue_Chat(myNPC.faction, myNPC.ID); }));
 
-        if (myNPC.dialogueID != "")
+        if (!string.IsNullOrEmpty(myNPC.dialogueID))
+        {
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Talk"), () => { World.userInterface.Dialogue_Inquire(myNPC.dialogueID); }));
+        }
 
         if (myNPC.HasFlag(NPC_Flags.Merchant) || myNPC.HasFlag(NPC_Flags.Doctor) || myNPC.HasFlag(NPC_Flags.Book_Merchant))
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Trade"), () => { World.userInterface.Dialogue_Shop(); }));
@@ -99,14 +101,26 @@ public class DialogueController : MonoBehaviour
 
         for (int i = 0; i < quests.Count; i++)
         {
-            if (quests[i].ActiveGoal != null && quests[i].ActiveGoal.goalType == "FetchPropertyGoal")
+            if (quests[i].ActiveGoal != null)
             {
-                FetchPropertyGoal fpg = (FetchPropertyGoal)quests[i].ActiveGoal;
-
-                if (fpg.npcTarget == myNPC.ID)
+                if (quests[i].ActiveGoal.goalType == "FetchPropertyGoal")
                 {
-                    dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => { World.userInterface.GiveItem(fpg.itemProperty); }));
+                    FetchPropertyGoal fpg = (FetchPropertyGoal)quests[i].ActiveGoal;
+
+                    if (fpg.npcTarget == myNPC.ID)
+                    {
+                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => { World.userInterface.GiveItem(fpg.itemProperty); }));
+                    }
                 }
+                else if (quests[i].ActiveGoal.goalType == "FetchGoal")
+                {
+                    FetchGoal fg = (FetchGoal)quests[i].ActiveGoal;
+
+                    if (fg.npcTarget == myNPC.ID)
+                    {
+                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => { World.userInterface.GiveItem(fg.itemID); }));
+                    }
+                }                
             }
         }
     }

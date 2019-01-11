@@ -455,7 +455,7 @@ public class ObjectManager : MonoBehaviour
         {
             MapObject m = NewObjectAtOtherScreen("Loot", localPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
             Item i = ItemList.GetItemByID("pool");
-            i.GetCComponent<CLiquidContainer>().liquid = newLiq;
+            i.GetCComponent<CLiquidContainer>().SetLiquid(newLiq);
             m.inv.Insert(0, i);
         }
         else

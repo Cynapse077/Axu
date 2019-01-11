@@ -404,10 +404,25 @@ public class MapObjectSprite : MonoBehaviour
             {
                 spriteRenderer.sprite = SwitchSprite(inv.items[0]);
 
-                if (inv.items[0].HasCComponent<CLiquidContainer>() && inv.items[0].GetCComponent<CLiquidContainer>().liquid != null)
-                    myColor = inv.items[0].GetCComponent<CLiquidContainer>().liquid.color;
+                Item first = inv.items[0];
+
+                if (first.HasCComponent<CLiquidContainer>() && !first.GetCComponent<CLiquidContainer>().isEmpty())
+                {
+                    Liquid liquid = ItemList.GetLiquidByID(first.GetCComponent<CLiquidContainer>().liq.ID);
+
+                    if (liquid != null)
+                    {
+                        myColor = liquid.color;
+                    }
+                    else
+                    {
+                        myColor = Color.white;
+                    }
+                }
                 else
+                {
                     myColor = Color.white;
+                }
             }
 
             ShowMoreItemIcon();
@@ -469,7 +484,7 @@ public class MapObjectSprite : MonoBehaviour
                 {
                     CLiquidContainer cl = inv.items[0].GetCComponent<CLiquidContainer>();
 
-                    if (cl.liquid == null || cl.currentAmount <= 0)
+                    if (cl.isEmpty())
                     {
                         World.objectManager.RemoveObject(objectBase, gameObject);
                         Destroy(gameObject);
@@ -675,6 +690,7 @@ public class MapObjectSprite : MonoBehaviour
                     if (bp == null)
                     {
                         break;
+
                     }
 
                     ObjectManager.playerEntity.inventory.RemoveInstance(ObjectManager.playerEntity.inventory.items.Find(x => x.ID == "ai_core"));

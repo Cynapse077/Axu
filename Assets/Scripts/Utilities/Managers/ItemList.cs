@@ -326,7 +326,7 @@ public static class ItemList
         if (item.HasCComponent<CLiquidContainer>() && SeedManager.combatRandom.Next(100) < 40)
         {
             CLiquidContainer cl = item.GetCComponent<CLiquidContainer>();
-            cl.liquid = GetRandomLiquid(SeedManager.combatRandom.Next(1, cl.capacity + 1));
+            cl.SetLiquid(GetRandomLiquid(SeedManager.combatRandom.Next(1, cl.capacity + 1)));
         }
 
         //We only check for adding modifiers if we are getting the item via rarity drops. AKA, it is a new instance of an item.
@@ -834,7 +834,9 @@ public static class ItemList
         for (int i = 0; i < liquids.Count; i++)
         {
             if (liquids[i].ID == search)
+            {
                 return new Liquid(liquids[i], (amount == -1 ? 1 : amount));
+            }
         }
 
         return null;

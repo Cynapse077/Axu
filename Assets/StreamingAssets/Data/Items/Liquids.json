@@ -363,6 +363,11 @@
             "Input1" : "liquid_saltwater",
             "Input2" : "liquid_mutagen",
             "Output" : "liquid_mutagen_aquatic"
-        }
+        },
+		{
+			"Input1" : "liquid_saltwater",
+			"Input2" : "liquid_regenitrol",
+			"Output" : "liquid_preservative"
+		}
     ]
 }

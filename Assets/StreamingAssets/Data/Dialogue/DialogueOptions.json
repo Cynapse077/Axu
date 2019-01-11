@@ -185,6 +185,30 @@
 			}
 		]
 	},
+	{
+		"ID" : "arthomas_init2",
+		"Display" : "Yes?",
+		"Responses" : [
+			{
+				"Display" : "What happened at the stronghold?",
+				"GoTo" : "arthomas2_attack"
+			},
+			{
+				"Display" : "Nothing, goodbye.",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "arthomas2_attack",
+		"Display" : "It was horrific. I don't wish to speak of such a tragedy. Too many good men and women died at Xzol's hand. I feel guilty to even have survived such an assault while so many perished...",
+		"Responses" : [
+			{
+				"Display" : "I'm sorry for bringing it up.",
+				"GoTo" : "End"
+			}
+		]
+	},
 
 	{
 		"ID" : "isazna_init",
@@ -249,10 +273,56 @@
 	},
 	{
 		"ID" : "blacksmith_xul",
-		"Display" : "We are the dwellers of the Red Desert, exiled by exiles. Long ago, we were cast by the Ensis. From what I have heard, there were disagreements over who should govern the people. We ended up here, and have resided ever since. It's really not so bad if you can get over the heat. We do our best to stay out of the quarrels of our Northern neighbors. The Kin and the Ensis have been at each other's throats, and I would prefer not to be involved.",
+		"Display" : "We are the dwellers of the Red Desert, exiled by exiles. Long ago, we were cast by the Ensis. From what I have heard, there were disagreements over who should govern the people. We ended up here, and have resided ever since. It's really not so bad if you can get over the heat. We do our best to stay out of the quarrels of our Northern neighbors. The Kin and the Ensis have been at each other's throats, and I would prefer not to be involved. We were nomads before finally settling down here.",
 		"Responses" : [
 			{
 				"Display" : "I see. Thank you.",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "oromir_init",
+		"Display" : "How may I elucidate?",
+		"Responses" : [
+			{
+				"Display" : "Exile",
+				"GoTo" : "oromir_exile"
+			},
+			{
+				"Display" : "Creatures",
+				"GoTo" : "oromir_creatures"
+			},
+			{
+				"Display" : "Nevermind.",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "oromir_exile",
+		"Display" : "Lomis is a strict man with high moral standards. My experimentation with energies from The Deep are controvertial in his eyes, especially with the Kindred of the Deep being a great threat to The Ensis. He was furious when he found out, destroying all my research. I was forced to promise to abandon my fascination with such a dangerous tool. A promise I broke. I am now known as The Duke of Lies for my betrayals, a moniker I wear proudly. I have done great things in my abscence, and will continue to do so without interference. If only he knew wha devious experiments Ka-Nil, one of his own, continues to do under his nose.",
+		"Responses" : [
+			{
+				"Display" : "Tell me something else.",
+				"GoTo" : "oromir_init"
+			},
+			{
+				"Display" : "Thank you.",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "oromir_creatures",
+		"Display" : "The creatures you see around Magna Dwyll are of my creation. Their consciousness may not be on par with a human's, but I am proud nonetheless.",
+		"Responses" : [
+			{
+				"Display" : "Interesting. I'd like to know something else.",
+				"GoTo" : "oromir_init"
+			},
+			{
+				"Display" : "Thank you. That will be all.",
 				"GoTo" : "End"
 			}
 		]

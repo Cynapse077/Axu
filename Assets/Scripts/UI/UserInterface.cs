@@ -303,6 +303,14 @@ public class UserInterface : MonoBehaviour
         UsePanel.gameObject.SetActive(true);
         UsePanel.Init(null,  ObjectManager.playerEntity.inventory, (x => x.HasProp(prop)), "Give Item");
     }
+    
+    public void GiveItem(string id)
+    {
+        CloseWindows();
+        uiState = UIWindow.UseItemOnItem;
+        UsePanel.gameObject.SetActive(true);
+        UsePanel.Init(null, ObjectManager.playerEntity.inventory, (x => x.ID == id), "Give Item");
+    }
 
     public void PourActions(Item cl)
     {

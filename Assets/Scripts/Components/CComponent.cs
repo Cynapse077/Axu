@@ -363,23 +363,26 @@ public class CCoat : CComponent
 [Serializable]
 public class CLiquidContainer : CComponent
 {
-    public Liquid liquid;
     public int capacity;
-
-    public int currentAmount
-    {
-        get { return (liquid != null) ? liquid.units : 0; }
+    public SLiquid liq {
+        get
+        {
+            if (liquid == null)
+            {
+                return null;
+            }
+            return liquid.ToSLiquid();
+        }
+        set
+        {
+            if (value != null)
+            {
+                liquid = ItemList.GetLiquidByID(value.ID, value.units);
+            }
+        }
     }
 
-    public int roomLeft
-    {
-        get { return (liquid != null) ? capacity - liquid.units : capacity; }
-    }
-
-    public bool isFull
-    {
-        get { return currentAmount >= capacity; }
-    }
+    Liquid liquid;
 
     public CLiquidContainer()
     {
@@ -395,9 +398,14 @@ public class CLiquidContainer : CComponent
         liquid = null;
     }
 
+    public void SetLiquidVolume(int amt)
+    {
+        liquid.units = amt;
+    }
+
     public int Fill(Liquid l)
     {
-        if (currentAmount >= capacity)
+        if (currentAmount() >= capacity)
         {
             return 0;
         }
@@ -416,7 +424,7 @@ public class CLiquidContainer : CComponent
             l.units--;
             poured++;
 
-            if (roomLeft <= 0 || currentAmount >= capacity)
+            if (roomLeft() <= 0 || currentAmount() >= capacity)
             {
                 break;
             }
@@ -424,7 +432,7 @@ public class CLiquidContainer : CComponent
 
         if (l.ID != liquid.ID)
         {
-            liquid = Liquid.Mix(new Liquid(l, 0), new Liquid(liquid, currentAmount));
+            liquid = Liquid.Mix(new Liquid(l, 0), new Liquid(liquid, currentAmount()));
         }
 
         return poured;
@@ -458,9 +466,34 @@ public class CLiquidContainer : CComponent
         }
     }
 
+    public void SetLiquid(Liquid l)
+    {
+        liquid = l;
+    }
+
+    public int roomLeft()
+    {
+        return (liquid != null) ? capacity - liquid.units : capacity;
+    }
+
+    public int currentAmount()
+    {
+        return (liquid != null) ? liquid.units : 0;
+    }
+
+    public bool isFull()
+    {
+        return currentAmount() >= capacity;
+    }
+
+    public bool isEmpty()
+    {
+        return liquid == null || liquid.units <= 0;
+    }
+
     public string GetInfo()
     {
-        string s = (liquid == null) ? LocalizationManager.GetContent("IT_LiquidUnits_Empty") : LocalizationManager.GetContent("IT_LiquidUnits") + "\n(" + liquid.Description + ")";
+        string s = (isEmpty()) ? LocalizationManager.GetContent("IT_LiquidUnits_Empty") : LocalizationManager.GetContent("IT_LiquidUnits") + "\n(" + liquid.Description + ")";
 
         if (s.Contains("[INPUT1]"))
         {

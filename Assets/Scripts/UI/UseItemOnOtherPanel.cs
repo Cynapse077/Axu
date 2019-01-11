@@ -123,6 +123,19 @@ public class UseItemOnOtherPanel : MonoBehaviour
                     break;
                 }
             }
+            else if (quests[i].ActiveGoal.goalType == "FetchGoal")
+            {
+                FetchGoal fg = (FetchGoal)quests[i].ActiveGoal;
+
+                if (item.ID == fg.itemID)
+                {
+                    inventory.RemoveInstance(relevantItems[index]);
+                    relevantItems.Remove(item);
+                    UpdateInventory(null);
+                    fg.AddAmount(1);
+                    break;
+                }
+            }
         }
     }
 
@@ -136,44 +149,44 @@ public class UseItemOnOtherPanel : MonoBehaviour
 
     void Coat(int index)
     {
-        CLiquidContainer liq = itemToUse.GetCComponent<CLiquidContainer>();
+        CLiquidContainer container = itemToUse.GetCComponent<CLiquidContainer>();
 
-        if (liq == null)
+        if (container == null)
         {
             return;
         }
 
         Item target = relevantItems[index];
+        Liquid lq = ItemList.GetLiquidByID(container.liq.ID, container.liq.units);
 
         if (target.HasCComponent<CCoat>())
         {
             CCoat cc = target.GetCComponent<CCoat>();
-            cc.liquid = new Liquid(liq.liquid, 1);
+            cc.liquid = new Liquid(lq, 1);
             cc.strikes = 10;
         }
         else
         {
-            CCoat cc = new CCoat(5, new Liquid(liq.liquid, 1));
+            CCoat cc = new CCoat(5, new Liquid(lq, 1));
             target.AddComponent(cc);
         }
 
-        liq.liquid.Coat(target);
-        liq.liquid.units--;
-        liq.CheckLiquid();
+        lq.Coat(target);
+        container.SetLiquidVolume(container.liq.units - 1);
+        container.CheckLiquid();
     }
 
     void Fill(int index)
     {
         CLiquidContainer frm = itemToUse.GetCComponent<CLiquidContainer>();
         CLiquidContainer to = relevantItems[index].GetCComponent<CLiquidContainer>();
-        int amount = to.Fill(frm.liquid);
+        Liquid liquid = ItemList.GetLiquidByID(frm.liq.ID, frm.liq.units);
+        int amount = to.Fill(liquid);
 
         if (amount > 0)
         {
-            CombatLog.NewMessage("You pour " + amount.ToString() + " units of " + frm.liquid.Name + " into the " + relevantItems[index].DisplayName() + ".");
-
-            if (frm.liquid.units <= 0)
-                itemToUse.GetCComponent<CLiquidContainer>().liquid = null;
+            CombatLog.NewMessage("You pour " + amount.ToString() + " units of " + liquid.Name + " into the " + relevantItems[index].DisplayName() + ".");
+            frm.CheckLiquid();
         }
         else
         {

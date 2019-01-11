@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LitJson;
 
 [System.Serializable]
+[MoonSharp.Interpreter.MoonSharpUserData]
 public class Liquid : IWeighted
 {
     static List<MixingOutput> mixingOutputs;
@@ -11,9 +12,9 @@ public class Liquid : IWeighted
     public int units;
     public int pricePerUnit;
     public int addictiveness;
-    public int Weight { get; set; }
     public Color32 color;
     public List<CLuaEvent> events;
+    public int Weight { get; set; }
 
     public Liquid()
     {
@@ -100,6 +101,11 @@ public class Liquid : IWeighted
         }
     }
 
+    public SLiquid ToSLiquid()
+    {
+        return new SLiquid(ID, units);
+    }
+
     struct MixingOutput
     {
         public string Input1, Input2;
@@ -143,5 +149,20 @@ public class Liquid : IWeighted
         }
 
         return liq;
+    }
+}
+
+[System.Serializable]
+public class SLiquid
+{
+    public string ID;
+    public int units;
+
+    public SLiquid() { }
+
+    public SLiquid(string id, int amount)
+    {
+        ID = id;
+        units = amount;
     }
 }
