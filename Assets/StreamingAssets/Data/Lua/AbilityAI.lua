@@ -20,23 +20,11 @@ function Restoration(skill, entity, target)
 end
 
 function Sprint(skill, entity, target)
-	if (target.stats.hasEffect("Haste")) then
+	if (not target.stats.hasEffect("Haste")) then
 		return false
 	end
 
 	return true
-end
-
-function Cone(skill, entity, target)
-	local spawns = PositionsInCone(caster, caster.myPos, direction, length)
-
-	for key,pos in pairs(spawns) do
-		if (target.myPos == pos) then
-			return true
-		end
-	end
-
-	return false
 end
 
 function Beam(skill, entity, target)
@@ -60,10 +48,10 @@ function Charge(skill, entity, target)
 end
 
 function Line(skill, entity, target)
-	local line = BLine.GetPoints(caster.myPos, target.myPos)
+	local line = BLine.GetPoints(entity.myPos, target.myPos)
 
 	for key,pos in pairs(line) do
-		if (FriendlyAt(pos.x, pos.y) or not TileMap.WalkableTile(pos.x, pos.y)) then
+		if (FriendlyAt(entity, pos.x, pos.y) or not TileMap.WalkableTile(pos.x, pos.y)) then
 			return false
 		elseif (pos.x == target.posX and pos.y == target.posY) then
 			return true
@@ -83,7 +71,7 @@ function Cone(skill, entity, target)
 	local spawns = PositionsInCone(caster, caster.myPos, direction, length)
 
 	for key,pos in pairs(spawns) do
-		if (FriendlyAt(pos.x, pos.y)) then
+		if (FriendlyAt(entity, pos.x, pos.y)) then
 			return false
 		elseif (pos.x == target.posX and pos.y == target.posY) then
 			return true

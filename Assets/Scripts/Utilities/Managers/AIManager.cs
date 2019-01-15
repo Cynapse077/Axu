@@ -175,8 +175,10 @@ public static class AIManager
 
     public static bool TryUseSkills(BaseAI ai, Entity target)
     {
-        if (target == null || ai.entitySkills.abilities.Count == 0 || ai.entity.stats.HasEffect("Blind"))
+        if (target == null || ai.entitySkills.abilities.Count == 0 || ai.entity.stats.HasEffect("Blind") || ai.entity.stats.SkipTurn())
+        {
             return false;
+        }
 
         List<Skill> possible = new List<Skill>();
 
@@ -192,7 +194,9 @@ public static class AIManager
             bool canUse = result.Boolean;
 
             if (canUse)
+            {
                 possible.Add(skill);
+            }
         }
 
         if (possible.Count > 0)

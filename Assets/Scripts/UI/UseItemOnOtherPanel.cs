@@ -88,19 +88,20 @@ public class UseItemOnOtherPanel : MonoBehaviour
         {
             case "Fill":
                 Fill(index);
+                World.userInterface.CloseWindows();
                 break;
             case "Pour_Item":
                 Coat(index);
+                World.userInterface.CloseWindows();
                 break;
             case "Mod_Item":
                 ModItem(index);
+                World.userInterface.CloseWindows();
                 break;
             case "Give Item":
                 GiveItem(index);
                 return;
         }
-
-        World.userInterface.CloseWindows();
     }
 
     void GiveItem(int index)
@@ -120,6 +121,12 @@ public class UseItemOnOtherPanel : MonoBehaviour
                     relevantItems.Remove(item);
                     UpdateInventory(null);
                     fpg.AddAmount(1);
+
+                    if (fpg.isComplete)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
                     break;
                 }
             }
@@ -130,12 +137,24 @@ public class UseItemOnOtherPanel : MonoBehaviour
                 if (item.ID == fg.itemID)
                 {
                     inventory.RemoveInstance(relevantItems[index]);
-                    relevantItems.Remove(item);
+
                     UpdateInventory(null);
                     fg.AddAmount(1);
+
+                    if (fg.isComplete)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+
                     break;
                 }
             }
+        }
+
+        if (relevantItems.Count <= 0)
+        {
+            gameObject.SetActive(false);
         }
     }
 
@@ -199,8 +218,12 @@ public class UseItemOnOtherPanel : MonoBehaviour
     public void UpdateTooltip()
     {
         ToolTipPanel.gameObject.SetActive(numItems > 0);
-        bool display = (inventory.items.Count > 0 && UserInterface.selectedItemNum < numItems);
-        ToolTipPanel.UpdateTooltip(inventory.items[UserInterface.selectedItemNum], display);
+
+        if (numItems > 0)
+        {
+            bool display = (inventory.items.Count > 0 && UserInterface.selectedItemNum < numItems);
+            ToolTipPanel.UpdateTooltip(inventory.items[UserInterface.selectedItemNum], display);
+        }
     }
 
     void Update()

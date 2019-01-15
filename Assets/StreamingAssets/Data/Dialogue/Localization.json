@@ -70,6 +70,14 @@
             "ID" : "Button_VIM",
             "Display" : "VIM Keybinds"
         },
+		{
+			"ID" : "Button_Numpad",
+			"Display" : "Numpad Keybinds"
+		},
+		{
+			"ID" : "Button_WASD",
+			"Display" : "WASD Keybinds"
+		},
         {
             "ID" : "Button_Apply",
             "Display" : "APPLY"

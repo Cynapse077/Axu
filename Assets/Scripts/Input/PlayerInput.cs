@@ -919,7 +919,9 @@ public class PlayerInput : MonoBehaviour
                 Coord targetPos = World.tileMap.FindStairsUp();
 
                 if (targetPos != null && World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
+                {
                     World.userInterface.YesNoAction("YN_TravelUp", () => { FindStairsUp(); }, null, "");
+                }
 
                 return false;
             }
@@ -932,7 +934,9 @@ public class PlayerInput : MonoBehaviour
                 Coord targetPos = World.tileMap.FindStairsDown();
 
                 if (targetPos != null && World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
+                {
                     World.userInterface.YesNoAction("YN_TravelDown", () => { FindStairsDown(); }, null, "");
+                }
 
                 return false;
             }
@@ -953,11 +957,12 @@ public class PlayerInput : MonoBehaviour
 
         BringNPCs2();
         World.objectManager.NoStickNPCs(entity.posX, entity.posY);
-        World.tileMap.LightCheck();
-
+        World.tileMap.HardRebuild();
+        
         entity.EndTurn(0.1f, 10);
         CheckMinimap();
         World.userInterface.CloseWindows();
+        World.objectManager.CheckFollowers();
     }
 
     public void CheckMinimap()

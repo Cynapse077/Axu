@@ -94,6 +94,7 @@ public class UserInterface : MonoBehaviour
 
         pausePanel.Init();
         ToggleFullMap(false);
+        ToggleMessageLog();
 
         uiState = UIWindow.None;
     }
@@ -121,6 +122,11 @@ public class UserInterface : MonoBehaviour
     public void NewLogMessage(string text)
     {
         MLog.NewMessage(text);
+    }
+    
+    public void ToggleMessageLog()
+    {
+        MLog.gameObject.SetActive(GameSettings.ShowLog);
     }
 
     void Update()

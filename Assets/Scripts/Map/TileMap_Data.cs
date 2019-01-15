@@ -526,8 +526,10 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                if (map_data[x, y].HasTag("Walkable"))
+                if (map_data[x, y].HasTag("Walkable") && map_data[x, y] != Tile.tiles["Lava"])
+                {
                     floorTiles.Add(new Coord(x, y));
+                }
             }
         }
 

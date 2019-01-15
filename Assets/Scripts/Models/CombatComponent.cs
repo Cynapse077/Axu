@@ -61,7 +61,7 @@ public class CombatComponent
     {
         int miss = MyStats.MissChance(hand.EquippedItem);
         float percentage = 1.0f + (targetPart.Weight / (float)targetPart.myBody.TotalBodyWeight());
-        bool twoHandPenalty = hand.EquippedItem.HasProp(ItemProperty.Two_Handed) && MyInventory.TwoHandPenalty(hand);
+        bool twoHandPenalty = MyInventory.TwoHandPenalty(hand);
 
         if (twoHandPenalty)
         {

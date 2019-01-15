@@ -7,6 +7,7 @@ public class DialogueController : MonoBehaviour
     public List<DialogueChoice> dialogueChoices { get; protected set; }
     public NPC myNPC { get; protected set; }
 
+    BaseAI bai;
     Action acceptQuest;
     Quest myQuest;
     Journal journal;
@@ -18,7 +19,7 @@ public class DialogueController : MonoBehaviour
             return;
         }
 
-        BaseAI bai = GetComponent<BaseAI>();
+        bai = GetComponent<BaseAI>();
         myNPC = bai.npcBase;
         journal = ObjectManager.playerJournal;
 
@@ -36,9 +37,13 @@ public class DialogueController : MonoBehaviour
         }
 
         if (dialogueChoices == null)
+        {
             dialogueChoices = new List<DialogueChoice>();
+        }
         else
+        {
             dialogueChoices.Clear();
+        }
 
         if (myQuest != null)
         {
@@ -54,21 +59,23 @@ public class DialogueController : MonoBehaviour
             }));
         }
 
-        dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => { World.userInterface.Dialogue_Chat(myNPC.faction, myNPC.ID); }));
+        dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => World.userInterface.Dialogue_Chat(myNPC.faction, myNPC.ID)));
 
         if (!string.IsNullOrEmpty(myNPC.dialogueID))
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Talk"), () => { World.userInterface.Dialogue_Inquire(myNPC.dialogueID); }));
+            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Talk"), () => World.userInterface.Dialogue_Inquire(myNPC.dialogueID)));
         }
 
         if (myNPC.HasFlag(NPC_Flags.Merchant) || myNPC.HasFlag(NPC_Flags.Doctor) || myNPC.HasFlag(NPC_Flags.Book_Merchant))
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Trade"), () => { World.userInterface.Dialogue_Shop(); }));
+        {
+            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Trade"), () => World.userInterface.Dialogue_Shop()));
+        }
 
         if (myNPC.HasFlag(NPC_Flags.Doctor))
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Heal Wounds"), () => { World.userInterface.Dialogue_Heal(); }));
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Replace Limb"), () => { World.userInterface.Dialogue_ReplaceLimb(); }));
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Amputate Limb"), () => { World.userInterface.Dialogue_AmputateLimb(); }));
+            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Heal Wounds"), () => World.userInterface.Dialogue_Heal()));
+            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Replace Limb"), () => World.userInterface.Dialogue_ReplaceLimb()));
+            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Amputate Limb"), () => World.userInterface.Dialogue_AmputateLimb()));
         }
 
         if (myNPC.HasFlag(NPC_Flags.Mercenary) && !bai.isFollower())
@@ -78,9 +85,7 @@ public class DialogueController : MonoBehaviour
 
         if (bai.isFollower() && !myNPC.HasFlag(NPC_Flags.Deteriortate_HP) && !myNPC.HasFlag(NPC_Flags.Static))
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Trade"), () => {
-                World.userInterface.Dialogue_Shop();
-            }));
+            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Trade"), () => World.userInterface.Dialogue_Shop()));
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Manage_Equipment"), () => {
                 World.userInterface.CloseWindows();
                 World.userInterface.OpenInventory(GetComponent<Inventory>());
@@ -92,7 +97,7 @@ public class DialogueController : MonoBehaviour
 
         CheckQuests();
 
-        dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Leave"), () => { World.userInterface.CloseWindows(); }));
+        dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Leave"), () => World.userInterface.CloseWindows()));
     }
 
     void CheckQuests()
@@ -109,7 +114,7 @@ public class DialogueController : MonoBehaviour
 
                     if (fpg.npcTarget == myNPC.ID)
                     {
-                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => { World.userInterface.GiveItem(fpg.itemProperty); }));
+                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => World.userInterface.GiveItem(fpg.itemProperty)));
                     }
                 }
                 else if (quests[i].ActiveGoal.goalType == "FetchGoal")
@@ -118,7 +123,7 @@ public class DialogueController : MonoBehaviour
 
                     if (fg.npcTarget == myNPC.ID)
                     {
-                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => { World.userInterface.GiveItem(fg.itemID); }));
+                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => World.userInterface.GiveItem(fg.itemID)));
                     }
                 }                
             }
@@ -163,7 +168,7 @@ public class DialogueController : MonoBehaviour
     bool QuestIconActive()
     {
         //TODO: Enable green marker when a quest can be turned in.
-        return (!myNPC.isHostile && !myNPC.hostilityOverride && !myNPC.HasFlag(NPC_Flags.Follower) && myQuest != null);
+        return (!bai.isHostile && !myNPC.HasFlag(NPC_Flags.Follower) && myQuest != null);
     }
 
     void Hire()

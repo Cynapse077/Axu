@@ -98,10 +98,14 @@ public class EntitySkills : MonoBehaviour
             entity.body.GrippableLimbs().GetRandom().GrabPart(targetLimb);
 
             if (entity.isPlayer)
+            {
                 entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
+            }
         }
         else
+        {
             Alert.CustomAlert_WithTitle("No Grippable Limbs", "You have no parts to grab with!");
+        }
     }
 
     public void Grapple_TakeDown(Stats target, string limbName)

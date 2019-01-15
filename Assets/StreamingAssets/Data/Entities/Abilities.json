@@ -67,7 +67,7 @@
             "Cast Type" : "Instant",
             "Tags" : [ "OpensNewWindow" ],
             "Script" : [ "Abilities", "Grapple" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+			"AI" : [ "AbilityAI", "Empty" ]
         },
         {
             "Name" : "Called Shot",

@@ -7,6 +7,8 @@ public class OptionsPanel : MonoBehaviour
     public Button ApplyButton;
     public Button DefaultButton;
     public Button VimButton;
+    public Button WASDButton;
+    public Button NumpadButton;
     public Button CancelButton;
 
     public Button ControlsTab;
@@ -15,12 +17,16 @@ public class OptionsPanel : MonoBehaviour
     [Space(10)]
     public GameObject ControlsPanel;
     public GameObject GameplayPanel;
+    public GameObject KeyDefaults;
 
     void Start()
     {
         ApplyButton.onClick.AddListener(() => ApplyChanges());
         DefaultButton.onClick.AddListener(() => Defaults());
         VimButton.onClick.AddListener(() => VimKeys());
+        NumpadButton.onClick.AddListener(() => NumpadKeys());
+        WASDButton.onClick.AddListener(() => WASDKeys());
+
         CancelButton.onClick.AddListener(() => {
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == 2)
                 World.userInterface.CloseWindows();
@@ -61,10 +67,23 @@ public class OptionsPanel : MonoBehaviour
         ApplyChanges();
     }
 
+    public void NumpadKeys()
+    {
+        GameSettings.Keybindings.Defaults();
+        ApplyChanges();
+    }
+
+    public void WASDKeys()
+    {
+        GameSettings.Keybindings.WASD();
+        ApplyChanges();
+    }
+
     public void SwitchtoGameplayPanel()
     {
         ControlsPanel.SetActive(false);
         GameplayPanel.SetActive(true);
+        KeyDefaults.SetActive(false);
         GameplayPanel.GetComponent<Options_GamePanel>().Initialize();
     }
 
@@ -72,5 +91,6 @@ public class OptionsPanel : MonoBehaviour
     {
         ControlsPanel.SetActive(true);
         GameplayPanel.SetActive(false);
+        KeyDefaults.SetActive(true);
     }
 }

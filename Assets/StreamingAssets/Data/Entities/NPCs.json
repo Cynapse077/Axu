@@ -26,7 +26,7 @@
                 "Endurance" : 8,
 
                 "Speed" : 11,
-                "Perception" : 10,
+                "Perception" : 20,
                 "Accuracy" : 1
             },
             "Quest" : "neant_queen",
@@ -176,6 +176,7 @@
             "Faction" : "xul",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-blacksmith.png",
+			"Quest" : "blacksmith0",
 			"Dialogue" : "blacksmith_init",
             "Flags" : [
                 "Human",
@@ -1084,7 +1085,7 @@
                 "Endurance" : 4,
 
                 "Speed" : 10,
-                "Perception" : 17,
+                "Perception" : 50,
                 "Accuracy" : 3
             },
             "Skills" : [
@@ -1119,7 +1120,7 @@
                 "Endurance" : 4,
 
                 "Speed" : 12,
-                "Perception" : 13,
+                "Perception" : 20,
                 "Accuracy" : 1
             },
             "Skills" : [

@@ -526,7 +526,7 @@ public class Stats : MonoBehaviour
         {
             if (attacker == ObjectManager.playerEntity)
             {
-                if (!entity.AI.isFollower() && entity.AI.HasDetectedPlayer(5))
+                if (!entity.AI.isFollower())
                 {
                     entity.AI.BecomeHostile();
                 }
@@ -996,6 +996,12 @@ public class Stats : MonoBehaviour
 
     public void ReplaceOneLimbByDoctor(int limbIndex, int itemIndex, bool fromDoctor)
     {
+        if (MyBody.bodyParts[limbIndex].slot == ItemProperty.Slot_Head && MyBody.GetBodyPartsBySlot(ItemProperty.Slot_Head).Count <= 1)
+        {
+            Alert.CustomAlert_WithTitle("Last Head", "You cannot replace your only head!");
+            return;
+        }
+
         if (MyBody.bodyParts[limbIndex].isAttached)
         {
             MyBody.RemoveLimb(limbIndex);
@@ -1207,14 +1213,16 @@ public class Stats : MonoBehaviour
 
     public int StealthCheck()
     {
-        int currentStealth = Attributes["Stealth"];
+        int currentStealth = 0;
 
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
             {
                 if (x == 0 && y == 0)
+                {
                     continue;
+                }
 
                 if (!World.tileMap.PassThroughableTile(entity.posX + x, entity.posY + y))
                 {
@@ -1223,7 +1231,7 @@ public class Stats : MonoBehaviour
             }
         }
 
-        return currentStealth;
+        return (currentStealth / 2) + Attributes["Stealth"];
     }
 
     public int IllumunationCheck()
@@ -1517,5 +1525,51 @@ public class Stats : MonoBehaviour
     {
         return new SStats(new Coord(_health, maxHealth), new Coord(_stamina, maxStamina), 
             new Dictionary<string, int>(Attributes), new Dictionary<string, int>(statusEffects), radiation, addictions);
+    }
+}
+
+[Serializable]
+public class SStats
+{
+    public int[] HP { get; set; }
+    public int[] ST { get; set; }
+
+    public int STR { get; set; }
+    public int DEX { get; set; }
+    public int INT { get; set; }
+    public int END { get; set; }
+
+    public int DEF { get; set; }
+    public int SPD { get; set; }
+    public int ACC { get; set; }
+    public int STLH { get; set; }
+    public int Rad { get; set; } //Radiation
+    public List<StringInt> SE { get; set; }
+    public List<Addiction> Adcts { get; set; }
+
+    public SStats(Coord hp, Coord st, Dictionary<string, int> attributes, Dictionary<string, int> statusEffects, int radiation, List<Addiction> adc)
+    {
+        HP = new int[2] { hp.x, hp.y };
+        ST = new int[2] { st.x, st.y };
+
+        STR = attributes["Strength"];
+        DEX = attributes["Dexterity"];
+        INT = attributes["Intelligence"];
+        END = attributes["Endurance"];
+        DEF = attributes["Defense"];
+        SPD = attributes["Speed"];
+        ACC = attributes["Accuracy"];
+        Adcts = adc;
+
+        SE = new List<StringInt>();
+        foreach (KeyValuePair<string, int> kvp in statusEffects)
+        {
+            SE.Add(new StringInt(kvp.Key, kvp.Value));
+        }
+
+        if (attributes.ContainsKey("Stealth"))
+            STLH = attributes["Stealth"];
+
+        Rad = radiation;
     }
 }

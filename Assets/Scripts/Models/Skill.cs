@@ -90,6 +90,7 @@ public class Skill
         XP = other.XP;
         CanLevelUp = other.CanLevelUp;
         luaAction = other.luaAction;
+        aiAction = other.aiAction;
         timeCost = other.timeCost;
         dice = other.dice;
         dicePerLevel = other.dicePerLevel;
@@ -132,12 +133,7 @@ public class Skill
         }
         else
         {
-            if (level == 1)
-            {
-                amount *= 2;
-            }
-
-            XP += amount;
+            XP += amount * 20 / level;
 
             while (XP >= XPToNext)
             {
@@ -212,4 +208,21 @@ public enum CastType
 public enum AbilityTags
 {
     OpensNewWindow, Radiate_Self, Small_Square, Blind, Summon
+}
+
+[System.Serializable]
+public class SSkill
+{
+    public string Name { get; protected set; }
+    public int Lvl { get; protected set; }
+    public double XP { get; protected set; }
+    public int Flg { get; protected set; }
+
+    public SSkill(string _name, int lvl, double xp, int origin)
+    {
+        Name = _name;
+        Lvl = lvl;
+        XP = xp;
+        Flg = origin;
+    }
 }

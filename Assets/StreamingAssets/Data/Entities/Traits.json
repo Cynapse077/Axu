@@ -440,6 +440,7 @@
                 { "Stat" : "Heat Resist", "Amount" : -10 },
                 { "Stat" : "Cold Resist", "Amount" : -10 }
             ],
+			"Cancels" : "Skin",
             "Tags" : [ "Mutation" ],
             "Stackable" : false
         },
@@ -466,7 +467,8 @@
             "ID" : "extail",
             "Description" : "You have a small tail protruding from the base of your back.",
             "Stats" : [
-				{ "Stat" : "Speed", "Amount" : 1 }
+				{ "Stat" : "Speed", "Amount" : 1 },
+				{ "Stat" : "Charisma", "Amount" : -1 }
 			],
             "Replace_Body_Part" : {
                 "Slot" : "Slot_Tail",
@@ -484,7 +486,8 @@
             "ID" : "exhead",
             "Description" : "You have another head sticking awkwardly from your neck.",
             "Stats" : [
-                { "Stat" : "Intelligence", "Amount" : 2 }
+                { "Stat" : "Intelligence", "Amount" : 2 },
+				{ "Stat" : "Charisma", "Amount" : -1 }
             ],
             "Replace_Body_Part" : {
             	"Slot" : "Slot_Head",
@@ -502,7 +505,8 @@
             "ID" : "exleg",
             "Description" : "You have an extra leg. With some practice, it will allow you to move faster.",
             "Stats" : [
-                { "Stat" : "Speed", "Amount" : 3 }
+                { "Stat" : "Speed", "Amount" : 3 },
+				{ "Stat" : "Charisma", "Amount" : -1 }
             ],
             "Replace_Body_Part" : {
             	"Slot" : "Slot_Leg",
@@ -520,7 +524,8 @@
             "ID" : "exarm",
             "Description" : "You have an extra arm protruding from your torso.",
             "Stats" : [
-                { "Stat" : "Strength", "Amount" : 2 }
+                { "Stat" : "Strength", "Amount" : 2 },
+				{ "Stat" : "Charisma", "Amount" : -1 }
             ],
             "Replace_Body_Part" : {
             	"Slot" : "Slot_Arm",
@@ -739,10 +744,9 @@
         {
             "Name" : "Tough Shell",
             "ID" : "shell",
-            "Description" : "A thick tortoise-like shell covers your back, offering great protection at the cost of speed. <color=green>+DEF</color> <color=red>-SPD</color>",
+            "Description" : "A thick tortoise-like shell covers your back, offering great protection at the cost of speed.",
             "Stats" : [
-            	{ "Stat" : "Speed", "Amount" : -2 },
-                { "Stat" : "Defense", "Amount" : 2 }
+            	{ "Stat" : "Speed", "Amount" : -2 }
             ],
             "Replace_Body_Part" : {
             	"Slot" : "Slot_Back",
@@ -867,6 +871,27 @@
             "Tags" : [ "Mutation" ],
             "Stackable" : false
         },
+		{
+			"Name" : "Smooth Skin",
+			"ID" : "smoothskin",
+			"Description" : "Your skin is extremely smooth and beautiful. <color=green>+Influence</color>",
+			"Stats" : [
+				{ "Stat" : "Charisma", "Amount" : 4 }
+			],
+			"Cancels" : "Skin",
+			"Tags" : [ "Mutation" ],
+			"Stackable" : false
+		},
+		{
+			"Name" : "Alluring Voice",
+			"ID" : "comvoice",
+			"Description" : "Your voice is quite pleasant to listen to. <color=green>+Influence</color>",
+			"Stats" : [
+				{ "Stat" : "Charisma", "Amount" : 2 }
+			],
+			"Tags" : [ "Mutation" ],
+			"Stackable" : false
+		},
         {
             "Name" : "Chitinous Skin",
             "ID" : "chitin",

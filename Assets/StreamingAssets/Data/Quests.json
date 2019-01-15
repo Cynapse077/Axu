@@ -70,7 +70,7 @@
             "Chained Quest" : "ensis4"
         },
         {
-            "Name" : "Deactivate the Terminals",
+            "Name" : "Activate the Terminals",
             "ID" : "ensis4",
             "Description" : "Turn on the five terminals inside the Power Plant. There is one on each floor.",
 			"Sequential" : false,
@@ -152,7 +152,7 @@
             "Name" : "Heart Recovery",
             "ID" : "ensis8",
             "Type" : "Main",
-            "Description" : "Recover an <color=yellow>Irradiated Heart</color> for Ka-Nil's experiments. The creature at the bottom level of the Stronghold has one.",
+            "Description" : "Recover an Irradiated Heart for Ka-Nil's experiments. The creature at the next level down of the Stronghold has one.",
             "Rewards" : {
                 "XP" : 100
             },
@@ -204,7 +204,7 @@
             "ID" : "ensis11",
             "Description" : "Find answers in the Kindred's Cathedral.",
             "Rewards" : {
-                "XP" : 250
+                "XP" : 30
             },
             "Steps" : [
                 { "Goal" : "Talk To", "NPC" : "corith" }
@@ -248,7 +248,7 @@
         {
             "Name" : "Strike the Earth",
             "ID" : "ensis14",
-            "Description" : "Ka-Nil needs <color=yellow>7x Unknown Ore</color>, found only in the Tundra. The best-known veins are located beneath the <color=yellow>Frostborne Village</color>",
+            "Description" : "Ka-Nil needs <color=yellow>7x Unknown Ore</color>, found only in the Tundra. The best-known veins are located beneath the <color=yellow>Frostborne Village</color>.",
             "Start Dialogue" : "Just the person I was looking for! I'm afraid I need a favor. There is a particular kind of ore, found beneath the Frostborne Village, in order to complete the body of the ship. Be wary, these people are vicious, attacking everyone on sight. Their technology is quite advanced, focusing on autonamous machines and cold-resistant gear. I'd send somebody else, but you've proven yourself one of the best at this sort of job. Bring something to dig with.",
             "Rewards" : {
                 "XP" : 400
@@ -637,12 +637,6 @@
             "Rewards" : {
 				"XP" : 50
 			},
-            "Events" : [
-                {
-                    "Event" : "OnStart",
-                    "Give Quest" : { "NPC" : "blacksmith", "Quest" : "blacksmith0" }
-                }
-            ],
 			"Steps" : [
                 { "Goal" : "Go", "To" : [ "Xul Camp" ] },
                 { "Goal" : "Talk To", "NPC" : "gemskhet" }
@@ -948,7 +942,7 @@
             "Name" : "Arena Wave 1",
             "ID" : "arena0",
             "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
-            "Description" : "Defeat the first wave in the arena.",
+            "Description" : "Defeat the wave in the arena.",
 			"Fail On Death" : true,
 			"Rewards" : {
 				"XP" : 50,
@@ -990,7 +984,7 @@
             "Name" : "Arena Wave 2",
             "ID" : "arena1",
             "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
-            "Description" : "Defeat the second wave in the arena.",
+            "Description" : "Defeat the wave in the arena.",
 			"Fail On Death" : true,
 			"Rewards" : {
 				"XP" : 60,
@@ -1033,7 +1027,7 @@
             "Name" : "Arena Wave 3",
             "ID" : "arena2",
             "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
-            "Description" : "Defeat the second wave in the arena.",
+            "Description" : "Defeat the wave in the arena.",
 			"Fail On Death" : true,
 			"Rewards" : {
 				"XP" : 60,
@@ -1077,7 +1071,7 @@
             "Name" : "Arena Wave 4",
             "ID" : "arena3",
             "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
-            "Description" : "Defeat the second wave in the arena.",
+            "Description" : "Defeat the wave in the arena.",
 			"Fail On Death" : true,
 			"Rewards" : {
 				"XP" : 60,
@@ -1120,7 +1114,7 @@
             "Name" : "Arena Wave 5",
             "ID" : "arena4",
             "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
-            "Description" : "Defeat the second wave in the arena.",
+            "Description" : "Defeat the wave in the arena.",
 			"Fail On Death" : true,
 			"Rewards" : {
 				"XP" : 100,
@@ -1163,7 +1157,7 @@
             "Name" : "Arena Wave 6",
             "ID" : "arena5",
             "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
-            "Description" : "Defeat the second wave in the arena.",
+            "Description" : "Defeat the wave in the arena.",
 			"Fail On Death" : true,
 			"Rewards" : {
 				"XP" : 150,
@@ -1205,7 +1199,7 @@
             "Name" : "Arena Wave 7",
             "ID" : "arena6",
             "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
-            "Description" : "Defeat the second wave in the arena.",
+            "Description" : "Defeat the wave in the arena.",
 			"Fail On Death" : true,
 			"Rewards" : {
 				"XP" : 200,

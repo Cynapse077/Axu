@@ -121,7 +121,7 @@ end
 
 function OnSplash_Lava(stats)
 	stats.AddStatusEffect("Aflame", Random(6, 14))
-	stats.IndirectAttack(Random(20, 55), DamageTypes.Heat, nil, "lava", true, false, false)
+	stats.IndirectAttack(Random(10, 55), DamageTypes.Heat, nil, "lava", true, false, false)
 end
 
 --Vomit

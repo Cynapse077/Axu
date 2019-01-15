@@ -31,7 +31,7 @@ e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.P
 172cfdd977ca8a6f32932932c2f0d2ee Assembly-CSharp.dll:UnityStandardAssets.ImageEffects.ImageEffectBase
 22905ec7f8e221db50f8d1c360263a6b Assembly-CSharp.dll:.CharacterPanel
 cc38079afc1a9252e23c0b60725c809d Assembly-CSharp.dll:.LookTooltipPanel
-46f41c1167b5610172d116657067c4d7 Assembly-CSharp.dll:.UseItemOnOtherPanel
+c4a2a18f67589f590c4093327b7fb2b1 Assembly-CSharp.dll:.UseItemOnOtherPanel
 e7a73f5f78ba6445195ec23b74a1ce2d Unity.TextMeshPro.dll:TMPro.TMP_ScrollbarEventHandler
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.DisplayHelpMessages
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.MapCreator_SideButton
@@ -236,7 +236,7 @@ fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-93fd46cf88fb2d82b39057b46f7dd694 Assembly-CSharp.dll:.BaseAI
+0bab5c445b94f43bd2474ccd3ee667de Assembly-CSharp.dll:.BaseAI
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Journal
 a4f0a4f62100f1a4fb5cbe0e00dde83f Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 0e71e42a045d01fcfb93ccf7c3e00db2 Assembly-CSharp.dll:.MiniMap

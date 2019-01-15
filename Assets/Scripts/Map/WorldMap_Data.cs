@@ -332,7 +332,9 @@ public class WorldMap_Data
                         continue;
 
                     if (tiles[nx + x, ny + y].biome == WorldMap.Biome.Ocean)
+                    {
                         breakOut = true;
+                    }
                 }
             }
 
@@ -361,7 +363,36 @@ public class WorldMap_Data
         for (int i = 1; i < riverTiles.Count; i++)
         {
             if (tiles[riverTiles[i].x, riverTiles[i].y].HasLandmark() || tiles[riverTiles[i].x, riverTiles[i].y].biome == WorldMap.Biome.Mountain)
+            {
                 return false;
+            }
+            else
+            {
+                //Uncomment for next major patch.
+                /*for (int x = -1; x <= 1; x++)
+                {
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        if (x == 0 && y == 0)
+                        {
+                            continue;
+                        }
+
+                        int rx = riverTiles[i].x + x;
+                        int ry = riverTiles[i].y + y;
+
+                        if (rx <= 0 || rx >= Manager.worldMapSize.x - 1 || ry <= 0 || ry >= Manager.worldMapSize.y)
+                        {
+                            continue;
+                        }
+
+                        if (tiles[rx, ry].landmark == "River" && !riverTiles.Contains(new Coord(rx, ry)))
+                        {
+                            return false;
+                        }
+                    }
+                }*/
+            }
         }
 
         return true;

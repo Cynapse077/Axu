@@ -20,11 +20,11 @@ public static class PrettyKeyNames
     {
         keys = new Dictionary<KeyCode, string>();
 
-        foreach (KeyCode k in Enum.GetValues(typeof(KeyCode)))
+        foreach (KeyCode kc in Enum.GetValues(typeof(KeyCode)))
         {
             string desc = "";
 
-            switch (k)
+            switch (kc)
             {
                 case KeyCode.RightBracket:
                     desc = "]";
@@ -161,13 +161,13 @@ public static class PrettyKeyNames
                     break;
 
                 default:
-                    desc = k.ToString();
+                    desc = kc.ToString();
                     break;
             }
 
-            if (!keys.ContainsKey(k))
+            if (!keys.ContainsKey(kc))
             {
-                keys.Add(k, desc);
+                keys.Add(kc, desc);
             }
         }
     }

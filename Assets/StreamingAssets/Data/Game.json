@@ -1,5 +1,7 @@
 {
 	"Campaign" : "Exile",
+	"Default Screen Size" : { "x" : 1280, "y" : 720 },
+    "Day Length" : { "Day" : 4000, "Night" : 2000 },
 
     "World" : {
         "Tileset" : "/Data/Art/Biomes.png",
@@ -11,7 +13,6 @@
         "Tileset" : "/Data/Art/LocalMap.png",
         "Start Position" : { "x" : 22, "y" : 2 }
     },
-    "Day Length" : { "Day" : 4000, "Night" : 2000 },
     "Data" : {
 		"Classes" : "/Data/Entities/Felonies.json",
         "NPCs" : "/Data/Entities/NPCs.json",

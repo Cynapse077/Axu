@@ -72,14 +72,16 @@ public class ItemActionsPanel : MonoBehaviour
         }
         else if (actionName == "Wield")
         {
-            if (curInv.entity.body.AttachedArms().Count > 1)
+            int armok = curInv.entity.body.AttachedArms().Count;
+
+            if (armok > 1)
             {
                 World.userInterface.SSPanel.gameObject.SetActive(true);
                 World.userInterface.SSPanel.Wield(item, curInv);
             }
-            else if (curInv.entity.body.AttachedArms().Count > 0)
+            else if (armok > 0)
             {
-                curInv.Wield(item, curInv.entity.body.MainIndex);
+                curInv.Wield(item, curInv.entity.body.MainHandIndex);
             }
         }
         else if (actionName == "Drop All")

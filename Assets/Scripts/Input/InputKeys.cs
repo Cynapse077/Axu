@@ -110,12 +110,12 @@ public class InputKeys
         MyKeys = new Dictionary<string, ShiftKeyCode>
         {
             { "North", new ShiftKeyCode(false, KeyCode.Keypad8) },
-            { "NorthEast", new ShiftKeyCode(false, KeyCode.Keypad9) },
             { "East", new ShiftKeyCode(false, KeyCode.Keypad6) },
-            { "SouthEast", new ShiftKeyCode(false, KeyCode.Keypad3) },
             { "South", new ShiftKeyCode(false, KeyCode.Keypad2) },
-            { "SouthWest", new ShiftKeyCode(false, KeyCode.Keypad1) },
             { "West", new ShiftKeyCode(false, KeyCode.Keypad4) },
+            { "NorthEast", new ShiftKeyCode(false, KeyCode.Keypad9) },
+            { "SouthEast", new ShiftKeyCode(false, KeyCode.Keypad3) },
+            { "SouthWest", new ShiftKeyCode(false, KeyCode.Keypad1) },
             { "NorthWest", new ShiftKeyCode(false, KeyCode.Keypad7) },
             { "Wait", new ShiftKeyCode(false, KeyCode.Keypad5) },
 
@@ -144,7 +144,7 @@ public class InputKeys
             { "Journal", new ShiftKeyCode(false, KeyCode.J) },
             { "Contextual Actions", new ShiftKeyCode(false, KeyCode.None) },
             { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) },
-            { "Toggle Minimap", new ShiftKeyCode(false, KeyCode.Backspace) }
+            { "Toggle Minimap", new ShiftKeyCode(false, KeyCode.None) }
         };
     }
 
@@ -153,12 +153,12 @@ public class InputKeys
         MyKeys = new Dictionary<string, ShiftKeyCode>
         {
             { "North", new ShiftKeyCode(false, KeyCode.K) },
-            { "NorthEast", new ShiftKeyCode(false, KeyCode.U) },
             { "East", new ShiftKeyCode(false, KeyCode.L) },
-            { "SouthEast", new ShiftKeyCode(false, KeyCode.N) },
             { "South", new ShiftKeyCode(false, KeyCode.J) },
-            { "SouthWest", new ShiftKeyCode(false, KeyCode.B) },
             { "West", new ShiftKeyCode(false, KeyCode.H) },
+            { "NorthEast", new ShiftKeyCode(false, KeyCode.U) },
+            { "SouthEast", new ShiftKeyCode(false, KeyCode.N) },
+            { "SouthWest", new ShiftKeyCode(false, KeyCode.B) },
             { "NorthWest", new ShiftKeyCode(false, KeyCode.Y) },
             { "Wait", new ShiftKeyCode(false, KeyCode.Period) },
 
@@ -187,7 +187,50 @@ public class InputKeys
             { "Journal", new ShiftKeyCode(false, KeyCode.Q) },
             { "Contextual Actions", new ShiftKeyCode(false, KeyCode.None) },
             { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) },
-            { "Toggle Minimap", new ShiftKeyCode(false, KeyCode.Backspace) }
+            { "Toggle Minimap", new ShiftKeyCode(false, KeyCode.None) }
+        };
+    }
+
+    public void WASD()
+    {
+        MyKeys = new Dictionary<string, ShiftKeyCode>()
+        {
+            { "North", new ShiftKeyCode(false, KeyCode.W) },
+            { "East", new ShiftKeyCode(false, KeyCode.D) },
+            { "South", new ShiftKeyCode(false, KeyCode.X) },
+            { "West", new ShiftKeyCode(false, KeyCode.A) },
+            { "NorthEast", new ShiftKeyCode(false, KeyCode.E) },
+            { "SouthEast", new ShiftKeyCode(false, KeyCode.C) },
+            { "SouthWest", new ShiftKeyCode(false, KeyCode.Z) },
+            { "NorthWest", new ShiftKeyCode(false, KeyCode.Q) },
+            { "Wait", new ShiftKeyCode(false, KeyCode.S) },
+
+            { "GoUpStairs", new ShiftKeyCode(false, KeyCode.KeypadPlus) },
+            { "GoDownStairs", new ShiftKeyCode(false, KeyCode.KeypadMinus) },
+
+            { "Enter", new ShiftKeyCode(false, KeyCode.Return) },
+            { "Pause", new ShiftKeyCode(false, KeyCode.Escape) },
+
+            { "Pickup", new ShiftKeyCode(false, KeyCode.G) },
+            { "Interact", new ShiftKeyCode(false, KeyCode.Space) },
+            { "Look", new ShiftKeyCode(false, KeyCode.L) },
+            { "Switch Target", new ShiftKeyCode(false, KeyCode.Tab) },
+            { "AlternateAttack", new ShiftKeyCode(false, KeyCode.LeftControl) },
+            { "GrappleAttack", new ShiftKeyCode(false, KeyCode.LeftAlt) },
+            { "Walk", new ShiftKeyCode(false, KeyCode.B) },
+            { "Throw", new ShiftKeyCode(false, KeyCode.T) },
+            { "Reload", new ShiftKeyCode(false, KeyCode.R) },
+            { "Rest", new ShiftKeyCode(false, KeyCode.Slash) },
+            { "Fire", new ShiftKeyCode(false, KeyCode.F) },
+
+            { "Inventory", new ShiftKeyCode(false, KeyCode.I) },
+            { "Character", new ShiftKeyCode(false, KeyCode.H) },
+            { "Abilities", new ShiftKeyCode(false, KeyCode.V) },
+            { "Map", new ShiftKeyCode(false, KeyCode.M) },
+            { "Journal", new ShiftKeyCode(false, KeyCode.J) },
+            { "Contextual Actions", new ShiftKeyCode(false, KeyCode.None) },
+            { "Toggle Mouse", new ShiftKeyCode(false, KeyCode.None) },
+            { "Toggle Minimap", new ShiftKeyCode(false, KeyCode.None) }
         };
     }
 }

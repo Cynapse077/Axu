@@ -2,7 +2,7 @@
     "Liquids" : [
         {
             "ID" : "liquid_default",
-            "Name" : "<color=grye>Dilute Liquid</color>",
+            "Name" : "<color=grye>Dilute Solution</color>",
             "Description" : "A heavily diluted liquid that most likely serves no purpose.",
             "Frequency" : 1,
             "Color" : [ 175, 175, 175 ],
@@ -41,7 +41,7 @@
             "Description" : "Ocean water.",
             "Frequency" : 100,
             "Color" : [ 100, 187, 243 ],
-            "Price Per Unit" : 0,
+            "Price Per Unit" : 1,
             "Events" : [
                 { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_SaltWater" },
                 { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
@@ -55,7 +55,8 @@
 			"Color" : [ 100, 187, 243 ],
 			"Price Per Unit" : 10,
 			"Events" : [
-				{ "Event" : "OnCoat", "File" : "Liquids", "Function" : "OnCoat_Preservative"}
+				{ "Event" : "OnCoat", "File" : "Liquids", "Function" : "OnCoat_Preservative" },
+				{ "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Preservative" }
 			]
 		},
         {
@@ -64,7 +65,7 @@
             "Description" : "Causes the consumer to regrow lost limbs.",
             "Frequency" : 10,
             "Color" : [ 240, 170, 33 ],
-            "Price Per Unit" : 1000,
+            "Price Per Unit" : 500,
             "Events" : [
                 { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Salamandis" },
                 { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
@@ -113,7 +114,7 @@
             "Description" : "Progresses radiation towards mutation.",
             "Frequency" : 8,
             "Color" : [ 155, 55, 217 ],
-            "Price Per Unit" : 300,
+            "Price Per Unit" : 150,
             "Events" : [
                 { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Mutagen" },
                 { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Mutagen" }
@@ -124,8 +125,8 @@
             "Name" : "<color=yellow>Lunium</color>",
             "Description" : "Drinking can remove up to 2 random mutations.",
             "Color" : [ 215, 222, 33 ],
-            "Frequency" : 10,
-            "Price Per Unit" : 300,
+            "Frequency" : 14,
+            "Price Per Unit" : 150,
             "Events" : [
                 { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Lunium" },
                 { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Lunium" }
@@ -150,7 +151,7 @@
             "Description" : "Molten rock, slightly cooled.",
             "Frequency" : 8,
             "Color" : [ 231, 75, 15 ],
-            "Price Per Unit" : 30,
+            "Price Per Unit" : 55,
             "Events" : [
                 { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Lava" },
                 { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Lava" }
@@ -186,7 +187,7 @@
             "Description" : "Blood from a vampiric creature.",
             "Frequency" : 5,
             "Color" : [ 184, 38, 38 ],
-            "Price Per Unit" : 0,
+            "Price Per Unit" : 50,
             "Events" : [
                 { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Blood_Vamp" },
                 { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
@@ -223,7 +224,7 @@
             "Frequency" : 1,
             "Color" : [ 0, 255, 0 ],
             "Addictiveness" : 30,
-            "Price Per Unit" : 650,
+            "Price Per Unit" : 150,
             "Events" : [
                 { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Cytopke" },
                 { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }

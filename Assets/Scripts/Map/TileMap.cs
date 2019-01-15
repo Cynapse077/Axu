@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
 
@@ -110,7 +111,9 @@ public class TileMap : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F11))
-            Utility.CaptureScreenshot();
+        {
+            StartCoroutine(CaptureScreenshot());
+        }
     }
 
     public static Sprite[] LoadImageFromStreamingAssets(int width, int height)
@@ -141,6 +144,20 @@ public class TileMap : MonoBehaviour
         }
 
         return ss;
+    }
+
+    IEnumerator CaptureScreenshot()
+    {
+        yield return new WaitForEndOfFrame();
+        string path = Application.persistentDataPath + "/Axu-Screenshot.png";
+        Texture2D screenImage = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+
+        screenImage.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0, false);
+        screenImage.Apply();
+
+        byte[] imageBytes = screenImage.EncodeToPNG();
+
+        File.WriteAllBytes(path, imageBytes);
     }
 
     void SetupTileRenderers()
@@ -311,6 +328,8 @@ public class TileMap : MonoBehaviour
         {
             LightCheck();
         }
+
+        World.objectManager.CheckFollowers();
     }
 
     void ApplyMapChanges(bool exists, int mx, int my, Coord worldPos)
@@ -319,7 +338,9 @@ public class TileMap : MonoBehaviour
         if (ObjectManager.playerEntity != null)
         {
             if (screens[mx, my].GetTileNumAt(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == Tile.tiles["Mountain"].ID)
+            {
                 screens[mx, my].ChangeTile(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY, Tile.tiles["Mountain_Floor"]);
+            }
         }
 
         if (exists)
@@ -755,7 +776,9 @@ public class TileMap : MonoBehaviour
         for (int i = 0; i < worldMap.landmarks.Count; i++)
         {
             if (Vector2.Distance(WorldPosition.toVector2(), worldMap.landmarks[i].position.toVector2()) < distMax)
+            {
                 lms.Add(worldMap.landmarks[i]);
+            }
         }
 
         return lms;

@@ -289,9 +289,22 @@ public class Inventory : MonoBehaviour
     public bool TwoHandPenalty(BodyPart.Hand hand)
     {
         if (hand == null || body == null || hand.arm == null)
+        {
             return false;
+        }
 
-        return (body.FreeHands().Count == 0 && hand.arm.GetStatMod("Strength").Amount < 6);
+        List<BodyPart.Hand> hands = body.Hands;
+        int twoHanded = 0;
+
+        for (int i = 0; i < hands.Count; i++)
+        {
+            if (hands[i].EquippedItem.HasProp(ItemProperty.Two_Handed) && hands[i].arm.GetStatMod("Strength").Amount < 6)
+            {
+                twoHanded++;
+            }
+        }
+
+        return twoHanded > body.FreeHands().Count;
     }
 
     public int BurdenPenalty()
@@ -330,7 +343,7 @@ public class Inventory : MonoBehaviour
         //Check for two handed weapons with low strength arms
         for (int h = 0; h < hands.Count; h++)
         {
-            if (hands[h].EquippedItem.HasProp(ItemProperty.Two_Handed) && TwoHandPenalty(hands[h]))
+            if (TwoHandPenalty(hands[h]))
             {
                 CombatLog.NameMessage("Message_2_Handed_No_Req", hands[h].EquippedItem.DisplayName());
                 break;
@@ -703,7 +716,7 @@ public class Inventory : MonoBehaviour
             {
                 if (randomNumer > (butcheryLevel + 1) * 10)
                 {
-                    it = (randomNumer > 60) ? ItemList.GetItemByID("fleshraw") : null;
+                    it = (randomNumer > 40) ? ItemList.GetItemByID("fleshraw") : null;
                 }
                 else
                 {
@@ -713,7 +726,7 @@ public class Inventory : MonoBehaviour
                         {
                             if (SeedManager.combatRandom.CoinFlip())
                                 sm.Amount += SeedManager.combatRandom.Next(0, 2);
-                            else if (SeedManager.combatRandom.Next(12) < butcheryLevel)
+                            else if (SeedManager.combatRandom.Next(15) < butcheryLevel + 1)
                                 sm.Amount += SeedManager.combatRandom.Next(1, 5);
                         }
                     }

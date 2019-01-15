@@ -375,7 +375,7 @@ function DrainBlood(caster, direction, skill)
 		caster.stats.Heal(amount)
 
 		--Give player vampirism
-		if (target.isPlayer and Random(0, 100) < 100) then
+		if (target.isPlayer and Random(0, 100) < 5) then
 			if (not target.stats.hasTrait("pre_vamp") and not target.stats.hasTrait("vampirism")) then
 				target.stats.InitializeNewTrait(TraitList.GetTraitByID("pre_vamp"))
 				Alert.CustomAlert("You have been bitten by a Vampire, and become a Fledgling Vampire yourself! Cure this disease or become one of them!")
@@ -485,7 +485,6 @@ function Cast_Coordinate(caster, pos, skill)
 		return
 	end
 
-	--LuaManager.CallScriptFunction(skill.luaAction.scriptName, skill.luaAction.functionName, caster, pos, skill)
 	skill.CallScriptFunction(caster, pos, skill)
 end
 
@@ -494,6 +493,7 @@ function CanUseSkill(caster, skill)
 		if (caster.isPlayer) then
 			Alert.CustomAlert("This ability is on cooldown. It will be available in <color=yellow><b>" .. skill.cooldown .. "</b></color> turns.")
 		end
+
 		return false
 	end
 

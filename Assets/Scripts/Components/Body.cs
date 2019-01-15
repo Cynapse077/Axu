@@ -8,6 +8,15 @@ public class Body : MonoBehaviour
     public Entity entity;
     public BodyPart.Hand defaultHand;
 
+    Stats MyStats
+    {
+        get { return entity.stats; }
+    }
+    Inventory MyInventory
+    {
+        get { return entity.inventory; }
+    }
+
     public BodyPart.Hand MainHand
     {
         get
@@ -21,7 +30,7 @@ public class Body : MonoBehaviour
         }
     }
 
-    public int MainIndex
+    public int MainHandIndex
     {
         get
         {
@@ -37,35 +46,6 @@ public class Body : MonoBehaviour
 
             return -1;
         }
-    }
-
-    Stats MyStats
-    {
-        get { return entity.stats; }
-    }
-    Inventory MyInventory
-    {
-        get { return entity.inventory; }
-    }
-
-    public int GetTotalStat(string id)
-    {
-        int total = 0;
-
-        foreach (BodyPart bp in bodyParts)
-        {
-            if (bp.isAttached)
-            {
-                Stat_Modifier sm = bp.Attributes.Find(x => x.Stat == id);
-
-                if (sm != null)
-                {
-                    total += sm.Amount;
-                }
-            }
-        }
-
-        return total;
     }
 
     void OnDisable()
@@ -152,17 +132,7 @@ public class Body : MonoBehaviour
 
     public List<BodyPart> SeverableBodyParts()
     {
-        List<BodyPart> bp = new List<BodyPart>();
-
-        for (int i = 0; i < bodyParts.Count; i++)
-        {
-            if (bodyParts[i].severable && bodyParts[i].isAttached)
-            {
-                bp.Add(bodyParts[i]);
-            }
-        }
-
-        return bp;
+        return bodyParts.FindAll(x => x.isAttached && x.severable);
     }
 
     public List<BodyPart> TargetableBodyParts()
@@ -296,11 +266,15 @@ public class Body : MonoBehaviour
 
                     bp.ReleaseGrip(true);
                 }
-                else
+                else if (bp.grip != null && bp.grip.heldPart != null && bp.grip.HeldBody != null)
                 {
                     bp.grip.HeldBody.entity.cell.UnSetEntity(bp.grip.HeldBody.entity);
                     bp.grip.HeldBody.entity.myPos = entity.myPos;
                     bp.grip.HeldBody.entity.SetCell();
+                }
+                else
+                {
+                    bp.ReleaseGrip(true);
                 }
             }
             else
@@ -470,7 +444,7 @@ public class Body : MonoBehaviour
 
     public List<BodyPart.Hand> FreeHands()
     {
-        return Hands.FindAll(x => x.IsAttached && x.EquippedItem.ID == x.baseItem);
+        return Hands.FindAll(x => x.IsAttached && (x.EquippedItem.ID == x.baseItem));
     }
 
     public List<BodyPart> AttachedArms()

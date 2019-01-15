@@ -4,18 +4,21 @@ using LitJson;
 
 public static class GameSettings
 {
+    public static int defaultScreenX = 1280, defaultScreenY = 720;
+
     public static InputKeys Keybindings;
     public static double SE_Volume, Mus_Volume, Master_Volume, Animation_Speed;
     public static bool SimpleDamage, MuteAll;
     public static bool UseMouse, Fullscreen, Enable_Weather;
     public static bool Allow_Console, Particle_Effects;
     public static Coord ScreenSize;
+    public static bool ShowLog;
 
     public static string version
     {
         get
         {
-            return "0.7.3";
+            return "0.7.3c";
         }
     }
 
@@ -28,69 +31,31 @@ public static class GameSettings
             string jsonString = File.ReadAllText(Manager.SettingsDirectory);
             JsonData dat = JsonMapper.ToObject(jsonString);
 
-            if (dat.Keys.Contains("ScreenSize") && dat["ScreenSize"].Count == 2)
-                ScreenSize = new Coord((int)dat["ScreenSize"][0], (int)dat["ScreenSize"][1]);
-            else
-                ScreenSize = new Coord(1280, 720);
-
-            if (dat.Keys.Contains("Master_Volume"))
-                Master_Volume = (dat["Master_Volume"].IsDouble) ? (double)dat["Master_Volume"] : 1.0;
-            else
-                Master_Volume = 1.0;
-
-            if (dat.Keys.Contains("Music_Volume"))
-                Mus_Volume = (dat["Music_Volume"].IsDouble) ? (double)dat["Music_Volume"] : 1.0;
-            else
-                Mus_Volume = 1.0;
-
-            if (dat.Keys.Contains("SFX_Volume"))
-                SE_Volume = (dat["SFX_Volume"].IsDouble) ? (double)dat["SFX_Volume"] : 1.0;
-            else
-                SE_Volume = 1.0;
-
-            if (dat.Keys.Contains("Mute"))
-                MuteAll = (bool)dat["Mute"];
-            else
-                MuteAll = false;
-
-            if (dat.Keys.Contains("Fullscreen"))
-                Fullscreen = (bool)dat["Fullscreen"];
-            else
-                Fullscreen = false;
-
-            if (dat.Keys.Contains("UseMouse"))
-                UseMouse = (bool)dat["UseMouse"];
-            else
-                UseMouse = false;
-
-            if (dat.ContainsKey("Weather"))
-                Enable_Weather = (bool)dat["Weather"];
-            else
-                Enable_Weather = true;
-
-            if (dat.Keys.Contains("Animation_Speed"))
-                Animation_Speed = (double)dat["Animation_Speed"];
-            else
-                Animation_Speed = 40.0;
-
-            if (dat.ContainsKey("Particle_Effects"))
-                Particle_Effects = (bool)dat["Particle_Effects"];
-            else
-                Particle_Effects = true;
-
-            if (dat.ContainsKey("SimpleDmg"))
-                SimpleDamage = (bool)dat["SimpleDmg"];
-            else
-                SimpleDamage = false;
+            ScreenSize = dat.ContainsKey("ScreenSize") && dat["ScreenSize"].Count > 1 ? new Coord((int)dat["ScreenSize"][0], (int)dat["ScreenSize"][1]) : new Coord(defaultScreenX, defaultScreenY);
+            Master_Volume = dat.ContainsKey("Master_Volume") ? (double)dat["Master_Volume"] : 1.0;
+            Mus_Volume = dat.ContainsKey("Music_Volume") ? (double)dat["Music_Volume"] : 1.0;
+            SE_Volume = dat.ContainsKey("SFX_Volume") ? (double)dat["SFX_Volume"] : 1.0;
+            MuteAll = dat.ContainsKey("Mute") ? (bool)dat["Mute"] : false;
+            Fullscreen = dat.ContainsKey("Fullscreen") ? (bool)dat["Fullscreen"] : false;
+            UseMouse = dat.ContainsKey("UseMouse") ? (bool)dat["UseMouse"] : false;
+            Enable_Weather = dat.ContainsKey("Weather") ? (bool)dat["Weather"] : true;
+            Animation_Speed = (dat.ContainsKey("Animation_Speed")) ? (double)dat["Animation_Speed"] : 40.0;
+            Particle_Effects = dat.ContainsKey("Particle_Effects") ? (bool)dat["Particle_Effects"] : true;
+            SimpleDamage = dat.ContainsKey("SimpleDmg") ? (bool)dat["SimpleDmg"] : false;
+            ShowLog = dat.ContainsKey("Show_Log") ? (bool)dat["Show_Log"] : true;
 
             if (dat.Keys.Contains("Input"))
+            {
                 Keybindings = new InputKeys(dat);
+            }
             else
             {
                 Keybindings = new InputKeys();
 
                 if (ObjectManager.player != null)
+                {
                     ObjectManager.player.GetComponent<PlayerInput>().NewKeybindingClass();
+                }
             }
         }
         else
@@ -104,7 +69,7 @@ public static class GameSettings
     public static void Save()
     {
         SSettings settings = new SSettings(Fullscreen, ScreenSize, Master_Volume, Mus_Volume, SE_Volume, MuteAll,
-            UseMouse, Keybindings, Animation_Speed, Enable_Weather, Particle_Effects, SimpleDamage);
+            UseMouse, Keybindings, Animation_Speed, Enable_Weather, Particle_Effects, SimpleDamage, ShowLog);
 
         JsonData data = JsonMapper.ToJson(settings);
         string prettyData = data.ToString();
@@ -122,17 +87,59 @@ public static class GameSettings
 
         MuteAll = false;
         Fullscreen = false;
-        ScreenSize = new Coord(1280, 720);
+        ScreenSize = new Coord(defaultScreenX, defaultScreenY);
         UseMouse = false;
         Allow_Console = true;
         Animation_Speed = 40.0;
         Enable_Weather = true;
         Particle_Effects = true;
         SimpleDamage = false;
+        ShowLog = true;
 
         Keybindings = new InputKeys();
 
         if (ObjectManager.player != null)
+        {
             ObjectManager.player.GetComponent<PlayerInput>().NewKeybindingClass();
+        }
+    }
+}
+
+[System.Serializable]
+public class SSettings
+{
+    public double Master_Volume { get; set; }
+    public double Music_Volume { get; set; }
+    public double SFX_Volume { get; set; }
+    public double Animation_Speed { get; set; }
+    public bool Mute { get; set; }
+    public bool Fullscreen { get; set; }
+    public Coord ScreenSize { get; set; }
+    public bool UseMouse { get; set; }
+    public bool Weather { get; set; }
+    public bool Particle_Effects { get; set; }
+    public bool SimpleDmg { get; set; }
+    public bool ShowLog { get; set; }
+
+    public InputKeys Input;
+
+    public SSettings() { }
+
+    public SSettings(bool fullscreen, Coord scSize, double masvol, double musvol, double sfxvol, bool mute,
+        bool mouse, InputKeys keys, double animspeed, bool wea, bool part, bool sdmg, bool log)
+    {
+        Fullscreen = fullscreen;
+        ScreenSize = scSize;
+        Master_Volume = masvol;
+        Music_Volume = musvol;
+        SFX_Volume = sfxvol;
+        Mute = mute;
+        UseMouse = mouse;
+        Input = keys;
+        Animation_Speed = animspeed;
+        Weather = wea;
+        Particle_Effects = part;
+        SimpleDmg = sdmg;
+        ShowLog = log;
     }
 }

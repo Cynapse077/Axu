@@ -211,6 +211,12 @@ public class MainMenu : MonoBehaviour
             TurnManager.nightLength = (int)dat["Day Length"]["Night"];
         }
 
+        if (dat.ContainsKey("Default Screen Size"))
+        {
+            GameSettings.defaultScreenX = (int)dat["Default Screen Size"][0];
+            GameSettings.defaultScreenY = (int)dat["Default Screen Size"][1];
+        }
+
         if (dat.ContainsKey("Data"))
         {
             EntityList.dataPath = dat["Data"]["NPCs"].ToString();

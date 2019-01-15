@@ -61,52 +61,6 @@ public struct StringInt
 }
 
 [Serializable]
-public class SStats
-{
-    public int[] HP { get; set; }
-    public int[] ST { get; set; }
-
-    public int STR { get; set; }
-    public int DEX { get; set; }
-    public int INT { get; set; }
-    public int END { get; set; }
-
-    public int DEF { get; set; }
-    public int SPD { get; set; }
-    public int ACC { get; set; }
-    public int STLH { get; set; }
-    public int Rad { get; set; } //Radiation
-    public List<StringInt> SE { get; set; }
-    public List<Addiction> Adcts { get; set; }
-
-    public SStats(Coord hp, Coord st, Dictionary<string, int> attributes, Dictionary<string, int> statusEffects, int radiation, List<Addiction> adc)
-    {
-        HP = new int[2] { hp.x, hp.y };
-        ST = new int[2] { st.x, st.y };
-
-        STR = attributes["Strength"];
-        DEX = attributes["Dexterity"];
-        INT = attributes["Intelligence"];
-        END = attributes["Endurance"];
-        DEF = attributes["Defense"];
-        SPD = attributes["Speed"];
-        ACC = attributes["Accuracy"];
-        Adcts = adc;
-
-        SE = new List<StringInt>();
-        foreach (KeyValuePair<string, int> kvp in statusEffects)
-        {
-            SE.Add(new StringInt(kvp.Key, kvp.Value));
-        }
-
-        if (attributes.ContainsKey("Stealth"))
-            STLH = attributes["Stealth"];
-
-        Rad = radiation;
-    }
-}
-
-[Serializable]
 public struct STrait
 {
     public string id;
@@ -142,59 +96,5 @@ public class Stat_Modifier
     {
         Stat = other.Stat;
         Amount = other.Amount;
-    }
-}
-
-[Serializable]
-public class SSettings
-{
-    public double Master_Volume { get; set; }
-    public double Music_Volume { get; set; }
-    public double SFX_Volume { get; set; }
-    public double Animation_Speed { get; set; }
-    public bool Mute { get; set; }
-    public bool Fullscreen { get; set; }
-    public Coord ScreenSize { get; set; }
-    public bool UseMouse { get; set; }
-    public bool Weather { get; set; }
-    public bool Particle_Effects { get; set; }
-    public bool SimpleDmg { get; set; }
-
-    public InputKeys Input;
-
-    public SSettings() { }
-
-    public SSettings(bool fullscreen, Coord scSize, double masvol, double musvol, double sfxvol, bool mute,
-        bool mouse, InputKeys keys, double animspeed, bool wea, bool part, bool sdmg)
-    {
-        Fullscreen = fullscreen;
-        ScreenSize = scSize;
-        Master_Volume = masvol;
-        Music_Volume = musvol;
-        SFX_Volume = sfxvol;
-        Mute = mute;
-        UseMouse = mouse;
-        Input = keys;
-        Animation_Speed = animspeed;
-        Weather = wea;
-        Particle_Effects = part;
-        SimpleDmg = sdmg;
-    }
-}
-
-[Serializable]
-public class SSkill
-{
-    public string Name { get; protected set; }
-    public int Lvl { get; protected set; }
-    public double XP { get; protected set; }
-    public int Flg { get; protected set; }
-
-    public SSkill(string _name, int lvl, double xp, int origin)
-    {
-        Name = _name;
-        Lvl = lvl;
-        XP = xp;
-        Flg = origin;
     }
 }
