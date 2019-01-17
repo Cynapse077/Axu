@@ -113,7 +113,14 @@ public class EntitySkills : MonoBehaviour
         int skill = entity.stats.Strength - 1;
         skill += (entity.isPlayer ? grappleLevel : SeedManager.combatRandom.Next(-1, 3));
 
-        if (SeedManager.combatRandom.Next(50) <= entity.stats.Strength + skill * 2)
+        bool success = SeedManager.combatRandom.Next(50) <= entity.stats.Strength + skill * 2;
+
+        if (!target.entity.isPlayer && target.entity.AI.npcBase.HasFlag(NPC_Flags.No_TakeDown))
+        {
+            success = false;
+        }
+
+        if (success)
         {
             string message = LocalizationManager.GetContent("Gr_TakeDown");
             message = message.Replace("[ATTACKER]", entity.MyName);
@@ -202,11 +209,22 @@ public class EntitySkills : MonoBehaviour
         int skill = entity.stats.Strength;
 
         if (entity.isPlayer)
-            skill += grappleLevel;
-
-        if (SeedManager.combatRandom.Next(30) <= skill)
         {
-            target.AddStatusEffect("Unconscious", SeedManager.combatRandom.Next(5, 11));
+            skill += grappleLevel;
+        }
+
+        bool success = SeedManager.combatRandom.Next(30) <= skill;
+
+        if (!target.entity.isPlayer && target.entity.AI.npcBase.HasFlag(NPC_Flags.No_TakeDown))
+        {
+            success = false;
+        }
+
+        if (success)
+        {
+            target.AddStatusEffect("Unconscious", SeedManager.combatRandom.Next(5, 12));
+            target.SimpleDamage(2);
+
             string message = LocalizationManager.GetContent("Gr_Strangle");
             message = message.Replace("[ATTACKER]", entity.MyName);
             message = message.Replace("[DEFENDER]", target.entity.MyName);
@@ -221,7 +239,9 @@ public class EntitySkills : MonoBehaviour
         }
 
         if (!target.entity.isPlayer)
+        {
             target.entity.AI.SetTarget(entity);
+        }
 
         if (entity.isPlayer)
         {
@@ -239,10 +259,10 @@ public class EntitySkills : MonoBehaviour
         Body otherBody = grip.HeldBody;
         BodyPart targetLimb = grip.heldPart;
         string message = "";
-
         int pullStrength = entity.stats.Strength + grappleLevel;
+        bool success = targetLimb.severable && targetLimb.isAttached && SeedManager.combatRandom.Next(100) <= pullStrength;
 
-        if (targetLimb.severable && targetLimb.isAttached && SeedManager.combatRandom.Next(100) <= pullStrength)
+        if (success)
         {
             otherBody.RemoveLimb(targetLimb);
             grip.Release();
@@ -261,7 +281,9 @@ public class EntitySkills : MonoBehaviour
         CombatLog.NewMessage(message);
 
         if (!otherBody.entity.isPlayer)
+        {
             otherBody.entity.AI.SetTarget(entity);
+        }
 
         if (entity.isPlayer)
         {
@@ -276,15 +298,21 @@ public class EntitySkills : MonoBehaviour
 
     public void Grapple_Pressure(BodyPart.Grip grip)
     {
-        int pullStrength = entity.stats.Strength + grappleLevel;
+        int pressure = entity.stats.Strength + grappleLevel;
 
-        if (SeedManager.combatRandom.Next(100) < pullStrength)
+        if (SeedManager.combatRandom.Next(100) < pressure)
         {
             grip.heldPart.InflictPhysicalWound();
         }
+        else
+        {
+            grip.heldPart.myBody.entity.stats.SimpleDamage(2);
+        }
 
         if (!grip.HeldBody.entity.isPlayer)
+        {
             grip.HeldBody.entity.AI.SetTarget(entity);
+        }
 
         if (entity.isPlayer)
         {
@@ -293,6 +321,8 @@ public class EntitySkills : MonoBehaviour
 
             entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
         }
+
+        entity.EndTurn(0.02f, 10);
     }
 
     public void CallForHelp()

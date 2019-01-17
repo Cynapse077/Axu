@@ -195,7 +195,9 @@ public class CharacterCreation : MonoBehaviour
                 string trait = dat["Traits"][t].ToString();
 
                 if (!string.IsNullOrEmpty(trait))
+                {
                     p.traits[t] = trait;
+                }
             }
         }
 
@@ -223,6 +225,7 @@ public class CharacterCreation : MonoBehaviour
         SetProf(ref p, dat, "Armor", 8);
         SetProf(ref p, dat, "Shield", 9);
         SetProf(ref p, dat, "Butchery", 10);
+        SetProf(ref p, dat, "Martial Arts", 11);
 
         for (int s = 0; s < dat["Skills"].Count; s++)
         {
@@ -254,7 +257,8 @@ public class CharacterCreation : MonoBehaviour
             new WeaponProficiency("Throwing", Proficiencies.Throw),
             new WeaponProficiency("Armor", Proficiencies.Armor),
             new WeaponProficiency("Shield", Proficiencies.Shield),
-            new WeaponProficiency("Butchery", Proficiencies.Butchery)
+            new WeaponProficiency("Butchery", Proficiencies.Butchery),
+            new WeaponProficiency("Martial Arts", Proficiencies.MartialArts)
         };
     }
 
@@ -315,6 +319,7 @@ public class CharacterCreation : MonoBehaviour
         {
             Back();
         }
+
         if (UpPressed())
         {
             int newNum = selectedNum - 1;
@@ -652,6 +657,7 @@ public class CharacterCreation : MonoBehaviour
         Manager.playerBuilder.proficiencies.Armor.level = profs[8].level + 1;
         Manager.playerBuilder.proficiencies.Shield.level = profs[9].level + 1;
         Manager.playerBuilder.proficiencies.Butchery.level = profs[10].level + 1;
+        Manager.playerBuilder.proficiencies.MartialArts.level = profs[11].level + 1;
 
         Manager.playerBuilder.maxHP = MaxHealth();
         Manager.playerBuilder.maxST = MaxStam();

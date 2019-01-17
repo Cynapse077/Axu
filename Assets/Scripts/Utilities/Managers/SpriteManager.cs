@@ -60,7 +60,9 @@ public static class SpriteManager
         Vector2 pivot = (tex.height > tex.width) ? new Vector2(0.5f, (tex.width / (float)tex.height) / 2f) : new Vector2(0.5f, 0.5f);
 
         if (overridePivot)
+        {
             pivot = new Vector2(0.5f, 0);
+        }
 
         return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot, 16f);
     }
@@ -69,7 +71,7 @@ public static class SpriteManager
     {
         if (!objectSprites.ContainsKey(id))
         {
-            Debug.LogError("No Object sprite by key: \"" + id + "\"");
+            Debug.LogError("No Object sprite with key: \"" + id + "\"");
             return Sprite.Create(null, new Rect(0, 0, 0, 0), Vector2.zero);
         }
 
@@ -80,7 +82,7 @@ public static class SpriteManager
     {
         if (!npcSprites.ContainsKey(id))
         {
-            Debug.LogError("No NPC sprite by key: \"" + id + "\"");
+            Debug.LogError("No NPC sprite with key: \"" + id + "\"");
             return Sprite.Create(null, new Rect(0, 0, 0, 0), Vector2.zero);
         }
 

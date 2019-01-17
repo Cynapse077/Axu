@@ -1935,7 +1935,9 @@
             "Flags" : [
                 "No_Blood",
                 "Stationary",
-                "RBleed"
+                "RBleed",
+				"No_Strangle",
+				"No_TakeDown"
             ],
             "Stats" : {
                 "Health" : 20,
@@ -1972,7 +1974,9 @@
             "Flags" : [
                 "No_Blood",
                 "Stationary",
-                "RBleed"
+                "RBleed",
+				"No_Strangle",
+				"No_TakeDown"
             ],
             "Stats" : {
                 "Health" : 20,
@@ -2007,7 +2011,9 @@
             "Flags" : [
                 "No_Blood",
                 "RBleed",
-                "Stationary"
+                "Stationary",
+				"No_Strangle",
+				"No_TakeDown"
             ],
             "Stats" : {
                 "Health" : 50,
@@ -2042,7 +2048,9 @@
             "Flags" : [
                 "No_Blood",
                 "Stationary",
-                "RBleed"
+                "RBleed",
+				"No_Strangle",
+				"No_TakeDown"
             ],
             "Stats" : {
                 "Health" : 50,
@@ -2612,7 +2620,8 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-vampire.png",
             "Flags" : [
-                "RBleed"
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 75,
@@ -2770,7 +2779,8 @@
             "Body Structure" : "Quadruped",
             "Sprite" : "npc-parasect.png",
             "Flags" : [
-                "RBleed"
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 56,
@@ -2939,7 +2949,8 @@
                 "No_Blood",
                 "Stationary",
                 "RPois",
-                "RBleed"
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 20,
@@ -2975,7 +2986,8 @@
             "Flags" : [
                 "No_Blood",
                 "RPois",
-                "RBleed"
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 55,
@@ -3011,7 +3023,8 @@
                 "Can_Open_Doors",
                 "No_Blood",
                 "RPois",
-                "RBleed"
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 54,
@@ -3043,7 +3056,8 @@
                 "Quantum_Locked",
                 "No_Blood",
                 "RPois",
-                "RBleed"
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 45,
@@ -3080,7 +3094,8 @@
                 "No_Blood",
 				"No_Body",
                 "RPois",
-                "RBleed"
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 65,
@@ -3118,7 +3133,8 @@
                 "No_Blood",
                 "No_Body",
                 "RPois",
-                "RBleed"       
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 37,
@@ -3155,7 +3171,8 @@
                 "No_Blood",
                 "No_Body",
                 "RPois",
-                "RBleed"       
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 85,
@@ -3362,7 +3379,8 @@
                 "No_Blood",
                 "RPois",
                 "RBleed",
-				"Solid_Limbs"
+				"Solid_Limbs",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 102,
@@ -3587,7 +3605,9 @@
                 "Aquatic",
                 "Stationary",
                 "No_Body",
-                "OnDisable_Regen"
+                "OnDisable_Regen",
+				"No_Strangle",
+				"No_TakeDown"
             ],
             "Stats" : {
                 "Health" : 85,
@@ -3686,7 +3706,8 @@
                 "Can_Open_Doors",
                 "No_Blood",
                 "RPois",
-                "RBleed"
+                "RBleed",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 106,

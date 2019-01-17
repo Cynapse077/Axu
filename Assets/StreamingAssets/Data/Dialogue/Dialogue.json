@@ -104,7 +104,13 @@
                 "Where to?",
                 "Keep up, will you?"
             ]
-        }
+        },
+		{
+			"ID" : "xul",
+			"Dialogues" : [
+				"Hello there."
+			]
+		}
     ],
 
     "Static NPCs" : [

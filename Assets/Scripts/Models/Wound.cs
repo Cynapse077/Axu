@@ -7,6 +7,8 @@ public class Wound
     public List<DamageTypes> damTypes;
     public List<Stat_Modifier> statMods;
 
+    public Wound() { }
+
     public Wound(string _name, string _ID, ItemProperty _slot, List<DamageTypes> dt)
     {
         Name = _name;

@@ -834,6 +834,11 @@ public class Entity : MonoBehaviour
 
     public void Interact(int x, int y)
     {
+        if (!World.tileMap.WalkableTile(posX + x, posY + y))
+        {
+            return;
+        }
+
         Cell targetCell = World.tileMap.GetCellAt(posX + x, posY + y);
 
         if (targetCell.entity != null || targetCell.mapObjects.Count > 0)

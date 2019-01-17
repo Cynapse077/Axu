@@ -30,8 +30,6 @@ public class Stats : MonoBehaviour
     public event Action hpChanged;
     public event Action stChanged;
     [HideInInspector] public Entity lastHit = null;
-
-
     [HideInInspector] public bool dead = false;
     [HideInInspector] public bool invincible = false;
 
@@ -183,9 +181,9 @@ public class Stats : MonoBehaviour
     {
         if (effectName == "Stun" && hasTraitEffect(TraitEffects.Stun_Resist) || effectName == "Confuse" && hasTraitEffect(TraitEffects.Confusion_Resist))
         {
-            if (SeedManager.combatRandom.Next(100) > 20)
+            if (RNG.Next(100) > 20)
                 turns /= 2;
-            else if (SeedManager.combatRandom.Next(100) < 2)
+            else if (RNG.Next(100) < 2)
                 turns = 0;
         }
 
@@ -211,8 +209,13 @@ public class Stats : MonoBehaviour
             if (effectName == "Slow" && statusEffects["Slow"] > Speed - 3)
             {
                 statusEffects["Slow"] = 0;
-                AddStatusEffect("Frozen", SeedManager.combatRandom.Next(2, 6));
+                AddStatusEffect("Frozen", RNG.Next(2, 6));
             }
+        }
+
+        if (effectName == "Unconscious" && !entity.isPlayer)
+        {
+            entity.AI.hasSeenPlayer = false;
         }
 
         CheckEffectsObjects();
@@ -222,7 +225,9 @@ public class Stats : MonoBehaviour
     public void RemoveStatusEffect(string effectName)
     {
         if (statusEffects.ContainsKey(effectName))
+        {
             statusEffects.Remove(effectName);
+        }
     }
 
     public bool HasEffect(string effect)
@@ -372,8 +377,10 @@ public class Stats : MonoBehaviour
             HandleSeverence(damTypes, targetPart, sevChance);
             weapon.OnHit(attacker, entity);
 
-            if (SeedManager.combatRandom.Next(100) < 20)
+            if (RNG.Next(100) < 20)
+            {
                 MyBody.TrainLimbOfType(new ItemProperty[] { ItemProperty.Slot_Back, ItemProperty.Slot_Chest });
+            }
 
         }
         else if (!damTypes.Contains(DamageTypes.Cold) && damTypes.Contains(DamageTypes.Heat) && !damTypes.Contains(DamageTypes.Energy))
@@ -582,27 +589,27 @@ public class Stats : MonoBehaviour
                 {
                     ApplyResist(ref damage, HeatResist);
 
-                    if (SeedManager.combatRandom.Next(100) < 3)
+                    if (RNG.Next(100) < 3)
                     {
-                        AddStatusEffect("Aflame", SeedManager.combatRandom.Next(2, 6));
+                        AddStatusEffect("Aflame", RNG.Next(2, 6));
                     }
                 }
                 else if (damageTypes.Contains(DamageTypes.Cold))
                 {
                     ApplyResist(ref damage, ColdResist);
 
-                    if (SeedManager.combatRandom.Next(100) < 3)
+                    if (RNG.Next(100) < 3)
                     {
-                        AddStatusEffect("Slow", SeedManager.combatRandom.Next(2, 5));
+                        AddStatusEffect("Slow", RNG.Next(2, 5));
                     }
                 }
                 else if (damageTypes.Contains(DamageTypes.Energy))
                 {
                     ApplyResist(ref damage, EnergyResist);
 
-                    if (SeedManager.combatRandom.Next(100) < 3)
+                    if (RNG.Next(100) < 3)
                     {
-                        AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 3));
+                        AddStatusEffect("Stun", RNG.Next(1, 3));
                     }
                 }
             }
@@ -610,7 +617,7 @@ public class Stats : MonoBehaviour
 
         if (damage > 0)
         {
-            if (entity.isPlayer && damage >= maxHealth / 5 && SeedManager.combatRandom.Next(1000) < 5)
+            if (entity.isPlayer && damage >= maxHealth / 5 && RNG.Next(1000) < 5)
             {
                 targetPart.WoundMe(damageTypes);
             }

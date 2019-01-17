@@ -305,9 +305,13 @@ public class CLuaEvent : CComponent
         if (eventToCall == evName)
         {
             if (string.IsNullOrEmpty(xprm))
+            {
                 LuaManager.CallScriptFunction(file, func, ObjectManager.playerEntity);
+            }
             else
+            {
                 LuaManager.CallScriptFunction(file, func, ObjectManager.playerEntity, xprm);
+            }
         }
     }
 

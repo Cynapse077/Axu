@@ -46,7 +46,7 @@ public class Inventory : MonoBehaviour
         {
             if (_firearm != null && entity != null)
             {
-                _firearm.OnUnequip(entity);
+                _firearm.OnUnequip(entity, false);
             }
 
             _firearm = value;
@@ -58,7 +58,7 @@ public class Inventory : MonoBehaviour
 
             if (stats != null && _firearm != null)
             {
-                _firearm.OnEquip(stats);
+                _firearm.OnEquip(stats, false);
             }
         }
     }
@@ -220,7 +220,7 @@ public class Inventory : MonoBehaviour
         }
 
         b.equippedItem = i;
-        i.OnEquip(stats);
+        i.OnEquip(stats, false);
         RemoveInstance(i);
         World.soundManager.UseItem();
     }
@@ -234,7 +234,7 @@ public class Inventory : MonoBehaviour
 
         Item itemToPickup = new Item(firearm);
         firearm = new Item(i);
-        i.OnEquip(stats);
+        i.OnEquip(stats, false);
         RemoveInstance_All(i);
         PickupItem(itemToPickup, false);
 
@@ -317,15 +317,21 @@ public class Inventory : MonoBehaviour
         return Mathf.Min((items.Count - maxItems) * 2, 10);
     }
 
-    public void Wield(Item i, int armSlot)
+    public void Wield(Item item, int armIndex)
     {
         List<BodyPart.Hand> hands = body.Hands;
-        BodyPart.Hand hand = hands[armSlot];
 
-        if (hands.Count == 0 || hand == null)
+        if (hands.Count == 0)
         {
             Alert.NewAlert("No_Hands", UIWindow.Inventory);
             return;
+        }
+
+        BodyPart.Hand hand = hands[armIndex];
+        
+        if (hand == null)
+        {
+            Debug.LogError("Inventory::Wield() - Selected hand does not exist.");
         }
 
         if (hand.EquippedItem.HasProp(ItemProperty.Cannot_Remove) && hand.EquippedItem.ID != hand.baseItem)
@@ -338,7 +344,7 @@ public class Inventory : MonoBehaviour
             PickupItem(hand.EquippedItem, true);
         }
 
-        hand.SetEquippedItem(new Item(i), entity);
+        hand.SetEquippedItem(new Item(item), entity);
 
         //Check for two handed weapons with low strength arms
         for (int h = 0; h < hands.Count; h++)
@@ -350,11 +356,10 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        i.RunCommands("OnEquip");
-        i.amount = 1;
-        RemoveInstance(i);
+        item.amount = 1;
+        RemoveInstance(item);
 
-        if (entity.isPlayer && i.statMods.Find(x => x.Stat == "Light") != null)
+        if (entity.isPlayer && item.statMods.Find(x => x.Stat == "Light") != null)
         {
             World.tileMap.LightCheck();
         }

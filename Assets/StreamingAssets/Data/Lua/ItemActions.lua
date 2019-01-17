@@ -1,8 +1,11 @@
 --Adds a mechanical body part to the player's body.
 function AddMechBodyPart(entity, partID)
 	local bp = EntityList.GetBodyPart(partID)
-	entity.body.AddBodyPart(bp)
-	bp.Attach(entity.stats, true)
+
+	if (bp ~= nil) then
+		entity.body.AddBodyPart(bp)
+		bp.Attach(entity.stats, true)
+	end
 end	
 --Removes it.
 function RemoveMechBodyPart(entity, partID)

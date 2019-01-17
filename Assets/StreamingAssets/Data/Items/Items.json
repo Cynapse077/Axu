@@ -2521,7 +2521,7 @@
             "Type" : "Misc_Object", 
             "Armor" : 1,
             "Rarity" : 5,
-            "FlavorText" : "Mechanical wings that are strapped to your back. Enables the wearer to fly.",
+            "FlavorText" : "Mechanical wings with a back strap. Enables the wearer to fly.",
             "Cost" :  1450,
             "Components" : [
                 { "ID" : "LuaEvent", "Trigger" : "OnEquip", "File" : "ItemActions", "Function" : "AddMechBodyPart", "Param" : "wing_mech" },
@@ -2727,6 +2727,19 @@
                 }
             ],
             "Properties" : []
+        },
+		{
+            "ID" : "ai_core",
+            "Name" : "AI Core",
+            "Type" : "Misc_Object",
+            "Rarity" : 5, 
+            "Stackable" : false,
+            "FlavorText" : "A chip containing an AI. It needs a body to be able to interact with you.",
+            "Cost" : 205,
+            "Display" : {
+                "On Ground" : "item-artifact.png"
+            },
+            "Properties" : [ ]
         }
     ]
 }

@@ -18,6 +18,7 @@ public class WeaponProficiency
             _xp = System.Math.Round(_xp, 2);
             return _xp;
         }
+
         set { _xp = value; }
     }
 
@@ -51,7 +52,9 @@ public class WeaponProficiency
         bool leveled = false;
 
         if (level < 1)
+        {
             amount *= 2.0;
+        }
 
         if (level < MaxLevel)
         {
@@ -65,7 +68,9 @@ public class WeaponProficiency
             }
         }
         else
+        {
             xp = 0;
+        }
 
         return leveled;
     }

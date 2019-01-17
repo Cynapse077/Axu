@@ -447,7 +447,6 @@ public class MapObjectSprite : MonoBehaviour
     Sprite SwitchSprite(Item item)
     {
         string id = (string.IsNullOrEmpty(item.renderer.onGround)) ? ItemList.GetMOB(objectBase.objectType).spriteID : item.renderer.onGround;
-
         return SpriteManager.GetObjectSprite(id);
     }
 
@@ -685,12 +684,17 @@ public class MapObjectSprite : MonoBehaviour
             case "Robot_Frame":
                 if (ObjectManager.playerEntity.inventory.HasItem("ai_core"))
                 {
+                    if (World.objectManager.NumFollowers() >= 3)
+                    {
+                        CombatLog.NewMessage("You have too many followers to accept another.");
+                        break;
+                    }
+
                     NPC_Blueprint bp = EntityList.GetBlueprintByID("hauler");
 
                     if (bp == null)
                     {
                         break;
-
                     }
 
                     ObjectManager.playerEntity.inventory.RemoveInstance(ObjectManager.playerEntity.inventory.items.Find(x => x.ID == "ai_core"));

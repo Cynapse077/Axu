@@ -104,12 +104,12 @@ public class Item : ComponentHolder
     }
 
     #region On___ Functions
-    public void OnEquip(Stats stats, bool wield = false)
+    public void OnEquip(Stats stats, bool inMainHand, bool skipCommands = false)
     {
         if (!OnUseReject())
         {
             ChangeStats(stats, false);
-            UpdateUserSprite(stats, wield);
+            UpdateUserSprite(stats, inMainHand);
         }
 
         if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
@@ -122,10 +122,10 @@ public class Item : ComponentHolder
             }
         }
 
-        RunCommands("OnEquip");
+        RunCommands((inMainHand ? "OnWield" : "OnEquip"));
     }
 
-    public void OnUnequip(Entity entity, bool wield = false)
+    public void OnUnequip(Entity entity, bool inMainHand, bool skipCommands = false)
     {
         if (!OnUseReject())
         {
@@ -137,8 +137,10 @@ public class Item : ComponentHolder
 
                 if (HasProp(ItemProperty.Weapon))
                 {
-                    if (wield || itemType == Proficiencies.Shield)
+                    if (inMainHand || itemType == Proficiencies.Shield)
+                    {
                         dsc.SetSprite(renderer, true);
+                    }
                 }
                 else
                 {
@@ -158,7 +160,7 @@ public class Item : ComponentHolder
             }
         }
 
-        RunCommands("OnUnequip");
+        RunCommands((inMainHand ? "OnUnWield" : "OnUnequip"));
     }
 
     public void OnHit(Entity myEntity, Entity attackedEntity)

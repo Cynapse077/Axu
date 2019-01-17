@@ -329,7 +329,9 @@ public class BodyPart : IWeighted
     public void ReleaseGrip(bool forced)
     {
         if (grip == null)
+        {
             grip = new Grip(null, this);
+        }
 
         if (!forced)
         {

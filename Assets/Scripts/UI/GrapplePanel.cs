@@ -38,7 +38,7 @@ public class GrapplePanel : MonoBehaviour
 
         for (int i = 0; i < body.bodyParts.Count; i++)
         {
-            if (body.bodyParts[i].grip != null && body.bodyParts[i].grip.heldPart != null)
+            if (body.bodyParts[i].grip != null && body.bodyParts[i].grip.heldPart != null && body.bodyParts[i].grip.heldPart.myBody != null)
             {
 
                 //PUSH
