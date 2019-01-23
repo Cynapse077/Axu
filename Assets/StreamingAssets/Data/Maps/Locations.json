@@ -102,6 +102,7 @@
             "Display" : "Power Plant",
             "Tile Index" : 5,
             "Walkable" : true,
+			"Friendly" : true,
             "Place At" : {
                 "Biome" : "Any Land",
                 "Mainland" : true
@@ -281,6 +282,25 @@
 			},
 			"Underground" : "Puzzle"
 		},
+		{
+			"ID" : "Cave_Entrance",
+			"Display" : "Cave Entrance",
+			"Tile Index" : 24,
+			"Walkable" : true,
+			"Place At" : {
+				"Biome" : "Any Land"
+			},
+			"Underground" : "Cave_Norm"
+		},
+		{
+			"ID" : "Puggle Village",
+			"Display" : "Puggle Village",
+			"Tile Index" : 25,
+			"Walkable" : true,
+			"Place At" : {
+				"Biome" : "Any Land"
+			}
+		},
         {
             "ID" : "Magna_C",
             "Display" : "Magna Dwyll",
@@ -420,7 +440,7 @@
 		{
 			"ID" : "Puzzle",
 			"Display" : "???",
-			"Depth" : 4,
+			"Depth" : 5,
 			"Light" : 9,
 			"Rules" : {
 				"Load" : true
@@ -602,7 +622,7 @@
 		{
 			"ID" : "Prison",
 			"Display" : "Prison/Lab",
-			"Depth" : 7,
+			"Depth" : 8,
 			"Light" : 10,
 			"Rules" : {
 				"Load" : true

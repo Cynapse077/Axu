@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using Augments;
 
 [MoonSharpUserData]
 [Serializable]
@@ -20,6 +21,7 @@ public class BodyPart : IWeighted
     public List<Wound> wounds;
     public Grip grip;
     public Hand hand;
+    public Cybernetic cybernetic = null;
     public List<Grip> holdsOnMe = new List<Grip>();
 
     double currXP = 0.0, maxXP = 1500.0;
@@ -200,6 +202,7 @@ public class BodyPart : IWeighted
         _attached = false;
         organic = true;
         equippedItem.OnUnequip(entity, false);
+        wounds.Clear();
         Remove(entity.stats);
     }
 
@@ -208,6 +211,7 @@ public class BodyPart : IWeighted
         _attached = true;
         _severable = true;
         name = _baseName;
+        myBody = stats.entity.body;
         wounds.Clear();
 
         if (effect == TraitEffects.Leprosy && !stats.hasTrait("leprosy"))
@@ -227,6 +231,15 @@ public class BodyPart : IWeighted
             }
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
+        }
+        else if (effect == TraitEffects.Vampirism)
+        {
+            if (showMessage)
+            {
+                Alert.NewAlert("Dis_Vamp_Attach");
+            }
+
+            stats.InitializeNewTrait(TraitList.GetTraitByID("pre_vamp"));
         }
 
         for (int i = 0; i < Attributes.Count; i++)
@@ -307,10 +320,14 @@ public class BodyPart : IWeighted
     public void GrabPart(BodyPart part)
     {
         if (part == null || part.myBody == null || myBody == null)
+        {
             return;
+        }
 
         if (grip == null)
+        {
             grip = new Grip(part, this);
+        }
         else
         {
             grip.Release();

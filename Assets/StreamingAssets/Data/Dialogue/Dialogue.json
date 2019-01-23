@@ -1,15 +1,5 @@
 {
     "Greetings" : [
-        "Hello, wanderer.", 
-        "A pleasure to meet you.", 
-        "What a fine day, don't you agree?",
-        "Hello.",
-        "Anything I can help you with?",
-        "Hi.",
-        "You look like a well-travelled individual.",
-        "Nice to meet you!",
-        "Anything I can help you with?",
-        "Salutations.",
         "Hello."
     ],
 
@@ -24,7 +14,6 @@
                 "Skill with any weapon is more important than your strength. Practice, practice, practice!",
                 "Make sure to use your abilities whenever you can. There's no sense in holding back against the creatures here.",
                 "Have you met with our brother, Akk-Lune? Last I heard, he was sent out of the stronghold on a mission.",
-                "Our exile should be seen as a gift. Earth is corrupt. We can start anew!",
                 "Arthomas is our second in command. A passionate warrior with a heart of gold. It's no wonder he is regarded so highly by our leader, Lomis.",
                 "While we focus on technology that can help one thrive, the <color=yellow>Frostborne</color> have only created war machines.",
                 "Our attempts to aid the <color=yellow>Frostborne</color> have not gone well. They attack anyone on sight, with no regard for mercy. I don't know what they want, but I'd prefer to stay away.",
@@ -66,12 +55,9 @@
                 "In the past six months, our numbers have nearly doubled! It's easy to see why after Isazna shows you The Truth.",
                 "Isazna has showed me visions of the future. The Deep Ones will grant us strength equal to our faith, and take over this wretched wasteland. Order will finally be in place.",
                 "The Deep Ones are ancient gods that preside over this planet. We can talk to them, ask for advice or abilities through ritual and prayer.",
-                "Priestess Isazna was captured by those scummy <color=yellow>Ensis</color> bastards. They see us as a threat. Perhaps they should.",
+                "Priestess Isazna was captured by those scummy Ensis bastards. They see us as a threat. Perhaps they should.",
                 "Are you here to join us?",
                 "Both the <color=yellow>Ensis</color> and the <color=yellow>Frostborne</color> rely on technology to keep their standing. We have a much greater power at our command.",
-                "Beneath our base lies some of the most terrifying creatures I've ever encountered. Living statues that only move while you aren't looking. These Cursed Statues are said to be filled with the tortured souls of The Deep Ones' enemies.",
-                "Three artifacts. That's all we need.",
-                "We detest all writing originating from Earth and its system. If we keep looking behind us, we will always feel like prisoners here. I say we start new, and become the masters!",
                 "I've heard people speak of horrifying experiments the Ensis have done upon its populace."
             ]
         },
@@ -110,69 +96,11 @@
 			"Dialogues" : [
 				"Hello there."
 			]
-		}
-    ],
-
-    "Static NPCs" : [
-        {
-            "ID" : "lomis",
-            "Dialogues" : [
-                "I hope you didn't bring any firearms in here. I find them distasteful.",
-                "How can I help you, Initiate?",
-                "Our exile should be seen as a gift.",
-                "Yes?",
-                "My mother was the member of my family to bring us here. From what I was told, she was a thief. Things must be horrible back on Earth to warrant such punishment for a minute crime."
-            ]
-        },
-        {
-            "ID" : "arthomas",
-            "Dialogues" : [
-                "Don't cause any trouble.",
-                "I don't have time to chat right now.",
-                "See this spear? It was made by my grandfather, the exiled member of my family. He wielded it proudly in the defense of us all in the hope it might redeem himself somehow.",
-                "...",
-                "What?",
-                "You're in my vision, wanderer.",
-                "I answer only to Lomis."
-            ]
-        },
-        {
-            "ID" : "saira",
-            "Dialogues" : [
-                "Hey there.",
-                "Shhhh. You'll spook the prey!",
-                "Why am I here? My great grandmother and grandfather worked as guards on one of them transport ships from Earth. It came down after a prisoner riot. The ship's impact killed most of the crew, though luckily my great grandparents survived with only minor wounds. The rest is history, I guess.",
-                "Whatcha got for me?",
-                "Hey there, fellah!"
-            ]
-        },
-        {
-            "ID" : "akklune",
-            "Dialogues" : [
-                "I hope you're doing alright.",
-                "I really think joining the Ensis would be the best way to survive out here.",
-                "I'm here on a mission."
-            ]
-        },
-        {
-            "ID" : "isazna",
-            "Dialogues" : [
-                "Is it the Truth you seek?",
-                "Yes, pilgrim?",
-                "My body may appear young, but my mind is years beyond reckoning.",
-                "Xzol be praised..."
-            ]
-        },
-        {
-            "ID" : "oromir",
-            "Dialogues" : [
-                "..."
-            ]
-        },
+		},
 		{
-			"ID" : "killower",
+			"ID" : "puggles_friendly",
 			"Dialogues" : [
-				"..."
+				"Grruff?"
 			]
 		}
     ]

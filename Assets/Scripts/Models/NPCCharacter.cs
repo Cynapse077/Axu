@@ -3,7 +3,7 @@
 [System.Serializable]
 public class NPCCharacter : Character
 {
-    public string ID, Fac, Spr, QN;
+    public string ID, Fac, Spr, QN, DID;
     public List<NPC_Flags> Flags;
     public List<SBodyPart> BPs;
     public List<SItem> Inv;
@@ -13,7 +13,7 @@ public class NPCCharacter : Character
 
     public NPCCharacter(string _name, string id, int uid, Coord worldPos, Coord localPos, int elevation,
         List<SItem> items, List<SItem> handItems, SItem firearm, bool hostile, string sprite, string faction, List<NPC_Flags> flags,
-        string questName, List<SBodyPart> bps)
+        string questName, string dialogueID, List<SBodyPart> bps)
     {
 
         Name = _name;
@@ -35,6 +35,7 @@ public class NPCCharacter : Character
         Host = hostile;
         Spr = sprite;
         QN = questName;
+        DID = dialogueID;
     }
 
     bool HasFlag(NPC_Flags flag)

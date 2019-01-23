@@ -595,16 +595,16 @@ public class UserInterface : MonoBehaviour
         EventHandler.instance.OnTalkTo(diaController.GetComponent<BaseAI>().npcBase);
     }
 
-    public void Dialogue_Chat(Faction faction, string npcID)
+    public void Dialogue_Chat(Faction faction)
     {
-        DPanel.SetText(Dialogue.Chat(faction, npcID));
+        DPanel.SetText(Dialogue.Chat(faction));
     }
 
     public void Dialogue_Inquire(string nodeID)
     {
         selectedItemNum = 0;
 
-        if (DialogueList.nodes == null)
+        if (!DialogueList.initialized)
         {
             DialogueList.Init();
         }
@@ -617,6 +617,11 @@ public class UserInterface : MonoBehaviour
 
         DialogueList.DialogueNode node = DialogueList.GetNode(nodeID);
         DPanel.Display(node);
+
+        if (node.onSelect != null)
+        {
+            LuaManager.CallScriptFunction(node.onSelect);
+        }
     }
 
     public void Dialogue_CustomChat(string text)

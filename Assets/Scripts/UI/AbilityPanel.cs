@@ -67,19 +67,26 @@ public class AbilityPanel : UIPanel
             {
                 if (GameSettings.Keybindings.GetKey("GoUpStairs") && SelectedNum < SelectedMax - 1)
                 {
-                    skills.abilities.Move(SelectedNum, SelectedNum + 1);
-                    SelectedNum++;
+                    int newIndex = SelectedNum + 1;
+                    skills.abilities.Move(SelectedNum, newIndex);
                     UpdateAbilities();
+                    SelectedNum = newIndex;
                 }
                 else if (GameSettings.Keybindings.GetKey("GoDownStairs") && SelectedNum > 0)
                 {
-                    skills.abilities.Move(SelectedNum, SelectedNum - 1);
-                    SelectedNum--;
+                    int newIndex = SelectedNum - 1;
+                    skills.abilities.Move(SelectedNum, newIndex);
                     UpdateAbilities();
+                    SelectedNum = newIndex;
                 }
             }
 
             base.Update();
+        }
+
+        if (GameSettings.Keybindings.GetKey("Abilities"))
+        {
+            World.userInterface.CloseWindows();
         }
     }
 

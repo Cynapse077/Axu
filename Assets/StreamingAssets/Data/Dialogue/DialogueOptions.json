@@ -20,6 +20,7 @@
 	{
 		"ID" : "akklune_where",
 		"Display" : "You are on the planet Axu, far from home. It has been a prison colony planet for generations now, a place you are sent to when you are too different or dangerous to keep around. I do not know your crimes, but it does not matter. There is no reason we cannot work together.",
+		"OnSelect" : { "File" : "DialogueActions", "Function" : "TestDialogue" },
 		"Responses" : [
 			{
 				"Display" : "What should I do now?",

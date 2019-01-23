@@ -20,6 +20,7 @@ public class StatusEffectPanel : MonoBehaviour
     public StatusEffectObject burning;
     public StatusEffectObject sick;
     public StatusEffectObject blind;
+    public StatusEffectObject offBalance;
 
     public void UpdateEnabledStatuses(Stats stats)
     {
@@ -47,6 +48,7 @@ public class StatusEffectPanel : MonoBehaviour
         burning.UpdateSE(stats.HasEffect("Aflame"), NumTurns(stats, "Aflame"));
         sick.UpdateSE(stats.HasEffect("Sick"), NumTurns(stats, "Sick"));
         blind.UpdateSE(stats.HasEffect("Blind"), NumTurns(stats, "Blind"));
+        offBalance.UpdateSE(stats.HasEffect("OffBalance"), NumTurns(stats, "OffBalance"));
     }
 
     int NumTurns(Stats stats, string se)

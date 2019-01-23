@@ -26,7 +26,8 @@
             "Attack Type" : "Bite",
             "Properties" : [
                 "Weapon",
-                "Cannot_Remove"
+                "Cannot_Remove",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Claw"
@@ -43,7 +44,8 @@
             "Properties" : [
                 "Weapon",
                 "Cannot_Remove",
-				"Quick"
+				"Quick",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Claw"
@@ -60,7 +62,8 @@
             "Properties" : [
                 "Weapon",
                 "Cannot_Remove",
-                "Slow"
+                "Slow",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Claw"
@@ -76,7 +79,8 @@
             "Attack Type" : "Bite",
             "Properties" : [
                 "Weapon",
-                "Cannot_Remove"
+                "Cannot_Remove",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Claw"
@@ -156,7 +160,8 @@
             "Attack Type" : "Bite",
             "Properties" : [
                 "Weapon",
-                "Cannot_Remove"
+                "Cannot_Remove",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Claw"
@@ -189,7 +194,8 @@
             "Attack Type" : "Bash",
             "Properties" : [
                 "Weapon",
-                "Cannot_Remove"
+                "Cannot_Remove",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Blunt"
@@ -327,7 +333,8 @@
             "Properties" : [
                 "Weapon",
                 "Cannot_Remove",
-                "Slow"
+                "Slow",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Blunt"
@@ -343,7 +350,8 @@
             "Attack Type" : "Claw",
             "Properties" : [
                 "Weapon",
-                "Cannot_Remove"
+                "Cannot_Remove",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Claw"
@@ -357,7 +365,7 @@
             "Damage" : "1d6+1",
             "FlavorText" : "You do not want to be on the bad end of these things.",
             "Attack Type" : "Claw",
-            "Properties" : [ "Weapon", "Cannot_Remove" ],
+            "Properties" : [ "Weapon", "Cannot_Remove", "Proc_Attack" ],
             "DmgTypes" : [ "Claw" ],
             "Lootable" : false
         },
@@ -605,7 +613,8 @@
             "Attack Type" : "Slash",
             "Properties" : [
                 "Weapon",
-                "Quick"
+                "Quick",
+				"Proc_Attack"
             ],
             "DmgTypes" : [
                 "Slash"
@@ -694,6 +703,25 @@
                 "On Ground" : "item-body.png"
             }
         },
+		{
+            "ID" : "corpse_vamp",
+            "Name" : "Vampiric Corpse",
+            "Type" : "Misc_Object",
+            "Weight" : 4,
+            "FlavorText" : "The corpse of a vampiric creature.",
+            "Components" : [
+                { "ID" : "Rot", "Max" : 4000  }
+            ],            
+            "Properties" : [
+                "Edible",
+                "Poison",
+                "Severed_BodyPart",
+                "OnAttach_Vampirism"
+            ],
+            "Display" : {
+                "On Ground" : "item-body.png"
+            }
+        },
         {
             "ID" : "corpse_human",
             "Name" : "Human Corpse",
@@ -701,7 +729,7 @@
             "Weight" : 3,
             "FlavorText" : "The corpse of a fellow human. You wouldn't eat this, would you..?",
             "Components" : [
-                { "ID" : "Rot", "Max" : 2000  }
+                { "ID" : "Rot", "Max" : 2500  }
             ],
             "Properties" : [
                 "Edible",
@@ -719,7 +747,7 @@
             "Weight" : 3,
             "FlavorText" : "The corpse of some creature.",
             "Components" : [
-                { "ID" : "Rot", "Max" : 2000  }
+                { "ID" : "Rot", "Max" : 2500  }
             ],
             "Properties" : [
                 "Edible",
@@ -892,6 +920,19 @@
             "Display" : {
                 "On Ground" : "item-pool.png"
             }
-        }
+        },
+		{
+			"ID" : "foldingblade",
+			"Name" : "Folding Blade",
+			"Type" : "Blade",
+			"Rarity" : 100,
+			"FlavorText" : "Made of a strong yet flexible metal. This blade is grafted to your arm.",
+			"Cost" : 0,
+			"Properties" : [
+				"Weapon",
+				"Quick"
+			],
+			"Lootable" : false
+		}
     ]
 }

@@ -123,7 +123,9 @@ public class InventoryPanel : UIPanel
         }
 
         if (!initialized || World.userInterface.CurrentState() != UIWindow.Inventory || World.userInterface.SelectItemActions || World.userInterface.SelectBodyPart)
+        {
             return;
+        }
 
         base.Update();
 
@@ -131,15 +133,19 @@ public class InventoryPanel : UIPanel
         {
             if (GameSettings.Keybindings.GetKey("GoUpStairs") && SelectedNum < SelectedMax - 1)
             {
+                int newIndex = SelectedNum + 1;
                 curInv.items.Move(SelectedNum, SelectedNum + 1);
-                SelectedNum++;
                 UpdateInventory();
+                SelectedNum = newIndex;
+                EventSystem.current.Highlight(inventoryBase.GetChild(SelectedNum).gameObject);
             }
             else if (GameSettings.Keybindings.GetKey("GoDownStairs") && SelectedNum > 0)
             {
+                int newIndex = SelectedNum - 1;
                 curInv.items.Move(SelectedNum, SelectedNum - 1);
-                SelectedNum--;
                 UpdateInventory();
+                SelectedNum = newIndex;
+                EventSystem.current.Highlight(inventoryBase.GetChild(SelectedNum).gameObject);
             }
             else if (GameSettings.Keybindings.GetKey("West"))
             {

@@ -939,6 +939,27 @@
         },
 
 		{
+			"Name" : "Scrag Menace",
+			"ID" : "grum0",
+			"Description" : "The wild man, Grum, asked you to kill the Elder Scrag below his cave.",
+			"Start Dialogue" : "Hrm? You here to help Grum? Big bad down. Need kill. Big Scrag hurt Grum! Yes?",
+			"Rewards" : {
+				"XP" : 250
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Spawn NPC" : { "NPC" : "scrag3", "Coordinate" : "Cave_Entrance", "Elevation" : -4 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Kill Spawned" },
+				{ "Goal" : "Talk To", "NPC" : "grum" }
+			],
+			"End Dialogue" : "It dead? Grateful! Grum still hurt though."
+		},
+
+		{
             "Name" : "Arena Wave 1",
             "ID" : "arena0",
             "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",

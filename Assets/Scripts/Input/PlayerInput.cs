@@ -762,19 +762,22 @@ public class PlayerInput : MonoBehaviour
             for (int mx = entity.posX - 1; mx <= entity.posX + 1; mx++)
             {
                 for (int my = entity.posY - 1; my <= entity.posY + 1; my++)
-                {
-
+                {                
                     if (mx == entity.posX && my == entity.posY)
+                    {
                         continue;
+                    }
 
                     if (World.tileMap.WalkableTile(mx, my) && World.tileMap.GetCellAt(new Coord(mx, my)).entity != null)
                     {
                         Entity other = World.tileMap.GetCellAt(new Coord(mx, my)).entity;
 
                         if (other == null || other.AI == null)
+                        {
                             continue;
+                        }
 
-                        if (other.AI.isHostile && other.AI.HasSeenPlayer() && !other.AI.isStationary && other.CanMove)
+                        if (other.AI.isHostile && other.AI.HasSeenPlayer() && !other.AI.isStationary && other.CanMove && !other.stats.SkipTurn())
                         {
                             npcsToMove.Add(other.AI.npcBase);
                         }
@@ -789,9 +792,10 @@ public class PlayerInput : MonoBehaviour
         foreach (NPC n in npcsToMove)
         {
             n.worldPosition = World.tileMap.WorldPosition;
-            n.localPosition = entity.GetEmptyCoords().GetRandom();
+            n.localPosition = entity.GetEmptyCoords().Count > 0 ? entity.GetEmptyCoords().GetRandom() : World.tileMap.CurrentMap.GetRandomFloorTile();
             n.elevation = World.tileMap.currentElevation;
             n.hasSeenPlayer = true;
+            World.objectManager.SpawnNPC(n);
         }
 
         World.tileMap.CheckNPCTiles();

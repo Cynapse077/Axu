@@ -15,14 +15,8 @@
 - Quests for doctor to stay at your base.
 - Quest event that triggers dialogue to open.
 - Mounts + Riding
-
-
-CYBERNETICS:
-- One per body slot.
-	- Folding blade that takes up arm and weapon slot. - Equip to arm, and sets default wep to folded blade.
-	- Increased vision at night.
-	- Radiation scrubber.
-	- Impact soles for extra stealth.
-
+- Cybernetics.
+- Better body part display
+- Icons for stats.
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------

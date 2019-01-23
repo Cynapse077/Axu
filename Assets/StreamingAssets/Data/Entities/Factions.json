@@ -163,6 +163,16 @@
                 "krish"
             ]
         },
+		{
+			"Name" : "Friendly Puggles",
+			"ID" : "puggles_friendly",
+			"Hostile To" : [
+				"bandits",
+                "krish",
+                "deepones",
+				"eversight"
+			]
+		},
         {
             "Name" : "Skull Bandits",
             "ID" : "bandits",

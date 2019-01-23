@@ -119,6 +119,15 @@ public class Console : MonoBehaviour
             World.tileMap.HardRebuild();
             return;
         }
+        else if (parsedText[0] == "alltraits")
+        {
+            for (int i = 0; i < TraitList.traits.Count; i++)
+            {
+                playerEntity.stats.GiveTrait(TraitList.traits[i].ID);
+            }
+
+            return;
+        }
         else if (parsedText[0] == "set")
         {
             int o = 0;
@@ -478,6 +487,28 @@ public class Console : MonoBehaviour
             {
                 tileMap.worldCoordX--;
                 MyConsole.NewMessage("    Going West.");
+            }
+            else if (parsedText[1] == "ele")
+            {
+                if (parsedText.Length < 3)
+                {
+                    MyConsole.Error("Specify an elevation.");
+                    return;
+                }
+
+                int o;
+
+                if (int.TryParse(parsedText[2], out o))
+                {
+                    tileMap.currentElevation = o;
+                    tileMap.HardRebuild();
+                }
+                else
+                {
+                    MyConsole.Error("Invalid elevation input.");
+                }
+
+                return;
             }
             else if (parsedText[1] == "home")
             {

@@ -51,14 +51,9 @@ public class WeaponProficiency
 
         bool leveled = false;
 
-        if (level < 1)
-        {
-            amount *= 2.0;
-        }
-
         if (level < MaxLevel)
         {
-            xp += amount;
+            xp += (amount * 5) / level;
 
             while (xp >= xpToNext)
             {

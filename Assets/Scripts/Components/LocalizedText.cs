@@ -21,7 +21,9 @@ public class LocalizedText : MonoBehaviour
     void Start()
     {
         if (setBySelf && GetComponent<Text>())
+        {
             GetComponent<Text>().text = BaseText;
+        }
     }
 
     public void GetLocalizedText(string searchKey = "")
@@ -34,7 +36,9 @@ public class LocalizedText : MonoBehaviour
         _baseText = content[0];
 
         if (GetComponent<OnHover_ShowTooltip>() != null)
+        {
             GetComponent<OnHover_ShowTooltip>().textToDisplay = content[1];
+        }
     }
 
     public void SetText(string searchKey)

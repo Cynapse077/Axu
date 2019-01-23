@@ -741,6 +741,18 @@ public class BaseAI : MonoBehaviour
                 }
             }
         }
+
+        //Destroy all tentacles.
+        if (npcBase.ID == "empty")
+        {
+            List<Entity> tentacles = World.objectManager.onScreenNPCObjects.FindAll(x => x.AI.npcBase.ID == "theempty-tentacle");
+            int numTentacles = tentacles.Count;
+
+            foreach (Entity e in tentacles)
+            {
+                e.fighter.Remove();
+            }
+        }
     }
 
     void CacheVars()
@@ -963,7 +975,7 @@ public class BaseAI : MonoBehaviour
         }
 
         //The End - Spawn tentacle
-        if (npcBase.ID == "empty" && RNG.Next(100) < 10)
+        if (npcBase.ID == "empty" && RNG.Next(100) < 20)
         {
             List<Entity> tentacles = World.objectManager.onScreenNPCObjects.FindAll(x => x.AI.npcBase.ID == "theempty-tentacle");
 
@@ -1050,13 +1062,5 @@ public class BaseAI : MonoBehaviour
         }
 
         return false;
-    }
-
-    public void OnHitEffects(Stats target, int damage)
-    {
-        if (target.entity.isPlayer && npcBase.HasFlag(NPC_Flags.Radiation) && SeedManager.combatRandom.Next(100) < 5)
-        {
-            target.Radiate(SeedManager.combatRandom.Next(1, 6));
-        }
     }
 }

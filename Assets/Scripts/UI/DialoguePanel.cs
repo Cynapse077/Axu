@@ -53,37 +53,42 @@ public class DialoguePanel : MonoBehaviour
 
     public void Display(DialogueList.DialogueNode node)
     {
-        transform.DespawnChildren();
+        transform.DestroyChildren();
         cMax = node.options.Count - 1;
         nodeDialogue = true;
 
-        GameObject t = SimplePool.Spawn(title, transform);
+        GameObject t = Instantiate(title, transform);
         titleText = t.GetComponentInChildren<Text>();
         titleText.text = controller.gameObject.name;
 
-        GameObject txt = SimplePool.Spawn(text, transform);
+        GameObject txt = Instantiate(text, transform);
         dialogueText = txt.GetComponentInChildren<Text>();
         dialogueText.text = node.display;
 
         for (int i = 0; i < node.options.Count; i++)
         {
-            GameObject g = SimplePool.Spawn(button, transform);
+            GameObject g = Instantiate(button, transform);
             g.GetComponentInChildren<Text>().text = node.options[i].display;
 
             string nID = node.options[i].nextID;
-            g.GetComponent<Button>().onClick.AddListener(() => { GetNextNode(nID); });
+
+            g.GetComponent<Button>().onClick.AddListener(() => GetNextNode(nID));
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(2, UIWindow.Dialogue);
             g.GetComponent<OnHover_SetSelectedIndex>().offset = 2;
         }
 
         if (transform.childCount > 1)
+        {
             EventSystem.current.SetSelectedGameObject(transform.GetChild(2).gameObject);
+        }
     }
 
     void Update()
     {
         if (World.userInterface.CurrentState() == UIWindow.Dialogue && transform.childCount > 1)
+        {
             EventSystem.current.SetSelectedGameObject(transform.GetChild(UserInterface.selectedItemNum + 2).gameObject);
+        }
     }
 
     public void SetText(string t)

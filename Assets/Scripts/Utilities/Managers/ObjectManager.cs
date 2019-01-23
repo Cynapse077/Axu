@@ -714,42 +714,35 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    public List<Entity> InSightEntities()
-    {
-        List<Entity> ise = new List<Entity>();
-
-        for (int i = 0; i < onScreenNPCObjects.Count; i++)
-        {
-            if (playerEntity.inSight(onScreenNPCObjects[i].GetComponent<Entity>().myPos))
-                ise.Add(onScreenNPCObjects[i].GetComponent<Entity>());
-        }
-
-        return ise;
-    }
-
     public bool SafeToRest()
     {
         for (int i = 0; i < onScreenNPCObjects.Count; i++)
         {
-            if (onScreenNPCObjects[i].GetComponent<BaseAI>() == null)
+            if (onScreenNPCObjects[i].AI == null)
+            {
                 continue;
+            }
 
-            BaseAI bAI = onScreenNPCObjects[i].GetComponent<BaseAI>();
+            BaseAI bAI = onScreenNPCObjects[i].AI;
 
-            if (bAI.isHostile && playerEntity.inSight(bAI.GetComponent<Entity>().myPos))
+            if (bAI.isHostile && playerEntity.inSight(onScreenNPCObjects[i].myPos))
             {
                 if (bAI.isStationary)
                 {
-                    float dist = Vector2.Distance(bAI.GetComponent<Entity>().myPos.toVector2(), playerEntity.myPos.toVector2());
+                    float dist = onScreenNPCObjects[i].myPos.DistanceTo(playerEntity.myPos);
 
                     if (dist > 2.5f)
                     {
                         Item firearm = bAI.GetComponent<Inventory>().firearm;
                         if (firearm == null || firearm.Name == ItemList.GetNone().Name)
+                        {
                             continue;
+                        }
                     }
                     else
+                    {
                         return false;
+                    }
                 }
 
                 return false;
@@ -762,7 +755,9 @@ public class ObjectManager : MonoBehaviour
     public void DemolishNPC(Entity e, NPC n)
     {
         if (n != null)
+        {
             npcClasses.Remove(n);
+        }
 
         if (e != null)
         {

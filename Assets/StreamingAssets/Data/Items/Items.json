@@ -161,7 +161,7 @@
             "Name" : "Femur",
             "Type" : "Blunt",
             "Damage" : "1d3-1",
-            "Rarity" : 1,
+            "Rarity" : 2,
             "FlavorText" : "The femur of some creature, repurposed into a crude club.",
             "Cost" : 6,
             "Properties" : [ "Weapon", "NoMods" ],
@@ -367,24 +367,7 @@
                 "On Player" : "/Data/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
-        },
-        {
-        	"ID" : "hatchet",
-            "Name" : "Hatchet",
-            "Type" : "Axe",
-            "Damage" : "1d4",
-            "Rarity" : 1,
-            "FlavorText" : "A small axe, better suited to cutting kindling than flesh.",
-            "Cost" : 14,
-            "Attack Type" : "Slash",
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Slash" ],
-            "Display" : {
-                "On Ground" : "item-axe.png",
-                "On Player" : "/Data/Art/Player/Weapons/char-axe-small.png",
-                "Layer" : "Weapon"
-            }
-        },
+        },        
         {
         	"ID" : "bonesaw",
             "Name" : "Bone Saw",
@@ -656,6 +639,23 @@
             "Display" : {
                 "On Ground" : "item-staff.png",
                 "On Player" : "/Data/Art/Player/Weapons/char-lance.png",
+                "Layer" : "Weapon"
+            }
+        },
+		{
+        	"ID" : "hatchet",
+            "Name" : "Hatchet",
+            "Type" : "Axe",
+            "Damage" : "1d4",
+            "Rarity" : 1,
+            "FlavorText" : "A small axe, better suited to cutting kindling than flesh.",
+            "Cost" : 14,
+            "Attack Type" : "Slash",
+            "Properties" : [ "Weapon" ],
+            "DmgTypes" : [ "Slash" ],
+            "Display" : {
+                "On Ground" : "item-axe.png",
+                "On Player" : "/Data/Art/Player/Weapons/char-axe-small.png",
                 "Layer" : "Weapon"
             }
         },

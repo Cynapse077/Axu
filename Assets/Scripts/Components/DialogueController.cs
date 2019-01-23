@@ -59,11 +59,12 @@ public class DialogueController : MonoBehaviour
             }));
         }
 
-        dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => World.userInterface.Dialogue_Chat(myNPC.faction, myNPC.ID)));
-
         if (!string.IsNullOrEmpty(myNPC.dialogueID))
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Talk"), () => World.userInterface.Dialogue_Inquire(myNPC.dialogueID)));
+            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => World.userInterface.Dialogue_Inquire(myNPC.dialogueID)));
+        } else
+        {
+            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => World.userInterface.Dialogue_Chat(myNPC.faction)));
         }
 
         if (myNPC.HasFlag(NPC_Flags.Merchant) || myNPC.HasFlag(NPC_Flags.Doctor) || myNPC.HasFlag(NPC_Flags.Book_Merchant))

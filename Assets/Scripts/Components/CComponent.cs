@@ -39,6 +39,7 @@ public class CComponent
             case "Coat": return JsonMapper.ToObject<CCoat>(reader);
             case "ModKit": return JsonMapper.ToObject<CModKit>(reader);
             case "ItemLevel": return JsonMapper.ToObject<CItemLevel>(reader);
+            case "Cybernetic": return JsonMapper.ToObject<CCybernetic>(reader);
 
             default: return null;
         }
@@ -85,19 +86,20 @@ public class CCorpse : CComponent
 {
     public List<SBodyPart> parts;
     public string owner;
-    public bool cann, rad, lep;
+    public bool cann, rad, lep, vamp;
 
     public CCorpse()
     {
         ID = "Corpse";
     }
-    public CCorpse(List<BodyPart> _parts, string _owner, bool _cannibalism, bool _rad, bool _lep)
+    public CCorpse(List<BodyPart> _parts, string _owner, bool _cannibalism, bool _rad, bool _lep, bool _vamp)
     {
         ID = "Corpse";
         owner = _owner;
         cann = _cannibalism;
         rad = _rad;
         lep = _lep;
+        vamp = _vamp;
 
         parts = new List<SBodyPart>();
 
@@ -249,10 +251,6 @@ public class CCoordinate : CComponent
             CombatLog.SimpleMessage("Return_Link");
             isSet = true;
         }
-        else
-        {
-
-        }
 
         ObjectManager.player.GetComponent<PlayerInput>().CheckMinimap();
     }
@@ -318,7 +316,9 @@ public class CLuaEvent : CComponent
     public void CallEvent_Params(string eventToCall, params object[] obj)
     {
         if (eventToCall == evName)
+        {
             LuaManager.CallScriptFunction(file, func, obj);
+        }
     }
 }
 
@@ -537,7 +537,9 @@ public class CModKit : CComponent
         for (int i = 0; i < it.Count; i++)
         {
             if (mod.CanAddToItem(it[i]))
+            {
                 newList.Add(it[i]);
+            }
         }
 
         return newList;
@@ -610,5 +612,22 @@ public class CItemLevel : CComponent
         {
             return "Level " + level.ToString() + "(MAX)";
         }
+    }
+}
+
+[Serializable]
+public class CCybernetic : CComponent
+{
+    public string CID;
+
+    public CCybernetic()
+    {
+        ID = "Cybernetic";
+    }
+
+    public CCybernetic(string id)
+    {
+        ID = "Cybernetic";
+        CID = id;
     }
 }

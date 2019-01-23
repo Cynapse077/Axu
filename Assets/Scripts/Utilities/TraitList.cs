@@ -216,7 +216,9 @@ public static class TraitList
         for (int i = 0; i < wounds.Count; i++)
         {
             if (wounds[i].slot != ItemProperty.None && wounds[i].slot != bp.slot || bp.wounds.Find(x => x.ID == wounds[i].ID) != null)
+            {
                 continue;
+            }
 
             bool canAdd = false;
 
@@ -230,7 +232,9 @@ public static class TraitList
             }
 
             if (canAdd)
+            {
                 ws.Add(new Wound(wounds[i]));
+            }
         }
 
         return ws;

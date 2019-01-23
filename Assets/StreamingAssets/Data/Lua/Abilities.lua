@@ -109,9 +109,9 @@ function Shove(caster, direction, skill)
 
 	local target = TileMap.GetCellAt(caster.myPos + direction).entity
 
+	Log(caster.Name .. "shoves " .. target.Name .. ".")
 	target.ForceMove(direction.x, direction.y, caster.stats.Strength + skill.level)
 	target.stats.AddStatusEffect("Stun", Random(0, 3))
-	Log_Combat("shoves", caster.Name, target.Name, target.isPlayer)
 
 	if (caster.isPlayer) then
 		caster.body.TrainLimbOfType(ItemProperty.Slot_Arm)

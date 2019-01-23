@@ -182,38 +182,56 @@ public class Stats : MonoBehaviour
         if (effectName == "Stun" && hasTraitEffect(TraitEffects.Stun_Resist) || effectName == "Confuse" && hasTraitEffect(TraitEffects.Confusion_Resist))
         {
             if (RNG.Next(100) > 20)
+            {
                 turns /= 2;
+            }
             else if (RNG.Next(100) < 2)
-                turns = 0;
+            {
+                return;
+            }
         }
 
-        if (turns > 0)
+        if (!statusEffects.ContainsKey(effectName))
         {
-            if (statusEffects.ContainsKey(effectName))
+            statusEffects.Add(effectName, turns - 1);
+
+            if (LocalizationManager.GetContent("Message_SE_" + effectName) != LocalizationManager.defaultText)
             {
-                if (effectName != "Unconscious")
-                {
-                    statusEffects[effectName] += turns - 1;
-                }
+                CombatLog.NameMessage("Message_SE_" + effectName, entity.MyName);
+            }
+        }
+        else
+        {
+            statusEffects[effectName] += turns;
+        }
+
+        if (effectName == "Slow" && statusEffects["Slow"] > Speed - 3)
+        {
+            statusEffects["Slow"] = 0;
+            AddStatusEffect("Frozen", RNG.Next(2, 6));
+        }
+        else if (effectName == "Strangle")
+        {
+            if (statusEffects["Strangle"] >= 20)
+            {
+                statusEffects["Strangle"] = 0;
+                AddStatusEffect("Unconscious", RNG.Next(8, 16));
             }
             else
             {
-                statusEffects.Add(effectName, turns - 1);
+                int str = statusEffects["Strangle"];
 
-                if (LocalizationManager.GetContent("Message_SE_" + effectName) != LocalizationManager.defaultText)
+                if (str <= 10)
                 {
-                    CombatLog.NameMessage("Message_SE_" + effectName, entity.MyName);
+                    CombatLog.NewMessage(entity.MyName + " is looking pale.");
+                }
+                else
+                {
+                    CombatLog.NewMessage(entity.MyName + " is shaking.");
                 }
             }
-
-            if (effectName == "Slow" && statusEffects["Slow"] > Speed - 3)
-            {
-                statusEffects["Slow"] = 0;
-                AddStatusEffect("Frozen", RNG.Next(2, 6));
-            }
         }
-
-        if (effectName == "Unconscious" && !entity.isPlayer)
+        else if (effectName == "Unconscious" && !entity.isPlayer)
         {
             entity.AI.hasSeenPlayer = false;
         }
@@ -989,7 +1007,7 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
-            if (MyBody.bodyParts[i].effect == TraitEffects.Leprosy || MyBody.bodyParts[i].effect == TraitEffects.PreVamp || MyBody.bodyParts[i].effect == TraitEffects.Crystallization)
+            if (MyBody.bodyParts[i].effect == TraitEffects.Leprosy || MyBody.bodyParts[i].effect == TraitEffects.Vampirism || MyBody.bodyParts[i].effect == TraitEffects.Crystallization)
             {
                 MyBody.bodyParts[i].effect = TraitEffects.None;
             }
@@ -1027,12 +1045,14 @@ public class Stats : MonoBehaviour
             Attributes = replacementLimb.statMods,
             armor = replacementLimb.armor
         };
-        
+
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Crystallization))
             newPart.effect = TraitEffects.Crystallization;
         else if (replacementLimb.HasProp(ItemProperty.OnAttach_Leprosy))
             newPart.effect = TraitEffects.Leprosy;
+        else if (replacementLimb.HasProp(ItemProperty.OnAttach_Vampirism))
+            newPart.effect = TraitEffects.Vampirism;
 
         CombatLog.NameItemMessage("Replace_Limb", MyBody.bodyParts[limbIndex].displayName, newLimbName);
         MyBody.bodyParts[limbIndex] = newPart;

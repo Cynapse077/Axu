@@ -940,7 +940,7 @@ public enum ItemProperty
     Weapon, Two_Handed, Ranged, Dig, Quick, Very_Quick, Slow, Very_Slow, Throwing_Wep, Disarm, Shock_Nearby, Burst, Quick_Reload,
     Legible, Explosive, Edible, Severed_BodyPart, Radiate, Cannibalism, Corpse,
     Tome, Replacement_Limb, Flying,
-    Quest_Item, Randart, Unique, Addictive, Bow, DrainHealth, Pool, NoMods, Preserved
+    Quest_Item, Randart, Unique, Addictive, Bow, DrainHealth, Pool, NoMods, Preserved, Proc_Attack, OnAttach_Vampirism
 }
 
 [System.Serializable]

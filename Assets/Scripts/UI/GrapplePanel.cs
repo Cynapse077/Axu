@@ -40,7 +40,6 @@ public class GrapplePanel : MonoBehaviour
         {
             if (body.bodyParts[i].grip != null && body.bodyParts[i].grip.heldPart != null && body.bodyParts[i].grip.heldPart.myBody != null)
             {
-
                 //PUSH
                 GameObject pushGO = Instantiate(abilityIcon, anchor);
                 n = LocalizationManager.GetContent("Grapple_Push");
@@ -51,18 +50,21 @@ public class GrapplePanel : MonoBehaviour
 
                 max++;
 
-                //TAKE DOWN
-                GameObject takeDownGO = Instantiate(abilityIcon, anchor);
-                n = LocalizationManager.GetContent("Grapple_TakeDown");
-                n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.gameObject.name);
-                takeDownGO.GetComponentInChildren<Text>().text = n;
-                takeDownGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
-                actions.Add(new KeyValuePair<string, int>("Take Down", i));
+                if (!body.bodyParts[i].grip.HeldBody.entity.stats.HasEffect("Topple"))
+                {
+                    //TAKE DOWN
+                    GameObject takeDownGO = Instantiate(abilityIcon, anchor);
+                    n = LocalizationManager.GetContent("Grapple_TakeDown");
+                    n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.gameObject.name);
+                    takeDownGO.GetComponentInChildren<Text>().text = n;
+                    takeDownGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+                    actions.Add(new KeyValuePair<string, int>("Take Down", i));
 
-                max++;
-
+                    max++;
+                }
+                
                 //Pressure Point
-                if (skill > 1)
+                if (skill > 2)
                 {
                     GameObject pressurePointGo = Instantiate(abilityIcon, anchor);
                     n = LocalizationManager.GetContent("Grapple_PressurePoint");
@@ -75,7 +77,7 @@ public class GrapplePanel : MonoBehaviour
                 }
 
                 //STRANGLE
-                if (skill > 2 && body.bodyParts[i].grip.heldPart.slot == ItemProperty.Slot_Head)
+                if (skill > 3 && body.bodyParts[i].grip.heldPart.slot == ItemProperty.Slot_Head)
                 {
                     GameObject strangleGO = Instantiate(abilityIcon, anchor);
                     n = LocalizationManager.GetContent("Grapple_Strangle");
@@ -88,7 +90,7 @@ public class GrapplePanel : MonoBehaviour
                 }
 
                 //Pull
-                if (skill > 3)
+                if (skill > 4)
                 {
                     GameObject pullGO = Instantiate(abilityIcon, anchor);
                     n = LocalizationManager.GetContent("Grapple_Pull");
@@ -96,6 +98,18 @@ public class GrapplePanel : MonoBehaviour
                     pullGO.GetComponentInChildren<Text>().text = n;
                     pullGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
                     actions.Add(new KeyValuePair<string, int>("Pull", i));
+
+                    max++;
+                }
+
+                //Disarm
+                if (skill > 5 && body.bodyParts[i].grip.heldPart.hand != null && !body.bodyParts[i].grip.heldPart.hand.EquippedItem.HasProp(ItemProperty.Cannot_Remove))
+                {
+                    GameObject disGO = Instantiate(abilityIcon, anchor);
+                    n = "Disarm";
+                    disGO.GetComponentInChildren<Text>().text = n;
+                    disGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
+                    actions.Add(new KeyValuePair<string, int>("Disarm", i));
 
                     max++;
                 }
@@ -157,6 +171,10 @@ public class GrapplePanel : MonoBehaviour
         else if (actions[selectedNum].Key == "Pressure")
         {
             skills.Grapple_Pressure(body.bodyParts[actions[selectedNum].Value].grip);
+        }
+        else if (actions[selectedNum].Key == "Disarm")
+        {
+            skills.Grapple_Disarm(body.bodyParts[actions[selectedNum].Value].grip);
         }
         else if (actions[selectedNum].Key == "Release")
         {

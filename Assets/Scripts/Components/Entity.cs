@@ -592,7 +592,7 @@ public class Entity : MonoBehaviour
 
     void Swipe(int x, int y)
     {
-        if (stats.SkipTurn())
+        if (stats.SkipTurn() || World.OutOfLocalBounds(posX + x, posY + y))
         {
             return;
         }
@@ -607,7 +607,7 @@ public class Entity : MonoBehaviour
             offsetX = Mathf.Clamp(offsetX, -1, 1);
             offsetY = Mathf.Clamp(offsetY, -1, 1);
 
-            if (ObjectManager.playerEntity.inSight(posX + x, posY + y))
+            if (World.tileMap.GetCellAt(posX + x, posY + y).InSight)
             {
                 GameObject s = SimplePool.Spawn(World.poolManager.slashEffects[wepNum], targetPosition + new Vector3(offsetX, offsetY, 0));
                 int playerDir = ((isPlayer) ? playerInput.childSprite.flipX : AI.spriteRenderer.flipX) ? -1 : 1;
@@ -689,6 +689,12 @@ public class Entity : MonoBehaviour
                     if (isPlayer)
                     {
                         World.tileMap.LightCheck();
+                    }
+
+                    if (i > 0 && stats.HasEffect("OffBalance") && SeedManager.combatRandom.CoinFlip())
+                    {
+                        stats.AddStatusEffect("Topple", SeedManager.combatRandom.Next(1, 5));
+                        break;
                     }
                 }
                 else
@@ -1148,8 +1154,11 @@ public class Entity : MonoBehaviour
             return;
 
         int tNum = World.tileMap.GetTileID(posX, posY);
+
         if (World.tileMap.IsWaterTile(posX, posY) || tNum == Tile.tiles["Stairs_Up"].ID || tNum == Tile.tiles["Stairs_Down"].ID)
+        {
             return;
+        }
 
         World.objectManager.NewObject("Bloodstain", new Coord(posX, posY));
     }
@@ -1300,47 +1309,14 @@ public class Entity : MonoBehaviour
                         }
                     }
                     else
+                    {
                         lightAmount += sm.Amount;
+                    }
                 }
             }
         }
 
         return Mathf.Clamp(lightAmount + stats.IllumunationCheck(), 1, Manager.localMapSize.x);
-    }
-
-    public Cell GetClosestOpenCell(Coord pos, int maxDistance = 1)
-    {
-        List<Cell> cells = new List<Cell>();
-
-        for (int x = pos.x - maxDistance; x <= pos.x + maxDistance; x++)
-        {
-            for (int y = pos.y - maxDistance; y <= pos.y + maxDistance; y++)
-            {
-                if (x == pos.x && y == pos.y || !World.tileMap.WalkableTile(x, y))
-                    continue;
-
-                Cell c = World.tileMap.GetCellAt(new Coord(x, y));
-
-                if (c.Walkable)
-                    cells.Add(c);
-            }
-        }
-
-        float dist = Mathf.Infinity;
-        Cell closest = null;
-
-        foreach (Cell c in cells)
-        {
-            float myDist = pos.DistanceTo(c.position);
-
-            if (closest == null || myDist < dist)
-            {
-                dist = myDist;
-                closest = c;
-            }
-        }
-
-        return closest;
     }
 
     void CacheVariables()

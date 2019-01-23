@@ -743,6 +743,8 @@ public class Inventory : MonoBehaviour
                         it.AddProperty(ItemProperty.OnAttach_Leprosy);
                     else if (corpse.parts[i].Dis == TraitEffects.Crystallization)
                         it.AddProperty(ItemProperty.OnAttach_Crystallization);
+                    else if (corpse.parts[i].Dis == TraitEffects.Vampirism || corpse.vamp)
+                        it.AddProperty(ItemProperty.OnAttach_Vampirism);
 
                     if (corpse.cann)
                     {
@@ -908,21 +910,16 @@ public class Inventory : MonoBehaviour
         if (!entity.isPlayer && SeedManager.combatRandom.Next(100) < BodyDropChance + ObjectManager.playerEntity.stats.proficiencies.Butchery.level)
         {
             BaseAI bai = entity.AI ?? GetComponent<BaseAI>();
-            Item corpseItem;
-
-            if (bai.npcBase.corpseItem != null)
-                corpseItem = ItemList.GetItemByID(bai.npcBase.corpseItem);
-            else
-                corpseItem = ItemList.GetItemByID("corpse_norm");
+            Item corpseItem = (bai.npcBase.corpseItem == null) ? ItemList.GetItemByID("corpse_norm") : ItemList.GetItemByID(bai.npcBase.corpseItem);
 
             if (!bai.npcBase.HasFlag(NPC_Flags.Deteriortate_HP) && !bai.npcBase.HasFlag(NPC_Flags.No_Body))
             {
                 CCorpse co = new CCorpse(new List<BodyPart>(body.bodyParts), gameObject.name, bai.npcBase.HasFlag(NPC_Flags.Human),
-                    bai.npcBase.HasFlag(NPC_Flags.Radiation), bai.npcBase.HasFlag(NPC_Flags.Skills_Leprosy));
+                    bai.npcBase.HasFlag(NPC_Flags.Radiation), bai.npcBase.HasFlag(NPC_Flags.Skills_Leprosy), bai.npcBase.HasFlag(NPC_Flags.Vampire));
 
                 corpseItem.AddComponent(co);
                 corpseItem.AddProperty(ItemProperty.Corpse);
-                corpseItem.displayName = gameObject.name + "'s Corpse";
+                corpseItem.displayName = string.Format("{0}'s Corpse", entity.MyName);
 
                 if (bai.npcBase.HasFlag(NPC_Flags.Human) && !corpseItem.HasProp(ItemProperty.Cannibalism))
                 {

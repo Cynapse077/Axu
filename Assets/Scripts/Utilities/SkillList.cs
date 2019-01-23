@@ -105,6 +105,7 @@ public static class SkillList
         if (s == null)
         {
             Debug.LogError("No skill with the ID " + id + ".");
+            return null;
         }
 
         return new Skill(s);

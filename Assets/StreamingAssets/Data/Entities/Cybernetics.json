@@ -48,7 +48,7 @@
 		{
 			"Name" : "Folding Arm Blade",
 			"ID" : "armblade",
-			"Description" : "A blade that can be extended quickly into your hand for ease of use.",
+			"Description" : "A blade that can be extended quickly for ease of use.",
 			"Slots" : [ "Slot_Arm" ],
 			"Base Weapon" : "foldingblade"
 		}

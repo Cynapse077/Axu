@@ -355,6 +355,7 @@ public class TileMap : MonoBehaviour
     }
     #endregion
 
+    //Right now only goes home
     public void GoToArea(string name)
     {
         Coord c = WorldPosition;
@@ -364,31 +365,7 @@ public class TileMap : MonoBehaviour
         ObjectManager.playerEntity.posY = 2;
         ObjectManager.playerEntity.ForcePosition();
 
-        if (name == "Power Plant")
-            c = worldMap.GetLandmark("Power Plant");
-        else if (name == "Ensis")
-            c = worldMap.GetLandmark("Ensis Exterior");
-        else if (name == "Volcano")
-            c = worldMap.GetLandmark("Volcano");
-        else if (name == "Frostborne")
-            c = worldMap.GetLandmark("Frostborne Base");
-        else if (name == "Cult")
-            c = worldMap.GetLandmark("Kin Hideout");
-        else if (name == "Cathedral")
-            c = worldMap.GetLandmark("Cathedral");
-        else if (name == "Arena")
-            c = worldMap.GetLandmark("Arena");
-        else if (name == "Oasis")
-            c = worldMap.GetLandmark("Oasis");
-        else if (name == "Ensis Interior" || name == "Workshop")
-            c = worldMap.GetLandmark("Ensis Interior");
-        else if (name == "Xul")
-            c = worldMap.GetLandmark("Xul Camp");
-        else if (name == "Magna")
-            c = worldMap.GetLandmark("Magna_S");
-        else if (name == "Magna_Center")
-            c = worldMap.GetLandmark("Magna_C");
-        else if (name == "Home")
+        if (name == "Home")
             c = worldMap.GetLandmark("Home");
         else if (name == "Home_Base")
         {

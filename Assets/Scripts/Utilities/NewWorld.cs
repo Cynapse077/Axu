@@ -178,6 +178,11 @@ public class OldWorld
             {
                 n.questID = npcData["QN"].ToString();
             }
+
+            if (npcData.ContainsKey("DID"))
+            {
+                n.dialogueID = npcData["DID"].ToString();
+            }
         }
 
         //Get map objects
@@ -189,7 +194,7 @@ public class OldWorld
             int elevation = (int)obj["WP"][2];
             string type = obj["Type"].ToString();
 
-            MapObject m = new MapObject(type, new Coord(lp.x, lp.y), wp, elevation);
+            MapObject m = new MapObject(type, lp, wp, elevation);
 
             //Inventory
             if (obj["Items"] != null)
@@ -198,10 +203,11 @@ public class OldWorld
 
                 for (int j = 0; j < obj["Items"].Count; j++)
                 {
+                    m.inv.Add(SaveData.GetItemFromJsonData(obj["Items"][j]));
 
-                    if (j < 50)
+                    if (j > 50)
                     {
-                        m.inv.Add(SaveData.GetItemFromJsonData(obj["Items"][j]));
+                        break;
                     }
                 }
             }
@@ -215,7 +221,9 @@ public class OldWorld
         List<Item> items = new List<Item>();
 
         if (wData["NPCs"][num]["Inv"].Count <= 0)
+        {
             return items;
+        }
 
         for (int i = 0; i < wData["NPCs"][num]["Inv"].Count; i++)
         {
@@ -243,12 +251,9 @@ public class OldScreens
 
         for (int i = 0; i < sc.Count; i++)
         {
-            if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y)
+            if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y && (int)sc[i]["P"][2] == z)
             {
-                if ((int)sc[i]["P"][2] == z)
-                {
-                    return (int)sc[i]["LTS"];
-                }
+                return (int)sc[i]["LTS"];
             }
         }
 
@@ -261,12 +266,9 @@ public class OldScreens
 
         for (int i = 0; i < sc.Count; i++)
         {
-            if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y)
+            if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y && (int)sc[i]["P"][2] == z)
             {
-                if ((int)sc[i]["P"][2] == z)
-                {
-                    return true;
-                }
+                return true;
             }
         }
 

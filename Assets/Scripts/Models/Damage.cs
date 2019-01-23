@@ -89,5 +89,5 @@ public class Damage {
 
 [System.Serializable]
 public enum DamageTypes {
-    None, Blunt, Slash, Pierce, Cleave, Energy, Heat, Cold, Venom, Claw, Bleed, Hunger, Corruption, NonLethal, Radiation
+    None, Blunt, Slash, Pierce, Cleave, Energy, Heat, Cold, Venom, Claw, Bleed, Hunger, Corruption, NonLethal, Radiation, Pull
 }

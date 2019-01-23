@@ -49,19 +49,14 @@ public class Faction
 
         if (otherFaction == "player" || otherFaction == "followers")
         {
-            if (ID == "ensis")
+            switch (ID)
             {
-                return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Ensis));
-            }
-
-            if (ID == "kin")
-            {
-                return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Kin));
-            }
-
-            if (ID == "magna")
-            {
-                return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Oromir));
+                case "ensis":
+                    return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Ensis));
+                case "kin":
+                    return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Kin));
+                case "magna":
+                    return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Oromir));
             }
         }
 

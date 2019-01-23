@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class Goal : EventContainer
@@ -72,7 +71,7 @@ public class Goal : EventContainer
 
     public override string ToString()
     {
-        return "";
+        return description;
     }
 
     protected NPC CheckNPCValidity(string npcID)
@@ -556,6 +555,7 @@ public class TalkToGoal : Goal
     {
         base.Init(skipEvent);
         EventHandler.instance.TalkedToNPC += TalkToNPC;
+        EventHandler.instance.NPCDied += NPCDied;
         CheckNPCValidity(npcTarget);
         World.objectManager.NewMapIcon(0, Destination());
     }
@@ -568,16 +568,26 @@ public class TalkToGoal : Goal
         }
     }
 
+    void NPCDied(NPC n)
+    {
+        if (n.ID == npcTarget)
+        {
+            Fail();
+        }
+    }
+
     public override void Complete()
     {
         World.objectManager.RemoveMapIconAt(Destination());
         EventHandler.instance.TalkedToNPC -= TalkToNPC;
+        EventHandler.instance.NPCDied -= NPCDied;
         base.Complete();
     }
 
     public override void Fail()
     {
         EventHandler.instance.TalkedToNPC -= TalkToNPC;
+        EventHandler.instance.NPCDied -= NPCDied;
         base.Fail();
     }
 
@@ -620,8 +630,17 @@ public class FetchPropertyGoal : Goal
     public override void Init(bool skipEvent)
     {
         base.Init(skipEvent);
+        EventHandler.instance.NPCDied += NPCDied;
         CheckNPCValidity(npcTarget);
         World.objectManager.NewMapIcon(0, Destination());
+    }
+
+    void NPCDied(NPC n)
+    {
+        if (n.ID == npcTarget)
+        {
+            Fail();
+        }
     }
 
     void TalkToNPC(NPC n)
@@ -645,12 +664,14 @@ public class FetchPropertyGoal : Goal
 
     public override void Complete()
     {
+        EventHandler.instance.NPCDied -= NPCDied;
         World.objectManager.RemoveMapIconAt(Destination());
         base.Complete();
     }
 
     public override void Fail()
     {
+        EventHandler.instance.NPCDied -= NPCDied;
         World.objectManager.RemoveMapIconAt(Destination());
         base.Fail();
     }
@@ -696,8 +717,17 @@ public class FetchGoal : Goal
     public override void Init(bool skipEvent)
     {
         base.Init(skipEvent);
+        EventHandler.instance.NPCDied += NPCDied;
         CheckNPCValidity(npcTarget);
         World.objectManager.NewMapIcon(0, Destination());
+    }
+
+    void NPCDied(NPC n)
+    {
+        if (n.ID == npcTarget)
+        {
+            Fail();
+        }
     }
 
     public void AddAmount(int amt)
@@ -713,12 +743,14 @@ public class FetchGoal : Goal
 
     public override void Complete()
     {
+        EventHandler.instance.NPCDied -= NPCDied;
         World.objectManager.RemoveMapIconAt(Destination());
         base.Complete();
     }
 
     public override void Fail()
     {
+        EventHandler.instance.NPCDied -= NPCDied;
         World.objectManager.RemoveMapIconAt(Destination());
         base.Fail();
     }

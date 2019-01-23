@@ -22,6 +22,11 @@ public class CombatComponent
         get { return entity.body; }
     }
 
+    int ExtraAttackChance
+    {
+        get { return (MyStats.Dexterity * 2) - 2; }
+    }
+
     public CombatComponent(Entity e)
     {
         entity = e;
@@ -34,8 +39,25 @@ public class CombatComponent
             return;
         }
 
+        bool playSound = false;
+        Item soundItem = null;
+
         //Main weapon
-        PerformAttack(target, MyBody.MainHand, targetPart, sevChance);
+        if (MyBody.MainHand.arm != null && !MyBody.MainHand.arm.FreeToMove())
+        {
+            MyBody.MainHand.arm.TryBreakGrips();
+        }
+        else if (PerformAttack(target, MyBody.MainHand, targetPart, sevChance))
+        {
+            playSound = true;
+            soundItem = MyBody.MainHand.EquippedItem;
+        }
+
+        if (target.dead)
+        {
+            return;
+        }
+
         lastTarget = target.entity;
 
         //Attack with all other arms.
@@ -43,13 +65,42 @@ public class CombatComponent
 
         for (int i = 0; i < hands.Count; i++)
         {
-            if (hands[i] != MyBody.MainHand && hands[i].IsAttached && SeedManager.combatRandom.Next(100) <= (MyStats.Dexterity * 2) - 2)
+            if (hands[i] != null && hands[i] != MyBody.MainHand && hands[i].IsAttached && SeedManager.combatRandom.Next(100) <= ExtraAttackChance)
             {
-                PerformAttack(target, hands[i]);
+                if (!hands[i].arm.FreeToMove())
+                {
+                    hands[i].arm.TryBreakGrips();
+                }
+                else if (PerformAttack(target, hands[i]))
+                {
+                    playSound = true;
+                    soundItem = hands[i].EquippedItem;
+                }
             }
         }
 
-        //TODO: Add extra attacks for bites, kicks, headbutts, etc.
+        if (target.dead)
+        {
+            return;
+        }
+
+        //Attack with proc weapons.
+        for (int i = 0; i < MyBody.bodyParts.Count; i++)
+        {
+            if (MyBody.bodyParts[i].isAttached && MyBody.bodyParts[i].equippedItem.HasProp(ItemProperty.Proc_Attack) && SeedManager.combatRandom.Next(100) < ExtraAttackChance)
+            {
+                if (AttackTarget(target, MyBody.bodyParts[i].equippedItem))
+                {
+                    playSound = true;
+                    soundItem = MyBody.bodyParts[i].equippedItem;
+                }
+            }
+        }
+
+        if (entity.isPlayer && playSound && soundItem != null)
+        {
+            World.soundManager.PlayAttackSound(soundItem);
+        }
 
         if (!freeAction)
         {
@@ -61,9 +112,8 @@ public class CombatComponent
     {
         int miss = MyStats.MissChance(hand.EquippedItem);
         float percentage = 1.0f + (targetPart.Weight / (float)targetPart.myBody.TotalBodyWeight());
-        bool twoHandPenalty = MyInventory.TwoHandPenalty(hand);
 
-        if (twoHandPenalty)
+        if (MyInventory.TwoHandPenalty(hand))
         {
             miss += 5;
         }
@@ -73,7 +123,7 @@ public class CombatComponent
 
     bool PerformAttack(Stats target, BodyPart.Hand hand, BodyPart targetPart = null, int sevChance = 0)
     {
-        if (hand == null || target == null || hand.EquippedItem == null)
+        if (target == null || hand == null || target == null || hand.EquippedItem == null)
         {
             return false;
         }
@@ -81,6 +131,11 @@ public class CombatComponent
         if (targetPart == null)
         {
             targetPart = target.entity.body.TargetableBodyParts().GetRandom(SeedManager.combatRandom);
+        }
+
+        if (targetPart == null)
+        {
+            return false;
         }
 
         Item wep = hand.EquippedItem;
@@ -109,8 +164,6 @@ public class CombatComponent
         {
             if (entity.isPlayer)
             {
-                World.soundManager.PlayAttackSound(wep);
-
                 //if it's a physical attack from a firearm, use misc prof
                 if (wep.itemType == Proficiencies.Firearm || wep.itemType == Proficiencies.Armor || wep.itemType == Proficiencies.Butchery)
                     MyStats.AddProficiencyXP(MyStats.proficiencies.Misc, MyStats.Intelligence);
@@ -122,18 +175,28 @@ public class CombatComponent
                     MyBody.TrainLimb(hand.arm);
                 }
             }
-            else
-            {
-                ApplyNPCEffects(target, damage);
-            }
         }
 
         return true;
     }
 
-    void ApplyNPCEffects(Stats target, int damage)
+    bool AttackTarget(Stats target, Item wep)
     {
-        entity.AI.OnHitEffects(target, damage);
+        if (target == null || wep == null)
+        {
+            return false;
+        }
+
+        if (SeedManager.combatRandom.Next(100) < 45)
+        {
+            target.Miss(entity, wep);
+            return false;
+        }
+
+        int profLevel = (entity.isPlayer) ? MyStats.CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
+        int damage = wep.CalculateDamage(MyStats.Strength, profLevel);
+
+        return target.TakeDamage(wep, damage, wep.damageTypes, entity);
     }
 
     public int AttackAPCost()
@@ -339,7 +402,10 @@ public class CombatComponent
 
             if (MyStats.lastHit != null && (MyStats.lastHit.isPlayer || MyStats.lastHit.AI.isFollower()))
             {
-                ObjectManager.playerEntity.stats.GainExperience((MyStats.Strength + MyStats.Dexterity + MyStats.Intelligence + MyStats.Endurance * 2) / 2 + 1);
+                if (!entity.AI.npcBase.HasFlag(NPC_Flags.NO_XP))
+                {
+                    ObjectManager.playerEntity.stats.GainExperience((MyStats.Strength + MyStats.Dexterity + MyStats.Intelligence + MyStats.Endurance * 2) / 2 + 1);
+                }
             }
 
             World.objectManager.DemolishNPC(entity, entity.AI.npcBase);

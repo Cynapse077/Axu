@@ -35,6 +35,40 @@
             "MaxItemRarity" : 2,
             "Corpse_Item" : "corpse_human"
         },
+		{
+            "Name" : "Grum",
+            "ID" : "grum",
+            "Faction" : "villagers",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-grum.png",
+            "Flags" : [
+                "Human",
+                "Can_Speak",
+                "Static",
+                "Stationary_While_Passive",
+                "Can_Open_Doors"
+            ],
+            "Position" : { "Zone" : "Cave_Entrance", "x" : 40, "y" : 20, "z" : 0 },
+            "Stats" : {
+                "Health" : 45,
+                "Stamina" : 20,
+
+                "Defense" : 1,
+                "Strength" : 6,
+                "Dexterity" : 4,
+                "Intelligence" : 1,
+                "Endurance" : 3,
+
+                "Speed" : 11,
+                "Perception" : 12,
+                "Accuracy" : 1
+            },
+            "Weapon_Choices" : [ "club" ],
+			"Quest" : "grum0",
+            "MaxItems" : 0,
+            "MaxItemRarity" : 2,
+            "Corpse_Item" : "corpse_human"
+        },
         {
             "Name" : "Neant Queen",
             "ID" : "neantqueen",
@@ -76,12 +110,14 @@
             "Sprite" : "npc-theempty2.png",
             "Flags" : [
                 "Static",
-                "Stationary",
                 "Aquatic",
                 "OnDisable_Regen",
-                "Boss"
+                "Boss",
+				"No_Body",
+				"No_Strangle",
+				"No_TakeDown"
             ],
-            "Position" : { "Zone" : "Random_Ocean", "x" : 22, "y" : 20, "z" : 0 },
+            "Position" : { "Zone" : "Ensis Interior", "x" : 23, "y" : 16, "z" : -8 },
             "Stats" : {
                 "Health" : 300,
                 "Stamina" : 100,
@@ -97,6 +133,7 @@
                 "Accuracy" : 2
             },
             "Weapon_Choices" : [ "tendrils" ],
+			"Weapon Skill" : 4,
             "MaxItems" : 6,
             "MaxItemRarity" : 6
         },
@@ -1874,7 +1911,9 @@
             "Sprite" : "npc-shinpel.png",
             "Flags" : [
                 "Aquatic",
-                "RBleed"
+                "RBleed",
+				"No_TakeDown",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 18,
@@ -1903,7 +1942,9 @@
             "Body Structure" : "Arms_And_Tail",
             "Sprite" : "npc-merisian.png",
             "Flags" : [
-                "Aquatic"
+                "Aquatic",
+				"No_TakeDown",
+				"No_Strangle"
             ],
             "Stats" : {
                 "Health" : 36,
@@ -2621,7 +2662,8 @@
             "Sprite" : "npc-vampire.png",
             "Flags" : [
                 "RBleed",
-				"No_Strangle"
+				"No_Strangle",
+				"Vampire"
             ],
             "Stats" : {
                 "Health" : 75,
@@ -2644,7 +2686,8 @@
                 "fangs"
             ],
             "MaxItems" : 3,
-            "MaxItemRarity" : 4
+            "MaxItemRarity" : 4,
+			"Corpse_Item" : "corpse_vamp"
         },
         {
             "Name" : "Puggle Pup",
@@ -2741,6 +2784,72 @@
             ],
             "MaxItems" : 1,
             "MaxItemRarity" : 3
+        },
+		{
+            "Name" : "Puggle Villager",
+            "ID" : "puggle_villager",
+            "Faction" : "puggles_friendly",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-puggle0.png",
+            "Flags" : [
+				"Can_Speak",
+                "Can_Open_Doors"
+            ],
+            "Stats" : {
+                "Health" : 20,
+                "Stamina" : 6,
+
+                "Defense" : 1,
+                "Strength" : 2,
+                "Dexterity" : 5,
+                "Intelligence" : 2,
+                "Endurance" : 3,
+
+                "Speed" : 9,
+                "Perception" : 16,
+                "Accuracy" : 1
+            },
+            "Skills" : [
+            	{ "ID" : "help", "Level" : 1 }
+            ],
+            "Weapon_Choices" : [
+                "fangs", "claws"
+            ],
+            "MaxItems" : 1,
+            "MaxItemRarity" : 2
+        },
+		{
+            "Name" : "Puggle Elder",
+            "ID" : "puggle_elder",
+            "Faction" : "puggles_friendly",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-puggle0.png",
+            "Flags" : [
+				"Can_Speak",
+                "Can_Open_Doors"
+            ],
+            "Stats" : {
+                "Health" : 60,
+                "Stamina" : 6,
+
+                "Defense" : 3,
+                "Strength" : 5,
+                "Dexterity" : 5,
+                "Intelligence" : 2,
+                "Endurance" : 3,
+
+                "Speed" : 9,
+                "Perception" : 16,
+                "Accuracy" : 1
+            },
+            "Skills" : [
+            	{ "ID" : "help", "Level" : 1 }
+            ],
+            "Weapon_Choices" : [
+                "fangs", "claws"
+            ],
+            "MaxItems" : 1,
+            "MaxItemRarity" : 2
         },
         {
             "Name" : "Slimemancer",
@@ -3607,17 +3716,18 @@
                 "No_Body",
                 "OnDisable_Regen",
 				"No_Strangle",
-				"No_TakeDown"
+				"No_TakeDown",
+				"NO_XP"
             ],
             "Stats" : {
-                "Health" : 85,
+                "Health" : 33,
                 "Stamina" : 30,
 
-                "Defense" : 5,
-                "Strength" : 4,
+                "Defense" : 3,
+                "Strength" : 5,
                 "Dexterity" : 4,
                 "Intelligence" : 4,
-                "Endurance" : 5,
+                "Endurance" : 4,
 
                 "Speed" : 10,
                 "Perception" : 9,
@@ -3628,7 +3738,7 @@
             ],
 			"Weapon Skill" : 3,
             "Skills" : [
-				{ "ID" : "grapple", "Level" : 3 }
+				{ "ID" : "grapple", "Level" : 4 }
 			],
             "MaxItems" : 0,
             "MaxItemRarity" : 0

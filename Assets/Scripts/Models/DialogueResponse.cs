@@ -5,7 +5,8 @@ using LitJson;
 
 public static class DialogueList
 {
-    public static List<DialogueNode> nodes;
+    public static bool initialized = false;
+    static List<DialogueNode> nodes;
 
     public static void Init()
     {
@@ -18,16 +19,21 @@ public static class DialogueList
         {
             nodes.Add(GetDialogue(dat[i]));
         }
+
+        initialized = true;
     }
 
     public static DialogueNode GetNode(string node)
     {
-        foreach (DialogueNode n in nodes) {
+        foreach (DialogueNode n in nodes)
+        {
             if (n.id == node)
+            {
                 return n;
+            }
         }
 
-        return new DialogueNode("null", "ERROR", new List<DialogueResponse>() { new DialogueResponse("End", "End" ) });
+        return new DialogueNode("null", "ERROR", new List<DialogueResponse>() { new DialogueResponse("End", "End") }, null);
     }
 
     static DialogueNode GetDialogue(JsonData dat)
@@ -39,12 +45,19 @@ public static class DialogueList
         for (int i = 0; i < dat["Responses"].Count; i++)
         {
             string disp = dat["Responses"][i]["Display"].ToString();
-            string nextID = dat["Responses"][i]["GoTo"].ToString();
+            string nextID = dat["Responses"][i]["GoTo"].ToString();            
 
             resp.Add(new DialogueResponse(disp, nextID));
         }
 
-        return new DialogueNode(id, display, resp);
+        LuaCall lc = null;
+
+        if (dat.ContainsKey("OnSelect"))
+        {
+            lc = new LuaCall(dat["OnSelect"]["File"].ToString(), dat["OnSelect"]["Function"].ToString());
+        }
+
+        return new DialogueNode(id, display, resp, lc);
     }
 
     public struct DialogueNode
@@ -52,12 +65,14 @@ public static class DialogueList
         public string id;
         public string display;
         public List<DialogueResponse> options;
+        public LuaCall onSelect;
 
-        public DialogueNode(string _id, string _display, List<DialogueResponse> dops)
+        public DialogueNode(string _id, string _display, List<DialogueResponse> dops, LuaCall lc)
         {
             id = _id;
             display = _display;
             options = dops;
+            onSelect = lc;
         }
     }
 
@@ -65,6 +80,7 @@ public static class DialogueList
     {
         public string display;
         public string nextID;
+        
 
         public DialogueResponse(string dis, string next)
         {

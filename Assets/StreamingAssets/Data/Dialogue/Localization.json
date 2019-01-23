@@ -722,27 +722,27 @@
     "Display Radiation" : [
         {
             "ID" : "Rad_1",
-            "Display" : "<color=magenta>Radiation</color>: <color=green>None</color>",
+            "Display" : "<color=green>None</color>",
             "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have none."
         },
         {
             "ID" : "Rad_2",
-            "Display" : "<color=magenta>Radiation</color>: <color=cyan>Low</color>",
+            "Display" : "<color=cyan>Low</color>",
             "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have little."
         },
         {
             "ID" : "Rad_3",
-            "Display" : "<color=magenta>Radiation</color>: <color=yellow>Moderate</color>",
+            "Display" : "<color=yellow>Moderate</color>",
             "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have a moderate level."
         },
         {
             "ID" : "Rad_4",
-            "Display" : "<color=magenta>Radiation</color>: <color=orange>Plenty</color>",
+            "Display" : "<color=orange>Plenty</color>",
             "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have lots."
         },
         {
             "ID" : "Rad_5",
-            "Display" : "<color=magenta>Radiation</color>: <color=red>Extreme!</color>",
+            "Display" : "<color=red>Extreme!</color>",
             "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have a large amount."
         }
     ],
@@ -931,7 +931,12 @@
             "ID" : "SE_Burning",
             "Display" : "Aflame",
             "Tooltip" : "Aflame: You will take damage every turn, unless doused with water or wait for flames to sputter out."
-        }
+        },
+		{
+			"ID" : "SE_OffBalance",
+			"Display" : "Off Balance",
+			"Tooltip" : "Off Balance: You are more susceptible to attacks that would move you around or trip you."
+		}
     ],
     "Difficulties" : [
         {
@@ -1523,6 +1528,11 @@
             "Title" : "Diseased!",
             "Message" : "You have contracted Crystallization from eating infected meat!"
         },
+		{
+            "ID" : "Dis_Vamp_Attach",
+            "Title" : "Diseased!",
+            "Message" : "You have contracted Fledgling Vampirism from attaching an infected limb!"
+        },
         {
             "ID" : "Dis_Vamp",
             "Title" : "Diseased!",
@@ -1841,6 +1851,10 @@
             "ID" : "Message_SE_Blind",
             "Display" : "[NAME] is blind!"
         },
+		{
+			"ID" : "Message_SE_OffBalance",
+			"Display" : "[NAME] is off balance!"
+		},
         {
             "ID" : "Lose_Hold",
             "Display" : "[NAME] loses hold of the [ITEM]."
@@ -2007,7 +2021,7 @@
         },
         {
             "ID" : "Gr_Strangle_Fail",
-            "Display" : "[ATTACKER] presses on [DEFENDER]'s windpipe."
+            "Display" : "[ATTACKER] presses on [DEFENDER]'s windpipe to no effect."
         },
         {
             "ID" : "Gr_Release",

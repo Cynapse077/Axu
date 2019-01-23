@@ -496,6 +496,22 @@
                 "Layer" : "Weapon"
             }
 		},
+		{
+        	"ID" : "club_grum",
+            "Name" : "Grum's Club",
+            "Type" : "Blunt",
+            "Damage" : "2d5",
+            "Rarity" : 100,
+            "FlavorText" : "A club belonging to a wild man. It is crude but sturdy, just like him. Big Smash.",
+            "Cost" : 430,
+            "Properties" : [ "Weapon", "Two_Handed", "Slow", "Unique" ],
+            "DmgTypes" : [ "Blunt" ],
+            "Display" : {
+                "On Ground" : "item-club.png",
+                "On Player" : "/Data/Art/Player/Weapons/char-club.png",
+                "Layer" : "Weapon"
+            }
+        },
 
         {
             "ID" : "artifact1",

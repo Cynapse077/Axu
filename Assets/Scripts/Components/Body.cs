@@ -7,6 +7,7 @@ public class Body : MonoBehaviour
     public List<BodyPart> bodyParts;
     public Entity entity;
     public BodyPart.Hand defaultHand;
+    public StanceType currentStance = StanceType.Standing;
 
     Stats MyStats
     {
@@ -209,10 +210,7 @@ public class Body : MonoBehaviour
         {
             for (int i = 0; i < bodyParts.Count; i++)
             {
-                if (bodyParts[i].holdsOnMe != null && bodyParts[i].holdsOnMe.Count > 0)
-                {
-                    allGrips.AddRange(bodyParts[i].holdsOnMe);
-                }
+                allGrips.AddRange(bodyParts[i].holdsOnMe);
             }
         }
 
@@ -350,6 +348,8 @@ public class Body : MonoBehaviour
                     partToDrop.AddProperty(ItemProperty.OnAttach_Leprosy);
                 else if (bodyParts[id].effect == TraitEffects.Crystallization || MyStats.hasTraitEffect(TraitEffects.Crystallization))
                     partToDrop.AddProperty(ItemProperty.OnAttach_Crystallization);
+                else if (bodyParts[id].effect == TraitEffects.Vampirism || MyStats.hasTraitEffect(TraitEffects.Vampirism))
+                    partToDrop.AddProperty(ItemProperty.OnAttach_Vampirism);
 
                 if (entity.isPlayer || !entity.isPlayer && entity.AI.npcBase.HasFlag(NPC_Flags.Human))
                     partToDrop.AddProperty(ItemProperty.Cannibalism);
@@ -458,7 +458,7 @@ public class Body : MonoBehaviour
 
         for (int i = 0; i < bodyParts.Count; i++)
         {
-            if (bodyParts[i].isAttached && bodyParts[i].hand != null)
+            if (bodyParts[i].isAttached && bodyParts[i].hand != null && bodyParts[i].hand.EquippedItem.ID == bodyParts[i].hand.baseItem)
             {
                 parts.Add(bodyParts[i]);
             }
@@ -553,7 +553,7 @@ public class Body : MonoBehaviour
                 }
             }
 
-            if (Manager.newGame && Manager.profName == "Experiment")
+            if (Manager.newGame && MyStats.hasTrait("experiment"))
             {
                 for (int i = 0; i < 3; i++)
                 {
@@ -567,8 +567,8 @@ public class Body : MonoBehaviour
         defaultHand = new BodyPart.Hand(GetBodyPartBySlot(ItemProperty.Slot_Head), ItemList.GetItemByID("stump"), "stump");
     }
 
-    public enum LimbSlot
+    public enum StanceType
     {
-        None, Head, Chest, Back, Arm, Leg, Tail, Wing
+        Standing, Crouching, Prone, Prostrate
     }
 }
