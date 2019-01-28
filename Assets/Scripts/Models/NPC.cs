@@ -18,6 +18,7 @@ public class NPC
     public List<Item> inventory = new List<Item>();
     public List<BodyPart> bodyParts = new List<BodyPart>();
     public List<NPC_Flags> flags = new List<NPC_Flags>();
+    public List<string> traits = new List<string>();
     public string corpseItem;
     public string questID, dialogueID;
     public int health, stamina, maxHealth, maxStamina;
@@ -64,7 +65,9 @@ public class NPC
     public bool CanSpawnThisNPC(Coord pos, int elev)
     {
         if (!isAlive || onScreen)
+        {
             return false;
+        }
 
         return (pos == worldPosition && elev == elevation);
     }
@@ -77,6 +80,11 @@ public class NPC
     public bool IsFollower()
     {
         return HasFlag(NPC_Flags.Follower) || faction.ID == "followers";
+    }
+
+    public bool ShouldShuffleInventory()
+    {
+        return HasFlag(NPC_Flags.Merchant) || HasFlag(NPC_Flags.Book_Merchant) || HasFlag(NPC_Flags.Doctor);
     }
 
     public SStats GetSimpleStats()
@@ -121,13 +129,29 @@ public class NPC
         ShuffleInventory(blueprint);
 
         if (!string.IsNullOrEmpty(blueprint.quest))
+        {
             questID = blueprint.quest;
+        }
 
         if (blueprint.Corpse_Item != null)
             corpseItem = blueprint.Corpse_Item;
 
         if (HasFlag(NPC_Flags.Named_NPC))
+        {
             name = NameGenerator.CharacterName(SeedManager.textRandom);
+        }
+        else if (!HasFlag(NPC_Flags.Static) && SeedManager.combatRandom.Next(500) < World.DangerLevel())
+        {
+            List<Trait> muts = TraitList.traits.FindAll(x => x.effects.Contains(TraitEffects.Mutation));
+
+            for (int i = 0; i < SeedManager.combatRandom.Next(1, 4); i++)
+            {
+                if (muts.Count > 0)
+                {
+                    traits.Add(muts.GetRandom().ID);
+                }
+            }
+        }
 
         isAlive = true;
         onScreen = false;
@@ -142,7 +166,7 @@ public class NPC
 
         if (blueprint.maxItems > 0)
         {
-            if (RNG.Next(1000) <= (1.2f * blueprint.maxItemRarity))
+            if (RNG.Next(1000) <= (1.25f * blueprint.maxItemRarity))
             {
                 inventory.Add(ItemList.GetRandomArtifact());
             }
@@ -172,7 +196,9 @@ public class NPC
                 if (amount > 0)
                 {
                     if (i.stackable)
+                    {
                         i.amount = amount;
+                    }
                     else
                     {
                         for (int t = 1; t < amount; t++)

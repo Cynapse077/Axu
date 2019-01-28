@@ -517,7 +517,7 @@
             },
             "Tags" : [ "Mutation" ],
             "Stackable" : true,
-			"Max Stacks" : 2
+			"Max Stacks" : 4
         },
         {
             "Name" : "Extra Arm",
@@ -536,7 +536,7 @@
             },
             "Tags" : [ "Mutation" ],
             "Stackable" : true,
-			"Max Stacks" : 2
+			"Max Stacks" : 4
         },
         {
             "Name" : "Claws",

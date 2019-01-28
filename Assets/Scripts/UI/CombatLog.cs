@@ -5,9 +5,6 @@ using MoonSharp.Interpreter;
 [MoonSharpUserData]
 public static class CombatLog
 {
-
-    public static Dictionary<string, string> Messages;
-
     static string Arrow
     {
         get

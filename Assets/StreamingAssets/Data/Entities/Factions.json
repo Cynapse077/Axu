@@ -122,7 +122,7 @@
             ]
         },
         {
-            "Name" : "Frostborne",
+            "Name" : "Frostborn",
             "ID" : "frostborne",
             "Hostile To" : [
                 "player",

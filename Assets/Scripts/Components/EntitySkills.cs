@@ -165,9 +165,15 @@ public class EntitySkills : MonoBehaviour
         entity.EndTurn(0.02f, 10);
     }
 
-    public void Grapple_Shove(Entity target)
+    public void Grapple_Shove(BodyPart.Grip grip)
     {
         int chance = entity.stats.Strength;
+        Entity target = grip.HeldBody.entity;
+
+        if (target == null)
+        {
+            return;
+        }
 
         if (entity.isPlayer)
         {

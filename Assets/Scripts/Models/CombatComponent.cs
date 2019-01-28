@@ -110,6 +110,11 @@ public class CombatComponent
 
     public float MissChance(BodyPart.Hand hand, Stats target, BodyPart targetPart)
     {
+        if (hand == null || hand.EquippedItem == null || target == null || targetPart == null)
+        {
+            return 1.0f;
+        }
+
         int miss = MyStats.MissChance(hand.EquippedItem);
         float percentage = 1.0f + (targetPart.Weight / (float)targetPart.myBody.TotalBodyWeight());
 
@@ -246,7 +251,6 @@ public class CombatComponent
             CombatLog.NameItemMessage("Message_ThrowItem", entity.MyName, itemForThrowing.DisplayName());
         }
 
-        //Instantiate
         entity.InstatiateThrowingEffect(destination, 1.0f);
 
         if (!itemForThrowing.HasProp(ItemProperty.Explosive))

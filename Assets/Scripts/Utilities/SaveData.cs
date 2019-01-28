@@ -52,7 +52,7 @@ public class SaveData : MonoBehaviour
             }
 
             NPCCharacter character = new NPCCharacter(n.name, n.ID, n.UID, n.worldPosition, n.localPosition, n.elevation, items, handItems, n.firearm.ToSimpleItem(),
-                n.isHostile, n.spriteID, n.faction.ID, n.flags, n.questID, n.dialogueID, bodyParts);
+                n.isHostile, n.spriteID, n.faction.ID, n.flags, n.questID, n.dialogueID, bodyParts, n.traits);
 
             chars.Add(character);
         }

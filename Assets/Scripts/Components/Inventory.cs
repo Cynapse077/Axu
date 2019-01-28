@@ -759,7 +759,7 @@ public class Inventory : MonoBehaviour
 
             if (it != null)
             {
-                DropBodyPart(it);
+                PickupItem(it);
             }
         }
 
@@ -787,7 +787,9 @@ public class Inventory : MonoBehaviour
         i.OnConsume(stats);
 
         if (i.HasCComponent<CLiquidContainer>())
+        {
             CombatLog.NameMessage("Message_Action_Drink", i.DisplayName());
+        }
         else
         {
             RemoveInstance(i);
@@ -1058,7 +1060,7 @@ public class Inventory : MonoBehaviour
 
     public bool isNoneItem(Item i)
     {
-        return (i.ID == ItemList.noneItem.ID);
+        return (i.ID == ItemList.GetNone().ID);
     }
 
     public bool DiggingEquipped()

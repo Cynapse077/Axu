@@ -7,17 +7,15 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class TurnManager : MonoBehaviour
 {
-    public static int dayLength = 4000, nightLength = 2000, costPerAction = 10;
+    const int costPerAction = 10;
+    public static int dayLength = 4000, nightLength = 2000;
 
     public int turn = 0;
     public GameObject rainEffect;
     public GameObject snowEffect;
     public GameObject sandstormEffect;
-    public event Action incrementTurnCounter;
-
-    public Gradient cloudColors;
-    public Gradient timeOfDayColors;
     public Weather currentWeather = Weather.Clear;
+    public event Action incrementTurnCounter;
 
     Color currentColor;
     int turnsSinceWeatherChange = 0, TurnsTilWeatherChange = 750;
@@ -33,32 +31,13 @@ public class TurnManager : MonoBehaviour
 
     public int Day
     {
-        get
-        {
-            return (turn / FullDayLength) + 1;
-        }
+        get { return (turn / FullDayLength) + 1; }
     }
 
     public int TimeOfDay
     {
         get { return timeOfDay; }
         protected set { timeOfDay = value; }
-    }
-
-    public Color CurrentCloudColor
-    {
-        get
-        {
-            return (World.tileMap == null || World.tileMap.currentElevation == 0) ? cloudColors.Evaluate(DayProgress) : Color.white;
-        }
-    }
-
-    public Color CurrentTODColor
-    {
-        get
-        {
-            return (World.tileMap == null || World.tileMap.currentElevation == 0) ? timeOfDayColors.Evaluate(DayProgress) : Color.white;
-        }
     }
 
     void OnEnable()
@@ -144,7 +123,7 @@ public class TurnManager : MonoBehaviour
         //Shuffle merchant inventories.
         foreach (NPC n in World.objectManager.npcClasses)
         {
-            if (n.HasFlag(NPC_Flags.Merchant) || n.HasFlag(NPC_Flags.Book_Merchant) || n.HasFlag(NPC_Flags.Doctor))
+            if (n.ShouldShuffleInventory())
             {
                 n.ReshuffleInventory();
             }
@@ -202,6 +181,8 @@ public class TurnManager : MonoBehaviour
             if (mi.radiation > 0 && SeedManager.combatRandom.Next(100) < (mi.radiation / 2f))
             {
                 playerEntity.stats.Radiate(SeedManager.combatRandom.Next(mi.radiation));
+
+                //TODO: NPCs radiate too.
             }
         }
     }

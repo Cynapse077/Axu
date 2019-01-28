@@ -7,24 +7,19 @@ using MoonSharp.Interpreter;
 public class BaseAI : MonoBehaviour
 {
     public NPC npcBase;
-    public Coord worldPos;
     public GameObject passiveMarker;
     public SpriteRenderer spriteRenderer;
     public GameObject explosive;
     public Entity entity;
-    public EntitySkills entitySkills;
-    public Path_AStar path { get; protected set; }
     public DialogueController dialogueController;
-
     public Entity target { get; protected set; }
 
     readonly int sightRange = 17;
-    readonly float distanceToTarget;
 
-    Body body;
+    Path_AStar path;
+    float distanceToTarget;
     List<Entity> possibleTargets = new List<Entity>();
     NPCSprite spriteComponent;
-    EntitySkills skills;
     int perception = 10;
     bool canAct, hasAskedForHelp = false, doneInit = false;
 
@@ -54,17 +49,12 @@ public class BaseAI : MonoBehaviour
         npcBase.hostilityOverride = hostile;
     }
 
-    public void Init()
+    public void Init(Entity e)
     {
+        entity = e;
         canAct = false;
         CacheVars();
-        GrabSkillsFromBase();
-        GetComponent<NPCSprite>().SetSprite(npcBase.spriteID);
-        
-        if (npcBase.worldPosition.x < 0 || npcBase.worldPosition.y < 0)
-        {
-            npcBase.worldPosition = worldPos;
-        }
+        spriteComponent.SetSprite(npcBase.spriteID);
 
         if (ObjectManager.playerEntity != null)
         {
@@ -114,7 +104,9 @@ public class BaseAI : MonoBehaviour
         }
 
         if (npcBase.faction != null && npcBase.faction.HostileToPlayer())
+        {
             npcBase.hostilityOverride = true;
+        }
 
         if (!canAct)
         {
@@ -123,16 +115,8 @@ public class BaseAI : MonoBehaviour
         }
 
         if (entity != null)
-            entity.canAct = canAct;
-
-        if (isStationary)
         {
-            if (isHostile)
-            {
-                Hostile_Action();
-            }
-
-            return false;
+            entity.canAct = canAct;
         }
 
         return true;
@@ -177,7 +161,9 @@ public class BaseAI : MonoBehaviour
             hasSeenPlayer = true;
 
             if (entity != null)
+            {
                 entity.Wait();
+            }
 
             return;
         }
@@ -192,13 +178,27 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        List<BodyPart.Grip> gripsAgainst = body.AllGripsAgainst();
+        if (isStationary)
+        {
+            if (isHostile)
+            {
+                Hostile_Action();
+            }
 
-        if (gripsAgainst.Count > 0 && SeedManager.combatRandom.Next(100) < 20)
+            return;
+        }
+
+        List<BodyPart.Grip> gripsAgainst = entity.body.AllGripsAgainst();
+
+        if (gripsAgainst.Count > 0 && SeedManager.combatRandom.Next(100) < 30)
         {
             Coord pos = entity.GetEmptyCoords().GetRandom();
-            entity.Action(pos.x - entity.posX, pos.y - entity.posY);
-            return;
+
+            if (pos != null)
+            {
+                entity.Action(pos.x - entity.posX, pos.y - entity.posY);
+                return;
+            }
         }
 
         if (isHostile)
@@ -223,7 +223,8 @@ public class BaseAI : MonoBehaviour
                 {
                     NoticePlayer();
                 }
-                else {
+                else
+                {
                     Wander();
                 }
             }
@@ -240,19 +241,17 @@ public class BaseAI : MonoBehaviour
 
     public void NoticePlayer()
     {
-        if (spriteRenderer.enabled)
+        if (InSightOfPlayer())
         {
             Transform g = SimplePool.Spawn(World.poolManager.exclamationMark, transform.position + new Vector3(0.5f, 0.5f, 0)).transform;
             g.parent = transform;
             hasSeenPlayer = true;
 
-            if (!hasAskedForHelp && skills.HasAndCanUseSkill("help") && SeedManager.combatRandom.Next(100) < 25)
+            if (!hasAskedForHelp && entity.skills.HasAndCanUseSkill("help") && SeedManager.combatRandom.Next(100) < 25)
             {
-                skills.CallForHelp();
+                entity.skills.CallForHelp();
                 hasAskedForHelp = true;
             }
-
-            return;
         }
 
         entity.Wait();
@@ -284,17 +283,21 @@ public class BaseAI : MonoBehaviour
         return (entity.inventory.items.FindAll(x => x.HasProp(ItemProperty.Throwing_Wep) || x.HasProp(ItemProperty.Explosive)).Count > 0);
     }
 
-    bool HasRanged(Entity target)
+    bool UseRangedAttack(Entity target)
     {
         if (entity.inventory.firearm == null)
+        {
             entity.inventory.firearm = ItemList.GetNone();
+        }
 
         if (!entity.inventory.firearm.HasProp(ItemProperty.Ranged) || isFollower() && target == ObjectManager.playerEntity)
+        {
             return false;
+        }
 
-        float dist = GetDistance(target);
+        distanceToTarget = GetDistance(target);
 
-        if (RNG.Next(100) > 40 && dist < sightRange)
+        if (RNG.Next(100) > 40 && distanceToTarget < sightRange)
         {
             RangedAttack(target.myPos);
             return true;
@@ -307,12 +310,14 @@ public class BaseAI : MonoBehaviour
     {
         if (target == null)
         {
-            SearchForTarget();
-        }
-
-        if (target == null)
-        {
-            Wander();
+            if (SearchForTarget())
+            {
+                Wander();
+            }
+            else
+            {
+                Hostile_Action();
+            }
         }
         else
         {
@@ -324,10 +329,14 @@ public class BaseAI : MonoBehaviour
     {
         if (target == null || SeedManager.combatRandom.Next(100) < 20)
         {
-            SearchForTarget();
+            if (!SearchForTarget())
+            {
+                Wander();
+                return;
+            }
         }
 
-        if (target == null || !isHostile && target == ObjectManager.playerEntity)
+        if (!isHostile && target == ObjectManager.playerEntity)
         {
             Wander();
             return;
@@ -339,28 +348,25 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        float distance = GetDistance(target);
+        distanceToTarget = GetDistance(target);
 
-        if (isStationary && distance > 1.6f)
+        if (isStationary && distanceToTarget > 1.6f)
         {
-            if (!HasRanged(target))
+            if (!UseRangedAttack(target))
             {
                 entity.Wait();
                 return;
             }
         }
 
-        if (HasThrowingItem(target) && distance < 7 && RNG.Next(100) < 5 && TargetInSight())
+        if (HasThrowingItem(target) && distanceToTarget < 7 && RNG.Next(100) < 5 && TargetInSight())
         {
             ThrowItem();
-            return;
         }
-        else if (HasRanged(target))
+        else if (!UseRangedAttack(target))
         {
-            return;
-        }
-
-        GetNewPath(target.myPos);
+            GetNewPath(target.myPos);
+        }        
     }
 
     void GetNewPath(Coord dest)
@@ -393,7 +399,7 @@ public class BaseAI : MonoBehaviour
         ConfirmAction(moveX, moveY);
     }
 
-    void SearchForTarget()
+    bool SearchForTarget()
     {
         possibleTargets.Refresh();
 
@@ -411,6 +417,8 @@ public class BaseAI : MonoBehaviour
         }
 
         target = (possibleTargets.Count == 0) ? null : GetClosestTarget(possibleTargets);
+
+        return target != null;
     }
 
     void Wander()
@@ -421,7 +429,7 @@ public class BaseAI : MonoBehaviour
             entity.myPos = new Coord((int)transform.position.x, (int)transform.position.y);
         }
 
-        if (target != null && target != ObjectManager.playerEntity)
+        if (target && target != ObjectManager.playerEntity)
         {
             Hostile_Action();
             return;
@@ -433,7 +441,7 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        if (path == null || path.path == null || path.path.Count <= 0)
+        if (path == null || path.steps == null || path.steps.Count <= 0)
         {
             Coord targetPosition = World.tileMap.CurrentMap.GetRandomFloorTile();
 
@@ -478,12 +486,10 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        if (HasRanged(target))
+        if (!UseRangedAttack(target))
         {
-            return;
-        }
-
-        GetNewPath(target.myPos);
+            GetNewPath(target.myPos);
+        } 
     }
 
     public void FollowPath()
@@ -492,7 +498,7 @@ public class BaseAI : MonoBehaviour
         {
             Coord next = path.GetNextStep();
 
-            if (next == entity.myPos)
+            if (next == entity.myPos && path.steps.Count > 0)
             {
                 next = path.GetNextStep();
             }
@@ -503,9 +509,9 @@ public class BaseAI : MonoBehaviour
 
     void RangedAttack(Coord targetPosition)
     {
-        float dist = GetDistance(target);
+        distanceToTarget = GetDistance(target);
         //Fleeing
-        if (dist < 3 && RNG.Next(100) < 20 && !isStationary)
+        if (distanceToTarget < 3 && RNG.Next(100) < 20 && !isStationary)
         {
             int dirX = entity.posX - targetPosition.x, dirY = entity.posY - targetPosition.y;
             dirX = Mathf.Clamp(dirX, -1, 1);
@@ -515,7 +521,7 @@ public class BaseAI : MonoBehaviour
         else
         {
             //Out of sight
-            if (!entity.inSight(targetPosition) || dist > 10)
+            if (!entity.inSight(targetPosition) || distanceToTarget > 10)
                 entity.Wait();
             else
             {
@@ -622,45 +628,28 @@ public class BaseAI : MonoBehaviour
     
     void ConfirmAction(int x, int y)
     {
-        if (entity.posX + x < 0 || entity.posX + x >= Manager.localMapSize.x)
-            x = 0;
-        if (entity.posY + y < 0 || entity.posY + y >= Manager.localMapSize.y)
-            y = 0;
-
-        x = Mathf.Clamp(x, -1, 1);
-        y = Mathf.Clamp(y, -1, 1);
-
-        if (Mathf.Abs(x) + Mathf.Abs(y) > 1)
+        if (npcBase.HasFlag(NPC_Flags.Quantum_Locked) && World.tileMap.InSightCoords().Contains(new Coord(entity.posX + x, entity.posY + y)))
         {
-            if (!World.tileMap.WalkableTile(entity.posX + x, entity.posY + y))
-            {
-                if (!World.tileMap.WalkableTile(entity.posX + x, entity.posY))
-                    x = 0;
-                if (!World.tileMap.WalkableTile(entity.posX, entity.posY + y))
-                    y = 0;
-            }
+            entity.Wait();
         }
-
-        if (npcBase.HasFlag(NPC_Flags.Quantum_Locked))
+        else
         {
-            if (World.tileMap.InSightCoords().Contains(new Coord(entity.posX + x, entity.posY + y)))
+            if (x != 0)
             {
-                entity.Wait();
-                return;
+                spriteComponent.SetXScale(-x);
             }
+
+            entity.Action(x, y);
+            entity.canAct = false;
         }
-
-        if (x != 0)
-            spriteComponent.SetXScale(-x);
-
-        entity.Action(x, y);
-        entity.canAct = false;
     }
 
     float GetDistance(Entity targetEntity)
     {
         if (targetEntity == null || entity == null)
+        {
             return Mathf.Infinity;
+        }
 
         return entity.myPos.DistanceTo(targetEntity.myPos);
     }
@@ -716,7 +705,9 @@ public class BaseAI : MonoBehaviour
                 for (int y = entity.posY - 1; y <= entity.posY + 1; y++)
                 {
                     if (x == entity.posX && y == entity.posY)
+                    {
                         continue;
+                    }
 
                     if (x == entity.posX || y == entity.posY && World.tileMap.WalkableTile(x, y))
                     {
@@ -746,7 +737,6 @@ public class BaseAI : MonoBehaviour
         if (npcBase.ID == "empty")
         {
             List<Entity> tentacles = World.objectManager.onScreenNPCObjects.FindAll(x => x.AI.npcBase.ID == "theempty-tentacle");
-            int numTentacles = tentacles.Count;
 
             foreach (Entity e in tentacles)
             {
@@ -758,21 +748,9 @@ public class BaseAI : MonoBehaviour
     void CacheVars()
     {
         spriteRenderer.enabled = false;
-        body = GetComponent<Body>();
         spriteComponent = GetComponent<NPCSprite>();
-        skills = GetComponent<EntitySkills>();
-    }
-
-    void GrabSkillsFromBase()
-    {
-        entity = GetComponent<Entity>();
-        entitySkills = GetComponent<EntitySkills>();
-        entity.stats.maxHealth = npcBase.maxHealth;
-        entity.stats.health = npcBase.health;
         gameObject.name = npcBase.name;
-        entity.stats.Attributes["Speed"] = npcBase.Attributes["Speed"];
         perception = npcBase.Attributes["Perception"];
-        entity.stats.Attributes["Accuracy"] = npcBase.Attributes["Accuracy"];
 
         if (npcBase.faction != null && npcBase.faction.HostileToPlayer())
         {
@@ -815,11 +793,10 @@ public class BaseAI : MonoBehaviour
             npcBase.stamina = (npcBase.HasFlag(NPC_Flags.OnDisable_Regen)) ? entity.stats.maxStamina : entity.stats.stamina;
 
             npcBase.inventory = inv.items;
-            npcBase.bodyParts = body.bodyParts;
-
+            npcBase.bodyParts = entity.body.bodyParts;
             npcBase.handItems = new List<Item>();
 
-            List<BodyPart.Hand> hands = body.Hands;
+            List<BodyPart.Hand> hands = entity.body.Hands;
 
             if (hands.Count > 0)
             {
@@ -827,7 +804,7 @@ public class BaseAI : MonoBehaviour
                 {
                     if (hands[i].EquippedItem == null)
                     {
-                        hands[i].SetEquippedItem(ItemList.GetItemByID(body.Hands[i].baseItem), entity);
+                        hands[i].SetEquippedItem(ItemList.GetItemByID(entity.body.Hands[i].baseItem), entity);
                     }
 
                     npcBase.handItems.Add(hands[i].EquippedItem);
@@ -835,7 +812,15 @@ public class BaseAI : MonoBehaviour
             }
             else
             {
-                npcBase.handItems = new List<Item>() { body.defaultHand.EquippedItem };
+                npcBase.handItems = new List<Item>() { entity.body.defaultHand.EquippedItem };
+            }
+
+            for (int i = 0; i < entity.stats.traits.Count; i++)
+            {
+                if (!npcBase.traits.Contains(entity.stats.traits[i].ID))
+                {
+                    npcBase.traits.Add(entity.stats.traits[i].ID);
+                }
             }
 
             npcBase.firearm = inv.firearm;
@@ -847,7 +832,7 @@ public class BaseAI : MonoBehaviour
         if (!isFollower())
         {
             npcBase.MakeFollower();
-            GetComponent<DialogueController>().SetupDialogueOptions();
+            dialogueController.SetupDialogueOptions();
             CombatLog.NameMessage("Message_Hire", gameObject.name);
         }
     }
@@ -914,11 +899,12 @@ public class BaseAI : MonoBehaviour
             possible.Clear();
         }
 
-        for (int i = 0; i < entitySkills.abilities.Count; i++)
+        for (int i = 0; i < entity.skills.abilities.Count; i++)
         {
-            Skill skill = entitySkills.abilities[i];
+            Skill skill = entity.skills.abilities[i];
 
-            if (skill.aiAction == null || skill.cooldown > 0 || !entitySkills.CanUseSkill(skill.staminaCost) || skill.castType == CastType.Target && entity.myPos.DistanceTo(target.myPos) > skill.range)
+            if (skill.aiAction == null || skill.cooldown > 0 || !entity.skills.CanUseSkill(skill.staminaCost) || 
+                skill.castType == CastType.Target && entity.myPos.DistanceTo(target.myPos) > skill.range)
             {
                 continue;
             }
@@ -944,13 +930,13 @@ public class BaseAI : MonoBehaviour
                     if (dirX != 0) dirX = (dirX > 0) ? 1 : -1;
                     if (dirY != 0) dirY = (dirY > 0) ? 1 : -1;
 
-                    choice.ActivateCoordinateSkill(skills, new Coord(dirX, dirY));
+                    choice.ActivateCoordinateSkill(entity.skills, new Coord(dirX, dirY));
                     break;
                 case CastType.Instant:
                     choice.Cast(entity);
                     break;
                 case CastType.Target:
-                    choice.ActivateCoordinateSkill(skills, target.myPos);
+                    choice.ActivateCoordinateSkill(entity.skills, target.myPos);
                     break;
             }
 
@@ -962,14 +948,14 @@ public class BaseAI : MonoBehaviour
 
     bool UseAbility_Unique()
     {
-        float distance = GetDistance(target);
+        distanceToTarget = GetDistance(target);
 
         //Call for help
-        if (!hasAskedForHelp && skills.HasAndCanUseSkill("help") && SeedManager.combatRandom.Next(100) < 10)
+        if (!hasAskedForHelp && entity.skills.HasAndCanUseSkill("help") && SeedManager.combatRandom.Next(100) < 10)
         {
-            skills.CallForHelp();
+            entity.skills.CallForHelp();
             hasAskedForHelp = true;
-            skills.abilities.Find(x => x.ID == "help").InitializeCooldown();
+            entity.skills.abilities.Find(x => x.ID == "help").InitializeCooldown();
 
             return true;
         }
@@ -994,9 +980,7 @@ public class BaseAI : MonoBehaviour
 
                 if (lps.Count > 0)
                 {
-                    Coord lp = lps.GetRandom(RNG);
-
-                    NPC n = EntityList.GetNPCByID("theempty-tentacle", World.tileMap.WorldPosition, new Coord(lp.x, lp.y));
+                    NPC n = EntityList.GetNPCByID("theempty-tentacle", World.tileMap.WorldPosition, lps.GetRandom(RNG));
                     World.objectManager.SpawnNPC(n);
                     return true;
                 }
@@ -1008,7 +992,7 @@ public class BaseAI : MonoBehaviour
         }
 
         //Summon Slimes
-        if (npcBase.HasFlag(NPC_Flags.Summon_Adds) && SeedManager.combatRandom.Next(100) < 10 && skills.CanUseSkill(3))
+        if (npcBase.HasFlag(NPC_Flags.Summon_Adds) && SeedManager.combatRandom.Next(100) < 10 && entity.skills.CanUseSkill(3))
         {
             entity.stats.UseStamina(3);
             SummonAdd("Slimeites 1");
@@ -1016,11 +1000,11 @@ public class BaseAI : MonoBehaviour
         }
 
         //Leprosy
-        if (npcBase.HasFlag(NPC_Flags.Skills_Leprosy) && SeedManager.combatRandom.Next(100) < 10)
+        if (npcBase.HasFlag(NPC_Flags.Skills_Leprosy) && SeedManager.combatRandom.Next(100) < 20)
         {
             CombatLog.CombatMessage("bites", gameObject.name, target.name, false);
 
-            if (RNG.Next(100) < 5)
+            if (RNG.Next(100) < 10)
             {
                 target.stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
             }
@@ -1030,35 +1014,36 @@ public class BaseAI : MonoBehaviour
         }
 
         //Grappling
-        if (distance < 2f && skills.HasAndCanUseSkill("grapple") && SeedManager.combatRandom.Next(100) < 20)
+        if (distanceToTarget < 2f && entity.skills.HasAndCanUseSkill("grapple") && SeedManager.combatRandom.Next(100) < 20)
         {
-            if (body.AllGrips() == null || body.AllGrips().Count == 0)
+            if (entity.body.AllGrips() == null || entity.body.AllGrips().Count == 0)
             {
-                skills.Grapple_GrabPart(target.GetComponent<Body>().SeverableBodyParts().GetRandom());
-                return true;
+                entity.skills.Grapple_GrabPart(target.body.SeverableBodyParts().GetRandom());
             }
             else
             {
-                BodyPart.Grip currentGrip = body.AllGrips()[0];
+                BodyPart.Grip currentGrip = entity.body.AllGrips()[0];
 
-                if (currentGrip.heldPart.slot == ItemProperty.Slot_Head && RNG.Next(100) < 20 && entity.stats.Strength > 6)
+                if (currentGrip != null && currentGrip.heldPart.slot == ItemProperty.Slot_Head && RNG.Next(100) < 20 && entity.stats.Strength > 6)
                 {
-                    skills.Grapple_Strangle(target.stats); //Choke me, daddy.
+                    entity.skills.Grapple_Strangle(target.stats); //Choke me, daddy.
                 }
                 else
                 {
                     int ran = RNG.Next(100);
 
                     if (ran <= 40)
-                        skills.Grapple_TakeDown(target.stats, body.AllGrips()[0].heldPart.displayName);
+                        entity.skills.Grapple_TakeDown(target.stats, currentGrip.heldPart.displayName);
                     else if (ran <= 60)
-                        skills.Grapple_Shove(target);
-                    else if (ran <= 90 && entity.stats.Strength >= 5)
-                        skills.Grapple_Pull(currentGrip);
+                        entity.skills.Grapple_Shove(currentGrip);
+                    else if (ran <= 85 && entity.stats.Strength >= 5)
+                        entity.skills.Grapple_Pull(currentGrip);
+                    else if (ran <= 93 && entity.stats.Dexterity >= 6)
+                        entity.skills.Grapple_Disarm(currentGrip);
                 }
-
-                return true;
             }
+
+            return true;
         }
 
         return false;

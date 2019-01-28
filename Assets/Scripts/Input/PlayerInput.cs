@@ -12,18 +12,16 @@ public class PlayerInput : MonoBehaviour
     public GameObject mapPointer;
     public GameObject directionSelectObject;
     public SpriteRenderer childSprite;
+    public Path_AStar localPath;
 
     Coord storedTravelPos;
     Coord targetPosition;
     bool waitForRefresh, canHoldKeys, fireWeapon, walking;
     bool canWorldMove = true;
     Entity entity;
-    Inventory playerInventory;
     GameObject mapPositionPointer;
     MiniMap miniMap;
     CursorControl cursorControlScript;
-    EntitySkills skills;
-    Stats stats;
     float moveTimer = 0;
     GameObject sidePanelUI;
     Vector3 mapOffset = Vector3.zero;
@@ -31,8 +29,8 @@ public class PlayerInput : MonoBehaviour
     List<NPC> npcsToMove;
     Path_AStar worldPath;
 
-    [HideInInspector] public Skill activeSkill;
-    [HideInInspector] public CursorMode cursorMode = CursorMode.None;
+    public Skill activeSkill;
+    public CursorMode cursorMode = CursorMode.None;
     public GameObject restingIcon;
     public InputKeys keybindings;
     public bool showMinimap = true;
@@ -93,7 +91,7 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator FollowPath()
     {
-        if (worldPath == null || worldPath.path == null)
+        if (worldPath == null || worldPath.steps == null)
         {
             yield break;
         }
@@ -102,7 +100,7 @@ public class PlayerInput : MonoBehaviour
 
         while (World.tileMap.WorldPosition != targetPosition && worldPath != null && targetPosition != null)
         {
-            if (worldPath.path.Count <= 0)
+            if (worldPath.steps.Count <= 0)
             {
                 break;
             }
@@ -127,7 +125,7 @@ public class PlayerInput : MonoBehaviour
             targetPosition = targetPos;
             Path_AStar path = new Path_AStar(World.tileMap.WorldPosition, targetPosition, World.tileMap.worldMap);
 
-            if (path.path != null)
+            if (path.steps != null)
             {
                 worldPath = path;
                 canWorldMove = true;
@@ -144,7 +142,7 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        if (stats.dead || lockInput)
+        if (entity.stats.dead || lockInput)
         {
             return;
         }
@@ -168,7 +166,9 @@ public class PlayerInput : MonoBehaviour
             }
         }
         else
+        {
             MenuKeys();
+        }
 
         if (fullMap && worldPath != null && canWorldMove)
         {
@@ -203,7 +203,7 @@ public class PlayerInput : MonoBehaviour
         }
         else if (KeyDown("Throw") && World.userInterface.NoWindowsOpen)
         {
-            if (playerInventory.items.Count <= 0 && !playerInventory.firearm.HasProp(ItemProperty.Throwing_Wep))
+            if (entity.inventory.items.Count <= 0 && !entity.inventory.firearm.HasProp(ItemProperty.Throwing_Wep))
             {
                 Alert.NewAlert("No_Throw");
             }
@@ -235,9 +235,9 @@ public class PlayerInput : MonoBehaviour
                 entity.CancelWalk();
             }
 
-            if (entity.path != null)
+            if (localPath != null)
             {
-                entity.path = null;
+                localPath = null;
             }
         }
     }
@@ -303,15 +303,15 @@ public class PlayerInput : MonoBehaviour
         }
         else if (KeyDown("Fire"))
         {
-            if (playerInventory.firearm.HasProp(ItemProperty.Ranged))
+            if (entity.inventory.firearm.HasProp(ItemProperty.Ranged))
             {
                 ChangeCursorMode(CursorMode.Tile);
                 cursorControlScript.range = entity.stats.FirearmRange;
                 cursorControlScript.FindClosestEnemy(0);
             }
-            else if (playerInventory.firearm.lootable && playerInventory.firearm.amount > 0)
+            else if (entity.inventory.firearm.lootable && entity.inventory.firearm.amount > 0)
             {
-                entity.fighter.SelectItemToThrow(playerInventory.firearm);
+                entity.fighter.SelectItemToThrow(entity.inventory.firearm);
                 ToggleThrow();
             }
 
@@ -319,7 +319,7 @@ public class PlayerInput : MonoBehaviour
         }
         else if (KeyDown("Rest"))
         {
-            if (stats.health < stats.maxHealth || stats.stamina < stats.maxStamina)
+            if (entity.stats.health < entity.stats.maxHealth || entity.stats.stamina < entity.stats.maxStamina)
             {
                 if (World.objectManager.SafeToRest())
                 {
@@ -460,7 +460,7 @@ public class PlayerInput : MonoBehaviour
 
     public void UseDirectionalSkill(Skill newSkill)
     {
-        if (stats.SkipTurn())
+        if (entity.stats.SkipTurn())
         {
             return;
         }
@@ -471,7 +471,7 @@ public class PlayerInput : MonoBehaviour
 
     public void UseSelectTileSkill(Skill newSkill)
     {
-        if (stats.SkipTurn())
+        if (entity.stats.SkipTurn())
         {
             return;
         }
@@ -595,45 +595,45 @@ public class PlayerInput : MonoBehaviour
 
     void AbilityHotkeys()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && skills.abilities.Count > 0)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && entity.skills.abilities.Count > 0)
         {
-            skills.abilities[0].Cast(entity);
+            entity.skills.abilities[0].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && skills.abilities.Count > 1)
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && entity.skills.abilities.Count > 1)
         {
-            skills.abilities[1].Cast(entity);
+            entity.skills.abilities[1].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && skills.abilities.Count > 2)
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && entity.skills.abilities.Count > 2)
         {
-            skills.abilities[2].Cast(entity);
+            entity.skills.abilities[2].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4) && skills.abilities.Count > 3)
+        else if (Input.GetKeyDown(KeyCode.Alpha4) && entity.skills.abilities.Count > 3)
         {
-            skills.abilities[3].Cast(entity);
+            entity.skills.abilities[3].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha5) && skills.abilities.Count > 4)
+        else if (Input.GetKeyDown(KeyCode.Alpha5) && entity.skills.abilities.Count > 4)
         {
-            skills.abilities[4].Cast(entity);
+            entity.skills.abilities[4].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha6) && skills.abilities.Count > 5)
+        else if (Input.GetKeyDown(KeyCode.Alpha6) && entity.skills.abilities.Count > 5)
         {
-            skills.abilities[5].Cast(entity);
+            entity.skills.abilities[5].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha7) && skills.abilities.Count > 6)
+        else if (Input.GetKeyDown(KeyCode.Alpha7) && entity.skills.abilities.Count > 6)
         {
-            skills.abilities[6].Cast(entity);
+            entity.skills.abilities[6].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha8) && skills.abilities.Count > 8)
+        else if (Input.GetKeyDown(KeyCode.Alpha8) && entity.skills.abilities.Count > 8)
         {
-            skills.abilities[7].Cast(entity);
+            entity.skills.abilities[7].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha9) && skills.abilities.Count > 9)
+        else if (Input.GetKeyDown(KeyCode.Alpha9) && entity.skills.abilities.Count > 9)
         {
-            skills.abilities[8].Cast(entity);
+            entity.skills.abilities[8].Cast(entity);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha0) && skills.abilities.Count > 10)
+        else if (Input.GetKeyDown(KeyCode.Alpha0) && entity.skills.abilities.Count > 10)
         {
-            skills.abilities[9].Cast(entity);
+            entity.skills.abilities[9].Cast(entity);
         }
     }
 
@@ -659,7 +659,7 @@ public class PlayerInput : MonoBehaviour
         {
             if (!(x == 0 && y == 0))
             {
-                activeSkill.ActivateCoordinateSkill(skills, new Coord(x, y));
+                activeSkill.ActivateCoordinateSkill(entity.skills, new Coord(x, y));
                 CheckFacingDirection(entity.posX + x);
                 activeSkill = null;
                 CancelLook();
@@ -732,16 +732,16 @@ public class PlayerInput : MonoBehaviour
     {
         for (int i = 0; i < inv.items.Count; i++)
         {
-            if (playerInventory.items.Find(x => x.ID == inv.items[i].ID) != null && inv.items[i].stackable || playerInventory.firearm.ID == inv.items[i].ID && inv.items[i].stackable)
+            if (entity.inventory.items.Find(x => x.ID == inv.items[i].ID) != null && inv.items[i].stackable || entity.inventory.firearm.ID == inv.items[i].ID && inv.items[i].stackable)
             {
-                if (playerInventory.firearm.ID == inv.items[i].ID)
+                if (entity.inventory.firearm.ID == inv.items[i].ID)
                 {
-                    playerInventory.firearm.amount += inv.items[i].amount;
+                    entity.inventory.firearm.amount += inv.items[i].amount;
                     CombatLog.NameMessage("Add_To_Stash", inv.items[i].DisplayName());
                 }
                 else
                 {
-                    playerInventory.PickupItem(inv.items[i]);
+                    entity.inventory.PickupItem(inv.items[i]);
                     CombatLog.NameMessage("Add_To_Inventory", inv.items[i].DisplayName());
                 }
 
@@ -791,11 +791,14 @@ public class PlayerInput : MonoBehaviour
     {
         foreach (NPC n in npcsToMove)
         {
-            n.worldPosition = World.tileMap.WorldPosition;
-            n.localPosition = entity.GetEmptyCoords().Count > 0 ? entity.GetEmptyCoords().GetRandom() : World.tileMap.CurrentMap.GetRandomFloorTile();
-            n.elevation = World.tileMap.currentElevation;
-            n.hasSeenPlayer = true;
-            World.objectManager.SpawnNPC(n);
+            if (entity.GetEmptyCoords().Count > 0)
+            {
+                n.worldPosition = World.tileMap.WorldPosition;
+                n.localPosition = entity.GetEmptyCoords().GetRandom();
+                n.elevation = World.tileMap.currentElevation;
+                n.hasSeenPlayer = true;
+                World.objectManager.SpawnNPC(n);
+            }
         }
 
         World.tileMap.CheckNPCTiles();
@@ -811,8 +814,8 @@ public class PlayerInput : MonoBehaviour
 
         if (fullMap)
         {
-            stats.health = stats.maxHealth;
-            stats.stamina = stats.maxStamina;
+            entity.stats.health = entity.stats.maxHealth;
+            entity.stats.stamina = entity.stats.maxStamina;
 
             int timePass = 20;
 
@@ -821,12 +824,12 @@ public class PlayerInput : MonoBehaviour
             else
                 timePass = (y != 0) ? 20 : 30;
 
-            if (playerInventory.CanFly())
+            if (entity.inventory.CanFly())
             {
                 timePass /= 2;
             }
 
-            if (playerInventory.overCapacity())
+            if (entity.inventory.overCapacity())
             {
                 timePass += 5;
             }
@@ -867,11 +870,11 @@ public class PlayerInput : MonoBehaviour
                 {
                     //Spawn Bandits
                     Item item = null;
-                    int goldAmount = (playerInventory.gold > 0) ? Random.Range(playerInventory.gold / 2, playerInventory.gold + 1) : 100;
+                    int goldAmount = (entity.inventory.gold > 0) ? Random.Range(entity.inventory.gold / 2, entity.inventory.gold + 1) : 100;
 
-                    if (playerInventory.items.Count > 0 && SeedManager.combatRandom.CoinFlip())
+                    if (entity.inventory.items.Count > 0 && SeedManager.combatRandom.CoinFlip())
                     {
-                        item = playerInventory.items.GetRandom();
+                        item = entity.inventory.items.GetRandom();
                     }
 
                     if (item != null && SeedManager.combatRandom.CoinFlip())
@@ -879,7 +882,7 @@ public class PlayerInput : MonoBehaviour
                         World.userInterface.YesNoAction("YN_BanditAmbush_Item", () =>
                         {
                             World.userInterface.BanditYes(goldAmount, item);
-                            playerInventory.RemoveInstance_All(item);
+                            entity.inventory.RemoveInstance_All(item);
                         }, () => World.userInterface.BanditNo(), item.DisplayName());
                     }
                     else
@@ -887,7 +890,7 @@ public class PlayerInput : MonoBehaviour
                         World.userInterface.YesNoAction("YN_BanditAmbush", () =>
                         {
                             World.userInterface.BanditYes(goldAmount, item);
-                            playerInventory.gold -= goldAmount;
+                            entity.inventory.gold -= goldAmount;
                         }, () => World.userInterface.BanditNo(), goldAmount.ToString());
                     }
 
@@ -997,7 +1000,7 @@ public class PlayerInput : MonoBehaviour
         if (targetPos != null && !World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
             return;
 
-        entity.path = new Path_AStar(entity.myPos, targetPos, playerInventory.CanFly());
+        localPath = new Path_AStar(entity.myPos, targetPos, entity.inventory.CanFly());
     }
     #endregion
 
@@ -1055,9 +1058,6 @@ public class PlayerInput : MonoBehaviour
     void Initialize()
     {
         entity = gameObject.GetComponent<Entity>();
-        playerInventory = gameObject.GetComponent<Inventory>();
-        skills = gameObject.GetComponent<EntitySkills>();
-        stats = gameObject.GetComponent<Stats>();
         mapPositionPointer = Instantiate(mapPointer) as GameObject;
         miniMap = mapPositionPointer.GetComponentInChildren<MiniMap>();
         cursorControlScript = gameObject.GetComponentInChildren<CursorControl>();

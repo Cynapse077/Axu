@@ -145,6 +145,7 @@ public class OldWorld
             Coord worldPos = (npcData["WP"] == null) ? new Coord(0, 0) : new Coord((int)npcData["WP"][0], (int)npcData["WP"][1]);
             Coord localPos = new Coord((int)npcData["LP"][0], (int)npcData["LP"][1]);
             NPC n = new NPC(npcData["ID"].ToString(), worldPos, localPos, (int)wData["NPCs"][i]["WP"][2]);
+            ObjectManager.SpawnedNPCs--;
 
             if (n.faction.ID == "followers" && !n.flags.Contains(NPC_Flags.Follower))
             {
@@ -171,9 +172,6 @@ public class OldWorld
 
             n.firearm = SaveData.GetItemFromJsonData(wData["NPCs"][i]["F"]);
 
-            objM.CreateNPC(n);
-            ObjectManager.SpawnedNPCs--;
-
             if (npcData["QN"] != null)
             {
                 n.questID = npcData["QN"].ToString();
@@ -183,6 +181,18 @@ public class OldWorld
             {
                 n.dialogueID = npcData["DID"].ToString();
             }
+
+            n.traits = new List<string>();
+
+            if (npcData.ContainsKey("Tr"))
+            {
+                for (int j = 0; j < npcData["Tr"].Count; j++)
+                {
+                    n.traits.Add(npcData["Tr"][j].ToString());
+                }
+            }
+
+            objM.CreateNPC(n);
         }
 
         //Get map objects

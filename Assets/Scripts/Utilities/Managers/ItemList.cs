@@ -11,6 +11,7 @@ public static class ItemList
     public static List<Item> artifacts;
     public static List<ItemModifier> modifiers;
     public static List<Liquid> liquids;
+    public static List<MapObjectBlueprint> mapObjectBlueprints;
 
     public static string itemDataPath;
     public static string natItemDataPath;
@@ -19,10 +20,14 @@ public static class ItemList
     public static string objDataPath;
     public static string liqDataPath;
 
-    public static List<MapObjectBlueprint> mapObjectBlueprints;
-
-    public static Item noneItem;
     public static int MaxRarity = 0;
+
+    static Item noneItem;
+
+    public static bool IsInitialized()
+    {
+        return items != null;
+    }
 
     public static void CreateItems()
     {

@@ -126,6 +126,13 @@ public class Stats : MonoBehaviour
     {
         get { return Attributes["ST Regen"]; }
     }
+    public int Influence
+    {
+        get
+        {
+            return Attributes.ContainsKey("Charisma") ? Attributes["Charisma"] : 0;
+        }
+    }
 
     Inventory MyInventory
     {
@@ -536,7 +543,7 @@ public class Stats : MonoBehaviour
 
     void PostDamage(Entity attacker, int damage, HashSet<DamageTypes> dt, BodyPart hitBodyPart)
     {
-        if (damage > 0)
+        if (damage > 0 && entity.isPlayer)
         {
             entity.CancelWalk();
         }
@@ -635,7 +642,7 @@ public class Stats : MonoBehaviour
 
         if (damage > 0)
         {
-            if (entity.isPlayer && damage >= maxHealth / 5 && RNG.Next(1000) < 5)
+            if (damage >= maxHealth / 5 && RNG.Next(1000) < 5)
             {
                 targetPart.WoundMe(damageTypes);
             }
@@ -663,7 +670,9 @@ public class Stats : MonoBehaviour
             Color color = (crit) ? Color.yellow : Color.red;
 
             if (col != Color.white)
+            {
                 color = col;
+            }
 
             CreateDamageNumber(amount.ToString(), color);
         }
@@ -689,31 +698,6 @@ public class Stats : MonoBehaviour
         entity.fighter.Die();
     }
 
-    string BloodType()
-    {
-        string bloodType = "liquid_blood";
-
-        if (HasEffect("Poison"))
-            bloodType = "liquid_blood_pois";
-
-        if (entity.isPlayer)
-        {
-            if (hasTraitEffect(TraitEffects.Leprosy))
-                bloodType = "liquid_blood_lep";
-            if (hasTraitEffect(TraitEffects.Vampirism) || hasTraitEffect(TraitEffects.PreVamp))
-                bloodType = "liquid_blood_vamp";
-        }
-        else
-        {
-            if (entity.AI.npcBase.HasFlag(NPC_Flags.Skills_Leprosy))
-                bloodType = "liquid_blood_lep";
-            if (entity.AI.npcBase.ID == "vamp")
-                bloodType = "liquid_blood_vamp";
-        }
-
-        return bloodType;
-    }
-
     public void StatusEffectDamage(int amount, DamageTypes damageType)
     {
         if (invincible || amount <= 0)
@@ -733,16 +717,7 @@ public class Stats : MonoBehaviour
             
             if (entity.isPlayer || !entity.AI.npcBase.HasFlag(NPC_Flags.No_Blood))
             {
-                string bloodType = BloodType();
-
-                if (bloodType != "liquid_bloow")
-                {
-                    World.objectManager.CreatePoolOfLiquid(entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, bloodType, 1);
-                }
-                else
-                {
-                    entity.CreateBloodstain(false, 30);
-                }
+                entity.CreateBloodstain(false, 30);
             }
         }
 
@@ -750,7 +725,7 @@ public class Stats : MonoBehaviour
         {
             entity.walkDirection = null;
             entity.resting = false;
-            entity.path = null;
+            entity.CancelWalk();
 
             if (damageType == DamageTypes.Venom)
                 CombatLog.SimpleMessage("Damage_Poison");
@@ -760,7 +735,6 @@ public class Stats : MonoBehaviour
                 CombatLog.SimpleMessage("Damage_Hunger");
             else if (damageType == DamageTypes.Heat)
                 CombatLog.SimpleMessage("Damage_Heat");
-
         }
 
         ApplyDamage(amount, false, c, damageType == DamageTypes.Bleed);
@@ -780,7 +754,9 @@ public class Stats : MonoBehaviour
         health += amount;
 
         if (entity.isPlayer)
+        {
             CombatLog.NameMessage("Message_Heal", amount.ToString());
+        }
     }
 
     public void RestHP()
@@ -821,7 +797,9 @@ public class Stats : MonoBehaviour
     public void InitializeNewTrait(Trait t)
     {
         if (t == null || traits.Contains(t) && !t.stackable)
+        {
             return;
+        }
 
         t.turnAcquired = World.turnManager.turn;
         AddTrait(t);
@@ -830,16 +808,17 @@ public class Stats : MonoBehaviour
 
     public void Radiate(int amount)
     {
-        if (!entity.isPlayer)
-            return;
-
         if (hasTraitEffect(TraitEffects.Rad_Resist) && amount > 1)
+        {
             amount /= 2;
+        }
 
         radiation += amount;
 
         if (radiation >= 100)
+        {
             Mutate();
+        }
     }
 
     public void GiveTrait(string traitID)
@@ -868,7 +847,12 @@ public class Stats : MonoBehaviour
         if (hasTraitEffect(TraitEffects.Rad_Resist) && RNG.Next(100) < 10)
         {
             radiation /= 2;
-            CombatLog.SimpleMessage("Message_MutFail");
+
+            if (entity.isPlayer)
+            {
+                CombatLog.SimpleMessage("Message_MutFail");
+            }
+
             return;
         }
 
@@ -909,7 +893,10 @@ public class Stats : MonoBehaviour
         InitializeNewTrait(mutation);
         radiation = RNG.Next(2, 7);
 
-        CombatLog.NameMessage("Message_Mutate", mutation.name);
+        if (entity.isPlayer)
+        {
+            CombatLog.NameMessage("Message_Mutate", mutation.name);
+        }
     }
 
     public int TraitStacks(string id)
@@ -930,15 +917,11 @@ public class Stats : MonoBehaviour
     void CheckMutationIntegrity(Trait newMut)
     {
         if (string.IsNullOrEmpty(newMut.slot))
-            return;
-
-        List<Trait> traitsToRemove = new List<Trait>();
-
-        for (int i = 0; i < traits.Count; i++)
         {
-            if (traits[i].slot == newMut.slot)
-                traitsToRemove.Add(traits[i]);
+            return;
         }
+
+        List<Trait> traitsToRemove = traits.FindAll(x => x.slot == newMut.slot);
 
         for (int i = 0; i < traitsToRemove.Count; i++)
         {
@@ -977,7 +960,9 @@ public class Stats : MonoBehaviour
     public void CureRandomMutations(int amount)
     {
         if (Mutations.Count <= 0)
+        {
             CombatLog.SimpleMessage("No_Effect");
+        }
 
         for (int i = 0; i < amount; i++)
         {
@@ -1002,12 +987,13 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < traitsToRemove.Count; i++)
         {
-            traits.Remove(traitsToRemove[i]);
+            RemoveTrait(traitsToRemove[i].ID);
+            //traits.Remove(traitsToRemove[i]);
         }
 
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
-            if (MyBody.bodyParts[i].effect == TraitEffects.Leprosy || MyBody.bodyParts[i].effect == TraitEffects.Vampirism || MyBody.bodyParts[i].effect == TraitEffects.Crystallization)
+            if (MyBody.bodyParts[i].effect == TraitEffects.Leprosy || MyBody.bodyParts[i].effect == TraitEffects.Crystallization)
             {
                 MyBody.bodyParts[i].effect = TraitEffects.None;
             }
@@ -1349,17 +1335,25 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < t.stats.Count; i++)
         {
-            if (t.stats[i].Stat == "Cold Resist")
-                Attributes["Cold Resist"] += t.stats[i].Amount;
-            else if (t.stats[i].Stat == "Heat Resist")
-                Attributes["Heat Resist"] += t.stats[i].Amount;
-            else if (t.stats[i].Stat == "Energy Resist")
-                Attributes["Energy Resist"] += t.stats[i].Amount;
-            else if (t.stats[i].Stat == "Storage Capacity")
-                MyInventory.AddRemoveStorage(t.stats[i].Amount);
-        }
+            switch (t.stats[i].Stat)
+            {
+                case "Cold Resist":
+                    Attributes["Cold Resist"] += t.stats[i].Amount;
+                    break;
 
-        EntitySkills skills = GetComponent<EntitySkills>();
+                case "Heat Resist":
+                    Attributes["Heat Resist"] += t.stats[i].Amount;
+                    break;
+
+                case "Energy Resist":
+                    Attributes["Energy Resist"] += t.stats[i].Amount;
+                    break;
+
+                case "Storage Capacity":
+                    MyInventory.AddRemoveStorage(t.stats[i].Amount);
+                    break;
+            }
+        }
 
         for (int i = 0; i < t.abilityIDs.Count; i++)
         {
@@ -1368,7 +1362,7 @@ public class Stats : MonoBehaviour
             if (s != null)
             {
                 s.SetFlag(Skill.AbilityOrigin.Trait);
-                skills.AddSkill(SkillList.GetSkillByID(t.abilityIDs[i]), Skill.AbilityOrigin.Trait);
+                entity.skills.AddSkill(SkillList.GetSkillByID(t.abilityIDs[i]), Skill.AbilityOrigin.Trait);
             }
         }
     }
@@ -1534,6 +1528,23 @@ public class Stats : MonoBehaviour
 
         healTimer = 10;
         restoreTimer = 10;
+    }
+
+    public void InitializeNPCTraits(NPC npc)
+    {
+        for (int i = 0; i < npc.traits.Count; i++)
+        {
+            Trait t = TraitList.GetTraitByID(npc.traits[i]);
+
+            if (t.effects.Contains(TraitEffects.Mutation))
+            {
+                Mutate(t.ID);
+            }
+            else
+            {
+                AddTrait(t);
+            }
+        }
     }
 
     void CreateDamageNumber(string text, Color col)

@@ -7,7 +7,7 @@ namespace Pathfinding
 {
     public class Path_AStar
     {
-        public Queue<Path_Node> path;
+        public Queue<Path_Node> steps;
 
         public Path_AStar(Coord startCoord, Coord endCoord, bool ignoreCosts)
         {
@@ -61,7 +61,7 @@ namespace Pathfinding
             Path_AStar p = new Path_AStar(start, end, ignoreCosts);
             List<Coord> points = new List<Coord>();
 
-            foreach (Path_Node pn in p.path)
+            foreach (Path_Node pn in p.steps)
             {
                 points.Add(pn.data.position);
             }
@@ -163,7 +163,7 @@ namespace Pathfinding
                 total_path.Enqueue(current);
             }
 
-            path = new Queue<Path_Node>(total_path.Reverse());
+            steps = new Queue<Path_Node>(total_path.Reverse());
         }
 
         float HeuristicCostEstimate(Coord a, Coord b)
@@ -186,10 +186,10 @@ namespace Pathfinding
 
         public Coord GetNextStep()
         {
-            if (path == null || path.Count == 0)
+            if (steps == null || steps.Count == 0)
                 return new Coord(0, 0);
 
-            Coord nextPosition = path.Dequeue().data.position;
+            Coord nextPosition = steps.Dequeue().data.position;
             return nextPosition;
         }
     }

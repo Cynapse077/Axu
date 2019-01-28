@@ -386,8 +386,10 @@ public class Item : ComponentHolder
                         stats.GetComponent<Inventory>().AddRemoveStorage(am);
                     break;
                 case "Light":
-                    if (World.tileMap != null)
+                    if (stats.entity.isPlayer && World.tileMap != null)
+                    {
                         World.tileMap.LightCheck();
+                    }
                     break;
                 case "Accuracy":
                     if (stats.Attributes.ContainsKey("Accuracy"))

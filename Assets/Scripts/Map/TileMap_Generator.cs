@@ -11,10 +11,7 @@ public static class TileMap_Generator
 
     static Random RNG
     {
-        get
-        {
-            return SeedManager.localRandom;
-        }
+        get { return SeedManager.localRandom; }
     }
 
     static Tile_Data[,] CreateFromBiome(WorldMap.Biome b, bool hasLandmark)

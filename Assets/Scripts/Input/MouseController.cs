@@ -269,18 +269,12 @@ public class MouseController : MonoBehaviour
         //Move to the selected position.
         Path_AStar path = new Path_AStar(playerEntity.myPos, targetPos, playerEntity.inventory.CanFly());
         playerEntity.CancelWalk();
-        playerEntity.path = path;
+        playerInput.localPath = path;
     }
 
     public bool CursorIsActive
     {
-        get
-        {
-            return cursor.gameObject.activeSelf;
-        }
-        set
-        {
-            cursor.gameObject.SetActive(value);
-        }
+        get { return cursor.gameObject.activeSelf; }
+        set { cursor.gameObject.SetActive(value); }
     }
 }

@@ -146,10 +146,18 @@ public class TileMap : MonoBehaviour
         return ss;
     }
 
-    IEnumerator CaptureScreenshot()
+    public static IEnumerator CaptureScreenshot()
     {
         yield return new WaitForEndOfFrame();
-        string path = Application.persistentDataPath + "/Axu-Screenshot.png";
+        string scPath = Application.persistentDataPath + "/Screenshots";
+
+        if (!Directory.Exists(scPath))
+        {
+            Directory.CreateDirectory(scPath);
+        }
+
+        DateTime dt = DateTime.Now;
+        string path = scPath + "/" + string.Format("Axu-{0}-{1}-{2}-{3}{4}{5}.png", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
         Texture2D screenImage = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
 
         screenImage.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0, false);
@@ -158,6 +166,8 @@ public class TileMap : MonoBehaviour
         byte[] imageBytes = screenImage.EncodeToPNG();
 
         File.WriteAllBytes(path, imageBytes);
+
+        CombatLog.NewMessage("Screenshot saved to: " + path);
     }
 
     void SetupTileRenderers()

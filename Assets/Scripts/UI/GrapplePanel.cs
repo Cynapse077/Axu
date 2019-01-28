@@ -144,42 +144,43 @@ public class GrapplePanel : MonoBehaviour
     {
         EntitySkills skills = ObjectManager.player.GetComponent<EntitySkills>();
         BodyPart targetLimb = body.bodyParts[actions[selectedNum].Value].grip.heldPart;
+        BodyPart.Grip selectedGrip = body.bodyParts[actions[selectedNum].Value].grip;
 
-        if (actions[selectedNum].Key == "Push")
+        if (selectedGrip == null)
         {
-            Entity target = targetLimb.myBody.entity;
-            skills.Grapple_Shove(target);
+            return;
+        }
 
-        }
-        else if (actions[selectedNum].Key == "Take Down")
+        switch (actions[selectedNum].Key)
         {
-            Stats target = targetLimb.myBody.entity.stats;
-            skills.Grapple_TakeDown(target, targetLimb.displayName);
+            case "Push":
+                skills.Grapple_Shove(selectedGrip);
+                break;
 
-        }
-        else if (actions[selectedNum].Key == "Strangle")
-        {
-            Stats target = targetLimb.myBody.entity.stats;
-            skills.Grapple_Strangle(target);
+            case "Take Down":
+                skills.Grapple_TakeDown(targetLimb.myBody.entity.stats, targetLimb.displayName);
+                break;
 
-        }
-        else if (actions[selectedNum].Key == "Pull")
-        {
-            skills.Grapple_Pull(body.bodyParts[actions[selectedNum].Value].grip);
+            case "Strangle":
+                skills.Grapple_Strangle(targetLimb.myBody.entity.stats);
+                break;
 
-        }
-        else if (actions[selectedNum].Key == "Pressure")
-        {
-            skills.Grapple_Pressure(body.bodyParts[actions[selectedNum].Value].grip);
-        }
-        else if (actions[selectedNum].Key == "Disarm")
-        {
-            skills.Grapple_Disarm(body.bodyParts[actions[selectedNum].Value].grip);
-        }
-        else if (actions[selectedNum].Key == "Release")
-        {
-            CombatLog.CombatMessage("Gr_ReleaseGrip", ObjectManager.player.name, targetLimb.myBody.gameObject.name, false);
-            body.bodyParts[actions[selectedNum].Value].grip.Release();
+            case "Pull":
+                skills.Grapple_Pull(selectedGrip);
+                break;
+
+            case "Pressure":
+                skills.Grapple_Pressure(selectedGrip);
+                break;
+
+            case "Disarm":
+                skills.Grapple_Disarm(selectedGrip);
+                break;
+
+            case "Release":
+                CombatLog.CombatMessage("Gr_ReleaseGrip", ObjectManager.player.name, targetLimb.myBody.gameObject.name, false);
+                selectedGrip.Release();
+                break;
         }
 
         World.userInterface.CloseWindows();

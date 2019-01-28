@@ -1,39 +1,44 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class WrapSprite : MonoBehaviour {
-	public Vector2 scrollDelta;
+public class WrapSprite : MonoBehaviour
+{
+    public Vector2 scrollDelta;
 
-	Material mat;
-	Vector2 newOffset, oldOffset;
+    Material mat;
+    Vector2 newOffset, oldOffset;
 
-	void Start() {
-		mat = GetComponent<SpriteRenderer>().material;
-		scrollDelta.x *= 0.00008f;
-		scrollDelta.y *= 0.00008f;
-		World.turnManager.incrementTurnCounter += OffsetClouds;
-		OffsetClouds();
-	}
+    void Start()
+    {
+        mat = GetComponent<SpriteRenderer>().material;
+        scrollDelta.x *= 0.00008f;
+        scrollDelta.y *= 0.00008f;
+        World.turnManager.incrementTurnCounter += OffsetClouds;
+        OffsetClouds();
+    }
 
-	void OnDestroy() {
-		World.turnManager.incrementTurnCounter -= OffsetClouds;
-	}
+    void OnDestroy()
+    {
+        World.turnManager.incrementTurnCounter -= OffsetClouds;
+    }
 
-	void FixedUpdate() {
-		if (!GameSettings.Enable_Weather) {
-			gameObject.SetActive(false);
-			return;
-		}
+    void FixedUpdate()
+    {
+        if (!GameSettings.Enable_Weather)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
 
-		oldOffset = mat.GetTextureOffset("_MainTex");
+        oldOffset = mat.GetTextureOffset("_MainTex");
 
-		if (oldOffset != newOffset)
-			mat.SetTextureOffset("_MainTex", Vector2.Lerp(oldOffset, newOffset, Time.deltaTime * 10f));
-	}
+        if (oldOffset != newOffset)
+        {
+            mat.SetTextureOffset("_MainTex", Vector2.Lerp(oldOffset, newOffset, Time.deltaTime * 10f));
+        }
+    }
 
-	void OffsetClouds() {
-		newOffset -= scrollDelta;
-		mat.color = World.turnManager.CurrentCloudColor;
-	}
+    void OffsetClouds()
+    {
+        newOffset -= scrollDelta;
+    }
 }

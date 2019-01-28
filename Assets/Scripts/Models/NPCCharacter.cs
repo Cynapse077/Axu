@@ -7,13 +7,14 @@ public class NPCCharacter : Character
     public List<NPC_Flags> Flags;
     public List<SBodyPart> BPs;
     public List<SItem> Inv;
+    public List<string> Tr;
     public SItem F;
     public bool Host;
     public int UID;
 
     public NPCCharacter(string _name, string id, int uid, Coord worldPos, Coord localPos, int elevation,
         List<SItem> items, List<SItem> handItems, SItem firearm, bool hostile, string sprite, string faction, List<NPC_Flags> flags,
-        string questName, string dialogueID, List<SBodyPart> bps)
+        string questName, string dialogueID, List<SBodyPart> bps, List<string> traits)
     {
 
         Name = _name;
@@ -36,6 +37,7 @@ public class NPCCharacter : Character
         Spr = sprite;
         QN = questName;
         DID = dialogueID;
+        Tr = traits;
     }
 
     bool HasFlag(NPC_Flags flag)

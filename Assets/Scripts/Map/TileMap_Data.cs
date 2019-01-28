@@ -889,7 +889,7 @@ public class TileMap_Data
             {
                 map_data[x, y] = Tile.GetByID(d.GetTileAt(x, y));
 
-                if (WalkableTile(x, y))
+                if (WalkableTile(x, y) && map_data[x, y] != Tile.tiles["Stairs_Up"] && map_data[x, y] != Tile.tiles["Stairs_Down"])
                 {
                     if (v.blueprint.id == "Cave_Start" && RNG.Next(1000) < 12 || v.blueprint.id == "Spider" && RNG.Next(1000) < 40)
                         World.objectManager.NewObjectAtOtherScreen("Web", new Coord(x, y), mapInfo.position, -elevation);
@@ -901,7 +901,7 @@ public class TileMap_Data
 
         bool spawnDownStairs = Mathf.Abs(elevation) < v.screens.Length - 1;
         Coord stairsUp = GetRandomFloorTile();
-        Coord stairsCoord2 = GetRandomFloorTile();
+        Coord stairsDown = GetRandomFloorTile();
 
         map_data[stairsUp.x, stairsUp.y] = Tile.tiles["Stairs_Up"];
 
@@ -909,17 +909,19 @@ public class TileMap_Data
         {
             int numFails = 0;
 
-            while (stairsUp.DistanceTo(stairsCoord2) < 15f && numFails < 500)
+            while (stairsUp.DistanceTo(stairsDown) < 15f && numFails < 500)
             {
-                stairsCoord2 = GetRandomFloorTile();
+                stairsDown = GetRandomFloorTile();
                 numFails++;
             }
 
-            map_data[stairsCoord2.x, stairsCoord2.y] = Tile.tiles["Stairs_Down"];
+            map_data[stairsDown.x, stairsDown.y] = Tile.tiles["Stairs_Down"];
         }
 
         if (v.blueprint.id == "Cellar" && !visited)
+        {
             PlaceCellarLoot();
+        }
     }
 
     void PlaceCellarLoot()

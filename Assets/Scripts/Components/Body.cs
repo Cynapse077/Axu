@@ -107,6 +107,11 @@ public class Body : MonoBehaviour
         }
 
         bodyParts = CharacterCreation.SortBodyParts(bodyParts);
+
+        if (!entity.isPlayer)
+        {
+
+        }
     }
 
     //Called from Lua

@@ -12,6 +12,7 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void SetTargets(Text title, Text desc, BodyDisplayPanel bdp)
     {
+        bodyPart = null;
         bpTitle = title;
         bpDescription = desc;
         display = bdp;
@@ -58,11 +59,22 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
                 desc += "  - " + LocalizationManager.GetContent(bodyPart.Attributes[i].Stat) + " <color=orange>(" + bodyPart.Attributes[i].Amount + ")</color>\n";
             }
 
+            desc += "\nCybernetic:\n";
+
+            if (bodyPart.cybernetic != null)
+            {
+                desc += "  " + bodyPart.cybernetic.Name + " - <i>\"" + bodyPart.cybernetic.Desc + "\"</i>\n";
+            }
+            else
+            {
+                desc += "  <color=grey>[N/A]</color>\n";
+            }
+
             desc += "\nWounds:\n";
 
             if (bodyPart.wounds.Count == 0)
             {
-                desc += "  <color=grey>[NONE]</color>";
+                desc += "  <color=grey>[NONE]</color>\n";
             }
             else
             {
@@ -72,35 +84,38 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
 
                     for (int j = 0; j < bodyPart.wounds[i].statMods.Count; j++)
                     {
-                        desc += "    - <color=red>(" + LocalizationManager.GetContent(bodyPart.wounds[i].statMods[j].Stat) + " " + bodyPart.wounds[i].statMods[j].Amount + ")</color>\n";
+                        desc += "    - " + LocalizationManager.GetContent(bodyPart.wounds[i].statMods[j].Stat) + " " + bodyPart.wounds[i].statMods[j].Amount + "\n";
                     }
                 }
             }
 
             bpDescription.text = desc;
-        }
 
-        if (display != null)
-        {
-            display.ActivateExtraInfoWindow(false);
+            if (display != null)
+            {
+                display.ActivateExtraInfoWindow(false);
+            }
         }
     }
 
     public void OnPointerExit(PointerEventData ped)
     {
-        if (bpTitle != null)
+        if (bodyPart != null)
         {
-            bpTitle.text = "";
-        }
+            if (bpTitle != null)
+            {
+                bpTitle.text = "";
+            }
 
-        if (bpDescription != null)
-        {
-            bpDescription.text = "";
-        }
+            if (bpDescription != null)
+            {
+                bpDescription.text = "";
+            }
 
-        if (display != null)
-        {
-            display.ActivateExtraInfoWindow(true);
-        }
+            if (display != null)
+            {
+                display.ActivateExtraInfoWindow(true);
+            }
+        }        
     }
 }

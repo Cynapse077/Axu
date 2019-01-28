@@ -157,7 +157,6 @@ public class DialogueController : MonoBehaviour
                 dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Send_Home"), () => {
                     myNPC.flags.Add(NPC_Flags.At_Home);
                     myNPC.worldPosition = World.tileMap.worldMap.GetClosestLandmark("Home");
-                    GetComponent<BaseAI>().worldPos = myNPC.worldPosition;
                     CombatLog.NameMessage("Message_Sent_Home", myNPC.name);
                     World.tileMap.HardRebuild();
                     World.userInterface.CloseWindows();
@@ -168,7 +167,6 @@ public class DialogueController : MonoBehaviour
 
     bool QuestIconActive()
     {
-        //TODO: Enable green marker when a quest can be turned in.
         return (!bai.isHostile && !myNPC.HasFlag(NPC_Flags.Follower) && myQuest != null);
     }
 

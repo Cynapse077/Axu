@@ -193,51 +193,31 @@ end
 
 --Specialized Mutagens
 function OnDrink_Mutagen_Bird(stats)
-	if (not stats.entity.isPlayer) then return end
-
-	local mutations = {
-		"wings", "beak", "hollowbones", "lithe", "deft", "nimble"
-	}
+	local mutations = { "wings", "beak", "hollowbones", "lithe", "deft", "nimble" }
 
 	MutateRandom(stats, mutations)
 end
 
 function OnDrink_Mutagen_Spider(stats)
-	if (not stats.entity.isPlayer) then return end
-
-	local mutations = {
-		"nostick", "rubberskin", "flyeyes", "chitin", "exarm", "stealthy"
-	}
+	local mutations = { "nostick", "rubberskin", "flyeyes", "chitin", "exarm", "stealthy" }
 
 	MutateRandom(stats, mutations)
 end
 
 function OnDrink_Mutagen_Reptile(stats)
-	if (not stats.entity.isPlayer) then return end
-
-	local mutations = {
-		"slitnostrils", "webbed", "claws", "coldblood", "scales", "serpentine", "selpig"
-	}
+	local mutations = { "slitnostrils", "webbed", "claws", "coldblood", "scales", "serpentine", "selpig" }
 
 	MutateRandom(stats, mutations)
 end
 
 function OnDrink_Mutagen_Chimera(stats)
-	if (not stats.entity.isPlayer) then return end
-
-	local mutations = {
-		"exhead", "exleg", "claws", "horns", "wings", "extail", "densebones"
-	}
+	local mutations = { "exhead", "exleg", "claws", "horns", "wings", "extail", "densebones" }
 
 	MutateRandom(stats, mutations)
 end
 
 function OnDrink_Mutagen_Aquatic(stats)
-	if (not stats.entity.isPlayer) then return end
-
-	local mutations = {
-		"aquatic", "dorsalfin", "shell", "extail", "tendrils"
-	}
+	local mutations = { "aquatic", "dorsalfin", "shell", "extail", "tendrils" }
 
 	MutateRandom(stats, mutations)
 end	

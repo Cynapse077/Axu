@@ -34,7 +34,7 @@ public class ShopPanel : MonoBehaviour
     {
         DisableSpawned();
 
-        int charisma = ObjectManager.player.GetComponent<Stats>().Attributes["Charisma"];
+        int influence = ObjectManager.playerEntity.stats.Influence;
 
         invMoney.text = string.Format("<color=yellow>$</color>{0}", playerInventory.gold.ToString());
         invCap.text = string.Format("<color=olive>({0} / {1})</color>", playerInventory.items.Count.ToString(), playerInventory.maxItems.ToString());
@@ -43,7 +43,7 @@ public class ShopPanel : MonoBehaviour
         {
             GameObject g = SimplePool.Spawn(itemButton, merchantBase);
             g.GetComponent<ItemButton>().icon.sprite = InventoryPanel.SwitchSprite(it);
-            g.GetComponentInChildren<Text>().text = it.InvDisplay("") + " - <color=yellow>$</color>" + it.buyCost(charisma);
+            g.GetComponentInChildren<Text>().text = it.InvDisplay("") + " - <color=yellow>$</color>" + it.buyCost(influence);
             g.GetComponent<Button>().onClick.AddListener(() => { World.userInterface.SelectPressed(g.transform.GetSiblingIndex()); });
             g.GetComponent<OnHover_SetSelectedIndex>().column = 0;
         }
@@ -52,7 +52,7 @@ public class ShopPanel : MonoBehaviour
         {
             GameObject g = SimplePool.Spawn(itemButton, inventoryBase);
             g.GetComponent<ItemButton>().icon.sprite = InventoryPanel.SwitchSprite(it);
-            g.GetComponentInChildren<Text>().text = it.InvDisplay("") + " - <color=yellow>$</color>" + it.sellCost(charisma);
+            g.GetComponentInChildren<Text>().text = it.InvDisplay("") + " - <color=yellow>$</color>" + it.sellCost(influence);
             g.GetComponent<Button>().onClick.AddListener(() => { World.userInterface.SelectPressed(g.transform.GetSiblingIndex()); });
             g.GetComponent<OnHover_SetSelectedIndex>().column = 1;
         }

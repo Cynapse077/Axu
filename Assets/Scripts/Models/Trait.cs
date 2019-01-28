@@ -136,11 +136,10 @@ public class Trait
 
     public void OnTurn_Update(Entity entity)
     {
-        if (luaCall == null)
-            return;
-
-        if (!string.IsNullOrEmpty(luaCall.functionName) && !string.IsNullOrEmpty(luaCall.scriptName))
+        if (luaCall != null && !string.IsNullOrEmpty(luaCall.functionName) && !string.IsNullOrEmpty(luaCall.scriptName))
+        {
             LuaManager.CallScriptFunction(luaCall.scriptName, luaCall.functionName, entity, this);
+        }
     }
 
     //For MUTATIONS ONLY:

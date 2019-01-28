@@ -2,16 +2,18 @@
 
 namespace Augments
 {
-    public class Cybernetic
+    public abstract class Cybernetic
     {
         public string Name { get; protected set; }
         public string ID { get; protected set; }
+        public string Desc;
         protected BodyPart bodyPart;
 
         public Cybernetic()
         {
             Name = "Undefined";
             ID = "N/A";
+            Desc = "[N/A]";
         }
 
         public Cybernetic Clone(Cybernetic other)
@@ -43,6 +45,7 @@ namespace Augments
         {
             Name = "Radiation Scrubber";
             ID = "RadScrubber";
+            Desc = "Your body scrubs away radiation as your heart beats.";
         }
 
         public override void Attach(BodyPart bp)
@@ -77,6 +80,7 @@ namespace Augments
         {
             Name = "Folding Blade";
             ID = "FoldingBlade";
+            Desc = "Your arm sports a curved blade that can be retracted into your flesh.";
         }
 
         public override void Attach(BodyPart bp)
@@ -106,6 +110,7 @@ namespace Augments
         {
             Name = "Impact Soles";
             ID = "ImpactSoles";
+            Desc = "Your sole has an impact dampener, reducing sounds made by this leg.";
         }
 
         public override void Attach(BodyPart bp)

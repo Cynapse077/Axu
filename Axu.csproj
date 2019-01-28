@@ -345,7 +345,6 @@
     <Compile Include="Assets\Scripts\Components\DialogueController.cs" />
     <Compile Include="Assets\Scripts\Components\DynamicSpriteController.cs" />
     <Compile Include="Assets\Scripts\Components\Entity.cs" />
-    <Compile Include="Assets\Scripts\Components\EntityAnimation.cs" />
     <Compile Include="Assets\Scripts\Components\EntitySkills.cs" />
     <Compile Include="Assets\Scripts\Components\Explosive.cs" />
     <Compile Include="Assets\Scripts\Components\HealthBarManager.cs" />
@@ -434,6 +433,8 @@
     <Compile Include="Assets\Scripts\UI\Alert.cs" />
     <Compile Include="Assets\Scripts\UI\AlertPanel.cs" />
     <Compile Include="Assets\Scripts\UI\AmmoPanel.cs" />
+    <Compile Include="Assets\Scripts\UI\BodyDisplay_Button.cs" />
+    <Compile Include="Assets\Scripts\UI\BodyDisplayPanel.cs" />
     <Compile Include="Assets\Scripts\UI\BodyPartTargetPanel.cs" />
     <Compile Include="Assets\Scripts\UI\CC_HighlightSelected.cs" />
     <Compile Include="Assets\Scripts\UI\CharacterPanel.cs" />
@@ -445,6 +446,7 @@
     <Compile Include="Assets\Scripts\UI\DamageText.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogue.cs" />
     <Compile Include="Assets\Scripts\UI\DialoguePanel.cs" />
+    <Compile Include="Assets\Scripts\UI\DoctorActionsPanel.cs" />
     <Compile Include="Assets\Scripts\UI\EquipmentPanel.cs" />
     <Compile Include="Assets\Scripts\UI\GiveItemPanel.cs" />
     <Compile Include="Assets\Scripts\UI\GrapplePanel.cs" />
@@ -496,6 +498,7 @@
     <Compile Include="Assets\Scripts\Utilities\LocalizationManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\LuaManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\CharacterCreation.cs" />
+    <Compile Include="Assets\Scripts\Utilities\Managers\GameData.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\ItemList.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\Manager.cs" />

@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
-using Pathfinding;
 
 [MoonSharpUserData]
 public class Entity : MonoBehaviour
@@ -13,9 +12,7 @@ public class Entity : MonoBehaviour
     public BaseAI AI { get; protected set; }
     public CombatComponent fighter { get; protected set; }
     public EntitySkills skills { get; protected set; }
-
     public int actionPoints = 10;
-    public Path_AStar path;
     public Cell cell;
 
     [HideInInspector] public bool isPlayer, canAct, resting, canCancelWalk;
@@ -47,7 +44,7 @@ public class Entity : MonoBehaviour
 
     public bool Walking
     {
-        get { return (walkDirection != null); }
+        get { return (isPlayer && walkDirection != null); }
     }
 
     public int posX
@@ -170,7 +167,7 @@ public class Entity : MonoBehaviour
             AI = gameObject.GetComponent<BaseAI>();
             AI.entity = this;
             CacheVariables();
-            AI.Init();
+            AI.Init(this);
         }
 
         SetCell();
@@ -280,17 +277,16 @@ public class Entity : MonoBehaviour
         }
 
         if (canAct)
-        {
-            //Pathing
-            if (path != null)
+        {            
+            if (playerInput.localPath != null) //Pathing
             {
-                if (path.path != null && path.path.Count > 0)
+                if (playerInput.localPath.steps != null && playerInput.localPath.steps.Count > 0)
                 {
-                    Coord c = path.GetNextStep();
+                    Coord c = playerInput.localPath.GetNextStep();
 
                     if (c.x == posX && c.y == posY)
                     {
-                        c = path.GetNextStep();
+                        c = playerInput.localPath.GetNextStep();
                     }
 
                     int moveX = c.x - posX, moveY = c.y - posY;
@@ -301,12 +297,10 @@ public class Entity : MonoBehaviour
 
                 if (!World.objectManager.SafeToRest())
                 {
-                    path = null;
-                    return;
-                }
-                //Resting
+                    CancelWalk();
+                }                
             }
-            else if (resting)
+            else if (resting) //Resting
             {
                 if (!World.objectManager.SafeToRest())
                 {
@@ -317,9 +311,9 @@ public class Entity : MonoBehaviour
                     Wait();
                 else
                     resting = false;
-                //Walking
+                
             }
-            else if (walkDirection != null)
+            else if (walkDirection != null) //Walking
             {
                 if (!World.objectManager.SafeToRest())
                 {
@@ -327,10 +321,9 @@ public class Entity : MonoBehaviour
                     return;
                 }
 
-                Action(walkDirection.x, walkDirection.y);
-                //None
+                Action(walkDirection.x, walkDirection.y);                
             }
-            else
+            else //None
             {
                 CancelWalk();
             }
@@ -519,19 +512,20 @@ public class Entity : MonoBehaviour
                     return true;
                 }
             }
-            else
+            else if (otherEntity.isPlayer && AI.isHostile || AI.ShouldAttack(otherEntity.AI))
             {
-                if (otherEntity.isPlayer && AI.isHostile || AI.ShouldAttack(otherEntity.AI))
+                Cell c = World.tileMap.GetCellAt(posX + (x / 2), posY + (y / 2));
+
+                if (c.entity == null || c.entity.isPlayer && AI.isHostile || AI.ShouldAttack(c.entity.AI))
                 {
-                    if (World.tileMap.GetCellAt(new Coord(posX + (x / 2), posY + (y / 2))).entity == null)
-                    {
-                        Swipe(x, y);
-                        return true;
-                    }
+                    Swipe(x, y);
+                    return true;
                 }
             }
-
-            Move(x / 2, y / 2);
+            else
+            {
+                Move(x / 2, y / 2);               
+            }
         }
 
         return true;
@@ -974,9 +968,13 @@ public class Entity : MonoBehaviour
 
     public void CancelWalk()
     {
-        walkDirection = null;
-        canCancelWalk = false;
-        path = null;
+        if (isPlayer)
+        {
+            walkDirection = null;
+            canCancelWalk = false;
+            playerInput.localPath = null;
+        }
+            
     }
 
     //Check to see if enities or items are in sight
@@ -1335,7 +1333,10 @@ public class Entity : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         if (!isPlayer)
+        {
             GetComponent<DialogueController>().SetupDialogueOptions();
+            stats.InitializeNPCTraits(AI.npcBase);
+        }
     }
 
     //Only used for the player's character to be transfered to a writeable string.

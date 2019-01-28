@@ -31,7 +31,7 @@ public class ObjectManager : MonoBehaviour
     #region "Initialization"
     void Start()
     {
-        if (ItemList.items == null || ItemList.items.Count <= 0)
+        if (!ItemList.IsInitialized())
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             return;
@@ -42,7 +42,7 @@ public class ObjectManager : MonoBehaviour
         StartCoroutine("Initialize", Manager.playerName);
     }
 
-    void GetVars()
+    void FindStatics()
     {
         turnManager = GetComponent<TurnManager>();
         worldMap = GameObject.FindObjectOfType<WorldMap>();
@@ -72,8 +72,6 @@ public class ObjectManager : MonoBehaviour
         CreateLocalMap();
         SpawnPlayer();
 
-        Camera.main.GetComponent<CameraControl>().Init();
-
         turnManager = GetComponent<TurnManager>();
         turnManager.Init();
 
@@ -87,12 +85,6 @@ public class ObjectManager : MonoBehaviour
         World.userInterface.ShowInitialMessage(Manager.playerName);
         doneLoading = true;
         GetComponent<MusicManager>().Init(World.tileMap.CurrentMap);
-    }
-
-    bool CheckArrowsEnabled(TileMap_Data oldMap, TileMap_Data newMap)
-    {
-        sideArrows.SetActive(newMap.elevation == 0 && Manager.localMapSize.x == 45 && Manager.localMapSize.y == 30);
-        return true;
     }
 
     void CreateWorldMap()
@@ -114,6 +106,22 @@ public class ObjectManager : MonoBehaviour
         tileMap.Init();
     }
 
+    public void SpawnPlayer()
+    {
+        if (!Manager.newGame)
+        {
+            GetComponent<SaveData>().SetUpJournal();
+        }
+
+        player = Instantiate(playerPrefab);
+        player.name = "Player";
+        playerEntity = player.GetComponent<Entity>();
+        playerEntity.myPos = new Coord(Manager.localStartPos.x, Manager.localStartPos.y);
+
+        Camera.main.GetComponent<CameraControl>().Init();
+    }
+    #endregion
+
     public bool CanDiscard(int x, int y, int z)
     {
         if (x == World.tileMap.worldCoordX && y == World.tileMap.worldCoordY && z == World.tileMap.currentElevation)
@@ -131,19 +139,11 @@ public class ObjectManager : MonoBehaviour
         return true;
     }
 
-    public void SpawnPlayer()
+    bool CheckArrowsEnabled(TileMap_Data oldMap, TileMap_Data newMap)
     {
-        if (!Manager.newGame)
-        {
-            GetComponent<SaveData>().SetUpJournal();
-        }
-
-        player = Instantiate(playerPrefab);
-        player.name = "Player";
-        playerEntity = player.GetComponent<Entity>();
-        playerEntity.myPos = new Coord(Manager.localStartPos.x, Manager.localStartPos.y);
+        sideArrows.SetActive(newMap.elevation == 0 && Manager.localMapSize.x == 45 && Manager.localMapSize.y == 30);
+        return true;
     }
-    #endregion
 
     public Entity GetEntityFromNPC(NPC n)
     {
@@ -255,11 +255,10 @@ public class ObjectManager : MonoBehaviour
             //Apparently this check is important.
             for (int i = 0; i < onScreenNPCObjects.Count; i++)
             {
-                if (onScreenNPCObjects[i] == null)
-                    continue;
-
-                if (npcB.localPosition == onScreenNPCObjects[i].myPos)
+                if (onScreenNPCObjects[i] != null && npcB.localPosition == onScreenNPCObjects[i].myPos)
+                {
                     return null;
+                }
             }
 
             npcB.onScreen = true;
@@ -287,7 +286,9 @@ public class ObjectManager : MonoBehaviour
         for (int i = 0; i < onScreenNPCObjects.Count; i++)
         {
             if (onScreenNPCObjects[i] == null || npcB.localPosition.x == summonerNPC.localPosition.x && npcB.localPosition.y == summonerNPC.localPosition.y)
+            {
                 return;
+            }
         }
 
         npcClasses.Add(npcB);
@@ -338,7 +339,9 @@ public class ObjectManager : MonoBehaviour
         for (int i = 0; i < onScreenNPCObjects.Count; i++)
         {
             if (onScreenNPCObjects[i] != null)
+            {
                 Destroy(onScreenNPCObjects[i].gameObject);
+            }
         }
 
         onScreenNPCObjects.Clear();
@@ -436,10 +439,11 @@ public class ObjectManager : MonoBehaviour
         MapObject mapOb = new MapObject(type, new Coord(locPos.x, locPos.y), worPos, elevation);
         mapObjects.Add(mapOb);
 
-        if (mapOb.onScreen)
-            return null;
-
-        SpawnObject(mapOb);
+        if (!mapOb.onScreen)
+        {
+            SpawnObject(mapOb);
+        }
+        
         return mapOb;
     }
 
@@ -449,7 +453,9 @@ public class ObjectManager : MonoBehaviour
         Liquid newLiq = ItemList.GetLiquidByID(liquidID, amount);
 
         if (newLiq == null || c == null)
+        {
             return;
+        }
 
         if (c.GetPool() == null && !World.tileMap.IsWaterTile(localPos.x, localPos.y + Manager.localMapSize.y))
         {
@@ -472,19 +478,24 @@ public class ObjectManager : MonoBehaviour
             MapObjectSprite mos = onScreenMapObjects[i].GetComponent<MapObjectSprite>();
 
             if (mos.localPos == locPos)
+            {
                 return null;
+            }
         }
 
         if (type == "Tall_Grass" && World.tileMap.IsWaterTile(locPos.x, locPos.y))
+        {
             return null;
+        }
 
         MapObject mapOb = new MapObject(type, locPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
         mapObjects.Add(mapOb);
 
-        if (mapOb.onScreen)
-            return mapOb;
-
-        SpawnObject(mapOb);
+        if (!mapOb.onScreen)
+        {
+            SpawnObject(mapOb);
+        }
+        
         return mapOb;
     }
 
@@ -508,7 +519,9 @@ public class ObjectManager : MonoBehaviour
         MapObject mapOb = new MapObject(type, new Coord(locPos.x, locPos.y), worPos, World.tileMap.currentElevation);
 
         if (items != null)
+        {
             mapOb.inv = items;
+        }
 
         mapObjects.Add(mapOb);
 
@@ -546,7 +559,9 @@ public class ObjectManager : MonoBehaviour
         }
 
         if (!mapObjects.Contains(obj))
+        {
             mapObjects.Add(obj);
+        }
     }
 
     public void SpawnObject(MapObject obj)

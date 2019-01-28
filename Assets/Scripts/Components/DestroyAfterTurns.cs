@@ -1,26 +1,33 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class DestroyAfterTurns : MonoBehaviour {
-	public int lifeTime = 3;
-	public GameObject childObject;
-	public bool shrink;
+public class DestroyAfterTurns : MonoBehaviour
+{
+    public int lifeTime = 3;
+    public GameObject childObject;
+    public bool shrink;
 
-	void Start () {
-		World.turnManager.incrementTurnCounter += IncrementTurnCounter;
-	}
+    void Start()
+    {
+        World.turnManager.incrementTurnCounter += IncrementTurnCounter;
+    }
 
-	public void IncrementTurnCounter() {
-		lifeTime --;
+    void OnDisAble()
+    {
+        World.turnManager.incrementTurnCounter -= IncrementTurnCounter;
+    }
 
-		if (lifeTime <= 0) {
-			UnregisterAndDestroy();
-			return;
-		}
-	}
+    public void IncrementTurnCounter()
+    {
+        lifeTime--;
 
-	void UnregisterAndDestroy() {
-		World.turnManager.incrementTurnCounter -= IncrementTurnCounter;
-		Destroy(gameObject);
-	}
+        if (lifeTime <= 0)
+        {
+            UnregisterAndDestroy();
+        }
+    }
+
+    void UnregisterAndDestroy()
+    {
+        Destroy(gameObject);
+    }
 }

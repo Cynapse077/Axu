@@ -24,6 +24,7 @@ public class BodyDisplayPanel : MonoBehaviour
 
     Body body;
     List<BodyPart> parts = new List<BodyPart>();
+    Color offColor = new Color(1.0f, 1.0f, 1.0f, 0.07f);
 
     public void Init(Body _body)
     {
@@ -36,9 +37,9 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external)
+            if (!parts[i].external && i < 3)
             {
-                heads.GetChild(i).gameObject.SetActive(true);
+                heads.GetChild(i).GetComponent<Image>().color = Color.white;
                 heads.GetChild(i).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
             }
         }
@@ -47,16 +48,16 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external)
+            if (!parts[i].external && i < 4)
             {
                 if (i % 2 == 0)
                 {
-                    wings_R.GetChild(i / 2).gameObject.SetActive(true);
+                    wings_R.GetChild(i / 2).GetComponent<Image>().color = Color.white;
                     wings_R.GetChild(i / 2).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
                 }
                 else
                 {
-                    wings_L.GetChild((i - 1) / 2).gameObject.SetActive(true);
+                    wings_L.GetChild((i - 1) / 2).GetComponent<Image>().color = Color.white;
                     wings_L.GetChild((i - 1) / 2).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
                 }
             }
@@ -66,16 +67,16 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external)
+            if (!parts[i].external && i < 6)
             {
                 if (i % 2 == 0)
                 {
-                    arms_R.GetChild(i / 2).gameObject.SetActive(true);
+                    arms_R.GetChild(i / 2).GetComponent<Image>().color = Color.white;
                     arms_R.GetChild(i / 2).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
                 }
                 else
                 {
-                    arms_L.GetChild((i - 1) / 2).gameObject.SetActive(true);
+                    arms_L.GetChild((i - 1) / 2).GetComponent<Image>().color = Color.white;
                     arms_L.GetChild((i - 1) / 2).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
                 }
             }
@@ -85,16 +86,16 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external)
+            if (!parts[i].external && i < 6)
             {
                 if (i % 2 == 0)
                 {
-                    legs_R.GetChild(i / 2).gameObject.SetActive(true);
+                    legs_R.GetChild(i / 2).GetComponent<Image>().color = Color.white;
                     legs_R.GetChild(i / 2).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
                 }
                 else
                 {
-                    legs_L.GetChild((i - 1) / 2).gameObject.SetActive(true);
+                    legs_L.GetChild((i - 1) / 2).GetComponent<Image>().color = Color.white;
                     legs_L.GetChild((i - 1) / 2).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
                 }
             }
@@ -104,9 +105,9 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external)
+            if (!parts[i].external && i < 3)
             {
-                tails.GetChild(i).gameObject.SetActive(true);
+                tails.GetChild(i).GetComponent<Image>().color = Color.white;
                 tails.GetChild(i).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
             }
         }
@@ -115,13 +116,16 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            external.GetChild(i).gameObject.SetActive(true);
-            external.GetChild(i).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
+            if (i < 4)
+            {
+                external.GetChild(i).GetComponent<Image>().color = Color.white;
+                external.GetChild(i).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
+            }
         }
 
-        chest.gameObject.SetActive(true);
+        chest.gameObject.GetComponent<Image>().color = Color.white;
         chest.SetBodyPart(body.GetBodyPartBySlot(ItemProperty.Slot_Chest));
-        back.gameObject.SetActive(true);
+        back.gameObject.GetComponent<Image>().color = Color.white;
         back.SetBodyPart(body.GetBodyPartBySlot(ItemProperty.Slot_Back));
 
         parts.Clear();
@@ -151,58 +155,58 @@ public class BodyDisplayPanel : MonoBehaviour
         for (int i = 0; i < heads.childCount; i++)
         {
             heads.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            heads.GetChild(i).gameObject.SetActive(false);
+            heads.GetChild(i).GetComponent<Image>().color = offColor;
         }
 
         for (int i = 0; i < wings_R.childCount; i++)
         {
             wings_R.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            wings_R.GetChild(i).gameObject.SetActive(false);
+            wings_R.GetChild(i).GetComponent<Image>().color = offColor;
         }
         for (int i = 0; i < wings_L.childCount; i++)
         {
             wings_L.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            wings_L.GetChild(i).gameObject.SetActive(false);
+            wings_L.GetChild(i).GetComponent<Image>().color = offColor;
         }
 
         for (int i = 0; i < arms_R.childCount; i++)
         {
             arms_R.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            arms_R.GetChild(i).gameObject.SetActive(false);
+            arms_R.GetChild(i).GetComponent<Image>().color = offColor;
         }
         for (int i = 0; i < arms_L.childCount; i++)
         {
             arms_L.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            arms_L.GetChild(i).gameObject.SetActive(false);
+            arms_L.GetChild(i).GetComponent<Image>().color = offColor;
         }
 
         for (int i = 0; i < legs_R.childCount; i++)
         {
             legs_R.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            legs_R.GetChild(i).gameObject.SetActive(false);
+            legs_R.GetChild(i).GetComponent<Image>().color = offColor;
         }
         for (int i = 0; i < legs_L.childCount; i++)
         {
             legs_L.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            legs_L.GetChild(i).gameObject.SetActive(false);
+            legs_L.GetChild(i).GetComponent<Image>().color = offColor;
         }
 
         for (int i = 0; i < tails.childCount; i++)
         {
             tails.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            tails.GetChild(i).gameObject.SetActive(false);
+            tails.GetChild(i).GetComponent<Image>().color = offColor;
         }
 
         for (int i = 0; i < external.childCount; i++)
         {
             external.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            external.GetChild(i).gameObject.SetActive(false);
+            external.GetChild(i).GetComponent<Image>().color = offColor;
         }
 
         back.SetTargets(title, desc, this);
         chest.SetTargets(title, desc, this);
-        back.gameObject.SetActive(false);
-        chest.gameObject.SetActive(false);
+        back.gameObject.GetComponent<Image>().color = Color.white;
+        chest.gameObject.GetComponent<Image>().color = Color.white;
     }
 
     public void ActivateExtraInfoWindow(bool on)

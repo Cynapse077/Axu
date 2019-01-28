@@ -326,7 +326,7 @@
 			"ID" : "ensis18",
 			"Description" : "Explore deeper into the Fabrication Plant.",
 			"Rewards" : {
-				"XP" : 55 
+				"XP" : 10
 			},
 			"Steps" : [
 				{ "Goal" : "Go", "To" : [ "Fabrication Plant", -2 ] }
@@ -340,7 +340,7 @@
 			"ID" : "ensis19",
 			"Description" : "Return to Arthomas with the unfortunate news.",
 			"Rewards" : {
-				"XP" : 55 
+				"XP" : 10
 			},
 			"Steps" : [
 				{ "Goal" : "Talk To", "NPC" : "arthomas" }
@@ -418,7 +418,7 @@
 		{
 			"Name" : "The Duke of Lies",
 			"ID" : "ensis23",
-			"Description" : "Find Oromir, the Duke of Lies at Magna Dwyll",
+			"Description" : "Find Oromir, the Duke of Lies, at Magna Dwyll.",
 			"Start Dialogue" : "You're alive! I can't believe how quickly we ended up in shambles. Lomis is dead, and now The Ensis are falling. There's only one person I know that could help us now. Oromir, the self-proclaimed \"Duke of Lies\", was one of us long ago. He betrayed us and now lives in exile. He may be a slimeball, but his knowledge was a great boon to us years ago. Perhaps he can help us overcome this threat. I dare not go, for I would surely be killed on sight... Will you talk to Oromir in my stead?",
 			"Rewards" : {
 				"XP" : 25
@@ -498,7 +498,7 @@
 			"Steps" : [
 				{ "Goal" : "Talk To", "NPC" : "arthomas" }
 			],
-			"End Dialogue" : "You spoke with the traitor? Of course he his holding his aid hostage, that bastard. I suppose we don't have a choice. Since Lomis is dead, that leaves me in charge of The Ensis. Oromir is once again one of us, with protections on his research. I'll gp get Ka-Nil and head to Magna Dwyll. We will meet you there.",
+			"End Dialogue" : "You spoke with the traitor? Of course he his holding his aid hostage, that bastard. I suppose we don't have a choice. Since Lomis is dead, that leaves me in charge of The Ensis. Oromir is once again one of us, with protections on his research. I'll go get Ka-Nil and head to Magna Dwyll. We will meet you there.",
 
 			"Chained Quest" : "ensis27"
 		},
@@ -524,7 +524,7 @@
 		{
             "Name" : "Isazna, the Prophet",
             "ID" : "kin0",
-            "Description" : "Find the <color=orange>Kin of the Deep</color> prophet, <color=orange>Isazna</color>. She is located under the <color=yellow>Ensis Stronghold</color>, in a prison cell.",
+            "Description" : "Find the Kin of the Deep prophet, Isazna. She is located under the Ensis Stronghold in a prison cell.",
             "Start Dialogue" : "Greetings, Ensis Initiate. I have a feeling the ones you've been affiliating with have been leading you astray. The Kin of the Deep aren't exactly on their \"nice\" list. What if I told you there's a darker side to the Ensis? We have a prophet, captured by those you trust. I'm not asking for you to believe, only that you talk to her, listen to what she has to say. Find a way into the <color=yellow>Prison</color> and talk to <color=orange>Isazna</color>. The rest I leave up to fate.",
 			"Rewards" : {
 				"XP" : 55,
@@ -540,7 +540,7 @@
 		{
             "Name" : "Searching for Artifacts",
             "ID" : "kin1",
-            "Description" : "Isazna asked you to retrieve an artifact from the <color=yellow>Volcano</color>, then bring it back to her.",
+            "Description" : "Isazna asked you to retrieve an artifact from the Volcano, then bring it back to her.",
             "Rewards" : {
 				"XP" : 200 
 			},
@@ -562,7 +562,7 @@
 		{
             "Name" : "The Second Artifact",
 			"ID" : "kin2",
-            "Description" : "Grab the second artifact, located in the <color=yellow>Ensis Stronghold Exterior</color>, then return to <color=yellow>Isazna</color>.",
+            "Description" : "Grab the second artifact, located in the Ensis Stronghold Exterior, then return to Isazna.",
             "Rewards" : {
 				"XP" : 120 
 			},
@@ -583,7 +583,7 @@
 		{
             "Name" : "Escape",
             "ID" : "kin3",
-            "Description" : "Take Isazna to the <color=yellow>Kindred Hideout</color>.",
+            "Description" : "Take Isazna to the Kindred Hideout.",
             "Rewards" : {
 				"XP" : 150 
 			},
@@ -648,9 +648,7 @@
 		{
             "Name" : "A Source of Power",
             "ID" : "kin6",
-            "Type" : "Main",
-            "Quest Giver" : "gemskhet",
-            "Description" : "Go to the city <color=yellow>Magna Dwyll</color>, and kill <color=yellow>Oromir, the Duke of Lies</color>.",
+            "Description" : "Go to the city Magna Dwyll, and kill Oromir, the Duke of Lies.",
             "Rewards" : {
 				"XP" : 250
 			},
@@ -725,7 +723,7 @@
         {
             "Name" : "Saira's Hunt",
             "ID" : "sairashunt1",
-            "Description" : "Kill Parasects for Saira.",
+            "Description" : "Kill 5 Parasects for Saira.",
             "Start Dialogue" : "Hello, wanderer. I heard from the Blacksmith that you were coming to help me on a few errands. I have to get some meat off the Parasects around these parts. Shall we hunt say.. 5? Then we can move onto something tougher.",
             "Rewards" : {
                 "XP" : 250
@@ -743,7 +741,7 @@
             "ID" : "sairashunt2",
             "Description" : "There's a vampire in the Power Plant. Saira needs you to eliminate it.",
             "Rewards" : {
-                "XP" : 500
+                "XP" : 300
 			},
             "Steps" : [
                 { "Goal" : "Go", "To" : [ "Power Plant", -3 ] },
@@ -790,11 +788,11 @@
 		{
             "Name" : "Xzol's Champion",
             "ID" : "ensis_sub0",
-            "Description" : "Pleicol wants you to take down a <color=yelow>Ranger of Xzol</color>.",
+            "Description" : "Pleicol wants you to take down a Ranger of Xzol.",
             "Start Dialogue" : "Hello, my name is Pleicol. I'm the lead scholar of this facility. We've been looking into the <color=yellow>Kin of the Deep</color> recently, especially the strange anomalies seemingly protecting them. The Kindred call them \"gods\", but I'm not so sure. They pick special individuals to be their champions. In fact, I've been tracking one for a little while now. Maybe you'd like to take it out for me? Be careful, this being is extremely strong. It is proficient with firearms, so try not to get into a ranged battle with it.",
 			"Rewards" : {
 				"XP" : 250,
-				"Money" : 50,
+				"Money" : 10,
 				"Items" : [ "flask/liquid_mutagen" ]
 			},
             "Events" : [
@@ -817,7 +815,7 @@
             "Description" : "Pleicol wants you to take down a <color=yelow>Virash Saint</color>.",
             "Rewards" : {
 				"XP" : 250,
-				"Money" : 50
+				"Money" : 25
 			},
             "Events" : [
                 {
@@ -839,7 +837,7 @@
             "Description" : "Pleicol wants you to take down the improperly-named <color=yellow>Demigod</color>.",
             "Rewards" : {
 				"XP" : 300,
-				"Money" : 300
+				"Money" : 50
 			},
             "Events" : [
                 {
@@ -860,7 +858,7 @@
             "Start Dialogue" : "Need something to do? I'm trying to reconstruct an old colleague of mine, but lack the required body parts. I still have his head and torso, but must aquire four more limbs. No, I don't care what they are. I would prefer them to be somewhat organic, but you know what? Surprise me. It would be an interesting experiment in itself to form a unique body shape.",
 			"Rewards" : {
 				"XP" : 350,
-				"Money" : 250,
+				"Money" : 100,
 				"Items" : [ "arm_intrine" ]
 			},
             "Steps" : [
@@ -871,7 +869,7 @@
 		{
         	"Name" : "Creepy Crawlies",
         	"ID" : "neant_queen",
-        	"Description" : "Kill the Neant Queen in her nest beneath an abandoned shrine.",
+        	"Description" : "Rojer wants you to kill the Neant Queen in her nest beneath an abandoned shrine.",
         	"Start Dialogue" : "There's an abandoned Kin shrine out there, just waiting to be pillaged. The problem is the nest of Neants beneath it. If you kill the queen, I'll split the profit with you. Deal?",
         	"Rewards" : {
 				"XP" : 200,
@@ -956,7 +954,21 @@
 				{ "Goal" : "Kill Spawned" },
 				{ "Goal" : "Talk To", "NPC" : "grum" }
 			],
-			"End Dialogue" : "It dead? Grateful! Grum still hurt though."
+			"End Dialogue" : "It dead? Grateful! Grum still hurt though. Get Grum bandage?",
+
+			"Chained Quest" : "grum1"
+		},
+		{
+			"Name" : "Grim-Looking Grum",
+			"ID" : "grum1",
+			"Description" : "Grum is injured and requires a bandage.",
+			"Rewards" : {
+				"XP" : 100
+			},
+			"Steps" : [
+				{ "Goal" : "Fetch", "Item" : [ "bandage", 1 ], "Give To" : "grum" }
+			],
+			"End Dialogue" : "Me thanks. Grum all better now!"
 		},
 
 		{
@@ -1240,7 +1252,7 @@
             "Events" : [
                 {
                     "Event" : "OnStart",
-                    "Spawn NPC" : { "NPC" : "phlogistonist", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+                    "Spawn NPC" : { "NPC" : "nightmare", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
                     "Set Elevation" : -1,
                     "Set Local Position" : { "x" : 18, "y" : 15 },
                     "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
