@@ -811,10 +811,12 @@ public class Item : ComponentHolder
     }
     #endregion
 
-    public SItem ToSimpleItem()
+    public SItem ToSerializedItem()
     {
         if (modifier == null)
+        {
             modifier = new ItemModifier();
+        }
 
         Item baseItem = ItemList.GetItemByID(ID);
         List<ItemProperty> props = new List<ItemProperty>();
@@ -822,11 +824,15 @@ public class Item : ComponentHolder
         foreach (ItemProperty p in properties)
         {
             if (!baseItem.HasProp(p))
+            {
                 props.Add(p);
+            }
         }
 
         if (props.Count == 0)
+        {
             props = null;
+        }
 
         return new SItem(ID, modifier.ID, amount, displayName, props, damage, armor, components, statMods);
     }

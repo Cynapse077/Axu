@@ -202,8 +202,10 @@ public class InventoryPanel : UIPanel
             return;
         }
 
-        World.userInterface.IAPanel.gameObject.SetActive(true);
-        World.userInterface.IAPanel.Display(curInv.items[index], curInv);
-        base.OnSelect(index);
+        if (SelectedMax > 0)
+        {
+            World.userInterface.IAPanel.gameObject.SetActive(true);
+            World.userInterface.IAPanel.Display(curInv.items[index], curInv);
+        }
     }
 }

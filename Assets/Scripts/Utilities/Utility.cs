@@ -369,14 +369,36 @@ public static class FlagsHelper
 
     public static void Set<T>(ref T flags, T flag) where T : struct
     {
+        if (IsSet(flags, flag))
+        {
+            return;
+        }
+
         int flagsValue = (int)(object)flags;
         int flagValue = (int)(object)flag;
 
         flags = (T)(object)(flagsValue | flagValue);
     }
 
+    public static void Toggle<T>(ref T flags, T flag, bool on) where T : struct
+    {
+        if (on)
+        {
+            Set(ref flags, flag);
+        }
+        else
+        {
+            UnSet(ref flags, flag);
+        }
+    }
+
     public static void UnSet<T>(ref T flags, T flag) where T : struct
     {
+        if (!IsSet(flags, flag))
+        {
+            return;
+        }
+
         int flagsValue = (int)(object)flags;
         int flagValue = (int)(object)flag;
 

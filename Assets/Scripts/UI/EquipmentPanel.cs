@@ -105,7 +105,5 @@ public class EquipmentPanel : UIPanel
 
         World.userInterface.InitializeAllWindows(curInv);
         World.userInterface.InvPanel.UpdateTooltip(SelectedNum);
-
-        base.OnSelect(index);
     }
 }

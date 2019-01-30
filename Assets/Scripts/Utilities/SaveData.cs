@@ -26,7 +26,7 @@ public class SaveData : MonoBehaviour
             {
                 for (int it = 0; it < n.inventory.Count; it++)
                 {
-                    items.Add(n.inventory[it].ToSimpleItem());
+                    items.Add(n.inventory[it].ToSerializedItem());
                 }
             }
 
@@ -36,14 +36,14 @@ public class SaveData : MonoBehaviour
             {
                 for (int j = 0; j < n.bodyParts.Count; j++)
                 {
-                    bodyParts.Add(n.bodyParts[j].ToSimpleBodyPart());
+                    bodyParts.Add(n.bodyParts[j].ToSerializedBodyPart());
                 }
             }
 
             List<SItem> handItems = new List<SItem>();
             for (int j = 0; j < n.handItems.Count; j++)
             {
-                handItems.Add(n.handItems[j].ToSimpleItem());
+                handItems.Add(n.handItems[j].ToSerializedItem());
             }
 
             if (n.firearm == null)
@@ -51,7 +51,7 @@ public class SaveData : MonoBehaviour
                 n.firearm = ItemList.GetNone();
             }
 
-            NPCCharacter character = new NPCCharacter(n.name, n.ID, n.UID, n.worldPosition, n.localPosition, n.elevation, items, handItems, n.firearm.ToSimpleItem(),
+            NPCCharacter character = new NPCCharacter(n.name, n.ID, n.UID, n.worldPosition, n.localPosition, n.elevation, items, handItems, n.firearm.ToSerializedItem(),
                 n.isHostile, n.spriteID, n.faction.ID, n.flags, n.questID, n.dialogueID, bodyParts, n.traits);
 
             chars.Add(character);
@@ -223,18 +223,11 @@ public class SaveData : MonoBehaviour
 
             BodyPart bp = new BodyPart(bpJson[i]["Name"].ToString(), (bool)bpJson[i]["Att"])
             {
-                severable = (bool)bpJson[i]["Sev"],
-                canWearGear = (bool)bpJson[i]["CWG"],
                 armor = (int)bpJson[i]["Ar"]
             };
 
             int slot = (int)bpJson[i]["Slot"];
             bp.slot = (ItemProperty)slot;
-
-            if (bpJson[i].ContainsKey("Org"))
-                bp.organic = (bool)bpJson[i]["Org"];
-            if (bpJson[i].ContainsKey("Ext"))
-                bp.external = (bool)bpJson[i]["Ext"];
 
             if (bpJson[i].ContainsKey("Hnd"))
             {
@@ -250,20 +243,18 @@ public class SaveData : MonoBehaviour
                     bp.Attributes.Add(new Stat_Modifier(bpJson[i]["Stats"][j]["Stat"].ToString(), (int)bpJson[i]["Stats"][j]["Amount"]));
                 }
             }
-            //Diseases
-            if (bpJson[i].ContainsKey("Dis"))
-            {
-                int teffect = (int)bpJson[i]["Dis"];
-                bp.effect = (TraitEffects)teffect;
-            }
 
             //body part levels/xp
             if (bpJson[i].ContainsKey("Lvl"))
+            {
                 bp.level = (int)bpJson[i]["Lvl"];
+            }
             if (bpJson[i].ContainsKey("XP"))
             {
                 bp.SetXP((double)bpJson[i]["XP"][0], (double)bpJson[i]["XP"][1]);
             }
+
+            bp.flags = bpJson[i].ContainsKey("Flgs") ? (BodyPart.BPTags)(int)bpJson[i]["Flgs"] : BodyPart.BPTags.None;
 
             //Wounds
             bp.wounds = new List<Wound>();

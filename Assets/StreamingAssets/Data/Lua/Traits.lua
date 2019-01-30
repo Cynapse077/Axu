@@ -64,7 +64,6 @@ function OnTurn_Crystallization(entity, trait)
 
 			bpToChange.armor = bpToChange.armor + 1
 			bpToChange.effect = TraitEffects.Crystallization
-			bpToChange.severable = false
 			bpToChange.name = "<color=cyan>" .. bpToChange.name .. "</color>"
 
 			Log("Your " .. bpToChange.displayName .. " has solidified into crystal.")

@@ -329,10 +329,19 @@ public class CursorControl : MonoBehaviour
         //Firing, throwing, using skill. 
         if (canSee)
         {
-            if (input.keybindings.GetKey("Fire") || input.keybindings.GetKey("Enter") ||
-                input.keybindings.GetKey("Interact") || (Input.GetMouseButtonUp(0) && GameSettings.UseMouse))
+            if (input.keybindings.GetKey("Fire") || input.keybindings.GetKey("Enter") || (Input.GetMouseButtonUp(0) && GameSettings.UseMouse))
             {
                 SelectTilePressed();
+            }
+            else if (input.keybindings.GetKey("Interact"))
+            {
+                if (!World.tileMap.WalkableTile(myPosX, myPosY) || World.tileMap.GetCellAt(myPosX, myPosY).entity == null)
+                {
+                    return;
+                }
+
+                World.userInterface.OpenCharacterPanel(World.tileMap.GetCellAt(myPosX, myPosY).entity);
+                input.CancelLook();
             }
         }
 

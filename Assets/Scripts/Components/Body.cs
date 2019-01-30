@@ -107,11 +107,6 @@ public class Body : MonoBehaviour
         }
 
         bodyParts = CharacterCreation.SortBodyParts(bodyParts);
-
-        if (!entity.isPlayer)
-        {
-
-        }
     }
 
     //Called from Lua
@@ -121,24 +116,9 @@ public class Body : MonoBehaviour
         bodyParts = CharacterCreation.SortBodyParts(bodyParts);
     }
 
-    public List<int> SeverableBodyPartsIDs()
-    {
-        List<int> bp = new List<int>();
-
-        for (int i = 0; i < bodyParts.Count; i++)
-        {
-            if (bodyParts[i].severable)
-            {
-                bp.Add(i);
-            }
-        }
-
-        return bp;
-    }
-
     public List<BodyPart> SeverableBodyParts()
     {
-        return bodyParts.FindAll(x => x.isAttached && x.severable);
+        return bodyParts.FindAll(x => x.isAttached && !FlagsHelper.IsSet(x.flags, BodyPart.BPTags.NonSeverable));
     }
 
     public List<BodyPart> TargetableBodyParts()
@@ -300,7 +280,7 @@ public class Body : MonoBehaviour
 
     public void RemoveLimb(int id)
     {
-        if (!bodyParts[id].isAttached || !bodyParts[id].severable)
+        if (!bodyParts[id].isAttached || FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.NonSeverable))
         {
             return;
         }
@@ -335,7 +315,7 @@ public class Body : MonoBehaviour
             }
         }
 
-        if (bodyParts[id].external)
+        if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.External))
         {
             //Aizith external. Remove from list
             bodyParts.Remove(bodyParts[id]);
@@ -349,11 +329,11 @@ public class Body : MonoBehaviour
         {
             if (bodyParts[id].organic)
             {
-                if (bodyParts[id].effect == TraitEffects.Leprosy || MyStats.hasTraitEffect(TraitEffects.Leprosy))
+                if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Leprosy) || MyStats.hasTraitEffect(TraitEffects.Leprosy))
                     partToDrop.AddProperty(ItemProperty.OnAttach_Leprosy);
-                else if (bodyParts[id].effect == TraitEffects.Crystallization || MyStats.hasTraitEffect(TraitEffects.Crystallization))
+                else if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Crystal) || MyStats.hasTraitEffect(TraitEffects.Crystallization))
                     partToDrop.AddProperty(ItemProperty.OnAttach_Crystallization);
-                else if (bodyParts[id].effect == TraitEffects.Vampirism || MyStats.hasTraitEffect(TraitEffects.Vampirism))
+                else if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Vampire) || MyStats.hasTraitEffect(TraitEffects.Vampirism))
                     partToDrop.AddProperty(ItemProperty.OnAttach_Vampirism);
 
                 if (entity.isPlayer || !entity.isPlayer && entity.AI.npcBase.HasFlag(NPC_Flags.Human))
@@ -416,7 +396,7 @@ public class Body : MonoBehaviour
             }
         }
 
-        bodyParts[id].organic = true;
+        FlagsHelper.UnSet(ref bodyParts[id].flags, BodyPart.BPTags.Synthetic);
     }
 
     public List<BodyPart.Hand> Hands
@@ -482,7 +462,7 @@ public class Body : MonoBehaviour
         bodyParts[id].Attach(MyStats);
         bodyParts[id].myBody = this;
 
-        if (bodyParts[id].slot == ItemProperty.Slot_Arm)
+        if (bodyParts[id].slot == ItemProperty.Slot_Arm && bodyParts[id].hand != null)
         {
             bodyParts[id].hand.SetEquippedItem(ItemList.GetItemByID("fists"), entity);
         }

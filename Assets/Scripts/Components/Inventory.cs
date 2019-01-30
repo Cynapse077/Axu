@@ -527,7 +527,9 @@ public class Inventory : MonoBehaviour
     public void PickupItem(Item i, bool fromFirearm = false)
     {
         if (i == null || !i.lootable)
+        {
             return;
+        }
 
         if (i.stackable)
         {
@@ -692,15 +694,15 @@ public class Inventory : MonoBehaviour
             int randomNumer = SeedManager.combatRandom.Next(100);
             int butcheryLevel = stats.proficiencies.Butchery.level;
 
-            BodyPart sample = new BodyPart(corpse.owner + "'s " + corpse.parts[i].Name, true, corpse.parts[i].Slot);
-            Item it = ItemList.GetSeveredBodyPart(sample);
+            BodyPart sample = new BodyPart(corpse.owner + "'s " + corpse.parts[i].Name, corpse.parts[i].Slot);
+            Item newItem = ItemList.GetSeveredBodyPart(sample);
 
-            if (it == null)
+            if (newItem == null)
             {
                 continue;
             }
 
-            it.displayName = sample.name;
+            newItem.displayName = sample.name;
 
             string handBaseItemID = "";
 
@@ -710,56 +712,53 @@ public class Inventory : MonoBehaviour
             }
 
             CEquipped ce = new CEquipped(corpse.parts[i].item.ID, handBaseItemID);
-            it.AddComponent(ce);
+            newItem.AddComponent(ce);
 
-            if (item.HasCComponent<CRot>() && it.HasCComponent<CRot>())
+            if (item.HasCComponent<CRot>() && newItem.HasCComponent<CRot>())
             {
-                it.GetCComponent<CRot>().current = item.GetCComponent<CRot>().current;
+                newItem.GetCComponent<CRot>().current = item.GetCComponent<CRot>().current;
             }
 
-            if (corpse.parts[i].Org)
+            if (!FlagsHelper.IsSet(corpse.parts[i].Flgs, BodyPart.BPTags.Synthetic))
             {
                 if (randomNumer > (butcheryLevel + 1) * 10)
                 {
-                    it = (randomNumer > 40) ? ItemList.GetItemByID("fleshraw") : null;
+                    newItem = (randomNumer > 40) ? ItemList.GetItemByID("fleshraw") : null;
                 }
                 else
                 {
-                    foreach (Stat_Modifier sm in it.statMods)
+                    foreach (Stat_Modifier sm in newItem.statMods)
                     {
-                        if (sm.Stat != "Hunger")
-                        {
-                            if (SeedManager.combatRandom.CoinFlip())
-                                sm.Amount += SeedManager.combatRandom.Next(0, 2);
-                            else if (SeedManager.combatRandom.Next(15) < butcheryLevel + 1)
-                                sm.Amount += SeedManager.combatRandom.Next(1, 5);
-                        }
+                        if (SeedManager.combatRandom.CoinFlip())
+                            sm.Amount += SeedManager.combatRandom.Next(0, 2);
+                        else if (SeedManager.combatRandom.Next(15) < butcheryLevel + 1)
+                            sm.Amount += SeedManager.combatRandom.Next(1, 5);
                     }
                 }
 
-                if (it != null)
+                if (newItem != null)
                 {
-                    if (corpse.parts[i].Dis == TraitEffects.Leprosy || corpse.lep)
-                        it.AddProperty(ItemProperty.OnAttach_Leprosy);
-                    else if (corpse.parts[i].Dis == TraitEffects.Crystallization)
-                        it.AddProperty(ItemProperty.OnAttach_Crystallization);
-                    else if (corpse.parts[i].Dis == TraitEffects.Vampirism || corpse.vamp)
-                        it.AddProperty(ItemProperty.OnAttach_Vampirism);
+                    if (FlagsHelper.IsSet(corpse.parts[i].Flgs, BodyPart.BPTags.Leprosy) || corpse.lep)
+                        newItem.AddProperty(ItemProperty.OnAttach_Leprosy);
+                    else if (FlagsHelper.IsSet(corpse.parts[i].Flgs, BodyPart.BPTags.Crystal))
+                        newItem.AddProperty(ItemProperty.OnAttach_Crystallization);
+                    else if (FlagsHelper.IsSet(corpse.parts[i].Flgs, BodyPart.BPTags.Vampire) || corpse.vamp)
+                        newItem.AddProperty(ItemProperty.OnAttach_Vampirism);
 
                     if (corpse.cann)
                     {
-                        it.AddProperty(ItemProperty.Cannibalism);
+                        newItem.AddProperty(ItemProperty.Cannibalism);
                     }
                 }
             }
             else
             {
-                it = ItemList.GetItemByID("scrap");
+                newItem = ItemList.GetItemByID("scrap");
             }
 
-            if (it != null)
+            if (newItem != null)
             {
-                PickupItem(it);
+                PickupItem(newItem);
             }
         }
 

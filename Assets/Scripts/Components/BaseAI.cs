@@ -636,12 +636,23 @@ public class BaseAI : MonoBehaviour
         {
             if (x != 0)
             {
-                spriteComponent.SetXScale(-x);
+                SetXScale(-x);
             }
 
             entity.Action(x, y);
             entity.canAct = false;
         }
+    }
+
+    void SetXScale(int x)
+    {
+        if (spriteComponent == null)
+        {
+            spriteComponent = GetComponentInChildren<NPCSprite>();
+
+        }
+
+        spriteComponent.SetXScale(x);
     }
 
     float GetDistance(Entity targetEntity)
@@ -690,7 +701,7 @@ public class BaseAI : MonoBehaviour
     {
         if (pos.x != entity.posX)
         {
-            spriteComponent.SetXScale((pos.x > entity.myPos.x) ? -1 : 1);
+            SetXScale((pos.x > entity.myPos.x) ? -1 : 1);
         }
     }
 

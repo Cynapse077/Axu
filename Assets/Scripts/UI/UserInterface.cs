@@ -270,12 +270,12 @@ public class UserInterface : MonoBehaviour
         BPPanel.TargetPart(playerStats.entity.body, BodyPartTargetPanel.SelectionType.Amputate);
     }
 
-    public void OpenCharacterPanel()
+    public void OpenCharacterPanel(Entity e)
     {
         CloseWindows();
         uiState = UIWindow.Character;
         CharPanel.gameObject.SetActive(true);
-        CharPanel.Initialize(playerStats, playerInventory);
+        CharPanel.Initialize(e.stats, e.inventory);
     }
 
     public void ItemOnItem_Fill(Item i, Inventory inv)
@@ -339,7 +339,7 @@ public class UserInterface : MonoBehaviour
                 OpenInventory();
                 break;
             case UIWindow.Character:
-                OpenCharacterPanel();
+                OpenCharacterPanel(ObjectManager.playerEntity);
                 break;
             case UIWindow.Journal:
                 OpenJournal();

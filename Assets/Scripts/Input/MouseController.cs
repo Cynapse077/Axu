@@ -9,7 +9,7 @@ public class MouseController : MonoBehaviour
 
     GameObject arrow;
     UserInterface userInterface;
-    Transform cursor, worldCursor;
+    Transform cursor;
     SpriteRenderer sRenderer;
     Entity playerEntity;
     PlayerInput playerInput;
@@ -169,8 +169,6 @@ public class MouseController : MonoBehaviour
     {
         if (worldCamera == null)
             worldCamera = GameObject.FindObjectOfType<MiniMap>().GetComponent<Camera>();
-        if (worldCursor == null)
-            worldCursor = GameObject.Find("WorldPointerObject").transform;
 
         Ray ray = worldCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -183,7 +181,6 @@ public class MouseController : MonoBehaviour
             pos.y = Mathf.FloorToInt(pos.y);
 
             Coord targetPos = new Coord(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
-            worldCursor.position = pos + new Vector3(0.5f, 0.5f, 0);
             cursor.position = pos;
 
             if (Input.GetMouseButtonUp(0))
@@ -193,11 +190,10 @@ public class MouseController : MonoBehaviour
         }
     }
 
-    void MoveWorld(Coord targetPos)
+    public void MoveWorld(Coord targetPos)
     {
+        World.userInterface.CloseWindows();
         playerInput.CancelWorldPath();
-        targetPos.x -= 50;
-        targetPos.y += 200;
         playerInput.SetWorldPath(targetPos);
     }
 

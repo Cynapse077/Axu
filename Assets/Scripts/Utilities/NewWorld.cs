@@ -135,7 +135,7 @@ public class OldWorld
         objM.GetComponent<TurnManager>().turn = (int)wData["Turn_Num"];
 
         World.BaseDangerLevel = (int)wData["Danger_Level"];
-        World.difficulty = new Difficulty((Difficulty.DiffLevel)((int)wData["Diff"]["Level"]), (double)wData["Diff"]["XPScale"], wData["Diff"]["descTag"].ToString());
+        World.difficulty = new Difficulty((Difficulty.DiffLevel)(int)wData["Diff"]["Level"], wData["Diff"]["descTag"].ToString());
         ObjectManager.SpawnedNPCs = (int)wData["Spawned_NPCs"];
 
         //Load NPCs
@@ -421,7 +421,7 @@ public struct WorldObject
             {
                 if (items[i] != null)
                 {
-                    Items.Add(items[i].ToSimpleItem());
+                    Items.Add(items[i].ToSerializedItem());
                 }
             }
         }

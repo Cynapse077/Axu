@@ -8,6 +8,22 @@
             "Tags" : [],
             "Stackable" : false
         },
+		{
+			"Name" : "Bleed Resistant",
+            "ID" : "rbleed",
+            "Description" : "Resistant to bleeding.",
+            "Stats" : [],
+            "Tags" : [ "Bleed_Resist" ],
+            "Stackable" : false
+		},
+		{
+			"Name" : "Poison Resistant",
+            "ID" : "rpois",
+            "Description" : "Resistant to poison.",
+            "Stats" : [],
+            "Tags" : [ "Poison_Resist" ],
+            "Stackable" : false
+		},
         {
             "Name" : "Distorted Body",
             "ID" : "experiment",
@@ -240,12 +256,12 @@
         	"Stackable" : false
         },
         {
-            "Name" : "Well Composed",
+            "Name" : "Well-Composed",
             "ID" : "resist",
             "Description" : "Your blood clots quickly, and you have a higher tolerance to poisons.",
             "Tags" : [ "Bleed_Resist", "Poison_Resist", "Random_Trait" ],
             "Stackable" : false
-        },
+        },		
         {
             "Name" : "Stable Genetics",
             "ID" : "radresist",

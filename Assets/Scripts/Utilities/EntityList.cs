@@ -125,14 +125,9 @@ public static class EntityList
                 string slotName = bpData["Slot"].ToString();
                 ItemProperty slot = slotName.ToEnum<ItemProperty>();
 
-                bool severable = (bool)bpData["Severable"];
-                bool wearGear = (bool)bpData["Can Wear Gear"];
-
-                BodyPart bodyPart = new BodyPart(bpName, severable, slot)
+                BodyPart bodyPart = new BodyPart(bpName, slot)
                 {
-                    canWearGear = wearGear,
-                    Weight = (int)bpData["Size"],
-                    organic = true
+                    Weight = (int)bpData["Size"]
                 };
 
                 if (bpData.ContainsKey("Stats"))
@@ -146,34 +141,25 @@ public static class EntityList
 
                 if (bpData.ContainsKey("Tags"))
                 {
-                    bodyPart.bpTags = new BodyPart.BPTags[bpData["Tags"].Count];
-
                     for (int j = 0; j < bpData["Tags"].Count; j++)
                     {
                         string txt = bpData["Tags"][j].ToString();
 
-                        if (txt == "Synthetic")
-                            bodyPart.organic = false;
-                        else if (txt == "External")
-                            bodyPart.external = true;
-                        else
-                        {
-                            BodyPart.BPTags tag = txt.ToEnum<BodyPart.BPTags>();
-                            bodyPart.bpTags[j] = tag;
-
-                            if (tag == BodyPart.BPTags.Grip && bodyPart.slot == ItemProperty.Slot_Arm)
-                            {
-                                string baseWep = "fists";
-
-                                if (bpData.ContainsKey("Wielding"))
-                                {
-                                    baseWep = bpData["Wielding"].ToString();
-                                }
-
-                                bodyPart.hand = new BodyPart.Hand(bodyPart, ItemList.GetItemByID(baseWep), baseWep);
-                            }
-                        }
+                        BodyPart.BPTags tag = txt.ToEnum<BodyPart.BPTags>();
+                        FlagsHelper.Set(ref bodyPart.flags, tag);
                     }
+                }
+
+                if (bodyPart.slot == ItemProperty.Slot_Arm)
+                {
+                    string baseWep = "fists";
+
+                    if (bpData.ContainsKey("Wielding"))
+                    {
+                        baseWep = bpData["Wielding"].ToString();
+                    }
+
+                    bodyPart.hand = new BodyPart.Hand(bodyPart, ItemList.GetItemByID(baseWep), baseWep);
                 }
 
                 bodyPart.equippedItem = bpData.ContainsKey("Default Equipped") ? ItemList.GetItemByID(bpData["Default Equipped"].ToString()) : ItemList.GetItemByID("none");

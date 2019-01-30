@@ -66,10 +66,10 @@ public class CharacterCreation : MonoBehaviour
     void Start()
     {
         difficulties = new Difficulty[] {
-            new Difficulty(Difficulty.DiffLevel.Adventurer, 1.10, "Diff_0"),
-            new Difficulty(Difficulty.DiffLevel.Scavenger, 1.0, "Diff_1"),
-            new Difficulty(Difficulty.DiffLevel.Rogue, 1.0, "Diff_2"),
-            new Difficulty(Difficulty.DiffLevel.Hunted, 0.9, "Diff_3")
+            new Difficulty(Difficulty.DiffLevel.Adventurer, "Diff_0"),
+            new Difficulty(Difficulty.DiffLevel.Scavenger, "Diff_1"),
+            new Difficulty(Difficulty.DiffLevel.Rogue, "Diff_2"),
+            new Difficulty(Difficulty.DiffLevel.Hunted, "Diff_3")
         };
 
         SetProficiencies();

@@ -16,14 +16,14 @@ namespace Pathfinding
                 for (int y = 0; y < Manager.worldMapSize.y; y++)
                 {
                     Path_TileData tileData = data.GetPathDataAt(x, y);
-                    Path_Node node = new Path_Node { data = tileData };
+                    Path_Node node = new Path_Node() { data = tileData };
 
                     if (tileData != null)
+                    {
                         nodes.Add(tileData, node);
+                    }
                 }
             }
-
-            int edgeCount = 0;
 
             foreach (Path_TileData t in nodes.Keys)
             {
@@ -38,8 +38,6 @@ namespace Pathfinding
                     {
                         Path_Edge e = new Path_Edge { node = nodes[neighbours[i]] };
                         edges.Add(e);
-
-                        edgeCount++;
                     }
                 }
 

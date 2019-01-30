@@ -33,7 +33,7 @@
             "Description" : "Your eyes are able to accurately predict a target's movement. <color=green>+ACC</color>",
             "Slots" : [ "Slot_Head" ],
             "Stats" : [
-                { "Stat" : "Accuracy", "Amout" : 1 }
+                { "Stat" : "Accuracy", "Amout" : 2 }
             ]
         },
         {

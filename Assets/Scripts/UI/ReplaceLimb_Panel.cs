@@ -45,10 +45,7 @@ public class ReplaceLimb_Panel : MonoBehaviour
 
                 for (int i = 0; i < b.Attributes.Count; i++)
                 {
-                    if (b.Attributes[i].Stat != "Hunger")
-                    {
-                        myText += LocalizationManager.GetContent(b.Attributes[i].Stat) + " <color=orange>(" + b.Attributes[i].Amount + ")</color> ";
-                    }
+                    myText += LocalizationManager.GetContent(b.Attributes[i].Stat) + " <color=orange>(" + b.Attributes[i].Amount + ")</color> ";
                 }
             }
 
@@ -176,8 +173,7 @@ public class ReplaceLimb_Panel : MonoBehaviour
 
     void ReplaceBodyPart(int bpID, int itemID)
     {
-        ObjectManager.playerEntity.stats.ReplaceOneLimbByDoctor(inv.entity.body.bodyParts.IndexOf(severableBodyParts[bpID]), 
-            inv.items.IndexOf(items[itemID]), FromDoctor);
+        ObjectManager.playerEntity.stats.ReplaceOneLimbByDoctor(inv.entity.body.bodyParts.IndexOf(severableBodyParts[bpID]), inv.items.IndexOf(items[itemID]), FromDoctor);
         World.userInterface.CloseWindows();
     }
 

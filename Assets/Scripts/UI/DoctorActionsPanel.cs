@@ -20,7 +20,7 @@ public class DoctorActionsPanel : UIPanel
 
     protected override void OnSelect(int index)
     {
-        base.OnSelect(index);
+
     }
 
     public override void ChangeSelectedNum(int newIndex)

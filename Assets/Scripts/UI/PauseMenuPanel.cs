@@ -17,7 +17,7 @@ public class PauseMenuPanel : MonoBehaviour
         anim = GetComponent<Animator>();
 
         buttons[0].onClick.AddListener(() => World.userInterface.OpenPlayerInventory());
-        buttons[1].onClick.AddListener(() => World.userInterface.OpenCharacterPanel());
+        buttons[1].onClick.AddListener(() => World.userInterface.OpenCharacterPanel(ObjectManager.playerEntity));
         buttons[2].onClick.AddListener(() => World.userInterface.OpenAbilities());
         buttons[3].onClick.AddListener(() => World.userInterface.OpenMap());
         buttons[4].onClick.AddListener(() => World.userInterface.OpenJournal());

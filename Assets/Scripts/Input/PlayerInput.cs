@@ -15,9 +15,7 @@ public class PlayerInput : MonoBehaviour
     public Path_AStar localPath;
 
     Coord storedTravelPos;
-    Coord targetPosition;
     bool waitForRefresh, canHoldKeys, fireWeapon, walking;
-    bool canWorldMove = true;
     Entity entity;
     GameObject mapPositionPointer;
     MiniMap miniMap;
@@ -96,48 +94,44 @@ public class PlayerInput : MonoBehaviour
             yield break;
         }
 
-        canWorldMove = false;
+        int moveCount = worldPath.steps.Count;
 
-        while (World.tileMap.WorldPosition != targetPosition && worldPath != null && targetPosition != null)
+        for (int i = 0; i < moveCount; i++)
         {
-            if (worldPath.steps.Count <= 0)
+            if (worldPath == null)
             {
                 break;
             }
 
             Coord next = worldPath.GetNextStep();
             int wx = next.x - World.tileMap.worldCoordX;
-            int wy = next.x - World.tileMap.worldCoordY;
+            int wy = next.y - World.tileMap.worldCoordY;
 
             Action(wx, wy);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.025f);
         }
 
         worldPath = null;
-        targetPosition = null;
-        canWorldMove = true;
     }
 
     public void SetWorldPath(Coord targetPos)
     {
         if (World.tileMap.WalkableWorldTile(targetPos.x, targetPos.y))
         {
-            targetPosition = targetPos;
-            Path_AStar path = new Path_AStar(World.tileMap.WorldPosition, targetPosition, World.tileMap.worldMap);
+            Path_AStar path = new Path_AStar(World.tileMap.WorldPosition, targetPos, World.tileMap.worldMap);
 
             if (path.steps != null)
             {
                 worldPath = path;
-                canWorldMove = true;
             }
+
+            StartCoroutine(FollowPath());
         }
     }
 
     public void CancelWorldPath()
     {
         worldPath = null;
-        canWorldMove = true;
-        targetPosition = null;
     }
 
     void Update()
@@ -170,19 +164,18 @@ public class PlayerInput : MonoBehaviour
             MenuKeys();
         }
 
-        if (fullMap && worldPath != null && canWorldMove)
-        {
-            StartCoroutine(FollowPath());
-            return;
-        }
-
         if (Mathf.Abs(mapPositionPointer.transform.position.x - PointerPos.x) > 6 || Mathf.Abs(mapPositionPointer.transform.position.y - PointerPos.y) > 6)
             mapPositionPointer.transform.position = PointerPos;
         else
             mapPositionPointer.transform.position = Vector3.Lerp(mapPositionPointer.transform.position, PointerPos, 0.5f);
+        World.userInterface.ChangeMapNameInSideBar();
+
+        if (worldPath != null)
+        {
+            return;
+        }
 
         questPointer.OnChangeWorldMapPosition();
-        World.userInterface.ChangeMapNameInSideBar();
 
         if (KeyDown("Map") && World.tileMap.currentElevation == 0 && World.userInterface.NoWindowsOpen 
             || fullMap && (KeyDown("GoDownStairs") || KeyDown("Enter") || KeyDown("Pause")))
@@ -380,6 +373,9 @@ public class PlayerInput : MonoBehaviour
             case 1:
                 c.x = 1;
                 break;
+            default:
+                c.x = Manager.localMapSize.x / 2;
+                break;
         }
 
         switch (y)
@@ -392,6 +388,9 @@ public class PlayerInput : MonoBehaviour
                 break;
             case 1:
                 c.y = 1;
+                break;
+            default:
+                c.y = Manager.localMapSize.y / 2;
                 break;
         }
 
@@ -848,10 +847,11 @@ public class PlayerInput : MonoBehaviour
             }
 
             //Encounters!
-            float encRate = (World.difficulty.Level == Difficulty.DiffLevel.Adventurer || World.difficulty.Level == Difficulty.DiffLevel.Scavenger) ? 0.8f : 1.0f;
+            float encRate = (World.difficulty.Level == Difficulty.DiffLevel.Adventurer) ? 0.8f : 1.0f;
 
             if (SpawnController.HasFoundEncounter(encRate))
             {
+                worldPath = null;
                 entity.myPos = World.tileMap.CurrentMap.GetRandomFloorTile();
                 entity.ForcePosition();
                 TriggerLocalOrWorldMap();
@@ -983,7 +983,9 @@ public class PlayerInput : MonoBehaviour
         Coord targetPos = World.tileMap.FindStairsUp();
 
         if (targetPos != null && World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
+        {
             FindStairs(targetPos);
+        }
     }
 
     void FindStairsDown()
@@ -992,7 +994,9 @@ public class PlayerInput : MonoBehaviour
         Coord targetPos = World.tileMap.FindStairsDown();
 
         if (targetPos != null && World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
+        {
             FindStairs(targetPos);
+        }
     }
 
     void FindStairs(Coord targetPos)
@@ -1010,12 +1014,6 @@ public class PlayerInput : MonoBehaviour
         entity.posY = y;
 
         Camera.main.GetComponent<CameraControl>().SetTargetTransform(entity.transform);
-    }
-
-    void ResetPath()
-    {
-        worldPath = null;
-        targetPosition = null;
     }
 
     public void TriggerLocalOrWorldMap()
@@ -1036,7 +1034,7 @@ public class PlayerInput : MonoBehaviour
         }
 
         fullMap = !fullMap;
-        ResetPath();
+        CancelWorldPath();
         World.userInterface.ToggleFullMap(fullMap);
         CheckMinimap();
         sidePanelUI.SetActive(!fullMap);

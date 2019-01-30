@@ -45,11 +45,13 @@ public class GiveItemPanel : UIPanel
 
     protected override void OnSelect(int index)
     {
-        base.OnSelect(index);
-        targetInventory.PickupItem(giveItems[index]);
-        playerInventory.RemoveInstance(giveItems[index]);
-        giveItems.RemoveAt(index);
-        Initialize();
+        if (SelectedMax > 0)
+        {
+            targetInventory.PickupItem(giveItems[index]);
+            playerInventory.RemoveInstance(giveItems[index]);
+            giveItems.RemoveAt(index);
+            Initialize();
+        }
     }
 
     void UpdateInventory()

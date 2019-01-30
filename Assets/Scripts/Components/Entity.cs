@@ -675,7 +675,10 @@ public class Entity : MonoBehaviour
                         break;
                     }
 
-                    cell.UnSetEntity(this);
+                    if (cell != null)
+                    {
+                        cell.UnSetEntity(this);
+                    }
                     posX += x;
                     posY += y;
                     SetCell();
@@ -1347,13 +1350,13 @@ public class Entity : MonoBehaviour
         List<SItem> items = new List<SItem>();
         for (int i = 0; i < inventory.items.Count; i++)
         {
-            items.Add(inventory.items[i].ToSimpleItem());
+            items.Add(inventory.items[i].ToSerializedItem());
         }
 
         List<SBodyPart> bodyParts = new List<SBodyPart>();
         for (int b = 0; b < body.bodyParts.Count; b++)
         {
-            bodyParts.Add(body.bodyParts[b].ToSimpleBodyPart());
+            bodyParts.Add(body.bodyParts[b].ToSerializedBodyPart());
         }
 
         List<STrait> traits = new List<STrait>();
@@ -1379,12 +1382,12 @@ public class Entity : MonoBehaviour
         List<SItem> handItems = new List<SItem>();
         for (int i = 0; i < body.Hands.Count; i++)
         {
-            handItems.Add(body.Hands[i].EquippedItem.ToSimpleItem());
+            handItems.Add(body.Hands[i].EquippedItem.ToSerializedItem());
         }
 
         PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, MyName, Manager.profName, stats.MyLevel, myStats,
             World.tileMap.WorldPosition, myPos, World.tileMap.currentElevation, traits, stats.proficiencies.GetProfs(),
-            bodyParts, inventory.gold, items, handItems, inventory.firearm.ToSimpleItem(), sskills, stats.Attributes["Charisma"], 
+            bodyParts, inventory.gold, items, handItems, inventory.firearm.ToSerializedItem(), sskills, stats.Attributes["Charisma"], 
             quests, World.turnManager.currentWeather, ObjectManager.playerJournal.AllFlags());
 
         return me;

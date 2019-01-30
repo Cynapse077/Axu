@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using LitJson;
 
 [Serializable]
-public class CComponent
+public abstract class CComponent
 {
     public string ID;
 
     public CComponent() { }
-    public CComponent(string _id)
-    {
-        ID = _id;
-    }
 
     public CComponent Clone()
     {
@@ -40,6 +36,30 @@ public class CComponent
             case "ModKit": return JsonMapper.ToObject<CModKit>(reader);
             case "ItemLevel": return JsonMapper.ToObject<CItemLevel>(reader);
             case "Cybernetic": return JsonMapper.ToObject<CCybernetic>(reader);
+
+            default: return null;
+        }
+    }
+
+    public static Type GetComponentType(string cc)
+    {
+        switch (cc)
+        {
+            case "Charges": return typeof(CCharges);
+            case "Rot": return typeof(CRot);
+            case "Corpse": return typeof(CCorpse);
+            case "Ability": return typeof(CAbility);
+            case "Equipped": return typeof(CEquipped);
+            case "Firearm": return typeof(CFirearm);
+            case "Coordinate": return typeof(CCoordinate);
+            case "Console": return typeof(CConsole);
+            case "LuaEvent": return typeof(CLuaEvent);
+            case "LiquidContainer": return typeof(CLiquidContainer);
+            case "Block": return typeof(CBlock);
+            case "Coat": return typeof(CCoat);
+            case "ModKit": return typeof(CModKit);
+            case "ItemLevel": return typeof(CItemLevel);
+            case "Cybernetic": return typeof(CCybernetic);
 
             default: return null;
         }
@@ -105,7 +125,7 @@ public class CCorpse : CComponent
 
         for (int i = 0; i < _parts.Count; i++)
         {
-            parts.Add(_parts[i].ToSimpleBodyPart());
+            parts.Add(_parts[i].ToSerializedBodyPart());
         }
     }
 

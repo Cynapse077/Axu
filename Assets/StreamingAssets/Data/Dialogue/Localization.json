@@ -952,17 +952,17 @@
         {
             "ID" : "Diff_1",
             "Display" : "Scavenger",
-            "Tooltip" : "A moderate difficulty.\n\n  - Death sends you back to your base.\n - Upon death, 10% of your money is taken away, some items may be dropped, and you suffer minor stat and/or XP loss.\n  - Reduced encounter rate."
+            "Tooltip" : "A moderate difficulty.\n\n  - Death sends you back to your base.\n - Upon death, 10% of your money is taken away, some items may be dropped, and you suffer minor stat and/or XP loss."
         },
         {
             "ID" : "Diff_2",
             "Display" : "Rogue",
-            "Tooltip" : "The way Axu was meant to be played.\n\n  - Death is <color=red>final</color>, causing you to start from the beginning.\n -  Some substances may cause <color=red>addiction</color>.\n -  Being hit can cause <color=red>injuries</color>."
+            "Tooltip" : "The way Axu was meant to be played.\n\n  - Death is <color=red>final</color>, causing you to start from the beginning.\n -  Some substances may cause <color=red>addiction</color>."
         },
         {
             "ID" : "Diff_3",
             "Display" : "Hunted",
-            "Tooltip" : "A more challenging experience.\n\n  - Death is <color=red>final</color>, causing you to start from the beginning.\n  - More difficult enemies spawn earlier.\n  - Some substances may cause <color=red>addiction</color>. (More likely than Rogue difficulty)\n -  Being hit can cause <color=red>injuries</color>\n  - You are hunted by a mysterious group of assassins."
+            "Tooltip" : "A more challenging experience.\n\n  - Death is <color=red>final</color>, causing you to start from the beginning.\n  - More difficult enemies spawn earlier.\n  - Some substances may cause <color=red>addiction</color>. (More likely than Rogue difficulty)\n - You are hunted by a mysterious group of assassins."
         }
     ],
     "Profs" : [

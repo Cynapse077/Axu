@@ -12,12 +12,10 @@ public class BodyPart : IWeighted
     public Body myBody;
     public string name;
     public string displayName;
-    public ItemProperty slot;
-    public List<Stat_Modifier> Attributes;
     public int armor, level = 0;
-    public bool held, external, organic, canWearGear = true;
-    public TraitEffects effect; //Leprosy or Crystalization.
-    public BPTags[] bpTags;
+    public ItemProperty slot;
+    public BPTags flags;
+    public List<Stat_Modifier> Attributes;
     public List<Wound> wounds;
     public Grip grip;
     public Hand hand;
@@ -29,7 +27,6 @@ public class BodyPart : IWeighted
     public Item equippedItem;
     string _baseName;
     bool _attached = true;
-    bool _severable = false;
 
     public int Weight
     {
@@ -43,15 +40,29 @@ public class BodyPart : IWeighted
         protected set { _attached = value; }
     }
 
-    public bool severable
-    {
-        get { return _severable; }
-        set { _severable = value; }
-    }
-
     public bool Crippled
     {
         get { return wounds != null && wounds.Count > 0; }
+    }
+
+    public bool external
+    {
+        get { return FlagsHelper.IsSet(flags, BPTags.External); }
+    }
+
+    public bool organic
+    {
+        get { return !FlagsHelper.IsSet(flags, BPTags.Synthetic);  }
+    }
+
+    public bool canWearGear
+    {
+        get { return !FlagsHelper.IsSet(flags, BPTags.CannotWearGear); }
+    }
+
+    public bool severable
+    {
+        get { return !FlagsHelper.IsSet(flags, BPTags.NonSeverable); }
     }
 
     public void SetXP(double xp, double max)
@@ -60,21 +71,16 @@ public class BodyPart : IWeighted
         maxXP = max;
     }
 
-    public BodyPart(string na, bool severable, ItemProperty itemSlot, bool _external = false, bool _organic = true)
+    public BodyPart(string na, ItemProperty itemSlot)
     {
         Attributes = new List<Stat_Modifier>();
         _baseName = na;
         name = na;
         _attached = true;
-        _severable = severable;
         equippedItem = ItemList.GetNone();
         slot = itemSlot;
-        external = _external;
-        organic = _organic;
         armor = 1;
-        held = false;
         displayName = name;
-        bpTags = new BPTags[0];
         wounds = new List<Wound>();
     }
 
@@ -85,10 +91,7 @@ public class BodyPart : IWeighted
         _attached = att;
         equippedItem = ItemList.GetNone();
         armor = 1;
-        organic = true;
-        held = false;
         displayName = name;
-        bpTags = new BPTags[0];
         wounds = new List<Wound>();
     }
 
@@ -105,15 +108,12 @@ public class BodyPart : IWeighted
 
     public void WoundMe(HashSet<DamageTypes> dts)
     {
-        if (World.difficulty.Level == Difficulty.DiffLevel.Hunted || World.difficulty.Level == Difficulty.DiffLevel.Rogue)
-        {
-            List<Wound> ws = TraitList.GetAvailableWounds(this, dts);
+        List<Wound> ws = TraitList.GetAvailableWounds(this, dts);
 
-            if (ws.Count > 0)
-            {
-                Wound w = ws.GetRandom(SeedManager.combatRandom);
-                w.Inflict(this);
-            }
+        if (ws.Count > 0)
+        {
+            Wound w = ws.GetRandom(SeedManager.combatRandom);
+            w.Inflict(this);
         }
     }
 
@@ -142,7 +142,7 @@ public class BodyPart : IWeighted
             myBody = entity.body;
         }
 
-        if (level >= 5 || !organic || !isAttached || external)
+        if (level >= 5 || FlagsHelper.IsSet(flags, BPTags.Synthetic) || !isAttached || FlagsHelper.IsSet(flags, BPTags.External))
         {
             return;
         }
@@ -200,7 +200,6 @@ public class BodyPart : IWeighted
     public void Sever(Entity entity)
     {
         _attached = false;
-        organic = true;
         equippedItem.OnUnequip(entity, false);
         wounds.Clear();
         Remove(entity.stats);
@@ -209,12 +208,11 @@ public class BodyPart : IWeighted
     public void Attach(Stats stats, bool showMessage = true)
     {
         _attached = true;
-        _severable = true;
         name = _baseName;
         myBody = stats.entity.body;
         wounds.Clear();
 
-        if (effect == TraitEffects.Leprosy && !stats.hasTrait("leprosy"))
+        if (FlagsHelper.IsSet(flags, BPTags.Leprosy) && !stats.hasTrait("leprosy"))
         {
             if (showMessage)
             {
@@ -223,7 +221,7 @@ public class BodyPart : IWeighted
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
         }
-        else if (effect == TraitEffects.Crystallization && !stats.hasTrait("crystal"))
+        else if (FlagsHelper.IsSet(flags, BPTags.Crystal) && !stats.hasTrait("crystal"))
         {
             if (showMessage)
             {
@@ -232,7 +230,7 @@ public class BodyPart : IWeighted
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
         }
-        else if (effect == TraitEffects.Vampirism)
+        else if (FlagsHelper.IsSet(flags, BPTags.Vampire) && !stats.hasTrait("pre-vamp") && !stats.hasTrait("vmap"))
         {
             if (showMessage)
             {
@@ -244,17 +242,14 @@ public class BodyPart : IWeighted
 
         for (int i = 0; i < Attributes.Count; i++)
         {
-            if (Attributes[i].Stat != "Hunger")
-            {
-                stats.Attributes[Attributes[i].Stat] += Attributes[i].Amount;
-            }
+            stats.Attributes[Attributes[i].Stat] += Attributes[i].Amount;
         }
     }
 
     public void Remove(Stats stats)
     {
         wounds.Clear();
-        organic = true;
+        FlagsHelper.UnSet(ref flags, BPTags.Synthetic);
 
         for (int i = 0; i < Attributes.Count; i++)
         {
@@ -265,7 +260,7 @@ public class BodyPart : IWeighted
         }
     }
 
-    public SBodyPart ToSimpleBodyPart()
+    public SBodyPart ToSerializedBodyPart()
     {
         if (equippedItem == null || equippedItem.ID == "none")
         {
@@ -278,12 +273,13 @@ public class BodyPart : IWeighted
         {
             string baseItem = (!string.IsNullOrEmpty(hand.baseItem)) ? "fists" : hand.baseItem;
 
-            hnd = new SHand(hand.EquippedItem.ToSimpleItem(), baseItem);
+            hnd = new SHand(hand.EquippedItem.ToSerializedItem(), baseItem);
         }
 
-        SItem equipped = equippedItem.ToSimpleItem();
-        SBodyPart simple = new SBodyPart(name, equipped, severable, _attached, slot, canWearGear,
-            Weight, Attributes, armor, effect, external, organic, level, currXP, maxXP, wounds, hnd);
+        string cybID = (cybernetic == null) ? "" : cybernetic.ID;
+
+        SItem equipped = equippedItem.ToSerializedItem();
+        SBodyPart simple = new SBodyPart(name, flags, equipped, _attached, slot, Weight, Attributes, armor, level, currXP, maxXP, wounds, hnd, cybID);
 
         return simple;
     }
@@ -375,25 +371,16 @@ public class BodyPart : IWeighted
         _attached = other.isAttached;
         equippedItem = new Item(other.equippedItem);
         armor = other.armor;
-        external = other.external;
-        organic = other.organic;
-        _severable = other.severable;
-        held = other.held;
         displayName = name;
         myBody = other.myBody;
         wounds = other.wounds;
+        flags = other.flags;
 
         if (other.hand != null)
         {
             hand = new Hand(other.hand);
         }
 
-        bpTags = new BPTags[other.bpTags.Length];
-
-        for (int i = 0; i < other.bpTags.Length; i++)
-        {
-            bpTags[i] = other.bpTags[i];
-        }
     }
 
     [MoonSharpUserData]
@@ -436,11 +423,21 @@ public class BodyPart : IWeighted
                 EquippedItem.OnEquip(entity.stats, this == entity.body.MainHand);
             }
         }
-    }
 
-    public enum BPTags
-    {
-        None, Grip, OnSeverLast_Die, Synthetic, External
+        public void RevertToBase(Entity entity)
+        {
+            if (EquippedItem != null && entity != null)
+            {
+                EquippedItem.OnUnequip(entity, this == entity.body.MainHand);
+            }
+
+            EquippedItem = ItemList.GetItemByID(baseItem);
+
+            if (entity != null && EquippedItem != null)
+            {
+                EquippedItem.OnEquip(entity.stats, this == entity.body.MainHand);
+            }
+        }
     }
 
     public class Grip
@@ -448,15 +445,15 @@ public class BodyPart : IWeighted
         public BodyPart myPart;
         public BodyPart heldPart;
 
+        public Body HeldBody
+        {
+            get { return heldPart.myBody; }
+        }
+
         public Grip(BodyPart part, BodyPart me)
         {
             myPart = me;
             Grab(part);
-        }
-
-        public Body HeldBody
-        {
-            get { return heldPart.myBody; }
         }
 
         int GripStrength()
@@ -523,47 +520,54 @@ public class BodyPart : IWeighted
             }
         }
     }
+
+    [Flags]
+    public enum BPTags
+    {
+        None = 0,
+        Synthetic = 1,
+        External = 2,
+        Crystal = 4,
+        Vampire = 8,
+        Leprosy = 16, 
+        NonSeverable = 32,
+        CannotWearGear = 64
+    }
 }
 
 [Serializable]
 public class SBodyPart
 {
     public string Name { get; set; }
+    public string Cyb { get; set; }
+    public BodyPart.BPTags Flgs;
     public SItem item { get; set; }
     public int Lvl;
     public double[] XP;
     public int Ar { get; set; } //armor
-    public bool Sev { get; set; } //severable
+    public int Size { get; set; }
     public bool Att { get; set; } //attached
-    public bool Ext { get; set; } //external
-    public bool Org { get; set; } //organic
     public ItemProperty Slot { get; set; }
+    public SHand Hnd;
     public List<Stat_Modifier> Stats { get; set; }
     public List<Wound> Wounds { get; set; }
-    public bool CWG { get; set; } //can wear gear
-    public int Size { get; set; }
-    public TraitEffects Dis { get; set; } //disease
-    public SHand Hnd;
 
     public SBodyPart() { }
-    public SBodyPart(string name, SItem _item, bool severable, bool attached, ItemProperty slot, bool weargear, int size, List<Stat_Modifier> stats, int armor,
-        TraitEffects disease, bool external, bool organic, int level, double currXP, double maxXP, List<Wound> wnds, SHand hand)
+    public SBodyPart(string name, BodyPart.BPTags flags, SItem _item, bool attached, ItemProperty slot, int size, List<Stat_Modifier> stats, int armor,
+        int level, double currXP, double maxXP, List<Wound> wnds, SHand hand, string cyberneticID)
     {
         Name = name;
+        Flgs = flags;
         item = _item;
-        Sev = severable;
         Att = attached;
         Slot = slot;
-        CWG = weargear;
         Size = size;
         Stats = stats;
         Ar = armor;
-        Dis = disease;
-        Ext = external;
-        Org = organic;
         Wounds = wnds;
         Lvl = level;
         Hnd = hand;
+        Cyb = cyberneticID;
         XP = new double[] { currXP, maxXP };
     }
 }
@@ -576,7 +580,7 @@ public class SHand
 
     public SHand()
     {
-        item = ItemList.GetItemByID("fists").ToSimpleItem();
+        item = ItemList.GetItemByID("fists").ToSerializedItem();
         bItem = "fists";
     }
 

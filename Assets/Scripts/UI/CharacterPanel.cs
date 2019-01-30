@@ -34,8 +34,8 @@ public class CharacterPanel : MonoBehaviour
     {
         DestroyChildren();
 
-        playerName.text = Manager.playerName + " the " + Manager.profName;
-        level.text = string.Format("Lvl: {0} <color=silver>({1} / {2})xp</color>", stats.MyLevel.CurrentLevel, stats.MyLevel.XP, stats.MyLevel.XPToNext);
+        playerName.text = (stats.entity.isPlayer) ? Manager.playerName + " the " + Manager.profName : stats.entity.MyName;
+        level.text = (stats.entity.isPlayer) ? string.Format("Lvl: {0} <color=silver>({1} / {2})xp</color>", stats.MyLevel.CurrentLevel, stats.MyLevel.XP, stats.MyLevel.XPToNext) : "";
 
         strength.text = stats.Strength.ToString();
         dexterity.text = stats.Dexterity.ToString();
@@ -57,8 +57,8 @@ public class CharacterPanel : MonoBehaviour
         }
 
         accuracy.text = stats.Accuracy.ToString();
-        stealth.text = stats.Attributes["Stealth"].ToString();
-        charisma.text = stats.Attributes["Charisma"].ToString();
+        stealth.text = (stats.entity.isPlayer) ? stats.Attributes["Stealth"].ToString() : "0";
+        charisma.text = (stats.entity.isPlayer) ? stats.Attributes["Charisma"].ToString() : "0";
 
         heatResist.text = stats.HeatResist.ToString() + "%";
         coldResist.text = stats.ColdResist.ToString() + "%";
@@ -66,20 +66,23 @@ public class CharacterPanel : MonoBehaviour
 
         radiation.text = LocalizationManager.GetContent(stats.RadiationDesc());
 
-        List<WeaponProficiency> profs = stats.proficiencies.GetProfs().OrderByDescending(p => p.level).ToList();
-
-        foreach (WeaponProficiency p in profs)
+        if (stats.entity.isPlayer)
         {
-            if (p.level > 1 || p.xp > 0)
+            List<WeaponProficiency> profs = stats.proficiencies.GetProfs().OrderByDescending(p => p.level).ToList();
+
+            foreach (WeaponProficiency p in profs)
             {
-                GameObject pr = Instantiate(profGO, profAnchor);
-                string pXP = (p.xp / 10.0).ToString();
-                string levelText = (p.level - 1).ToString();
-                pr.GetComponent<Text>().text = string.Format("{0} - {1} <color=orange>({2})</color>\n  <color=silver>({3}%x p)</color>", p.name, p.LevelName(), levelText, pXP);
+                if (p.level > 1 || p.xp > 0)
+                {
+                    GameObject pr = Instantiate(profGO, profAnchor);
+                    string pXP = (p.xp / 10.0).ToString();
+                    string levelText = (p.level - 1).ToString();
+                    pr.GetComponent<Text>().text = string.Format("{0} - {1} <color=orange>({2})</color>\n  <color=silver>({3}%x p)</color>", p.name, p.LevelName(), levelText, pXP);
+                }
             }
         }
-
-        GetComponentInChildren<BodyDisplayPanel>().Init(ObjectManager.playerEntity.body);
+        
+        GetComponentInChildren<BodyDisplayPanel>().Init(stats.entity.body);
     }
 
     void DestroyChildren()

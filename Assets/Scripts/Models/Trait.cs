@@ -161,7 +161,7 @@ public class Trait
             for (int i = 0; i < bps.Count; i++)
             {
                 //If it's not organic, skip it.
-                if (!bps[i].organic || bps[i].external)
+                if (FlagsHelper.IsSet(bps[i].flags, BodyPart.BPTags.Synthetic) || FlagsHelper.IsSet(bps[i].flags, BodyPart.BPTags.External))
                 {
                     continue;
                 }
@@ -177,7 +177,7 @@ public class Trait
                 //Rename parts
                 if (replaceBodyPart.allOfType)
                 {
-                    bps[i].canWearGear = replaceBodyPart.canWearGear;
+                    FlagsHelper.Toggle(ref bps[i].flags, BodyPart.BPTags.CannotWearGear, !replaceBodyPart.canWearGear);
 
                     if (!replaceBodyPart.canWearGear)
                     {
@@ -194,7 +194,7 @@ public class Trait
                 {
                     if (i == 0)
                     {
-                        bps[i].canWearGear = replaceBodyPart.canWearGear;
+                        FlagsHelper.Toggle(ref bps[i].flags, BodyPart.BPTags.CannotWearGear, !replaceBodyPart.canWearGear);
                     }
                 }
             }
@@ -279,7 +279,7 @@ public class Trait
             //Set the Can Wear Gear flag back to default.
             if (!replaceBodyPart.canWearGear)
             {
-                entity.body.bodyParts[i].canWearGear = true;
+                FlagsHelper.UnSet(ref entity.body.bodyParts[i].flags, BodyPart.BPTags.CannotWearGear);
             }
 
             //Reset equipment

@@ -468,11 +468,16 @@ public class Stats : MonoBehaviour
 
     void HandleSeverence(HashSet<DamageTypes> damageType, BodyPart targetPart, int sevChance = 0)
     {
+        if (!targetPart.severable)
+        {
+            return;
+        }
+
         bool sever = false;
 
         if (entity.isPlayer)
         {
-            if (targetPart.effect == TraitEffects.Crystallization && damageType.Contains(DamageTypes.Blunt) && RNG.Next(10) == 0 || 
+            if (FlagsHelper.IsSet(targetPart.flags, BodyPart.BPTags.Crystal) && damageType.Contains(DamageTypes.Blunt) && RNG.Next(10) == 0 || 
                 damageType.Contains(DamageTypes.Cleave) || damageType.Contains(DamageTypes.Slash) && RNG.Next(10) == 0)
                 sever = true;
         }
@@ -993,10 +998,8 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
-            if (MyBody.bodyParts[i].effect == TraitEffects.Leprosy || MyBody.bodyParts[i].effect == TraitEffects.Crystallization)
-            {
-                MyBody.bodyParts[i].effect = TraitEffects.None;
-            }
+            FlagsHelper.UnSet(ref MyBody.bodyParts[i].flags, BodyPart.BPTags.Leprosy);
+            FlagsHelper.UnSet(ref MyBody.bodyParts[i].flags, BodyPart.BPTags.Crystal);
 
             for (int j = 0; j < MyBody.bodyParts[i].wounds.Count; j++)
             {
@@ -1026,19 +1029,32 @@ public class Stats : MonoBehaviour
         Item replacementLimb = MyInventory.items[itemIndex];
         string newLimbName = (replacementLimb.displayName != "") ? replacementLimb.displayName : replacementLimb.Name;
 
-        BodyPart newPart = new BodyPart(MyBody.bodyParts[limbIndex].name, true, MyBody.bodyParts[limbIndex].slot, false, replacementLimb.HasCComponent<CRot>())
+        BodyPart newPart = new BodyPart(MyBody.bodyParts[limbIndex].name, MyBody.bodyParts[limbIndex].slot)
         {
             Attributes = replacementLimb.statMods,
             armor = replacementLimb.armor
         };
 
+        if (!replacementLimb.HasCComponent<CRot>())
+        {
+            FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Synthetic);
+        }
+
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Crystallization))
-            newPart.effect = TraitEffects.Crystallization;
-        else if (replacementLimb.HasProp(ItemProperty.OnAttach_Leprosy))
-            newPart.effect = TraitEffects.Leprosy;
-        else if (replacementLimb.HasProp(ItemProperty.OnAttach_Vampirism))
-            newPart.effect = TraitEffects.Vampirism;
+        {
+            FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Crystal);
+        }
+
+        if (replacementLimb.HasProp(ItemProperty.OnAttach_Leprosy))
+        {
+            FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Leprosy);
+        }
+
+        if (replacementLimb.HasProp(ItemProperty.OnAttach_Vampirism))
+        {
+            FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Vampire);
+        }
 
         CombatLog.NameItemMessage("Replace_Limb", MyBody.bodyParts[limbIndex].displayName, newLimbName);
         MyBody.bodyParts[limbIndex] = newPart;
@@ -1201,9 +1217,10 @@ public class Stats : MonoBehaviour
         }
     }
 
+    //Called from Lua
     public List<BodyPart> UnCrystallizedParts()
     {
-        return MyBody.bodyParts.FindAll(x => x.effect != TraitEffects.Crystallization && x.organic);
+        return MyBody.bodyParts.FindAll(x => !FlagsHelper.IsSet(x.flags, BodyPart.BPTags.Crystal) && !FlagsHelper.IsSet(x.flags, BodyPart.BPTags.Synthetic));
     }
 
     public bool IsFlying()

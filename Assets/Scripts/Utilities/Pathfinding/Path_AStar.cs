@@ -187,7 +187,10 @@ namespace Pathfinding
         public Coord GetNextStep()
         {
             if (steps == null || steps.Count == 0)
+            {
+                Debug.Log("Empty path");
                 return new Coord(0, 0);
+            }
 
             Coord nextPosition = steps.Dequeue().data.position;
             return nextPosition;

@@ -35,11 +35,12 @@ public class ThrowItemPanel : UIPanel
 
     protected override void OnSelect(int index)
     {
-        base.OnSelect(index);
-
-        playerInventory.entity.fighter.SelectItemToThrow(playerInventory.Items_ThrowingFirst()[SelectedNum]);
-        playerInventory.GetComponent<PlayerInput>().ToggleThrow();
-        World.userInterface.CloseWindows();
+        if (SelectedMax > 0)
+        {
+            playerInventory.entity.fighter.SelectItemToThrow(playerInventory.Items_ThrowingFirst()[SelectedNum]);
+            playerInventory.GetComponent<PlayerInput>().ToggleThrow();
+            World.userInterface.CloseWindows();
+        }
     }
 
     void UpdateInventory()

@@ -84,14 +84,28 @@ public class JournalPanel : UIPanel
         base.ChangeSelectedNum(newIndex);
 
         if (SelectedMax > 0)
+        {
             EventSystem.current.SetSelectedGameObject(journalBase.GetChild(SelectedNum).gameObject);
+        }
 
         UpdateTooltip();
     }
 
+    public override void Update()
+    {
+        base.Update();
+
+        if (SelectedMax > 0 && GameSettings.Keybindings.GetKey("Interact"))
+        {
+            if (journal.quests[SelectedNum].ActiveGoal.Destination() != null && PlayerInput.fullMap)
+            {
+                Camera.main.GetComponent<MouseController>().MoveWorld(journal.quests[SelectedNum].ActiveGoal.Destination());
+            }
+        }
+    }
+
     protected override void OnSelect(int index)
     {
-        base.OnSelect(index);
         journal.trackedQuest = journal.quests[SelectedNum];
 
         journalBase.DespawnChildren();

@@ -105,7 +105,9 @@ public class AbilityPanel : UIPanel
 
     protected override void OnSelect(int index)
     {
-        base.OnSelect(index);
-        skills.abilities[index].Cast(skills.entity);
+        if (SelectedMax > 0)
+        {
+            skills.abilities[index].Cast(skills.entity);
+        }
     }
 }

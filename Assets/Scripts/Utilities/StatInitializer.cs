@@ -33,15 +33,21 @@ public static class StatInitializer
 
         if (npc.HasFlag(NPC_Flags.RPois))
         {
-            Trait t = new Trait("RPois", "rpois");
-            t.effects.Add(TraitEffects.Poison_Resist);
-            s.AddTrait(t);
+            Trait t = TraitList.GetTraitByID("rpois");
+
+            if (t != null)
+            {
+                s.AddTrait(t);
+            }
         }
         if (npc.HasFlag(NPC_Flags.RBleed))
         {
-            Trait t = new Trait("RBleed", "rbleed");
-            t.effects.Add(TraitEffects.Bleed_Resist);
-            s.AddTrait(t);
+            Trait t = TraitList.GetTraitByID("rbleed");
+
+            if (t != null)
+            {
+                s.AddTrait(t);
+            }
         }
     }
 }

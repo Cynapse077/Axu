@@ -20,6 +20,11 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void SetBodyPart(BodyPart bp)
     {
+        if (bp == null)
+        {
+            return;
+        }
+
         img = GetComponent<Image>();
         bodyPart = bp;
 
@@ -49,8 +54,11 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
                 bodyPart.equippedItem = ItemList.GetNone();
             }
 
+            string wielded = (bodyPart.hand != null && bodyPart.hand.EquippedItem != null ? "\nWielded: " + bodyPart.hand.EquippedItem.InvDisplay("", false, true) : "");
+
             string desc = "Status: " + health + 
-                "\nEquipped: " + bodyPart.equippedItem.DisplayName() +
+                "\nEquipped: " + bodyPart.equippedItem.DisplayName() + 
+                wielded +
                 "\nArmor: <color=grey>[" + (bodyPart.armor + bodyPart.equippedItem.armor + bodyPart.myBody.entity.stats.Defense).ToString() + "]</color>" +
                 "\n\nStats:\n";
 

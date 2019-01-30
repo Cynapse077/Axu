@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UIPanel : MonoBehaviour
+public abstract class UIPanel : MonoBehaviour
 {
     public int SelectedNum { get; protected set; }
+
     protected int SelectedMax;
     protected bool initialized;
+
     bool canHoldKeys = false;
     bool waitForRefresh = false;
     float moveTimer = 0.0f;
+
+    protected abstract void OnSelect(int index);
 
     void OnDisable()
     {
@@ -25,7 +29,9 @@ public class UIPanel : MonoBehaviour
     public virtual void Update()
     {
         if (!initialized)
+        {
             return;
+        }
 
         if (GameSettings.Keybindings.GetKey("Enter"))
         {
@@ -87,8 +93,6 @@ public class UIPanel : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         waitForRefresh = false;
     }
-
-    protected virtual void OnSelect(int index) {}
 
     public virtual void ChangeSelectedNum(int newIndex)
     {

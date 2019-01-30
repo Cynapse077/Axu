@@ -119,7 +119,7 @@ namespace Priority_Queue
         {
             lock(_queue)
             {
-                if(_queue.Count <= 0)
+                if (_queue.Count <= 0)
                 {
                     throw new InvalidOperationException("Cannot call Dequeue() on an empty queue");
                 }
