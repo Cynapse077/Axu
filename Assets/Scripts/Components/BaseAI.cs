@@ -826,12 +826,12 @@ public class BaseAI : MonoBehaviour
                 npcBase.handItems = new List<Item>() { entity.body.defaultHand.EquippedItem };
             }
 
-            for (int i = 0; i < entity.stats.traits.Count; i++)
+            int traitCount = entity.stats.traits.Count;
+
+            for (int i = 0; i < traitCount; i++)
             {
-                if (!npcBase.traits.Contains(entity.stats.traits[i].ID))
-                {
-                    npcBase.traits.Add(entity.stats.traits[i].ID);
-                }
+                npcBase.traits.Add(entity.stats.traits[0].ID);
+                entity.stats.RemoveTrait(entity.stats.traits[0].ID);
             }
 
             npcBase.firearm = inv.firearm;
@@ -1055,6 +1055,16 @@ public class BaseAI : MonoBehaviour
             }
 
             return true;
+        }
+
+        //Dive
+        if (SeedManager.combatRandom.Next(100) < 10 && npcBase.HasFlag(NPC_Flags.Aquatic) && Tile.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
+        {
+            if (entity.body.AllGripsAgainst().Count <= 0 && !entity.stats.HasEffect("Underwater"))
+            {
+                entity.stats.AddStatusEffect("Underwater", 10);
+                return true;
+            }
         }
 
         return false;

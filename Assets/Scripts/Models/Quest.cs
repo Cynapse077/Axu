@@ -268,6 +268,13 @@ public class Quest : EventContainer
 
                 return new ChoiceGoal(this, goals.ToArray());
 
+            case "Fetch Homonculus":
+                string propH = q["ItemProperty"][0].ToString();
+                string propGiveToH = q["Give To"].ToString();
+                int propAmtH = (q["ItemProperty"].Count > 1) ? (int)q["ItemProperty"][1] : 1;
+
+                return new Fetch_Homonculus(this, propGiveToH, propH, propAmtH);
+
             default:
                 UnityEngine.Debug.LogError("Quest::GetQuestGoalFromJson - No quest goal type " + goal + "!");
                 return null;

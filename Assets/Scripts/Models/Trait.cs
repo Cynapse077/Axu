@@ -161,7 +161,7 @@ public class Trait
             for (int i = 0; i < bps.Count; i++)
             {
                 //If it's not organic, skip it.
-                if (FlagsHelper.IsSet(bps[i].flags, BodyPart.BPTags.Synthetic) || FlagsHelper.IsSet(bps[i].flags, BodyPart.BPTags.External))
+                if (!bps[i].organic || bps[i].external)
                 {
                     continue;
                 }

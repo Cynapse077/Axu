@@ -898,7 +898,7 @@ public class PlayerInput : MonoBehaviour
                 }
                 
                 World.tileMap.HardRebuild();
-                World.objectManager.NoStickNPCs(entity.posX, entity.posY);
+                World.objectManager.NoStickNPCs();
             }
         }
     }
@@ -963,7 +963,7 @@ public class PlayerInput : MonoBehaviour
         ObjectManager.playerEntity.ForcePosition(new Coord(newPlayerPos.x, newPlayerPos.y));
 
         BringNPCs2();
-        World.objectManager.NoStickNPCs(entity.posX, entity.posY);
+        World.objectManager.NoStickNPCs();
         World.tileMap.HardRebuild();
         
         entity.EndTurn(0.1f, 10);

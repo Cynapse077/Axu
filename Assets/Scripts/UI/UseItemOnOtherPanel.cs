@@ -127,6 +127,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
                         gameObject.SetActive(false);
                         return;
                     }
+
                     break;
                 }
             }
@@ -137,9 +138,28 @@ public class UseItemOnOtherPanel : MonoBehaviour
                 if (item.ID == fg.itemID)
                 {
                     inventory.RemoveInstance(relevantItems[index]);
-
                     UpdateInventory(null);
                     fg.AddAmount(1);
+
+                    if (fg.isComplete)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+
+                    break;
+                }
+            }
+            else if (quests[i].ActiveGoal.goalType == "Fetch_Homonculus")
+            {
+                Fetch_Homonculus fg = (Fetch_Homonculus)quests[i].ActiveGoal;
+
+                if (item.HasProp(fg.itemProperty))
+                {
+                    inventory.RemoveInstance(item);
+                    relevantItems.Remove(item);
+                    fg.AddItem(item);
+                    UpdateInventory(null);
 
                     if (fg.isComplete)
                     {

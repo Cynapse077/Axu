@@ -242,19 +242,6 @@
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
-        {
-            "ID" : "tome_butchery",
-            "Name" : "Butcher's Guide",
-            "Type" : "Misc_Object",
-            "Material" : "Paper",
-            "FlavorText" : "A guide on how to properly prepare meat.",
-            "Cost" : 100,
-            "Properties" : [ "Artifact" ],
-            "Components" : [
-                { "ID" : "Console", "Action" : "Read", "Command" : "questflag Learned_Butcher" },
-                { "ID" : "Console", "Action" : "Read", "Command" : "log You pore over the pages, and learn how to butcher corpses!" }
-            ]
-        },
 
         {
             "ID" : "blackfang",

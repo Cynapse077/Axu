@@ -16,6 +16,11 @@ public class Vault
 
     public TileMap_Data GetLevel(int level, bool visited)
     {
+        if (screens.Length <= level)
+        {
+            return new TileMap_Data(position.x, position.y, level, this, visited);
+        }
+
         if (screens[level] == null)
         {
             screens[level] = CreateLevel(level, visited);
@@ -27,7 +32,9 @@ public class Vault
     TileMap_Data CreateLevel(int level, bool visited)
     {
         if (!ContainsDepth(level))
+        {
             return new TileMap_Data(position.x, position.y, level, this, visited);
+        }
 
         return screens[level];
     }

@@ -214,9 +214,9 @@
         "Biome" : "Swamp"
     },
     {
-        "ID" : "Swamp_Wall",
+        "ID" : "Wall_Prison",
         "TileIndex" : 94,
-        "Tags" : [ "Swamp", "Wall", "Breakable" ],
+        "Tags" : [ "Construct_Steel", "Wall" ],
         "Biome" : "None"
     },
     {

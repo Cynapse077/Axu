@@ -811,6 +811,21 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public bool HasSpearEquipped()
+    {
+        List<BodyPart.Hand> hands = body.Hands;
+
+        for (int i = 0; i < hands.Count; i++)
+        {
+            if (hands[i].EquippedItem != null && hands[i].EquippedItem.attackType == Item.AttackType.Spear)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     Inventory CheckForInventories(Coord pos)
     {
         Cell c = World.tileMap.GetCellAt(pos);

@@ -33,7 +33,7 @@ function ShockAdjacent(defender, attacker)
 			if (Random(0, 100) < 50 and TileMap.WalkableTile(x, y)) then
 				local c = TileMap.GetCellAt(x, y)
 
-				if (c ~= null and c.entity ~= null and c.entity ~= attacker and c.entity ~= defender) then
+				if (c ~= nil and c.entity ~= nil and c.entity ~= attacker and c.entity ~= defender) then
 					local diffX = x - defender.posX
 					local diffY = y - defender.posY
 					local rot = 0

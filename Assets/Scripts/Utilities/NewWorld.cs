@@ -131,14 +131,48 @@ public class OldWorld
     {
         loadJson = File.ReadAllText(Manager.SaveDirectory + "/" + Manager.playerName + ".axu");
         wData = JsonMapper.ToObject(loadJson)["World"];
-        ObjectManager objM = World.objectManager;
-        objM.GetComponent<TurnManager>().turn = (int)wData["Turn_Num"];
+        World.objectManager.GetComponent<TurnManager>().turn = (int)wData["Turn_Num"];
 
         World.BaseDangerLevel = (int)wData["Danger_Level"];
         World.difficulty = new Difficulty((Difficulty.DiffLevel)(int)wData["Diff"]["Level"], wData["Diff"]["descTag"].ToString());
         ObjectManager.SpawnedNPCs = (int)wData["Spawned_NPCs"];
 
         //Load NPCs
+        LoadNPCs();
+
+        //Get map objects
+        for (int i = 0; i < wData["Objects"].Count; i++)
+        {
+            JsonData obj = wData["Objects"][i];
+            Coord lp = new Coord((int)obj["LP"][0], (int)wData["Objects"][i]["LP"][1]);
+            Coord wp = new Coord((int)obj["WP"][0], (int)wData["Objects"][i]["WP"][1]);
+            int elevation = (int)obj["WP"][2];
+            string type = obj["Type"].ToString();
+
+            MapObject m = new MapObject(type, lp, wp, elevation);
+
+            //Inventory
+            if (obj["Items"] != null)
+            {
+                m.inv = new List<Item>();
+
+                for (int j = 0; j < obj["Items"].Count; j++)
+                {
+                    m.inv.Add(SaveData.GetItemFromJsonData(obj["Items"][j]));
+
+                    if (j > 50)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            World.objectManager.AddMapObject(m);
+        }
+    }
+
+    void LoadNPCs()
+    {
         for (int i = 0; i < wData["NPCs"].Count; i++)
         {
             JsonData npcData = wData["NPCs"][i];
@@ -163,6 +197,16 @@ public class OldWorld
             for (int j = 0; j < npcData["HIt"].Count; j++)
             {
                 n.handItems.Add(SaveData.GetItemFromJsonData(npcData["HIt"][j]));
+            }
+
+            if (npcData.ContainsKey("Atr"))
+            {
+                for (int j = 0; j < npcData["Atr"].Count; j++)
+                {
+                    string key = npcData["Atr"][j][0].ToString();
+                    int val = (int)npcData["Atr"][j][1];
+                    n.Attributes[key] = val;
+                }
             }
 
             if (npcData.ContainsKey("BPs"))
@@ -192,37 +236,8 @@ public class OldWorld
                 }
             }
 
-            objM.CreateNPC(n);
-        }
-
-        //Get map objects
-        for (int i = 0; i < wData["Objects"].Count; i++)
-        {
-            JsonData obj = wData["Objects"][i];
-            Coord lp = new Coord((int)obj["LP"][0], (int)wData["Objects"][i]["LP"][1]);
-            Coord wp = new Coord((int)obj["WP"][0], (int)wData["Objects"][i]["WP"][1]);
-            int elevation = (int)obj["WP"][2];
-            string type = obj["Type"].ToString();
-
-            MapObject m = new MapObject(type, lp, wp, elevation);
-
-            //Inventory
-            if (obj["Items"] != null)
-            {
-                m.inv = new List<Item>();
-
-                for (int j = 0; j < obj["Items"].Count; j++)
-                {
-                    m.inv.Add(SaveData.GetItemFromJsonData(obj["Items"][j]));
-
-                    if (j > 50)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            objM.AddMapObject(m);
+            
+            World.objectManager.CreateNPC(n);
         }
     }
 

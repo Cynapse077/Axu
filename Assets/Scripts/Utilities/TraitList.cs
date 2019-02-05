@@ -180,10 +180,11 @@ public static class TraitList
         for (int i = 0; i < traits.Count; i++)
         {
             if (traits[i].ID == id)
+            {
                 return traits[i];
+            }
         }
 
-        Debug.Log("No trait with the ID \"" + id + "\"");
         return null;
     }
 

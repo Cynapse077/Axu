@@ -51,8 +51,14 @@ public class SaveData : MonoBehaviour
                 n.firearm = ItemList.GetNone();
             }
 
+            List<object[]> atr = new List<object[]>();
+            foreach (KeyValuePair<string, int> s in n.Attributes)
+            {
+                atr.Add(new object[2] { s.Key, s.Value });
+            }
+
             NPCCharacter character = new NPCCharacter(n.name, n.ID, n.UID, n.worldPosition, n.localPosition, n.elevation, items, handItems, n.firearm.ToSerializedItem(),
-                n.isHostile, n.spriteID, n.faction.ID, n.flags, n.questID, n.dialogueID, bodyParts, n.traits);
+                n.isHostile, n.spriteID, n.faction.ID, n.flags, n.questID, n.dialogueID, bodyParts, n.traits, atr);
 
             chars.Add(character);
         }

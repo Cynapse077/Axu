@@ -864,7 +864,21 @@
             "Steps" : [
 				{ "Goal" : "Fetch Property", "ItemProperty" : [ "Replacement_Limb", 4 ], "Give To" : "faust" }
             ],
-            "End Dialogue" : "All done? Splendid! I shall get to work right away. Take these for your troubles. I may have a need for your services again soon. I wish to experiment on these creatures' combat abilities. Maybe you'll be able to take one with you next time. If I'm feeling generous, that is."
+            "End Dialogue" : "All done? Splendid! I shall get to work right away. Take these for your troubles. \nI may have a need for your services again. Get me five more parts, and I'll create a creature for your own personal use! Homonculi can be very useful in combat. Just make sure you bring me parts that would benefit what you're looking for.",
+
+			"Chained Quest" : "homonculus2"
+        },
+		{
+            "Name" : "Your Own Homonculus",
+            "ID" : "homonculus2",
+            "Description" : "Faust needs 5 body parts to create your own homonculus.",
+			"Rewards" : {
+				"XP" : 100
+			},
+            "Steps" : [
+				{ "Goal" : "Fetch Homonculus", "ItemProperty" : [ "Replacement_Limb", 5 ], "Give To" : "faust" }
+            ],
+            "End Dialogue" : "All done? Splendid! I'll put these pieces together and create something amazing!"
         },
 		{
         	"Name" : "Creepy Crawlies",

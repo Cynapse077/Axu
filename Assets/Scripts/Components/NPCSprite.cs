@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-public class NPCSprite : MonoBehaviour
+public class NPCSprite : MonoBehaviour, EntitySprite
 {
+    public GameObject questIcon;
+    public Sprite swimmingSprite;
+
     SpriteRenderer spriteRenderer;
     Transform spriteObject;
-    public GameObject questIcon;
+    string spriteID;
 
     void OnEnable()
     {
@@ -14,18 +17,40 @@ public class NPCSprite : MonoBehaviour
 
     public void SetSprite(string spriteKey)
     {
-        spriteRenderer.sprite = SpriteManager.GetNPCSprite(spriteKey);
+        spriteID = spriteKey;
+        spriteRenderer.sprite = SpriteManager.GetNPCSprite(spriteID);
         int lx = (Random.value < 0.5f) ? 1 : -1;
         SetXScale(lx);
     }
 
     public void SetXScale(int x)
     {
-        spriteObject.GetComponent<SpriteRenderer>().flipX = (x > 0);
+        if (x != 0)
+        {
+            spriteObject.GetComponent<SpriteRenderer>().flipX = (x > 0);
+        }
     }
 
     public void SetEnabled(bool enabled)
     {
         spriteRenderer.enabled = enabled;
     }
+
+    public void SetSwimming(bool swim)
+    {
+        if (swim)
+        {
+            spriteRenderer.sprite = swimmingSprite;
+        }
+        else if (!string.IsNullOrEmpty(spriteID))
+        {
+            spriteRenderer.sprite = SpriteManager.GetNPCSprite(spriteID);
+        }
+        
+    }
+}
+
+public interface EntitySprite
+{
+    void SetSwimming(bool swim);
 }

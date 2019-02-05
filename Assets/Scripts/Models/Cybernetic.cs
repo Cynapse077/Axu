@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Augments
 {
@@ -9,6 +10,28 @@ namespace Augments
         public string Desc;
         protected BodyPart bodyPart;
 
+        readonly static Cybernetic[] cyberArray = new Cybernetic[]
+        {
+            new SyntheticMuscle(), new DermalPlating(), new RadiationScrubber(), 
+            new FoldingBlade(), new ImpactSole(), new NanoRegen(), new NanoAdrenal(),
+            new TargetSensor()
+        };
+
+        public static List<Cybernetic> GetCyberneticsForLimb(BodyPart bp)
+        {
+            List<Cybernetic> cs = new List<Cybernetic>();
+
+            for (int i = 0; i < cyberArray.Length; i++)
+            {
+                if (cyberArray[i].CanAttach(bp))
+                {
+                    cs.Add(cyberArray[i].Clone());
+                }
+            }
+
+            return cs;
+        }
+
         public abstract bool CanAttach(BodyPart bp);
 
         public Cybernetic()
@@ -18,7 +41,7 @@ namespace Augments
             Desc = "[N/A]";
         }
 
-        public Cybernetic Clone(Cybernetic other)
+        public Cybernetic Clone()
         {
             return (Cybernetic)MemberwiseClone();
         }
@@ -32,7 +55,7 @@ namespace Augments
         public virtual void Remove()
         {
             bodyPart = null;
-            bodyPart.cybernetic = null;
+            bodyPart.cybernetic = null;            
         }
 
         public static Type GetCyberneticType(Cybernetic c)

@@ -126,7 +126,16 @@ public class DialogueController : MonoBehaviour
                     {
                         dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => World.userInterface.GiveItem(fg.itemID)));
                     }
-                }                
+                }
+                else if (quests[i].ActiveGoal.goalType == "Fetch_Homonculus")
+                {
+                    Fetch_Homonculus fh = (Fetch_Homonculus)quests[i].ActiveGoal;
+
+                    if (fh.npcTarget == myNPC.ID)
+                    {
+                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => World.userInterface.GiveItem(fh.itemProperty)));
+                    }
+                }
             }
         }
     }

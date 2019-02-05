@@ -9,6 +9,20 @@
             "Properties" : [ "Armor", "Slot_Misc", "Cannot_Remove" ],
             "Lootable" : false
         },
+		{
+            "ID" : "chasis",
+            "Name" : "Chasis",
+            "Type" : "Armor",
+            "Armor" : 2,
+            "FlavorText" : "Thick metal plates.",
+            "Properties" : [ "Armor", "Cannot_Remove", "Slot_Chest" ],
+            "Lootable" : false,
+			"Display" : {
+                "On Ground" : "item-chest.png",
+                "On Player" : "/Data/Art/Player/Torsos/char-chasis.png",
+                "Layer" : "Torso"
+            }
+        },
         {
             "ID" : "scrap",
             "Name" : "Scrap Metal",

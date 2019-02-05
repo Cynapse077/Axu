@@ -165,7 +165,8 @@
                 { "Weight" : 10, "Amount" : "1d2", "Blueprint" : "bird" },
                 { "Weight" : 10, "Amount" : "2d2", "Blueprint" : "scrag2" },
                 { "Weight" : 20, "Amount" : "2d2", "Blueprint" : "scrag1" },
-                { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "boyak" }
+                { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "boyak" },
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "bat2" }
             ]
         },
         {
@@ -231,7 +232,8 @@
                 { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "bird" },
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "subject" },
                 { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" },
-				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "snake2" }
+				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "snake2" },
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "bat2" }
             ]
         },
         {
@@ -289,7 +291,8 @@
                 { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" },
                 { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "insect" },
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "insect2" },
-				{ "Weight" : 1, "Amount" : "1d1", "Blueprint" : "snake2" }
+				{ "Weight" : 1, "Amount" : "1d1", "Blueprint" : "snake2" },
+				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "bat2" }
             ]
         },
         {
@@ -444,7 +447,9 @@
                 { "Weight" : 1, "Amount" : "1d2", "Blueprint" : "infected" },
                 { "Weight" : 6, "Amount" : "1d2", "Blueprint" : "neant0" },
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "wastewalker"},
-				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "snake2" }
+				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "snake2" },
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "bat2" },
+				{ "Weight" : 4, "Amount" : "1d1", "Blueprint" : "bat" }
             ]
         },
 
@@ -534,7 +539,7 @@
         },
         {
             "Name" : "Minibosses 1",
-            "Level" : 5,
+            "Level" : 4,
             "Possibilities" : [
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "deephunter" },
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "saint" },
@@ -545,7 +550,7 @@
         },
         {
             "Name" : "Minibosses 2",
-            "Level" : 10,
+            "Level" : 8,
             "Possibilities" : [
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "deephunter" },
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "saint" },
@@ -558,7 +563,7 @@
         },
         {
             "Name" : "Minibosses 3",
-            "Level" : 15,
+            "Level" : 13,
             "Possibilities" : [
                 { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "deephunter" },
                 { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "saint" },

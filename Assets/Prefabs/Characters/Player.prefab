@@ -639,6 +639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyParts: []
   entity: {fileID: 11417096}
+  currentStance: 0
 --- !u!114 &11449158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -734,6 +735,7 @@ MonoBehaviour:
     origin: 0
   cursorMode: 0
   restingIcon: {fileID: 105312}
+  showMinimap: 1
 --- !u!114 &114000013717847370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -747,6 +749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 21235060}
+  swimmingSprite: {fileID: 21300000, guid: 8b7f56fd68ef35946b7c15bd034b5050, type: 3}
 --- !u!114 &11441988
 MonoBehaviour:
   m_ObjectHideFlags: 0

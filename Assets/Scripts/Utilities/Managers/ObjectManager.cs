@@ -308,15 +308,16 @@ public class ObjectManager : MonoBehaviour
     }
 
     //Call this to check NPCs positions upon entering a screen, to make sure they don't overlap the player.
-    public void NoStickNPCs(int posX, int posY)
+    public void NoStickNPCs()
     {
         for (int i = 0; i < onScreenNPCObjects.Count; i++)
         {
             Entity entity = onScreenNPCObjects[i];
 
-            if (entity.posX == posX && entity.posY == posY)
+            if (entity.posX == playerEntity.posX && entity.posY == playerEntity.posY)
             {
-                Coord c = World.tileMap.GetRandomPosition();
+                List<Coord> adjacent = playerEntity.GetEmptyCoords();
+                Coord c = (adjacent.Count == 0) ? World.tileMap.GetRandomPosition() : adjacent.GetRandom();
                 entity.posX = c.x;
                 entity.posY = c.y;
             }

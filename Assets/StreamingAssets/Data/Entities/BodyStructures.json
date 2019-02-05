@@ -88,6 +88,10 @@
 		{
 			"Name" : "Hauler",
 			"Parts" : [ "head_robot", "back_robot", "chest_robot", "arm_robot", "arm_robot", "leg_robot", "leg_robot" ]
+		},
+		{
+			"Name" : "Homonculus",
+			"Parts" : [ "head", "chest", "back" ]
 		}
     ],
 
@@ -299,7 +303,7 @@
             "Slot" : "Slot_Chest",
             "Size" : 25,
             "Tags" : [ "Synthetic", "NonSeverable" ],
-            "Default Equipped" : "plating"
+            "Default Equipped" : "chasis"
         },
         {
             "Name" : "Back",

@@ -140,7 +140,7 @@ public class NPC
         {
             name = NameGenerator.CharacterName(SeedManager.textRandom);
         }
-        else if (!HasFlag(NPC_Flags.Static) && SeedManager.combatRandom.Next(500) < World.DangerLevel())
+        else if (!HasFlag(NPC_Flags.Static) && SeedManager.combatRandom.Next(500) < World.DangerLevel() + 1)
         {
             List<Trait> muts = TraitList.traits.FindAll(x => x.effects.Contains(TraitEffects.Mutation));
 
@@ -148,7 +148,8 @@ public class NPC
             {
                 if (muts.Count > 0)
                 {
-                    traits.Add(muts.GetRandom().ID);
+                    Trait t = muts.GetRandom();
+                    traits.Add(t.ID);
                 }
             }
         }

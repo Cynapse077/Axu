@@ -1483,14 +1483,14 @@
         },
         {
         	"ID" : "softshoe",
-            "Name" : "Soft Shoe",
+            "Name" : "Durafoam Shoe",
             "Type" : "Armor",
             "Armor" : 0,
             "Rarity" : 2,
             "FlavorText" : "A shoe with a special sole that inhibits sounds made by the wearer.",
             "Cost" : 44,
             "Stat Mods" : [
-                { "Stat" : "Stealth", "Amount" : 3 }
+                { "Stat" : "Stealth", "Amount" : 2 }
             ],
             "Properties" : [ "Armor", "Slot_Leg" ],
             "Display" : {
@@ -1556,7 +1556,7 @@
             "Type" : "Armor",
             "Armor" : 3,
             "Rarity" : 3,
-            "FlavorText" : "An armored shoe worn by knights of the 14th and 15th centuries. Very encumbering and inflexible.",
+            "FlavorText" : "An armored shoe. Very encumbering and inflexible.",
             "Cost" : 68,
             "Stat Mods" : [
                 { "Stat" : "Speed", "Amount" : -1 }

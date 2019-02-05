@@ -33,6 +33,14 @@ public class Entity : MonoBehaviour
         }
     }
 
+    bool underwater
+    {
+        get
+        {
+            return stats != null && stats.HasEffect("Underwater");
+        }
+    }
+
     public string Name
     {
         get { return gameObject.name; }
@@ -429,7 +437,7 @@ public class Entity : MonoBehaviour
                     return false;
                 }
 
-                if (body.MainHand.EquippedItem.attackType == Item.AttackType.Spear)
+                if (inventory.HasSpearEquipped())
                 {
                     if (!World.tileMap.WalkableTile(posX + (x * 2), posY + (y * 2)))
                     {
@@ -475,7 +483,7 @@ public class Entity : MonoBehaviour
 
         if (isPlayer)
         {
-            BaseAI bai = otherEntity.GetComponent<BaseAI>();
+            BaseAI bai = otherEntity.AI;
 
             if (bai != null && bai.isHostile)
             {
@@ -487,6 +495,13 @@ public class Entity : MonoBehaviour
                 SwapPosition(new Coord(x, y), otherEntity);
                 return true;
             }
+            else if (Mathf.Abs(x) == 2 || Mathf.Abs(y) == 2)
+            {
+                Move(x / 2, y / 2);
+                return true;
+            }
+
+            return false;
         }
         else
         {
@@ -502,7 +517,7 @@ public class Entity : MonoBehaviour
             }
         }
 
-        if (body.MainHand.EquippedItem.attackType == Item.AttackType.Spear && (Mathf.Abs(x) == 2 || Mathf.Abs(y) == 2))
+        if (inventory.HasSpearEquipped() && (Mathf.Abs(x) == 2 || Mathf.Abs(y) == 2))
         {
             if (isPlayer)
             {
@@ -594,12 +609,13 @@ public class Entity : MonoBehaviour
         int wepNum = fighter.CheckWepType();
 
         if (wepNum == 3)
+        {
             SweepAttack(x, y);
+        }
         else
         {
-            int offsetX = x, offsetY = y;
-            offsetX = Mathf.Clamp(offsetX, -1, 1);
-            offsetY = Mathf.Clamp(offsetY, -1, 1);
+            int offsetX = Mathf.Clamp(x, -1, 1);
+            int offsetY = Mathf.Clamp(y, -1, 1);
 
             if (World.tileMap.GetCellAt(posX + x, posY + y).InSight)
             {
@@ -610,7 +626,7 @@ public class Entity : MonoBehaviour
 
             if (!AttackTile(posX + x, posY + y))
             {
-                if (body.MainHand.EquippedItem.attackType == Item.AttackType.Spear)
+                if (inventory.HasSpearEquipped())
                 {
                     x += x;
                     y += y;
@@ -1368,7 +1384,7 @@ public class Entity : MonoBehaviour
         List<SSkill> sskills = new List<SSkill>();
         for (int s = 0; s < skills.abilities.Count; s++)
         {
-            sskills.Add(skills.abilities[s].ToSimpleSkill());
+            sskills.Add(skills.abilities[s].ToSerializedSkill());
         }
 
         Journal journal = GetComponent<Journal>();

@@ -91,19 +91,6 @@ public class JournalPanel : UIPanel
         UpdateTooltip();
     }
 
-    public override void Update()
-    {
-        base.Update();
-
-        if (SelectedMax > 0 && GameSettings.Keybindings.GetKey("Interact"))
-        {
-            if (journal.quests[SelectedNum].ActiveGoal.Destination() != null && PlayerInput.fullMap)
-            {
-                Camera.main.GetComponent<MouseController>().MoveWorld(journal.quests[SelectedNum].ActiveGoal.Destination());
-            }
-        }
-    }
-
     protected override void OnSelect(int index)
     {
         journal.trackedQuest = journal.quests[SelectedNum];

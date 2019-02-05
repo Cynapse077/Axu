@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class Goal : EventContainer
@@ -173,6 +174,11 @@ public class ChoiceGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         string s = goals[0].ToString();
 
         for (int i = 1; i < goals.Length; i++)
@@ -262,6 +268,11 @@ public class SpecificKillGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         string s = "Kill targets: \n";
 
         for (int i = 0; i < myQuest.spawnedNPCs.Count; i++)
@@ -303,6 +314,11 @@ public class NPCKillGoal : Goal
     {
         EventHandler.instance.NPCDied += NPCKilled;
         base.Init(skipEvent);
+
+        if (ObjectManager.playerJournal.staticNPCKills.Contains(npcID))
+        {
+            Complete();
+        }
     }
 
     void NPCKilled(NPC n)
@@ -337,6 +353,11 @@ public class NPCKillGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         string npcName = EntityList.GetBlueprintByID(npcID).name;
         return string.Format("Kill {0}. ({1} / {2})", npcName, amount.ToString(), max.ToString());
     }
@@ -395,6 +416,11 @@ public class FactionKillGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         return string.Format("Kill {0}x members of the {1} faction. ({2}/{1})", max.ToString(), FactionList.GetFactionByID(faction).Name, amount.ToString());
     }
 }
@@ -457,6 +483,11 @@ public class GoToGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         string s = string.Format("Travel to the {0}", World.tileMap.worldMap.GetZoneNameAt(coordDest.x, coordDest.y, 0));
 
         if (elevation != 0)
@@ -532,6 +563,11 @@ public class InteractGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         string objName = ItemList.GetMOB(objectType).Name;
         string amt = (max > 1) ? (max + "x" + objName) : "the " + objName;
         string ele = elevation == 0 ? "." : " on floor " + elevation + ".";
@@ -606,6 +642,11 @@ public class TalkToGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         return string.Format("Talk to {0}.", EntityList.GetBlueprintByID(npcTarget).name);
     }
 }
@@ -691,6 +732,170 @@ public class FetchPropertyGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
+        string npcName = EntityList.GetBlueprintByID(npcTarget).name;
+
+        return string.Format("Give {0} items of type \"{1}\" x{2}.", npcName, itemProperty.ToString(), (max - amount).ToString());
+    }
+}
+
+public class Fetch_Homonculus : Goal
+{
+    public readonly ItemProperty itemProperty;
+    public readonly string npcTarget;
+    public List<Item> items;
+    readonly int max;
+
+    public Fetch_Homonculus(Quest q, string nid, string prop, int amt)
+    {
+        goalType = "Fetch_Homonculus";
+        myQuest = q;
+        npcTarget = nid;
+        itemProperty = prop.ToEnum<ItemProperty>();
+        items = new List<Item>();
+        max = amt;
+        amount = 0;
+        isComplete = false;
+    }
+
+    public override void Init(bool skipEvent)
+    {
+        base.Init(skipEvent);
+        EventHandler.instance.NPCDied += NPCDied;
+        CheckNPCValidity(npcTarget);
+        World.objectManager.NewMapIcon(0, Destination());
+    }
+
+    void NPCDied(NPC n)
+    {
+        if (n.ID == npcTarget)
+        {
+            Fail();
+        }
+    }
+
+    void TalkToNPC(NPC n)
+    {
+        if (npcTarget == n.ID && CanComplete())
+        {
+            Complete();
+        }
+    }
+
+    public void AddItem(Item i)
+    {
+        items.Add(i);
+
+        if (items.Count >= max)
+        {
+            World.userInterface.CloseWindows();
+            Complete();
+        }
+    }
+
+    public override void Complete()
+    {
+        EventHandler.instance.NPCDied -= NPCDied;
+        World.objectManager.RemoveMapIconAt(Destination());
+        List<Coord> possibleCoords = ObjectManager.playerEntity.GetEmptyCoords();
+        Coord lp = (possibleCoords.Count > 0) ? possibleCoords.GetRandom() : World.tileMap.CurrentMap.GetRandomFloorTile();
+
+        NPC n = new NPC("homonculus", World.tileMap.WorldPosition, lp, World.tileMap.currentElevation);
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            bool canAdd = true;
+            BodyPart b = new BodyPart("", true);
+            CEquipped ce = items[i].GetCComponent<CEquipped>();
+            b.equippedItem = (ce == null) ? ItemList.GetNone() : ItemList.GetItemByID(ce.itemID);
+
+            //Add body parts from items here.
+            switch (items[i].GetSlot())
+            {
+                case ItemProperty.Slot_Arm:
+                    b.slot = ItemProperty.Slot_Arm;
+                    string baseItem = (ce == null) ? "fists" : ce.baseItemID;
+                    b.hand = new BodyPart.Hand(b, ItemList.GetItemByID(baseItem), baseItem);
+                    break;
+
+                case ItemProperty.Slot_Head:
+                    b.slot = ItemProperty.Slot_Head;
+                    break;
+
+                case ItemProperty.Slot_Leg:
+                    b.slot = ItemProperty.Slot_Leg;
+                    break;
+
+                case ItemProperty.Slot_Tail:
+                    b.slot = ItemProperty.Slot_Tail;
+                    break;
+
+                case ItemProperty.Slot_Wing:
+                    b.slot = ItemProperty.Slot_Wing;
+                    break;
+
+                default:
+                    canAdd = false;
+                    break;
+            }
+
+            if (canAdd)
+            {   
+                if (!items[i].HasCComponent<CRot>())
+                {
+                    FlagsHelper.Set(ref b.flags, BodyPart.BPTags.Synthetic);
+                }
+
+                for (int j = 0; j < items[i].statMods.Count; j++)
+                {
+                    b.AddAttribute(items[i].statMods[j].Stat, items[i].statMods[j].Amount);
+
+                    if (n.Attributes.ContainsKey(items[i].statMods[j].Stat))
+                    {
+                        n.Attributes[items[i].statMods[j].Stat] += items[i].statMods[j].Amount;
+                    }
+                }
+
+                n.bodyParts.Add(b);
+            }
+        }
+
+        World.objectManager.SpawnNPC(n);
+
+        base.Complete();
+    }
+
+    public override void Fail()
+    {
+        EventHandler.instance.NPCDied -= NPCDied;
+        World.objectManager.RemoveMapIconAt(Destination());
+        base.Fail();
+    }
+
+    public override Coord Destination()
+    {
+        NPC n = CheckNPCValidity(npcTarget);
+
+        if (n == null)
+        {
+            Debug.LogError("Fetch_KeepInMemGoal: NPC Target is null. Cannot get destination position.");
+            return null;
+        }
+
+        return n.worldPosition;
+    }
+
+    public override string ToString()
+    {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         string npcName = EntityList.GetBlueprintByID(npcTarget).name;
 
         return string.Format("Give {0} items of type \"{1}\" x{2}.", npcName, itemProperty.ToString(), (max - amount).ToString());
@@ -770,6 +975,11 @@ public class FetchGoal : Goal
 
     public override string ToString()
     {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
         string npcName = EntityList.GetBlueprintByID(npcTarget).name;
         string itemName = ItemList.GetItemByID(itemID).Name;
 

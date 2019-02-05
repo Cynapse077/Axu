@@ -180,7 +180,7 @@ public class TurnManager : MonoBehaviour
 
             if (mi.radiation > 0 && SeedManager.combatRandom.Next(100) < (mi.radiation / 2f))
             {
-                playerEntity.stats.Radiate(SeedManager.combatRandom.Next(mi.radiation));
+                playerEntity.stats.Radiate(SeedManager.combatRandom.Next((int)(mi.radiation / 2f)));
 
                 //TODO: NPCs radiate too.
             }

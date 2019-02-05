@@ -104,7 +104,7 @@ public class TileMap : MonoBehaviour
 
     public void LoadMap(string mapName)
     {
-        screens[worldCoordX, worldCoordY] = CurrentMap = new TileMap_Data(mapName);
+        screens[worldCoordX, worldCoordY] = CurrentMap = new TileMap_Data(mapName, true);
         HardRebuild();
     }
 

@@ -4,12 +4,14 @@ using Pathfinding;
 public class MouseController : MonoBehaviour
 {
     public Transform cursorObject;
+    public Transform worldCursorObject;
     public Vector3 cursorPosition;
     public Sprite[] sprites;
 
     GameObject arrow;
     UserInterface userInterface;
     Transform cursor;
+    Transform worldCursor;
     SpriteRenderer sRenderer;
     Entity playerEntity;
     PlayerInput playerInput;
@@ -20,14 +22,15 @@ public class MouseController : MonoBehaviour
         cursor = Instantiate(cursorObject).transform;
         arrow = cursor.GetChild(0).GetChild(0).gameObject;
         sRenderer = cursor.GetComponentInChildren<SpriteRenderer>();
+
+        worldCursor = Instantiate(worldCursorObject).transform;
+
         userInterface = GameObject.FindObjectOfType<UserInterface>();
     }
 
     void Update()
     {
-        if (ObjectManager.playerEntity == null)
-            return;
-        else
+        if (ObjectManager.playerEntity != null)
         {
             playerEntity = ObjectManager.playerEntity;
 
@@ -35,12 +38,12 @@ public class MouseController : MonoBehaviour
             {
                 playerInput = playerEntity.GetComponent<PlayerInput>();
             }
-        }
 
-        if (GameSettings.UseMouse)
-        {
-            HandleMouseInput();
-        }
+            if (GameSettings.UseMouse)
+            {
+                HandleMouseInput();
+            }
+        }       
     }
 
     void HandleMouseInput()
@@ -63,7 +66,7 @@ public class MouseController : MonoBehaviour
 
         if (PlayerInput.fullMap)
         {
-            //WorldMapHandling();
+            WorldMapHandling();
         }
         else if (CursorIsActive)
         {
@@ -179,9 +182,10 @@ public class MouseController : MonoBehaviour
 
             pos.x = Mathf.FloorToInt(pos.x);
             pos.y = Mathf.FloorToInt(pos.y);
+            pos.z = -1;
 
             Coord targetPos = new Coord(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
-            cursor.position = pos;
+            worldCursor.position = pos;
 
             if (Input.GetMouseButtonUp(0))
             {
@@ -192,7 +196,7 @@ public class MouseController : MonoBehaviour
 
     public void MoveWorld(Coord targetPos)
     {
-        World.userInterface.CloseWindows();
+        targetPos += new Coord(-50, 200);
         playerInput.CancelWorldPath();
         playerInput.SetWorldPath(targetPos);
     }

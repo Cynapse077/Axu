@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public static class TileMap_Generator
 {
-
     public static Tile_Data[,] Generate(WorldMap.Biome biome, bool hasLandmark)
     {
         return CreateFromBiome(biome, hasLandmark);
@@ -33,7 +32,7 @@ public static class TileMap_Generator
         if (b == WorldMap.Biome.Forest && SeedManager.localRandom.Next(100) < 5)
             AdditionalLayer(ref td, b, Tile.tiles["Plains_Grass_2"], 25, 6);
 
-        if (b == WorldMap.Biome.Swamp || (b == WorldMap.Biome.Forest || b == WorldMap.Biome.Plains) && SeedManager.localRandom.Next(100) < 5)
+        if (b == WorldMap.Biome.Swamp || (b == WorldMap.Biome.Forest || b == WorldMap.Biome.Plains) && SeedManager.localRandom.Next(100) < 4)
         {
             if (!hasLandmark)
             {
@@ -175,14 +174,15 @@ public static class TileMap_Generator
             case WorldMap.Biome.Shore:
                 if (RNG.Next(100) < 8)
                 {
-                    if (RNG.Next(1000) == 0)
+                    if (RNG.OneIn(1000))
                         return Tile.tiles["Shore_Star"];
                     else
-                        return (RNG.Next(100) < 50) ? Tile.tiles["Shore_Rock_2"] : Tile.tiles["Shore_Rock"];
-
+                        return (RNG.CoinFlip()) ? Tile.tiles["Shore_Rock_2"] : Tile.tiles["Shore_Rock"];
                 }
                 else
+                {
                     return Tile.tiles["Shore_Sand"];
+                }
 
             default:
                 return Tile.tiles["Plains_Grass_1"];

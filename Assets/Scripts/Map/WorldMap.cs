@@ -21,8 +21,10 @@ public class WorldMap : MonoBehaviour
     Dictionary<Coord, GameObject> landmarks;
     Color[][] lmTiles;
 
-    /*void Update() {
-        if (Input.GetKeyDown(KeyCode.F2)) {
+    /*void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
             string filePath = Application.persistentDataPath + "/Axu Overworld Map.png";
 
             SaveTextureToFile(texture, filePath);
@@ -30,7 +32,8 @@ public class WorldMap : MonoBehaviour
         }
     }
 
-    void SaveTextureToFile(Texture2D texture, string filename) {
+    void SaveTextureToFile(Texture2D texture, string filename)
+    {
         Texture2D tex = new Texture2D(texture.width, texture.height);
         tex.SetPixels(texture.GetPixels());
 
@@ -59,7 +62,7 @@ public class WorldMap : MonoBehaviour
         landmarks = new Dictionary<Coord, GameObject>();
         texture = new Texture2D(Manager.worldMapSize.x * tileResolution, Manager.worldMapSize.y * tileResolution);
 
-        worldMapData = new WorldMap_Data(Manager.newGame, () => {});
+        worldMapData = new WorldMap_Data(Manager.newGame, () => { });
     }
 
     void LoadImageFromStreamingAssets()
@@ -67,12 +70,13 @@ public class WorldMap : MonoBehaviour
         string path = Application.streamingAssetsPath + BiomePath;
         byte[] imageBytes = File.ReadAllBytes(path);
 
-        Texture2D tex = new Texture2D(0, 0, TextureFormat.ARGB32, false);
-        tex.LoadImage(imageBytes);
-        tex.filterMode = FilterMode.Point;
-        tex.wrapMode = TextureWrapMode.Clamp;
+        terrainTiles = new Texture2D(0, 0, TextureFormat.ARGB32, false)
+        {
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Clamp
+        };
 
-        terrainTiles = tex;
+        terrainTiles.LoadImage(imageBytes);
 
         path = Application.streamingAssetsPath + LandmarkPath;
         imageBytes = File.ReadAllBytes(path);
@@ -208,7 +212,6 @@ public class WorldMap : MonoBehaviour
 
         return sum;
     }
-
 
     int BitwiseRivers(int x, int y)
     {

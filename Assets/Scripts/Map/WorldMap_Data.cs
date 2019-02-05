@@ -114,7 +114,6 @@ public class WorldMap_Data
                     case 4:
                         height = 0.99f;
                         break;
-
                 }
 
                 SetBiome(height, x, y);
@@ -146,7 +145,6 @@ public class WorldMap_Data
         else if (biome <= 0.19f)
         { //Shore
             tiles[x, y] = new MapInfo(c, WorldMap.Biome.Shore);
-
         }
         else if (biome <= 0.42f)
         { //Plains
@@ -156,7 +154,6 @@ public class WorldMap_Data
         else if (biome <= 0.63f)
         { //Forest
             tiles[x, y] = new MapInfo(c, (rng.Next(0, 101) < 95) ? WorldMap.Biome.Forest : WorldMap.Biome.Plains);
-
         }
         else
         { //Mountains

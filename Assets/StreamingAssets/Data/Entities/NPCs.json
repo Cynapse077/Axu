@@ -972,7 +972,7 @@
             "ID" : "villager",
             "Faction" : "villagers",
             "Body Structure" : "Humanoid",
-            "Sprite" : "npc-villager_m0.png|npc-villager_m1.png|npc-villager_f0.png|npc-villager_f1.png",
+            "Sprite" : "npc-villager_m0.png|npc-villager_m1.png|npc-villager_f0.png|npc-villager_f1.png|npc-villager_m3.png|npc-villager_f2.png",
             "Flags" : [
                 "Named_NPC",
                 "Human",
@@ -1862,13 +1862,41 @@
                 "Intelligence" : 2,
                 "Endurance" : 2,
 
-                "Speed" : 28,
+                "Speed" : 22,
                 "Perception" : 7,
                 "Accuracy" : 1
             },
             "Weapon_Choices" : [ "fangs_quick" ],
             "MaxItems" : 0,
             "MaxItemRarity" : 1
+        },
+		{
+            "Name" : "Bloodsucker",
+            "ID" : "bat2",
+            "Faction" : "wildlife",
+            "Body Structure" : "Flying",
+            "Sprite" : "npc-bat.png",
+            "Flags" : [
+                "Flying",
+                "Hit_And_Run"
+            ],
+            "Stats" : {
+                "Health" : 35,
+                "Stamina" : 2,
+
+                "Defense" : 4,
+                "Strength" : 3,
+                "Dexterity" : 5,
+                "Intelligence" : 2,
+                "Endurance" : 6,
+
+                "Speed" : 28,
+                "Perception" : 9,
+                "Accuracy" : 1
+            },
+            "Weapon_Choices" : [ "fangs_quick" ],
+            "MaxItems" : 0,
+            "MaxItemRarity" : 3
         },
         {
             "Name" : "Carrion Eater",
@@ -2622,6 +2650,34 @@
             "MaxItems" : 1,
             "MaxItemRarity" : 3,
             "Corpse_Item" : "corpse_rad"
+        },
+		{
+            "Name" : "Homonculus",
+            "ID" : "homonculus",
+            "Faction" : "followers",
+            "Body Structure" : "Homonculus",
+            "Sprite" : "npc-testsubject.png",
+            "Flags" : [
+                "Can_Open_Doors",
+				"Can_Speak"
+            ],
+            "Stats" : {
+                "Health" : 40,
+                "Stamina" : 30,
+
+                "Defense" : 1,
+                "Strength" : 2,
+                "Dexterity" : 3,
+                "Intelligence" : 2,
+                "Endurance" : 2,
+
+                "Speed" : 2,
+                "Perception" : 10,
+                "Accuracy" : 1
+            },
+            "Weapon_Choices" : [
+                "fists"
+            ]
         },
         {
             "Name" : "Infected",

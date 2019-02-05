@@ -58,14 +58,9 @@ public class EntitySkills : MonoBehaviour
             return;
         }
 
-        if (!FlagsHelper.IsSet(s.origin, origin))
-        {
-            s.SetFlag(origin);
-        }
-
-
         if (abilities.Find(x => x.ID == s.ID) == null)
         {
+            s.SetFlag(origin);
             abilities.Add(s);
             s.Init();
         }

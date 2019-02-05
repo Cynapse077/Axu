@@ -748,6 +748,7 @@ public class UserInterface : MonoBehaviour
                 CloseWindows();
                 return;
             }
+
             playerStats.InitializeNewTrait(levelUpTraits[selectedItemNum]);
             pickedTrait = true;
             CloseWindows();
@@ -853,7 +854,7 @@ public class UserInterface : MonoBehaviour
             if (selectedItemNum >= playerInventory.items.Count || playerInventory.items[selectedItemNum] == null)
                 return;
 
-            bool friendly = shopInv.entity.AI.isFollower();
+            bool isFollower = shopInv.entity.AI.isFollower();
             int cost = playerInventory.items[selectedItemNum].sellCost(charisma);
             Item newItem = new Item(playerInventory.items[selectedItemNum]);
 
@@ -863,9 +864,11 @@ public class UserInterface : MonoBehaviour
                 newItem.amount = 1;
 
             if (World.soundManager != null)
+            {
                 World.soundManager.UseItem();
+            }
 
-            if (friendly && !shopInv.CanPickupItem(newItem))
+            if (isFollower && !shopInv.CanPickupItem(newItem))
             {
                 Alert.NewAlert("Inv_Full_Follower");
                 return;
@@ -878,8 +881,10 @@ public class UserInterface : MonoBehaviour
             else
                 playerInventory.RemoveInstance(playerInventory.items[selectedItemNum]);
 
-            if (!friendly)
+            if (!isFollower)
+            {
                 playerInventory.gold += cost;
+            }
         }
 
         ShopPanel.Init(shopInv);

@@ -413,6 +413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questIcon: {fileID: 1000010389483174}
+  swimmingSprite: {fileID: 21300000, guid: 8b7f56fd68ef35946b7c15bd034b5050, type: 3}
 --- !u!114 &11415160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,7 +552,6 @@ GameObject:
   m_Component:
   - component: {fileID: 492750}
   - component: {fileID: 21254362}
-  - component: {fileID: 114144988057982308}
   m_Layer: 0
   m_Name: SpriteBase
   m_TagString: Untagged
@@ -627,21 +627,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &114144988057982308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 195162}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 1
 --- !u!1 &1000010389483174
 GameObject:
   m_ObjectHideFlags: 0

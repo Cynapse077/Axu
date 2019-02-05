@@ -291,12 +291,12 @@ public class Item : ComponentHolder
                 if (components[i].ID == "Console")
                 {
                     CConsole cc = (CConsole)components[i];
-                    cc.RunCommand("OnBlock");
+                    cc.RunCommand(action);
                 }
                 else if (components[i].ID == "LuaEvent")
                 {
                     CLuaEvent cl = (CLuaEvent)components[i];
-                    cl.CallEvent_Params("OnBlock", obj);
+                    cl.CallEvent_Params(action, obj);
                 }
             }
         }

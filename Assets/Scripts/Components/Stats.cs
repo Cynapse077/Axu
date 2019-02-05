@@ -268,6 +268,8 @@ public class Stats : MonoBehaviour
         confuseEffectObject.SetActive(HasEffect("Confuse"));
         freezeEffect.SetActive(HasEffect("Frozen"));
 
+        GetComponent<EntitySprite>().SetSwimming(HasEffect("Underwater"));
+
         if (entity.isPlayer)
         {
             World.userInterface.UpdateStatusEffects(this);
@@ -448,6 +450,7 @@ public class Stats : MonoBehaviour
                     }
                 }
             }
+
             if (willMiss && MyBody.AllGrips().Count > 0)
             {
                 foreach (BodyPart.Grip g in MyBody.AllGrips())
@@ -461,6 +464,11 @@ public class Stats : MonoBehaviour
             }
 
             return !willMiss;
+        }
+
+        if (HasEffect("Underwater") && !attacker.stats.HasEffect("Underwater"))
+        {
+            return false;
         }
 
         return true;
@@ -509,11 +517,15 @@ public class Stats : MonoBehaviour
     //has a source, just not from an entity or its weapon. from a string instead.
     public int IndirectAttack(int amount, HashSet<DamageTypes> dTypes, Entity attacker, string sourceName, bool ignoreArmor, bool crit = false, bool ignoreResists = false)
     {
-        if (invincible || dead)
+        if (invincible || dead || HasEffect("Underwater"))
+        {
             return 0;
+        }
 
         if (attacker != null)
+        {
             lastHit = attacker;
+        }
 
         BodyPart targetPart = Utility.WeightedChoice(MyBody.TargetableBodyParts());
         int damage = CalculateDamage(amount, dTypes, crit, targetPart, ignoreArmor, ignoreResists);
@@ -526,6 +538,7 @@ public class Stats : MonoBehaviour
 
         CombatLog.NewIndirectCombat("Damage_Indirect", damage, sourceName, entity.MyName, targetPart.displayName, entity.isPlayer);
         PostDamage(attacker, damage, dTypes, targetPart);
+
         return damage;
     }
     public int IndirectAttack(int amount, DamageTypes damageType, Entity attacker, string sourceName, bool ignoreArmor, bool crit = false, bool ignoreResists = false)
@@ -535,7 +548,7 @@ public class Stats : MonoBehaviour
 
     public void SimpleDamage(int amount)
     {
-        if (invincible || dead)
+        if (invincible || dead || HasEffect("Underwater"))
             return;
 
         BodyPart targetPart = Utility.WeightedChoice(MyBody.TargetableBodyParts());
@@ -819,8 +832,9 @@ public class Stats : MonoBehaviour
         }
 
         radiation += amount;
+        radiation = Mathf.Clamp(radiation, 0, 100);
 
-        if (radiation >= 100)
+        if (radiation >= 100 && SeedManager.combatRandom.Next(100) > Mutations.Count * 2)
         {
             Mutate();
         }
@@ -878,8 +892,7 @@ public class Stats : MonoBehaviour
 
         Trait mutation = TraitList.GetTraitByID(mutID);
 
-        if (mutation == null || !mutation.stackable && hasTrait(mutation.ID) && string.IsNullOrEmpty(mutation.nextTier) 
-            || mutation.stackable && TraitStacks(mutation.ID) >= mutation.maxStacks)
+        if (mutation == null || !mutation.stackable && hasTrait(mutation.ID) && string.IsNullOrEmpty(mutation.nextTier) || mutation.stackable && TraitStacks(mutation.ID) >= mutation.maxStacks)
         {
             radiation = 0;
             return;
@@ -1107,7 +1120,7 @@ public class Stats : MonoBehaviour
 
         if ((entity.resting || ObjectManager.playerEntity.resting && !entity.isPlayer && entity.AI.isFollower()) && healTimer % 3 == 0)
         {
-            healTimer--;
+            healTimer-= 2;
         }
 
         if (healTimer <= 0)
@@ -1169,9 +1182,7 @@ public class Stats : MonoBehaviour
             }
             else if (kvp.Key == "Aflame")
             {
-                int tileID = World.tileMap.CurrentMap.GetTileNumAt(entity.posX, entity.posY);
-
-                if (tileID == Tile.tiles["Water"].ID || tileID == Tile.tiles["Water_Swamp"].ID)
+                if (Tile.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
                 {
                     statusEffects[kvp.Key] = 0;
                 }
@@ -1183,6 +1194,13 @@ public class Stats : MonoBehaviour
                     damage += (int)dm;
                     StatusEffectDamage(damage, DamageTypes.Heat);
 
+                }
+            }
+            else if (kvp.Key == "Underwater")
+            {
+                if (!Tile.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
+                {
+                    statusEffects[kvp.Key] = 0;
                 }
             }
 
@@ -1553,13 +1571,16 @@ public class Stats : MonoBehaviour
         {
             Trait t = TraitList.GetTraitByID(npc.traits[i]);
 
-            if (t.effects.Contains(TraitEffects.Mutation))
+            if (traits.Find(x => x.ID == t.ID) == null)
             {
-                Mutate(t.ID);
-            }
-            else
-            {
-                AddTrait(t);
+                if (t.effects.Contains(TraitEffects.Mutation))
+                {
+                    Mutate(t.ID);
+                }
+                else
+                {
+                    AddTrait(t);
+                }
             }
         }
     }

@@ -223,6 +223,11 @@ public static class Utility
         return (ran.Next(100) < 50);
     }
 
+    public static bool OneIn(this System.Random ran, int number)
+    {
+        return (ran.Next(number) == 0);
+    }
+
     public static float DistanceTo(this Coord c1, Coord c2)
     {
         return Vector2.Distance(c1.toVector2(), c2.toVector2());

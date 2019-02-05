@@ -492,6 +492,11 @@ public class MapCreatorTool : MonoBehaviour
                         tIndex = 2;
                         eightWay = true;
                     }
+                    else if (tile.HasTag("Construct_Steel"))
+                    {
+                        tIndex = 24;
+                        eightWay = true;
+                    }
 
                     BitwiseAutotile(x, y, tIndex, (z => Tile.GetByID(z).HasTag("Wall") && !Tile.isMountain(z)), eightWay);
                 }

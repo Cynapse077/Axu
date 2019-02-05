@@ -21,4 +21,10 @@ public static class SeedManager {
 		int seed = (x * 105701) + (y * 15486491) + (z * 105907);
 		localRandom = new Random(seed);
     }
+
+    public static void NPCSeed(string name)
+    {
+        int seed = name.GetHashCode();
+        localRandom = new Random(seed);
+    }
 }

@@ -4,10 +4,8 @@
 
 - Teleport items that don't disappear on use should not be useable when enemies are near.
 	- Or link all locations to the "Return" spell.
-- Mouse movement on world map.
 - Blood slime familiar.
 - Vampire god, Krish.
-- Rosoemnas, the Empty appearing deep under the Ensis base.
 - Enemies change forms, like the boss above. (Diving under water, cannot be hit)
 - Different forms of currency. One for cybernetics, like the Becoming Nooks in CoQ.
 - Familiar that starts off weak. Can feed it items to increase its stats.
@@ -15,8 +13,12 @@
 - Quests for doctor to stay at your base.
 - Quest event that triggers dialogue to open.
 - Mounts + Riding
-- Cybernetics.
-- Better body part display
-- Icons for stats.
+
+
+- Prison that has malfunctioning security drones inside
+	- Trip alarms by player cause spawns
+- Mindwalking: level up spirit form.
+- Check if important npc is dead if take a quest to kill them. autocomplete if so.
+- Dodging by moving to an adjacent tile.
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------

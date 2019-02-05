@@ -40,7 +40,11 @@ public class CombatComponent
         }
 
         bool playSound = false;
+        bool attacked = false;
         Item soundItem = null;
+
+        int diffX = target.entity.posX - entity.posX;
+        int diffY = target.entity.posY - entity.posY;
 
         //Main weapon
         if (MyBody.MainHand.arm != null && !MyBody.MainHand.arm.FreeToMove())
@@ -49,6 +53,11 @@ public class CombatComponent
         }
         else if (PerformAttack(target, MyBody.MainHand, targetPart, sevChance))
         {
+            if (InRange(MyBody.MainHand.EquippedItem, diffX, diffY))
+            {
+                attacked = true;
+            }
+
             playSound = true;
             soundItem = MyBody.MainHand.EquippedItem;
         }
@@ -65,7 +74,7 @@ public class CombatComponent
 
         for (int i = 0; i < hands.Count; i++)
         {
-            if (hands[i] != null && hands[i] != MyBody.MainHand && hands[i].IsAttached && SeedManager.combatRandom.Next(100) <= ExtraAttackChance)
+            if (hands[i] != null && hands[i] != MyBody.MainHand && hands[i].IsAttached && (SeedManager.combatRandom.Next(100) <= ExtraAttackChance) || !attacked)
             {
                 if (!hands[i].arm.FreeToMove())
                 {
@@ -73,6 +82,11 @@ public class CombatComponent
                 }
                 else if (PerformAttack(target, hands[i]))
                 {
+                    if (InRange(hands[i].EquippedItem, diffX, diffY))
+                    {
+                        attacked = true;
+                    }
+
                     playSound = true;
                     soundItem = hands[i].EquippedItem;
                 }
@@ -105,6 +119,18 @@ public class CombatComponent
         if (!freeAction)
         {
             entity.EndTurn(0.1f, AttackAPCost());
+        }
+    }
+
+    bool InRange(Item wep, int diffX, int diffY)
+    {
+        if (Mathf.Abs(diffX) == 2 || Mathf.Abs(diffY) == 2)
+        {
+            return wep.attackType == Item.AttackType.Spear;
+        }
+        else
+        {
+            return true;
         }
     }
 
@@ -369,7 +395,9 @@ public class CombatComponent
         entity.CreateBloodstain(true);
 
         if (entity.cell != null)
+        {
             entity.cell.UnSetEntity(entity);
+        }
 
         if (entity.isPlayer)
         {

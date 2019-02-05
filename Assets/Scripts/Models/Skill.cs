@@ -175,9 +175,9 @@ public class Skill
         cooldown = maxCooldown;
     }
 
-    public SSkill ToSimpleSkill()
+    public SSkill ToSerializedSkill()
     {
-        return new SSkill(ID, level, XP, (int)origin);
+        return new SSkill(ID, level, XP, origin);
     }
 
     public void RemoveFlag(AbilityOrigin ab)
@@ -216,9 +216,9 @@ public class SSkill
     public string Name { get; protected set; }
     public int Lvl { get; protected set; }
     public double XP { get; protected set; }
-    public int Flg { get; protected set; }
+    public Skill.AbilityOrigin Flg { get; protected set; }
 
-    public SSkill(string _name, int lvl, double xp, int origin)
+    public SSkill(string _name, int lvl, double xp, Skill.AbilityOrigin origin)
     {
         Name = _name;
         Lvl = lvl;

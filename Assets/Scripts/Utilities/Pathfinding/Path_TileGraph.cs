@@ -29,7 +29,7 @@ namespace Pathfinding
             {
                 Path_Node n = nodes[t];
                 List<Path_Edge> edges = new List<Path_Edge>();
-                List<Path_TileData> neighbours = t.GetNeighbours(false, data);
+                List<Path_TileData> neighbours = t.GetNeighbours(true, data);
 
                 // If neighbour is walkable, create an edge to the relevant node.
                 for (int i = 0; i < neighbours.Count; i++)

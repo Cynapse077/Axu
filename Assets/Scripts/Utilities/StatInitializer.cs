@@ -40,6 +40,7 @@ public static class StatInitializer
                 s.AddTrait(t);
             }
         }
+
         if (npc.HasFlag(NPC_Flags.RBleed))
         {
             Trait t = TraitList.GetTraitByID("rbleed");

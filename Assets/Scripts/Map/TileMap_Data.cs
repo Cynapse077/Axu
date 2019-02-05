@@ -71,14 +71,14 @@ public class TileMap_Data
     }
 
     /// <summary>
-    /// Generating a dream world for mind walking.
+    /// Load a specific map
     /// </summary>
-    public TileMap_Data(string mapName)
+    public TileMap_Data(string mapName, bool friendly)
     {
         mapInfo = new MapInfo(World.tileMap.WorldPosition, WorldMap.Biome.Default);
-        SeedManager.CoordinateSeed(mapInfo.position.x, mapInfo.position.y, 0);
+        SeedManager.NPCSeed(mapName);
         Init();
-        mapInfo.friendly = true;
+        mapInfo.friendly = friendly;
         LoadSpecificMap(mapName);
         FinalPass();
     }
@@ -164,7 +164,7 @@ public class TileMap_Data
             {
                 Ruins();
             }
-            else if (ranNum <= 50)
+            else if (ranNum <= 70)
             {
                 RandomRocks();
             }
@@ -174,6 +174,31 @@ public class TileMap_Data
     void RandomRocks()
     {
         //Random rock formations.
+        List<Coord> points = new List<Coord>();
+
+        for (int i = 0; i < RNG.Next(5, 10); i++)
+        {
+            points.Add(GetRandomFloorTile());
+        }
+
+        for (int x = 4; x < Manager.localMapSize.x - 4; x++)
+        {
+            for (int y = 4; y < Manager.localMapSize.y - 4; y++)
+            {
+                int ranNum = RNG.Next(100);
+
+                for (int i = 0; i < points.Count; i++)
+                {
+                    float dist = Vector2.Distance(points[i].toVector2(), new Vector2(x, y));
+
+                    if (!Tile.isWaterTile(map_data[x, y].ID, true) && dist < 5 && (1.0f / dist) * 250 > ranNum)
+                    {
+                        map_data[x, y] = Tile.tiles["Mountain"];
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void ChangeTile(int x, int y, Tile_Data tile)
@@ -359,6 +384,11 @@ public class TileMap_Data
                     else if (tile.HasTag("Construct_Hospital"))
                     {
                         tIndex = 2;
+                        eightWay = true;
+                    }
+                    else if (tile.HasTag("Construct_Steel"))
+                    {
+                        tIndex = 24;
                         eightWay = true;
                     }
 
