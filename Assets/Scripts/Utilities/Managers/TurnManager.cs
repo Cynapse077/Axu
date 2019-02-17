@@ -118,7 +118,6 @@ public class TurnManager : MonoBehaviour
     void NewDay()
     {
         TimeOfDay = 0;
-        World.BaseDangerLevel++;
 
         //Shuffle merchant inventories.
         foreach (NPC n in World.objectManager.npcClasses)

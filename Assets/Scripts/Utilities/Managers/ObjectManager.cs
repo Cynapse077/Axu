@@ -778,12 +778,6 @@ public class ObjectManager : MonoBehaviour
         if (e != null)
         {
             onScreenNPCObjects.Remove(e);
-
-            if (n.HasFlag(NPC_Flags.Static))
-            {
-                World.BaseDangerLevel++;
-                CombatLog.SimpleMessage("Message_Darkness");
-            }
         }
     }
 

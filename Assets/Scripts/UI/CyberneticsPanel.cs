@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class CyberneticsPanel : UIPanel
@@ -49,7 +47,7 @@ public class CyberneticsPanel : UIPanel
                 break;
 
             case Mode.Cyber:
-
+                currentBody.bodyParts[SelectedNum].cybernetic = null;
                 break;
         }
     }

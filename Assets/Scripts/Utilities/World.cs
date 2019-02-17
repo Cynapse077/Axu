@@ -20,7 +20,7 @@ public static class World
         if (ObjectManager.player != null && ObjectManager.playerEntity.stats != null && ObjectManager.playerEntity.stats.MyLevel != null)
         {
             dl = BaseDangerLevel + ObjectManager.playerEntity.stats.MyLevel.CurrentLevel;
-            dl += turnManager.Day / 2 - 1;
+            dl += turnManager.Day / 2;
         }
 
         return dl;

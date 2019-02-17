@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LitJson;
 
 [Serializable]
-public abstract class CComponent
+public class CComponent
 {
     public string ID;
 
@@ -240,8 +240,7 @@ public class CCoordinate : CComponent
 
     public string GetInfo()
     {
-        string s = (isSet) ? (aNa + " - \n@ " + lPos.ToString()) : LocalizationManager.GetLocalizedContent("IT_NotSet")[0];
-        return s;
+        return (isSet) ? (aNa + " - \n@ " + lPos.ToString()) : LocalizationManager.GetLocalizedContent("IT_NotSet")[0];
     }
 
     public void Activate(Entity entity)
@@ -388,13 +387,15 @@ public class CCoat : CComponent
 public class CLiquidContainer : CComponent
 {
     public int capacity;
-    public SLiquid liq {
+    public SLiquid liq
+    {
         get
         {
             if (liquid == null)
             {
                 return null;
             }
+
             return liquid.ToSLiquid();
         }
         set
@@ -550,7 +551,9 @@ public class CModKit : CComponent
         ItemModifier mod = ItemList.GetModByID(modID);
 
         if (mod == null)
+        {
             return null;
+        }
 
         List<Item> newList = new List<Item>();
 
@@ -625,8 +628,7 @@ public class CItemLevel : CComponent
     {      
         if (level < maxLevel)
         {
-            double xpPercent = Math.Round(xp / 10.0, 2);
-            return string.Format("<color=cyan>Level</color> <color=yellow>{0}</color> <color=grey>({1} %xp)</color>", level, xpPercent);
+            return string.Format("<color=cyan>Level</color> <color=yellow>{0}</color> <color=grey>({1} %xp)</color>", level, Math.Round(xp / 10.0, 2));
         }
         else
         {

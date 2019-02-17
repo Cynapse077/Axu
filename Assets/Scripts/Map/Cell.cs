@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using System;
 
 [MoonSharpUserData]
 public class Cell
@@ -7,8 +8,9 @@ public class Cell
     public Coord position;
     public Entity entity;
     public List<MapObjectSprite> mapObjects;
-
     bool inSight, hasSeen;
+
+    public event Action<Entity> onEntityEnter;
 
     public Cell()
     {
@@ -82,6 +84,11 @@ public class Cell
             if (World.tileMap.CurrentMap != null)
             {
                 World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, 2);
+            }
+
+            if (onEntityEnter != null)
+            {
+                onEntityEnter(entity);
             }
 
             foreach (MapObjectSprite mos in mapObjects)

@@ -26,14 +26,16 @@ public class TileRenderer : MonoBehaviour
         ShowHide(insight);
     }
 
-    void ShowHide(bool sighted)
+    void ShowHide(bool iS)
     {
-        if (inSight != sighted)
+        if (inSight != iS)
         {
-            inSight = sighted;
+            inSight = iS;
 
             if (inSight)
+            {
                 hasSeen = true;
+            }
         }
 
         SetSpriteColor();
@@ -48,9 +50,13 @@ public class TileRenderer : MonoBehaviour
         else
         {
             if (lit)
+            {
                 spriteRenderer.color = (inSight) ? litColor : outOfSightColor;
+            }
             else
+            {
                 spriteRenderer.color = (inSight) ? Color.white : outOfSightColor;
+            }
         }
     }
 }

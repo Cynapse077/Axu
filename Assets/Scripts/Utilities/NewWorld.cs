@@ -192,8 +192,8 @@ public class OldWorld
             n.isHostile = (bool)npcData["Host"];
             n.inventory = SetUpInventory(i);
             n.spriteID = npcData["Spr"].ToString();
-
             n.handItems = new List<Item>();
+
             for (int j = 0; j < npcData["HIt"].Count; j++)
             {
                 n.handItems.Add(SaveData.GetItemFromJsonData(npcData["HIt"][j]));

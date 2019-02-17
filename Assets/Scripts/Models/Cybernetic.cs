@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Augments
 {
-    public abstract class Cybernetic
+    public class Cybernetic
     {
         public string Name { get; protected set; }
         public string ID { get; protected set; }
@@ -32,7 +32,10 @@ namespace Augments
             return cs;
         }
 
-        public abstract bool CanAttach(BodyPart bp);
+        public virtual bool CanAttach(BodyPart bp)
+        {
+            return true;
+        }
 
         public Cybernetic()
         {
@@ -56,29 +59,6 @@ namespace Augments
         {
             bodyPart = null;
             bodyPart.cybernetic = null;            
-        }
-
-        public static Type GetCyberneticType(Cybernetic c)
-        {
-            switch (c.ID)
-            {
-                case "RadScrubber":
-                    return typeof(RadiationScrubber);
-                case "FoldingBlade":
-                    return typeof(FoldingBlade);
-                case "ImpactSole":
-                    return typeof(ImpactSole);
-                case "NanoRegen":
-                    return typeof(NanoRegen);
-                case "NanoAdrenal":
-                    return typeof(NanoAdrenal);
-                case "TargetSensor":
-                    return typeof(TargetSensor);
-                case "DermalPlating":
-                    return typeof(DermalPlating);
-
-                default: return null;
-            }
         }
     }
 
