@@ -12,7 +12,7 @@ end
 
 
 function Restoration(skill, entity, target)
-	if (target.stats.stamina <= target.stats.maxStamina) then
+	if (target.stats.stamina <= target.stats.maxStamina / 2) then
 		return true
 	end
 

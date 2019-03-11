@@ -1,17 +1,21 @@
 -- Basic incremental healing skills
 function Healing(caster, skill)
-	local amount = skill.totalDice.Roll()
+	if (caster.stats.health < caster.stats.maxHealth) then
+		local amount = skill.totalDice.Roll()
 
-	caster.stats.Heal(amount)
-	ApplyChanges(caster, skill)
+		caster.stats.Heal(amount)
+		ApplyChanges(caster, skill)
+	end
 end
 
 --Heal to full health
 function FullHeal(caster, skill)
-	local amount = caster.stats.maxHealth
+	if (caster.stats.health < caster.stats.maxHealth) then
+		local amount = caster.stats.maxHealth
 
-	caster.stats.Heal(amount)
-	ApplyChanges(caster, skill)
+		caster.stats.Heal(amount)
+		ApplyChanges(caster, skill)
+	end
 end
 
 --Reduce physical damage by half for the duration.

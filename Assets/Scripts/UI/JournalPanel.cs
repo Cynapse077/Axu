@@ -67,7 +67,21 @@ public class JournalPanel : UIPanel
             {
                 for (int i = 0; i < q.goals.Length; i++)
                 {
-                    goal += (q.goals[i].isComplete ? "- (<color=yellow>DONE</color>) <color=grey>" : "- <color=white>") + q.goals[i].ToString() + "</color>\n";
+                    if (q.sequential)
+                    {
+                        if (q.goals[i].isComplete || q.goals[i] == q.ActiveGoal)
+                        {
+                            goal += (q.goals[i].isComplete ? "- (<color=yellow>DONE</color>) <color=grey>" : "- <color=white>") + q.goals[i].ToString() + "</color>\n";
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        goal += (q.goals[i].isComplete ? "- (<color=yellow>DONE</color>) <color=grey>" : "- <color=white>") + q.goals[i].ToString() + "</color>\n"; 
+                    }
                 }
             }
 

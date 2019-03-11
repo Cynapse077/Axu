@@ -36,6 +36,40 @@
             "Corpse_Item" : "corpse_human"
         },
 		{
+            "Name" : "Bounty Master",
+            "ID" : "bountymaster",
+            "Faction" : "xul",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-villager_m1.png",
+            "Flags" : [
+                "Human",
+                "Can_Speak",
+                "Static",
+                "Stationary_While_Passive",
+                "Can_Open_Doors"
+            ],
+            "Position" : { "Zone" : "Xul Camp", "x" : 5, "y" : 8, "z" : 0 },
+            "Stats" : {
+                "Health" : 22,
+                "Stamina" : 20,
+
+                "Defense" : 3,
+                "Strength" : 5,
+                "Dexterity" : 4,
+                "Intelligence" : 6,
+                "Endurance" : 8,
+
+                "Speed" : 11,
+                "Perception" : 20,
+                "Accuracy" : 1
+            },
+            "Quest" : "bounty0",
+            "Weapon_Choices" : [ "spear" ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 2,
+            "Corpse_Item" : "corpse_human"
+        },
+		{
             "Name" : "Grum",
             "ID" : "grum",
             "Faction" : "villagers",
@@ -1608,6 +1642,40 @@
             ],
             "MaxItems" : 2,
             "MaxItemRarity" : 4,
+            "Corpse_Item" : "corpse_human"
+        },
+		{
+            "Name" : "Bandit Leader",
+            "ID" : "bandit_leader",
+            "Faction" : "bandits",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-bandit5.png",
+            "Flags" : [
+                "Human",
+                "Can_Speak",
+                "Can_Open_Doors"
+            ],
+            "Stats" : {
+                "Health" : 150,
+                "Stamina" : 50,
+
+                "Defense" : 7,
+                "Strength" : 8,
+                "Dexterity" : 10,
+                "Intelligence" : 4,
+                "Endurance" : 5,
+
+                "Speed" : 15,
+                "Perception" : 10,
+                "Accuracy" : 2,
+
+                "Heat Resist" : 20,
+                "Cold Resist" : 20
+            },
+            "Weapon_Choices" : [ "stunbaton" ],
+			"Weapon Skill" : 2,
+            "MaxItems" : 2,
+            "MaxItemRarity" : 6,
             "Corpse_Item" : "corpse_human"
         },
 

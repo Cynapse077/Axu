@@ -2,23 +2,26 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MapCreator_LoadButton : MonoBehaviour, IPointerEnterHandler
+namespace MapCreator
 {
-    public Button deleteButton;
-    MapCreatorTool mct;
-    string info;
-
-    public void Init(MapCreatorTool _mct, string myInfo)
+    public class MapCreator_LoadButton : MonoBehaviour, IPointerEnterHandler
     {
-        mct = _mct;
-        info = myInfo;
-    }
+        public Button deleteButton;
+        MapCreatorTool mct;
+        string info;
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (mct != null)
+        public void Init(MapCreatorTool _mct, string myInfo)
         {
-            mct.mapInfoText.text = info;
+            mct = _mct;
+            info = myInfo;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (mct != null)
+            {
+                mct.mapInfoText.text = info;
+            }
         }
     }
 }

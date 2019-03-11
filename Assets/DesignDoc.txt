@@ -6,7 +6,6 @@
 	- Or link all locations to the "Return" spell.
 - Blood slime familiar.
 - Vampire god, Krish.
-- Enemies change forms, like the boss above. (Diving under water, cannot be hit)
 - Different forms of currency. One for cybernetics, like the Becoming Nooks in CoQ.
 - Familiar that starts off weak. Can feed it items to increase its stats.
 	- Stays in pen at your base until it grows up?

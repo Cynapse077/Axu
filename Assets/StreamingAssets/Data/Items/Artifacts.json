@@ -9,7 +9,12 @@
             "FlavorText" : "An acient tome containing a great secret.",
             "Cost" : 100,
             "Components" : [
-                { "ID" : "Ability", "Ability" : "healing0"  }
+                { "ID" : "Ability", "Ability" : "healing0"  },
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Intelligence", "Amount" : 6 }
+					]
+				}
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
@@ -21,7 +26,12 @@
             "FlavorText" : "An acient tome containing a great secret.",
             "Cost" : 200,
             "Components" : [
-                { "ID" : "Ability", "Ability" : "healing1"  }
+                { "ID" : "Ability", "Ability" : "healing1"  },
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Intelligence", "Amount" : 8 }
+					]
+				}
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
@@ -45,7 +55,12 @@
             "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 350,
             "Components" : [
-                { "ID" : "Ability", "Ability" : "spirits"  }
+                { "ID" : "Ability", "Ability" : "spirits"  },
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Intelligence", "Amount" : 6 }
+					]
+				}
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
@@ -57,7 +72,12 @@
             "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 350,
             "Components" : [
-                { "ID" : "Ability", "Ability" : "scritters"  }
+                { "ID" : "Ability", "Ability" : "scritters"  },
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Intelligence", "Amount" : 6 }
+					]
+				}
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
@@ -69,7 +89,12 @@
             "FlavorText" : "An acient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
-                { "ID" : "Ability", "Ability" : "echo"  }
+                { "ID" : "Ability", "Ability" : "echo"  },
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Intelligence", "Amount" : 5 }
+					]
+				}
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
@@ -129,7 +154,12 @@
             "FlavorText" : "An acient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
-                { "ID" : "Ability", "Ability" : "blink"  }
+                { "ID" : "Ability", "Ability" : "blink"  },
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Intelligence", "Amount" : 5 }
+					]
+				}
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
@@ -238,7 +268,12 @@
             "FlavorText" : "A manual that teaches one to be as nimble as a dancer.",
             "Cost" : 200,
             "Components" : [
-                { "ID" : "Ability", "Ability" : "juke"  }
+                { "ID" : "Ability", "Ability" : "juke"  },
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Dexterity", "Amount" : 5 }
+					]
+				}
             ],
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
@@ -269,7 +304,7 @@
             "Name" : "Sagacious Circlet",
             "Type" : "Armor",
             "Material" : "None",
-            "Armor" : 2,
+            "Armor" : 1,
             "FlavorText" : "A silver band. It glows faintly, radiating a protecive shield over those who wear it. Its healing ability further makes this item irreplacable.",
             "Cost" : 750,
             "Rarity" : 100,
@@ -315,6 +350,13 @@
             "Cost" : 103,
             "Properties" : [ "Weapon", "Two_Handed", "Very_Slow", "Knockback" ],
             "DmgTypes" : [ "Blunt" ],
+			"Components" : [
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Strength", "Amount" : 7 }
+					]
+				}
+            ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "/Data/Art/Player/Weapons/char-mace.png",

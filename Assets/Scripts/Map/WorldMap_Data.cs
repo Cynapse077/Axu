@@ -17,6 +17,7 @@ public class WorldMap_Data
     public List<Village_Data> villages = new List<Village_Data>();
     public bool doneLoading = false;
     public Path_TileData[,] tileData { get; set; }
+    public List<Landmark> postGenLandmarks { get; protected set; }
 
     readonly MapInfo[,] tiles;
     readonly JsonData worldTileData;
@@ -50,10 +51,16 @@ public class WorldMap_Data
 
         mountains = new List<Coord>();
         ocean = new List<Coord>();
+        postGenLandmarks = new List<Landmark>();
 
         if (!newGame)
         {
-            new OldWorld();
+            OldWorld ow = new OldWorld();
+
+            for (int i = 0; i < ow.postGenLandmarks.Count; i++)
+            {
+                postGenLandmarks.Add(ow.postGenLandmarks[i]);
+            }
         }
 
         LoadZoneBlueprints();
@@ -81,6 +88,12 @@ public class WorldMap_Data
         {
             zoneBlueprints.Add(dat["Locations"][i]["ID"].ToString(), ZoneBlueprint.LoadFromJson(dat["Locations"][i]));
         }
+    }
+
+    public void NewPostGenLandmark(Coord c, string zoneID)
+    {
+        postGenLandmarks.Add(new Landmark(c, zoneID));
+        World.worldMap.PlaceLandmark(c.x, c.y, tiles[c.x, c.y]);
     }
 
     void GenerateTerrain()
@@ -415,22 +428,34 @@ public class WorldMap_Data
                 PlaceZone(z);
             }
         }
+
+        for (int i = 0; i < postGenLandmarks.Count; i++)
+        {
+            ZoneBlueprint zb = GetZone(postGenLandmarks[i].desc);
+            PlaceZone(zb, null, postGenLandmarks[i].pos);
+        }
     }
 
-    void PlaceZone(ZoneBlueprint zb, Coord parentPos = null)
+    public Coord PlaceZone(ZoneBlueprint zb, Coord parentPos = null, Coord forcePos = null)
     {
         Coord pos = null;
         bool noParent = (parentPos == null && zb.placement.relativePosition == null);
 
-        if (noParent)
+        if (forcePos != null)
+        {
+            pos = forcePos;
+        }
+        else if (noParent)
         {
             if (!string.IsNullOrEmpty(zb.placement.landmark))
+            {
                 pos = GetRandomLandmark(zb.placement.landmark);
+            }
             else
             {
                 if (zb.placement.zoneID == "Any Land")
                 {
-                    pos = (zb.placement.onMain) ? GetOpenMainPosition(zb.neighbors) : GetOpenPosition(zb.neighbors);
+                    pos = (zb.placement.onMain) ? GetOpenFromMainIsland(zb.neighbors) : GetOpenPosition(zb.neighbors);
 
                 }
                 else
@@ -444,15 +469,10 @@ public class WorldMap_Data
             pos = parentPos + zb.placement.relativePosition;
         }
 
-        if (pos == null)
+        if (pos == null || pos.x < 0 || pos.y < 0 || pos.x >= width || pos.y >= height)
         {
-            Debug.LogError("Zone " + zb.name + " could not be placed.");
-            return;
-        }
-
-        if (pos.x < 0 || pos.y < 0 || pos.x >= width || pos.y >= height)
-        {
-            return;
+            Debug.LogError("Zone \"" + zb.name + "\" could not be placed.");
+            return null;
         }
 
         if (tiles[pos.x, pos.y].biome == WorldMap.Biome.Mountain)
@@ -499,6 +519,7 @@ public class WorldMap_Data
         }
 
         landmarks.Add(new Landmark(pos, (zb.id == "Village" ? "Village of " + zb.name : zb.name)));
+        return pos;
     }
 
     void RemoveIsolatedTiles()
@@ -609,7 +630,7 @@ public class WorldMap_Data
         return openPositions.GetRandom(rng);
     }
 
-    public Coord GetOpenMainPosition(ZoneBlueprint[] neighbors)
+    public Coord GetOpenFromMainIsland(ZoneBlueprint[] neighbors)
     {
         List<Coord> openPositions = new List<Coord>();
 
@@ -640,7 +661,6 @@ public class WorldMap_Data
                         }
                     }
                 }
-                
 
                 if (canAdd)
                 {
@@ -953,6 +973,20 @@ public class WorldMap_Data
         string id = LocalizationManager.GetContent("Biome_" + mi.biome.ToString());
         return id;
     }
+
+    public void RemoveLandmark(Coord c)
+    {
+        tiles[c.x, c.y].landmark = null;
+
+        for (int i = 0; i < postGenLandmarks.Count; i++)
+        {
+            if (postGenLandmarks[i].pos == c)
+            {
+                postGenLandmarks.RemoveAt(i);
+                return;
+            }
+        }
+    }
 }
 
 public struct MapInfo
@@ -991,14 +1025,15 @@ public struct MapInfo
     }
 }
 
+[Serializable]
 public struct Landmark
 {
-    public Coord position;
-    public string description;
+    public Coord pos;
+    public string desc;
 
     public Landmark(Coord pos, string desc = "")
     {
-        position = pos;
-        description = desc;
+        this.pos = pos;
+        this.desc = desc;
     }
 }

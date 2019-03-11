@@ -64,6 +64,38 @@ public static class SpawnController
         World.tileMap.CheckNPCTiles();
     }
 
+    public static void SpawnMerchant()
+    {
+        Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
+
+        if (c != null)
+        {
+            SpawnNPCByID("merch", World.tileMap.CurrentMap.mapInfo.position, 0, c);
+            return;
+        }
+
+        int guards = 0;
+
+        for (int x = -3; x <= 3; x++)
+        {
+            for (int y = -3; y <= 3; y++)
+            {
+                if (World.OutOfLocalBounds(c.x + x, c.y + y) || guards > 5)
+                {
+                    continue;
+                }
+
+                if (World.tileMap.GetCellAt(c.x + x, c.y + y).Walkable && rng.Next(100) < 30)
+                {
+                    Coord guardPos = new Coord(c.x + x, c.y + y);
+
+                    SpawnNPCByID("guard", World.tileMap.CurrentMap.mapInfo.position, 0, guardPos);
+                    guards++;
+                }
+            }
+        }
+    }
+
     public static void SpawnEversightAmbush()
     {
         List<GroupBlueprint> bps = new List<GroupBlueprint>();
@@ -168,6 +200,13 @@ public static class SpawnController
             }
         }
 
+        //Spawn a merchant and his guards.
+        if (rng.Next(1000) <= 2)
+        {
+            SpawnMerchant();
+            return;
+        }
+
         //Random minibosses.
         if (World.DangerLevel() >= 6 && rng.Next(1000) < 5)
         {
@@ -188,6 +227,60 @@ public static class SpawnController
                 SpawnFromGroupName(bps.GetRandom().Name);
             }
         }
+    }
+
+    public static void SetupOverworldEncounter()
+    {
+        Entity entity = ObjectManager.playerEntity;
+
+        if (World.difficulty.Level == Difficulty.DiffLevel.Hunted && rng.Next(500) < World.DangerLevel())
+        {
+            //Spawn Eversight Assassins
+            SpawnEversightAmbush();
+            Alert.CustomAlert_WithTitle("Ambush!", "A group of Eversight Assassins have snuck up on you. Prepare to fight!");
+        }
+        else
+        {
+            //Merchant
+            if (rng.Next(100) < 10)
+            {
+                Alert.NewAlert("FoundMerchant");
+                SpawnMerchant();              
+            }
+            else
+            {
+                //Spawn Bandits
+                Item item = null;
+                int goldAmount = (entity.inventory.gold > 0) ? Random.Range(entity.inventory.gold / 2, entity.inventory.gold + 1) : 100;
+
+                if (entity.inventory.items.Count > 0 && rng.CoinFlip())
+                {
+                    item = entity.inventory.items.GetRandom();
+                }
+
+                if (item != null && SeedManager.combatRandom.CoinFlip())
+                {
+                    World.userInterface.YesNoAction("YN_BanditAmbush_Item", () =>
+                    {
+                        World.userInterface.BanditYes(goldAmount, item);
+                        entity.inventory.RemoveInstance_All(item);
+                    }, () => World.userInterface.BanditNo(), item.DisplayName());
+                }
+                else
+                {
+                    World.userInterface.YesNoAction("YN_BanditAmbush", () =>
+                    {
+                        World.userInterface.BanditYes(goldAmount, item);
+                        entity.inventory.gold -= goldAmount;
+                    }, () => World.userInterface.BanditNo(), goldAmount.ToString());
+                }
+
+                SpawnBanditAmbush();
+            }
+        }
+
+        World.tileMap.HardRebuild();
+        World.objectManager.NoStickNPCs();
     }
 
     static void HouseObjects()

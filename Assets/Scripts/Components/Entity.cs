@@ -165,7 +165,6 @@ public class Entity : MonoBehaviour
         {
             isPlayer = true;
             World.tileMap.OnScreenChange += OnScreenChange;
-            World.turnManager.CheckInSightObjectAndEntities();
             playerInput = gameObject.GetComponent<PlayerInput>();
             CacheVariables();
         }

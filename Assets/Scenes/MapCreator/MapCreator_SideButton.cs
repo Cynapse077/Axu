@@ -2,73 +2,76 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class MapCreator_SideButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+namespace MapCreator
 {
-    int tileID;
-    MapCreatorTool mct;
-    MC_ButtonType buttonType;
-
-    public void Init(MapCreatorTool m, int id, MC_ButtonType bType)
+    public class MapCreator_SideButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        tileID = id;
-        mct = m;
-        buttonType = bType;
+        int tileID;
+        MapCreatorTool mct;
+        MC_ButtonType buttonType;
 
-        GetSprite();
-        GetComponent<Button>().onClick.AddListener(OnPress);
-    }
-
-    void GetSprite()
-    {
-        switch (buttonType)
+        public void Init(MapCreatorTool m, int id, MC_ButtonType bType)
         {
-            case MC_ButtonType.Tile:
-                GetComponent<Image>().sprite = mct.Sprites[tileID];
-                break;
-            case MC_ButtonType.Object:
-                Image img = GetComponent<Image>();
-                img.sprite = mct.objectSprites[tileID];
-                float y = (img.sprite.texture.height > img.sprite.texture.width) ? 2f : 1f;
-                transform.localScale = new Vector3(1f, y, 1f);
-                break;
-            case MC_ButtonType.NPC:
-                GetComponent<Image>().sprite = mct.npcSprites[tileID].sprite;
-                break;
-        }
-    }
+            tileID = id;
+            mct = m;
+            buttonType = bType;
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        switch (buttonType)
+            GetSprite();
+            GetComponent<Button>().onClick.AddListener(OnPress);
+        }
+
+        void GetSprite()
         {
-            case MC_ButtonType.Tile:
-                mct.EnableTooltip(Tile.GetKey(tileID));
-                break;
-            case MC_ButtonType.Object:
-                mct.EnableTooltip(ItemList.mapObjectBlueprints[tileID].Name);
-                break;
-            case MC_ButtonType.NPC:
-                mct.EnableTooltip(EntityList.npcs[tileID].name);
-                break;
-            default:
-                break;
+            switch (buttonType)
+            {
+                case MC_ButtonType.Tile:
+                    GetComponent<Image>().sprite = mct.Sprites[tileID];
+                    break;
+                case MC_ButtonType.Object:
+                    Image img = GetComponent<Image>();
+                    img.sprite = mct.objectSprites[tileID];
+                    float y = (img.sprite.texture.height > img.sprite.texture.width) ? 2f : 1f;
+                    transform.localScale = new Vector3(1f, y, 1f);
+                    break;
+                case MC_ButtonType.NPC:
+                    GetComponent<Image>().sprite = mct.npcSprites[tileID].sprite;
+                    break;
+            }
         }
-    }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        mct.DisableTooltip();
-    }
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            switch (buttonType)
+            {
+                case MC_ButtonType.Tile:
+                    mct.EnableTooltip(Tile.GetKey(tileID));
+                    break;
+                case MC_ButtonType.Object:
+                    mct.EnableTooltip(ItemList.mapObjectBlueprints[tileID].Name);
+                    break;
+                case MC_ButtonType.NPC:
+                    mct.EnableTooltip(EntityList.npcs[tileID].name);
+                    break;
+                default:
+                    break;
+            }
+        }
 
-    void OnPress()
-    {
-        if (mct.selectType != MapCreatorTool.MC_Selection_Type.Save)
-            mct.SetCurrentTileID(tileID);
-            
-    }
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            mct.DisableTooltip();
+        }
 
-    public enum MC_ButtonType
-    {
-        Tile, Object, NPC
+        void OnPress()
+        {
+            if (mct.selectType != MapCreatorTool.MC_Selection_Type.Save)
+                mct.SetCurrentTileID(tileID);
+
+        }
+
+        public enum MC_ButtonType
+        {
+            Tile, Object, NPC
+        }
     }
 }

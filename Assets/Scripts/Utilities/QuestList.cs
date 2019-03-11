@@ -48,7 +48,6 @@ public static class QuestList
         {
             case "Spawn NPC":
                 string npcID = data["NPC"].ToString();
-                Coord npcWorldPos = GetZone(data["Coordinate"].ToString());
                 int npcElevation = (int)data["Elevation"];
                 Coord npcLocalPos = new Coord(SeedManager.combatRandom.Next(2, Manager.localMapSize.x - 2), SeedManager.combatRandom.Next(2, Manager.localMapSize.y - 2));
 
@@ -60,35 +59,32 @@ public static class QuestList
 
                 string giveItem = data.ContainsKey("Give Item") ? data["Give Item"].ToString() : "";
 
-                return new SpawnNPCEvent(npcID, npcWorldPos, npcLocalPos, npcElevation, giveItem);
+                return new SpawnNPCEvent(npcID, data["Coordinate"].ToString(), npcLocalPos, npcElevation, giveItem);
 
             case "Spawn Group":
                 string groupID = data["Group"].ToString();
-                Coord groupWorldPos = GetZone(data["Coordinate"].ToString());
                 int groupElevation = (int)data["Elevation"];
                 int groupAmount = (int)data["Amount"];
 
-                return new SpawnNPCGroupEvent(groupID, groupWorldPos, groupElevation, groupAmount);
+                return new SpawnNPCGroupEvent(groupID, data["Coordinate"].ToString(), groupElevation, groupAmount);
 
             case "Spawn Object":
                 string objectID = data["Object"].ToString();
-                Coord objectWorldPos = GetZone(data["Coordinate"].ToString());
                 Coord objectLocalPos = new Coord((int)data["Local Position"][0], (int)data["Local Position"][1]);
                 int objectElevation = (int)data["Elevation"];
                 string objectGiveItem = data.ContainsKey("Give Item") ? data["Give Item"].ToString() : "";
 
-                return new SpawnObjectEvent(objectID, objectWorldPos, objectLocalPos, objectElevation, objectGiveItem);
+                return new SpawnObjectEvent(objectID, data["Coordinate"].ToString(), objectLocalPos, objectElevation, objectGiveItem);
 
             case "Remove Spawns":
                 return new RemoveAllSpawnedNPCsEvent();
 
             case "Move NPC":
-                Coord npcMoveWorldPos = GetZone(data["Coordinate"].ToString());
                 Coord npcMoveLocalPos = new Coord((int)data["Local Position"][0], (int)data["Local Position"][1]);
                 int moveNPCEle = (int)data["Elevation"];
                 string npcMoveID = data["NPC"].ToString();
 
-                return new MoveNPCEvent(npcMoveID, npcMoveWorldPos, npcMoveLocalPos, moveNPCEle);
+                return new MoveNPCEvent(npcMoveID, data["Coordinate"].ToString(), npcMoveLocalPos, moveNPCEle);
 
             case "Give Quest":
                 string giveQuestNPC = data["NPC"].ToString();
@@ -156,6 +152,22 @@ public static class QuestList
                 string diaID = data["Dialogue"].ToString();
 
                 return new SetNPCDialogueTree(dialogueNPC, diaID);
+
+            case "Open Dialogue":
+                string speaker = data["Speaker"].ToString();
+                string dialogue = data["Dialogue"].ToString();
+
+                return new OpenDialogue(speaker, dialogue);
+
+            case "Create Location":
+                string zoneID = data["Zone ID"].ToString();
+
+                return new CreateLocation(zoneID);
+
+            case "Remove Location":
+                string remID = data["Zone ID"].ToString();
+
+                return new RemoveLocation(remID);
 
             default:
                 Debug.LogError("QuestList::GetEvent() - No event with ID \"" + key + "\".");

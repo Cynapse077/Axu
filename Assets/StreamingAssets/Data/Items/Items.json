@@ -389,12 +389,12 @@
         	"ID" : "scalpel",
             "Name" : "Scalpel",
             "Type" : "Blade",
-            "Damage" : "3d1",
+            "Damage" : "2d1",
             "Rarity" : 1,
             "FlavorText" : "A tool used by surgeons to cut into flesh.",
             "Cost" : 14,
             "Attack Type" : "Knife",
-            "Properties" : [ "Weapon", "Very_Quick" ],
+            "Properties" : [ "Weapon", "Quick" ],
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
@@ -1820,7 +1820,7 @@
             "Cost" : 88,
             "Stat Mods" : [
                 { "Stat" : "Storage Capacity", "Amount" : 8 },
-                { "Stat" : "Speed", "Amount" : -1 }
+                { "Stat" : "Speed", "Amount" : -2 }
             ],
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {
@@ -1900,6 +1900,13 @@
             "Stat Mods" : [
                 { "Stat" : "Dexterity", "Amount" : -1 },
                 { "Stat" : "Speed", "Amount" : -2 }
+            ],
+			"Components" : [
+				{ "ID" : "Requirement", 
+					"Requirements" : [
+						{ "Stat" : "Strength", "Amount" : 7 }
+					]
+				}
             ],
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {

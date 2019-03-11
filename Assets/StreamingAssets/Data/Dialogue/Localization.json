@@ -22,7 +22,7 @@
         },
         {
             "ID" : "Dialogue_Heal Wounds",
-            "Display" : "Heal Wounds"
+            "Display" : "Heal Wounds/Diseases"
         },
         {
             "ID" : "Dialogue_Replace Limb",
@@ -224,6 +224,10 @@
             "ID" : "IT_Ability",
             "Display" : "<color=magenta>{Ability: [INPUT]}</color>"
         },
+		{
+			"ID" : "IT_Req",
+			"Display" : "<color=red>Requires: [INPUT]</color>"
+		},
         {
             "ID" : "IT_Wearable",
             "Display" : "Wearable"
@@ -1333,6 +1337,21 @@
             "Title" : "Welcome to Axu",
             "Message" : "You are [NAME], an exiled criminal sent to the planet Axu. After days of travel, your supplies are running dry. Luckily you have come across some sort of structure with <color=cyan>a man beckoning you</color> nearby. Is he a friend or foe? Further away from home than comprehension allows, will you attempt to find a way back to Earth, or come to terms with your exile?"
         },
+		{
+			"ID" : "FoundMerchant",
+			"Title" : "Merchant Found",
+			"Message" : "A merchant beckons you over to peruse their wares!"
+		},
+		{
+			"ID" : "CannotEquip",
+			"Title" : "Cannot Equip",
+			"Message" : "You cannot equip this item since you do not meet its requirements."
+		},
+		{
+			"ID" : "CannotRead",
+			"Title" : "Too Complicted",
+			"Message" : "The tome is too complex to comprehend! You become confused."
+		},
         {
             "ID" : "Pour_No_Room",
             "Title" : "No Room",

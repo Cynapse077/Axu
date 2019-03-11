@@ -762,7 +762,7 @@ public class TileMap : MonoBehaviour
 
         for (int i = 0; i < worldMap.landmarks.Count; i++)
         {
-            if (Vector2.Distance(WorldPosition.toVector2(), worldMap.landmarks[i].position.toVector2()) < distMax)
+            if (Vector2.Distance(WorldPosition.toVector2(), worldMap.landmarks[i].pos.toVector2()) < distMax)
             {
                 lms.Add(worldMap.landmarks[i]);
             }
@@ -815,9 +815,22 @@ public class TileMap : MonoBehaviour
     public TileMap_Data GetScreen(int x, int y)
     {
         if (screens[x, y] == null && worldData != null && worldData.dataExists(x, y))
+        {
             screens[x, y] = new TileMap_Data(x, y, 0, worldData.dataExists(x, y));
+        }
 
         return screens[x, y];
+    }
+
+    public void DeleteScreen(int x, int y)
+    {
+        if (x == worldCoordX && y == worldCoordY)
+        {
+            Debug.LogError("Attempting to delete current loaded map. Aborting.");
+            return;
+        }
+
+        screens[x, y] = null;
     }
 
     void CacheVars()

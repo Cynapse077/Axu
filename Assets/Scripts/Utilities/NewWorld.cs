@@ -31,7 +31,7 @@ public class NewWorld
 
         //world
         List<MapObject> mapObjects = World.objectManager.mapObjects;
-        w2json = new WorldToJson(chars, mapObjects, Turn_Num, World.DangerLevel(), ObjectManager.SpawnedNPCs, World.difficulty);
+        w2json = new WorldToJson(chars, mapObjects, Turn_Num, World.DangerLevel(), ObjectManager.SpawnedNPCs, World.difficulty, World.worldMap.worldMapData.postGenLandmarks);
 
         //local
         ScreenHolder holder = new ScreenHolder(tileMap.worldCoordX, tileMap.worldCoordY);
@@ -119,6 +119,8 @@ public class NewWorld
 //Loading world data from the json string
 public class OldWorld
 {
+    public List<Landmark> postGenLandmarks;
+
     JsonData wData;
     string loadJson;
 
@@ -168,6 +170,17 @@ public class OldWorld
             }
 
             World.objectManager.AddMapObject(m);
+        }
+
+        postGenLandmarks = new List<Landmark>();
+
+        if (wData.ContainsKey("PGLm"))
+        {
+            for (int i = 0; i < wData["PGLm"].Count; i++)
+            {
+                JsonData lm = wData["PGLm"][i];
+                postGenLandmarks.Add(new Landmark(new Coord((int)lm["pos"][0], (int)lm["pos"][1]), lm["desc"].ToString()));
+            }
         }
     }
 
@@ -338,11 +351,12 @@ public class WorldToJson
 {
     public List<NPCCharacter> NPCs;
     public List<WorldObject> Objects;
+    public List<Landmark> PGLm;
     public int Turn_Num, Danger_Level, Spawned_NPCs;
     public Difficulty Diff;
     public string Time;
 
-    public WorldToJson(List<NPCCharacter> npcs, List<MapObject> objects, int tn, int dl, int spwned, Difficulty diff)
+    public WorldToJson(List<NPCCharacter> npcs, List<MapObject> objects, int tn, int dl, int spwned, Difficulty diff, List<Landmark> landmarks)
     {
         NPCs = npcs;
         Turn_Num = tn;
@@ -352,6 +366,7 @@ public class WorldToJson
         Time = System.DateTime.Now.ToString();
 
         Objects = new List<WorldObject>();
+        PGLm = landmarks;
 
         for (int i = 0; i < objects.Count; i++)
         {

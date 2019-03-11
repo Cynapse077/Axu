@@ -13,6 +13,17 @@
             },
             "Underground" : "Cellar"
         },
+		{
+			"ID" : "Bandit Camp",
+			"Display" : "Bandit Camp",
+			"Tile Index" : 15,
+			"Walkable" : true,
+			"Amount" : 0,
+			"Friendly" : true,
+			"Place At" : {
+				"Biome" : "Any Land"
+			}
+		},
         {
             "ID" : "Abandoned Building",
             "Display" : "Abandoned Building",

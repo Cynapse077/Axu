@@ -859,46 +859,7 @@ public class PlayerInput : MonoBehaviour
 
                 SetStoredTravelPosition();
                 World.tileMap.HardRebuild();
-
-                if (World.difficulty.Level == Difficulty.DiffLevel.Hunted && SeedManager.combatRandom.Next(500) < World.DangerLevel())
-                {
-                    //Spawn Eversight Assassins
-                    SpawnController.SpawnEversightAmbush();
-                    Alert.CustomAlert_WithTitle("Ambush!", "A group of Eversight Assassins have snuck up on you. Prepare to fight!");
-                }
-                else
-                {
-                    //Spawn Bandits
-                    Item item = null;
-                    int goldAmount = (entity.inventory.gold > 0) ? Random.Range(entity.inventory.gold / 2, entity.inventory.gold + 1) : 100;
-
-                    if (entity.inventory.items.Count > 0 && SeedManager.combatRandom.CoinFlip())
-                    {
-                        item = entity.inventory.items.GetRandom();
-                    }
-
-                    if (item != null && SeedManager.combatRandom.CoinFlip())
-                    {
-                        World.userInterface.YesNoAction("YN_BanditAmbush_Item", () =>
-                        {
-                            World.userInterface.BanditYes(goldAmount, item);
-                            entity.inventory.RemoveInstance_All(item);
-                        }, () => World.userInterface.BanditNo(), item.DisplayName());
-                    }
-                    else
-                    {
-                        World.userInterface.YesNoAction("YN_BanditAmbush", () =>
-                        {
-                            World.userInterface.BanditYes(goldAmount, item);
-                            entity.inventory.gold -= goldAmount;
-                        }, () => World.userInterface.BanditNo(), goldAmount.ToString());
-                    }
-
-                    SpawnController.SpawnBanditAmbush();
-                }
-                
-                World.tileMap.HardRebuild();
-                World.objectManager.NoStickNPCs();
+                SpawnController.SetupOverworldEncounter();
             }
         }
     }

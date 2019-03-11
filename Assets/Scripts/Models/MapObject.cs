@@ -40,14 +40,21 @@ public class MapObject
         ReInitialize(bp);
 
         if (objectType.Contains("Bloodstain_"))
+        {
             SetRotation();
-
+        }
         else if (objectType == "Chest")
+        {
             inv = Inventory.GetDrops(SeedManager.combatRandom.Next(1, 4));
+        }
         else if (objectType == "Barrel" && SeedManager.combatRandom.Next(100) < 5)
+        {
             inv = Inventory.GetDrops(1);
+        }
         else if (objectType == "Loot" || objectType == "Body")
+        {
             inv = new List<Item>();
+        }
     }
 
     public void ReInitialize(MapObjectBlueprint bp)
@@ -82,7 +89,9 @@ public class MapObject
                     continue;
 
                 if (!World.tileMap.WalkableTile(cx, cy))
+                {
                     possPos.Add(new Coord(x, y));
+                }
             }
         }
 
@@ -103,14 +112,10 @@ public class MapObject
 
     void RotationFromOrientation(Coord offset)
     {
-        if (offset.y > 0)
-            rotation = 0;
-        if (offset.y < 0)
-            rotation = 180;
-        if (offset.x < 0)
-            rotation = 90;
-        if (offset.x > 0)
-            rotation = -90;
+        if (offset.y > 0) rotation = 0;
+        if (offset.y < 0) rotation = 180;
+        if (offset.x < 0) rotation = 90;
+        if (offset.x > 0) rotation = -90;
     }
 
     public bool CanSpawnThisObject(Coord pos, int elev)
@@ -121,7 +126,9 @@ public class MapObject
     public bool HasEvent(string eventName)
     {
         if (luaEvents == null)
+        {
             return false;
+        }
 
         return luaEvents.ContainsKey(eventName);
     }
@@ -133,7 +140,6 @@ public class MapObject
 
     public bool CanDiscard()
     {
-
         return true;
     }
 }

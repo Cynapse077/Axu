@@ -278,12 +278,7 @@ public class SpecificKillGoal : Goal
         for (int i = 0; i < myQuest.spawnedNPCs.Count; i++)
         {
             NPC n = World.objectManager.GetNPCByUID(myQuest.spawnedNPCs[i]);
-            s += "  - " + n.name + " @ " + World.tileMap.worldMap.GetZoneNameAt(n.worldPosition.x, n.worldPosition.y, 0);
-
-            if (n.elevation != 0)
-            {
-                s += " Floor " + (-n.elevation).ToString() + ".";
-            }
+            s += n.name;
 
             if (i < myQuest.spawnedNPCs.Count)
             {
@@ -429,7 +424,7 @@ public class GoToGoal : Goal
 {
     readonly string destination;
     readonly int elevation;
-    readonly Coord coordDest;
+    Coord coordDest;
 
     public GoToGoal(Quest q, string dest, int ele)
     {
@@ -446,6 +441,11 @@ public class GoToGoal : Goal
     {
         base.Init(skipEvent);
         EventHandler.instance.EnteredScreen += EnteredArea;
+
+        if (coordDest == null)
+        {
+            coordDest = myQuest.GetZone(destination);
+        }
 
         World.objectManager.NewMapIcon(0, coordDest);
     }
@@ -501,16 +501,16 @@ public class GoToGoal : Goal
 
 public class InteractGoal : Goal
 {
-    readonly Coord worldPos;
+    readonly string zone;
     readonly int elevation;
     readonly string objectType;
     readonly int max;
 
-    public InteractGoal(Quest q, string objType, Coord wPos, int ele, int amt)
+    public InteractGoal(Quest q, string objType, string wPos, int ele, int amt)
     {
         goalType = "InteractGoal";
         myQuest = q;
-        worldPos = wPos;
+        zone = wPos;
         elevation = ele;
         objectType = objType;
         max = amt;
@@ -521,12 +521,12 @@ public class InteractGoal : Goal
     {
         base.Init(skipEvent);
         EventHandler.instance.InteractedWithObject += InteractedWithObject;
-        World.objectManager.NewMapIcon(0, worldPos);
+        World.objectManager.NewMapIcon(0, Destination());
     }
 
     void InteractedWithObject(MapObject m)
     {
-        if (worldPos == m.worldPosition && elevation == m.elevation && m.objectType == objectType)
+        if (Destination() == m.worldPosition && elevation == m.elevation && m.objectType == objectType)
         {
             amount++;
 
@@ -544,19 +544,19 @@ public class InteractGoal : Goal
 
     public override Coord Destination()
     {
-        return worldPos;
+        return myQuest.GetZone(zone);
     }
 
     public override void Complete()
     {
-        World.objectManager.RemoveMapIconAt(worldPos);
+        World.objectManager.RemoveMapIconAt(Destination());
         EventHandler.instance.InteractedWithObject -= InteractedWithObject;
         base.Complete();
     }
 
     public override void Fail()
     {
-        World.objectManager.RemoveMapIconAt(worldPos);
+        World.objectManager.RemoveMapIconAt(Destination());
         EventHandler.instance.InteractedWithObject -= InteractedWithObject;
         base.Fail();
     }

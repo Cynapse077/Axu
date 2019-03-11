@@ -249,12 +249,11 @@ public class Quest : EventContainer
                 return new FactionKillGoal(this, facID, facKillAmt);
 
             case "Interact":
-                Coord interactPos = GetZone(q["Coordinate"].ToString());
                 int interactEle = (int)q["Elevation"];
                 string objType = q["Object Type"].ToString();
                 int interactAmount = (int)q["Amount"];
 
-                return new InteractGoal(this, objType, interactPos, interactEle, interactAmount);
+                return new InteractGoal(this, objType, q["Coordinate"].ToString(), interactEle, interactAmount);
 
             case "Choice":
                 List<Goal> goals = new List<Goal>();

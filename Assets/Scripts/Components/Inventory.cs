@@ -193,6 +193,17 @@ public class Inventory : MonoBehaviour
 
     public void Equip(Item i)
     {
+        if (i.HasCComponent<CRequirement>())
+        {
+            CRequirement cr = i.GetCComponent<CRequirement>();
+
+            if (!cr.CanUse(stats))
+            {
+                Alert.NewAlert("CannotEquip", UIWindow.Inventory);
+                return;
+            }
+        }
+
         if (i.HasProp(ItemProperty.Ranged))
         {
             EquipFirearm(i);
@@ -214,6 +225,17 @@ public class Inventory : MonoBehaviour
             return;
         }
 
+        if (i.HasCComponent<CRequirement>())
+        {
+            CRequirement cr = i.GetCComponent<CRequirement>();
+
+            if (!cr.CanUse(stats))
+            {
+                Alert.NewAlert("CannotEquip", UIWindow.Inventory);
+                return;
+            }
+        }
+
         if (b.equippedItem != null && !isNoneItem(b.equippedItem) && b.equippedItem.lootable)
         {
             UnEquipArmor(b, true);
@@ -230,6 +252,17 @@ public class Inventory : MonoBehaviour
         if (firearm.HasProp(ItemProperty.Cannot_Remove))
         {
             return;
+        }
+
+        if (i.HasCComponent<CRequirement>())
+        {
+            CRequirement cr = i.GetCComponent<CRequirement>();
+
+            if (!cr.CanUse(stats))
+            {
+                Alert.NewAlert("CannotEquip", UIWindow.Inventory);
+                return;
+            }
         }
 
         Item itemToPickup = new Item(firearm);
@@ -325,6 +358,17 @@ public class Inventory : MonoBehaviour
         {
             Alert.NewAlert("No_Hands", UIWindow.Inventory);
             return;
+        }
+
+        if (item.HasCComponent<CRequirement>())
+        {
+            CRequirement cr = item.GetCComponent<CRequirement>();
+
+            if (!cr.CanUse(stats))
+            {
+                Alert.NewAlert("CannotEquip", UIWindow.Inventory);
+                return;
+            }
         }
 
         BodyPart.Hand hand = hands[armIndex];
@@ -454,6 +498,18 @@ public class Inventory : MonoBehaviour
     {
         int timeCost = 100 - (stats.Intelligence * 2);
         timeCost = Mathf.Clamp(timeCost, 1, 100);
+
+        if (i.HasCComponent<CRequirement>())
+        {
+            CRequirement cr = i.GetCComponent<CRequirement>();
+
+            if (!cr.CanUse(stats))
+            {
+                Alert.NewAlert("CannotRead");
+                stats.AddStatusEffect("Confuse", 11);
+                return;
+            }
+        }
 
         if (i.HasProp(ItemProperty.Tome))
         {

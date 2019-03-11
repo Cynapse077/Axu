@@ -1015,6 +1015,55 @@ public class Console : MonoBehaviour
             return;
         }
 
+        else if (parsedText[0] == "removelocation")
+        {
+            if (parsedText.Length < 2)
+            {
+                MyConsole.Error("Specify a location ID to remove.");
+                return;
+            }
+
+            string zoneID = "";
+
+            for (int i = 1; i < parsedText.Length; i++)
+            {
+                zoneID += parsedText[i];
+
+                if (i < parsedText.Length - 1)
+                {
+                    zoneID += " ";
+                }
+            }
+
+            RemoveLocation rl = new RemoveLocation(zoneID);
+            rl.RunEvent();
+            return;
+        }
+        else if (parsedText[0] == "addlocation")
+        {
+            if (parsedText.Length < 2)
+            {
+                MyConsole.Error("Specify a location ID to add.");
+                return;
+            }
+
+            string zoneID = "";
+
+            for (int i = 1; i < parsedText.Length; i++)
+            {
+                zoneID += parsedText[i];
+
+                if (i < parsedText.Length - 1)
+                {
+                    zoneID += " ";
+                }
+            }
+
+            CreateLocation cl = new CreateLocation(zoneID);
+            cl.RunEvent();
+            return;
+        }
+
         else if (parsedText[0] == "?" || parsedText[0] == "help" || parsedText[0] == "commands")
         {
             MyConsole.DoubleLine();
@@ -1070,6 +1119,8 @@ public class Console : MonoBehaviour
             MyConsole.NewMessage("  - <b>closedoors</b>\n    Closes all doors on the current screen, regardless of permissions.");
                                       
             MyConsole.NewMessage("  - <b>load <i>[map name]</i></b>\n    Loads a map by its name.");
+            MyConsole.NewMessage("  - <b>addlocation <i>[zone ID]</i></b>\n    Adds the specified zone to the world map.");
+            MyConsole.NewMessage("  - <b>removelocation <i>[zone ID]</i></b>\n    Removes the specified zone from the world map.");
             MyConsole.NewMessage("  - <b>detonate</b>\n      Kills all NPCs on the screen.");
             MyConsole.NewMessage("  - <b>reveal</b>\n      Reveals all tiles on the map");
             MyConsole.NewMessage("  - <b>wizard</b>\n      Combines the previous two commands. Kills all NPCs on screen, and reveals the map. Cuz... Cynapse is lazy.");

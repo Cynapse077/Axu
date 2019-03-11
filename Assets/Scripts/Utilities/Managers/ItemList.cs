@@ -704,6 +704,17 @@ public static class ItemList
                 CItemLevel ci = new CItemLevel();
                 comps.Add(ci);
             }
+            else if (ID == "Requirement")
+            {
+                CRequirement cr = new CRequirement();
+
+                for (int j = 0; j < data[i]["Requirements"].Count; j++)
+                {
+                    cr.req.Add(new StringInt(data[i]["Requirements"][j]["Stat"].ToString(), (int)data[i]["Requirements"][j]["Amount"]));
+                }
+
+                comps.Add(cr);
+            }
             else
             {
                 Debug.LogError("Need to assign the new component to ItemList::GetComponentsFromData() - " + ID);

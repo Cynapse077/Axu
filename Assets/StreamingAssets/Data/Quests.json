@@ -475,10 +475,10 @@
 				}
 			],
 			"Steps" : [
-				{ "Goal" : "Go", "To" : [ "Kin Hideout", -1 ] },
-				{ "Goal" : "Fetch", "Item" : [ "artifact5" ], "Give To" : "oromir" }
+				{ "Goal" : "Go", "To" : [ "Kin Hideout", 0 ] },
+				{ "Goal" : "Fetch", "Item" : [ "animusstone", 5 ], "Give To" : "oromir" }
 			],
-			"End Dialogue" : "Excellent. I'm going to use these six Animus Stones to create a weapon unlike anything else on Axu. Xzol's body can be broken by conventional means, but that does not solve the main issue. His physical and spiritual prescences are still somewhat separate. With what I will create, you can trap Xzol in his stone body. Now, I need something from you since I am saving your people. I want the support of The Ensis again, but without their childish fear of The Deep. Since Lomis is dead, I would assume Arthomas will take the mantle of leader. Speak to him on my behalf, and I will entrust you with the power to kill a god.",
+			"End Dialogue" : "Excellent. I'm going to use these six Animus Stones to create a weapon unlike anything else on Axu. Xzol's body can be broken by conventional means, but that does not solve the main issue. His physical and spiritual prescences are still somewhat separate. With what I will create, you can trap Xzol in his stone body. Now, I need something from you since I am saving your people. I want the support of The Ensis again, but without their childish fear of The Deep. Since Lomis is dead, I would assume Arthomas will take the mantle of leader. Speak to him on my behalf, and I will entrust you with the power to enslave a god.",
 
 			"Chained Quest" : "ensis26"
 		},
@@ -520,6 +520,8 @@
 			],
 			"End Dialogue" : "I see you managed to convince Arthomas. He and Ka-Nil arrived moments before you. \n\n[TO BE CONTINUED...]"
 		},
+
+
 
 		{
             "Name" : "Isazna, the Prophet",
@@ -1279,6 +1281,35 @@
 				}
             ],
             "End Dialogue" : "Good show, here's your pay. I don't have any more fights for you at the moment."
-        }
+        },
+
+
+		{
+			"Name" : "Bounty: Bandit Leader",
+			"ID" : "bounty0",
+			"Start Dialogue" : "There's some coin on a Bandit Leader's head. If you'd like, I can tell you where to find him.",
+			"Description" : "Kill the marked target.",
+			"Rewards" : {
+				"XP" : 0,
+				"Money" : 200
+			},
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Bandit Camp" ] },
+				{ "Goal" : "Kill Spawned" },
+				{ "Goal" : "Talk To", "NPC" : "bountymaster" }
+			],
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Create Location" : { "Zone ID" : "Bandit Camp" },
+					"Spawn NPC" : { "NPC" : "bandit_leader", "Coordinate" : "Bandit Camp", "Elevation" : 0 }
+				},
+				{
+					"Event" : "OnComplete",
+					"Remove Location" : { "Zone ID" : "Bandit Camp" }
+				}
+			],
+			"End Dialogue" : "Very good! You've earned this coin! Come back later once I've some more work for you."
+		}
 	]
 }

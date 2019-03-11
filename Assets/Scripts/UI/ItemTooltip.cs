@@ -28,6 +28,36 @@ public static class ItemTooltip
                 displayItems.Add(GetContent("IT_Container", true));
         }
 
+        if (item.HasCComponent<CRequirement>())
+        {
+            CRequirement cr = item.GetCComponent<CRequirement>();
+            string req = "";
+
+            for (int i = 0; i < cr.req.Count; i++)
+            {
+                if (cr.CanUse(ObjectManager.playerEntity.stats, i))
+                {
+                    req += "<color=green>";
+                }
+                else
+                {
+                    req += "<color=red>";
+                }
+
+                req += LocalizationManager.GetContent(cr.req[i].String) + " " + cr.req[i].Int;
+
+                if (i < cr.req.Count - 1)
+                {
+                    req += ", ";
+                }
+
+                req += "</color>";
+            }
+
+            displayItems.Add(GetContent_Input("IT_Req", req));
+        }
+
+
         if (item.HasProp(ItemProperty.Ranged) || item.HasCComponent<CFirearm>())
         {
             displayItems.Add(GetContent("IT_Firearm", true));

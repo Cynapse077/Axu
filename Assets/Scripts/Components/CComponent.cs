@@ -36,6 +36,7 @@ public class CComponent
             case "ModKit": return JsonMapper.ToObject<CModKit>(reader);
             case "ItemLevel": return JsonMapper.ToObject<CItemLevel>(reader);
             case "Cybernetic": return JsonMapper.ToObject<CCybernetic>(reader);
+            case "Requirement": return JsonMapper.ToObject<CRequirement>(reader);
 
             default: return null;
         }
@@ -60,6 +61,7 @@ public class CComponent
             case "ModKit": return typeof(CModKit);
             case "ItemLevel": return typeof(CItemLevel);
             case "Cybernetic": return typeof(CCybernetic);
+            case "Requirement": return typeof(CRequirement);
 
             default: return null;
         }
@@ -651,5 +653,70 @@ public class CCybernetic : CComponent
     {
         ID = "Cybernetic";
         CID = id;
+    }
+}
+
+[Serializable]
+public class CRequirement : CComponent
+{
+    public List<StringInt> req;
+
+    public CRequirement()
+    {
+        ID = "Requirement";
+        req = new List<StringInt>();
+    }
+
+    public bool CanUse(Stats stats)
+    {
+        if (!stats.entity.isPlayer)
+        {
+            return true;
+        }
+
+        for (int i = 0; i < req.Count; i++)
+        {
+            if (!CanUse(stats, i))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool CanUse(Stats stats, int i)
+    {
+        if (!stats.entity.isPlayer)
+        {
+            return true;
+        }
+
+        if (stats.Attributes.ContainsKey(req[i].String))
+        {
+            if (stats.Attributes[req[i].String] < req[i].Int)
+            {
+                return false;
+            }
+            else if (stats.proficiencies != null)
+            {
+                List<WeaponProficiency> profs = stats.proficiencies.GetProfs();
+
+                if (profs.Find(x => x.name == req[i].String) != null)
+                {
+                    if (profs.Find(x => x.name == req[i].String).level < req[i].Int)
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                //Something went wrong.
+                UnityEngine.Debug.Log("CRequirement::CanUse() cannot find " + req[i].String);
+            }
+        }
+
+        return true;
     }
 }

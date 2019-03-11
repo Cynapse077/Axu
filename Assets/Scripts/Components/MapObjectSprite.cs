@@ -631,7 +631,7 @@ public class MapObjectSprite : MonoBehaviour
 
             case "Crystal":
                 Landmark landmark = World.tileMap.GetRandomLandmark();
-                World.tileMap.SetPosition(landmark.position, 0);
+                World.tileMap.SetPosition(landmark.pos, 0);
 
                 ObjectManager.playerEntity.ForcePosition(World.tileMap.CurrentMap.GetRandomFloorTile());
                 ObjectManager.playerEntity.BeamDown();

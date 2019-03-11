@@ -85,14 +85,14 @@ public class SpawnNPCEvent : QuestEvent
 {
     readonly string npcID;
     readonly string giveItem;
-    readonly Coord worldPos;
+    readonly string zone;
     readonly int elevation;
     readonly Coord localPos;
 
-    public SpawnNPCEvent(string nID, Coord wPos, Coord lPos, int ele, string gItem = "")
+    public SpawnNPCEvent(string nID, string z, Coord lPos, int ele, string gItem = "")
     {
         npcID = nID;
-        worldPos = wPos;
+        zone = z;
         localPos = lPos;
         elevation = ele;
         giveItem = gItem;
@@ -100,7 +100,8 @@ public class SpawnNPCEvent : QuestEvent
 
     public override void RunEvent()
     {
-        NPC n = new NPC(EntityList.GetBlueprintByID(npcID), worldPos, localPos, elevation);
+        Coord wPos = World.worldMap.worldMapData.GetLandmark(zone);
+        NPC n = new NPC(EntityList.GetBlueprintByID(npcID), wPos, localPos, elevation);
 
         if (giveItem != "")
         {
@@ -114,21 +115,22 @@ public class SpawnNPCEvent : QuestEvent
 public class SpawnNPCGroupEvent : QuestEvent
 {
     readonly string groupID;
-    readonly Coord worldPos;
+    readonly string zone;
     readonly int elevation;
     readonly int amount;
 
-    public SpawnNPCGroupEvent(string group, Coord wPos, int ele, int amt)
+    public SpawnNPCGroupEvent(string group, string wPos, int ele, int amt)
     {
         groupID = group;
-        worldPos = wPos;
+        zone = wPos;
         elevation = ele;
         amount = amt;
     }
 
     public override void RunEvent()
     {
-        List<NPC> ns = SpawnController.SpawnFromGroupNameAt(groupID, amount, worldPos, elevation);
+        Coord wPos = World.worldMap.worldMapData.GetLandmark(zone);
+        List<NPC> ns = SpawnController.SpawnFromGroupNameAt(groupID, amount, wPos, elevation);
 
         foreach (NPC n in ns)
         {
@@ -161,14 +163,14 @@ public class SpawnObjectEvent : QuestEvent
 {
     readonly string objectID;
     readonly string giveItem;
-    readonly Coord worldPos;
+    readonly string zone;
     readonly int elevation;
     readonly Coord localPos;
 
-    public SpawnObjectEvent(string oID, Coord wPos, Coord lPos, int ele, string gItem = "")
+    public SpawnObjectEvent(string oID, string wPos, Coord lPos, int ele, string gItem = "")
     {
         objectID = oID;
-        worldPos = wPos;
+        zone = wPos;
         localPos = lPos;
         elevation = ele;
         giveItem = gItem;
@@ -176,12 +178,17 @@ public class SpawnObjectEvent : QuestEvent
 
     public override void RunEvent()
     {
-        MapObject m = World.objectManager.NewObjectAtOtherScreen(objectID, localPos, worldPos, elevation);
+        Coord c = myQuest.GetZone(zone);
 
-        if (giveItem != "")
+        if (c != null)
         {
-            m.inv.Add(ItemList.GetItemByID(giveItem));
-        }
+            MapObject m = World.objectManager.NewObjectAtOtherScreen(objectID, localPos, c, elevation);
+
+            if (giveItem != "")
+            {
+                m.inv.Add(ItemList.GetItemByID(giveItem));
+            }
+        }        
     }
 }
 
@@ -231,27 +238,28 @@ public class GiveNPCQuestEvent : QuestEvent
 public class MoveNPCEvent : QuestEvent
 {
     readonly string npcID;
-    readonly Coord worldPos;
+    readonly string zone;
     readonly Coord localPos;
     readonly int elevation;
 
-    public MoveNPCEvent(string nID, Coord wPos, Coord lPos, int ele)
+    public MoveNPCEvent(string nID, string wPos, Coord lPos, int ele)
     {
         npcID = nID;
-        worldPos = wPos;
+        zone = wPos;
         localPos = lPos;
         elevation = ele;
     }
 
     public override void RunEvent()
     {
+        Coord c = myQuest.GetZone(zone);
         NPC n = World.objectManager.npcClasses.Find(x => x.ID == npcID);
 
         if (n != null)
         {
-            if (worldPos != null)
+            if (zone != null)
             {
-                n.worldPosition = worldPos;
+                n.worldPosition = c;
             }
 
             if (localPos != null)
@@ -278,7 +286,7 @@ public class MoveNPCEvent : QuestEvent
             {
                 localPosition = localPos,
                 elevation = elevation,
-                worldPosition = worldPos
+                worldPosition = c
             };
 
             World.objectManager.CreateNPC(npc);
@@ -478,6 +486,67 @@ public class SetNPCDialogueTree : QuestEvent
         if (n != null)
         {
             n.dialogueID = dialogueID;
+        }
+    }
+}
+
+public class OpenDialogue : QuestEvent
+{
+    readonly string speaker;
+    readonly string dialogue;
+
+    public OpenDialogue(string spkr, string dia)
+    {
+        speaker = spkr;
+        dialogue = dia;
+    }
+
+    public override void RunEvent()
+    {
+        Alert.CustomAlert_WithTitle(speaker, dialogue);
+    }
+}
+
+public class CreateLocation : QuestEvent
+{
+    readonly string zoneID;
+
+    public CreateLocation(string zone)
+    {
+        zoneID = zone;
+    }
+
+    public override void RunEvent()
+    {
+        ZoneBlueprint zb = World.worldMap.worldMapData.GetZone(zoneID);
+        Coord pos = World.worldMap.worldMapData.PlaceZone(zb);
+
+        if (pos != null)
+        {
+            World.tileMap.DeleteScreen(pos.x, pos.y);
+            World.worldMap.worldMapData.NewPostGenLandmark(pos, zoneID);
+        }
+    }
+}
+
+public class RemoveLocation : QuestEvent
+{
+    readonly string zoneID;
+
+    public RemoveLocation(string zone)
+    {
+        zoneID = zone;
+    }
+
+    public override void RunEvent()
+    {
+        Coord c = World.worldMap.worldMapData.GetLandmark(zoneID);
+
+        if (c != null)
+        {
+            World.worldMap.worldMapData.RemoveLandmark(c);
+            World.tileMap.DeleteScreen(c.x, c.y);
+            World.worldMap.RemoveLandmark(c.x, c.y);
         }
     }
 }

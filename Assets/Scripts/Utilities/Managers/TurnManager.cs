@@ -179,7 +179,7 @@ public class TurnManager : MonoBehaviour
 
             if (mi.radiation > 0 && SeedManager.combatRandom.Next(100) < (mi.radiation / 2f))
             {
-                playerEntity.stats.Radiate(SeedManager.combatRandom.Next((int)(mi.radiation / 2f)));
+                playerEntity.stats.Radiate(1);
 
                 //TODO: NPCs radiate too.
             }
@@ -203,6 +203,7 @@ public class TurnManager : MonoBehaviour
             }
 
             turnsSinceWeatherChange = 0;
+
             if (_weather == Weather.Sandstorm)
                 TurnsTilWeatherChange = UnityEngine.Random.Range(150, 450);
             else
@@ -236,31 +237,40 @@ public class TurnManager : MonoBehaviour
     void PlayerTurn()
     {
         if (playerEntity == null)
-            return;
-
-        playerEntity.RefreshActionPoints();
-
-        if (playerEntity.actionPoints >= costPerAction)
-            playerEntity.canAct = true;
-        else
-            playerEntity.EndTurn(0.01f, 0);
-    }
-
-    public void EndTurn(float waitTime, int actionPointCost)
-    {
-        if (playerEntity != null && playerEntity.stats.dead)
         {
             return;
         }
 
-        CheckInSightObjectAndEntities();
+        playerEntity.RefreshActionPoints();
+
+        if (playerEntity.actionPoints >= costPerAction)
+        {
+            playerEntity.canAct = true;
+        }
+        else
+        {
+            playerEntity.EndTurn(0.01f, 0);
+        }
+    }
+
+    public void EndTurn(float waitTime, int actionPointCost)
+    {
+        if (playerEntity == null || playerEntity.stats.dead)
+        {
+            return;
+        }
+
         playerEntity.actionPoints -= actionPointCost;
         IncrementTime();
 
         if (playerEntity.actionPoints >= costPerAction)
+        {
             playerEntity.canAct = true;
+        }
         else
+        {
             StartCoroutine(NPCTurns(waitTime + 0.01f));
+        }
     }
 
     public IEnumerator NPCTurns(float wt)
@@ -312,15 +322,18 @@ public class TurnManager : MonoBehaviour
         PlayerTurn();
     }
 
+    //Unused
     public void CheckInSightObjectAndEntities()
     {
-        if (playerEntity == null)
-            return;
-
-        for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
+        if (playerEntity != null)
         {
-            if (World.objectManager.onScreenNPCObjects[i] != null)
-                World.objectManager.onScreenNPCObjects[i].GetComponentInChildren<SpriteRenderer>().enabled = (playerEntity.inSight(World.objectManager.onScreenNPCObjects[i].myPos));
+            for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
+            {
+                if (World.objectManager.onScreenNPCObjects[i] != null)
+                {
+                    World.objectManager.onScreenNPCObjects[i].GetComponentInChildren<SpriteRenderer>().enabled = playerEntity.inSight(World.objectManager.onScreenNPCObjects[i].myPos);
+                }
+            }
         }
     }
 }

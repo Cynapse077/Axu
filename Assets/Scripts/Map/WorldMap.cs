@@ -104,7 +104,9 @@ public class WorldMap : MonoBehaviour
                 int tileNum = BiomeToIndex(mi.biome);
 
                 if (SeedManager.worldRandom.Next(100) < 40)
+                {
                     tileNum += 8;
+                }
 
                 Color[] p = tiles[tileNum];
 
@@ -126,7 +128,7 @@ public class WorldMap : MonoBehaviour
         GetComponent<Renderer>().material.mainTexture = texture;
     }
 
-    void PlaceLandmark(int x, int y, MapInfo mi)
+    public void PlaceLandmark(int x, int y, MapInfo mi)
     {
         //Set landmarks
         if (mi.biome != Biome.Mountain && mi.HasLandmark())
@@ -153,6 +155,14 @@ public class WorldMap : MonoBehaviour
 
             landmarks.Add(new Coord(x, y), g);
         }
+    }
+
+    public void RemoveLandmark(int x, int y)
+    {
+        Coord c = new Coord(x, y);
+
+        Destroy(landmarks[c]);
+        landmarks.Remove(c);
     }
 
     int BiomeToIndex(Biome b)

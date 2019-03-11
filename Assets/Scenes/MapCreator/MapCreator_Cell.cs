@@ -2,218 +2,221 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MapCreator_Cell : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler, IPointerExitHandler
+namespace MapCreator
 {
-    public int tileID;
-    public int objectID = -1;
-    public int npcID;
-    public Coord pos;
-    public Image mapObject;
-    public Image npc;
-    public Image image;
-
-    MapCreatorTool mct;
-    
-    void Start()
+    public class MapCreator_Cell : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler, IPointerExitHandler
     {
-        Initialize();
-    }
+        public int tileID;
+        public int objectID = -1;
+        public int npcID;
+        public Coord pos;
+        public Image mapObject;
+        public Image npc;
+        public Image image;
 
-    void Initialize()
-    {
-        if (mct == null)
-            mct = GameObject.FindObjectOfType<MapCreatorTool>();
-    }
+        MapCreatorTool mct;
 
-    public void SetTile(Sprite s, int id)
-    {
-        if (image == null)
-            image = GetComponent<Image>();
-
-        image.sprite = s;
-        tileID = id;
-    }
-
-    Color ColorToDisplay
-    {
-        get
+        void Start()
         {
-            return (Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl)) ? Color.yellow : Color.magenta;
+            Initialize();
         }
-    }
 
-    public void OnPress(bool overrrideMenu = false, bool skipAuto = false)
-    {
-        Initialize();
-
-        if (mct.selectType == MapCreatorTool.MC_Selection_Type.Save)
+        void Initialize()
         {
-            if (overrrideMenu)
-                SetTile(mct.Sprites[32], 32);
-            else
-                return;
+            if (mct == null)
+                mct = GameObject.FindObjectOfType<MapCreatorTool>();
         }
-        else if (mct.selectType == MapCreatorTool.MC_Selection_Type.Paint)
-        {
-            if (Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl))
-                mct.SetCurrentTileID(tileID);
-            else if (Input.GetKey(KeyCode.LeftShift))
-                mct.Box(pos);
-            else
-                mct.TileChanged(pos.x, pos.y, skipAuto);
 
-        }
-        else if (mct.selectType == MapCreatorTool.MC_Selection_Type.Fill)
+        public void SetTile(Sprite s, int id)
         {
-            if (Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl))
-                mct.SetCurrentTileID(tileID);
-            else
-                mct.FloodFill(this, tileID);
-        }
-        else if (mct.selectType == MapCreatorTool.MC_Selection_Type.Place_Object)
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-                mct.Box(pos);
+            if (image == null)
+                image = GetComponent<Image>();
 
-            else if (objectID != mct.CurrentTile)
+            image.sprite = s;
+            tileID = id;
+        }
+
+        Color ColorToDisplay
+        {
+            get
             {
-                mct.ObjectChanged(pos.x, pos.y);
-                SetObjectSprite(mct.CurrentTile);
-                mct.AutotileObjects(pos.x, pos.y, true);
+                return (Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl)) ? Color.yellow : Color.magenta;
             }
         }
-        else if (mct.selectType == MapCreatorTool.MC_Selection_Type.Place_NPC)
+
+        public void OnPress(bool overrrideMenu = false, bool skipAuto = false)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-                mct.Box(pos);
-            else if (npcID != mct.CurrentTile)
+            Initialize();
+
+            if (mct.selectType == MapCreatorTool.MC_Selection_Type.Save)
             {
-                mct.NPCChanged(pos.x, pos.y);
-                npc.sprite = mct.npcSprites[mct.CurrentTile].sprite;
+                if (overrrideMenu)
+                    SetTile(mct.Sprites[32], 32);
+                else
+                    return;
+            }
+            else if (mct.selectType == MapCreatorTool.MC_Selection_Type.Paint)
+            {
+                if (Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl))
+                    mct.SetCurrentTileID(tileID);
+                else if (Input.GetKey(KeyCode.LeftShift))
+                    mct.Box(pos);
+                else
+                    mct.TileChanged(pos.x, pos.y, skipAuto);
+
+            }
+            else if (mct.selectType == MapCreatorTool.MC_Selection_Type.Fill)
+            {
+                if (Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl))
+                    mct.SetCurrentTileID(tileID);
+                else
+                    mct.FloodFill(this, tileID);
+            }
+            else if (mct.selectType == MapCreatorTool.MC_Selection_Type.Place_Object)
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                    mct.Box(pos);
+
+                else if (objectID != mct.CurrentTile)
+                {
+                    mct.ObjectChanged(pos.x, pos.y);
+                    SetObjectSprite(mct.CurrentTile);
+                    mct.AutotileObjects(pos.x, pos.y, true);
+                }
+            }
+            else if (mct.selectType == MapCreatorTool.MC_Selection_Type.Place_NPC)
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                    mct.Box(pos);
+                else if (npcID != mct.CurrentTile)
+                {
+                    mct.NPCChanged(pos.x, pos.y);
+                    npc.sprite = mct.npcSprites[mct.CurrentTile].sprite;
+                    npcID = mct.npcSprites[mct.CurrentTile].id;
+                }
+            }
+        }
+
+        public void SetObjectSprite(int id)
+        {
+            if (id < 0)
+            {
+                EmptySprite(MapCreatorTool.MC_Selection_Type.Place_Object);
+
+            }
+            else
+            {
+                mapObject.sprite = mct.objectSprites[id];
+                objectID = id;
+                float y = (mapObject.sprite.texture.height > mapObject.sprite.texture.width) ? 1f : 0.5f;
+                mapObject.rectTransform.localScale = new Vector3(0.5f, y, 1f);
+            }
+        }
+
+        public void SetObject(string name)
+        {
+            MapObjectBlueprint mob = ItemList.GetMOB(name);
+
+            for (int i = 0; i < ItemList.mapObjectBlueprints.Count; i++)
+            {
+                if (ItemList.mapObjectBlueprints[i].objectType == name)
+                {
+                    objectID = i;
+                    break;
+                }
+            }
+
+            mapObject.sprite = SpriteManager.GetObjectSprite(mob.spriteID);
+            float y = (mapObject.sprite.texture.height > mapObject.sprite.texture.width) ? 1f : 0.5f;
+            mapObject.rectTransform.localScale = new Vector3(0.5f, y, 1f);
+
+            if (mapObject.sprite.texture.width > 16)
+                mapObject.sprite = Sprite.Create(mapObject.sprite.texture, new Rect(0, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+        }
+
+        public void SetNPCSprite(int id)
+        {
+            if (id < 0)
+                EmptySprite(MapCreatorTool.MC_Selection_Type.Place_NPC);
+            else
+            {
+                npc.sprite = mct.npcSprites[id].sprite;
                 npcID = mct.npcSprites[mct.CurrentTile].id;
             }
         }
-    }
 
-    public void SetObjectSprite(int id)
-    {
-        if (id < 0)
+        public void SetNPC(string id)
         {
-            EmptySprite(MapCreatorTool.MC_Selection_Type.Place_Object);
-            
+            npc.sprite = mct.npcSprites.Find(x => x.npcID == id).sprite;
+            npcID = mct.npcSprites.Find(x => x.npcID == id).id;
         }
-        else
-        {
-            mapObject.sprite = mct.objectSprites[id];
-            objectID = id;
-            float y = (mapObject.sprite.texture.height > mapObject.sprite.texture.width) ? 1f : 0.5f;
-            mapObject.rectTransform.localScale = new Vector3(0.5f, y, 1f);
-        }
-    }
 
-    public void SetObject(string name)
-    {
-        MapObjectBlueprint mob = ItemList.GetMOB(name);
-
-        for (int i = 0; i < ItemList.mapObjectBlueprints.Count; i++)
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            if (ItemList.mapObjectBlueprints[i].objectType == name)
+            mct.MouseOver(pos);
+
+            if (mct.selectType != MapCreatorTool.MC_Selection_Type.Save)
             {
-                objectID = i;
-                break;
+                image.color = ColorToDisplay;
+
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    mct.EnableTooltip(GetTootip());
+                }
+
+                if (Input.GetMouseButton(0))
+                    OnPress();
+                if (Input.GetMouseButton(1))
+                    EmptySprite(mct.selectType);
             }
         }
 
-        mapObject.sprite = SpriteManager.GetObjectSprite(mob.spriteID);
-        float y = (mapObject.sprite.texture.height > mapObject.sprite.texture.width) ? 1f : 0.5f;
-        mapObject.rectTransform.localScale = new Vector3(0.5f, y, 1f);
-
-        if (mapObject.sprite.texture.width > 16)
-            mapObject.sprite = Sprite.Create(mapObject.sprite.texture, new Rect(0, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
-    }
-
-    public void SetNPCSprite(int id)
-    {
-        if (id < 0)
-            EmptySprite(MapCreatorTool.MC_Selection_Type.Place_NPC);
-        else
+        string GetTootip()
         {
-            npc.sprite = mct.npcSprites[id].sprite;
-            npcID = mct.npcSprites[mct.CurrentTile].id;
+            string tt = Tile.GetKey(tileID);
+            string ot = (objectID > -1) ? ItemList.mapObjectBlueprints[objectID].Name : "No Object";
+            string nt = (npcID > -1) ? EntityList.npcs[npcID].name : "No NPC";
+
+            return string.Format("{0}\n{1}\n{2}", tt, ot, nt);
         }
-    }
 
-    public void SetNPC(string id)
-    {
-        npc.sprite = mct.npcSprites.Find(x => x.npcID == id).sprite;
-        npcID = mct.npcSprites.Find(x => x.npcID == id).id;
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        mct.MouseOver(pos);
-
-        if (mct.selectType != MapCreatorTool.MC_Selection_Type.Save)
+        public void OnPointerExit(PointerEventData eventData)
         {
-            image.color = ColorToDisplay;
+            image.color = Color.white;
+            mct.DisableTooltip();
+        }
 
-            if (Input.GetKey(KeyCode.LeftControl))
+        public void EmptySprite(MapCreatorTool.MC_Selection_Type type)
+        {
+            if (type == MapCreatorTool.MC_Selection_Type.Paint)
             {
-                mct.EnableTooltip(GetTootip());
+                npc.sprite = mct.empty;
+                npcID = -1;
+                mapObject.sprite = mct.empty;
+                objectID = -1;
             }
-
-            if (Input.GetMouseButton(0))
-                OnPress();
-            if (Input.GetMouseButton(1))
-                EmptySprite(mct.selectType);
+            else if (type == MapCreatorTool.MC_Selection_Type.Place_NPC)
+            {
+                npc.sprite = mct.empty;
+                npcID = -1;
+            }
+            else if (type == MapCreatorTool.MC_Selection_Type.Place_Object)
+            {
+                mapObject.sprite = mct.empty;
+                objectID = -1;
+                mct.AutotileObjects(pos.x, pos.y, true);
+            }
         }
-    }
 
-    string GetTootip()
-    {
-        string tt = Tile.GetKey(tileID);
-        string ot = (objectID > -1) ? ItemList.mapObjectBlueprints[objectID].Name : "No Object";
-        string nt = (npcID > -1) ? EntityList.npcs[npcID].name : "No NPC";
-
-        return string.Format("{0}\n{1}\n{2}", tt, ot, nt);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        image.color = Color.white;
-        mct.DisableTooltip();
-    }
-
-    public void EmptySprite(MapCreatorTool.MC_Selection_Type type)
-    {
-        if (type == MapCreatorTool.MC_Selection_Type.Paint)
+        public void OnPointerDown(PointerEventData eventData)
         {
-            npc.sprite = mct.empty;
-            npcID = -1;
-            mapObject.sprite = mct.empty;
-            objectID = -1;
-        }
-        else if (type == MapCreatorTool.MC_Selection_Type.Place_NPC)
-        {
-            npc.sprite = mct.empty;
-            npcID = -1;
-        }
-        else if (type == MapCreatorTool.MC_Selection_Type.Place_Object)
-        {
-            mapObject.sprite = mct.empty;
-            objectID = -1;
-            mct.AutotileObjects(pos.x, pos.y, true);
-        }
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        if (mct.selectType != MapCreatorTool.MC_Selection_Type.Save)
-        {
-            if (eventData.button == PointerEventData.InputButton.Left)
-                OnPress();
-            else if (eventData.button == PointerEventData.InputButton.Right)
-                EmptySprite(mct.selectType);
+            if (mct.selectType != MapCreatorTool.MC_Selection_Type.Save)
+            {
+                if (eventData.button == PointerEventData.InputButton.Left)
+                    OnPress();
+                else if (eventData.button == PointerEventData.InputButton.Right)
+                    EmptySprite(mct.selectType);
+            }
         }
     }
 }
