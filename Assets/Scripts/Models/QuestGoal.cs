@@ -115,10 +115,11 @@ public class ChoiceGoal : Goal
 {
     Goal[] goals;
 
-    public ChoiceGoal(Quest q, Goal[] gs)
+    public ChoiceGoal(Quest q, Goal[] gs, string desc)
     {
         goalType = "ChoiceGoal";
         myQuest = q;
+        description = desc;
 
         goals = new Goal[gs.Length];
         for (int i = 0; i < gs.Length; i++)
@@ -192,10 +193,11 @@ public class ChoiceGoal : Goal
 
 public class SpecificKillGoal : Goal
 {
-    public SpecificKillGoal(Quest q)
+    public SpecificKillGoal(Quest q, string desc)
     {
         goalType = "SpecificKillGoal";
         myQuest = q;
+        description = desc;
         isComplete = false;
     }
 
@@ -295,13 +297,14 @@ public class NPCKillGoal : Goal
     readonly string npcID;
     readonly int max;
 
-    public NPCKillGoal(Quest q, string nID, int amt)
+    public NPCKillGoal(Quest q, string nID, int amt, string desc)
     {
         goalType = "NPCKillGoal";
         myQuest = q;
         npcID = nID;
         amount = 0;
         max = amt;
+        description = desc;
         isComplete = false;
     }
 
@@ -363,13 +366,14 @@ public class FactionKillGoal : Goal
     readonly string faction;
     readonly int max;
 
-    public FactionKillGoal(Quest q, string _faction, int amt)
+    public FactionKillGoal(Quest q, string _faction, int amt, string desc)
     {
         goalType = "FactionKillGoal";
         myQuest = q;
         faction = _faction;
         amount = 0;
         max = amt;
+        description = desc;
         isComplete = false;
     }
 
@@ -426,12 +430,13 @@ public class GoToGoal : Goal
     readonly int elevation;
     Coord coordDest;
 
-    public GoToGoal(Quest q, string dest, int ele)
+    public GoToGoal(Quest q, string dest, int ele, string desc)
     {
         goalType = "GoToGoal";
         myQuest = q;
         destination = dest;
         elevation = ele;
+        description = desc;
         isComplete = false;
 
         coordDest = q.GetZone(destination);
@@ -506,7 +511,7 @@ public class InteractGoal : Goal
     readonly string objectType;
     readonly int max;
 
-    public InteractGoal(Quest q, string objType, string wPos, int ele, int amt)
+    public InteractGoal(Quest q, string objType, string wPos, int ele, int amt, string desc)
     {
         goalType = "InteractGoal";
         myQuest = q;
@@ -514,6 +519,7 @@ public class InteractGoal : Goal
         elevation = ele;
         objectType = objType;
         max = amt;
+        description = desc;
         amount = 0;
     }
 
@@ -579,11 +585,12 @@ public class TalkToGoal : Goal
 {
     readonly string npcTarget;
 
-    public TalkToGoal(Quest q, string n)
+    public TalkToGoal(Quest q, string n, string desc)
     {
         goalType = "TalkToGoal";
         myQuest = q;
         npcTarget = n;
+        description = desc;
         isComplete = false;
     }
 
@@ -657,7 +664,7 @@ public class FetchPropertyGoal : Goal
     public readonly string npcTarget;
     readonly int max;
 
-    public FetchPropertyGoal(Quest q, string nid, string prop, int amt)
+    public FetchPropertyGoal(Quest q, string nid, string prop, int amt, string desc)
     {
         goalType = "FetchPropertyGoal";
         myQuest = q;
@@ -665,6 +672,7 @@ public class FetchPropertyGoal : Goal
         itemProperty = prop.ToEnum<ItemProperty>();
         max = amt;
         amount = 0;
+        description = desc;
         isComplete = false;
     }
 
@@ -750,7 +758,7 @@ public class Fetch_Homonculus : Goal
     public List<Item> items;
     readonly int max;
 
-    public Fetch_Homonculus(Quest q, string nid, string prop, int amt)
+    public Fetch_Homonculus(Quest q, string nid, string prop, int amt, string desc)
     {
         goalType = "Fetch_Homonculus";
         myQuest = q;
@@ -759,6 +767,7 @@ public class Fetch_Homonculus : Goal
         items = new List<Item>();
         max = amt;
         amount = 0;
+        description = desc;
         isComplete = false;
     }
 
@@ -908,7 +917,7 @@ public class FetchGoal : Goal
     public readonly string npcTarget;
     readonly int max;
 
-    public FetchGoal(Quest q, string nid, string id, int amt)
+    public FetchGoal(Quest q, string nid, string id, int amt, string desc)
     {
         goalType = "FetchGoal";
         myQuest = q;
@@ -916,6 +925,7 @@ public class FetchGoal : Goal
         itemID = id;
         max = amt;
         amount = 0;
+        description = desc;
         isComplete = false;
     }
 

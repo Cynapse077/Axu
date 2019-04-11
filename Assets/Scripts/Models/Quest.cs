@@ -205,6 +205,7 @@ public class Quest : EventContainer
     Goal GetQuestGoalFromJson(JsonData q)
     {
         string goal = q["Goal"].ToString();
+        string desc = q.ContainsKey("Description") ? q["Description"].ToString() : null;
 
         switch (goal)
         {
@@ -212,48 +213,48 @@ public class Quest : EventContainer
                 string locID = q["To"][0].ToString();
                 int ele = (q["To"].Count > 1) ? (int)q["To"][1] : 0;
 
-                return new GoToGoal(this, locID, ele);
+                return new GoToGoal(this, locID, ele, desc);
 
             case "Fetch":
                 string itemID = q["Item"][0].ToString();
                 string giveTo = q["Give To"].ToString();
                 int fetchAmt = (q["Item"].Count > 1) ? (int)q["Item"][1] : 1;
 
-                return new FetchGoal(this, giveTo, itemID, fetchAmt);
+                return new FetchGoal(this, giveTo, itemID, fetchAmt, desc);
 
             case "Fetch Property":
                 string prop = q["ItemProperty"][0].ToString();
                 string propGiveTo = q["Give To"].ToString();
                 int propAmt = (q["ItemProperty"].Count > 1) ? (int)q["ItemProperty"][1] : 1;
 
-                return new FetchPropertyGoal(this, propGiveTo, prop, propAmt);
+                return new FetchPropertyGoal(this, propGiveTo, prop, propAmt, desc);
 
             case "Talk To":
                 string npcToTalkTo = q["NPC"].ToString();
 
-                return new TalkToGoal(this, npcToTalkTo);
+                return new TalkToGoal(this, npcToTalkTo, desc);
 
             case "Kill Spawned":
-                return new SpecificKillGoal(this);
+                return new SpecificKillGoal(this, desc);
 
             case "Kill NPC":
                 string npcID = q["NPC"][0].ToString();
                 int killAmt = (q["NPC"].Count > 1) ? (int)q["NPC"][1] : 1;
 
-                return new NPCKillGoal(this, npcID, killAmt);
+                return new NPCKillGoal(this, npcID, killAmt, desc);
 
             case "Kill Faction":
                 string facID = q["Faction"][0].ToString();
                 int facKillAmt = (q["Faction"].Count > 1) ? (int)q["Faction"][1] : 1;
 
-                return new FactionKillGoal(this, facID, facKillAmt);
+                return new FactionKillGoal(this, facID, facKillAmt, desc);
 
             case "Interact":
                 int interactEle = (int)q["Elevation"];
                 string objType = q["Object Type"].ToString();
                 int interactAmount = (int)q["Amount"];
 
-                return new InteractGoal(this, objType, q["Coordinate"].ToString(), interactEle, interactAmount);
+                return new InteractGoal(this, objType, q["Coordinate"].ToString(), interactEle, interactAmount, desc);
 
             case "Choice":
                 List<Goal> goals = new List<Goal>();
@@ -265,14 +266,14 @@ public class Quest : EventContainer
                     goals.Add(g);
                 }
 
-                return new ChoiceGoal(this, goals.ToArray());
+                return new ChoiceGoal(this, goals.ToArray(), desc);
 
             case "Fetch Homonculus":
                 string propH = q["ItemProperty"][0].ToString();
                 string propGiveToH = q["Give To"].ToString();
                 int propAmtH = (q["ItemProperty"].Count > 1) ? (int)q["ItemProperty"][1] : 1;
 
-                return new Fetch_Homonculus(this, propGiveToH, propH, propAmtH);
+                return new Fetch_Homonculus(this, propGiveToH, propH, propAmtH, desc);
 
             default:
                 UnityEngine.Debug.LogError("Quest::GetQuestGoalFromJson - No quest goal type " + goal + "!");

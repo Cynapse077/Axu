@@ -1016,7 +1016,7 @@
             "Damage" : "1d4",
             "Armor" : 2,
             "Rarity" : 2,
-            "FlavorText" : "A Renaissance-era shield, designed for offense. It is worn like a glove, with a protective metal plate along the wrist. A light is placed in the center.",
+            "FlavorText" : "A shield  worn like a glove, with a protective metal plate along the wrist. A light is placed in the center.",
             "Cost" : 145,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "bash", "Level" : 1 },
@@ -1040,7 +1040,7 @@
             "DmgTypes" : [ "Cold" ],
             "Armor" : 2,
             "Rarity" : 4,
-            "FlavorText" : "A cold-repeling shield often held by Frostborne who are not yet used to the Northern environment.",
+            "FlavorText" : "A cold-repelling shield often held by Frostborne who are not yet used to the Northern environment.",
             "Cost" : 99,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "bash", "Level" : 1 },

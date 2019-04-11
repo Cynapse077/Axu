@@ -18,7 +18,7 @@ public static class GameSettings
     {
         get
         {
-            return "0.7.4c";
+            return "0.7.5";
         }
     }
 

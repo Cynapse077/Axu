@@ -114,7 +114,7 @@ public class BaseAI : MonoBehaviour
             return false;
         }
 
-        if (entity != null)
+        if (entity)
         {
             entity.canAct = canAct;
         }
@@ -170,7 +170,7 @@ public class BaseAI : MonoBehaviour
 
         if (!CanDoAnAction() || npcBase.HasFlag(NPC_Flags.Inactive))
         {
-            if (entity != null)
+            if (entity)
             {
                 entity.Wait();
             }
@@ -544,7 +544,9 @@ public class BaseAI : MonoBehaviour
     public void SummonAdd(string groupName)
     {
         if (entity == null)
+        {
             entity = GetComponent<Entity>();
+        }
 
         List<Coord> emptyCoords = entity.GetEmptyCoords();
 

@@ -28,6 +28,11 @@ public class GameData
 
         public List<T> Get(Predicate<T> p)
         {
+            if (!initialized)
+            {
+                Debug.LogError("DataList::Get(Predicate) - List is not initialized.");
+            }
+
             return list.FindAll(p);
         }
     }

@@ -294,7 +294,8 @@
 			"Events" : [
 				{
                     "Event" : "OnComplete",
-                    "Console Command" : "questflag Hostile_To_Kin"
+                    "Console Command" : "questflag Hostile_To_Kin",
+					"Move NPC" : { "NPC" : "isazna", "Coordinate" : "Kin Hideout", "Local Position" : { "x" : 23, "y" : 2 }, "Elevation" : 0 }
                 }
 			],
             "End Dialogue" : "You are truly one of us. I am glad to call you Ensis. \nOur spies have located where the Kin are manufacturing one of their gods' bodies. There's a <color=yellow>Fabrication Plant</color> up North in the <color=yellow>Tundra</color>. If we are lucky, you can make it there in time to stop the construction.",
