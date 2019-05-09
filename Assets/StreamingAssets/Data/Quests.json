@@ -48,8 +48,8 @@
                 }
             ],
             "Steps" : [
-				{ "Goal"  : "Kill Spawned" },
-                { "Goal" : "Fetch", "Item" : [ "artifact1" ], "Give To" : "akklune" }
+				{ "Goal"  : "Kill Spawned", "Description" : "Kill the Deep Hunter and take the artifact." },
+                { "Goal" : "Fetch", "Item" : [ "artifact1" ], "Give To" : "akklune", "Description" : "Return the artifact to Akk-Lune." }
             ],
             "End Dialogue" : "That took longer than expected! Did you encounter difficulties? A <color=red>Deep Hunter</color>? Here? My appologies for putting you in danger.\nThe item you retrieved for me is a special keycard, used to activate the terminals in the Power Plant. It was stolen from us not long ago, and has made communications a pain, as you can imagine. I need you to <color=cyan>turn the power on</color>. There are five sub-terranean levels, each with a <color=yellow>terminal</color>. Turn all of them on to give back power. I would go myself, but I have matters to attend to. You'll hear from us when you've completed this task.",
 
@@ -78,11 +78,11 @@
                 "XP" : 150
             },
             "Steps" : [
-                { "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -1,  "Amount" : 1 },
-				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -2,  "Amount" : 1 },
-				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -3,  "Amount" : 1 },
-				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -4,  "Amount" : 1 },
-				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -5,  "Amount" : 1 }
+                { "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -1,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 1)" },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -2,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 2)" },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -3,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 3)" },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -4,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 4)" },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -5,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 5)" }
             ],
             "Events" : [
                 {
@@ -157,7 +157,7 @@
                 "XP" : 100
             },
             "Steps" : [
-                { "Goal" : "Fetch", "Item" : [ "rad_heart" ], "Give To" : "kanil" }
+                { "Goal" : "Fetch", "Item" : [ "rad_heart" ], "Give To" : "kanil", "Description" : "Kill the beast below and retrieve its heart." }
             ],
             "End Dialogue" : "Ah yes, thank you. My experiments aren't exactly <i>condoned</i> by Lomis, so I have to keep my collection a secret. If you grab me more items, I can make you healing concoctions. This is great. My very own apprentice! Find me <color=yellow>4 Spiny Fronds</color> and I can do this for you. They can be found on the Man-Eating Plants on the surface. Go now! He he he..",
 
@@ -519,9 +519,38 @@
 			"Steps" : [
 				{ "Goal" : "Talk To", "NPC" : "oromir" }
 			],
-			"End Dialogue" : "I see you managed to convince Arthomas. He and Ka-Nil arrived moments before you. \n\n[TO BE CONTINUED...]"
-		},
+			"End Dialogue" : "I see you've managed to convince Arthomas. He and Ka-Nil arrived moments before you. I give you my thanks and a great power. This device will restrict Xzol from leaving his construct body. If you weaken him sufficiently, I believe its power will be enough to permanently trap him on this plane. Xzol will need to use a large amount of power to have it work, however. I just hope you are able to survive long enough to get the deed done. If you are lucky enough, please bring the trapped god back to me. He will be quite the study partner... Of course, you will get your ship home finally. Talk to Ka-Nil about locating your target.",
 
+			"Chained Quest" : "ensis28"
+		},
+		{
+			"Name" : "Directions",
+			"ID" : "ensis28",
+			"Description" : "Talk to Ka-Nil.",
+			"Rewards" : {
+				"XP" : 0
+			},
+			"Steps" : [
+				{ "Goal" : "Talk To", "NPC" : "kanil" }
+			],
+			"End Dialogue" : "Locating Xzol has proven to be quite the problem. He seems to slip in and out of existence on a whim, but I feel like there is more solidity to it than that. His body is physical, and must be constrained the limitations of our plane. I believe he is hiding somewhere deep within the planet to regain his power after the devastation he caused. There are some deep tunnels in the desert, but I cannot be sure that's where he is hiding out. If we activate sonar above, we should be able to map out the entirety of the tunnels below the planet. This will give us a location.",
+
+			"Chained Quest" : "ensis29"
+		},
+		{
+			"Name" : "Sonar",
+			"ID" : "ensis29",
+			"Description" : "Find the entrance to the tunnels, and activate the sonar.",
+			"Rewards" : {
+				"XP" : 200
+			},
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Tunnel Entrance", 0 ] },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Tunnel Entrance", "Elevation" : -0,  "Amount" : 1, "Description" : "Turn on the sonar." },
+				{ "Goal" : "Talk To", "NPC" : "kanil" }
+			],
+			"End Dialogue" : "Excellent! I can see everything below! There appears to be something in the Tunnels, though I can't be sure of what it is exactly. It looks like a mass of... I don't even know. My best guess would be something to do with The Deep. [TO BE CONTINUED...]"
+		},
 
 
 		{
@@ -903,7 +932,7 @@
         		{ "Goal" : "Kill Spawned" },
         		{ "Goal" : "Talk To", "NPC" : "rojer" }
         	],
-        	"End Dialogue" : "She is dead? Perfect. Here's something for your troubles. I come from a family of merchants, but caught a bit of the wanderlust some years ago. I think I'm ready to go back to my roots now. I've heard you have some kind of a base of operations. If you're willing to do a favor for me, I can set up right there. Convenience is key, after all! There is a group of bandits stalking the Bazaar, taking everything they please. My friends have set up shop there and could really use your help!",
+        	"End Dialogue" : "She is dead? Perfect. Here's something for your troubles. I come from a family of merchants, but caught a bit of the wanderlust some years ago. I think I'm ready to go back to my roots now. I've heard you have some kind of a base of operations. If you're willing to do another favor for me, I can set up right there. Convenience is key, after all! There is a group of bandits stalking the Bazaar, taking everything they please. My friends have set up shop there and could really use your help!",
 
 			"Chained Quest" : "merchantile"
         },

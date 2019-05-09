@@ -1599,7 +1599,7 @@ public class Stats : MonoBehaviour
 
     public SStats ToSimpleStats()
     {
-        return new SStats(new Coord(_health, maxHealth), new Coord(_stamina, maxStamina), 
+        return new SStats(maxHealth, maxStamina, 
             new Dictionary<string, int>(Attributes), new Dictionary<string, int>(statusEffects), radiation, addictions);
     }
 }
@@ -1607,8 +1607,8 @@ public class Stats : MonoBehaviour
 [Serializable]
 public class SStats
 {
-    public int[] HP { get; set; }
-    public int[] ST { get; set; }
+    public int HP { get; set; }
+    public int ST { get; set; }
 
     public int STR { get; set; }
     public int DEX { get; set; }
@@ -1623,10 +1623,10 @@ public class SStats
     public List<StringInt> SE { get; set; }
     public List<Addiction> Adcts { get; set; }
 
-    public SStats(Coord hp, Coord st, Dictionary<string, int> attributes, Dictionary<string, int> statusEffects, int radiation, List<Addiction> adc)
+    public SStats(int hp, int st, Dictionary<string, int> attributes, Dictionary<string, int> statusEffects, int radiation, List<Addiction> adc)
     {
-        HP = new int[2] { hp.x, hp.y };
-        ST = new int[2] { st.x, st.y };
+        HP = hp;
+        ST = st;
 
         STR = attributes["Strength"];
         DEX = attributes["Dexterity"];

@@ -244,7 +244,6 @@ public class ObjectManager : MonoBehaviour
             if (npcB.HasFlag(NPC_Flags.Boss))
             {
                 npcB.maxHealth += Mathf.Min(World.DangerLevel() / 10, 20);
-                npcB.health = npcB.maxHealth;
             }
 
             npcClasses.Add(npcB);
@@ -324,8 +323,9 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    //use this for making an NPC at a certain location other than on screen
-    //Only used in world initialization from file for now.
+    /// <summary>
+    /// Only used in world initialization from file for now.
+    /// </summary>
     public void CreateNPC(NPC npcB)
     {
         if (!npcClasses.Contains(npcB))

@@ -78,22 +78,20 @@ public class Journal : MonoBehaviour
     {
         Faction f = FactionList.GetFactionByID(facID);
 
-        if (f == null)
+        if (f != null)
         {
-            return;
-        }
+            if (!f.hostileTo.Contains("player"))
+            {
+                f.hostileTo.Add("player");
+            }
 
-        if (!f.hostileTo.Contains("player"))
-        {
-            f.hostileTo.Add("player");
-        }
+            if (!f.hostileTo.Contains("followers"))
+            {
+                f.hostileTo.Add("followers");
+            }
 
-        if (!f.hostileTo.Contains("followers"))
-        {
-            f.hostileTo.Add("followers");
+            BreakFollowersInFaction(facID);
         }
-
-        BreakFollowersInFaction(facID);
     }
 
     void BreakFollowersInFaction(string facID)
@@ -174,6 +172,7 @@ public class Journal : MonoBehaviour
             {
                 Alert.NewAlert("Found_Base");
                 progressFlags.Add(ProgressFlags.Found_Base);
+
                 //Spawn chest with return tome in it.
                 MapObject moj = new MapObject("Chest", new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y - 8), newMap.mapInfo.position, newMap.elevation)
                 {

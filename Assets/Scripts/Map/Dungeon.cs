@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Dungeon
 {
     ZoneBlueprint_Underground blueprint;
-    public List<Room> rooms;
+    List<Room> rooms;
     readonly int[,] map_data;
 
     int FloorTile
@@ -78,6 +78,9 @@ public class Dungeon
                 case "Building":
                     SubCult();
                     break;
+                case "Tunnels":
+                    Tunnels();
+                    break;
             }
 
             if (blueprint.rules.layer2.Int > 0 && RNG.Next(100) <= blueprint.rules.layer2.Int)
@@ -120,6 +123,47 @@ public class Dungeon
         }
     }
 
+    void Tunnels()
+    {
+        FillMapWithWalls();
+        Coord start = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
+
+        for (int j = 0; j < RNG.Next(2, 5); j++)
+        {
+            Coord end = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
+
+            while (start.DistanceTo(end) < 8)
+            {
+                start = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
+                end = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
+            }
+
+            Line l = new Line(start, end);
+            List<Coord> points = l.GetPoints();
+            int radiusX = RNG.Next(1, 3);
+            int radiusY = RNG.Next(1, 3);
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                points[i].x += (int)Mathf.Sin(points[i].y * 5);
+                points[i].y += (int)Mathf.Sin(points[i].x * 5);
+
+                for (int x = points[i].x - radiusX; x <= points[i].x + radiusX; x++)
+                {
+                    for (int y = points[i].y - radiusY; y <= points[i].y + radiusY; y++)
+                    {
+                        if (x <= 0 || y <= 0 || x >= Manager.localMapSize.x - 2 || y >= Manager.localMapSize.y - 2)
+                        {
+                            continue;
+                        }
+
+                        map_data[x, y] = FloorTile;
+                    }
+                }
+            }
+        }
+    }
+
     void SubCult()
     {
         FillMapWithWalls();
@@ -146,7 +190,9 @@ public class Dungeon
             for (int ry = st.bottom; ry < st.top; ry++)
             {
                 if (rx > 1 && rx < Manager.localMapSize.x - 2 && ry > 1 && ry < Manager.localMapSize.y - 2)
+                {
                     map_data[rx, ry] = FloorTile;
+                }
             }
         }
     }

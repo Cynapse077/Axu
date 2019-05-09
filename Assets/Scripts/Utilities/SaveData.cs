@@ -104,10 +104,9 @@ public class SaveData : MonoBehaviour
         Manager.startElevation = (int)playerJson["WP"][2];
 
         //Health/Stamina
-        Manager.playerBuilder.hp = (int)playerJson["Stats"]["HP"][0];
-        Manager.playerBuilder.maxHP = (int)playerJson["Stats"]["HP"][1];
-        Manager.playerBuilder.st = (int)playerJson["Stats"]["ST"][0];
-        Manager.playerBuilder.maxST = (int)playerJson["Stats"]["ST"][1];
+        Manager.playerBuilder.hp = Manager.playerBuilder.maxHP = (int)playerJson["Stats"]["HP"];
+        Manager.playerBuilder.st = Manager.playerBuilder.maxST = (int)playerJson["Stats"]["ST"];
+
         //Attributes
         Manager.playerBuilder.attributes["Strength"] = (int)playerJson["Stats"]["STR"];
         Manager.playerBuilder.attributes["Dexterity"] = (int)playerJson["Stats"]["DEX"];

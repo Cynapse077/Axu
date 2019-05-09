@@ -522,7 +522,9 @@ public class BaseAI : MonoBehaviour
         {
             //Out of sight
             if (!entity.inSight(targetPosition) || distanceToTarget > 10)
+            {
                 entity.Wait();
+            }
             else
             {
                 //Shoot
@@ -802,9 +804,6 @@ public class BaseAI : MonoBehaviour
             Inventory inv = GetComponent<Inventory>();
             npcBase.localPosition = entity.myPos;
             npcBase.hasSeenPlayer = hasSeenPlayer;
-            npcBase.health = (npcBase.HasFlag(NPC_Flags.OnDisable_Regen)) ? entity.stats.maxHealth : entity.stats.health;
-            npcBase.stamina = (npcBase.HasFlag(NPC_Flags.OnDisable_Regen)) ? entity.stats.maxStamina : entity.stats.stamina;
-
             npcBase.inventory = inv.items;
             npcBase.bodyParts = entity.body.bodyParts;
             npcBase.handItems = new List<Item>();

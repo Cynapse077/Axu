@@ -304,6 +304,16 @@
 			"Underground" : "Cave_Norm"
 		},
 		{
+			"ID" : "Tunnel Entrance",
+			"Display" : "Tunnel Entrance",
+			"Tile Index" : 24,
+			"Walkable" : true,
+			"Place At" : {
+				"Biome" : "Desert"
+			},
+			"Underground" : "Tunnels"
+		},
+		{
 			"ID" : "Puggle Village",
 			"Display" : "Puggle Village",
 			"Tile Index" : 25,
@@ -539,6 +549,21 @@
 				{ "ID" : "UG_Dirt_2", "Weight" : 4 },
 				{ "ID" : "UG_Shroom_1", "Weight" : 2 },
 				{ "ID" : "UG_Shroom_2", "Weight" : 2 }
+			]
+		},
+		{
+			"ID" : "Tunnels",
+			"Display" : "Tunnels",
+			"Depth" : 20,
+			"Light" : 2,
+			"Rules" : {
+				"Algorithms" : [ "Tunnels", "CellAuto" ]
+			},
+			"Wall Tile" : "Volcano_Wall",
+			"Floor Tiles" : [
+				{ "ID" : "Floor_Stone_1", "Weight" : 50 },
+				{ "ID" : "Floor_Stone_2", "Weight" : 50 },
+				{ "ID" : "Floor_Stone_3", "Weight" : 3 }
 			]
 		},
 		{

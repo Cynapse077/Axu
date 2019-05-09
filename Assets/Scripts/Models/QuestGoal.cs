@@ -169,8 +169,15 @@ public class ChoiceGoal : Goal
 
     public override Coord Destination()
     {
-        //TODO: Uh....? How do I make two destinations?
-        return goals[0].Destination();
+        for (int i = 0; i < goals.Length; i++)
+        {
+            if (goals[i].Destination() != null)
+            {
+                return goals[i].Destination();
+            }
+        }
+
+        return null;
     }
 
     public override string ToString()
@@ -822,7 +829,6 @@ public class Fetch_Homonculus : Goal
             CEquipped ce = items[i].GetCComponent<CEquipped>();
             b.equippedItem = (ce == null) ? ItemList.GetNone() : ItemList.GetItemByID(ce.itemID);
 
-            //Add body parts from items here.
             switch (items[i].GetSlot())
             {
                 case ItemProperty.Slot_Arm:

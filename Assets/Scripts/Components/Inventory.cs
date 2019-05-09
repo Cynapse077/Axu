@@ -151,11 +151,9 @@ public class Inventory : MonoBehaviour
                 RemoveInstance(i);
                 Destroy(exp.gameObject);
                 CombatLog.NameMessage("Item_Impact_Shatter", i.Name);
-                return;
             }
         }
-
-        if (SeedManager.combatRandom.Next(100) < 12 + stats.proficiencies.Throwing.level)
+        else if (SeedManager.combatRandom.Next(100) < 12 + stats.proficiencies.Throwing.level)
         {
             if (!i.HasProp(ItemProperty.Quest_Item) && !i.HasProp(ItemProperty.Artifact))
             {
@@ -496,14 +494,9 @@ public class Inventory : MonoBehaviour
 
     public void Read(Item i)
     {
-        int timeCost = 100 - (stats.Intelligence * 2);
-        timeCost = Mathf.Clamp(timeCost, 1, 100);
-
         if (i.HasCComponent<CRequirement>())
         {
-            CRequirement cr = i.GetCComponent<CRequirement>();
-
-            if (!cr.CanUse(stats))
+            if (!i.GetCComponent<CRequirement>().CanUse(stats))
             {
                 Alert.NewAlert("CannotRead");
                 stats.AddStatusEffect("Confuse", 11);
@@ -523,10 +516,12 @@ public class Inventory : MonoBehaviour
                 if (eSkills.abilities.Find(x => x.ID == skill.ID) == null)
                 {
                     Skill s = SkillList.GetSkillByID(abName);
-                    s.SetFlag(Skill.AbilityOrigin.Book);
 
-                    eSkills.AddSkill(s, Skill.AbilityOrigin.Book);
-                    CombatLog.NameMessage("Learn_Skill", skill.Name);
+                    if (s != null)
+                    {
+                        eSkills.AddSkill(s, Skill.AbilityOrigin.Book);
+                        CombatLog.NameMessage("Learn_Skill", skill.Name);
+                    }
                 }
                 else
                 {
@@ -549,7 +544,7 @@ public class Inventory : MonoBehaviour
 
         i.RunCommands("OnRead");
         items.Remove(i);
-        entity.EndTurn(0.1f, timeCost);
+        entity.EndTurn(0.1f, 20);
     }
 
     public List<Item> Items_ThrowingFirst()

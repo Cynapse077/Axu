@@ -23,10 +23,8 @@ public static class StatInitializer
 
     public static void GetNPCStats(NPC npc, Stats s)
     {
-        s.maxHealth = npc.maxHealth;
-        s.health = npc.health;
-        s.maxStamina = npc.maxStamina;
-        s.stamina = npc.stamina;
+        s.health = s.maxHealth = npc.maxHealth;
+        s.stamina = s.maxStamina = npc.maxStamina;
 
         s.Attributes = new Dictionary<string, int>(npc.Attributes);
         s.statusEffects = new Dictionary<string, int>();

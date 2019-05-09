@@ -7,7 +7,6 @@ public class Body : MonoBehaviour
     public List<BodyPart> bodyParts;
     public Entity entity;
     public BodyPart.Hand defaultHand;
-    public StanceType currentStance = StanceType.Standing;
 
     Stats MyStats
     {
@@ -109,7 +108,9 @@ public class Body : MonoBehaviour
         bodyParts = CharacterCreation.SortBodyParts(bodyParts);
     }
 
-    //Called from Lua
+    /// <summary>
+    /// Called from lua. Adds a body part.
+    /// </summary>
     public void AddBodyPart(BodyPart bp)
     {
         bodyParts.Add(bp);
@@ -550,10 +551,5 @@ public class Body : MonoBehaviour
         }
 
         defaultHand = new BodyPart.Hand(GetBodyPartBySlot(ItemProperty.Slot_Head), ItemList.GetItemByID("stump"), "stump");
-    }
-
-    public enum StanceType
-    {
-        Standing, Crouching, Prone, Prostrate
     }
 }

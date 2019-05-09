@@ -21,7 +21,7 @@ public class NPC
     public List<string> traits = new List<string>();
     public string corpseItem;
     public string questID, dialogueID;
-    public int health, stamina, maxHealth, maxStamina;
+    public int maxHealth, maxStamina;
     public int weaponSkill;
 
     Random RNG
@@ -51,9 +51,6 @@ public class NPC
 
     public void AssignStats()
     {
-        health = maxHealth;
-        stamina = maxStamina;
-
         if (maxHealth < 0)
         {
             maxHealth = 0;
@@ -89,7 +86,7 @@ public class NPC
 
     public SStats GetSimpleStats()
     {
-        return new SStats(new Coord(health, maxHealth), new Coord(stamina, maxStamina), new Dictionary<string, int>(Attributes), new Dictionary<string, int>(), 0, null);
+        return new SStats(maxHealth, maxStamina, new Dictionary<string, int>(Attributes), new Dictionary<string, int>(), 0, null);
     }
 
     void FromBlueprint(NPC_Blueprint blueprint)
