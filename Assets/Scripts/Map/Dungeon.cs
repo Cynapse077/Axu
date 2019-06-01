@@ -128,7 +128,7 @@ public class Dungeon
         FillMapWithWalls();
         Coord start = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
 
-        for (int j = 0; j < RNG.Next(2, 5); j++)
+        for (int j = 0; j < RNG.Next(3, 6); j++)
         {
             Coord end = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
 
@@ -138,8 +138,7 @@ public class Dungeon
                 end = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
             }
 
-            Line l = new Line(start, end);
-            List<Coord> points = l.GetPoints();
+            List<Coord> points = new Line(start, end).GetPoints();
             int radiusX = RNG.Next(1, 3);
             int radiusY = RNG.Next(1, 3);
 

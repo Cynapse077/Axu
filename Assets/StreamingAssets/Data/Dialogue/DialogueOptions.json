@@ -216,7 +216,7 @@
 		"Display" : "What do you wish to know of, my child?",
 		"Responses" : [
 			{
-				"Display" : "The Kin of the Deep/",
+				"Display" : "The Kindred of the Deep.",
 				"GoTo" : "isazna_kin"
 			},
 			{

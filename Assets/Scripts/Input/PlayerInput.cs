@@ -253,25 +253,37 @@ public class PlayerInput : MonoBehaviour
             if (!waitForRefresh)
             {
                 if (KeyHeld("North"))
+                {
                     HeldKeys_Menu(-1);
+                }
                 else if (KeyHeld("South"))
+                {
                     HeldKeys_Menu(1);
+                }
             }
         } else
         {
             if (KeyDown("North"))
+            {
                 World.userInterface.SwitchSelectedNum(-1);
+            }
             else if (KeyDown("South"))
+            {
                 World.userInterface.SwitchSelectedNum(1);
+            }
         }
     }
 
     void HandleKeys()
     {
         if (canHoldKeys)
+        {
             HoldKeys();
+        }
         else
+        {
             SingleInput();
+        }
 
         AbilityHotkeys();
 
@@ -281,7 +293,7 @@ public class PlayerInput : MonoBehaviour
             ChangeCursorMode((cursorMode == CursorMode.Tile) ? CursorMode.None : CursorMode.Tile);
             cursorControlScript.Reset();
         }
-        else if (KeyDown("Interact") && World.userInterface.NoWindowsOpen && cursorMode != CursorMode.Direction)
+        else if (!fullMap && KeyDown("Interact") && World.userInterface.NoWindowsOpen && cursorMode != CursorMode.Direction)
         {
             List<ContextualMenu.ContextualAction> co = ContextualMenu.GetActions();
 
@@ -333,13 +345,17 @@ public class PlayerInput : MonoBehaviour
             walking = true;
         }
         else if (KeyDown("Reload"))
+        {
             entity.ReloadWeapon();
-
+        }
         else if (KeyDown("GoDownStairs"))
+        {
             TryChangeElevation(-1);
-
+        }
         else if (KeyDown("GoUpStairs"))
+        {
             TryChangeElevation(1);
+        }
 
         if (AnyInput())
         {
@@ -364,33 +380,25 @@ public class PlayerInput : MonoBehaviour
 
         switch (x)
         {
-            case -1:
-                c.x = Manager.localMapSize.x - 2;
+            case -1: c.x = Manager.localMapSize.x - 2;
                 break;
-            case 0:
-                c.x = Manager.localMapSize.x / 2;
+            case 0: c.x = Manager.localMapSize.x / 2;
                 break;
-            case 1:
-                c.x = 1;
+            case 1: c.x = 1;
                 break;
-            default:
-                c.x = Manager.localMapSize.x / 2;
+            default: c.x = Manager.localMapSize.x / 2;
                 break;
         }
 
         switch (y)
         {
-            case -1:
-                c.y = Manager.localMapSize.y - 2;
+            case -1: c.y = Manager.localMapSize.y - 2;
                 break;
-            case 0:
-                c.y = Manager.localMapSize.y / 2;
+            case 0: c.y = Manager.localMapSize.y / 2;
                 break;
-            case 1:
-                c.y = 1;
+            case 1: c.y = 1;
                 break;
-            default:
-                c.y = Manager.localMapSize.y / 2;
+            default: c.y = Manager.localMapSize.y / 2;
                 break;
         }
 
@@ -556,7 +564,9 @@ public class PlayerInput : MonoBehaviour
     public void CheckFacingDirection(int otherXPos)
     {
         if (otherXPos != entity.posX)
+        {
             FlipX(otherXPos < entity.posX);
+        }
     }
 
     void HeldKeyAction(int x, int y)
@@ -566,7 +576,10 @@ public class PlayerInput : MonoBehaviour
         if (!fullMap)
         {
             if (!entity.canAct)
+            {
                 return;
+            }
+            
             if (x != 0)
                 FlipX(x < 0);
             if (x == 0 && y == 0)

@@ -19,8 +19,12 @@ function Restoration(skill, entity, target)
 	return false
 end
 
+function Drain(skill, entity, target)
+	return (target.stats.stamina > target.stats.maxStamina / 4)
+end
+
 function Sprint(skill, entity, target)
-	if (not target.stats.hasEffect("Haste")) then
+	if (target.stats.hasEffect("Haste")) then
 		return false
 	end
 
@@ -51,7 +55,7 @@ function Line(skill, entity, target)
 	local line = BLine.GetPoints(entity.myPos, target.myPos)
 
 	for key,pos in pairs(line) do
-		if (FriendlyAt(entity, pos.x, pos.y) or not TileMap.WalkableTile(pos.x, pos.y)) then
+		if (not TileMap.WalkableTile(pos.x, pos.y) or FriendlyAt(entity, pos.x, pos.y)) then
 			return false
 		elseif (pos.x == target.posX and pos.y == target.posY) then
 			return true

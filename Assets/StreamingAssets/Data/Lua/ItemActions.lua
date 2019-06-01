@@ -55,6 +55,7 @@ function ShockAdjacent(defender, attacker)
 	end
 end
 
+--Pushes a creature away from the attacker
 function PushEntity(defender, attacker)
 	if (Random(0, 100) < 50) then
 		return
@@ -66,6 +67,7 @@ function PushEntity(defender, attacker)
 	Log(attacker.Name .. " is shoved back by " .. defender.Name)
 end
 
+--Heals the attacker by a small amount
 function DrainHealth(defender, attacker)
 	if (Random(0, 100) >= 10) then
 		attacker.stats.Heal(Random(1, 5))

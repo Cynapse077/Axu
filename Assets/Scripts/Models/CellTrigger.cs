@@ -88,6 +88,22 @@ public struct ARect
         }
     }
 
+    public int centerX
+    {
+        get
+        {
+            return left + (width / 2);
+        }
+    }
+
+    public int centerY
+    {
+        get
+        {
+            return bottom + (height / 2);
+        }
+    }
+
     public ARect(int l, int b, int w, int h)
     {
         left = l;

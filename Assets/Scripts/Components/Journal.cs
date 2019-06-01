@@ -40,7 +40,7 @@ public class Journal : MonoBehaviour
         }
     }
 
-    public void OnDisable()
+    void OnDisable()
     {
         World.tileMap.OnScreenChange -= UpdateLocation;
         EventHandler.instance.NPCDied -= OnNPCKill;
@@ -50,6 +50,11 @@ public class Journal : MonoBehaviour
     public bool HasCompletedQuest(string id)
     {
         return completedQuests.Contains(id);
+    }
+
+    public bool HasQuest(string id)
+    {
+        return quests.Find(x => x.ID == id) != null;
     }
 
     public List<ProgressFlags> AllFlags()

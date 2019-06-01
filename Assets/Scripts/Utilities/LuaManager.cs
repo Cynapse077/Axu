@@ -37,9 +37,13 @@ public static class LuaManager
         string path = Path.GetFileNameWithoutExtension(s);
 
         if (scripts.ContainsKey(path))
+        {
             scripts[path] = sc;
+        }
         else
+        {
             scripts.Add(path, sc);
+        }
     }
 
     static void RegisterAssembly()

@@ -34,6 +34,19 @@ function RestoreStamina(caster, skill)
 	ApplyChanges(caster, skill)
 end
 
+--Drains stamina
+function DrainStamina(caster, position, skill)
+	if (TileMap.GetCellAt(position) == nil or TileMap.GetCellAt(position).entity == nil) then
+		return
+	end
+
+	local target = TileMap.GetCellAt(position).entity
+	target.stats.UseStamina(Random(2, 6))
+	Log(caster.Name .. " drains " .. target.Name .. "'s Stamina!")
+
+	ApplyChanges(caster, skill)
+end
+
 --Teleports the caster to their home base.
 function ReturnHome(caster, skill)
 	if (ObjectManager.SafeToRest()) then

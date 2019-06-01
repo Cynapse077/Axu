@@ -115,6 +115,7 @@ function OnEnter_Web(entity, obj)
 end
 
 function OnExit_Web(entity, obj)
+	--FIXME: Disrupts the foreach loop
 	--obj.DestroyMe()
 end
 
@@ -142,6 +143,18 @@ function OnEnter_PoisonTrap(entity, obj)
 	entity.stats.AddStatusEffect("Poison", Random(2, 6))
 end
 
+function OnEnter_BlindTrap(entity, obj)
+	if (entity.inventory.CanFly()) then
+		return
+	end
+
+	if (obj.InSight()) then
+		Log("The floor beneath " .. entity.Name .. " sprays blinding gas!")
+	end
+
+	entity.stats.AddStatusEffect("Blind", Random(10, 15))
+end
+
 function OnEnter_PressurePlate(entity, obj)
 	obj.StartPulse(true)
 end
@@ -162,5 +175,13 @@ function OnTurn_Spike(obj)
 
 	elseif (obj.objectType == "Spike_Up") then
 		obj.SetTypeAndSwapSprite("Spike_Down")
+	end
+end
+
+function OnInteract_DeepPortal()
+	if (Journal.HasQuest("ensis30")) then
+		
+	else
+		Log("You are unsure what to do with this right now.")
 	end
 end

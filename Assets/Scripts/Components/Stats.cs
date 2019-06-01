@@ -761,10 +761,20 @@ public class Stats : MonoBehaviour
     public void RestoreStamina(int amount)
     {
         stamina += amount;
+
+        if (stamina > maxStamina)
+        {
+            stamina = maxStamina;
+        }
     }
     public void UseStamina(int amount)
     {
         stamina -= amount;
+
+        if (stamina < 0)
+        {
+            stamina = 0;
+        }
     }
 
     public void Heal(int amount)

@@ -1,15 +1,29 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class MusicManager : MonoBehaviour
 {
     public MusicZone[] musicZones;
     public AudioClip[] defaultMusic;
+    public Dictionary<string, AudioClip> uniqueMusic;
 
     SoundManager soundManager;
 
     void Start()
     {
         soundManager = GetComponent<SoundManager>();
+    }
+
+    public void OverrideMusic(string musID)
+    {
+        if (!uniqueMusic.ContainsKey(musID))
+        {
+            soundManager.OverrideMusic(new AudioClip[] { uniqueMusic[musID] });
+        }
+        else
+        {
+            Debug.LogError("No music with ID " + musID);
+        }
     }
 
     public void Init(TileMap_Data newMap)

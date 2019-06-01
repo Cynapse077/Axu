@@ -570,6 +570,16 @@
 			"Description" : "A floor panel with holes. There is a foul smell coming from it."
 		},
 		{
+			"Name" : "Blinding Gas Trap",
+			"ObjectType" : "Trap_Gas",
+			"Sprite" : "object-trap_spike.png",
+			"Render In Back" : true,
+			"LuaEvents" : [
+				{ "Event" : "OnEntityEnter", "File" : "Objects", "Function" : "OnEnter_BlindTrap" }
+			],
+			"Description" : "A floor panel with holes. There is a foul smell coming from it."
+		},
+		{
 			"Name" : "Pressure Plate",
 			"ObjectType" : "PressurePlate",
 			"Sprite" : "object-pressureplate.png",

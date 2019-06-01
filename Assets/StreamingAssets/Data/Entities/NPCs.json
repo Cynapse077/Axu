@@ -647,7 +647,8 @@
                 "Accuracy" : 2
             },
             "Skills" : [
-                { "ID" : "firestream", "Level" : 5 }
+                { "ID" : "firestream", "Level" : 5 },
+				{ "ID" : "drainstamina", "Level" : 1 }
             ],
             "Weapon_Choices" : [ "staffofxzol" ],
 			"Weapon Skill" : 3,
@@ -763,7 +764,8 @@
             "Skills" : [
                 { "ID" : "confsquare", "Level" : 4 },
                 { "ID" : "zapline", "Level" : 3 },
-                { "ID" : "rockspire", "Level" : 3 }
+                { "ID" : "rockspire", "Level" : 3 },
+				{ "ID" : "drainstamina", "Level" : 1 }
             ],
 			"Weapon Skill" : 3,
             "MaxItems" : 2,
@@ -1597,7 +1599,8 @@
             },
             "Skills" : [
                 { "ID" : "firestream", "Level" : 2 },
-                { "ID" : "firewall", "Level" : 2 }
+                { "ID" : "firewall", "Level" : 2 },
+				{ "ID" : "drainstamina", "Level" : 1 }
             ],
             "Weapon_Choices" : [
                 "staff"
@@ -2987,10 +2990,10 @@
                 "RPois"
             ],
             "Stats" : {
-                "Health" : 28,
+                "Health" : 23,
                 "Stamina" : 50,
 
-                "Defense" : 1,
+                "Defense" : 0,
                 "Strength" : 3,
                 "Dexterity" : 6,
                 "Intelligence" : 10,
@@ -3555,7 +3558,7 @@
                 "Stamina" : 30,
 
                 "Defense" : 7,
-                "Strength" : 8,
+                "Strength" : 9,
                 "Dexterity" : 5,
                 "Intelligence" : 7,
                 "Endurance" : 9,
@@ -3597,6 +3600,9 @@
             },
             "Weapon_Choices" : [
                 "tentacle"
+            ],
+			"Skills" : [
+                { "ID" : "drainstamina", "Level" : 1 }
             ],
 			"Weapon Skill" : 5,
             "MaxItems" : 3,
@@ -3675,7 +3681,7 @@
             "MaxItemRarity" : 4
         },
         {
-            "Name" : "Deep Hunter",
+            "Name" : "Weakened Deep Hunter",
             "ID" : "deephunter_start",
             "Faction" : "deepones",
             "Body Structure" : "Humanoid",
@@ -3726,10 +3732,10 @@
                 "Health" : 30,
                 "Stamina" : 27,
 
-                "Defense" : 3,
-                "Strength" : 2,
+                "Defense" : 5,
+                "Strength" : 5,
                 "Dexterity" : 6,
-                "Intelligence" : 3,
+                "Intelligence" : 7,
                 "Endurance" : 6,
 
                 "Speed" : 9,
@@ -3739,9 +3745,7 @@
                 "Heat Resist" : 10
             },
             "Skills" : [
-                { "ID" : "zapline", "Level" : 1 }
-            ],
-            "Inventory" : [
+                { "ID" : "zapline", "Level" : 4 }
             ],
             "Weapon_Choices" : [
                 "rustyspike",
@@ -3821,7 +3825,7 @@
                 { "Item" : "bullet", "Min" : 10, "Max" : 30 }
             ],
             "Weapon_Choices" : [
-                "shortsword", "dagger"
+                "Random_Weapon_R3"
             ],
             "Firearm" : "huntingrifle",
             "MaxItems" : 2,
@@ -3925,7 +3929,9 @@
             "Weapon_Choices" : [
                 "tentacle"
             ],
-            "Skills" : [],
+            "Skills" : [
+				{ "ID" : "drainstamina", "Level" : 1 }
+			],
             "MaxItems" : 2,
             "MaxItemRarity" : 4,
             "Corpse_Item" : "corpse_rad"
