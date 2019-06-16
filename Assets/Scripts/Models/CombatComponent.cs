@@ -128,10 +128,8 @@ public class CombatComponent
         {
             return wep.attackType == Item.AttackType.Spear;
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     public float MissChance(BodyPart.Hand hand, Stats target, BodyPart targetPart)
@@ -139,6 +137,11 @@ public class CombatComponent
         if (hand == null || hand.EquippedItem == null || target == null || targetPart == null)
         {
             return 1.0f;
+        }
+
+        if (!target.entity.isPlayer && !target.entity.AI.HasSeenPlayer())
+        {
+            return 0.0f;
         }
 
         int miss = MyStats.MissChance(hand.EquippedItem);

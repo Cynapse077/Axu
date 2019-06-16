@@ -25,15 +25,15 @@ public class DialogueController : MonoBehaviour
 
         GetComponent<NPCSprite>().questIcon.SetActive(QuestIconActive());
 
+        if (!myNPC.HasFlag(NPC_Flags.Can_Speak))
+        {
+            return;
+        }
+
         if (!string.IsNullOrEmpty(myNPC.questID) && !ObjectManager.playerJournal.HasCompletedQuest(myNPC.questID) 
             && ObjectManager.playerJournal.quests.Find(x => x.ID == myNPC.questID) == null)
         {
             myQuest = QuestList.GetByID(myNPC.questID);
-        }
-
-        if (!myNPC.HasFlag(NPC_Flags.Can_Speak))
-        {
-            return;
         }
 
         if (dialogueChoices == null)
@@ -77,6 +77,7 @@ public class DialogueController : MonoBehaviour
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Heal Wounds"), () => World.userInterface.Dialogue_Heal()));
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Replace Limb"), () => World.userInterface.Dialogue_ReplaceLimb()));
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Amputate Limb"), () => World.userInterface.Dialogue_AmputateLimb()));
+            dialogueChoices.Add(new DialogueChoice("Cybernetics (1x Bottle Cap)", () => World.userInterface.OpenCyberneticsPanel(ObjectManager.playerEntity.body)));
         }
 
         if (myNPC.HasFlag(NPC_Flags.Mercenary) && !bai.isFollower())

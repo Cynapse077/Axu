@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class YesNoPanel : MonoBehaviour {
+public class YesNoPanel : MonoBehaviour
+{
 	public Text question;
 	public Button yesButton;
 	public Button noButton;
@@ -15,7 +14,8 @@ public class YesNoPanel : MonoBehaviour {
 	bool canInput = false;
 	int column = 1;
 
-	public void Display(string text, Action ycb, Action ncb, string input) {
+	public void Display(string text, Action ycb, Action ncb, string input)
+    {
 		if (LocalizationManager.GetContent(text) != LocalizationManager.defaultText)
 			GetLocalizedContent(text, input);
 		else
@@ -27,16 +27,20 @@ public class YesNoPanel : MonoBehaviour {
 		Setup();
 	}
 
-	void GetLocalizedContent(string qs, string input) {
+	void GetLocalizedContent(string qs, string input)
+    {
 		string s = LocalizationManager.GetContent(qs);
 
 		if (s.Contains("[INPUT]") && !string.IsNullOrEmpty(input))
+        {
 			s = s.Replace("[INPUT]", input);
+        }
 
 		question.text = s;
 	}
 
-	void Setup() {
+	void Setup()
+    {
 		canInput = true;
 		column = 1;
 		yesButton.onClick.RemoveAllListeners();
@@ -46,20 +50,25 @@ public class YesNoPanel : MonoBehaviour {
 		EventSystem.current.SetSelectedGameObject(noButton.gameObject);
 	}
 
-	void Update() {
+	void Update()
+    {
 		HandleKeys();
 	}
 
-	void HandleKeys() {
+	void HandleKeys()
+    {
 		if (!canInput)
 			return;
 		
-		if (GameSettings.Keybindings.GetKey("East") && column < 1) {
+		if (GameSettings.Keybindings.GetKey("East") && column < 1)
+        {
 			column++;
 			World.soundManager.MenuTick();
 			EventSystem.current.SetSelectedGameObject(noButton.gameObject);
 		}
-		if (GameSettings.Keybindings.GetKey("West") && column > 0) {
+
+		if (GameSettings.Keybindings.GetKey("West") && column > 0)
+        {
 			column--;
 			World.soundManager.MenuTick();
 			EventSystem.current.SetSelectedGameObject(yesButton.gameObject);
@@ -73,17 +82,20 @@ public class YesNoPanel : MonoBehaviour {
 			Callback(NoCallback);
 	}
 
-	void Yes() {
+	void Yes()
+    {
 		if (YesCallback != null)
 			Callback(YesCallback);
 	}
 
-	void No() {
+	void No()
+    {
 		if (NoCallback != null)
 			Callback(NoCallback);
 	}
 
-	void Callback(Action callback) {
+	void Callback(Action callback)
+    {
 		canInput = false;
 		callback();
 	}

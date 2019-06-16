@@ -249,6 +249,16 @@ public class SaveData : MonoBehaviour
                 }
             }
 
+            //Cybernetic
+            if (bpJson[i].ContainsKey("Cyb"))
+            {
+                if (bpJson[i]["Cyb"].ToString() != "")
+                {
+                    Augments.Cybernetic cyb = Augments.Cybernetic.GetCybernetic(bpJson[i]["Cyb"].ToString());
+                    cyb.Attach(bp);
+                }
+            }
+
             //body part levels/xp
             if (bpJson[i].ContainsKey("Lvl"))
             {

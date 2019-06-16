@@ -28,33 +28,31 @@ public abstract class UIPanel : MonoBehaviour
 
     public virtual void Update()
     {
-        if (!initialized)
+        if (initialized)
         {
-            return;
-        }
+            if (GameSettings.Keybindings.GetKey("Enter"))
+            {
+                OnSelect(SelectedNum);
+            }
 
-        if (GameSettings.Keybindings.GetKey("Enter"))
-        {
-            OnSelect(SelectedNum);
-        }
+            if (GameSettings.Keybindings.GetKey("North", KeyPress.Up) || GameSettings.Keybindings.GetKey("South", KeyPress.Up))
+            {
+                moveTimer = 0;
+            }
+            else if (GameSettings.Keybindings.GetKey("North", KeyPress.Held) || GameSettings.Keybindings.GetKey("South", KeyPress.Held))
+            {
+                moveTimer += Time.deltaTime;
+                canHoldKeys = moveTimer >= 0.25f;
+            }
 
-        if (GameSettings.Keybindings.GetKey("North", KeyPress.Up) || GameSettings.Keybindings.GetKey("South", KeyPress.Up))
-        {
-            moveTimer = 0;
-        }
-        else if (GameSettings.Keybindings.GetKey("North", KeyPress.Held) || GameSettings.Keybindings.GetKey("South", KeyPress.Held))
-        {
-            moveTimer += Time.deltaTime;
-            canHoldKeys = moveTimer >= 0.25f;
-        }
-
-        if (canHoldKeys)
-        {
-            HeldKeys();
-        }
-        else
-        {
-            PressedKeys();
+            if (canHoldKeys)
+            {
+                HeldKeys();
+            }
+            else
+            {
+                PressedKeys();
+            }
         }
     }
 
@@ -99,8 +97,12 @@ public abstract class UIPanel : MonoBehaviour
         SelectedNum = newIndex;
 
         if (SelectedNum < 0)
+        {
             SelectedNum = SelectedMax - 1;
+        }
         else if (SelectedNum >= SelectedMax)
+        {
             SelectedNum = 0;
+        }
     }
 }

@@ -691,7 +691,7 @@ public static class ItemList
             }
             else if (ID == "Coat")
             {
-                //TODO: What do?
+                //Empty
             }
             else if (ID == "ModKit")
             {

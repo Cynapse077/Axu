@@ -157,7 +157,7 @@ public class ReplaceLimb_Panel : MonoBehaviour
 
     public void SelectPressed()
     {
-        if (mode == Mode.BodyPart)
+        if (mode == Mode.BodyPart && items.Count > 0)
         {
             bpID = selectedNum;
 
@@ -173,7 +173,7 @@ public class ReplaceLimb_Panel : MonoBehaviour
 
     void ReplaceBodyPart(int bpID, int itemID)
     {
-        ObjectManager.playerEntity.stats.ReplaceOneLimbByDoctor(inv.entity.body.bodyParts.IndexOf(severableBodyParts[bpID]), inv.items.IndexOf(items[itemID]), FromDoctor);
+        inv.entity.stats.ReplaceOneLimbByDoctor(inv.entity.body.bodyParts.IndexOf(severableBodyParts[bpID]), inv.items.IndexOf(items[itemID]), FromDoctor);
         World.userInterface.CloseWindows();
     }
 

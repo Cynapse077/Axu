@@ -213,7 +213,7 @@ public class NPC
 
         if (HasFlag(NPC_Flags.Doctor))
         {
-            List<Item> items = ItemList.items.FindAll(x => x.ContainsProperty(ItemProperty.Replacement_Limb) && x.GetCComponent<CRot>() == null);
+            List<Item> items = ItemList.items.FindAll(x => x.ContainsProperty(ItemProperty.Replacement_Limb) && !x.HasCComponent<CRot>());
 
             for (int i = 0; i < RNG.Next(0, 2); i++)
             {

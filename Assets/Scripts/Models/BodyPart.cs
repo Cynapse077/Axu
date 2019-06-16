@@ -258,6 +258,11 @@ public class BodyPart : IWeighted
                 stats.Attributes[Attributes[i].Stat] -= Attributes[i].Amount;
             }
         }
+
+        if (cybernetic != null)
+        {
+            cybernetic.Remove();
+        }
     }
 
     public SBodyPart ToSerializedBodyPart()

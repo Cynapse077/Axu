@@ -28,7 +28,9 @@ public class ZoneBlueprint
     public static ZoneBlueprint LoadFromJson(JsonData dat)
     {
         if (dat == null)
+        {
             return null;
+        }
 
         int tileID = (int)dat["Tile Index"];
         bool walkable = (bool)dat["Walkable"];
@@ -110,7 +112,9 @@ public class ZoneBlueprint_Underground
     public static ZoneBlueprint_Underground FromJson(JsonData dat)
     {
         if (dat == null)
+        {
             return null;
+        }
 
         string _id = dat["ID"].ToString();
         string _name = dat["Display"].ToString();
@@ -196,7 +200,7 @@ public class ZoneBlueprint_Underground
 
         public Tile_Data GetRandomTile()
         {
-            return Tile.GetByName(Utility.WeightedChoice<WeightedTile>(floorTiles).tileID);
+            return Tile.GetByName(Utility.WeightedChoice(floorTiles).tileID);
         }
     }
 

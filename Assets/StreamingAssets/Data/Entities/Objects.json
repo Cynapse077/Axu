@@ -335,6 +335,18 @@
             "Render In Front" : true,
             "Description" : "What made such a curious structure? What could it do?"
         },
+		{
+            "Name" : "Surface Crystal",
+            "ObjectType" : "Crystal_Surface",
+			"LuaEvents" : [
+				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "OnInteract_SurfaceTele" }
+			],
+            "Sprite" : "object-crystal_on.png",
+			"Physics" : "Solid",
+            "Light" : 1,
+            "Render In Front" : true,
+            "Description" : "A large green crystal that seems to float in place. It will likely take you to the surface."
+        },
         {
             "Name" : "Bookshelf",
             "ObjectType" : "Bookshelf",

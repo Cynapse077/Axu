@@ -336,6 +336,11 @@ public class Stats : MonoBehaviour
 
     bool BlockedWithShield(Entity attacker)
     {
+        if (!entity.isPlayer && !entity.AI.HasSeenPlayer())
+        {
+            return false;
+        }
+
         List<BodyPart.Hand> hands = MyBody.Hands;
 
         for (int i = 0; i < hands.Count; i++)
@@ -399,7 +404,9 @@ public class Stats : MonoBehaviour
         if (damage > 0)
         {
             if (hasTraitEffect(TraitEffects.Zap_On_Hit) && RNG.Next(100) < 5)
+            {
                 attacker.stats.IndirectAttack(RNG.Next(1, 6), DamageTypes.Energy, entity, LocalizationManager.GetContent("Shock"), true);
+            }
 
             HandleSeverence(damTypes, targetPart, sevChance);
             weapon.OnHit(attacker, entity);
@@ -595,11 +602,19 @@ public class Stats : MonoBehaviour
     int CalculateDamage(int amount, HashSet<DamageTypes> damageTypes, bool crit, BodyPart targetPart, bool ignoreArmor = false, bool ignoreResists = false)
     {
         if (amount <= 0)
+        {
             return 0;
+        }
 
         int damage = 0;
         int targettedPartArmor = (targetPart == null) ? 0 : targetPart.equippedItem.armor + targetPart.armor;
         int def = targettedPartArmor + Defense;
+
+        if (!entity.isPlayer && !entity.AI.HasSeenPlayer())
+        {
+            crit = true;
+            def = 0;
+        }
 
         if (ignoreArmor || damageTypes.Contains(DamageTypes.Heat) || damageTypes.Contains(DamageTypes.Cold) || damageTypes.Contains(DamageTypes.Energy))
         {
@@ -608,11 +623,6 @@ public class Stats : MonoBehaviour
         else if (HasEffect("Shield"))
         {
             def *= 2;
-        }
-
-        if (!entity.isPlayer && !entity.AI.HasSeenPlayer())
-        {
-            crit = true;
         }
 
         damage = amount - def + (crit ? (damage / 2) : 0);
@@ -850,6 +860,16 @@ public class Stats : MonoBehaviour
         }
     }
 
+    public void RemoveRadiation(int amt)
+    {
+        radiation -= amt;
+
+        if (radiation < 0)
+        {
+            radiation = 0;
+        }
+    }
+
     public void GiveTrait(string traitID)
     {
         Trait t = TraitList.GetTraitByID(traitID);
@@ -1016,7 +1036,6 @@ public class Stats : MonoBehaviour
         for (int i = 0; i < traitsToRemove.Count; i++)
         {
             RemoveTrait(traitsToRemove[i].ID);
-            //traits.Remove(traitsToRemove[i]);
         }
 
         for (int i = 0; i < MyBody.bodyParts.Count; i++)

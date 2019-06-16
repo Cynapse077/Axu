@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 
 namespace Augments
@@ -10,7 +11,7 @@ namespace Augments
         public string Desc;
         protected BodyPart bodyPart;
 
-        readonly static Cybernetic[] cyberArray = new Cybernetic[]
+        public static Cybernetic[] cyberArray = new Cybernetic[]
         {
             new SyntheticMuscle(), new DermalPlating(), new RadiationScrubber(), 
             new FoldingBlade(), new ImpactSole(), new NanoRegen(), new NanoAdrenal(),
@@ -30,6 +31,20 @@ namespace Augments
             }
 
             return cs;
+        }
+
+        public static Cybernetic GetCybernetic(string id)
+        {
+            for (int i = 0; i < cyberArray.Length; i++)
+            {
+                if (cyberArray[i].ID == id)
+                {
+                    return cyberArray[i];
+                }
+            }
+
+            Debug.LogError("Could not find cybernetic with ID \"" + id + "\".");
+            return null;
         }
 
         public virtual bool CanAttach(BodyPart bp)
@@ -58,7 +73,7 @@ namespace Augments
         public virtual void Remove()
         {
             bodyPart = null;
-            bodyPart.cybernetic = null;            
+            bodyPart.cybernetic = null;
         }
     }
 
@@ -149,7 +164,7 @@ namespace Augments
         {
             if (bodyPart != null && World.turnManager.turn % turnsToActivate == 0)
             {
-                bodyPart.myBody.entity.stats.radiation--;
+                bodyPart.myBody.entity.stats.RemoveRadiation(1);
             }
         }
 

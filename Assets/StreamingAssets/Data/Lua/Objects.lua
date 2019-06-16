@@ -160,7 +160,8 @@ function OnEnter_PressurePlate(entity, obj)
 end
 
 function OnExit_PressurePlate(entity, obj)
-	obj.StartPulse(false)
+	--obj.StartPulse(false)
+	--Commented out since you would usually want to keep the pulse going.
 end
 
 function OnTurn_Spike(obj)
@@ -180,8 +181,18 @@ end
 
 function OnInteract_DeepPortal()
 	if (Journal.HasQuest("ensis30")) then
-		
+		--TODO:Send the player to the deep.
 	else
 		Log("You are unsure what to do with this right now.")
 	end
+end
+
+function OnInteract_SurfaceTele()
+	UI.YNAction("Travel to the surface?", "Objects", "GoToSurface")
+end
+
+function GoToSurface()
+	UI.CloseWindows()
+	TileMap.currentElevation = 0
+	TileMap.HardRebuild()
 end

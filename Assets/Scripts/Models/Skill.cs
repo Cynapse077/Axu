@@ -19,7 +19,7 @@ public class Skill
     public DiceRoll dice;
     public DiceRoll dicePerLevel;
     public AbilityOrigin origin;
-
+    
     List<AbilityTags> tags;
     double _xp;
 

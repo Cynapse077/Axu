@@ -129,7 +129,7 @@ public class BaseAI : MonoBehaviour
         if (i != null)
         {
             entity.fighter.SelectItemToThrow(i);
-            GameObject ex = (GameObject)Instantiate(explosive, target.transform.position, Quaternion.identity);
+            GameObject ex = Instantiate(explosive, target.transform.position, Quaternion.identity);
             Explosive exScript = ex.GetComponent<Explosive>();
             exScript.localPosition = target.myPos;
             entity.fighter.ThrowItem(target.myPos, exScript);
@@ -757,6 +757,9 @@ public class BaseAI : MonoBehaviour
             {
                 e.fighter.Remove();
             }
+
+            MapObject m = new MapObject(ItemList.GetMOB("Crystal_Surface"), entity.GetEmptyCoords().GetRandom(), World.tileMap.WorldPosition, World.tileMap.currentElevation);
+            World.objectManager.SpawnObject(m);
         }
     }
 

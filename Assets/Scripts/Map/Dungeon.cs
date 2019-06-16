@@ -128,7 +128,7 @@ public class Dungeon
         FillMapWithWalls();
         Coord start = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
 
-        for (int j = 0; j < RNG.Next(3, 6); j++)
+        for (int j = 0; j < RNG.Next(3, 7); j++)
         {
             Coord end = new Coord(RNG.Next(2, Manager.localMapSize.x - 3), RNG.Next(2, Manager.localMapSize.y - 3));
 

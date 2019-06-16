@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Pathfinding;
 using LitJson;
 
-[System.Serializable]
+[Serializable]
 public class WorldMap_Data
 {
     public static string ZonePath;
@@ -26,7 +26,7 @@ public class WorldMap_Data
     Dictionary<string, ZoneBlueprint> zoneBlueprints;
     Dictionary<string, ZoneBlueprint_Underground> ugZoneBlueprints;
 
-    const int riversMin = 6, riversMax = 14;
+    const int riversMin = 8, riversMax = 16;
 
     System.Random rng
     {
@@ -331,7 +331,6 @@ public class WorldMap_Data
                 break;
 
             //Check adjacent oceans to avoid strangeness in autotiling.
-            //Might want to use a better system...
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
@@ -378,8 +377,7 @@ public class WorldMap_Data
             }
             else
             {
-                //Uncomment for next major patch.
-                /*for (int x = -1; x <= 1; x++)
+                for (int x = -1; x <= 1; x++)
                 {
                     for (int y = -1; y <= 1; y++)
                     {
@@ -401,7 +399,7 @@ public class WorldMap_Data
                             return false;
                         }
                     }
-                }*/
+                }
             }
         }
 
@@ -581,7 +579,7 @@ public class WorldMap_Data
 
             Coord v = possibleLocations.GetRandom(rng);
             possibleLocations.Remove(v);
-            Village_Data vd = new Village_Data(v, vData.name, vData.MapPosition);
+            Village_Data vd = new Village_Data(v, vData.name, vData.mapPosition);
             tiles[v.x, v.y].landmark = "Village";
             tiles[v.x, v.y].friendly = true;
             villages.Add(vd);
@@ -733,9 +731,9 @@ public class WorldMap_Data
     {
         List<Coord> c = new List<Coord>();
 
-        for (int x = 0; x < width; x++)
+        for (int x = 1; x < width - 1; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 1; y < height - 1; y++)
             {
                 if (types.Contains(tiles[x, y].biome) && !tiles[x, y].HasLandmark())
                 {
@@ -856,7 +854,7 @@ public class WorldMap_Data
 
     public Village_Data GetVillageAt(int x, int y)
     {
-        return (villages.Find(v => v.MapPosition.x == x && v.MapPosition.y == y));
+        return (villages.Find(v => v.mapPosition.x == x && v.mapPosition.y == y));
     }
 
     void SetupPathfindingGrid()

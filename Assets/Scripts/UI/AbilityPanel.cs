@@ -13,11 +13,6 @@ public class AbilityPanel : UIPanel
 
     EntitySkills skills;
 
-    private void Start()
-    {
-        
-    }
-
     public override void Initialize()
     {
         skills = ObjectManager.playerEntity.skills;
@@ -56,7 +51,9 @@ public class AbilityPanel : UIPanel
             tooltip.UpdateTooltip(skills.abilities[SelectedNum]);
         }
         else
+        {
             tooltip.gameObject.SetActive(false);
+        }
     }
 
     public override void Update()

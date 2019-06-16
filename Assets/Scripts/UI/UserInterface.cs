@@ -43,6 +43,7 @@ public class UserInterface : MonoBehaviour
     public LiquidActionsPanel LAPanel;
     public ContextualActionsPanel CAPanel;
     public GiveItemPanel GIPanel;
+    public CyberneticsPanel CybPanel;
 
     public GameObject loadingGO;
     public Image fadePanel;
@@ -202,7 +203,9 @@ public class UserInterface : MonoBehaviour
     public void OpenInventory(Inventory inv = null)
     {
         if (inv == null)
+        {
             inv = playerInventory;
+        }
 
         CloseWindows();
         uiState = UIWindow.Inventory;
@@ -373,6 +376,15 @@ public class UserInterface : MonoBehaviour
         CAPanel.Refresh(actions);
     }
 
+    public void OpenCyberneticsPanel(Body body)
+    {
+        CloseWindows();
+        CybPanel.gameObject.SetActive(true);
+        uiState = UIWindow.Cybernetics;
+
+        CybPanel.SetupLists(body);
+    }
+
     void HandleInput()
     {
         if (loading || playerInput == null || PlayerInput.lockInput)
@@ -439,13 +451,19 @@ public class UserInterface : MonoBehaviour
             if (playerInput.keybindings.GetKey("East"))
             {
                 if (column < 1 && limbToReplaceIndex > -1)
+                {
                     column++;
+                }
+
                 World.soundManager.MenuTick();
             }
             if (playerInput.keybindings.GetKey("West"))
             {
                 if (column > 0)
+                {
                     column--;
+                }
+
                 World.soundManager.MenuTick();
             }
         }
@@ -675,14 +693,23 @@ public class UserInterface : MonoBehaviour
         Amputate();
     }
 
-    public void YesNoAction(string question, Action yAction, Action nAction, string input)
+    public void YesNoAction(string question, Action yAction, Action nAction, string input = "")
     {
         if (nAction == null)
-            nAction = (() => { CloseWindows(); });
+        {
+            nAction = () => CloseWindows();
+        }
 
         uiState = UIWindow.YesNoPrompt;
         YNPanel.gameObject.SetActive(true);
         YNPanel.Display(question, yAction, nAction, input);
+    }
+
+    public void YNAction(string question, string fileName, string functionName)
+    {
+        Action yAction = () => LuaManager.CallScriptFunction(fileName, functionName, new object[] { });
+        Action nAction = () => CloseWindows();
+        YesNoAction(question, yAction, nAction);
     }
 
     public void BanditYes(int goldAmount, Item item)
@@ -1063,6 +1090,7 @@ public class UserInterface : MonoBehaviour
         LAPanel.gameObject.SetActive(false);
         CAPanel.gameObject.SetActive(false);
         GIPanel.gameObject.SetActive(false);
+        CybPanel.gameObject.SetActive(false);
         pausePanel.TogglePause(false);
     }
 
@@ -1229,5 +1257,6 @@ public enum UIWindow
     LevelUp,
     Grapple,
     LiquidActions,
-    ContextActions
+    ContextActions,
+    Cybernetics
 }

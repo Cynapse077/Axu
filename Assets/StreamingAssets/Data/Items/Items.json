@@ -2747,6 +2747,19 @@
                 "On Ground" : "item-artifact.png"
             },
             "Properties" : [ ]
-        }
+        },
+		{
+			"ID" : "bottlecap",
+			"Name" : "Bottle Cap",
+			"Type" : "Misc_Object",
+			"Rarity" : 5,
+			"Stackable" : true,
+			"FlavorText" : "The cap off a bottle, though these haven't been used in decades. Can be traded for cybernetic enhancements.",
+			"Cost" : 500,
+			"Display" : {
+				"On Ground" : "item-artifact.png"
+			},
+			"Properties" : []
+		}
     ]
 }

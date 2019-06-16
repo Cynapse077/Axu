@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using System.IO;
 using LitJson;
 
@@ -158,14 +159,9 @@ public class OldWorld
             {
                 m.inv = new List<Item>();
 
-                for (int j = 0; j < obj["Items"].Count; j++)
+                for (int j = 0; j < Mathf.Min(obj["Items"].Count, 50); j++)
                 {
                     m.inv.Add(SaveData.GetItemFromJsonData(obj["Items"][j]));
-
-                    if (j > 50)
-                    {
-                        break;
-                    }
                 }
             }
 

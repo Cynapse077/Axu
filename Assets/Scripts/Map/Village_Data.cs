@@ -3,18 +3,11 @@ public class Village_Data
 {
     public string name;
     public Coord center;
+    public Coord mapPosition;
 
-    Coord mapPosition;
-
-    public Coord MapPosition
+    public Village_Data(Coord pos, string _name, Coord _center)
     {
-        get { return mapPosition; }
-        set { mapPosition = value; }
-    }
-
-public Village_Data(Coord pos, string _name, Coord _center)
-    {
-        MapPosition = pos;
+        mapPosition = pos;
         name = _name;
         center = _center;
     }

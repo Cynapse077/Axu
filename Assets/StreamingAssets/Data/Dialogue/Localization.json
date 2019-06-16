@@ -1112,6 +1112,14 @@
             "ID" : "Title_ReplaceLimb_Item",
             "Display" : "Select an Item to Use:"
         },
+		{
+            "ID" : "Title_CybLimb",
+            "Display" : "Select a Limb to Attach to:"
+        },
+        {
+            "ID" : "Title_CybLimb_Cyb",
+            "Display" : "Select a Cybernetic:"
+        },
         {
             "ID" : "Title_AmpLimb",
             "Display" : "Select a Limb to Amputate:"

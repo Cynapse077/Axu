@@ -81,7 +81,6 @@ public static class DialogueList
         public string display;
         public string nextID;
         
-
         public DialogueResponse(string dis, string next)
         {
             display = dis;
