@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using LitJson;
 
 public class MapFeatures
 {
@@ -12,6 +13,11 @@ public class MapFeatures
         pos = new Coord(x, y);
         features = new List<string>();
         customFeatures = new List<string>();
+    }
+
+    public bool HasCustomFeatures()
+    {
+        return customFeatures.Count > 0;
     }
 
     public void AddFeature(string s)
@@ -51,5 +57,38 @@ public class MapFeatures
         }
 
         World.userInterface.mapFeaturePanel.UpdateFeatureList(features, customFeatures);
+    }
+
+    public SMapFeature CustomFeatureList()
+    {
+        return new SMapFeature(pos, customFeatures.ToArray());
+    }
+}
+
+[System.Serializable]
+public struct SMapFeature
+{
+    public int x;
+    public int y;
+    public string[] feats;
+
+    public SMapFeature(Coord p, string[] f)
+    {
+        x = p.x;
+        y = p.y;
+        feats = f;
+    }
+
+    public static SMapFeature FromJson(JsonData dat)
+    {
+        Coord c = new Coord((int)dat["x"], (int)dat["y"]);
+        string[] f = new string[dat["feats"].Count];
+
+        for (int i = 0; i < dat["feats"].Count; i++)
+        {
+            f[i] = dat["feats"][i].ToString();
+        }
+
+        return new SMapFeature(c, f);
     }
 }

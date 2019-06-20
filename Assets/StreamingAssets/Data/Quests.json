@@ -1000,7 +1000,7 @@
 				{ "Goal" : "Kill Spawned" },
 				{ "Goal" : "Talk To", "NPC" : "grum" }
 			],
-			"End Dialogue" : "It dead? Grateful! Grum still hurt though. Get Grum bandage?",
+			"End Dialogue" : "It dead? Good! Grum still hurt though. Get Grum bandage?",
 
 			"Chained Quest" : "grum1"
 		},

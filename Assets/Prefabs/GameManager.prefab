@@ -85,6 +85,7 @@ MonoBehaviour:
   LAPanel: {fileID: 0}
   CAPanel: {fileID: 0}
   GIPanel: {fileID: 0}
+  CybPanel: {fileID: 0}
   loadingGO: {fileID: 0}
   fadePanel: {fileID: 0}
   miniMapObject: {fileID: 0}
@@ -128,64 +129,6 @@ MonoBehaviour:
   rainEffect: {fileID: 1340136403869248}
   snowEffect: {fileID: 1943721910397234}
   sandstormEffect: {fileID: 1671389465803076}
-  cloudColors:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
-  timeOfDayColors:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
   currentWeather: 0
 --- !u!114 &114763523530106532
 MonoBehaviour:
@@ -482,6 +425,10 @@ MonoBehaviour:
     underground: 1
     songs:
     - {fileID: 8300000, guid: 693a61c3455949d40909a8a52f3e0511, type: 3}
+  - ZoneID: Ensis Interior
+    underground: 0
+    songs:
+    - {fileID: 8300000, guid: 0c76b0a29314dcb479e9df1b65eeba66, type: 3}
   defaultMusic:
   - {fileID: 8300000, guid: 2734fe66d0be89a44ad8d108413cb34b, type: 3}
   - {fileID: 8300000, guid: 6ecf0a2c1cc568b4c80fbb7444b5b8d3, type: 3}

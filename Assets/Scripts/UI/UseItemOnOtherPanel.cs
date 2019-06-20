@@ -196,7 +196,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
         }
 
         Item target = relevantItems[index];
-        Liquid lq = ItemList.GetLiquidByID(container.liq.ID, container.liq.units);
+        Liquid lq = ItemList.GetLiquidByID(container.sLiquid.ID, container.sLiquid.units);
 
         if (target.HasCComponent<CCoat>())
         {
@@ -211,7 +211,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
         }
 
         lq.Coat(target);
-        container.SetLiquidVolume(container.liq.units - 1);
+        container.SetLiquidVolume(container.sLiquid.units - 1);
         container.CheckLiquid();
     }
 
@@ -219,7 +219,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
     {
         CLiquidContainer frm = itemToUse.GetCComponent<CLiquidContainer>();
         CLiquidContainer to = relevantItems[index].GetCComponent<CLiquidContainer>();
-        Liquid liquid = ItemList.GetLiquidByID(frm.liq.ID, frm.liq.units);
+        Liquid liquid = ItemList.GetLiquidByID(frm.sLiquid.ID, frm.sLiquid.units);
         int amount = to.Fill(liquid);
 
         if (amount > 0)

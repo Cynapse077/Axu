@@ -30,13 +30,17 @@ public class PauseMenuPanel : MonoBehaviour
         anim.SetBool("Paused", paused);
 
         if (paused)
+        {
             UpdateSelected(0);
+        }
     }
 
     public void UpdateSelected(int index)
     {
         if (index < 0 || index > buttons.Length - 1)
+        {
             return;
+        }
 
         EventSystem.current.SetSelectedGameObject(buttons[index].gameObject);
     }

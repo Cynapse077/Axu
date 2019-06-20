@@ -6,7 +6,8 @@ public class TileRenderer : MonoBehaviour
 
     SpriteRenderer spriteRenderer;
     bool inSight, hasSeen;
-    Color outOfSightColor, litColor = new Color(1f, 1f, 0.9f);
+    Color outOfSightColor;
+    static Color litColor = new Color(1.0f, 1.0f, 0.9f);
 
     void Awake()
     {

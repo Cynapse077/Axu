@@ -408,7 +408,7 @@ public class MapObjectSprite : MonoBehaviour
 
                 if (first.HasCComponent<CLiquidContainer>() && !first.GetCComponent<CLiquidContainer>().isEmpty())
                 {
-                    Liquid liquid = ItemList.GetLiquidByID(first.GetCComponent<CLiquidContainer>().liq.ID);
+                    Liquid liquid = ItemList.GetLiquidByID(first.GetCComponent<CLiquidContainer>().sLiquid.ID);
 
                     if (liquid != null)
                     {

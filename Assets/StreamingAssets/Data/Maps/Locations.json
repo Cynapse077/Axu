@@ -322,6 +322,28 @@
 				"Biome" : "Any Land"
 			}
 		},
+		{
+			"ID" : "Prison_S",
+			"Display" : "Abandoned Prison",
+			"Tile Index" : 26,
+			"Walkable" : false,
+			"Place At" : {
+				"Biome" : "Any Land"
+			},
+			"Neighbors" : [
+				{
+					"ID" : "Prison_N",
+					"Display" : "Abandoned Prison",
+					"Tile Index" : 27,
+					"Walkable" : false,
+					"Underground" : "AbandonedPrison",
+					"Place At" : {
+						"Biome" : "Any Land",
+						"Relative" : { "x" : 0, "y" : 1 }
+					}
+				}
+			]
+		},
         {
             "ID" : "Magna_C",
             "Display" : "Magna Dwyll",
@@ -340,7 +362,7 @@
                     "Tile Index" : 37,
                     "Walkable" : false,
                     "Friendly" : true,
-					"Radiation" : 5,
+					"Radiation" : 1,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 0, "y" : 1 }
@@ -352,7 +374,7 @@
                     "Tile Index" : 38,
                     "Walkable" : false,
                     "Friendly" : true,
-					"Radiation" : 5,
+					"Radiation" : 1,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 1, "y" : 1 }
@@ -364,7 +386,7 @@
                     "Tile Index" : 35,
                     "Walkable" : false,
                     "Friendly" : true,
-					"Radiation" : 5,
+					"Radiation" : 1,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 1, "y" : 0 }
@@ -376,7 +398,7 @@
                     "Tile Index" : 32,
                     "Walkable" : false,
                     "Friendly" : true,
-					"Radiation" : 5,
+					"Radiation" : 1,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 1, "y" : -1 }
@@ -388,7 +410,7 @@
                     "Tile Index" : 31,
                     "Walkable" : false,
                     "Friendly" : true,
-					"Radiation" : 5,
+					"Radiation" : 1,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : 0, "y" : -1 }
@@ -400,7 +422,7 @@
                     "Tile Index" : 30,
                     "Walkable" : false,
                     "Friendly" : true,
-					"Radiation" : 5,
+					"Radiation" : 1,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : -1, "y" : -1 }
@@ -412,7 +434,7 @@
                     "Tile Index" : 33,
                     "Walkable" : false,
                     "Friendly" : true,
-					"Radiation" : 5,
+					"Radiation" : 1,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : -1, "y" : 0 }
@@ -424,7 +446,7 @@
                     "Tile Index" : 36,
                     "Walkable" : false,
                     "Friendly" : true,
-					"Radiation" : 5,
+					"Radiation" : 1,
                     "Place At" : {
                         "Biome" : "Ocean",
                         "Relative" : { "x" : -1, "y" : 1 }
@@ -607,6 +629,15 @@
 				{ "ID" : "UG_Shroom_1", "Weight" : 2 },
 				{ "ID" : "UG_Shroom_2", "Weight" : 2 }
 			]
+		},
+		{
+			"ID" : "AbandonedPrison",
+			"Display" : "Abandoned Prison",
+			"Depth" : 1,
+			"Light" : 3,
+			"Rules" : {
+				"Load" : true
+			}
 		},
 		{
 			"ID" : "PowerPlant",

@@ -3,7 +3,7 @@ using MoonSharp.Interpreter;
 
 [System.Serializable]
 [MoonSharpUserData]
-public class Item : ComponentHolder
+public class Item : ComponentHolder<CComponent>
 {
     public string ID, Name, displayName = "", flavorText;
     public Proficiencies itemType;
@@ -122,7 +122,7 @@ public class Item : ComponentHolder
             }
         }
 
-        RunCommands((inMainHand ? "OnWield" : "OnEquip"));
+        RunCommands((inMainHand ? "OnWield" : "OnEquip"), stats.entity);
     }
 
     public void OnUnequip(Entity entity, bool inMainHand, bool skipCommands = false)
@@ -160,7 +160,7 @@ public class Item : ComponentHolder
             }
         }
 
-        RunCommands((inMainHand ? "OnUnWield" : "OnUnequip"));
+        RunCommands((inMainHand ? "OnUnWield" : "OnUnequip"), entity);
     }
 
     public void OnHit(Entity myEntity, Entity attackedEntity)
@@ -241,7 +241,7 @@ public class Item : ComponentHolder
         }
 
         ApplyEffects(stats);
-        RunCommands("OnConsume");
+        RunCommands("OnConsume", stats.entity);
 
         if (HasCComponent<CLiquidContainer>() && !GetCComponent<CLiquidContainer>().isEmpty())
         {
@@ -262,7 +262,7 @@ public class Item : ComponentHolder
     }
     #endregion
 
-    public void RunCommands(string action)
+    public void RunCommands(string action, Entity ent)
     {
         if (HasCComponent<CConsole>() || HasCComponent<CLuaEvent>())
         {
@@ -276,7 +276,7 @@ public class Item : ComponentHolder
                 else if (components[i].ID == "LuaEvent")
                 {
                     CLuaEvent cl = (CLuaEvent)components[i];
-                    cl.CallEvent(action);
+                    cl.CallEvent(action, ent);
                 }
             }
         }
@@ -547,7 +547,7 @@ public class Item : ComponentHolder
 
             if (!cl.isEmpty())
             {
-                Liquid liquid = ItemList.GetLiquidByID(cl.liq.ID, cl.liq.units);
+                Liquid liquid = ItemList.GetLiquidByID(cl.sLiquid.ID, cl.sLiquid.units);
                 totCost += liquid.pricePerUnit * liquid.units;
             }
         }
@@ -569,7 +569,7 @@ public class Item : ComponentHolder
 
             if (!cl.isEmpty())
             {
-                Liquid liquid = ItemList.GetLiquidByID(cl.liq.ID, cl.liq.units);
+                Liquid liquid = ItemList.GetLiquidByID(cl.sLiquid.ID, cl.sLiquid.units);
                 totCost += liquid.pricePerUnit * liquid.units;
             }
         }
@@ -717,7 +717,7 @@ public class Item : ComponentHolder
 
             if (!cl.isEmpty())
             {
-                liqName = ItemList.GetLiquidByID(cl.liq.ID).Name;
+                liqName = ItemList.GetLiquidByID(cl.sLiquid.ID).Name;
             }
 
             baseName += " (" + liqName + ")";

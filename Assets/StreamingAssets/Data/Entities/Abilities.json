@@ -23,11 +23,23 @@
             "Script" : [ "Abilities", "DrainStamina" ],
 			"AI" : [ "AbilityAI", "Drain" ]
 		},
+		{
+			"Name" : "Poisonous Bite",
+			"ID" : "bite_poison",
+			"Description" : "Poisons an adjacent target.",
+			"Levels Up" : false,
+			"Stamina Cost" : 1,
+			"Time Cost" : 10,
+			"Cooldown" : 6,
+			"Cast Type" : "Direction",
+			"Script" : [ "Abilities", "Bite_Poison" ],
+			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+		},
         {
             "Name" : "Scratch Eyes",
             "ID" : "peck",
             "Description" : "You scratch at an opponent's eyes, potentially blinding them.",
-            "Stamina Cost" : 5,
+            "Stamina Cost" : 3,
             "Time Cost" : 10,
             "Cooldown" : 25,
             "Cast Type" : "Direction",
@@ -80,7 +92,7 @@
             "Cast Type" : "Instant",
             "Tags" : [ "OpensNewWindow" ],
             "Script" : [ "Abilities", "Grapple" ],
-			"AI" : [ "AbilityAI", "Empty" ]
+			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
         },
         {
             "Name" : "Called Shot",
@@ -109,7 +121,7 @@
         {
             "Name" : "Charge",
             "ID" : "charge",
-            "Description" : "Charge up to [Skill Level + 3] tiles in a single direction, attacking and pushing an enemy if they are in the way.",
+            "Description" : "Charge [Skill Level + 3] tiles in a single direction, attacking and pushing an enemy if they are in the way.",
             "Stamina Cost" : 3,
             "Cooldown" : 12,
             "Time Cost" : 10,
@@ -172,9 +184,9 @@
 			"AI" : [ "AbilityAI", "Empty" ]
         },
         {
-            "Name" : "Summon Spirits",
+            "Name" : "Summon Spirit",
             "ID" : "spirits",
-            "Description" : "Summons multiple friendly spirits to aid you. Their HP deteriorates over time.",
+            "Description" : "Summons a friendly spirit to aid you. Multiple upon higher levels. Their HP deteriorates over time.",
             "Stamina Cost" : 5,
             "Time Cost" : 20,
             "Cooldown" : 120,
@@ -203,7 +215,7 @@
             "Dice Scale" : "0d0+2",
             "Stamina Cost" : 5,
             "Time Cost" : 15,
-            "Cooldown" : 15,
+            "Cooldown" : 20,
             "Cast Type" : "Instant",
             "Script" : [ "Abilities", "Healing" ],
 			"AI" : [ "AbilityAI", "Healing" ]
@@ -216,7 +228,7 @@
             "Dice Scale" : "0d0+3",
             "Stamina Cost" : 7,
             "Time Cost" : 15,
-            "Cooldown" : 18,
+            "Cooldown" : 45,
             "Cast Type" : "Instant",
             "Script" : [ "Abilities", "Healing" ],
 			"AI" : [ "AbilityAI", "Healing" ]
@@ -226,8 +238,8 @@
             "ID" : "healing2",
             "Description" : "An effective healing talent. Heals your HP to <color=green>full</color>.",
             "Stamina Cost" : 11,
-            "Time Cost" : 15,
-            "Cooldown" : 24,
+            "Time Cost" : 20,
+            "Cooldown" : 60,
             "Cast Type" : "Instant",
             "Script" : [ "Abilities", "FullHeal" ],
 			"AI" : [ "AbilityAI", "Healing" ]

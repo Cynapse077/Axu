@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 namespace Augments
@@ -9,11 +8,11 @@ namespace Augments
         public string Name { get; protected set; }
         public string ID { get; protected set; }
         public string Desc;
-        protected BodyPart bodyPart;
+        public BodyPart bodyPart;
 
-        public static Cybernetic[] cyberArray = new Cybernetic[]
+        static Cybernetic[] cyberArray = new Cybernetic[]
         {
-            new SyntheticMuscle(), new DermalPlating(), new RadiationScrubber(), 
+            new SyntheticMuscle(), new SubdermalScales(), new RadiationScrubber(), 
             new FoldingBlade(), new ImpactSole(), new NanoRegen(), new NanoAdrenal(),
             new TargetSensor()
         };
@@ -39,7 +38,7 @@ namespace Augments
             {
                 if (cyberArray[i].ID == id)
                 {
-                    return cyberArray[i];
+                    return cyberArray[i].Clone();
                 }
             }
 
@@ -72,8 +71,8 @@ namespace Augments
 
         public virtual void Remove()
         {
-            bodyPart = null;
             bodyPart.cybernetic = null;
+            bodyPart = null;
         }
     }
 
@@ -108,14 +107,14 @@ namespace Augments
         }
     }
 
-    public class DermalPlating : Cybernetic
+    public class SubdermalScales : Cybernetic
     {
         const int bonus = 2;
 
-        public DermalPlating()
+        public SubdermalScales()
         {
-            Name = "Dermal Plating";
-            ID = "DermalPlating";
+            Name = "Subdermal Scales";
+            ID = "SubdermalScales";
             Desc = "You have small plates under the skin of this body part. They offer increased protection.";
         }
 

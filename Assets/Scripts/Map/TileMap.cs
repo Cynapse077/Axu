@@ -97,6 +97,21 @@ public class TileMap : MonoBehaviour
 
         QuestList.InitializeFromJson();
 
+        if (WorldMap_Data.featuresToAdd != null)
+        {
+            for (int i = 0; i < WorldMap_Data.featuresToAdd.Count; i++)
+            {
+                SMapFeature s = WorldMap_Data.featuresToAdd[i];
+
+                for (int j = 0; j < s.feats.Length; j++)
+                {
+                    AddMapFeature(new Coord(s.x, s.y), s.feats[j]);
+                }
+            }
+        }
+
+        WorldMap_Data.featuresToAdd = null;
+
         HardRebuild();
         CheckNPCTiles();
         doneSetup = true;
@@ -209,12 +224,16 @@ public class TileMap : MonoBehaviour
     public void UpdateMapFeatures()
     {
         if (!mapFeatures.ContainsKey(WorldPosition))
+        {
             mapFeatures.Add(WorldPosition, new MapFeatures(worldCoordX, worldCoordY));
+        }
 
         TileMap_Data dat = null;
 
         if (screens[worldCoordX, worldCoordY] != null)
+        {
             dat = screens[worldCoordX, worldCoordY];
+        }
 
         mapFeatures[WorldPosition].SetupFeatureList(dat, World.objectManager.onScreenMapObjects, World.objectManager.NPCsInScreen(WorldPosition, 0));
     }
@@ -223,6 +242,17 @@ public class TileMap : MonoBehaviour
     {
         mapFeatures[WorldPosition].AddFeature(s);
         UpdateMapFeatures();
+    }
+
+    //Called when loading world data.
+    public void AddMapFeature(Coord c, string s)
+    {
+        if (!mapFeatures.ContainsKey(c))
+        {
+            mapFeatures.Add(c, new MapFeatures(c.x, c.y));
+        }
+
+        mapFeatures[c].AddFeature(s);
     }
 
     public void RemoveMapFeature(string s)
@@ -831,6 +861,21 @@ public class TileMap : MonoBehaviour
         }
 
         screens[x, y] = null;
+    }
+
+    public List<SMapFeature> GetCustomFeatures()
+    {
+        List<SMapFeature> fs = new List<SMapFeature>();
+
+        foreach (KeyValuePair<Coord, MapFeatures> m in mapFeatures)
+        {
+            if (m.Value.HasCustomFeatures())
+            {
+                fs.Add(m.Value.CustomFeatureList());
+            }
+        }
+
+        return fs;
     }
 
     void CacheVars()

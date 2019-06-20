@@ -19,7 +19,7 @@ public class BodyPart : IWeighted
     public List<Wound> wounds;
     public Grip grip;
     public Hand hand;
-    public Cybernetic cybernetic = null;
+    public Cybernetic cybernetic;
     public List<Grip> holdsOnMe = new List<Grip>();
 
     double currXP = 0.0, maxXP = 1500.0;
@@ -380,6 +380,7 @@ public class BodyPart : IWeighted
         myBody = other.myBody;
         wounds = other.wounds;
         flags = other.flags;
+        cybernetic = other.cybernetic;
 
         if (other.hand != null)
         {

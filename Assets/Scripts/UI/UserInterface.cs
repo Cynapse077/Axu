@@ -76,7 +76,7 @@ public class UserInterface : MonoBehaviour
 
     public bool NoWindowsOpen
     {
-        get { return (uiState == UIWindow.None); }
+        get { return uiState == UIWindow.None; }
     }
 
     void OnEnable()
@@ -87,17 +87,17 @@ public class UserInterface : MonoBehaviour
 
     void Start()
     {
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex != 2)
-            return;
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            loading = true;
+            paused = false;
 
-        loading = true;
-        paused = false;
+            pausePanel.Init();
+            ToggleFullMap(false);
+            ToggleMessageLog();
 
-        pausePanel.Init();
-        ToggleFullMap(false);
-        ToggleMessageLog();
-
-        uiState = UIWindow.None;
+            uiState = UIWindow.None;
+        }
     }
 
     public void ShowInitialMessage(string name)
@@ -106,7 +106,9 @@ public class UserInterface : MonoBehaviour
         fadePanel.CrossFadeAlpha(0, 1.5f, false);
 
         if (Manager.newGame)
+        {
             Alert.NewAlert("Start_Message", name, null);
+        }
     }
 
     public void ToggleFullMap(bool fullMap)
@@ -175,6 +177,7 @@ public class UserInterface : MonoBehaviour
 
     public void NewAlert(string title, string content)
     {
+        CloseWindows();
         uiState = UIWindow.Alert;
         AlPanel.gameObject.SetActive(true);
         AlPanel.NewAlert(title, content);
@@ -187,13 +190,10 @@ public class UserInterface : MonoBehaviour
 
     public void OpenJournal()
     {
-        if (uiState == UIWindow.Journal)
+        CloseWindows();
+
+        if (uiState != UIWindow.Journal)
         {
-            CloseWindows();
-        }
-        else
-        {
-            CloseWindows();
             uiState = UIWindow.Journal;
             JPanel.gameObject.SetActive(true);
             JPanel.Initialize();
@@ -254,7 +254,7 @@ public class UserInterface : MonoBehaviour
 
     public void OpenPauseMenu()
     {
-        paused = true;
+        paused = !paused;
         uiState = UIWindow.PauseMenu;
         pausePanel.TogglePause(paused);
     }
@@ -938,10 +938,14 @@ public class UserInterface : MonoBehaviour
         }
 
         if (!SelectItemActions && !SelectBodyPart)
+        {
             selectedItemNum = 0;
+        }
 
         if (Options_KeyPanel.WaitingForRebindingInput)
+        {
             return;
+        }
 
         if (uiState == UIWindow.Alert)
         {
@@ -955,7 +959,9 @@ public class UserInterface : MonoBehaviour
         else
         {
             if (PlayerInput.fullMap)
+            {
                 return;
+            }
             if (SelectItemActions)
             {
                 IAPanel.gameObject.SetActive(false);

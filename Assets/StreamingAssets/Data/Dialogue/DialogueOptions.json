@@ -323,7 +323,117 @@
 				"GoTo" : "oromir_init"
 			},
 			{
-				"Display" : "Thank you. That will be all.",
+				"Display" : "Thank you. That will be all. (Leave)",
+				"GoTo" : "End"
+			}
+		]
+	},
+
+	{
+		"ID" : "grum_init",
+		"Display" : "Want to hear good thought Grum have?",
+		"Responses" : [
+			{
+				"Display" : "Sure.",
+				"GoTo" : "grum_yes"
+			},
+			{
+				"Display" : "Not really.",
+				"GoTo" : "grum_no"
+			},
+			{
+				"Display" : "I don't have time for this. (Leave)",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "grum_yes",
+		"Display" : "Me hate Puggles. They nasty bunch who laugh at Grum for shiny head! Whole village of Puggles who speak to Grum, but me no like to go there anymore. I tell them I make new clothes out of fur if they keep laughing at me! Got big bite on my leg from that...\nWant to hear more thought?",
+		"Responses" : [
+			{
+				"Display" : "Go ahead.",
+				"GoTo" : "grum_yes2"
+			},
+			{
+				"Display" : "Spare me.",
+				"GoTo" : "grum_no"
+			}
+		]
+	},
+	{
+		"ID" : "grum_no",
+		"Display" : "Why so mean to Grum? Me just want friend.",
+		"Responses" : [
+			{
+				"Display" : "Okay fine. Tell me your \"thought\".",
+				"GoTo" : "grum_yes"
+			},
+			{
+				"Display" : "I'll be going now.",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "grum_yes2",
+		"Display" : "Grum hear science man say Scrags made by humans. Maybe we made from different being? Father used to say that we made from rock, but me too soft and squishy. Have you seen soft and squishy rock?",
+		"Responses" : [
+			{
+				"Display" : "I can't say I have.",
+				"GoTo" : "grum_rock"
+			},
+			{
+				"Display" : "I'm going to leave now.",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "grum_rock",
+		"Display" : "If you see soft and squishy rock, tell Grum. Grum want to make a friend.",
+		"Responses" : [
+			{
+				"Display" : "I certainly will. (Leave)",
+				"GoTo" : "End"
+			}
+		]
+	},
+
+	{
+		"ID" : "pugelder_init",
+		"Display" : "Hello, human. \n\n<color=grey><i>The Puggle Elder sniffs the air.</i></color>",
+		"Responses" : [
+			{
+				"Display" : "Wait, you're not going to attack me?",
+				"GoTo" : "pugelder_attack"
+			},
+			{
+				"Display" : "Hello and goodbye. (Leave)",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "pugelder_attack",
+		"Display" : "Should I? You don't seem very dangerous to me. You must be confusing us with the wild ones. In our society, we set aside our base instincts to further evolve. Make no mistake, if you prove to be an enemy, I will not hesitate to call for your head.",
+		"Responses" : [
+			{
+				"Display" : "You are much too trusting.",
+				"GoTo" : "pugelder_trust"
+			},
+			{
+				"Display" : "That won't be necessary. (Leave)",
+				"GoTo" : "End"
+			}
+		]
+	},
+	{
+		"ID" : "pugelder_trust",
+		"Display" : "I see no need for senseless violence. I am afraid I must be going. Do not cause trouble. I've had to ban one too many humans from my village.",
+		"Responses" : [
+			{
+				"Display" : "Fair enough. (Leave)",
 				"GoTo" : "End"
 			}
 		]

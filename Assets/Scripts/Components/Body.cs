@@ -74,7 +74,6 @@ public class Body : MonoBehaviour
         }
 
         Item handItem = (entity.AI.npcBase.handItems.Count > 0 && entity.AI.npcBase.handItems[0] != null) ? entity.AI.npcBase.handItems[0] : ItemList.GetItemByName("fists");
-
         defaultHand = new BodyPart.Hand(GetBodyPartBySlot(ItemProperty.Slot_Head), handItem, handItem.ID);
 
         for (int i = 0; i < entity.AI.npcBase.handItems.Count; i++)
@@ -331,14 +330,22 @@ public class Body : MonoBehaviour
             if (bodyParts[id].organic)
             {
                 if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Leprosy) || MyStats.hasTraitEffect(TraitEffects.Leprosy))
+                {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Leprosy);
+                }
                 else if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Crystal) || MyStats.hasTraitEffect(TraitEffects.Crystallization))
+                {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Crystallization);
+                }
                 else if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Vampire) || MyStats.hasTraitEffect(TraitEffects.Vampirism))
+                {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Vampirism);
+                }
 
                 if (entity.isPlayer || !entity.isPlayer && entity.AI.npcBase.HasFlag(NPC_Flags.Human))
+                {
                     partToDrop.AddProperty(ItemProperty.Cannibalism);
+                }
 
                 partToDrop.displayName = gameObject.name + " " + partToDrop.Name;
 
@@ -444,9 +451,12 @@ public class Body : MonoBehaviour
 
         for (int i = 0; i < bodyParts.Count; i++)
         {
-            if (bodyParts[i].isAttached && bodyParts[i].hand != null && bodyParts[i].hand.EquippedItem.ID == bodyParts[i].hand.baseItem)
+            if (bodyParts[i].isAttached && bodyParts[i].hand != null)
             {
-                parts.Add(bodyParts[i]);
+                if (bodyParts[i].hand.EquippedItem.ID == bodyParts[i].hand.baseItem || bodyParts[i].hand.EquippedItem.itemType == Proficiencies.Unarmed)
+                {
+                    parts.Add(bodyParts[i]);
+                }
             }
         }
 
@@ -455,23 +465,24 @@ public class Body : MonoBehaviour
 
     public void AttachLimb(int id)
     {
-        if (bodyParts[id].isAttached)
+        if (!bodyParts[id].isAttached)
         {
-            return;
+            bodyParts[id].Attach(MyStats);
+            bodyParts[id].myBody = this;
+
+            if (bodyParts[id].slot == ItemProperty.Slot_Arm && bodyParts[id].hand != null)
+            {
+                bodyParts[id].hand.SetEquippedItem(ItemList.GetItemByID("fists"), entity);
+            }
+
+            bodyParts[id].equippedItem = ItemList.GetNone();
+            bodyParts[id].SetXP(0.0, 1000.0);
+
+            if (entity.isPlayer)
+            {
+                CombatLog.NameMessage("Grow_Back_Limb", bodyParts[id].displayName);
+            }
         }
-
-        bodyParts[id].Attach(MyStats);
-        bodyParts[id].myBody = this;
-
-        if (bodyParts[id].slot == ItemProperty.Slot_Arm && bodyParts[id].hand != null)
-        {
-            bodyParts[id].hand.SetEquippedItem(ItemList.GetItemByID("fists"), entity);
-        }
-
-        bodyParts[id].equippedItem = ItemList.GetNone();
-        bodyParts[id].SetXP(0.0, 1000.0);
-
-        CombatLog.NameMessage("Grow_Back_Limb", bodyParts[id].displayName);
     }
 
     public void RegrowLimbs()
@@ -519,13 +530,24 @@ public class Body : MonoBehaviour
                 bodyParts[i].equippedItem.UpdateUserSprite(MyStats, false);
 
                 if (bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Heat Resist") != null)
+                {
                     MyStats.Attributes["Heat Resist"] += bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Heat Resist").Amount;
+                }
+
                 if (bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Cold Resist") != null)
+                {
                     MyStats.Attributes["Cold Resist"] += bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Cold Resist").Amount;
+                }
+
                 if (bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Energy Resist") != null)
+                {
                     MyStats.Attributes["Energy Resist"] += bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Energy Resist").Amount;
+                }
+
                 if (bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Storage Capacity") != null)
+                {
                     MyInventory.AddRemoveStorage(bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Storage Capacity").Amount);
+                }
             }
 
             if (builder.handItems != null && builder.handItems.Count > 0)

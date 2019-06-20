@@ -32,7 +32,8 @@ public class NewWorld
 
         //world
         List<MapObject> mapObjects = World.objectManager.mapObjects;
-        w2json = new WorldToJson(chars, mapObjects, Turn_Num, World.DangerLevel(), ObjectManager.SpawnedNPCs, World.difficulty, World.worldMap.worldMapData.postGenLandmarks);
+        w2json = new WorldToJson(chars, mapObjects, Turn_Num, World.DangerLevel(), ObjectManager.SpawnedNPCs, World.difficulty, 
+            World.worldMap.worldMapData.postGenLandmarks, World.tileMap.GetCustomFeatures());
 
         //local
         ScreenHolder holder = new ScreenHolder(tileMap.worldCoordX, tileMap.worldCoordY);
@@ -176,6 +177,16 @@ public class OldWorld
             {
                 JsonData lm = wData["PGLm"][i];
                 postGenLandmarks.Add(new Landmark(new Coord((int)lm["pos"][0], (int)lm["pos"][1]), lm["desc"].ToString()));
+            }
+        }
+
+        if (wData.ContainsKey("Features"))
+        {
+            WorldMap_Data.featuresToAdd = new List<SMapFeature>();
+
+            for (int i = 0; i < wData["Features"].Count; i++)
+            {
+                WorldMap_Data.featuresToAdd.Add(SMapFeature.FromJson(wData["Features"][i]));
             }
         }
     }
@@ -348,11 +359,12 @@ public class WorldToJson
     public List<NPCCharacter> NPCs;
     public List<WorldObject> Objects;
     public List<Landmark> PGLm;
+    public List<SMapFeature> Features;
     public int Turn_Num, Danger_Level, Spawned_NPCs;
     public Difficulty Diff;
     public string Time;
 
-    public WorldToJson(List<NPCCharacter> npcs, List<MapObject> objects, int tn, int dl, int spwned, Difficulty diff, List<Landmark> landmarks)
+    public WorldToJson(List<NPCCharacter> npcs, List<MapObject> objects, int tn, int dl, int spwned, Difficulty diff, List<Landmark> landmarks, List<SMapFeature> feats)
     {
         NPCs = npcs;
         Turn_Num = tn;
@@ -360,6 +372,7 @@ public class WorldToJson
         Spawned_NPCs = spwned;
         Diff = diff;
         Time = System.DateTime.Now.ToString();
+        Features = feats;
 
         Objects = new List<WorldObject>();
         PGLm = landmarks;

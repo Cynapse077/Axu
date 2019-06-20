@@ -35,7 +35,6 @@ public class CComponent
             case "Coat": return JsonMapper.ToObject<CCoat>(reader);
             case "ModKit": return JsonMapper.ToObject<CModKit>(reader);
             case "ItemLevel": return JsonMapper.ToObject<CItemLevel>(reader);
-            case "Cybernetic": return JsonMapper.ToObject<CCybernetic>(reader);
             case "Requirement": return JsonMapper.ToObject<CRequirement>(reader);
 
             default: return null;
@@ -60,7 +59,6 @@ public class CComponent
             case "Coat": return typeof(CCoat);
             case "ModKit": return typeof(CModKit);
             case "ItemLevel": return typeof(CItemLevel);
-            case "Cybernetic": return typeof(CCybernetic);
             case "Requirement": return typeof(CRequirement);
 
             default: return null;
@@ -242,7 +240,7 @@ public class CCoordinate : CComponent
 
     public string GetInfo()
     {
-        return (isSet) ? (aNa + " - \n@ " + lPos.ToString()) : LocalizationManager.GetLocalizedContent("IT_NotSet")[0];
+        return isSet ? (aNa + " - \n@ " + lPos.ToString()) : LocalizationManager.GetContent("IT_NotSet");
     }
 
     public void Activate(Entity entity)
@@ -319,17 +317,17 @@ public class CLuaEvent : CComponent
         xprm = xp;
     }
 
-    public void CallEvent(string eventToCall)
+    public void CallEvent(string eventToCall, Entity ent)
     {
         if (eventToCall == evName)
         {
             if (string.IsNullOrEmpty(xprm))
             {
-                LuaManager.CallScriptFunction(file, func, ObjectManager.playerEntity);
+                LuaManager.CallScriptFunction(file, func, ent);
             }
             else
             {
-                LuaManager.CallScriptFunction(file, func, ObjectManager.playerEntity, xprm);
+                LuaManager.CallScriptFunction(file, func, ent, xprm);
             }
         }
     }
@@ -389,7 +387,9 @@ public class CCoat : CComponent
 public class CLiquidContainer : CComponent
 {
     public int capacity;
-    public SLiquid liq
+    Liquid liquid;
+
+    public SLiquid sLiquid
     {
         get
         {
@@ -408,8 +408,6 @@ public class CLiquidContainer : CComponent
             }
         }
     }
-
-    Liquid liquid;
 
     public CLiquidContainer()
     {
@@ -612,7 +610,6 @@ public class CItemLevel : CComponent
                 xp -= xpToNext;
                 level++;
             }
-
         }
         else
         {
@@ -634,25 +631,8 @@ public class CItemLevel : CComponent
         }
         else
         {
-            return "Level " + level.ToString() + "(MAX)";
+            return "Level " + level.ToString() + " (MAX)";
         }
-    }
-}
-
-[Serializable]
-public class CCybernetic : CComponent
-{
-    public string CID;
-
-    public CCybernetic()
-    {
-        ID = "Cybernetic";
-    }
-
-    public CCybernetic(string id)
-    {
-        ID = "Cybernetic";
-        CID = id;
     }
 }
 

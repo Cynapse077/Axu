@@ -34,7 +34,7 @@ public class LiquidActionsPanel : MonoBehaviour
     void OnGround()
     {
         CLiquidContainer cl = cont.GetCComponent<CLiquidContainer>();
-        World.objectManager.CreatePoolOfLiquid(ObjectManager.playerEntity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, cl.liq.ID, cl.liq.units);
+        World.objectManager.CreatePoolOfLiquid(ObjectManager.playerEntity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, cl.sLiquid.ID, cl.sLiquid.units);
 
         cl.SetLiquidVolume(0);
         cl.CheckLiquid();
@@ -44,9 +44,9 @@ public class LiquidActionsPanel : MonoBehaviour
     void OnSelf()
     {
         CLiquidContainer cl = cont.GetCComponent<CLiquidContainer>();
-        Liquid liquid = ItemList.GetLiquidByID(cl.liq.ID, cl.liq.units);
+        Liquid liquid = ItemList.GetLiquidByID(cl.sLiquid.ID, cl.sLiquid.units);
         liquid.Splash(ObjectManager.playerEntity.stats);
-        cl.SetLiquidVolume(cl.liq.units - 1);
+        cl.SetLiquidVolume(cl.sLiquid.units - 1);
 
         cl.CheckLiquid();
         World.userInterface.CloseWindows();

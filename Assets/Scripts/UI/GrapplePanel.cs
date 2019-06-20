@@ -142,14 +142,15 @@ public class GrapplePanel : MonoBehaviour
 
     void PerformAction()
     {
-        EntitySkills skills = ObjectManager.player.GetComponent<EntitySkills>();
-        BodyPart targetLimb = body.bodyParts[actions[selectedNum].Value].grip.heldPart;
         BodyPart.Grip selectedGrip = body.bodyParts[actions[selectedNum].Value].grip;
 
         if (selectedGrip == null)
         {
             return;
         }
+
+        EntitySkills skills = ObjectManager.player.GetComponent<EntitySkills>();
+        BodyPart targetLimb = body.bodyParts[actions[selectedNum].Value].grip.heldPart;
 
         switch (actions[selectedNum].Key)
         {

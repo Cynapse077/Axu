@@ -71,7 +71,7 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
 
             if (bodyPart.cybernetic != null)
             {
-                desc += "  " + bodyPart.cybernetic.Name + " - <i>\"" + bodyPart.cybernetic.Desc + "\"</i>\n";
+                desc += "  <color=silver>" + bodyPart.cybernetic.Name + "</color> - <i>" + bodyPart.cybernetic.Desc + "</i>\n";
             }
             else
             {

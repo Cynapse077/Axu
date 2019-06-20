@@ -77,7 +77,7 @@ public class CharacterPanel : MonoBehaviour
                     GameObject pr = Instantiate(profGO, profAnchor);
                     string pXP = (p.xp / 10.0).ToString();
                     string levelText = (p.level - 1).ToString();
-                    pr.GetComponent<Text>().text = string.Format("{0} - {1} <color=orange>({2})</color>\n  <color=silver>({3}%x p)</color>", p.name, p.LevelName(), levelText, pXP);
+                    pr.GetComponent<Text>().text = string.Format("{0} - {1} <color=orange>({2})</color>\n  <color=silver>({3}% xp)</color>", p.name, p.LevelName(), levelText, pXP);
                 }
             }
         }

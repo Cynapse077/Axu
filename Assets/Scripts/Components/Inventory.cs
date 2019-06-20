@@ -312,7 +312,7 @@ public class Inventory : MonoBehaviour
     {
         CombatLog.NameMessage("Attach_Limb", i.DisplayName());
 
-        i.RunCommands("OnAttach");
+        i.RunCommands("OnAttach", entity);
         i.OnEquip(stats, false);
         RemoveInstance(i);
     }
@@ -373,7 +373,7 @@ public class Inventory : MonoBehaviour
         
         if (hand == null)
         {
-            Debug.LogError("Inventory::Wield() - Selected hand does not exist.");
+            Debug.LogError("Inventory.Wield() - Selected hand does not exist.");
         }
 
         if (hand.EquippedItem.HasProp(ItemProperty.Cannot_Remove) && hand.EquippedItem.ID != hand.baseItem)
@@ -458,7 +458,7 @@ public class Inventory : MonoBehaviour
             return;
         }
 
-        i.RunCommands("OnUse");
+        i.RunCommands("OnUse", entity);
 
         if (i.HasProp(ItemProperty.Selected_Tele))
         {
@@ -542,7 +542,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        i.RunCommands("OnRead");
+        i.RunCommands("OnRead", entity);
         items.Remove(i);
         entity.EndTurn(0.1f, 20);
     }
@@ -782,7 +782,7 @@ public class Inventory : MonoBehaviour
                     {
                         if (SeedManager.combatRandom.CoinFlip())
                             sm.Amount += SeedManager.combatRandom.Next(0, 2);
-                        else if (SeedManager.combatRandom.Next(15) < butcheryLevel + 1)
+                        else if (SeedManager.combatRandom.Next(15) < butcheryLevel)
                             sm.Amount += SeedManager.combatRandom.Next(1, 5);
                     }
                 }
@@ -813,7 +813,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        item.RunCommands("OnButcher");
+        item.RunCommands("OnButcher", entity);
         CombatLog.SimpleMessage("Butcher_Corpse");
         stats.AddProficiencyXP(stats.proficiencies.Butchery, SeedManager.localRandom.Next(3, 6));
         entity.CreateBloodstain(true, 100);
@@ -1007,9 +1007,22 @@ public class Inventory : MonoBehaviour
 
         PickupItem(firearm, true);
 
-        if (!entity.isPlayer && entity.AI.npcBase.HasFlag(NPC_Flags.Human) && items.Count < 2 && SeedManager.combatRandom.Next(100) < 5)
+        if (!entity.isPlayer)
         {
-            items = GetDrops(SeedManager.combatRandom.Next(0, 4));
+            if (entity.AI.isFollower())
+            {
+                for (int i = 0; i < body.bodyParts.Count; i++)
+                {
+                    if (body.bodyParts[i].equippedItem != null)
+                    {
+                        PickupItem(body.bodyParts[i].equippedItem);
+                    }
+                }
+            }
+            else if (entity.AI.npcBase.HasFlag(NPC_Flags.Human) && items.Count < 2 && SeedManager.combatRandom.Next(100) < 5)
+            {
+                items.AddRange(GetDrops(SeedManager.combatRandom.Next(0, 4)));
+            }
         }
 
         if (items.Count > 0)
@@ -1023,17 +1036,16 @@ public class Inventory : MonoBehaviour
                 for (int i = 0; i < items.Count; i++)
                 {
                     if (items[i] != null && items[i].lootable)
+                    {     
                         m.inv.Add(items[i]);
+                    }
                 }
             }
             else
             {
                 for (int i = 0; i < items.Count; i++)
                 {
-                    if (items[i] != null && items[i].lootable)
-                    {
-                        otherInventory.PickupItem(items[i], true);
-                    }
+                    otherInventory.PickupItem(items[i], true);
                 }
             }
         }

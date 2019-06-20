@@ -59,7 +59,6 @@ public class CyberneticsPanel : UIPanel
         SelectedMax = augmentableBodyParts.Count;
 
         ChangeSelectedNum(0);
-        SetupCybernetics();
     }
 
     void SetupCybernetics()
@@ -86,15 +85,14 @@ public class CyberneticsPanel : UIPanel
         switch (mode)
         {
             case Mode.BodyPart:
-                bpIndex = newIndex;
-                SelectedNum = Mathf.Clamp(SelectedNum, 0, augmentableBodyParts.Count - 1);
+                bpIndex = SelectedNum = Mathf.Clamp(SelectedNum, 0, SelectedMax);
                 SetupCybernetics();
                 EventSystem.current.SetSelectedGameObject(bpAnchor.GetChild(SelectedNum).gameObject);
                 bpScroll.value = 1f / (SelectedNum / (float)augmentableBodyParts.Count);
                 break;
 
             case Mode.Cybernetic:
-                SelectedNum = Mathf.Clamp(SelectedNum, 0, availableCybernetics.Count - 1);
+                SelectedNum = Mathf.Clamp(SelectedNum, 0, availableCybernetics.Count - 1);                
                 EventSystem.current.SetSelectedGameObject(cybAnchor.GetChild(SelectedNum).gameObject);
                 cybScroll.value = 1f / (SelectedNum / (float)availableCybernetics.Count);
                 break;

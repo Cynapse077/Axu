@@ -4,16 +4,28 @@ using UnityEngine.EventSystems;
 
 public class OnHover_ShowTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public Transform tooltip;
     public string textToDisplay;
+
+    Transform tooltip;
+    bool hovering = false;
+
+    void Start()
+    {
+        tooltip = GameObject.FindObjectOfType<UITooltip>().transform;
+    }
 
     void OnDisable()
     {
-        tooltip.gameObject.SetActive(false);
+        if (hovering)
+        {
+            tooltip.gameObject.SetActive(false);
+        }
     }
 
     public void OnPointerEnter(PointerEventData ev)
     {
+        hovering = true;
+
         if (string.IsNullOrEmpty(textToDisplay))
         {
             tooltip.gameObject.SetActive(false);
@@ -28,6 +40,7 @@ public class OnHover_ShowTooltip : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void OnPointerExit(PointerEventData ev)
     {
+        hovering = false;
         tooltip.GetComponentInChildren<Text>().text = "";
         tooltip.gameObject.SetActive(false);
     }

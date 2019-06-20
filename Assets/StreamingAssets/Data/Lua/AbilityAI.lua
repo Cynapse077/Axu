@@ -93,11 +93,7 @@ function FriendlyAt(entity, x, y)
 			return false
 		end
 
-		if (cell.entity == entity) then
-			return true
-		end
-
-		if (entity.AI.isFollower()) then
+		if (cell.entity == entity or entity.AI.isFollower()) then
 			return (cell.entity.isPlayer or cell.entity.AI.isFollower())
 		end
 

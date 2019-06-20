@@ -19,7 +19,7 @@ public class BodyPartTargetPanel : MonoBehaviour
         targetBody = bod;
         bpAnchor.DestroyChildren();
 
-        title.text = LocalizationManager.GetContent(((Amputate) ? "Title_AmpLimb" : "Title_TargetPart"));
+        title.text = LocalizationManager.GetContent(Amputate ? "Title_AmpLimb" : "Title_TargetPart");
         bodyParts = (Amputate) ? targetBody.SeverableBodyParts() : targetBody.bodyParts;
 
         foreach (BodyPart b in bodyParts)

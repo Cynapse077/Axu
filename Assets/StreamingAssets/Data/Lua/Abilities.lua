@@ -47,6 +47,17 @@ function DrainStamina(caster, position, skill)
 	ApplyChanges(caster, skill)
 end
 
+function Bite_Poison(caster, direction, skill)
+	if (not TargetAvailableInDirection(caster.myPos, direction)) then
+		return
+	end
+
+	local targetStats = TileMap.GetCellAt(caster.myPos + direction).entity.stats
+	targetStats.AddStatusEffect("Poison", Random(3, 7))
+
+	ApplyChanges(caster, skill)
+end
+
 --Teleports the caster to their home base.
 function ReturnHome(caster, skill)
 	if (ObjectManager.SafeToRest()) then

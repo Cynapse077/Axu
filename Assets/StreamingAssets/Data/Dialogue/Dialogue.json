@@ -100,7 +100,8 @@
 		{
 			"ID" : "puggles_friendly",
 			"Dialogues" : [
-				"Grruff?"
+				"Grruff?",
+				"Haaallo there."
 			]
 		}
     ]

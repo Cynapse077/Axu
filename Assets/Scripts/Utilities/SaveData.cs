@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LitJson;
 using System.IO;
 using System.Threading;
+using Augments;
 
 public class SaveData : MonoBehaviour
 {
@@ -131,22 +132,24 @@ public class SaveData : MonoBehaviour
             }
         }
 
-        //weapon profs
+        //Proficiencies
+        int p = 0;
         Manager.playerBuilder.proficiencies = new PlayerProficiencies
         {
-            Blade = SetProf("Blade", 0),
-            Blunt = SetProf("Blunt", 1),
-            Polearm = SetProf("Polearm", 2),
-            Axe = SetProf("Axe", 3),
-            Firearm = SetProf("Firearm", 4),
-            Throwing = SetProf("Thrown", 5),
-            Unarmed = SetProf("Unarmed", 6),
-            Misc = SetProf("Misc", 7),
+            //Weapon
+            Blade = SetProf("Blade", p++),
+            Blunt = SetProf("Blunt", p++),
+            Polearm = SetProf("Polearm", p++),
+            Axe = SetProf("Axe", p++),
+            Firearm = SetProf("Firearm", p++),
+            Throwing = SetProf("Thrown", p++),
+            Unarmed = SetProf("Unarmed", p++),
+            Misc = SetProf("Misc", p++),
             //other
-            Armor = SetProf("Armor", 8),
-            Shield = SetProf("Shield", 9),
-            Butchery = SetProf("Butchery", 10),
-            MartialArts = SetProf("Martial Arts", 11)
+            Armor = SetProf("Armor", p++),
+            Shield = SetProf("Shield", p++),
+            Butchery = SetProf("Butchery", p++),
+            MartialArts = SetProf("Martial Arts", p++)
         };
 
         //Traits
@@ -167,7 +170,6 @@ public class SaveData : MonoBehaviour
             for (int i = 0; i < playerJson["Stats"]["Adcts"].Count; i++)
             {
                 JsonData j = playerJson["Stats"]["Adcts"][i];
-
                 string itemID = j["addictedID"].ToString();
                 bool addicted = (bool)j["addicted"], withdrawal = (bool)j["withdrawal"];
 
@@ -228,7 +230,8 @@ public class SaveData : MonoBehaviour
 
             BodyPart bp = new BodyPart(bpJson[i]["Name"].ToString(), (bool)bpJson[i]["Att"])
             {
-                armor = (int)bpJson[i]["Ar"]
+                armor = (int)bpJson[i]["Ar"],
+                Attributes = new List<Stat_Modifier>()
             };
 
             int slot = (int)bpJson[i]["Slot"];
@@ -240,7 +243,6 @@ public class SaveData : MonoBehaviour
                 bp.hand = new BodyPart.Hand(bp, ItemList.GetItemByID(baseItem), baseItem);
             }
 
-            bp.Attributes = new List<Stat_Modifier>();
             if (bpJson[i].ContainsKey("Stats") && bpJson[i]["Stats"].Count > 0)
             {
                 for (int j = 0; j < bpJson[i]["Stats"].Count; j++)
@@ -254,8 +256,9 @@ public class SaveData : MonoBehaviour
             {
                 if (bpJson[i]["Cyb"].ToString() != "")
                 {
-                    Augments.Cybernetic cyb = Augments.Cybernetic.GetCybernetic(bpJson[i]["Cyb"].ToString());
-                    cyb.Attach(bp);
+                    Cybernetic cyb = Cybernetic.GetCybernetic(bpJson[i]["Cyb"].ToString());
+                    bp.cybernetic = cyb;
+                    cyb.bodyPart = bp;
                 }
             }
 
@@ -264,6 +267,7 @@ public class SaveData : MonoBehaviour
             {
                 bp.level = (int)bpJson[i]["Lvl"];
             }
+
             if (bpJson[i].ContainsKey("XP"))
             {
                 bp.SetXP((double)bpJson[i]["XP"][0], (double)bpJson[i]["XP"][1]);
@@ -389,14 +393,21 @@ public class SaveData : MonoBehaviour
         }
 
         if (data.ContainsKey("Dmg"))
+        {
             it.damage = new Damage((int)data["Dmg"][0], (int)data["Dmg"][1], (int)data["Dmg"][2], it.damage.Type);
+        }
+
         if (data.ContainsKey("Ar"))
+        {
             it.armor = (int)data["Ar"];
+        }
 
         it.AddModifier(ItemList.GetModByID(mName));
 
         if (data.ContainsKey("Com"))
+        {
             it.SetComponentList(GetComponentsFromData(data["Com"]));
+        }
 
         it.statMods = new List<Stat_Modifier>();
 
