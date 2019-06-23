@@ -25,10 +25,14 @@ namespace Pathfinding
                 for (int y = -1; y <= 1; y++)
                 {
                     if ((x == 0 && y == 0) || (!diagOkay && Mathf.Abs(x) + Mathf.Abs(y) > 1))
+                    {
                         continue;
+                    }
 
                     if (!World.OutOfLocalBounds(position.x + x, position.y + y))
+                    {
                         ns.Add(data.GetTileData(position.x + x, position.y + y));
+                    }
                 }
             }
 
@@ -44,7 +48,9 @@ namespace Pathfinding
                 for (int y = -1; y <= 1; y++)
                 {
                     if ((x == 0 && y == 0) || (!diagOkay && Mathf.Abs(x) + Mathf.Abs(y) > 1) || World.OutOfWorldBounds(position.x + x, position.y + y))
+                    {
                         continue;
+                    }
 
                     ns.Add(data.GetPathDataAt(position.x + x, position.y + y));
                 }

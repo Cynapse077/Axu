@@ -635,6 +635,21 @@
             ],
             "Lootable" : false
         },
+		{
+			"ID" : "armcannon",
+			"Name" : "Arm Cannon",
+			"Type" : "Firearm",
+			"Damage" : "1d5",
+			"FlavorText" : "A small firearm set above the wrist.",
+			"Cost" : 53,
+            "Components" : [
+                { "ID" : "Firearm", "ShotsPerTurn" : 2, "Max" : 10, "AmmoID" : "bullet" }
+            ],
+            "Properties" : [ "Ranged" ],
+            "Display" : {
+                "On Ground" : "item-pistol.png"
+            }
+		},
         {
             "ID" : "stump",
             "Name" : "Stump",

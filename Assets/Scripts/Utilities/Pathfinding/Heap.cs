@@ -91,6 +91,7 @@ public class Heap<T> where T : IHeapItem<T>
         while (true)
         {
             T parentItem = items[parentIndex];
+
             if (item.CompareTo(parentItem) > 0)
             {
                 Swap(item, parentItem);

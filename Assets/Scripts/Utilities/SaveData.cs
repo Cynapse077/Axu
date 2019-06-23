@@ -178,7 +178,6 @@ public class SaveData : MonoBehaviour
             }
         }
 
-        //create an item out of the Json data
         SetUpInventory();
         SetUpSkills();
 
@@ -381,7 +380,9 @@ public class SaveData : MonoBehaviour
         it.amount = (int)data["Am"];
 
         if (data.ContainsKey("DName"))
+        {
             it.displayName = data["DName"].ToString();
+        }
 
         if (data.ContainsKey("Props"))
         {

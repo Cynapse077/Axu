@@ -1,51 +1,62 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
 
-public class AmmoPanel : MonoBehaviour {
+public class AmmoPanel : MonoBehaviour
+{
+    Text ammoText;
+    Inventory playerInventory;
+    bool isActive = false;
 
-	Text ammoText;
+    public void Display(bool show)
+    {
+        if (playerInventory == null)
+        {
+            playerInventory = ObjectManager.player.GetComponent<Inventory>();
+            ammoText = GetComponentInChildren<Text>();
+        }
 
-	Inventory playerInventory;
-	bool isActive = false;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(show);
+        }
 
-	public void Display(bool show) {
-		if (playerInventory == null) {
-			playerInventory = ObjectManager.player.GetComponent<Inventory>();
-			ammoText = GetComponentInChildren<Text>();
-		}
+        GetComponent<Image>().enabled = show;
+        isActive = show;
+    }
 
-		for (int i = 0; i < transform.childCount; i++) {
-			transform.GetChild(i).gameObject.SetActive(show);
-		}
+    void Update()
+    {
+        if (!isActive || playerInventory == null)
+            return;
 
-		GetComponent<Image>().enabled = show;
-		isActive = show;
-	}
+        ChangeDisplayText();
+    }
 
-	void Update() {
-		if (!isActive || playerInventory == null)
-			return;
+    void ChangeDisplayText()
+    {
+        if (playerInventory.firearm.HasProp(ItemProperty.Ranged))
+        {
+            CFirearm cf = playerInventory.firearm.GetCComponent<CFirearm>();
 
-		ChangeDisplayText();
-	}
-
-	void ChangeDisplayText() {
-		if (playerInventory.firearm.HasProp(ItemProperty.Ranged)) {
-			CFirearm cf = playerInventory.firearm.GetCComponent<CFirearm>();
-
-			if (cf != null) {
-				ammoText.text = "(" + cf.curr + "/" + cf.max + ")";
-			} else {
-				Display(false);
-			}
-		} else {
-			if (playerInventory.firearm.stackable) {
-				ammoText.text = "(" + playerInventory.firearm.amount + ")";
-			} else {
-				Display(false);
-			}
-		}
-	}
+            if (cf != null)
+            {
+                ammoText.text = "(" + cf.curr + "/" + cf.max + ")";
+            }
+            else
+            {
+                Display(false);
+            }
+        }
+        else
+        {
+            if (playerInventory.firearm.stackable)
+            {
+                ammoText.text = "(" + playerInventory.firearm.amount + ")";
+            }
+            else
+            {
+                Display(false);
+            }
+        }
+    }
 }

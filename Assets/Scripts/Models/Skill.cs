@@ -28,7 +28,9 @@ public class Skill
         get
         {
             if (dice == null)
+            {
                 return new DiceRoll(0, 0, 0);
+            }
 
             DiceRoll roll = dice;
 
@@ -196,7 +198,8 @@ public class Skill
         None = 0,
         Book = 1,
         Trait = 2,
-        Item = 4
+        Item = 4, 
+        Cybernetic = 8
     }
 }
 

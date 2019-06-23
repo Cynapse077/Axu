@@ -13,8 +13,8 @@ namespace Augments
         static Cybernetic[] cyberArray = new Cybernetic[]
         {
             new SyntheticMuscle(), new SubdermalScales(), new RadiationScrubber(), 
-            new FoldingBlade(), new ImpactSole(), new NanoRegen(), new NanoAdrenal(),
-            new TargetSensor()
+            new FoldingBlade(), new ArmCannon(), new ImpactSole(), new NanoRegen(),
+            new NanoAdrenal(), new TargetSensor()
         };
 
         public static List<Cybernetic> GetCyberneticsForLimb(BodyPart bp)
@@ -79,6 +79,7 @@ namespace Augments
     public class SyntheticMuscle : Cybernetic
     {
         const int bonus = 2;
+        const string attribute = "Strength";
 
         public SyntheticMuscle()
         {
@@ -90,14 +91,14 @@ namespace Augments
         public override void Attach(BodyPart bp)
         {
             base.Attach(bp);
-            bodyPart.AddAttribute("Strength", bonus);
-            bodyPart.myBody.entity.stats.ChangeAttribute("Strength", bonus);
+            bodyPart.AddAttribute(attribute, bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, bonus);
         }
 
         public override void Remove()
         {
-            bodyPart.AddAttribute("Strength", -bonus);
-            bodyPart.myBody.entity.stats.ChangeAttribute("Strength", -bonus);
+            bodyPart.AddAttribute(attribute, -bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, -bonus);
             base.Remove();
         }
 
@@ -175,6 +176,9 @@ namespace Augments
 
     public class FoldingBlade : Cybernetic
     {
+        const string weaponID = "foldingblade";
+        string baseWeaponID = "fists";
+
         public FoldingBlade()
         {
             Name = "Folding Blade";
@@ -188,7 +192,8 @@ namespace Augments
 
             if (bodyPart.hand != null)
             {
-                bodyPart.hand.baseItem = "foldingblade";
+                baseWeaponID = bodyPart.hand.baseItem;
+                bodyPart.hand.baseItem = weaponID;
                 bodyPart.myBody.entity.inventory.PickupItem(bodyPart.hand.EquippedItem);
                 bodyPart.hand.RevertToBase(bodyPart.myBody.entity);
             }
@@ -196,7 +201,7 @@ namespace Augments
 
         public override void Remove()
         {
-            bodyPart.hand.baseItem = "fists";
+            bodyPart.hand.baseItem = baseWeaponID;
             bodyPart.hand.RevertToBase(bodyPart.myBody.entity);
             base.Remove();
         }
@@ -207,9 +212,46 @@ namespace Augments
         }
     }
 
+    public class ArmCannon : Cybernetic
+    {
+        const string firearmID = "armcannon";
+
+        public ArmCannon()
+        {
+            Name = "Arm Cannon";
+            ID = "ArmCannon";
+            Desc = "Your arm has a small firearm set above the wrist.";
+        }
+
+        public override void Attach(BodyPart bp)
+        {
+            base.Attach(bp);
+            Item firearm = bodyPart.myBody.entity.inventory.firearm;
+
+            if (firearm != null)
+            {
+                bodyPart.myBody.entity.inventory.PickupItem(firearm);
+            }
+
+            bodyPart.myBody.entity.inventory.firearm = ItemList.GetItemByID(firearmID);
+        }
+
+        public override void Remove()
+        {
+            bodyPart.myBody.entity.inventory.firearm = ItemList.GetNone();
+            base.Remove();
+        }
+
+        public override bool CanAttach(BodyPart bp)
+        {
+            return bp.slot == ItemProperty.Slot_Arm;
+        }
+    }
+
     public class ImpactSole : Cybernetic
     {
         const int bonus = 3;
+        const string attribute = "Stealth";
 
         public ImpactSole()
         {
@@ -221,14 +263,14 @@ namespace Augments
         public override void Attach(BodyPart bp)
         {
             base.Attach(bp);
-            bodyPart.AddAttribute("Stealth", bonus);
-            bodyPart.myBody.entity.stats.ChangeAttribute("Stealth", bonus);
+            bodyPart.AddAttribute(attribute, bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, bonus);
         }
 
         public override void Remove()
         {
-            bodyPart.AddAttribute("Stealth", -bonus);
-            bodyPart.myBody.entity.stats.ChangeAttribute("Stealth", -bonus);
+            bodyPart.AddAttribute(attribute, -bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, -bonus);
             base.Remove();
         }
 
@@ -241,6 +283,7 @@ namespace Augments
     public class NanoRegen : Cybernetic
     {
         const int bonus = 3;
+        const string attribute = "HP Regen";
 
         public NanoRegen()
         {
@@ -252,14 +295,14 @@ namespace Augments
         public override void Attach(BodyPart bp)
         {
             base.Attach(bp);
-            bodyPart.AddAttribute("HP Regen", 3);
-            bodyPart.myBody.entity.stats.ChangeAttribute("HP Regen", 3);
+            bodyPart.AddAttribute(attribute, 3);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, 3);
         }
 
         public override void Remove()
         {
-            bodyPart.AddAttribute("HP Regen", -3);
-            bodyPart.myBody.entity.stats.ChangeAttribute("HP Regen", -3);
+            bodyPart.AddAttribute(attribute, -3);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, -3);
             base.Remove();
         }
 
@@ -272,6 +315,7 @@ namespace Augments
     public class NanoAdrenal : Cybernetic
     {
         const int bonus = 2;
+        const string attribute = "ST Regen";
 
         public NanoAdrenal()
         {
@@ -283,14 +327,14 @@ namespace Augments
         public override void Attach(BodyPart bp)
         {
             base.Attach(bp);
-            bodyPart.AddAttribute("ST Regen", bonus);
-            bodyPart.myBody.entity.stats.ChangeAttribute("ST Regen", bonus);
+            bodyPart.AddAttribute(attribute, bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, bonus);
         }
 
         public override void Remove()
         {
-            bodyPart.AddAttribute("ST Regen", -bonus);
-            bodyPart.myBody.entity.stats.ChangeAttribute("ST Regen", -bonus);
+            bodyPart.AddAttribute(attribute, -bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, -bonus);
             base.Remove();
         }
 
@@ -303,6 +347,7 @@ namespace Augments
     public class TargetSensor : Cybernetic
     {
         const int bonus = 2;
+        const string attribute = "Accuracy";
 
         public TargetSensor()
         {
@@ -314,14 +359,14 @@ namespace Augments
         public override void Attach(BodyPart bp)
         {
             base.Attach(bp);
-            bodyPart.AddAttribute("Accuracy", bonus);
-            bodyPart.myBody.entity.stats.ChangeAttribute("Accuracy", bonus);
+            bodyPart.AddAttribute(attribute, bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, bonus);
         }
 
         public override void Remove()
         {
-            bodyPart.AddAttribute("Accuracy", -bonus);
-            bodyPart.myBody.entity.stats.ChangeAttribute("Accuracy", -bonus);
+            bodyPart.AddAttribute(attribute, -bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, -bonus);
             base.Remove();
         }
 

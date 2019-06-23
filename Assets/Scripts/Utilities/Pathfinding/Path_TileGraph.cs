@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Pathfinding
 {
@@ -7,6 +6,7 @@ namespace Pathfinding
     {
         public Dictionary<Path_TileData, Path_Node> nodes;
 
+        //World graph
         public Path_TileGraph(WorldMap_Data data)
         {
             nodes = new Dictionary<Path_TileData, Path_Node>();
@@ -45,6 +45,7 @@ namespace Pathfinding
             }
         }
 
+        //Local graph
         public Path_TileGraph(TileMap_Data data)
         {
             nodes = new Dictionary<Path_TileData, Path_Node>();
@@ -57,7 +58,9 @@ namespace Pathfinding
                     Path_Node node = new Path_Node { data = tileData };
 
                     if (tileData != null)
+                    {
                         nodes.Add(tileData, node);
+                    }
                 }
             }
 

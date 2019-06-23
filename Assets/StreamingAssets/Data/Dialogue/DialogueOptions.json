@@ -430,7 +430,7 @@
 	},
 	{
 		"ID" : "pugelder_trust",
-		"Display" : "I see no need for senseless violence. I am afraid I must be going. Do not cause trouble. I've had to ban one too many humans from my village.",
+		"Display" : "I see no need for senseless violence. I am afraid I must be going. Do not cause trouble. I've had to ban too many humans from my village.",
 		"Responses" : [
 			{
 				"Display" : "Fair enough. (Leave)",

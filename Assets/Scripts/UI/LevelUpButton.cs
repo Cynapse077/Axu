@@ -1,21 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelUpButton : MonoBehaviour {
+public class LevelUpButton : MonoBehaviour
+{
+    public Text titleText;
+    public Text descriptionText;
 
-	public Text titleText;
-	public Text descriptionText;
-	Trait myTrait;
+    Trait myTrait;
 
-	public void SetValues(Trait t) {
-		myTrait = t;
-		titleText.text = myTrait.name;
-		descriptionText.text = myTrait.description;
-	}
+    public void SetValues(Trait t)
+    {
+        myTrait = t;
+        titleText.text = myTrait.name;
+        descriptionText.text = myTrait.description;
+    }
 
-	public Trait GetTrait() {
-		return myTrait;
-	}
+    public Trait GetTrait()
+    {
+        return myTrait;
+    }
 }
