@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
 [System.Serializable]
-public struct Profession {
-
+public struct Profession
+{
 	public string name;
 	public string ID;
 	public string description;

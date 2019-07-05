@@ -8,9 +8,10 @@ public class Cell
     public Coord position;
     public Entity entity;
     public List<MapObjectSprite> mapObjects;
+
+    event Action<Entity> onEntityEnter;
     bool inSight, hasSeen;
 
-    public event Action<Entity> onEntityEnter;
 
     public Cell()
     {
@@ -32,6 +33,16 @@ public class Cell
     {
         get { return inSight; }
         protected set { inSight = value; }
+    }
+
+    public void AddOnEnterCallback(Action<Entity> act)
+    {
+        onEntityEnter += act;
+    }
+
+    public void RemoveOnEnterCallback(Action<Entity> act)
+    {
+        onEntityEnter -= act;
     }
 
     public bool BlocksSpearAttacks()

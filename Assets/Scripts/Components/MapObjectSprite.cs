@@ -331,32 +331,25 @@ public class MapObjectSprite : MonoBehaviour
 
     void SetLit(bool lit)
     {
-        if (lightSource == null)
+        if (lightSource != null)
         {
-            return;
-        }
+            int rad = lightSource.radius;
 
-        int rad = lightSource.radius;
-
-        for (int x = objectBase.localPosition.x - rad; x <= objectBase.localPosition.x + rad; x++)
-        {
-            for (int y = objectBase.localPosition.y - rad; y <= objectBase.localPosition.y + rad; y++)
+            for (int x = objectBase.localPosition.x - rad; x <= objectBase.localPosition.x + rad; x++)
             {
-                if (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y)
+                for (int y = objectBase.localPosition.y - rad; y <= objectBase.localPosition.y + rad; y++)
                 {
-                    continue;
-                }
+                    if (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y)
+                    {
+                        continue;
+                    }
 
-                float dist = objectBase.localPosition.DistanceTo(new Coord(x, y));
+                    float dist = objectBase.localPosition.DistanceTo(new Coord(x, y));
 
-                if (dist > rad)
-                {
-                    continue;
-                }
-
-                if (Line.inSight(objectBase.localPosition, x, y))
-                {
-                    World.tileMap.tileRenderers[x, y].lit = lit;
+                    if (dist <= rad && Line.inSight(objectBase.localPosition, x, y))
+                    {
+                        World.tileMap.tileRenderers[x, y].lit = lit;
+                    }
                 }
             }
         }
@@ -410,14 +403,7 @@ public class MapObjectSprite : MonoBehaviour
                 {
                     Liquid liquid = ItemList.GetLiquidByID(first.GetCComponent<CLiquidContainer>().sLiquid.ID);
 
-                    if (liquid != null)
-                    {
-                        myColor = liquid.color;
-                    }
-                    else
-                    {
-                        myColor = Color.white;
-                    }
+                    myColor = (liquid != null) ? (Color)liquid.color : Color.white;
                 }
                 else
                 {

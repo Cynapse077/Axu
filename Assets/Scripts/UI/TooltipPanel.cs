@@ -16,7 +16,9 @@ public class TooltipPanel : MonoBehaviour
     public void UpdateTooltip(Item item, bool display, bool shop = false)
     {
         if (image == null)
+        {
             image = GetComponent<Image>();
+        }
 
         transform.DespawnChildren();
 

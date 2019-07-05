@@ -3778,7 +3778,7 @@
                 "Stamina" : 20,
 
                 "Defense" : 5,
-                "Strength" : 6,
+                "Strength" : 5,
                 "Dexterity" : 5,
                 "Intelligence" : 6,
                 "Endurance" : 6,
@@ -3788,13 +3788,14 @@
                 "Accuracy" : 1
             },
             "Skills" : [
-                { "ID" : "shove", "Level" : 5 }
+                { "ID" : "shove", "Level" : 2 }
             ],
             "Inventory" : [
                 { "Item" : "lanternshield", "Min" : 0, "Max" : 1 },
                 { "Item" : "Random_R4", "Max" : 1 }
             ],
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
+			"Weapon Skill" : 2,
             "MaxItems" : 2,
             "MaxItemRarity" : 2,
             "Corpse_Item" : "corpse_human"

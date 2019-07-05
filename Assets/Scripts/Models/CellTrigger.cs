@@ -27,7 +27,7 @@ public class CellTrigger
 
                 if (c != null)
                 {
-                    c.onEntityEnter += PerformAction;
+                    c.AddOnEnterCallback(PerformAction);
                 }
             }
         }
@@ -50,7 +50,7 @@ public class CellTrigger
 
                 if (c != null)
                 {
-                    c.onEntityEnter -= PerformAction;
+                    c.RemoveOnEnterCallback(PerformAction);
                 }
             }
         }
@@ -74,34 +74,22 @@ public struct ARect
 
     public int right
     {
-        get
-        {
-            return left + width;
-        }
+        get { return left + width; }
     }
 
     public int top
     {
-        get
-        {
-            return bottom + height;
-        }
+        get { return bottom + height; }
     }
 
     public int centerX
     {
-        get
-        {
-            return left + (width / 2);
-        }
+        get { return left + (width / 2); }
     }
 
     public int centerY
     {
-        get
-        {
-            return bottom + (height / 2);
-        }
+        get { return bottom + (height / 2); }
     }
 
     public ARect(int l, int b, int w, int h)

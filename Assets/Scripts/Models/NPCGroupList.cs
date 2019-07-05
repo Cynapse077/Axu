@@ -99,7 +99,6 @@ public static class NPCGroupList
             }
         }
 
-        MyConsole.NewMessageColor("GetGroupByName()::ERROR: Could not find group \"" + search + "\"", Color.red);
         Debug.LogError("GetGroupByName()::ERROR: Could not find group \"" + search + "\"");
 
         return null;

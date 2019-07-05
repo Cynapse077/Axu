@@ -12,6 +12,8 @@ public class DialogueController : MonoBehaviour
     Quest myQuest;
     Journal journal;
 
+    const int costToHire = 300;
+
     public void SetupDialogueOptions()
     {
         if (ObjectManager.playerJournal == null)
@@ -177,25 +179,23 @@ public class DialogueController : MonoBehaviour
 
     bool QuestIconActive()
     {
-        return (!bai.isHostile && !myNPC.HasFlag(NPC_Flags.Follower) && myQuest != null);
+        return !bai.isHostile && !myNPC.HasFlag(NPC_Flags.Follower) && myQuest != null;
     }
 
     void Hire()
     {
-        World.userInterface.YesNoAction("YN_Hire", () => HireMe(), null, 300.ToString());
+        World.userInterface.YesNoAction("YN_Hire", () => HireMe(), null, costToHire.ToString());
     }
 
     public void HireMe()
     {
-        int cost = 300;
-
-        if (ObjectManager.playerEntity.inventory.gold < cost)
+        if (ObjectManager.playerEntity.inventory.gold < costToHire)
         {
             Alert.NewAlert("Hire_No_Money", UIWindow.Dialogue);
         }
         else if (World.objectManager.NumFollowers() < 3)
         {
-            ObjectManager.playerEntity.inventory.gold -= cost;
+            ObjectManager.playerEntity.inventory.gold -= costToHire;
             World.userInterface.CloseWindows();
             GetComponent<BaseAI>().HireAsFollower();
         }

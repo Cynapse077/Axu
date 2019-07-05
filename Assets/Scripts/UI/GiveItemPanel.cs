@@ -8,6 +8,7 @@ public class GiveItemPanel : UIPanel
 {
     [Header("Prefabs")]
     public GameObject inventoryButton;
+
     [Header("Children")]
     public Transform inventoryBase;
     public TooltipPanel ToolTipPanel;

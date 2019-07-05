@@ -82,7 +82,7 @@ public class Item : ComponentHolder<CComponent>
 
     public bool PhysicalDamage()
     {
-        return (!ContainsDamageType(DamageTypes.Slash) || !ContainsDamageType(DamageTypes.Blunt) || !ContainsDamageType(DamageTypes.Pierce));
+        return !ContainsDamageType(DamageTypes.Slash) || !ContainsDamageType(DamageTypes.Blunt) || !ContainsDamageType(DamageTypes.Pierce);
     }
 
     public void UpdateUserSprite(Stats stats, bool wield)
@@ -94,7 +94,9 @@ public class Item : ComponentHolder<CComponent>
             if (HasProp(ItemProperty.Weapon))
             {
                 if (wield || itemType == Proficiencies.Shield)
+                {
                     dsc.SetSprite(renderer, false);
+                }
             }
             else
             {
@@ -122,7 +124,7 @@ public class Item : ComponentHolder<CComponent>
             }
         }
 
-        RunCommands((inMainHand ? "OnWield" : "OnEquip"), stats.entity);
+        RunCommands(inMainHand ? "OnWield" : "OnEquip", stats.entity);
     }
 
     public void OnUnequip(Entity entity, bool inMainHand, bool skipCommands = false)
@@ -160,7 +162,7 @@ public class Item : ComponentHolder<CComponent>
             }
         }
 
-        RunCommands((inMainHand ? "OnUnWield" : "OnUnequip"), entity);
+        RunCommands(inMainHand ? "OnUnWield" : "OnUnequip", entity);
     }
 
     public void OnHit(Entity myEntity, Entity attackedEntity)
@@ -193,6 +195,7 @@ public class Item : ComponentHolder<CComponent>
             GetCComponent<CItemLevel>().AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
         }
 
+        //Status Effects
         if (damageTypes.Contains(DamageTypes.Venom) && SeedManager.combatRandom.Next(100) <= 3)
         {
             attackedEntity.stats.AddStatusEffect("Poison", SeedManager.combatRandom.Next(2, 8));
@@ -231,7 +234,7 @@ public class Item : ComponentHolder<CComponent>
     {
         if (HasProp(ItemProperty.Replacement_Limb)) 
         {
-            //TODO: Add training for limbs here.
+            //TODO: Add training for limbs here?
             //List<ItemProperty> props = new List<ItemProperty>(properties);
             //stats.entity.body.TrainLimbOfType(props.ToArray());
         }
@@ -341,7 +344,9 @@ public class Item : ComponentHolder<CComponent>
         int newDamage = nDmg.Roll() + (dex / 2 - 1) + proficiency;
 
         if (HasProp(ItemProperty.Throwing_Wep))
+        {
             newDamage += proficiency;
+        }
 
         return newDamage;
     }
@@ -355,9 +360,13 @@ public class Item : ComponentHolder<CComponent>
             int am = mod.Amount * multiplier;
 
             if (stats.Attributes.ContainsKey(mod.Stat))
+            {
                 stats.Attributes[mod.Stat] += am;
+            }
             if (stats.proficiencies != null && stats.proficiencies.Profs.ContainsKey(mod.Stat))
+            {
                 stats.proficiencies.Profs[mod.Stat].level += am;
+            }
 
             switch (mod.Stat)
             {
@@ -393,7 +402,9 @@ public class Item : ComponentHolder<CComponent>
                     break;
                 case "Accuracy":
                     if (stats.Attributes.ContainsKey("Accuracy"))
+                    {
                         stats.Attributes["Accuracy"] += am;
+                    }
                     break;
                 case "Endurance":
                     stats.maxHealth += (am * 3);
@@ -411,7 +422,10 @@ public class Item : ComponentHolder<CComponent>
         }
 
         if (HasProp(ItemProperty.ReplaceLimb))
+        {
             World.userInterface.Dialogue_ReplaceLimb(false);
+            return;
+        }
 
         if (HasProp(ItemProperty.Poison) || ContainsDamageType(DamageTypes.Venom))
         {
@@ -420,13 +434,19 @@ public class Item : ComponentHolder<CComponent>
         }
 
         if (HasProp(ItemProperty.Confusion))
+        {
             stats.AddStatusEffect("Confuse", SeedManager.combatRandom.Next(5, 11));
+        }
 
         if (HasProp(ItemProperty.Stun))
+        {
             stats.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 3));
+        }
 
         if (HasProp(ItemProperty.Radiate))
+        {
             stats.Radiate(SeedManager.combatRandom.Next(10, 40));
+        }
 
         if (HasProp(ItemProperty.Cure_Radiation))
         {
@@ -460,31 +480,45 @@ public class Item : ComponentHolder<CComponent>
     public void AddProperty(ItemProperty property)
     {
         if (!properties.Contains(property))
+        {
             properties.Add(property);
+        }
     }
     public void AddDamageType(DamageTypes dt)
     {
         if (!damageTypes.Contains(dt))
+        {
             damageTypes.Add(dt);
+        }
     }
 
     public void AddModifier(ItemModifier mod)
     {
         if (mod == null || mod.name == "" || mod.ID == "")
+        {
             return;
+        }
 
-        RemoveModifier();
+        if (modifier != null)
+        {
+            return;
+        }
+
         modifier = mod;
 
         if (!damageTypes.Contains(mod.damageType))
+        {
             AddDamageType(mod.damageType);
+        }
 
         armor += mod.armor;
 
         for (int i = 0; i < mod.properties.Count; i++)
         {
             if (!properties.Contains(mod.properties[i]))
+            {
                 AddProperty(mod.properties[i]);
+            }
         }
 
         for (int i = 0; i < mod.statMods.Count; i++)
@@ -502,7 +536,9 @@ public class Item : ComponentHolder<CComponent>
             }
 
             if (!incremented)
+            {
                 statMods.Add(new Stat_Modifier(mod.statMods[i]));
+            }
         }
 
         for (int i = 0; i < mod.components.Count; i++)
@@ -512,8 +548,7 @@ public class Item : ComponentHolder<CComponent>
     }
     #endregion
 
-    //Actually completely resets the item to default values.
-    public void RemoveModifier()
+    public void Reset()
     {
         CopyFrom(ItemList.GetItemByID(ID));
     }

@@ -60,26 +60,22 @@ public class UseItemOnOtherPanel : MonoBehaviour
 
     public void UpdateInventory(Predicate<Item> p)
     {
-        title.text = (actionName == "Give Item") ? LocalizationManager.GetContent("Title_Give") : LocalizationManager.GetContent("Title_Use");
-
-        inventoryBase.DespawnChildren();
-
-        if (!gameObject.activeSelf)
+        if (gameObject.activeSelf)
         {
-            return;
+            title.text = (actionName == "Give Item") ? LocalizationManager.GetContent("Title_Give") : LocalizationManager.GetContent("Title_Use");
+            inventoryBase.DespawnChildren();
+            relevantItems = (p != null) ? inventory.items.FindAll(p) : relevantItems;
+
+            for (int i = 0; i < relevantItems.Count; i++)
+            {
+                GameObject g = SimplePool.Spawn(inventoryButton, inventoryBase);
+                g.GetComponent<ItemButton>().icon.sprite = InventoryPanel.SwitchSprite(relevantItems[i]);
+                g.GetComponentInChildren<Text>().text = relevantItems[i].InvDisplay("");
+                g.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(g.transform.GetSiblingIndex()); });
+            }
+
+            UpdateTooltip();
         }
-
-        relevantItems = (p != null) ? inventory.items.FindAll(p) : relevantItems;
-
-        for (int i = 0; i < relevantItems.Count; i++)
-        {
-            GameObject g = SimplePool.Spawn(inventoryButton, inventoryBase);
-            g.GetComponent<ItemButton>().icon.sprite = InventoryPanel.SwitchSprite(relevantItems[i]);
-            g.GetComponentInChildren<Text>().text = relevantItems[i].InvDisplay("");
-            g.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(g.transform.GetSiblingIndex()); });
-        }
-
-        UpdateTooltip();
     }
 
     void SelectPressed(int index)
@@ -182,37 +178,42 @@ public class UseItemOnOtherPanel : MonoBehaviour
     {
         CModKit cmod = itemToUse.GetCComponent<CModKit>();
 
-        relevantItems[index].AddModifier(ItemList.GetModByID(cmod.modID));
-        inventory.RemoveInstance(itemToUse);
+        if (relevantItems[index].modifier == null || string.IsNullOrEmpty(relevantItems[index].modifier.ID))
+        {
+            relevantItems[index].AddModifier(ItemList.GetModByID(cmod.modID));
+            inventory.RemoveInstance(itemToUse);
+        }
+        else
+        {
+            Alert.CustomAlert_WithTitle("Item Has Modifier", "Item already has a modifier. It cannot be replaced or removed.");
+        }
     }
 
     void Coat(int index)
     {
         CLiquidContainer container = itemToUse.GetCComponent<CLiquidContainer>();
 
-        if (container == null)
+        if (container != null)
         {
-            return;
-        }
+            Item target = relevantItems[index];
+            Liquid lq = ItemList.GetLiquidByID(container.sLiquid.ID, container.sLiquid.units);
 
-        Item target = relevantItems[index];
-        Liquid lq = ItemList.GetLiquidByID(container.sLiquid.ID, container.sLiquid.units);
+            if (target.HasCComponent<CCoat>())
+            {
+                CCoat cc = target.GetCComponent<CCoat>();
+                cc.liquid = new Liquid(lq, 1);
+                cc.strikes = 10;
+            }
+            else
+            {
+                CCoat cc = new CCoat(5, new Liquid(lq, 1));
+                target.AddComponent(cc);
+            }
 
-        if (target.HasCComponent<CCoat>())
-        {
-            CCoat cc = target.GetCComponent<CCoat>();
-            cc.liquid = new Liquid(lq, 1);
-            cc.strikes = 10;
+            lq.Coat(target);
+            container.SetLiquidVolume(container.sLiquid.units - 1);
+            container.CheckLiquid();
         }
-        else
-        {
-            CCoat cc = new CCoat(5, new Liquid(lq, 1));
-            target.AddComponent(cc);
-        }
-
-        lq.Coat(target);
-        container.SetLiquidVolume(container.sLiquid.units - 1);
-        container.CheckLiquid();
     }
 
     void Fill(int index)
@@ -225,6 +226,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
         if (amount > 0)
         {
             CombatLog.NewMessage("You pour " + amount.ToString() + " units of " + liquid.Name + " into the " + relevantItems[index].DisplayName() + ".");
+            frm.SetLiquidVolume(frm.currentAmount() - amount);
             frm.CheckLiquid();
         }
         else
@@ -241,15 +243,17 @@ public class UseItemOnOtherPanel : MonoBehaviour
 
         if (numItems > 0)
         {
-            bool display = (inventory.items.Count > 0 && UserInterface.selectedItemNum < numItems);
-            ToolTipPanel.UpdateTooltip(inventory.items[UserInterface.selectedItemNum], display);
+            bool display = (relevantItems.Count > 0 && UserInterface.selectedItemNum < numItems);
+            ToolTipPanel.UpdateTooltip(relevantItems[UserInterface.selectedItemNum], display);
         }
     }
 
     void Update()
     {
         if (World.userInterface.column == 1 && inventoryBase.childCount > 0 && inventoryBase.childCount > UserInterface.selectedItemNum)
+        {
             EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(UserInterface.selectedItemNum).gameObject);
+        }
 
         if (numItems > 0)
         {

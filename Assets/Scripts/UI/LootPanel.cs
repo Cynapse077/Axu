@@ -32,7 +32,9 @@ public class LootPanel : MonoBehaviour
         inventoryBase.DespawnChildren();
 
         if (!gameObject.activeSelf)
+        {
             return;
+        }
 
         if (inv == null)
         {

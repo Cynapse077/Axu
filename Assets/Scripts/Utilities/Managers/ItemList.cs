@@ -71,7 +71,7 @@ public static class ItemList
 
         if ((i.HasProp(ItemProperty.Weapon) || i.HasProp(ItemProperty.Armor) || i.HasProp(ItemProperty.Ranged)) && !i.stackable && i.lootable)
         {
-            newItem.RemoveModifier();
+            newItem.Reset();
 
             newItem.displayName = "<color=magenta>" + NameGenerator.ArtifactName(SeedManager.textRandom) + "</color>";
             newItem.AddProperty(ItemProperty.Randart);
@@ -111,13 +111,14 @@ public static class ItemList
                 newItem.armor += SeedManager.combatRandom.Next(1, 4);
 
                 int ranNum = SeedManager.combatRandom.Next(100);
+                int amt = SeedManager.combatRandom.Next(1, 5) * 5;
 
                 if (ranNum < 33)
-                    newItem.statMods.Add(new Stat_Modifier("Cold Resist", SeedManager.combatRandom.Next(1, 5) * 5));
+                    newItem.statMods.Add(new Stat_Modifier("Cold Resist", amt));
                 else if (ranNum < 66)
-                    newItem.statMods.Add(new Stat_Modifier("Heat Resist", SeedManager.combatRandom.Next(1, 5) * 5));
+                    newItem.statMods.Add(new Stat_Modifier("Heat Resist", amt));
                 else
-                    newItem.statMods.Add(new Stat_Modifier("Energy Resist", SeedManager.combatRandom.Next(1, 5) * 5));
+                    newItem.statMods.Add(new Stat_Modifier("Energy Resist", amt));
 
                 threshold /= 2;
             }
@@ -263,13 +264,13 @@ public static class ItemList
             int rarity = int.Parse(s);
             return GetItemByRarity(rarity);
         }
-        if (rar.Contains("Random_Weapon_R"))
+        else if (rar.Contains("Random_Weapon_R"))
         {
             string s = rar.Replace("Random_Weapon_R", "");
             int rarity = int.Parse(s);
             return GetWeaponByRarity(rarity);
         }
-        if (rar.Contains("Random_Book"))
+        else if (rar.Contains("Random_Book"))
             return GetRandomBook();
 
         return null;

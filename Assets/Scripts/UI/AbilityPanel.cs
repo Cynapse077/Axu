@@ -24,7 +24,6 @@ public class AbilityPanel : UIPanel
     {
         abilityBase.DespawnChildren();
         SelectedMax = 0;
-        SelectedNum = 0;
 
         for (int i = 0; i < skills.abilities.Count; i++)
         {
@@ -37,7 +36,7 @@ public class AbilityPanel : UIPanel
         if (SelectedMax > 0)
         {
             EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(abilityBase.GetChild(0).gameObject);
+            EventSystem.current.SetSelectedGameObject(abilityBase.GetChild(SelectedNum).gameObject);
         }
             
         UpdateTooltip();

@@ -195,24 +195,22 @@ public class SaveData : MonoBehaviour
     {
         //items
         JsonData invJson = playerJson["Inv"];
-        List<Item> items = new List<Item>();
-
         for (int i = 0; i < invJson.Count; i++)
         {
-            items.Add(GetItemFromJsonData(invJson[i]));
+            Manager.playerBuilder.items.Add(GetItemFromJsonData(invJson[i]));
         }
-
-        Manager.playerBuilder.items = items;
 
         //body parts
         JsonData bpJson = playerJson["BodyParts"];
         Manager.playerBuilder.bodyParts = GetBodyPartsFromJson(bpJson);
 
+        //Hand items
         for (int i = 0; i < playerJson["HIt"].Count; i++)
         {
             Manager.playerBuilder.handItems.Add(GetItemFromJsonData(playerJson["HIt"][i]));
         }
 
+        //Firearm
         Manager.playerBuilder.firearm = GetItemFromJsonData(playerJson["F"]);
     }
 

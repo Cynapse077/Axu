@@ -75,6 +75,7 @@ public class CyberneticsPanel : UIPanel
             g.GetComponentInChildren<Text>().text = buttonText;
             g.GetComponent<ItemButton>().icon.enabled = false;
             g.GetComponent<OnHover_SetSelectedIndex>().window = UIWindow.Cybernetics;
+            g.GetComponent<OnHover_SetSelectedIndex>().column = 1;
         }
     }
 

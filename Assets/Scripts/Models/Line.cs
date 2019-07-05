@@ -30,7 +30,9 @@ public class Line
     List<Coord> FillLine()
     {
         if (c0 == null || c1 == null)
+        {
             return null;
+        }
 
         points = new List<Coord>();
 
@@ -73,6 +75,11 @@ public class Line
 
     public static bool inSight(Coord myPos, int cX, int cY)
     {
+        if (cX == myPos.x && cY == myPos.y)
+        {
+            return true;
+        }
+
         int dx = cX - myPos.x, dy = cY - myPos.y;
         int nx = Mathf.Abs(dx), ny = Mathf.Abs(dy);
         int sign_x = dx > 0 ? 1 : -1, sign_y = dy > 0 ? 1 : -1;
@@ -82,7 +89,9 @@ public class Line
         for (int ix = 0, iy = 0; ix < nx || iy < ny;)
         {
             if (!World.tileMap.LightPassableTile(p.x, p.y) && p != myPos)
+            {
                 return false;
+            }
 
             float fx = (0.5f + ix) / nx, fy = (0.5f + iy) / ny;
             if (fx == fy)
@@ -124,7 +133,9 @@ public static class LineHelper
     public static Coord GetPoint(int index)
     {
         if (points == null || index > points.Count - 1)
+        {
             return null;
+        }
 
         return points[index];
     }

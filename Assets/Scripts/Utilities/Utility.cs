@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System;
 using System.Linq;
 using LitJson;
@@ -6,12 +7,13 @@ using System.Collections.Generic;
 
 public static class Utility
 {
-    public static void Highlight(this UnityEngine.EventSystems.EventSystem ev, GameObject go)
+    public static void Highlight(this EventSystem ev, GameObject go)
     {
         ev.SetSelectedGameObject(null);
         ev.SetSelectedGameObject(go);
     }
 
+    //Called from Lua
     public static List<Coord> Cone(Entity ent, Coord pos, Coord direction, int length)
     {
         List<Coord> coords = new List<Coord>();
@@ -19,10 +21,14 @@ public static class Utility
         float min = (o * 45) - 46, max = (o * 45) + 46;
 
         if (min < 0)
+        {
             min += 360;
+        }
 
         if (max > 360)
+        {
             max -= 360;
+        }
 
         bool swap = (min > max);
 
@@ -52,6 +58,20 @@ public static class Utility
         return coords;
     }
 
+    static int GetOctant(Coord direction)
+    {
+        if (direction.x == 0 && direction.y == 1)        return 0;
+        else if (direction.x == 1 && direction.y == 1)   return 1;
+        else if (direction.x == 1 && direction.y == 0)   return 2;
+        else if (direction.x == 1 && direction.y == -1)  return 3;
+        else if (direction.x == 0 && direction.y == -1)  return 4;
+        else if (direction.x == -1 && direction.y == -1) return 5;
+        else if (direction.x == -1 && direction.y == 0)  return 6;
+        else if (direction.x == -1 && direction.y == 1)  return 7;
+
+        return 0;
+    }
+
     static Sprite SetSpriteRect(this Sprite s, int xOffset, int yOffset, Vector2 pivot, int width = 16, int height = 16)
     {
         s = Sprite.Create(s.texture, new Rect(xOffset, yOffset, width, height), pivot, width);
@@ -70,34 +90,14 @@ public static class Utility
         }
     }
 
-    static int GetOctant(Coord direction)
-    {
-        if (direction.x == 0 && direction.y == 1)
-            return 0;
-        else if (direction.x == 1 && direction.y == 1)
-            return 1;
-        else if (direction.x == 1 && direction.y == 0)
-            return 2;
-        else if (direction.x == 1 && direction.y == -1)
-            return 3;
-        else if (direction.x == 0 && direction.y == -1)
-            return 4;
-        else if (direction.x == -1 && direction.y == -1)
-            return 5;
-        else if (direction.x == -1 && direction.y == 0)
-            return 6;
-        else if (direction.x == -1 && direction.y == 1)
-            return 7;
-
-        return 0;
-    }
-
     static float Bearing(Coord c1, Coord c2)
     {
         float theta = Mathf.Atan2(c2.x - c1.x, c2.y - c1.y);
 
         if (theta < 0.0f)
+        {
             theta += (Mathf.PI * 2f);
+        }
 
         return Mathf.Rad2Deg * theta;
     }
@@ -144,7 +144,9 @@ public static class Utility
     public static void Move<T>(this List<T> list, int oldIndex, int newIndex)
     {
         if ((oldIndex == newIndex) || (0 > oldIndex) || (oldIndex >= list.Count) || (0 > newIndex) || (newIndex >= list.Count))
+        {
             return;
+        }
 
         T tmp = list[oldIndex];
 
@@ -199,7 +201,9 @@ public static class Utility
             t.SetParent(null);
 
             if (t.GetComponent<UnityEngine.UI.Button>())
+            {
                 t.GetComponent<UnityEngine.UI.Button>().onClick.RemoveAllListeners();
+            }
 
             SimplePool.Despawn(t.gameObject);
         }
@@ -218,14 +222,16 @@ public static class Utility
     public static bool CoinFlip(this System.Random ran)
     {
         if (ran == null)
+        {
             ran = new System.Random();
+        }
 
         return (ran.Next(100) < 50);
     }
 
-    public static bool OneIn(this System.Random ran, int number)
+    public static bool OneIn(this System.Random ran, int max)
     {
-        return (ran.Next(number) == 0);
+        return (ran.Next(max) == 0);
     }
 
     public static float DistanceTo(this Coord c1, Coord c2)
@@ -236,10 +242,14 @@ public static class Utility
     public static T GetRandom<T>(this List<T> list, System.Random rng = null)
     {
         if (list.Count <= 0)
+        {
             return default(T);
+        }
 
         if (rng != null)
+        {
             return list[rng.Next(list.Count)];
+        }
 
         return list[UnityEngine.Random.Range(0, list.Count)];
     }
@@ -247,10 +257,14 @@ public static class Utility
     public static T GetRandom<T>(this T[] array, System.Random rng = null)
     {
         if (array.Length <= 0)
+        {
             return default(T);
+        }
 
         if (rng != null)
+        {
             return array[rng.Next(array.Length)];
+        }
 
         return array[UnityEngine.Random.Range(0, array.Length)];
     }

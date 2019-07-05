@@ -49,7 +49,7 @@ public class TileRenderer : MonoBehaviour
             spriteRenderer.color = Color.clear;
         }
         else
-        {
+        {            
             if (lit)
             {
                 spriteRenderer.color = (inSight) ? litColor : outOfSightColor;

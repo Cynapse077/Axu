@@ -7,7 +7,12 @@ public class Addiction
     public bool addicted, withdrawal;
     Trait applicableTrait;
 
-    int TimeBetweenDoses
+    const int TimeToCure = 20000;
+    const int TimeToWithdrawal = 4000;
+    const int CravingReminderTime = 800;
+    const int FalloffTime = 3000;
+
+    int timeBetweenDoses
     {
         get { return World.turnManager.turn - lastTurnTaken; }
     }
@@ -17,9 +22,13 @@ public class Addiction
         get
         {
             if (ItemList.GetItemByID(addictedID) != null)
-                return ItemList.GetItemByID(addictedID).DisplayName() + " Addiction";
+            {
+                return ItemList.GetItemByID(addictedID).DisplayName() + " Addiction";            
+            }
             else
+            {
                 return ItemList.GetLiquidByID(addictedID).Name + " Addiction";
+            }
         }
     }
 
@@ -28,9 +37,13 @@ public class Addiction
         get
         {
             if (ItemList.GetItemByID(addictedID) != null)
+            {
                 return ItemList.GetItemByID(addictedID).DisplayName();
+            }
             else
+            {
                 return ItemList.GetLiquidByID(addictedID).Name;
+            }
         }
     }
 
@@ -44,7 +57,7 @@ public class Addiction
         currUse = _currUse;
 
         applicableTrait = TraitList.GetTraitByID("addiction_" + addictedID);
-        World.turnManager.incrementTurnCounter += NewTurn;
+        World.turnManager.incrementTurnCounter += IncrementTurnCounter;
     }
 
     public Addiction(string id, int chance)
@@ -56,7 +69,7 @@ public class Addiction
 
         lastTurnTaken = World.turnManager.turn;
         applicableTrait = TraitList.GetTraitByID("addiction_" + addictedID);
-        World.turnManager.incrementTurnCounter += NewTurn;
+        World.turnManager.incrementTurnCounter += IncrementTurnCounter;
     }
 
     public void ItemUse(Stats stats)
@@ -70,7 +83,9 @@ public class Addiction
             int newChance = (chanceToAddict * (currUse)) / val;
 
             if (SeedManager.combatRandom.Next(100) < newChance)
+            {
                 FullAddiction(stats);
+            }
         }
         else if (withdrawal)
         {
@@ -81,17 +96,19 @@ public class Addiction
 
     public void Cure(Stats stats)
     {
-        if (!addicted)
-            return;
+        if (addicted)
+        {
+            World.turnManager.incrementTurnCounter -= IncrementTurnCounter;
 
-        World.turnManager.incrementTurnCounter -= NewTurn;
+            if (withdrawal)
+            {
+                AffectStats(stats, true);
+            }
 
-        if (withdrawal)
-            AffectStats(stats, true);
-
-        CombatLog.NameMessage("Message_Add_Subside", itemDisplay);
-        stats.RemoveTrait("addiction_" + addictedID);
-        stats.addictions.Remove(this);
+            CombatLog.NameMessage("Message_Add_Subside", itemDisplay);
+            stats.RemoveTrait("addiction_" + addictedID);
+            stats.addictions.Remove(this);
+        }
     }
 
     void FullAddiction(Stats stats)
@@ -101,15 +118,17 @@ public class Addiction
         stats.GiveTrait("addiction_" + addictedID);
     }
 
-    void NewTurn()
+    void IncrementTurnCounter()
     {
         if (addicted)
         {
-            if (TimeBetweenDoses >= 20000)
+            //Fully Shrugged it off
+            if (timeBetweenDoses >= TimeToCure)
             {
                 Cure(ObjectManager.playerEntity.stats);
             }
-            else if (TimeBetweenDoses >= 4000 && !withdrawal)
+            //Enter into a new withdrawal phase
+            else if (timeBetweenDoses >= TimeToWithdrawal && !withdrawal)
             {
                 withdrawal = true;
                 AffectStats(ObjectManager.playerEntity.stats, false);
@@ -117,7 +136,7 @@ public class Addiction
             }
             else
             {
-                if (World.turnManager.turn % 200 == 0)
+                if (World.turnManager.turn % CravingReminderTime == 0)
                 {
                     CombatLog.NameMessage("Message_Add_Crave", itemDisplay);
                     ObjectManager.playerEntity.CancelWalk();
@@ -126,7 +145,8 @@ public class Addiction
         }
         else
         {
-            if (TimeBetweenDoses >= 3000)
+            //If not addicted, slowly reduce number of doses given. Decreases chance of getting addicted over time.
+            if (timeBetweenDoses >= FalloffTime)
             {
                 currUse--;
                 lastTurnTaken = World.turnManager.turn;
@@ -136,7 +156,7 @@ public class Addiction
 
     void AffectStats(Stats stats, bool cure)
     {
-        int am = (cure) ? -1 : 1;
+        int am = cure ? -1 : 1;
 
         foreach (Stat_Modifier sm in applicableTrait.stats)
         {

@@ -149,7 +149,6 @@
             "ObjectType" : "Ensis_Door_Closed",
             "Sprite" : "object-door_ensis_closed.png",
             "Description" : "A door only the Ensis can open.",
-			"Permission" : "Door_Ensis",
 			"Opaque" : true,
 			"Pulse" : {
 				"Receive" : true

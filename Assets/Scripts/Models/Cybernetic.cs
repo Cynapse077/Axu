@@ -14,8 +14,22 @@ namespace Augments
         {
             new SyntheticMuscle(), new SubdermalScales(), new RadiationScrubber(), 
             new FoldingBlade(), new ArmCannon(), new ImpactSole(), new NanoRegen(),
-            new NanoAdrenal(), new TargetSensor()
+            new NanoAdrenal(), new TargetSensor(), new Shielding()
         };
+
+        public static void AddCyberneticToData(Cybernetic c)
+        {
+            List<Cybernetic> cybs = new List<Cybernetic>();
+            
+            for (int i = 0; i < cyberArray.Length; i++)
+            {
+                cybs.Add(cyberArray[i]);
+            }
+
+            cybs.Add(c);
+
+            cyberArray = cybs.ToArray();
+        }
 
         public static List<Cybernetic> GetCyberneticsForLimb(BodyPart bp)
         {
@@ -171,6 +185,36 @@ namespace Augments
         public override bool CanAttach(BodyPart bp)
         {
             return bp.slot == ItemProperty.Slot_Chest || bp.slot == ItemProperty.Slot_Back;
+        }
+    }
+
+    public class Shielding : Cybernetic
+    {
+        const int amount = 10;
+
+        public Shielding()
+        {
+            Name = "Shielding";
+            ID = "Shielding";
+            Desc = "You have increased effective health. (+10 HP)";
+        }
+
+        public override void Attach(BodyPart bp)
+        {
+            base.Attach(bp);
+            bodyPart.myBody.entity.stats.maxHealth += amount;
+        }
+
+        public override void Remove()
+        {
+            bodyPart.myBody.entity.stats.maxHealth -= amount;
+            bodyPart.myBody.entity.stats.health.Clamp(0, bodyPart.myBody.entity.stats.maxHealth);
+            base.Remove();
+        }
+
+        public override bool CanAttach(BodyPart bp)
+        {
+            return bp.slot == ItemProperty.Slot_Chest;
         }
     }
 
