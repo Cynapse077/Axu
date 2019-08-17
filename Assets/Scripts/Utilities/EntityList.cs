@@ -6,9 +6,8 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public static class EntityList
 {
-    public static List<NPC_Blueprint> npcs;
-    public static string dataPath;
-
+    public static List<NPC_Blueprint> npcs { get { return GameData.instance.GetAll<NPC_Blueprint>(); } }
+    static string bodyDataPath { get { return Application.streamingAssetsPath + "/Mods/Core/Entities/BodyStructures.json"; } }
     static List<BodyPart> humanoidStructure;
     static JsonData bodyPartJson;
 
@@ -19,43 +18,12 @@ public static class EntityList
 
     public static void FillListFromData()
     {
-        npcs = GrabBlueprintsFromData(Application.streamingAssetsPath + dataPath);
-
-        TraitList.FillTraitsFromData();
-        NPCGroupList.Init();
-    }
-
-    public static void RemoveNPC(string id)
-    {
-        if (npcs.Find(x => x.id == id) != null)
-            npcs.Remove(npcs.Find(x => x.id == id));
-    }
-
-    public static List<NPC_Blueprint> GrabBlueprintsFromData(string fileName)
-    {
-        List<NPC_Blueprint> list = new List<NPC_Blueprint>();
-        string listFromJson = File.ReadAllText(fileName);
-
-        if (string.IsNullOrEmpty(listFromJson))
-        {
-            Debug.LogError("Entity Blueprints null.");
-            return list;
-        }
-
-        JsonData data = JsonMapper.ToObject(listFromJson);
         humanoidStructure = GetBodyStructure("Humanoid");
-
-        for (int i = 0; i < data["NPCs"].Count; i++)
-        {
-            list.Add(new NPC_Blueprint(data["NPCs"][i]));
-        }
-
-        return list;
     }
 
     public static NPC_Blueprint GetBlueprintByID(string search)
     {
-        return (npcs.Find(x => x.id == search));
+        return GameData.instance.Get<NPC_Blueprint>(search) as NPC_Blueprint;
     }
 
     public static NPC GetNPCByID(string id, Coord worldPos, Coord localPos, int elevation = 0)
@@ -65,7 +33,7 @@ public static class EntityList
 
         for (int i = 0; i < npcs.Count; i++)
         {
-            if (npcs[i].id == id)
+            if (npcs[i].ID == id)
                 return new NPC(npcs[i], worldPos, localPos, elevation);
                 
         }
@@ -86,14 +54,15 @@ public static class EntityList
         return bps;
     }
 
-    public static string bodyDataPath;
-
     public static List<BodyPart> GetBodyStructure(string search)
     {
         List<BodyPart> parts = new List<BodyPart>();
 
-        string file = File.ReadAllText(Application.streamingAssetsPath + bodyDataPath);
-        bodyPartJson = JsonMapper.ToObject(file);
+        if (bodyPartJson == null)
+        {
+            string file = File.ReadAllText(bodyDataPath);
+            bodyPartJson = JsonMapper.ToObject(file);
+        }
 
         for (int a = 0; a < bodyPartJson["Body Structures"].Count; a++)
         {
@@ -115,6 +84,12 @@ public static class EntityList
 
     public static BodyPart GetBodyPart(string bodyPartID)
     {
+        if (bodyPartJson == null)
+        {
+            string file = File.ReadAllText(bodyDataPath);
+            bodyPartJson = JsonMapper.ToObject(file);
+        }
+
         for (int i = 0; i < bodyPartJson["Body Parts"].Count; i++)
         {
             JsonData bpData = bodyPartJson["Body Parts"][i];

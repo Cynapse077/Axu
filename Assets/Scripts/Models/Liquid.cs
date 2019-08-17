@@ -4,11 +4,12 @@ using LitJson;
 
 [System.Serializable]
 [MoonSharp.Interpreter.MoonSharpUserData]
-public class Liquid : IWeighted
+public class Liquid : IWeighted, IAsset
 {
     static List<MixingOutput> mixingOutputs;
 
-    public string ID, Name, Description;
+    public string ID { get; set; }
+    public string Name, Description;
     public int units;
     public int pricePerUnit;
     public int addictiveness;

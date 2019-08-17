@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using LitJson;
 
-public class Wound
+public class Wound : IAsset
 {
-    public string Name, ID, Desc;
+    public string Name, Desc;
+    public string ID { get; set; }
     public ItemProperty slot;
     public List<DamageTypes> damTypes;
     public List<Stat_Modifier> statMods;
@@ -31,6 +33,11 @@ public class Wound
         {
             statMods.Add(new Stat_Modifier(other.statMods[i]));
         }
+    }
+
+    public Wound(JsonData dat)
+    {
+        FromJson(dat);
     }
 
     public void Inflict(BodyPart bp)
@@ -80,6 +87,37 @@ public class Wound
             {
                 bp.myBody.entity.stats.ChangeAttribute(sm.Stat, sm.Amount * am);
             }
+        }
+    }
+
+    void FromJson(JsonData dat)
+    {
+        Name = dat["Name"].ToString();
+        ID = dat["ID"].ToString();
+        Desc = dat["Description"].ToString();
+        slot = dat["Slot"].ToString().ToEnum<ItemProperty>();
+        damTypes = new List<DamageTypes>();
+
+        if (dat.ContainsKey("Damage Types"))
+        {
+            for (int i = 0; i < dat["Damage Types"].Count; i++)
+            {
+                DamageTypes dt = (dat["Damage Types"][i].ToString()).ToEnum<DamageTypes>();
+                damTypes.Add(dt);
+            }
+        }
+
+        List<Stat_Modifier> sm = new List<Stat_Modifier>();
+
+        if (dat.ContainsKey("Stats"))
+        {
+            for (int i = 0; i < dat["Stats"].Count; i++)
+            {
+                Stat_Modifier s = new Stat_Modifier(dat["Stats"][i]["Stat"].ToString(), (int)dat["Stats"][i]["Amount"]);
+                sm.Add(s);
+            }
+
+            statMods = sm;
         }
     }
 }

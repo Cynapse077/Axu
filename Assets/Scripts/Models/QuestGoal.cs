@@ -89,7 +89,7 @@ public class Goal : EventContainer
 
             if (bp.zone == "")
             {
-                Debug.LogError("Blueprint zone for '" + bp.id + "' is empty.");
+                Debug.LogError("Blueprint zone for '" + bp.ID + "' is empty.");
                 return null;
             }
 
@@ -427,7 +427,9 @@ public class FactionKillGoal : Goal
             return description;
         }
 
-        return string.Format("Kill {0}x members of the {1} faction. ({2}/{1})", max.ToString(), FactionList.GetFactionByID(faction).Name, amount.ToString());
+        Faction fac = GameData.instance.Get<Faction>(faction) as Faction;
+
+        return string.Format("Kill {0}x members of the {1} faction. ({2}/{1})", max.ToString(), fac.Name, amount.ToString());
     }
 }
 

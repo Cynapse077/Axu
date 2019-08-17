@@ -1,0 +1,1067 @@
+{
+    "Traits": [
+        {
+            "Name" : "None",
+            "ID" : "none",
+            "Description" : "Choose none of them.",
+            "Stats" : [],
+            "Tags" : [],
+            "Stackable" : false
+        },
+		{
+			"Name" : "Bleed Resistant",
+            "ID" : "rbleed",
+            "Description" : "Resistant to bleeding.",
+            "Stats" : [],
+            "Tags" : [ "Bleed_Resist" ],
+            "Stackable" : false
+		},
+		{
+			"Name" : "Poison Resistant",
+            "ID" : "rpois",
+            "Description" : "Resistant to poison.",
+            "Stats" : [],
+            "Tags" : [ "Poison_Resist" ],
+            "Stackable" : false
+		},
+        {
+            "Name" : "Distorted Body",
+            "ID" : "experiment",
+            "Description" : "You start with an assortment of mutations.",
+            "Stats" : [],
+            "Tags" : [],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Blade Training",
+            "ID" : "blade",
+            "Description" : "You are better with a blade. <color=green>Blade Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Blade", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Blunt Training",
+            "ID" : "blunt",
+            "Description" : "You are better with blunt weapons. <color=green>Blunt Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Blunt", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Polearm Training",
+            "ID" : "pole",
+            "Description" : "You are better with polearm weapons.. <color=green>Polearm Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Polearm", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Axe Training",
+            "ID" : "axe",
+            "Description" : "You are better with axes. <color=green>Axe Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Axe", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Firearm Training",
+            "ID" : "fire",
+            "Description" : "You are better with firearms. <color=green>Firearm Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Firearm", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Throwing Training",
+            "ID" : "throw",
+            "Description" : "You are better with thrown weapons. <color=green>Throwing Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Throwing", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Improvisation Training",
+            "ID" : "improv",
+            "Description" : "You are better with misc weapons. <color=green>Misc Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Misc", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "CQC Training",
+            "ID" : "cqc",
+            "Description" : "You are more proficient while unarmed or wielding fist-type weapons. <color=green>Unarmed Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Unarmed", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Armor Training",
+            "ID" : "armr",
+            "Description" : "You deflect attacks when wearing armor more often. <color=green>Armor Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Armor", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Shield Training",
+            "ID" : "shld",
+            "Description" : "You block more attacks while equipped with a shield. <color=green>Shield Skill +</color>",
+            "Stats" : [
+                { "Stat" : "Shield", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Charming",
+            "ID" : "charming",
+            "Description" : "You have a way with words. Shopkeepers like you.",
+            "Stats" : [
+                { "Stat" : "Charisma", "Amount" : 5 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Sure-Footed",
+            "ID" : "nostick",
+            "Description" : "You have learned to traverse webs without being caught in them.",
+            "Tags" : [ "Random_Trait", "Resist_Webs" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Runner",
+            "ID" : "runner",
+            "Description" : "Before coming to Axu, you ran as a hobby. <color=green>+SPD</color>",
+            "Stats" : [
+                { "Stat" : "Speed", "Amount" : 2 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Lithe",
+            "ID" : "lithe",
+            "Description" : "Your hands are very quick. <color=green>+DEX</color>",
+            "Stats" : [
+                { "Stat" : "Dexterity", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Fortitudinous",
+            "ID" : "fortitude",
+            "Description" : "You have greater tolerance for the wilds. <color=green>+END</color>",
+            "Stats" : [
+                { "Stat" : "Endurance", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Insightful",
+            "ID" : "insight",
+            "Description" : "You have greater knowledge. <color=green>+INT</color>",
+            "Stats" : [
+                { "Stat" : "Intelligence", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Organized",
+            "ID" : "organized",
+            "Description" : "You are able to pack your belongings efficiently. <color=green>+Storage</color>",
+            "Stats" : [
+                { "Stat" : "Storage Capacity", "Amount" : 3 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Book Worm",
+            "ID" : "bookworm",
+            "Description" : "You are more intelligent, but your strength suffers. <color=green>+INT</color> <color=red>-STR</color>",
+            "Stats" : [
+                { "Stat" : "Intelligence", "Amount" : 1 },
+                { "Stat" : "Strength", "Amount" : -1 }
+            ],
+            "Cancels" : "Type_Brain",
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Simple",
+            "ID" : "simple",
+            "Description" : "You have higher health and resiliance to attacks, but your stamina and intelligence are lower. <color=green>+HP +DEF</color> <color=red>-ST -INT</color>",
+            "Stats" : [
+                { "Stat" : "Health", "Amount" : 10 },
+                { "Stat" : "Stamina", "Amount" : -5 },
+                { "Stat" : "Defense", "Amount" : 1 },
+                { "Stat" : "Intelligence", "Amount" : -1 }
+            ],
+            "Cancels" : "Type_Brain",
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Healthy",
+            "ID" : "healthy",
+            "Description" : "You are at the peak of physical fitness. <color=green>+HP</color>.",
+            "Stats" : [
+                { "Stat" : "Health", "Amount" : 5 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Energetic",
+            "ID" : "energetic",
+            "Description" : "You have plenty of energy. <color=green>+ST</color>.",
+            "Stats" : [
+                { "Stat" : "Stamina", "Amount" : 5 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+        	"Name" : "Deft",
+        	"ID" : "deft",
+        	"Description" : "You attack slightly faster with all weapon types.",
+        	"Stats" : [
+        		{ "Stat" : "Attack Delay", "Amount" : -2 }
+        	],
+        	"Tags" : [ "Random_Trait" ],
+        	"Stackable" : false
+        },
+        {
+            "Name" : "Well-Composed",
+            "ID" : "resist",
+            "Description" : "Your blood clots quickly, and you have a higher tolerance to poisons.",
+            "Tags" : [ "Bleed_Resist", "Poison_Resist", "Random_Trait" ],
+            "Stackable" : false
+        },		
+        {
+            "Name" : "Stable Genetics",
+            "ID" : "radresist",
+            "Description" : "You are less likely to mutate, and resist radiation slightly.",
+            "Tags" : [ "Random_Trait", "Rad_Resist" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Fast Walker",
+            "ID" : "fastwalk",
+            "Description" : "You move slightly quicker than average. <color=green>+SPD</color>.",
+            "Stats" : [
+                { "Stat" : "Speed", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Fast Metabolism",
+            "ID" : "fastmet",
+            "Description" : "Your fast metabolism allows you to heal quicker.",
+            "Cancels" : "Metabolism",
+            "Tags" : [ "Fast_Metabolism", "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Stealthy",
+            "ID" : "stealthy",
+            "Description" : "Enemies are less likely to notice you. <color=green>+STLH</color>.",
+            "Stats" : [
+                { "Stat" : "Stealth", "Amount" : 3 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Thick Skin",
+            "ID" : "thickskin",
+            "Description" : "Your skin has several extra layers, providing protection from attacks. <color=green>+DEF</color>.",
+            "Stats" : [
+                { "Stat" : "Defense", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Keen Eye",
+            "ID" : "keeneye",
+            "Description" : "You have impeccable eye sight. <color=green>+ACC</color>.",
+            "Stats" : [
+                { "Stat" : "Accuracy", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Fast Swimmer",
+            "ID" : "swimmer",
+            "Description" : "You lose no time while travelling in water.",
+            "Tags" : [ "Fast_Swimming", "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Weathered",
+            "ID" : "weathered",
+            "Description" : "You are tolerant to harsh conditions. <color=green>+Heat/Cold Resist</color>.",
+            "Stats" : [
+                { "Stat" : "Heat Resist", "Amount" : 10 },
+                { "Stat" : "Cold Resist", "Amount" : 10 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Reflective Iris",
+            "ID" : "vision",
+            "Description" : "Your eyes are able to penetrate the darkness somewhat. <color=green>+VISION</color>",
+            "Stats" : [
+            	{ "Stat" : "Light", "Amount" : 1 }
+            ],
+            "Cancels" : "Eyes",
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+
+        {
+            "Name" : "Cannibal",
+            "ID" : "cannibal",
+            "Description" : "You have a reputation for devouring human flesh. <color=red>-Influence</color>",
+            "Stats" : [
+                { "Stat" : "Charisma", "Amount" : -5 }
+            ],
+            "Tags" : [],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Irritating",
+            "ID" : "irritating",
+            "Description" : "You have an irritating personality. <color=red>-Influence</color>",
+            "Stats" : [
+                { "Stat" : "Charisma", "Amount" : -4 }
+            ],
+            "Tags" : [],
+            "Stackable" : false
+        },
+
+        {
+            "Name" : "Slit Nostrils",
+            "ID" : "slitnostrils",
+            "Description" : "Your nose is flush with your face, leaving only slits to breathe out of. <color=red>-ST Regen</color>",
+            "Stats" : [
+                { "Stat" : "ST Regen", "Amount" : -2 }
+            ],
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Sickle Cells",
+            "ID" : "sicklecells",
+            "Description" : "Your red blood cells are sickle-shaped, making it more difficult to recover from injuries. <color=red>-HP Regen</color>",
+            "Stats" : [
+                { "Stat" : "HP Regen", "Amount" : -2 }
+            ],
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Asthmatic",
+            "ID" : "athsmatic",
+            "Description" : "You have a hard time catching your breath. <color=red>-END -ST</color>",
+            "Stats" : [
+                { "Stat" : "Endurance", "Amount" : -1 },
+                { "Stat" : "Stamina", "Amount" : -2 }
+            ],
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Large Heart",
+            "ID" : "bigheart",
+            "Description" : "Your heart is larger than normal. <color=green>+END +ST</color>",
+            "Stats" : [
+                { "Stat" : "Endurance", "Amount" : 1 },
+                { "Stat" : "Stamina", "Amount" : 2 }
+            ],
+            "Tags" : [ "Mutation"],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Night Vision",
+            "ID" : "vision2",
+            "Description" : "You are very comfortable in darkness. It hides no secrets for you. <color=green>+VISION</color>",
+            "Stats" : [
+            	{ "Stat" : "Light", "Amount" : 4 }
+            ],
+            "Cancels" : "Eyes",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Unshakable Will",
+            "ID" : "mentalresist",
+            "Description" : "Your mind is a fortress. You can resist confusion and stun attacks more easily.",
+            "Tags" : [ "Confusion_Resist", "Stun_Resist", "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Charged",
+            "ID" : "charged",
+            "Description" : "A constant stream of electricity runs through your body, occasionally zapping enemies on contact.",
+            "Tags" : [ "Zap_On_Hit", "Mutation" ],
+            "Abilities" : [ "zapline" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Sluggish",
+            "ID" : "sluggish",
+            "Description" : "Your movements and reaction time are slowed. <color=red>-SPD</color>.",
+            "Stats" : [
+                { "Stat" : "Speed", "Amount" : -2 },
+                { "Stat" : "Attack Delay", "Amount" : 2 }
+            ],
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Zarina",
+            "ID" : "zarina",
+            "Description" : "Your skin is thin, like paper. <color=red>-DEF -Heat/Cold Resist</color>.",
+            "Stats" : [
+                { "Stat" : "Defense", "Amount" : -1 },
+                { "Stat" : "Heat Resist", "Amount" : -10 },
+                { "Stat" : "Cold Resist", "Amount" : -10 }
+            ],
+			"Cancels" : "Skin",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Serpentine",
+            "ID" : "serpentine",
+            "Description" : "Your legs have been fused together, creating a hideous tail. <color=green>+Stealth</color> <color=red>-SPD</color>",
+            "Stats" : [
+                { "Stat" : "Stealth", "Amount" : 4 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Leg",
+            	"NewEquippedItem" : "none",
+            	"RemoveAll" : true,
+            	"ExtraParts" : [
+            		{ "Name" : "tail" }
+            	]
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Tail",
+            "ID" : "extail",
+            "Description" : "You have a small tail protruding from the base of your back.",
+            "Stats" : [
+				{ "Stat" : "Speed", "Amount" : 1 },
+				{ "Stat" : "Charisma", "Amount" : -1 }
+			],
+            "Replace_Body_Part" : {
+                "Slot" : "Slot_Tail",
+                "NewEquippedItem" : "none",
+                "ExtraParts" : [
+                    { "Name" : "sm_tail" }
+                ]
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false,
+			"Max Stacks" : 2
+        },
+        {
+            "Name" : "Extra Head",
+            "ID" : "exhead",
+            "Description" : "You have another head sticking awkwardly from your neck.",
+            "Stats" : [
+                { "Stat" : "Intelligence", "Amount" : 2 },
+				{ "Stat" : "Charisma", "Amount" : -1 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Head",
+            	"NewEquippedItem" : "none",
+            	"ExtraParts" : [
+            		{ "Name" : "head" }
+            	]
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : true,
+			"Max Stacks" : 2
+        },
+        {
+            "Name" : "Extra Leg",
+            "ID" : "exleg",
+            "Description" : "You have an extra leg. With some practice, it will allow you to move faster.",
+            "Stats" : [
+                { "Stat" : "Speed", "Amount" : 3 },
+				{ "Stat" : "Charisma", "Amount" : -1 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Leg",
+            	"NewEquippedItem" : "none",
+            	"ExtraParts" : [
+            		{ "Name" : "leg" }
+            	]
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : true,
+			"Max Stacks" : 4
+        },
+        {
+            "Name" : "Extra Arm",
+            "ID" : "exarm",
+            "Description" : "You have an extra arm protruding from your torso.",
+            "Stats" : [
+                { "Stat" : "Strength", "Amount" : 2 },
+				{ "Stat" : "Charisma", "Amount" : -1 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Arm",
+            	"NewEquippedItem" : "none",
+            	"ExtraParts" : [
+            		{ "Name" : "arm" }
+            	]
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : true,
+			"Max Stacks" : 4
+        },
+        {
+            "Name" : "Claws",
+            "ID" : "claws",
+            "Tier" : 1,
+            "Next Tier" : "claws2",
+            "Description" : "Your hands are gnarled claws, unable to wear gauntlets or gloves. <color=green>+Unarmed</color>",
+            "Stats" : [
+                { "Stat" : "Unarmed", "Amount" : 1 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Arm",
+            	"NewEquippedItem" : "claws",
+            	"CanWearGear" : false,
+            	"AllOfType" : true
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Sharp Claws",
+            "ID" : "claws2",
+            "Tier" : 2,
+            "Prerequisite" : "claws",
+            "Description" : "Your hands bear extremely sharp claws, unable to wear gauntlets or gloves. (Claws II)",
+            "Stats" : [
+				{ "Stat" : "Unarmed", "Amount" : 2 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Arm",
+            	"NewEquippedItem" : "sharpclaws",
+            	"CanWearGear" : false,
+            	"AllOfType" : true
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Horns",
+            "ID" : "horns",
+            "Tier" : 1,
+            "Next Tier" : "horns2",
+            "Description" : "Your head grows curved horns. You can gore opponents, causing bleeding, but cannot wear head gear.",
+            "Replace_Body_Part" : {
+                "Slot" : "Slot_Head",
+                "NewEquippedItem" : "horns",
+                "CanWearGear" : false,
+                "AllOfType" : true
+            },
+            "Tags" : [ "Mutation" ],
+            "Abilities" : [ "gore" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Large Horns",
+            "ID" : "horns2",
+            "Prerequisite" : "horns",
+            "Tier" : 2,
+            "Description" : "The horns on your head have become massive and encumbering. You cannot wear head gear, but can gore nearby opponents.",
+            "Replace_Body_Part" : {
+                "Slot" : "Slot_Head",
+                "NewEquippedItem" : "horns2",
+                "CanWearGear" : false,
+                "AllOfType" : true
+            },
+            "Stats" : [
+                { "Stat" : "Speed", "Amount" : -1 }
+            ],
+            "Tags" : [ "Mutation" ],
+            "Abilities" : [ "gore" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Tendrils",
+            "ID" : "tendrils",
+            "Tier" : 1,
+            "Next Tier" : "tendrils2",
+            "Description" : "Your arms have turned into long whispy tendrils, capable of hitting enemies from a distance. <color=green>+DEX</color> <color=red>-STR</color>",
+            "Stats" : [
+				{ "Stat" : "Strength", "Amount" : -1 },
+                { "Stat" : "Dexterity", "Amount" : 1 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Arm",
+            	"NewEquippedItem" : "tendrils",
+            	"CanWearGear" : false,
+            	"AllOfType" : true
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Tentacles",
+            "ID" : "tendrils2",
+            "Tier" : 2,
+            "Prerequisite" : "tendrils",
+            "Description" : "Your arms have turned into long tentacles. (Tendrils II)",
+            "Stats" : [
+            	{ "Stat" : "Strength", "Amount" : -1 },
+                { "Stat" : "Dexterity", "Amount" : 2 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Arm",
+            	"NewEquippedItem" : "tentacle",
+            	"CanWearGear" : false,
+            	"AllOfType" : true
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Large Cranium",
+            "ID" : "bighead",
+            "Description" : "Your head is very large, and most head gear will not fit. <color=green>+INT</color>",
+            "Stats" : [
+                { "Stat" : "Intelligence", "Amount" : 1 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Head",
+            	"BodyPartName" : "Head (Large)",
+            	"NewEquippedItem" : "none",
+            	"CanWearGear" : false
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+        	"Name" : "Rubbery Skin",
+        	"ID" : "rubberskin",
+            "Next Tier" : "rubberskin2",
+            "Tier" : 1,
+        	"Description" : "Your skin is stretchy, yet somewhat resilliant. <color=green>+Heat/Cold/Energy Resist</color>",
+        	"Stats" : [
+        		{ "Stat" : "Heat Resist", "Amount" : 5 },
+        		{ "Stat" : "Cold Resist", "Amount" : 5 },
+        		{ "Stat" : "Energy Resist", "Amount" : 5 }
+        	],
+            "Cancels" : "Skin",
+        	"Tags" : [ "Mutation" ],
+        	"Stackable" : false
+        },
+        {
+            "Name" : "Rubbery Skin II",
+            "ID" : "rubberskin2",
+            "Prerequisite" : "rubberskin",
+            "Tier" : 2,
+            "Description" : "Your skin is stretchy and very resilliant. <color=green>+Heat/Cold/Energy Resist</color>",
+            "Stats" : [
+                { "Stat" : "Heat Resist", "Amount" : 10 },
+                { "Stat" : "Cold Resist", "Amount" : 10 },
+                { "Stat" : "Energy Resist", "Amount" : 10 }
+            ],
+            "Cancels" : "Skin",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+        	"Name" : "Selective Pigmentation",
+        	"ID" : "selpig",
+        	"Description" : "Your skin can adapt its colour to your surroundings. <color=green>+STLH</color>",
+        	"Stats" : [
+        		{ "Stat" : "Stealth", "Amount" : 5 }
+        	],
+        	"Tags" : [ "Mutation" ],
+        	"Stackable" : false
+        },
+        {
+            "Name" : "Nimble",
+            "ID" : "nimble",
+            "Description" : "You are faster, but your strength suffers. <color=green>+DEX</color>, <color=green>+SPD</color>, <color=red>-STR</color>",
+            "Stats" : [
+                { "Stat" : "Dexterity", "Amount" : 1 },
+                { "Stat" : "Strength", "Amount" : -1 },
+                { "Stat" : "Speed", "Amount" : 2 }
+            ],
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Compound Eyes",
+            "ID" : "flyeyes",
+            "Description" : "You have trouble focusing with your large fly-like eyes. <color=red>-ACC</color>",
+            "Stats" : [
+                { "Stat" : "Accuracy", "Amount" : -1 }
+            ],
+            "Cancels" : "Eyes",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Dorsal Fin",
+            "ID" : "dorsalfin",
+            "Description" : "You have a fin sprouting from your back, restricting the gear you can wear.",
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Back",
+            	"BodyPartName" : "Back",
+            	"NewEquippedItem" : "dorsalfin",
+            	"CanWearGear" : false,
+            	"AllOfType" : true,
+            	"RemoveAll" : false
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Tough Shell",
+            "ID" : "shell",
+            "Description" : "A thick tortoise-like shell covers your back, offering great protection at the cost of speed.",
+            "Stats" : [
+            	{ "Stat" : "Speed", "Amount" : -2 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Back",
+            	"BodyPartName" : "Back",
+            	"NewEquippedItem" : "shell",
+            	"CanWearGear" : false,
+            	"AllOfType" : true,
+            	"RemoveAll" : false
+            },
+            "Cancels" : "Back",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Wings",
+            "ID" : "wings",
+            "Description" : "You have wings sprouting from your back. <color=green>+SPD</color>",
+            "Stats" : [
+                { "Stat" : "Speed", "Amount" : 6 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Back",
+            	"BodyPartName" : "Back",
+            	"NewEquippedItem" : "wings",
+            	"CanWearGear" : false,
+            	"AllOfType" : true,
+            	"RemoveAll" : false,
+            	"ExtraParts" : [
+					{ "Name" : "wing" },
+            		{ "Name" : "wing" }
+            	]
+            },
+            "Cancels" : "Back",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Antennae",
+            "ID" : "antennae",
+            "Description" : "Your head bears two large, ugly antennae. <color=red>-Influence</color>",
+            "Stats" : [
+                { "Stat" : "Charisma", "Amount" : -3 }
+            ],
+            "Replace_Body_Part" : {
+            	"Slot" : "Slot_Head",
+            	"BodyPartName" : "Head",
+            	"NewEquippedItem" : "antennae",
+            	"CanWearGear" : false,
+            	"AllOfType" : true,
+            	"RemoveAll" : false
+            },
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Beak",
+            "ID" : "beak",
+            "Description" : "Your mouth has been replaced by an unsightly beak. <color=red>-Influence</color>",
+            "Stats" : [
+                { "Stat" : "Charisma", "Amount" : -1 }
+            ],
+            "Replace_Body_Part" : {
+                "Slot" : "Slot_Head",
+                "BodyPartName" : "Head",
+                "NewEquippedItem" : "beak",
+                "CanWearGear" : false,
+                "AllOfType" : true,
+                "RemoveAll" : false
+            },
+            "Abilities" : [ "peck" ],
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Webbed Digits",
+            "ID" : "webbed",
+            "Next Tier" : "aquatic",
+            "Tier" : 1,
+            "Description" : "Your fingers and toes are webbed, allowing you to move through the water quickly.",
+            "Tags" : [ "Mutation", "Fast_Swimming" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Aquatic",
+            "ID" : "aquatic",
+            "Prerequisite" : "webbed",
+            "Tier" : 2,
+            "Description" : "You feel more comfortable in water than out. Swimming causes you to move faster than on land.",
+            "Tags" : [ "Mutation", "Faster_Swimming" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Hollow Bones",
+            "ID" : "hollowbones",
+            "Description" : "Your bones have become hollow like a bird's. <color=red>-DEF</color>",
+            "Stats" : [
+                { "Stat" : "Defense", "Amount" : -1 }
+            ],
+            "Cancels" : "Bones",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Dense Bones",
+            "ID" : "densebones",
+            "Description" : "Your bones' density has increased, protecting you. <color=green>+DEF</color>",
+            "Stats" : [
+                { "Stat" : "Defense", "Amount" : 1 }
+            ],
+            "Cancels" : "Bones",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Cold-Blooded",
+            "ID" : "coldblood",
+            "Description" : "Your body temperature varies with your environment. <color=green>+Heat Res</color> <color=red>-Cold Res</color>.",
+            "Stats" : [
+                { "Stat" : "Heat Resist", "Amount" : 25 },
+                { "Stat" : "Cold Resist", "Amount" : -25 }
+            ],
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+		{
+			"Name" : "Smooth Skin",
+			"ID" : "smoothskin",
+			"Description" : "Your skin is extremely smooth and beautiful. <color=green>+Influence</color>",
+			"Stats" : [
+				{ "Stat" : "Charisma", "Amount" : 4 }
+			],
+			"Cancels" : "Skin",
+			"Tags" : [ "Mutation" ],
+			"Stackable" : false
+		},
+		{
+			"Name" : "Alluring Voice",
+			"ID" : "comvoice",
+			"Description" : "Your voice is quite pleasant to listen to. <color=green>+Influence</color>",
+			"Stats" : [
+				{ "Stat" : "Charisma", "Amount" : 2 }
+			],
+			"Tags" : [ "Mutation" ],
+			"Stackable" : false
+		},
+        {
+            "Name" : "Chitinous Skin",
+            "ID" : "chitin",
+            "Description" : "Your skin is covered in a thin layer of chitin. <color=green>+DEF +Heat Resist</color>",
+            "Stats" : [
+                { "Stat" : "Defense", "Amount" : 1 },
+                { "Stat" : "Heat Resist", "Amount" : 5 }
+            ],
+            "Cancels" : "Skin",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Scales",
+            "ID" : "scales",
+            "Next Tier" : "scales2",
+            "Tier" : 1,
+            "Description" : "Your body is covered in thick, tough scales. <color=green>+DEF</color>",
+            "Stats" : [
+                { "Stat" : "Defense", "Amount" : 1 }
+            ],
+            "Cancels" : "Skin",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Plated Skin",
+            "ID" : "scales2",
+            "Prerequisite" : "scales",
+            "Tier" : 2,
+            "Description" : "Your body is covered in large segmented plates. It slightly impacts your movement. <color=green>+DEF</color> <color=red>-SPD</color> (Scales II)",
+            "Stats" : [
+                { "Stat" : "Defense", "Amount" : 2 },
+                { "Stat" : "Speed", "Amount" : -1 }
+            ],
+            "Cancels" : "Skin",
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Second Heart",
+            "ID" : "2ndheart",
+            "Description" : "You gain a second heart, and it miraculously doesn't interfere with your circulatory system. <color=green>+END +ST</color>",
+            "Stats" : [
+                { "Stat" : "Endurance", "Amount" : 1 },
+                { "Stat" : "Stamina", "Amount" : 5 }
+            ],
+            "Tags" : [ "Mutation" ],
+            "Stackable" : false
+        },
+
+
+        {
+            "Name" : "Leprosy",
+            "ID" : "leprosy",
+            "Description" : "You have contracted this vile disease. Your limbs will fall off one by one unless cured.",
+            "Scripts" : [
+                { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_Leprosy" }
+            ],
+            "Tags" : [ "Disease", "Leprosy" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Crystallization",
+            "ID" : "crystal",
+            "Description" : "Your limbs slowly begin to be covered by a sort of crystal. Crystal limbs are less flexible but more resistant.",
+            "Scripts" : [
+                { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_Crystallization" }
+            ],
+            "Tags" : [ "Disease", "Crystallization" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Vampirism",
+            "ID" : "vampirism",
+            "Description" : "You crave the blood of living creatures. Your strength and speed are unmatched, but your body is stagnant and cannot improve through training.",
+            "Tags" : [ "Disease", "Vampirism", "No_Cure" ],
+            "Stats" : [
+                { "Stat" : "Speed", "Amount" : 5 },
+                { "Stat" : "Strength", "Amount" : 4 },
+                { "Stat" : "Dexterity", "Amount" : 4 }
+            ],
+            "Abilities" : [ "vampire" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Vampire Fledgling",
+            "ID" : "pre_vamp",
+            "Description" : "You have been bitten by a Vampire, and are slowly turning into a blood-sucking monster. Cure this disease, or succumb to it.",
+            "Stats" : [
+                { "Stat" : "Speed", "Amount" : 2 },
+                { "Stat" : "Strength", "Amount" : -1 }
+            ],
+            "Scripts" : [
+                { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_PreVamp" }
+            ],
+            "Tags" : [ "Disease", "PreVamp" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Brain Rot",
+            "ID" : "brain_rot",
+            "Description" : "Your brain function is slowly deteriorating over time.",
+            "Scripts" : [
+                { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_BrainRot" }
+            ],
+            "Tags" : [ "Disease", "Drain_Int" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Regenitrol <color=red>Addiction</color>",
+            "ID" : "addiction_liquid_regenitrol",
+            "Description" : "You are addicted to Regenitrol. Going without it can cause these withdrawal effects: (<color=red>-1 INT, -2 END</color>)",
+            "Stats" : [
+                { "Stat" : "Intelligence", "Amount" : -1 },
+                { "Stat" : "Endurance", "Amount" : -2 }
+            ],
+            "Tags" : [ "Addiction" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Caffeine <color=red>Addiction</color>",
+            "ID" : "addiction_caffeine",
+            "Description" : "You are addicted to Caffeine Pills. Going without it can cause these withdrawal effects: (<color=red>-1 SPD -2 STR</color>)",
+            "Stats" : [
+                { "Stat" : "Move Speed", "Amount" : -1 },
+                { "Stat" : "Strength", "Amount" : -2 }
+            ],
+            "Tags" : [ "Addiction" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Alcohol <color=red>Addiction</color>",
+            "ID" : "addiction_liquid_alcohol",
+            "Description" : "You are addicted to Alcohol. Going without it can cause these withdrawal effects: (<color=red>-1 ACC -1 STR</color>)",
+            "Stats" : [
+                { "Stat" : "Accuracy", "Amount" : -1 },
+                { "Stat" : "Strength", "Amount" : -1 }
+            ],
+            "Tags" : [ "Addiction" ],
+            "Stackable" : false
+        },
+        {
+            "Name" : "Cytopke <color=red>Addiction</color>",
+            "ID" : "addiction_liquid_cytopke",
+            "Description" : "You are addicted to Cytopke. Going without it can cause these withdrawal effects: (<color=red>+1 STR -1 INT -2 SPD</color>)",
+            "Stats" : [
+                { "Stat" : "Strength", "Amount" : 1 },
+                { "Stat" : "Move Speed", "Amount" : -2 },
+                { "Stat" : "Intelligence", "Amount" : -1 }
+            ],
+            "Tags" : [ "Addiction" ],
+            "Stackable" : false
+        }
+    ]
+
+}

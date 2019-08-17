@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using LitJson;
 
-public class Quest : EventContainer
+public class Quest : EventContainer, IAsset
 {
-    public string ID { get; private set; }
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public Goal[] goals { get; private set; }
-    public QuestReward rewards { get; private set; }
-    public List<int> spawnedNPCs { get; private set; }
+    public string ID { get; set; }
+    public string Name;
+    public string Description;
+    public Goal[] goals;
+    public QuestReward rewards;
+    public List<int> spawnedNPCs;
 
-    public string chainedQuest { get; private set; }
-    public string startDialogue { get; private set; }
-    public string endDialogue { get; private set; }
-    public bool failOnDeath { get; private set; }
-    public bool sequential { get; private set; }
+    public string chainedQuest;
+    public string startDialogue;
+    public string endDialogue;
+    public bool failOnDeath;
+    public bool sequential;
 
     public bool isComplete
     {
@@ -82,7 +82,7 @@ public class Quest : EventContainer
             goals[i].amount = s.comp[i].amt;
         }
 
-        spawnedNPCs.Clear();
+        spawnedNPCs = new List<int>();
 
         for (int i = 0; i < s.sp.Length; i++)
         {
@@ -160,33 +160,19 @@ public class Quest : EventContainer
             }
         }
 
-        if (q.ContainsKey("Start Dialogue"))
-        {
-            startDialogue = q["Start Dialogue"].ToString();
-        }
-
-        if (q.ContainsKey("End Dialogue"))
-        {
-            endDialogue = q["End Dialogue"].ToString();
-        }
-
-        if (q.ContainsKey("Chained Quest"))
-        {
-            chainedQuest = q["Chained Quest"].ToString();
-        }
-
-        if (q.ContainsKey("Fail On Death"))
-        {
-            failOnDeath = (bool)q["Fail On Death"];
-        }
-
-        sequential = q.ContainsKey("Sequential") ? (bool)q["Sequential"] : true;
+        q.TryGetValue("Start Dialogue", out startDialogue);
+        q.TryGetValue("End Dialogue", out endDialogue);
+        q.TryGetValue("Chained Quest", out chainedQuest);
+        q.TryGetValue("Fail On Death", out failOnDeath);
+        q.TryGetValue("Sequential", out sequential);
 
         if (q.ContainsKey("Rewards"))
         {
-            int xp = (q["Rewards"].ContainsKey("XP")) ? (int)q["Rewards"]["XP"] : 0;
-            int money = (q["Rewards"].ContainsKey("Money")) ? (int)q["Rewards"]["Money"] : 0;
+            int xp, money;
             string[] items = new string[0];
+
+            q["Rewards"].TryGetValue("XP", out xp);
+            q["Rewards"].TryGetValue("Money", out money);
 
             if (q["Rewards"].ContainsKey("Items"))
             {

@@ -1,0 +1,586 @@
+[
+    {
+        "ID" : "Default",
+        "TileIndex" : 9,
+        "Tags" : [  ],
+        "Biome" : "None",
+		"Path Cost" : 0
+    },
+    {
+        "ID" : "Water",
+        "TileIndex" : 0,
+        "Tags" : [ "Liquid", "Walkable" ],
+        "Biome" : "None",
+		"Path Cost" : 2
+    },
+    {
+        "ID" : "Water_Swamp",
+        "TileIndex" : 27,
+        "Tags" : [ "Liquid", "Walkable", "Swamp" ],
+        "Biome" : "None",
+		"Path Cost" : 2
+    },
+    {
+        "ID" : "Lava",
+        "TileIndex" : 74,
+        "Tags" : [ "Liquid", "Walkable", "Volcano" ],
+        "Biome" : "None",
+		"Path Cost" : 888
+    },
+    {
+        "ID" : "Shore_Star",
+        "TileIndex" : 2,
+        "Tags" : [ "Walkable", "Sand" ],
+        "Biome" : "Shore"
+    },
+    {
+        "ID" : "Shore_Sand",
+        "TileIndex" : 8,
+        "Tags" : [ "Walkable", "Sand" ],
+        "Biome" : "Shore"
+    },
+    {
+        "ID" : "Shore_Rock",
+        "TileIndex" : 34,
+        "Tags" : [ "Walkable", "Sand" ],
+        "Biome" : "Shore"
+    },
+    {
+        "ID" : "Shore_Rock_2",
+        "TileIndex" : 35,
+        "Tags" : [ "Walkable", "Sand" ],
+        "Biome" : "Shore"
+    },
+    {
+        "ID" : "Plains_Grass_1",
+        "TileIndex" : 3,
+        "Tags" : [ "Walkable", "Plains" ],
+        "Biome" : "Plains"
+    },
+    {
+        "ID" : "Plains_Grass_2",
+        "TileIndex" : 32,
+        "Tags" : [ "Walkable", "Plains" ],
+        "Biome" : "Plains"
+    },
+    {
+        "ID" : "Plains_Grass_3",
+        "TileIndex" : 33,
+        "Tags" : [ "Walkable", "Plains" ],
+        "Biome" : "Plains"
+    },
+    {
+        "ID" : "Plains_Flower",
+        "TileIndex" : 16,
+        "Tags" : [ "Walkable", "Plains" ],
+        "Biome" : "Plains"
+    },
+    {
+        "ID" : "Plains_Tree_1",
+        "TileIndex" : 4,
+        "Tags" : [ "Plains_Unwalkable" ],
+        "Biome" : "Plains"
+    },
+    {
+        "ID" : "Plains_Tree_2",
+        "TileIndex" : 15,
+        "Tags" : [ "Plains_Unwalkable" ],
+        "Biome" : "Plains"
+    },
+    {
+        "ID" : "Plains_Vine",
+        "TileIndex" : 44,
+        "Tags" : [ "Walkable", "Plains" ],
+        "Biome" : "Plains"
+    },
+    {
+        "ID" : "Forest_Grass_1",
+        "TileIndex" : 5,
+        "Tags" : [ "Walkable", "Forest" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "Forest_Grass_2",
+        "TileIndex" : 18,
+        "Tags" : [ "Walkable", "Forest" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "Forest_Grass_3",
+        "TileIndex" : 19,
+        "Tags" : [ "Walkable", "Forest" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "Forest_Grass_4",
+        "TileIndex" : 96,
+        "Tags" : [ "Walkable", "Forest" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "Forest_Grass_5",
+        "TileIndex" : 97,
+        "Tags" : [ "Walkable", "Forest" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "Forest_Grass_6",
+        "TileIndex" : 98,
+        "Tags" : [ "Walkable", "Forest" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "Forest_Vine",
+        "TileIndex" : 45,
+        "Tags" : [ "Walkable", "Forest" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "Forest_Tree",
+        "TileIndex" : 6,
+        "Tags" : [ "Forest_Unwalkable" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "Forest_Tree_Dead",
+        "TileIndex" : 95,
+        "Tags" : [ "Forest_Unwalkable" ],
+        "Biome" : "Forest"
+    },
+    {
+        "ID" : "UG_Tile",
+        "TileIndex" : 22,
+        "Tags" : [ "Walkable", "Underground" ],
+        "Biome" : "Mountain"
+    },
+    {
+        "ID" : "UG_Dirt_1",
+        "TileIndex" : 47,
+        "Tags" : [ "Walkable", "Underground" ],
+        "Biome" : "Mountain"
+    },
+    {
+        "ID" : "UG_Dirt_2",
+        "TileIndex" : 46,
+        "Tags" : [ "Walkable", "Underground" ],
+        "Biome" : "Mountain"
+    },
+    {
+        "ID" : "UG_Shroom_1",
+        "TileIndex" : 48,
+        "Tags" : [ "Walkable", "Underground" ],
+        "Biome" : "Mountain"
+    },
+    {
+        "ID" : "UG_Shroom_2",
+        "TileIndex" : 49,
+        "Tags" : [ "Walkable", "Underground" ],
+        "Biome" : "Mountain"
+    },
+    {
+        "ID" : "Swamp_Grass_1",
+        "TileIndex" : 31,
+        "Tags" : [ "Walkable", "Swamp" ],
+        "Biome" : "Swamp"
+    },
+    {
+        "ID" : "Swamp_Grass_2",
+        "TileIndex" : 26,
+        "Tags" : [ "Walkable", "Swamp" ],
+        "Biome" : "Swamp"
+    },
+    {
+        "ID" : "Swamp_Grass_3",
+        "TileIndex" : 29,
+        "Tags" : [ "Walkable", "Swamp" ],
+        "Biome" : "Swamp"
+    },
+    {
+        "ID" : "Swamp_Frond",
+        "TileIndex" : 25,
+        "Tags" : [ "Walkable", "Swamp" ],
+        "Biome" : "Swamp"
+    },
+    {
+        "ID" : "Swamp_Frond_2",
+        "TileIndex" : 99,
+        "Tags" : [ "Walkable", "Swamp" ],
+        "Biome" : "Swamp"
+    },
+    {
+        "ID" : "Swamp_Flower",
+        "TileIndex" : 30,
+        "Tags" : [ "Walkable", "Swamp" ],
+        "Biome" : "Swamp"
+    },
+    {
+        "ID" : "Wall_Prison",
+        "TileIndex" : 94,
+        "Tags" : [ "Construct_Steel", "Wall" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Wall_Magna",
+        "TileIndex" : 103,
+        "Tags" : [ "Construct_Magna", "Wall" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Mountain",
+        "TileIndex" : 7,
+        "Tags" : [ "Mountain", "Breakable" ],
+        "Biome" : "None"
+    },
+
+    {
+        "ID" : "Mountain_Floor",
+        "TileIndex" : 36,
+        "Tags" : [ "Walkable", "Mountain" ],
+        "Biome" : "Mountain"
+    },
+    {
+        "ID" : "Snow_1",
+        "TileIndex" : 53,
+        "Tags" : [ "Walkable", "Tundra" ],
+        "Biome" : "Tundra"
+    },
+    {
+        "ID" : "Snow_2",
+        "TileIndex" : 56,
+        "Tags" : [ "Walkable", "Tundra" ],
+        "Biome" : "Tundra"
+    },
+	{
+        "ID" : "Snow_3",
+        "TileIndex" : 57,
+        "Tags" : [ "Walkable", "Tundra" ],
+        "Biome" : "Tundra"
+    },
+    {
+        "ID" : "Snow_Tree",
+        "TileIndex" : 54,
+        "Tags" : [ "Tundra" ],
+        "Biome" : "Tundra"
+    },
+    {
+        "ID" : "Snow_Grass",
+        "TileIndex" : 55,
+        "Tags" : [ "Walkable", "Tundra" ],
+        "Biome" : "Tundra"
+    },
+    {
+        "ID" : "Ice",
+        "TileIndex" : 77,
+        "Tags" : [ "Walkable", "Tundra", "Ice" ],
+        "Biome" : "None"
+    },
+
+    {
+        "ID" : "Ice_Wall",
+        "TileIndex" : 79,
+        "Tags" : [ "Tundra", "Mountain", "Breakable" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Door",
+        "TileIndex" : 11,
+        "Tags" : [ "Walkable" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Wall_Brick",
+        "TileIndex" : 12,
+        "Tags" : [ "Construct_Brick", "Wall", "Breakable_Explosion" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Wall_Broken",
+        "TileIndex" : 21,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_Brick",
+        "TileIndex" : 43,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_House",
+        "TileIndex" : 13,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_House_Broken",
+        "TileIndex" : 17,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_House_Dirt",
+        "TileIndex" : 10,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Wall_Futuristic",
+        "TileIndex" : 50,
+        "Tags" : [ "Construct_Ensis", "Wall" ],
+        "Biome" : "None"
+    },
+
+    {
+        "ID" : "Floor_Futuristic",
+        "TileIndex" : 52,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_Futuristic_Broken",
+        "TileIndex" : 59,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_Square_1",
+        "TileIndex" : 60,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_Square_2",
+        "TileIndex" : 61,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_Square_3",
+        "TileIndex" : 62,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Wall_Square",
+        "TileIndex" : 65,
+        "Tags" : [ "Construct_Facility", "Wall" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Prison_Bars",
+        "TileIndex" : 80,
+        "Tags" : [ "Construct_Prison", "Breakable_Explosion", "See Through", "Wall" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Shrine_Wall",
+        "TileIndex" : 66,
+        "Tags" : [ "Construct_Kin", "Wall" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Shrine_Floor",
+        "TileIndex" : 67,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Shrine_Floor_2",
+        "TileIndex" : 76,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Shrine_Statue",
+        "TileIndex" : 69,
+        "Tags" : [ "See Through" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Shrine_Pew",
+        "TileIndex" : 86,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Shrine_Pew_Top",
+        "TileIndex" : 87,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Shrine_Pew_Bottom",
+        "TileIndex" : 88,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Volcano_Wall",
+        "TileIndex" : 71,
+        "Tags" : [ "Mountain", "Breakable" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Volcano_Floor_1",
+        "TileIndex" : 72,
+        "Tags" : [ "Walkable", "Volcano" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Volcano_Floor_2",
+        "TileIndex" : 73,
+        "Tags" : [ "Walkable", "Volcano" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Stairs_Up",
+        "TileIndex" : 24,
+        "Tags" : [ "Walkable", "Stairs" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Stairs_Down",
+        "TileIndex" : 23,
+        "Tags" : [ "Walkable", "Stairs" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Farm_1",
+        "TileIndex" : 37,
+        "Tags" : [ "Walkable", "Farm" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Farm_2",
+        "TileIndex" : 38,
+        "Tags" : [ "Walkable", "Farm" ],
+        "Biome" : "None"
+    },
+
+    {
+        "ID" : "Desert_Sand_1",
+        "TileIndex" : 83,
+        "Tags" : [ "Walkable", "Desert" ],
+        "Biome" : "Desert"
+    },
+    {
+        "ID" : "Desert_Sand_2",
+        "TileIndex" : 84,
+        "Tags" : [ "Walkable", "Desert" ],
+        "Biome" : "Desert"
+    },
+    {
+        "ID" : "Desert_Sand_3",
+        "TileIndex" : 100,
+        "Tags" : [ "Walkable", "Desert" ],
+        "Biome" : "Desert"
+    },
+    {
+        "ID" : "Desert_Sand_4",
+        "TileIndex" : 101,
+        "Tags" : [ "Walkable", "Desert" ],
+        "Biome" : "Desert"
+    },
+    {
+        "ID" : "Desert_Sand_5",
+        "TileIndex" : 102,
+        "Tags" : [ "Walkable", "Desert" ],
+        "Biome" : "Desert"
+    },
+    {
+        "ID" : "Desert_Cactus",
+        "TileIndex" : 85,
+        "Tags" : [ "Desert" ],
+        "Biome" : "Desert"
+    },
+    {
+        "ID" : "Desert_Vines",
+        "TileIndex" : 89,
+        "Tags" : [ "Walkable", "Desert" ],
+        "Biome" : "Desert"
+    },
+    {
+        "ID" : "Ship_Floor",
+        "TileIndex" : 91,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Dark_Floor",
+        "TileIndex" : 105,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_Brick_2",
+        "TileIndex" : 106,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Water_Swamp_3",
+        "TileIndex" : 107,
+        "Tags" : [ "Walkable", "Liquid" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Floor_Magna",
+        "TileIndex" : 108,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Pillar",
+        "TileIndex" : 109,
+        "Tags" : [ "Underground" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Misc_Flooring",
+        "TileIndex" : 110,
+        "Tags" : [ "Walkable", "Flooring" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Dream_Floor",
+        "TileIndex" : 1,
+        "Tags" : [ "Dream", "Walkable" ],
+        "Biome" : "None"
+    },
+    {
+        "ID" : "Dream_Wall",
+        "TileIndex" : 20,
+        "Tags" : [ "Dream" ],
+        "Biome" : "None"
+    },
+	{
+        "ID" : "Wall_Store",
+        "TileIndex" : 63,
+        "Tags" : [ "Construct_Store", "Wall", "Breakable_Explosion" ],
+        "Biome" : "None"
+	},
+	{
+        "ID" : "Wall_Hospital",
+        "TileIndex" : 64,
+        "Tags" : [ "Construct_Hospital", "Wall" ],
+        "Biome" : "None"
+    },
+	{
+		"ID" : "Floor_Stone_1",
+		"TileIndex" : 40,
+		"Tags" : [ "Crypt", "Flooring", "Walkable" ],
+		"Biome" : "None"
+	},
+	{
+		"ID" : "Floor_Stone_2",
+		"TileIndex" : 41,
+		"Tags" : [ "Crypt", "Flooring", "Walkable" ],
+		"Biome" : "None"
+	},
+	{
+		"ID" : "Floor_Stone_3",
+		"TileIndex" : 42,
+		"Tags" : [ "Crypt", "Flooring", "Walkable" ],
+		"Biome" : "None"
+	}
+]

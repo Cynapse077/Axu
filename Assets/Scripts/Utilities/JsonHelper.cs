@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
+﻿using LitJson;
 using System.Text;
+using System;
 
 public static class JsonHelper {
 	public static string Indent = "    ";
@@ -87,5 +84,101 @@ public static class JsonHelper {
 	{
 		return str.ToString().IsEscaped(index);
 	}
-}
 
+    public static bool TryGetValue(this JsonData dat, string key, out string o, string defaultValue = "")
+    {
+        if (dat.ContainsKey(key))
+        {
+            o = dat[key].ToString();
+            return true;
+        }
+
+        o = defaultValue;
+        return false;
+    }
+
+    public static bool TryGetValue(this JsonData dat, string key, out int o, int defaultValue = 0)
+    {
+        if (dat.ContainsKey(key))
+        {
+            o = (int)dat[key];
+            return true;
+        }
+
+        o = defaultValue;
+        return false;
+    }
+
+    public static bool TryGetValue(this JsonData dat, string key, out float o, float defaultValue = 0f)
+    {
+        if (dat.ContainsKey(key))
+        {
+            o = (float)((double)dat[key]);
+            return true;
+        }
+
+        o = defaultValue;
+        return false;
+    }
+
+    public static bool TryGetValue(this JsonData dat, string key, out bool o)
+    {
+        if (dat.ContainsKey(key))
+        {
+            o = (bool)dat[key];
+            return true;
+        }
+
+        o = false;
+        return false;
+    }
+
+    public static bool TryGetValue(this JsonData dat, string key, out JsonData o)
+    {
+        if (dat.ContainsKey(key))
+        {
+            o = dat[key];
+            return true;
+        }
+
+        o = false;
+        return false;
+    }
+
+    public static bool TryGetValue(this JsonData dat, string key, out Coord o, Coord defaultValue = null)
+    {
+        if (dat.ContainsKey(key) && dat[key].Count == 2)
+        {
+            int x = 0;
+            int y = 0;
+
+            if (dat.TryGetValue("x", out x) && dat.TryGetValue("y", out y))
+            {
+                o = new Coord(x, y);
+                return true;
+            }
+        }
+
+        o = defaultValue;
+        return false;
+    }
+
+    //For enums
+    public static bool TryGetValue<T>(this JsonData dat, string key, out T o, bool parseEnum) where T : struct, IConvertible
+    {
+        if (parseEnum && !typeof(T).IsEnum)
+        {
+            throw new ArgumentException("T must be an enumerated type");
+        }
+
+        if (dat.ContainsKey(key))
+        {
+            string e = dat[key].ToString();
+            o = e.ToEnum<T>();
+            return true;
+        }
+
+        o = default(T);
+        return false;
+    }
+}

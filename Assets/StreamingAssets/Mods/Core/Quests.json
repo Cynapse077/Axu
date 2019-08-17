@@ -1,0 +1,1345 @@
+{
+    "Quests" : [
+        {
+            "Name" : "Spelunking",
+            "ID" : "ensis0",
+            "Start Dialogue" : "You there, are you okay? You must have been dropped off here not long ago. Here, take these.\n<color=grey>(Akk-Lune hands you multiple items)</color>\nI represent The <color=yellow>Ensis</color>, a group of individuals dedicated to creating a thriving civilization on Axu. I can help you get an audience with our leader if you wish. There is a cave in this building here. At the bottom lays an item we need. Grab it for me, and I may be able to help you. We could use a person of skill.",
+            "Description" : "Explore the underground caverns. There are stairs down inside the <color=yellow>building</color> you started in front of.",
+            "Rewards" : {
+                "XP" : 20
+            },
+            "Steps" : [
+				{ "Goal" : "Go", "To" : [ "Abandoned Building", -1 ] }
+            ],
+			"Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Console Command" : "give cloak1|give flask/liquid_regenitrol|log You were given some items by Akk-Lune."
+                }
+            ],
+
+            "Chained Quest" : "ensis1"
+        },
+        {
+            "Name" : "Spelunking II",
+            "ID" : "ensis1",
+            "Description" : "Find further passages down to make your way to the <color=yellow>bottom</color> of this cave. The artifact must be there.",
+            "Rewards" : {
+                "XP" : 50
+            },
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Abandoned Building", -4 ] }
+            ],
+
+            "Chained Quest" : "ensis2"
+        },
+        {
+            "Name" : "The Hunter's Artifact",
+            "ID" : "ensis2",
+            "Description" : "You sense a powerful hostile presence nearby. <color=yellow>Defeat the menace, then talk to Akk-Lune</color> and give him the artifact it holds.",
+            "Rewards" : {
+                "XP" : 100
+            },
+            "Flag" : "Can_Enter_Power_Plant",
+			"Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "deephunter_start", "Coordinate" : "Abandoned Building", "Elevation" : -4, "Give Item" : "artifact1" }
+                }
+            ],
+            "Steps" : [
+				{ "Goal"  : "Kill Spawned", "Description" : "Kill the Deep Hunter and take the artifact." },
+                { "Goal" : "Fetch", "Item" : [ "artifact1" ], "Give To" : "akklune", "Description" : "Return the artifact to Akk-Lune." }
+            ],
+            "End Dialogue" : "That took longer than expected! Did you encounter difficulties? A <color=red>Deep Hunter</color>? Here? My appologies for putting you in danger.\nThe item you retrieved for me is a special keycard, used to activate the terminals in the Power Plant. It was stolen from us not long ago, and has made communications a pain, as you can imagine. I need you to <color=cyan>turn the power on</color>. There are five sub-terranean levels, each with a <color=yellow>terminal</color>. Turn all of them on to give back power. I would go myself, but I have matters to attend to. You'll hear from us when you've completed this task.",
+
+            "Chained Quest" : "ensis3"
+        },
+        {
+            "Name" : "Find the Power Plant",
+            "ID" : "ensis3",
+            "Description" : "Find the abandoned Power Plant.",
+            "Rewards" : {
+                "XP" : 50
+            },
+            "Steps" : [
+                { "Goal" : "Go",  "To" : [ "Power Plant" ] }
+            ],
+			"End Dialogue" : "I've found the Power Plant that Akk-Lune was talking about. I need to enter and turn on all five terminals below.",
+
+            "Chained Quest" : "ensis4"
+        },
+        {
+            "Name" : "Activate the Terminals",
+            "ID" : "ensis4",
+            "Description" : "Turn on the five terminals inside the Power Plant. There is one on each floor.",
+			"Sequential" : false,
+            "Rewards" : {
+                "XP" : 150
+            },
+            "Steps" : [
+                { "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -1,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 1)" },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -2,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 2)" },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -3,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 3)" },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -4,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 4)" },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Power Plant", "Elevation" : -5,  "Amount" : 1, "Description" : "Turn on the terminal (Floor 5)" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnComplete",
+                    "Move NPC" : { "NPC" : "akklune", "Coordinate" : "Ensis Exterior", "Local Position" : { "x" : 28, "y" : 13 }, "Elevation" : 0 }
+                }
+            ],
+            "End Dialogue" : "You hear machines hum beneath you. The plant has come back to life. A crackle can be heard, and suddenly a voice from speakers above says:\n<color=lightblue>\"My friend. I thank you for getting the power plant back online. My name is Arthomas, and I have heard of your deeds from Akk-Lune. Come see me. We can work out something mutually beneficial.\"</color>",
+
+            "Chained Quest" : "ensis5"
+        },
+        {
+            "Name" : "Find the Ensis",
+            "ID" : "ensis5",
+            "Description" : "A voice told you to find people known as <color=yellow>\"The Ensis\"</color>. Arthomas is waiting for you at their stronghold.",
+            "Rewards" : {
+                "XP" : 25
+            },
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "arthomas" }
+            ],
+			"Events" : [
+				{
+                    "Event" : "OnComplete",
+                    "Console Command" : "questflag Can_Enter_Ensis"
+                }
+			],
+            "End Dialogue" : "A pleasure to meet you! My name is Arthomas. Please head inside. Our leader <color=yellow>Lomis</color> is waiting to speak with you. You've been granted permission to enter the facility. Don't cause trouble, now...",
+
+            "Chained Quest" : "ensis6"                 
+        },
+        {
+            "Name" : "Speak with Lomis",
+            "ID" : "ensis6",
+            "Description" : "Arthomas told you to <color=yellow>meet</color> Lomis, head of the Ensis.",
+            "Rewards" : {
+                "XP" : 5
+            },
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "lomis" }
+            ],
+			"Events" : [
+				{
+                    "Event" : "OnComplete",
+                    "Console Command" : "questflag Can_Open_Prison_Cells"
+                }
+			],
+            "End Dialogue" : "Thank you for coming. My name is Lomis, and this is my city. I am the leader of the Ensis. Listen, I think we can make a deal. You do some work for us, and I can get you a seat on a space craft. You do want to go home right? Good. Now, I've granted you access to the <color=cyan>lower levels of the facility</color>. Beneath the <color=yellow>Prison</color> is the <color=yellow>Workshop</color>. You will meet our head engineer, Ka-Nil there. He is overseeing construction on the ship. Be wary, he is a very peculiar individual.",
+
+            "Chained Quest" : "ensis7"
+        },
+        {
+            "Name" : "Mad Scientist",
+            "ID" : "ensis7",
+            "Description" : "Lomis asked you to speak with Ka-Nil, the head engineer. He can be found below the Ensis Stronghold.",
+            "Rewards" : {
+                "XP" : 30
+            },
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "kanil" }
+            ],
+            "End Dialogue" : "Ah yes, good day to you. Lomis told me to expect you. I'm the head Ensistic engineer and scientist. I'm afraid construction of the ship will take some time. In the meantime, could you help me with a bit of research? I need an <color=yellow>Irradiated Heart</color>. Don't you mind what it's for. I've managed to capture a specimen. It's <color=yellow>down one level</color>. All I need is for you to kill it, and tear out its heart.",
+
+			"Chained Quest" : "ensis8"
+        },
+        {
+            "Name" : "Heart Recovery",
+            "ID" : "ensis8",
+            "Type" : "Main",
+            "Description" : "Recover an Irradiated Heart for Ka-Nil's experiments. The creature at the next level down of the Stronghold has one.",
+            "Rewards" : {
+                "XP" : 100
+            },
+            "Steps" : [
+                { "Goal" : "Fetch", "Item" : [ "rad_heart" ], "Give To" : "kanil", "Description" : "Kill the beast below and retrieve its heart." }
+            ],
+            "End Dialogue" : "Ah yes, thank you. My experiments aren't exactly <i>condoned</i> by Lomis, so I have to keep my collection a secret. If you grab me more items, I can make you healing concoctions. This is great. My very own apprentice! Find me <color=yellow>4 Spiny Fronds</color> and I can do this for you. They can be found on the Man-Eating Plants on the surface. Go now! He he he..",
+
+            "Chained Quest" : "ensis9"
+        },
+        {
+            "Name" : "Apprenticeship",
+            "ID" : "ensis9",
+            "Description" : "Ka-Nil needs you to find 4 <color=yellow>Spiny Fronds</color>",
+			"Rewards" : {
+                "XP" : 100,
+				"Items" : [ "canteen/liquid_regenitrol" ]
+            },
+            "Steps" : [
+				{ "Goal" : "Fetch", "Item" : [ "frond", 4 ], "Give To" : "kanil" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "lomis", "Quest" : "ensis10" }
+                }
+            ],
+            "End Dialogue" : "You found the fronds I desired? Here you go, apprentice. <color=cyan>Lomis called for you.</color>. I wouldn't keep him waiting."
+        },        
+        {
+            "Name" : "What Lies Beneath",
+            "ID" : "ensis10",
+            "Description" : "Explore beneath the Kin of the Deep hideout.",
+            "Start Dialogue" : "You're back. I tust you found Ka-Nil? He's an eccentric one, but utterly reliable. There is one thing I must ask of you, even if I don't wish to involve more people than I already have. The Kin of the Deep are conducting some kind of experiments beneath their base. I need to know what these are. Get as far as you can below, and return to me.",
+            "Rewards" : {
+                "XP" : 500,
+				"Items" : [ "returnpad" ]
+            },
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Kin Hideout", -5 ] },
+                { "Goal" : "Talk To", "NPC" : "lomis" }
+            ],
+            "End Dialogue" : "Living statues? Altars? The Kindred wish to summon the <color=yellow>Deep Ones</color>, their dieties, here as physical entities. If this were to happen, I can't say the Ensis would survive. They wish to destroy every ounce of our past. Starting with our libraries, our archives, and even keepsakes held by mourning family members. These statues must be their initial experiments with transfering living essence ito physical bodies. I must ask you to visit their <color=yellow>Cathedral</color>, and see if you can gather information.",
+
+            "Chained Quest" : "ensis11"
+        },
+        {
+            "Name" : "The Cathedral",
+            "ID" : "ensis11",
+            "Description" : "Find answers in the Kindred's Cathedral.",
+            "Rewards" : {
+                "XP" : 30
+            },
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "corith" }
+            ],
+            "End Dialogue" : "Ensis? Here? Or simply a freelancer? How strange. Have you come to murder me and my kin? Perhaps you wish to view the situation from a less narrow-minded perspective? Forgive me, my name is Corith. I am the high priest of this cathedral, devoted to the <color=cyan>Deep Ones</color> I can tell you're new here, and the conflict goes a bit beyond your understanding. Do not fret, I understand your desire to return home. That's what they promised you, yes? If you hear out our side, I will tell you everything you wish to know. Talk to me again when you are ready.",
+
+            "Chained Quest" : "ensis12"
+        },
+        {
+            "Name" : "Information",
+            "ID" : "ensis12",
+            "Description" : "Talk to Corith to gain information on The Kin of the Deep.",
+            "Rewards" : {
+                "XP" : 1
+            },
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "corith" }
+            ],
+            "End Dialogue" : "Let me ask you one thing: How are we to forge ahead while looking over our shoulder, drilling the mistakes of others into our skull? Our founder, <color=cyan>Isazna</color> spoke to ancient dieties presiding over this planet, and was offered the chance to make a new start. Not only surviving as we do now, we will thrive with the aid of <color=yellow>The Deep Ones</color>, our gods. Their influence is great, but not as powerful as it will become. Soon the first Deep One, Xzol will be transferred into a physical body. The rest will follow. The ritual may begin soon. \n\nNow... kill me if you must, and return to your master. Perhaps the facts I've given you will be useful. I do, however, hope you see what right we are doing,",
+
+            "Chained Quest" : "ensis13"
+        },
+        {
+            "Name" : "The Return",
+            "ID" : "ensis13",
+            "Description" : "Return to Lomis and tell him the information you have gathered about the Kin's plans.",
+            "Rewards" : {
+                "XP" : 250
+            },
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "lomis" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "kanil", "Quest" : "ensis14" }
+                }
+            ],
+            "End Dialogue" : "If what you heard was correct, we need to destroy Xzol's body before he is brought into this plane. Unfortunately, we don't know where it's being held, nor where the ceremony will be. While I gather some intel, <color=yellow>Ka-Nil might need your help</color>. Something regarding the ship."
+        },
+        {
+            "Name" : "Strike the Earth",
+            "ID" : "ensis14",
+            "Description" : "Ka-Nil needs <color=yellow>7x Unknown Ore</color>, found only in the Tundra. The best-known veins are located beneath the <color=yellow>Frostborne Village</color>.",
+            "Start Dialogue" : "Just the person I was looking for! I'm afraid I need a favor. There is a particular kind of ore, found beneath the Frostborne Village, in order to complete the body of the ship. Be wary, these people are vicious, attacking everyone on sight. Their technology is quite advanced, focusing on autonamous machines and cold-resistant gear. I'd send somebody else, but you've proven yourself one of the best at this sort of job. Bring something to dig with.",
+            "Rewards" : {
+                "XP" : 400
+            },
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Frostborne Base", -1 ] },
+				{ "Goal" : "Fetch", "Item" : [ "artifact4", 7 ], "Give To" : "kanil" }
+            ],
+            "End Dialogue" : "I knew I could count on you. Those Frostborne are something, eh? I envy their skill with artificial intelligence. My library has nothing on the subject, and all my experiments have been nothing to write home about. Perhaps I'll figure it out one day. Anyways, I hear you're going after the Kin! Lomis told me to put the ship on hold until we complete this goal. It seems quite unfair after all you've done for us. <color=yellow>Arthomas was also looking for you.</color> I wouldn't keep him waiting.",
+
+            "Chained Quest" : "ensis15"
+        },
+        {
+            "Name" : "See Arthomas",
+            "ID" : "ensis15",
+            "Description" : "Go see Arthomas. Ka-Nil said he was looking for you.",
+            "Rewards" : {
+                "XP" : 5
+            },
+            "Events" : [
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "arthomas", "Quest" : "ensis16" }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "arthomas" }
+            ],
+            "End Dialogue" : "Good, you're here. Let me know when you're ready to embark on a task to prove your loyalty. Any involvement with the Kin stops here."
+        },
+        {
+            "Name" : "First Strike",
+            "ID" : "ensis16",
+            "Description" : "Kill <color=yellow>5 Kindred</color> to prove your loyalty to The Ensis.",
+            "Start Dialogue" : "I'm preparing a strike against the Kin, and I want you to be a part of it. First, I need you to show your allegiance. Kill 5 Kindred then return to me. We are going to war, and need to know who our allies are. Any ties you may have to the Kin will die with them. Are you one of us, or one of them?",
+            "Rewards" : {
+				"XP" : 200 
+			},
+            "Steps" : [
+                { "Goal" : "Kill Faction", "Faction" : [ "kin", 5 ] },
+				{ "Goal" : "Talk To", "NPC" : "arthomas" }
+            ],
+			"Events" : [
+				{
+                    "Event" : "OnComplete",
+                    "Console Command" : "questflag Hostile_To_Kin",
+					"Move NPC" : { "NPC" : "isazna", "Coordinate" : "Kin Hideout", "Local Position" : { "x" : 23, "y" : 2 }, "Elevation" : 0 }
+                }
+			],
+            "End Dialogue" : "You are truly one of us. I am glad to call you Ensis. \nOur spies have located where the Kin are manufacturing one of their gods' bodies. There's a <color=yellow>Fabrication Plant</color> up North in the <color=yellow>Tundra</color>. If we are lucky, you can make it there in time to stop the construction.",
+
+            "Chained Quest" : "ensis17" 
+        },
+		{
+			"Name" : "Body of a God",
+			"ID" : "ensis17",
+			"Description" : "Go to the Kindred Fabrication Plant and stop the construction of a Deep One's physical body.",
+			"Rewards" : {
+				"XP" : 55 
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Console Command" : "questflag Can_Enter_Fab"
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Fabrication Plant" ] }
+			],
+			"End Dialogue" : "The place seems deserted. Perhaps the construction is being done inside.",
+
+			"Chained Quest" : "ensis18"
+		},
+		{
+			"Name" : "The Fabrication Plant",
+			"ID" : "ensis18",
+			"Description" : "Explore deeper into the Fabrication Plant.",
+			"Rewards" : {
+				"XP" : 10
+			},
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Fabrication Plant", -2 ] }
+			],
+			"End Dialogue" : "Not a sound. We are already too late. It would be smart to return to Arthomas and tell him of this misfortune.",
+
+			"Chained Quest" : "ensis19"
+		},
+		{
+			"Name" : "Bearer of Bad News",
+			"ID" : "ensis19",
+			"Description" : "Return to Arthomas with the unfortunate news.",
+			"Rewards" : {
+				"XP" : 10
+			},
+			"Steps" : [
+				{ "Goal" : "Talk To", "NPC" : "arthomas" }
+			],
+			"End Dialogue" : "Gone? Damn... We were too late. That means the Deep One's body has been constructed and may now be waiting on a consciousness transfer. Thankfully, we now know where this is going to take place. Beneath the Cathedral, where you met Corith previously, there is some kind of facility. Go there and stop the Kin before it is too late!",
+
+			"Chained Quest" : "ensis20"
+		},
+		{
+			"Name" : "Confrontation",
+			"ID" : "ensis20",
+			"Description" : "Go beneath the Cathedral and confront the Kin of the Deep before Xzol has been transferred into his new body.",
+			"Rewards" : {
+				"XP" : 200 
+			},
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Cathedral", -8 ] }
+			],
+			"End Dialogue" : "[Isazna, the Kindred Prophet stands by the stairwell.]\nWell, look who it is, the Ensis' pet dog. I'm afraid you're too late. Xzol is already gone. I shall put you down. Goodbye, wanderer. I hope there's some peace for you in the afterlife.",
+
+			"Chained Quest" : "ensis21"
+		},
+		{
+			"Name" : "Death of the Prophet",
+			"ID" : "ensis21",
+			"Description" : "Kill Isaza.",
+			"Rewards" : {
+				"XP" : 300
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Move NPC" : { "NPC" : "arthomas", "Coordinate" : "Home", "Local Position" : { "x" : 26, "y" : 13 }, "Elevation" : 0 },
+					"Remove NPC" : { "NPC" : "akklune" },
+					"Remove NPCs At" : { "Coordinate" : "Ensis Exterior", "Elevation" : 0 }
+				},
+				{
+					"Event" : "OnComplete",
+					"Set NPC Dialogue" : { "NPC" : "arthomas", "Dialogue" : "arthomas_init2" },
+					"Remove NPCs At" : { "Coordinate" : "Ensis Interior", "Elevation" : 0 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Kill NPC", "NPC" : [ "isazna", 1 ] }
+			],
+			"End Dialogue" : "[With her dying breath, Isazna chuckles.]\nYou really think killing me will do any good for your cause? Xzol has probably decimated The Ensis by now. You have lost.",
+
+			"Chained Quest" : "ensis22"
+		},
+		{
+			"Name" : "Dark Times",
+			"ID" : "ensis22",
+			"Description" : "Isazna claims Xzol has already made his way to the Ensis Stronghold. Return there to see if there are any survivors.",
+			"Rewards" : {
+				"XP" : 10,
+				"Items" : [ "swordoffate" ]
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Move NPC" : { "NPC" : "kanil", "Coordinate" : "Ensis Interior", "Local Position" : { "x" : 25, "y" : 6 }, "Elevation" : 0 },
+					"Remove NPC" : { "NPC" : "lomis" }
+				},
+				{
+					"Event" : "OnComplete",
+					"Give Quest" : { "NPC" : "arthomas", "Quest" : "ensis23" }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Ensis Interior" ] },
+				{ "Goal" : "Talk To", "NPC" : "kanil" }
+			],
+			"End Dialogue" : "Wanderer! Thank goodness you're okay! There was a brutal invasion not hours ago. Lomis and Akk-Lune perished in the fight. I was fortunate enough to be away from the Stronghold, and thus my life was spared. I have yet to find Arthomas' body though. I'm sure he is still alive somewhere. Poor Lomis... I don't know what The Ensis is going to do without him. Here, take his sword. I know he would have wanted you to have it. We need to find Arthomas if we have any hope of survival. Do you know of any safe places he might be hiding? Please search for him. I'll stay here in case he returns."
+		},
+		{
+			"Name" : "The Duke of Lies",
+			"ID" : "ensis23",
+			"Description" : "Find Oromir, the Duke of Lies, at Magna Dwyll.",
+			"Start Dialogue" : "You're alive! I can't believe how quickly we ended up in shambles. Lomis is dead, and now The Ensis are falling. There's only one person I know that could help us now. Oromir, the self-proclaimed \"Duke of Lies\", was one of us long ago. He betrayed us and now lives in exile. He may be a slimeball, but his knowledge was a great boon to us years ago. Perhaps he can help us overcome this threat. I dare not go, for I would surely be killed on sight... Will you talk to Oromir in my stead?",
+			"Rewards" : {
+				"XP" : 25
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Console Command" : "questflag Can_Enter_Magna"
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Magna_C" ] },
+				{ "Goal" : "Talk To", "NPC" : "oromir" }
+			],
+			"End Dialogue" : "Let me guess, the Ensis sent you to grovel at my feet? Yes, I know about the massacre at the Stronghold. I may be considered a traitor, but I never would have wished this kind of destruction against anyone. I've done my best to stay away from the conflict, but it seems the time has come for me to pick a side. Xzol and his Kindred are a cancer upon this planet and must be disposed of. This so-called god is nothing of the sort, but will be almost impossible to kill with conventional weapons. There is an artifact down the stairs here. Grab it for me, will you? I'll explain more about the Deep Ones upon your return.",
+
+			"Chained Quest" : "ensis24"
+		},
+		{
+			"Name" : "Oromir's Artifact",
+			"ID" : "ensis24",
+			"Description" : "Grab the artifact from below Magna Dwyll and give it to Oromir. Apparently it will help.",
+			"Rewards" : {
+				"XP" : 50
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Spawn Object" : { "Object" : "Chest", "Coordinate" : "Magna_C", "Elevation" : -1, "Give Item" : "artifact5", "Local Position" : { "x" : 19, "y" : 9 } }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Fetch", "Item" : [ "artifact5" ], "Give To" : "oromir" }
+			],
+			"End Dialogue" : "Thank you. Let me explain to the best of my ability. These Deep Ones the Kindred worship are not gods at all, but an ancient form of life native to Axu. Each \"entity\" is a piece of a larger consciousness which resides on a parallel plane to ours. They could not directly interact with us as they were, but since the Kindred manufactured a body for Xzol, he is able to walk among us. I believe they crave to be worshipped by us humans, and have been attempting to get our attention since our ancestors were dumped here. This is an Animus Stone, able to draw on energies created by the Deep Ones. I used them to create the creatures you see in Magna Dwyll. I need you to get more of these off the statues under the Kindred Hideout. Five should suffice.",
+
+			"Chained Quest" : "ensis25"
+		},
+		{
+			"Name" : "Animus Stones",
+			"ID" : "ensis25",
+			"Description" : "Retrieve 5 Animus Stones from Cursed Statues below the Kindred Hideout.",
+			"Rewards" : {
+				"XP" : 350
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -1, "Give Item" : "animusstone" },
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -1, "Give Item" : "animusstone" },
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -2, "Give Item" : "animusstone" },
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -2, "Give Item" : "animusstone" },
+					"Spawn NPC" : { "NPC" : "statue2", "Coordinate" : "Kin Hideout", "Elevation" : -3, "Give Item" : "animusstone" }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Kin Hideout", 0 ] },
+				{ "Goal" : "Fetch", "Item" : [ "animusstone", 5 ], "Give To" : "oromir" }
+			],
+			"End Dialogue" : "Excellent. I'm going to use these six Animus Stones to create a weapon unlike anything else on Axu. Xzol's body can be broken by conventional means, but that does not solve the main issue. His physical and spiritual prescences are still somewhat separate. With what I will create, you can trap Xzol in his stone body. Now, I need something from you since I am saving your people. I want the support of The Ensis again, but without their childish fear of The Deep. Since Lomis is dead, I would assume Arthomas will take the mantle of leader. Speak to him on my behalf, and I will entrust you with the power to enslave a god.",
+
+			"Chained Quest" : "ensis26"
+		},
+		{
+			"Name" : "The Duke's Request",
+			"ID" : "ensis26",
+			"Description" : "Speak to Arthomas on Oromir's behalf. He wishes to have the support of The Ensis in his experiments.",
+			"Rewards" : {
+				"XP" : 10
+			},
+			"Events" : [
+				{
+					"Event" : "OnComplete",
+					"Move NPC" : { "NPC" : "kanil", "Coordinate" : "Magna_C", "Local Position" : { "x" : 5, "y" : 5 }, "Elevation" : 0 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Talk To", "NPC" : "arthomas" }
+			],
+			"End Dialogue" : "You spoke with the traitor? Of course he his holding his aid hostage, that bastard. I suppose we don't have a choice. Since Lomis is dead, that leaves me in charge of The Ensis. Oromir is once again one of us, with protections on his research. I'll go get Ka-Nil and head to Magna Dwyll. We will meet you there.",
+
+			"Chained Quest" : "ensis27"
+		},
+		{
+			"Name" : "A New Ally",
+			"ID" : "ensis27",
+			"Description" : "Return to Magna Dwyll. Oromir, Ka-Nil and Arthomas are waiting there.",
+			"Rewards" : {
+				"XP" : 10
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Move NPC" : { "NPC" : "arthomas", "Coordinate" : "Magna_C", "Local Position" : { "x" : 5, "y" : 7 }, "Elevation" : 0 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Talk To", "NPC" : "oromir" }
+			],
+			"End Dialogue" : "I see you've managed to convince Arthomas. He and Ka-Nil arrived moments before you. I give you my thanks and a great power. This device will restrict Xzol from leaving his construct body. If you weaken him sufficiently, I believe its power will be enough to permanently trap him on this plane. Xzol will need to use a large amount of power to have it work, however. I just hope you are able to survive long enough to get the deed done. If you are lucky enough, please bring the trapped god back to me. He will be quite the study partner... Of course, you will get your ship home finally. Talk to Ka-Nil about locating your target.",
+
+			"Chained Quest" : "ensis28"
+		},
+		{
+			"Name" : "Directions",
+			"ID" : "ensis28",
+			"Description" : "Talk to Ka-Nil.",
+			"Rewards" : {
+				"XP" : 0
+			},
+			"Steps" : [
+				{ "Goal" : "Talk To", "NPC" : "kanil" }
+			],
+			"End Dialogue" : "Locating Xzol has proven to be quite the problem. He seems to slip in and out of existence on a whim, but I feel like there is more solidity to it than that. His body is physical, and must be constrained the limitations of our plane. I believe he is hiding somewhere deep within the planet to regain his power after the devastation he caused. There are some deep tunnels in the desert, but I cannot be sure that's where he is hiding out. If we activate sonar above, we should be able to map out the entirety of the tunnels below the planet. This will give us a location.",
+
+			"Chained Quest" : "ensis29"
+		},
+		{
+			"Name" : "Sonar",
+			"ID" : "ensis29",
+			"Description" : "Find the entrance to the tunnels, and activate the sonar.",
+			"Rewards" : {
+				"XP" : 200
+			},
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Tunnel Entrance", 0 ] },
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Tunnel Entrance", "Elevation" : -0,  "Amount" : 1, "Description" : "Turn on the sonar." },
+				{ "Goal" : "Talk To", "NPC" : "kanil" }
+			],
+			"End Dialogue" : "Excellent! I can see everything below! There appears to be something in the Tunnels, though I can't be sure of what it is exactly. It looks like a mass of... I don't even know. My best guess would be something to do with The Deep. [TO BE CONTINUED...]"
+		},
+
+
+		{
+            "Name" : "Isazna, the Prophet",
+            "ID" : "kin0",
+            "Description" : "Find the Kin of the Deep prophet, Isazna. She is located under the Ensis Stronghold in a prison cell.",
+            "Start Dialogue" : "Greetings, Ensis Initiate. I have a feeling the ones you've been affiliating with have been leading you astray. The Kin of the Deep aren't exactly on their \"nice\" list. What if I told you there's a darker side to the Ensis? We have a prophet, captured by those you trust. I'm not asking for you to believe, only that you talk to her, listen to what she has to say. Find a way into the <color=yellow>Prison</color> and talk to <color=orange>Isazna</color>. The rest I leave up to fate.",
+			"Rewards" : {
+				"XP" : 55,
+				"Items" : [ "envirosuit" ]
+			},
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "isazna" }
+            ],
+            "End Dialogue" : "You're not exactly one of them, are you? Greetings, my name is Isazna. Did Gemskhet send you? Good, then everything is occuring as expected. We, The Kin of the Deep, represent a new era for this planet.  Look where our ancestors lead us, to a prison billions of miles away.\nI need you to do me a favor. Retrieve an artifact from the <color=yellow>Volcano</color> nearby, and I will show you marvelous things. There are forces at work that you cannot even comprehend. Take this suit. It will help you deal with the heat.",
+
+            "Chained Quest" : "kin1"    
+        },
+		{
+            "Name" : "Searching for Artifacts",
+            "ID" : "kin1",
+            "Description" : "Isazna asked you to retrieve an artifact from the Volcano, then bring it back to her.",
+            "Rewards" : {
+				"XP" : 200 
+			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "saint", "Coordinate" : "Volcano", "Elevation" : -6, "Give Item" : "artifact2" }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Volcano", -6 ] },
+                { "Goal" : "Kill Spawned" },
+                { "Goal" : "Fetch", "Item" : [ "artifact2" ], "Give To" : "isazna" }
+            ],
+            "End Dialogue" : "My thanks, wanderer. This will surely help us. You are worthy of the Ancient Ones' attention. If you wish, you can be of more use to us. Do not be frightened, child. There is another artifact in the Ensis Stronghold Exterior Area. Just one level up, then slightly south. Take it. With the two artifacts, the Deep Ones will heed our call, and raise us to their breast. All others will serve the Kin. We <i><b>need</b></i> that artifact.",
+
+            "Chained Quest" : "kin2"
+        },
+		{
+            "Name" : "The Second Artifact",
+			"ID" : "kin2",
+            "Description" : "Grab the second artifact, located in the Ensis Stronghold Exterior, then return to Isazna.",
+            "Rewards" : {
+				"XP" : 120 
+			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn Object" : { "Object" : "Chest", "Coordinate" : "Ensis Exterior", "Elevation" : 0, "Give Item" : "artifact3", "Local Position" : { "x" : 4, "y" : 15 } }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Ensis Exterior" ] },
+                { "Goal" : "Fetch", "Item" : [ "artifact3" ], "Give To" : "isazna" }
+            ],
+            "End Dialogue" : "Well done, wanderer. I now have the means to grant the Deep Ones physical bodies. The next step is getting me out of here without too much of a fuss. There should be enough extra power in these artifacts for some invisibility. Please take me to the Hideout!",
+            
+            "Chained Quest" : "kin3"
+        },
+		{
+            "Name" : "Escape",
+            "ID" : "kin3",
+            "Description" : "Take Isazna to the Kindred Hideout.",
+            "Rewards" : {
+				"XP" : 150 
+			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Move NPC" : { "NPC" : "isazna", "Coordinate" : "Kin Hideout", "Local Position" : { "x" : 23, "y" : 2 }, "Elevation" : 0 }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "gemskhet", "Quest" : "kin4" }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Kin Hideout" ] },
+				{ "Goal" : "Talk To", "NPC" : "isazna" }
+            ],
+            "End Dialogue" : "Yet again you have my thanks. Talk to Gemskhet, my child. I think he has something for you to do."
+        },
+		{
+            "Name" : "Stolen Blade",
+            "ID" : "kin4",
+            "Description" : "Find the thief of Gemskhet's Ritual Dagger, kill him, and bring the blade back to its rightful owner.",
+            "Start Dialogue" : "You brought her back to us! You please us with your devotion. I have something more for you to do. A peasant has stolen something from me, my Ritual Dagger. Find the one responsible, and bring the dagger back to me. This is not Ensis work, so don't be surprised to find them unwilling to accept you with open arms after this. If you are one of us, prove it.",
+            "Rewards" : {
+				"XP" : 200
+			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "villager_thief", "Coordinate" : "Rich District", "Elevation" : 0, "Give Item" : "ritualdagger" }
+                },
+				{
+					"Event" : "OnComplete",
+					"Console Command" : "questflag Hostile_To_Ensis"
+				}
+            ],
+            "Steps" : [
+				{ "Goal" : "Go", "To" : [ "Rich District" ] },
+                { "Goal" : "Kill Spawned" },
+                { "Goal" : "Fetch", "Item" : [ "ritualdagger" ], "Give To" : "gemskhet" }
+            ],
+            "End Dialogue" : "You found it? Splendid. I hope it did not trouble you to spill a little blood in our name. One more thing... I need some intel on the Xul to the South. Could you check on them, and report back to me? Their pitiful village is in the Red Desert. Be wary of the wildlife and sandstorms.",
+            
+            "Chained Quest" : "kin5"
+        },
+		{
+            "Name" : "Meeting the Xul",
+            "ID" : "kin5",
+            "Description" : "Gemskhet needs you to check on the Xul. You can find them in the Red Desert.",
+            "Rewards" : {
+				"XP" : 50
+			},
+			"Steps" : [
+                { "Goal" : "Go", "To" : [ "Xul Camp" ] },
+                { "Goal" : "Talk To", "NPC" : "gemskhet" }
+            ],
+            "End Dialogue" : "No resistance from the south? Perfect. We have the dagger, the artifacts, and now we need the ritual area. There's a place of power out in the water. A betrayer of the Ensis lives in solitude inside the city of Magna Dwyll. The man's name is <color=yellow>Oromir</color>, but he now calls himself \"<color=yellow>The Duke of Lies</color>\". Be wary, as this crafty fellow has amassed some kind of army. We hope to harness the source's power instead. Kill him, and return here.",
+
+			"Chained Quest" : "kin6"
+        },
+		{
+            "Name" : "A Source of Power",
+            "ID" : "kin6",
+            "Description" : "Go to the city Magna Dwyll, and kill Oromir, the Duke of Lies.",
+            "Rewards" : {
+				"XP" : 250
+			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Console Command" : "questflag Can_Enter_Magna"
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Magna_S" ] },
+                { "Goal" : "Kill NPC", "NPC" : [ "oromir", 1 ] },
+                { "Goal" : "Talk To", "NPC" : "gemskhet" }
+            ],
+            "End Dialogue" : "I trust the Duke of Lies has been slain? Good now we move onto the next phase of our plan...\n\n(TO BE CONTINUED...)"
+        },
+
+        {
+            "Name" : "Fetching Tools",
+            "ID" : "blacksmith0",
+            "Description" : "The Xul Blacksmith needs you to fetch a couple hammers for him.",
+            "Start Dialogue" : "You there! If I could ask a few favours while I tend to my shop. I promise it will be worth your while. I can strengthen your weapon for you if you complete what I need. First, I broke my hammer and could use a couple replacements. Could you grab two for me?",
+            "Rewards" : {
+				"XP" : 120 
+			},
+            "Steps" : [
+				{ "Goal" : "Fetch", "Item" : [ "hammer", 2 ], "Give To" : "blacksmith" }
+            ],
+            "End Dialogue" : "You have my thanks. Next, I've been having trouble getting outside customers with all the hostile wildlife about. Kill some <color=yellow>Winged Snappers</color> for me. 5 should do the trick to scare them off. Come back when you're done.",
+
+            "Chained Quest" : "blacksmith1"
+        },
+        {
+            "Name" : "Damn Snappers",
+            "ID" : "blacksmith1",
+            "Description" : "The Xul Blacksmith needs you to kill <color=yellow>5 Winged Snappers</color> to encourage customers to come South.",
+            "Rewards" : {
+				"XP" : 200 
+			},
+            "Steps" : [
+                { "Goal" : "Kill NPC", "NPC" : [ "snake", 5 ] },
+                { "Goal" : "Talk To", "NPC" : "blacksmith" }
+            ],
+            "End Dialogue" : "Good timing! A group of Lepers has come to raid our wares! Please get rid of them for us! I beg you!",
+
+            "Chained Quest" : "blacksmith2"
+        },
+        {
+            "Name" : "Leper Attack",
+            "ID" : "blacksmith2",
+            "Description" : "Lepers have invaded the Xul Village. Take them out.",
+			"Rewards" : {
+                "XP" : 50,
+				"Items" : [ "modkit_xul" ]
+            },
+            "Steps" : [
+                { "Goal" : "Kill NPC", "NPC" : [ "infected", 6 ] },
+                { "Goal" : "Talk To", "NPC" : "blacksmith" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn Group" :  { "Group" : "Leper Colony 1", "Amount" : 6, "Coordinate" : "Xul Camp", "Elevation" : 0 }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "saira", "Quest" : "sairashunt1" }
+                }
+            ],
+            "End Dialogue" : "Thank you so much! It's only fair that I pass on the means to improve a weapon of yours. Take this Xul Mod Kit. Safe travels, wanderer. Oh, before you go, a friend of mine, Saira, is wandering near the Oasis. I'm sure she could use some help if you are willing. She's kept us fed with her hunting for years. I would be very greatful if you could check up on her."
+        },
+        {
+            "Name" : "Saira's Hunt",
+            "ID" : "sairashunt1",
+            "Description" : "Kill 5 Parasects for Saira.",
+            "Start Dialogue" : "Hello, wanderer. I heard from the Blacksmith that you were coming to help me on a few errands. I have to get some meat off the Parasects around these parts. Shall we hunt say.. 5? Then we can move onto something tougher.",
+            "Rewards" : {
+                "XP" : 250
+			},
+            "Steps" : [
+                { "Goal" : "Kill NPC", "NPC" : [ "parasect", 5 ] },
+				{ "Goal" : "Talk To", "NPC" : "saira" }
+            ],
+            "End Dialogue" : "What a good warmup. Next, I think we'll take on the Vampire roaming around the old power plant. Ensis repair crews have been too scared to venture that deep into the facility. Take it on, and I'll teach you how to butcher!",
+
+            "Chained Quest" : "sairashunt2"
+        },
+        {
+            "Name" : "Vampire Hunter",
+            "ID" : "sairashunt2",
+            "Description" : "There's a vampire in the Power Plant. Saira needs you to eliminate it.",
+            "Rewards" : {
+                "XP" : 300
+			},
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Power Plant", -3 ] },
+                { "Goal" : "Kill Spawned" },
+                { "Goal" : "Talk To", "NPC" : "saira" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "vamp", "Coordinate" : "Power Plant", "Elevation" : -3 }
+                },
+				{
+					"Event" : "OnComplete",
+					"Console Command" : "questflag Learned_Butcher|log Saira has taught you the basics of Butchery."
+				}
+            ],
+            "End Dialogue" : "Great! As promised, I'll show you how to butcher the corpses of your catches. \nLet's move onto something tougher. There's a big beastie I like to call <color=yellow>\"Noggins\"</color> roaming around these parts. I call it that because well... It has two heads.",
+            "Chained Quest" : "sairashunt3"
+        },
+        {
+            "Name" : "Noggins Be Gone",
+            "ID" : "sairashunt3",
+            "Description" : "Hunt the roaming creature, \"Noggins\".",
+            "Rewards" : {
+                "XP" : 550,
+				"Items" : [ "sairasrifle" ]
+            },
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "noggins", "Coordinate" : "Abandoned Building", "Elevation" : 0 }
+                },
+                {
+                	"Event" : "OnComplete",
+                	"Remove Item" : { "NPC" : "saira", "Item" : "sairasrifle", "Replacement" : "pistol" }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Go", "To" : [ "Abandoned Building" ] },
+                { "Goal" : "Kill Spawned" }
+            ],
+            "End Dialogue" : "Whew, what a tough one! Thanks for your help. I've had this rifle for a few years now, and it's served me admirably. I'd like you to have it as a thank you gift."
+        },
+		{
+            "Name" : "Xzol's Champion",
+            "ID" : "ensis_sub0",
+            "Description" : "Pleicol wants you to take down a Ranger of Xzol.",
+            "Start Dialogue" : "Hello, my name is Pleicol. I'm the lead scholar of this facility. We've been looking into the <color=yellow>Kin of the Deep</color> recently, especially the strange anomalies seemingly protecting them. The Kindred call them \"gods\", but I'm not so sure. They pick special individuals to be their champions. In fact, I've been tracking one for a little while now. Maybe you'd like to take it out for me? Be careful, this being is extremely strong. It is proficient with firearms, so try not to get into a ranged battle with it.",
+			"Rewards" : {
+				"XP" : 250,
+				"Money" : 10,
+				"Items" : [ "flask/liquid_mutagen" ]
+			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "ranger", "Coordinate" : "Spider Den", "Elevation" : 0 }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Kill Spawned" },
+                { "Goal" : "Talk To", "NPC" : "pleicol" }
+            ],
+            "End Dialogue" : "How did you fare? Interesting creature, eh? My thanks for performing that task. Hopefully this makes it worth your while. I've been told you've taken down a Deep Hunter. Would you like to try your luck against something even more interesting? Virash Saints are noble warriors devoted to the \"gods\" of the planet. I'd like you to take one down for me.",
+
+            "Chained Quest" : "ensis_sub1"
+        },
+		{
+            "Name" : "Impending Martyr",
+            "ID" : "ensis_sub1",
+            "Description" : "Pleicol wants you to take down a <color=yelow>Virash Saint</color>.",
+            "Rewards" : {
+				"XP" : 250,
+				"Money" : 25
+			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "saint", "Coordinate" : "Crater", "Elevation" : 0 }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Kill Spawned" },
+                { "Goal" : "Talk To", "NPC" : "pleicol"}
+            ],
+            "End Dialogue" : "Another one down. You're quite good at this. I have one more mark for you, a Demigod. Now, the name isn't exactly accurate. These guys are quite like the Deep Hunters you'll find roaming caves, only stronger. Take it down, and show the Kin that men will rise above gods.",
+
+            "Chained Quest" : "ensis_sub2"
+        },
+		{
+            "Name" : "All Demi, No God",
+            "ID" : "ensis_sub2",
+            "Description" : "Pleicol wants you to take down the improperly-named <color=yellow>Demigod</color>.",
+            "Rewards" : {
+				"XP" : 300,
+				"Money" : 50
+			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "demigod", "Coordinate" : "Crashed Ship", "Elevation" : 0 }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Kill Spawned" },
+                { "Goal" : "Talk To", "NPC" : "pleicol" }
+            ],
+            "End Dialogue" : "Well done! Here's some money for your troubles."
+        },
+		{
+            "Name" : "Homonculus",
+            "ID" : "homonculus",
+            "Description" : "Faust needs 4 body parts to reconstruct an old colleague.",
+            "Start Dialogue" : "Need something to do? I'm trying to reconstruct an old colleague of mine, but lack the required body parts. I still have his head and torso, but must aquire four more limbs. No, I don't care what they are. I would prefer them to be somewhat organic, but you know what? Surprise me. It would be an interesting experiment in itself to form a unique body shape.",
+			"Rewards" : {
+				"XP" : 350,
+				"Money" : 100,
+				"Items" : [ "arm_intrine" ]
+			},
+            "Steps" : [
+				{ "Goal" : "Fetch Property", "ItemProperty" : [ "Replacement_Limb", 4 ], "Give To" : "faust" }
+            ],
+            "End Dialogue" : "All done? Splendid! I shall get to work right away. Take these for your troubles. \nI may have a need for your services again. Get me five more parts, and I'll create a creature for your own personal use! Homonculi can be very useful in combat. Just make sure you bring me parts that would benefit what you're looking for.",
+
+			"Chained Quest" : "homonculus2"
+        },
+		{
+            "Name" : "Your Own Homonculus",
+            "ID" : "homonculus2",
+            "Description" : "Faust needs 5 body parts to create your own homonculus.",
+			"Rewards" : {
+				"XP" : 100
+			},
+            "Steps" : [
+				{ "Goal" : "Fetch Homonculus", "ItemProperty" : [ "Replacement_Limb", 5 ], "Give To" : "faust" }
+            ],
+            "End Dialogue" : "All done? Splendid! I'll put these pieces together and create something amazing!"
+        },
+		{
+        	"Name" : "Creepy Crawlies",
+        	"ID" : "neant_queen",
+        	"Description" : "Rojer wants you to kill the Neant Queen in her nest beneath an abandoned shrine.",
+        	"Start Dialogue" : "There's an abandoned Kin shrine out there, just waiting to be pillaged. The problem is the nest of Neants beneath it. If you kill the queen, I'll split the profit with you. Deal?",
+        	"Rewards" : {
+				"XP" : 200,
+				"Money" : 250
+			},
+        	"Events" : [
+        		{
+        			"Event" : "OnStart",
+        			"Spawn NPC" : { "NPC" : "neantqueen", "Coordinate" : "Spider Den", "Elevation" : -7 }
+        		}
+        	],
+        	"Steps" : [
+        		{ "Goal" : "Go", "To" : [ "Spider Den", -7 ] },
+        		{ "Goal" : "Kill Spawned" },
+        		{ "Goal" : "Talk To", "NPC" : "rojer" }
+        	],
+        	"End Dialogue" : "She is dead? Perfect. Here's something for your troubles. I come from a family of merchants, but caught a bit of the wanderlust some years ago. I think I'm ready to go back to my roots now. I've heard you have some kind of a base of operations. If you're willing to do another favor for me, I can set up right there. Convenience is key, after all! There is a group of bandits stalking the Bazaar, taking everything they please. My friends have set up shop there and could really use your help!",
+
+			"Chained Quest" : "merchantile"
+        },
+		{
+			"Name" : "Merchantile",
+			"ID" : "merchantile",
+			"Description" : "Rojer needs a group of bandits at the Bazaar killed. He will set up shop at your home base once the quest has been completed.",
+			"Rewards" : {
+				"XP" : 200
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Spawn Group" :  { "Group" : "Bandits 5", "Amount" : 5, "Coordinate" : "Bazaar", "Elevation" : 0 }
+				},
+				{
+					"Event" : "OnComplete",
+					"Move NPC" : { "NPC" : "rojer", "Coordinate" : "Home", "Local Position" : { "x" : 10, "y" : 15 }, "Elevation" : 0 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Bazaar" ] },
+				{ "Goal" : "Kill Spawned" },
+				{ "Goal" : "Talk To", "NPC" : "rojer" }
+			],
+			"End Dialogue" : "They're dead? Amazing! I'll meet you at the Home Base, boss!"
+		},
+
+		{
+        	"Name" : "Long Pig",
+        	"ID" : "longpig",
+        	"Description" : "The man known as \"Kilovir\" asked you to gather some human flesh for him to prepare for like-minded allies. 5 pieces would be perfect.",
+        	"Start Dialogue" : "I've been watching you. You have a very... peculiar taste, don't you? Don't worry, I'm very much the same, and would like to make you a deal. I have a very nice weapon, perfect for segmenting flesh on humans. All you need to do is bring me some meat. How does that sound?",
+			"Rewards" : {
+				"XP" : 100,
+				"Items" : [ "mancleaver" ]
+			},
+        	"Events" : [
+        		{
+        			"Event" : "OnComplete",
+        			"Remove Item" : { "NPC" : "killower", "Item" : "mancleaver", "Replacement" : "scythe" }
+        		}
+        	],
+        	"Steps" : [
+				{ "Goal" : "Fetch Property", "ItemProperty" : [ "Cannibalism", 5 ], "Give To" : "killower" }
+        	],
+        	"End Dialogue" : "Perfect. Here's the weapon as promised. I shall prepare a feast tonight!"
+        },
+
+		{
+			"Name" : "Scrag Menace",
+			"ID" : "grum0",
+			"Description" : "The wild man, Grum, asked you to kill the Elder Scrag below his cave.",
+			"Start Dialogue" : "Hrm? You here to help Grum? Big bad down. Need kill. Big Scrag hurt Grum! Yes?",
+			"Rewards" : {
+				"XP" : 250
+			},
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Spawn NPC" : { "NPC" : "scrag3", "Coordinate" : "Cave_Entrance", "Elevation" : -4 }
+				}
+			],
+			"Steps" : [
+				{ "Goal" : "Kill Spawned" },
+				{ "Goal" : "Talk To", "NPC" : "grum" }
+			],
+			"End Dialogue" : "It dead? Good! Grum still hurt though. Get Grum bandage?",
+
+			"Chained Quest" : "grum1"
+		},
+		{
+			"Name" : "Grim-Looking Grum",
+			"ID" : "grum1",
+			"Description" : "Grum is injured and requires a bandage.",
+			"Rewards" : {
+				"XP" : 100
+			},
+			"Steps" : [
+				{ "Goal" : "Fetch", "Item" : [ "bandage", 1 ], "Give To" : "grum" }
+			],
+			"End Dialogue" : "Me thanks. Grum all better now!"
+		},
+
+		{
+            "Name" : "Arena Wave 1",
+            "ID" : "arena0",
+            "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
+            "Description" : "Defeat the wave in the arena.",
+			"Fail On Death" : true,
+			"Rewards" : {
+				"XP" : 50,
+				"Money" : 50
+			},
+            "Steps" : [
+                { "Goal" : "Kill Spawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "arenamaster" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "bandit0", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena1" }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : true,
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 },
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena0" }
+				}
+            ],
+            "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
+        },
+		{
+            "Name" : "Arena Wave 2",
+            "ID" : "arena1",
+            "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
+            "Description" : "Defeat the wave in the arena.",
+			"Fail On Death" : true,
+			"Rewards" : {
+				"XP" : 60,
+				"Money" : 80
+			},
+            "Steps" : [
+                { "Goal" : "Kill Spawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "arenamaster" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 } },
+					"Spawn NPC" : { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 16 } },
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena2" }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : true,
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 },
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena1" }
+				}
+            ],
+            "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
+        },
+		{
+            "Name" : "Arena Wave 3",
+            "ID" : "arena2",
+            "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
+            "Description" : "Defeat the wave in the arena.",
+			"Fail On Death" : true,
+			"Rewards" : {
+				"XP" : 60,
+				"Money" : 100
+			},
+            "Steps" : [
+                { "Goal" : "Kill Spawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "arenamaster" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 16 } },
+					"Spawn NPC" : { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 } },
+					"Spawn NPC" : { "NPC" : "bandit0", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena3" }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : true,
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 },
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena2" }
+				}
+            ],
+            "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
+        },
+		{
+            "Name" : "Arena Wave 4",
+            "ID" : "arena3",
+            "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
+            "Description" : "Defeat the wave in the arena.",
+			"Fail On Death" : true,
+			"Rewards" : {
+				"XP" : 60,
+				"Money" : 100
+			},
+            "Steps" : [
+                { "Goal" : "Kill Spawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "arenamaster" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "bandit1", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+					"Spawn NPC" : { "NPC" : "bandit2", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 14 } },
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena4" }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : true,
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 },
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena3" }
+				}
+            ],
+            "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
+        },
+		{
+            "Name" : "Arena Wave 5",
+            "ID" : "arena4",
+            "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
+            "Description" : "Defeat the wave in the arena.",
+			"Fail On Death" : true,
+			"Rewards" : {
+				"XP" : 100,
+				"Money" : 120
+			},
+            "Steps" : [
+                { "Goal" : "Kill Spawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "arenamaster" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "wastewalker", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+					"Spawn NPC" : { "NPC" : "wastewalker", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 13 } },
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena5" }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : true,
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 },
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena4" }
+				}
+            ],
+            "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
+        },
+		{
+            "Name" : "Arena Wave 6",
+            "ID" : "arena5",
+            "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
+            "Description" : "Defeat the wave in the arena.",
+			"Fail On Death" : true,
+			"Rewards" : {
+				"XP" : 150,
+				"Money" : 200
+			},
+            "Steps" : [
+                { "Goal" : "Kill Spawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "arenamaster" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "phlogistonist", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena6" }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : true,
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 },
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena5" }
+				}
+            ],
+            "End Dialogue" : "Good show, here's your pay. Come back later for more fights."
+        },
+		{
+            "Name" : "Arena Wave 7",
+            "ID" : "arena6",
+            "Start Dialogue" : "Wanna step into the arena? Be wary. These fights are to the death.",
+            "Description" : "Defeat the wave in the arena.",
+			"Fail On Death" : true,
+			"Rewards" : {
+				"XP" : 200,
+				"Money" : 200
+			},
+            "Steps" : [
+                { "Goal" : "Kill Spawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "arenamaster" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "nightmare", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : true,
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 },
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena6" }
+				}
+            ],
+            "End Dialogue" : "Good show, here's your pay. I don't have any more fights for you at the moment."
+        },
+
+
+		{
+			"Name" : "Bounty: Bandit Leader",
+			"ID" : "bounty0",
+			"Start Dialogue" : "There's some coin on a Bandit Leader's head. If you'd like, I can tell you where to find him.",
+			"Description" : "Kill the marked target.",
+			"Rewards" : {
+				"XP" : 0,
+				"Money" : 200
+			},
+			"Steps" : [
+				{ "Goal" : "Go", "To" : [ "Bandit Camp" ] },
+				{ "Goal" : "Kill Spawned" },
+				{ "Goal" : "Talk To", "NPC" : "bountymaster" }
+			],
+			"Events" : [
+				{
+					"Event" : "OnStart",
+					"Create Location" : { "Zone ID" : "Bandit Camp" },
+					"Spawn NPC" : { "NPC" : "bandit_leader", "Coordinate" : "Bandit Camp", "Elevation" : 0 }
+				},
+				{
+					"Event" : "OnComplete",
+					"Remove Location" : { "Zone ID" : "Bandit Camp" }
+				}
+			],
+			"End Dialogue" : "Very good! You've earned this coin! Come back later once I've some more work for you."
+		}
+	]
+}

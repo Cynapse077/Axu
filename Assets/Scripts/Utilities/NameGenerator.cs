@@ -69,7 +69,7 @@ public static class NameGenerator
         Suffixes = new List<string>();
         ArtWords = new List<string>();
 
-        string sylList = File.ReadAllText(appPath + "/Data/Dialogue/Name Syllables.json");
+        string sylList = File.ReadAllText(appPath + "/Mods/Core/Dialogue/NameSyllables.json");
         JsonData data = JsonMapper.ToObject(sylList);
 
         if (data.ContainsKey("Prefixes"))
@@ -88,7 +88,7 @@ public static class NameGenerator
             }
         }
 
-        string wordList = File.ReadAllText(appPath + "/Data/Dialogue/ArtifactNames.json");
+        string wordList = File.ReadAllText(appPath + "/Mods/Core/Dialogue/ArtifactNames.json");
         data = JsonMapper.ToObject(wordList);
 
         for (int i = 0; i < data["Words"].Count; i++)

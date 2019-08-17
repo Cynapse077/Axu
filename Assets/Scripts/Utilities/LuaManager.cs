@@ -9,23 +9,18 @@ using MoonSharp.Interpreter.Loaders;
 public static class LuaManager
 {
     static Dictionary<string, Script> scripts;
+    static string pathToLua = Application.streamingAssetsPath + "/Mods/Core/Lua";
+    static bool assemblyRegistered = false;
 
-    public static void LoadScripts()
+    public static void AddFile(string s)
     {
-        RegisterAssembly();
-
-        scripts = new Dictionary<string, Script>();
-        string[] files = Directory.GetFiles(Application.streamingAssetsPath + "/Data/Lua", "*.lua");
-        string pathToLua = Application.streamingAssetsPath + "/Data/Lua";
-
-        foreach (string s in files)
-        {   
-            AddFile(pathToLua, s);
+        if (!assemblyRegistered)
+        {
+            RegisterAssembly();
+            scripts = new Dictionary<string, Script>();
+            assemblyRegistered = true;
         }
-    }
 
-    public static void AddFile(string pathToLua, string s)
-    {
         string rawLua = File.ReadAllText(s);
         string modulePath = pathToLua + "/?.lua";
         Script sc = new Script(CoreModules.Preset_SoftSandbox);

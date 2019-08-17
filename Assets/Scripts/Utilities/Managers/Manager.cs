@@ -3,8 +3,8 @@ using System.IO;
 
 public static class Manager
 {
-    public static Coord worldMapSize = new Coord(200, 200);
-    public static Coord localMapSize = new Coord(45, 30);
+    public static Coord worldMapSize;
+    public static Coord localMapSize;
 
     public static bool lightingOn = true;
     public static bool newGame = true;

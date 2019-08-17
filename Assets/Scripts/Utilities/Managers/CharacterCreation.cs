@@ -4,13 +4,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
-using LitJson;
-using System.IO;
 
 public class CharacterCreation : MonoBehaviour
 {
-    public static string felonyPath;
-
     public string characterName { get; set; }
     [HideInInspector]
     public List<Trait> appliedTraits = new List<Trait>();
@@ -38,9 +34,9 @@ public class CharacterCreation : MonoBehaviour
     List<WeaponProficiency> profs;
     int selectedNum = 0, selectedMax = 3, profNum = 0;
     bool confirmStart = false, confirmReturn = false, loading = false, done = false, waitBufferFinished = true;
-    List<Profession> professions = new List<Profession>();
+    List<Felony> professions { get { return GameData.instance.GetAll<Felony>(); } }
     Difficulty[] difficulties;
-    Profession currentProf;
+    Felony currentProf;
     Difficulty currentDiff = null;
 
     public bool YNOpen
@@ -50,13 +46,6 @@ public class CharacterCreation : MonoBehaviour
 
     void Awake()
     {
-        if (ItemList.items == null)
-        {
-            Debug.LogError("Permissions error: Could not access paths to load data.");
-            SceneManager.LoadScene(0);
-            return;
-        }
-
         DiffPanel.SetActive(false);
         CharPanel.SetActive(true);
 
@@ -78,7 +67,6 @@ public class CharacterCreation : MonoBehaviour
 
     void Initialize()
     {
-        LoadProfessionsFromData();
         Manager.playerBuilder = new PlayerBuilder();
 
         characterName = NameGenerator.CharacterName(SeedManager.textRandom);
@@ -142,106 +130,6 @@ public class CharacterCreation : MonoBehaviour
         profAnchor.DestroyChildren();
         traitAnchor.DestroyChildren();
         abilAnchor.DestroyChildren();
-    }
-
-    void LoadProfessionsFromData()
-    {
-        TraitList.FillTraitsFromData();
-
-        loading = true;
-
-        professions = new List<Profession>();
-        string jsonString = File.ReadAllText(Application.streamingAssetsPath + felonyPath);
-        JsonData data = JsonMapper.ToObject(jsonString);
-
-        for (int i = 0; i < data["Felonies"].Count; i++)
-        {
-            JsonData dat = data["Felonies"][i];
-
-            professions.Add(GetProfFromData(dat));
-        }
-
-        loading = false;
-    }
-
-    Profession GetProfFromData(JsonData dat)
-    {
-        Profession p = new Profession
-        {
-            name = dat["Name"].ToString(),
-            ID = dat["ID"].ToString(),
-            description = dat["Description"].ToString(),
-            bodyStructure = dat["Body Structure"].ToString(),
-
-            HP = (int)dat["Stats"]["HP Bonus"],
-            ST = (int)dat["Stats"]["ST Bonus"],
-
-            STR = (int)dat["Stats"]["Strength"],
-            DEX = (int)dat["Stats"]["Dexterity"],
-            INT = (int)dat["Stats"]["Intelligence"],
-            END = (int)dat["Stats"]["Endurance"],
-            startingMoney = (int)dat["Money"],
-
-            traits = new string[dat["Traits"].Count],
-            items = new List<StringInt>(),
-            proficiencies = new int[10],
-            skills = new List<SSkill>()
-        };
-
-        if (dat["Traits"].Count > 0)
-        {
-            for (int t = 0; t < dat["Traits"].Count; t++)
-            {
-                string trait = dat["Traits"][t].ToString();
-
-                if (!string.IsNullOrEmpty(trait))
-                {
-                    p.traits[t] = trait;
-                }
-            }
-        }
-
-        if (dat.ContainsKey("Items"))
-        {
-            for (int j = 0; j < dat["Items"].Count; j++)
-            {
-                p.items.Add(new StringInt(dat["Items"][j]["Item"].ToString(), (int)dat["Items"][j]["Amount"]));
-            }
-        }
-
-        for (int j = 0; j < p.proficiencies.Length; j++)
-        {
-            p.proficiencies[j] = 0;
-        }
-
-        SetProf(ref p, dat, "Blade", 0);
-        SetProf(ref p, dat, "Blunt", 1);
-        SetProf(ref p, dat, "Polearm", 2);
-        SetProf(ref p, dat, "Axe", 3);
-        SetProf(ref p, dat, "Firearm", 4);
-        SetProf(ref p, dat, "Unarmed", 5);
-        SetProf(ref p, dat, "Misc", 6);
-        SetProf(ref p, dat, "Throwing", 7);
-        SetProf(ref p, dat, "Armor", 8);
-        SetProf(ref p, dat, "Shield", 9);
-        SetProf(ref p, dat, "Butchery", 10);
-        SetProf(ref p, dat, "Martial Arts", 11);
-
-        for (int s = 0; s < dat["Skills"].Count; s++)
-        {
-            string skillName = dat["Skills"][s].ToString();
-            p.skills.Add(new SSkill(skillName, 1, 0, 0));
-        }
-
-        return p;
-    }
-
-    void SetProf(ref Profession p, JsonData dat, string name, int id)
-    {
-        if (dat["Proficiencies"].ContainsKey(name))
-        {
-            p.proficiencies[id] = (int)dat["Proficiencies"][name];
-        }
     }
 
     void SetProficiencies()
@@ -379,7 +267,7 @@ public class CharacterCreation : MonoBehaviour
             return;
 
         profNum = selectedNum;
-        Profession p = professions[profNum];
+        Felony p = professions[profNum];
         InitializePanels();
 
         AttTexts[0].text = AttTexts[0].GetComponent<LocalizedText>().BaseText + ": <color=orange>" + ((p.ID == "experiment") ? "??" : p.STR.ToString()) + "</color>";

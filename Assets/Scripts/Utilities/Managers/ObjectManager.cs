@@ -31,7 +31,7 @@ public class ObjectManager : MonoBehaviour
     #region "Initialization"
     void Start()
     {
-        if (!ItemList.IsInitialized())
+        if (!ModManager.IsInitialized)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             return;
@@ -66,6 +66,8 @@ public class ObjectManager : MonoBehaviour
         {
             yield return null;
         }
+
+        ModManager.LoadQuests();
 
         worldMap.BuildTexture();
 

@@ -16,7 +16,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
     void Init()
     {
         baseSprite = new Texture2D(18, 18, TextureFormat.ARGB32, true);
-        spritePath = Application.streamingAssetsPath + "/Data/Art/Player/Bases/char-baseBody.png";
+        spritePath = Application.streamingAssetsPath + "/Mods/Core/Art/Player/Bases/char-baseBody.png";
         byte[] imageBytes = File.ReadAllBytes(spritePath);
         baseSprite.LoadImage(imageBytes);
         baseSprite.filterMode = FilterMode.Point;

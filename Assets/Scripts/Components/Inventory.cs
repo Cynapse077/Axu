@@ -89,7 +89,7 @@ public class Inventory : MonoBehaviour
         {
             int rarity = 1;
 
-            for (int j = 0; j < ItemList.MaxRarity; j++)
+            for (int j = 0; j < ItemUtility.MaxRarity; j++)
             {
                 if (SeedManager.combatRandom.Next(1000) < j * World.DangerLevel())
                 {
@@ -99,7 +99,7 @@ public class Inventory : MonoBehaviour
 
             Item item = ItemList.GetItemByRarity(rarity);
 
-            if (rarity >= ItemList.MaxRarity && SeedManager.combatRandom.Next(150) < 10 || SeedManager.combatRandom.Next(500) == 1)
+            if (rarity >= ItemUtility.MaxRarity && SeedManager.combatRandom.Next(150) < 10 || SeedManager.combatRandom.Next(500) == 1)
             {
                 item = ItemList.GetRandart(item);
             }

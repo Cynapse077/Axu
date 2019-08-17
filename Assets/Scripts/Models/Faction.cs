@@ -1,19 +1,27 @@
-﻿using UnityEngine;
+﻿using LitJson;
 using System.Collections.Generic;
 
 [System.Serializable]
 [MoonSharp.Interpreter.MoonSharpUserData]
-public class Faction
+public class Faction : IAsset
 {
     public string Name { get; protected set; }
-    public string ID { get; protected set; }
+    public string ID { get; set; }
     public List<string> hostileTo;
 
-    public Faction(string _name, string _id)
+    public Faction(JsonData dat)
     {
-        Name = _name;
-        ID = _id;
         hostileTo = new List<string>();
+        Name = dat["Name"].ToString();
+        ID = dat["ID"].ToString();
+
+        if (dat.ContainsKey("Hostile To"))
+        {
+            for (int j = 0; j < dat["Hostile To"].Count; j++)
+            {
+                hostileTo.Add(dat["Hostile To"][j].ToString());
+            }
+        }
     }
 
     public bool HostileToPlayer()

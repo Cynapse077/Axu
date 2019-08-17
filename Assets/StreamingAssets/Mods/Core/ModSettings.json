@@ -1,0 +1,19 @@
+{
+	"ID" : "Core",
+	"Name" : "Core",
+	"Load Order" : 0,
+	"Data" : {
+		"Felonies" : "/Entities/Felonies.json",
+		"Abilities" : "/Entities/Abilities.json",
+		"Traits" : "/Entities/Traits.json",
+		"Wounds" : "/Entities/Wounds.json",
+		"NPCs" : "/Entities/NPCs.json",
+		"Factions" : "/Entities/Factions.json",
+		"BodyStructures" : "/Entities/BodyStructures.json",
+		"SpawnTables" : "/Entities/Encounters.json",
+		"Objects" : "/Entities/Objects.json",
+		"Quests" : "/Quests.json",
+		"Locations" : "/Maps/Locations.json",
+		"Maps": "/Maps/Default"
+	}
+}

@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using LitJson;
 
 [System.Serializable]
 [MoonSharpUserData]
-public class Skill
+public class Skill : IAsset
 {
     public const int maxLvl = 10;
     public const int XPToNext = 1000;
 
-    public string Name, ID, Description;
+    public string Name, Description;
+    public string ID { get; set; }
     public int staminaCost, cooldown, maxCooldown, level, range = 20;
     public CastType castType;
     public DamageTypes damageType;
@@ -69,6 +71,11 @@ public class Skill
         origin = AbilityOrigin.None;
         level = 1;
         timeCost = 10;
+    }
+
+    public Skill(JsonData dat)
+    {
+        FromJson(dat);
     }
 
     public Skill(Skill other)
@@ -175,6 +182,71 @@ public class Skill
     public void InitializeCooldown()
     {
         cooldown = maxCooldown;
+    }
+
+    void FromJson(JsonData dat)
+    {
+        Name = dat["Name"].ToString();
+        ID = dat["ID"].ToString();
+        Description = dat["Description"].ToString();
+        tags = new List<AbilityTags>();
+
+        if (dat.ContainsKey("Stamina Cost"))
+            staminaCost = (int)dat["Stamina Cost"];
+        if (dat.ContainsKey("Time Cost"))
+            timeCost = (int)dat["Time Cost"];
+        if (dat.ContainsKey("Cooldown"))
+            maxCooldown = (int)dat["Cooldown"];
+        if (dat.ContainsKey("Damage Type"))
+        {
+            string dType = dat["Damage Type"].ToString();
+            damageType = dType.ToEnum<DamageTypes>();
+        }
+
+        if (dat.ContainsKey("Dice"))
+        {
+            dice = DiceRoll.GetByString(dat["Dice"].ToString());
+        }
+
+        if (dat.ContainsKey("Dice Scale"))
+        {
+            dicePerLevel = DiceRoll.GetByString(dat["Dice Scale"].ToString());
+        }
+
+        string castType = dat["Cast Type"].ToString();
+        this.castType = castType.ToEnum<CastType>();
+
+        if (dat.ContainsKey("Tags"))
+        {
+            for (int j = 0; j < dat["Tags"].Count; j++)
+            {
+                string ef = dat["Tags"][j].ToString();
+                AddTag(ef.ToEnum<AbilityTags>());
+            }
+        }
+
+        if (dat.ContainsKey("Script"))
+        {
+            if (dat["Script"].Count > 2)
+                luaAction = new LuaCall(dat["Script"][0].ToString(), dat["Script"][1].ToString(), dat["Script"][2].ToString());
+            else
+                luaAction = new LuaCall(dat["Script"][0].ToString(), dat["Script"][1].ToString());
+        }
+
+        if (dat.ContainsKey("AI"))
+        {
+            aiAction = new LuaCall(dat["AI"][0].ToString(), dat["AI"][1].ToString());
+        }
+
+        if (dat.ContainsKey("Levels Up"))
+        {
+            CanLevelUp = (bool)dat["Levels Up"];
+        }
+
+        if (dat.ContainsKey("Range"))
+        {
+            range = (int)dat["Range"];
+        }
     }
 
     public SSkill ToSerializedSkill()

@@ -1,0 +1,231 @@
+{
+    "Wounds" : [
+		{
+			"Name" : "Cracked Skull",
+			"ID" : "skull_broken",
+			"Description" : "",
+			"Damage Types" : [
+				"Blunt"
+			],
+			"Slot" : "Slot_Head",
+			"Stats" : [
+				{ "Stat" : "Armor", "Amount" : -1 }
+			]
+		},
+		{
+			"Name" : "Concussion",
+			"ID" : "concussion",
+			"Description" : "",
+			"Damage Types" : [
+				"Blunt"
+			],
+			"Slot" : "Slot_Head",
+			"Stats" : [
+				{ "Stat" : "Intelligence", "Amount" : -2 }
+			]
+		},
+		{
+			"Name" : "Crushed Windpipe",
+			"ID" : "windpipe",
+			"Description" : "",
+			"Damage Types" : [
+				"Blunt"
+			],
+			"Slot" : "Slot_Head",
+			"Stats" : [
+				{ "Stat" : "Armor", "Amount" : -1 },
+				{ "Stat" : "Health", "Amount" : -3 }
+			]
+		},
+        {
+            "Name" : "Broken Leg",
+            "ID" : "leg_broken",
+            "Description" : "",
+            "Damage Types" : [
+                "Blunt"
+            ],
+            "Slot" : "Slot_Leg",
+            "Stats" : [
+                { "Stat" : "Move Speed", "Amount" : -3 },
+                { "Stat" : "Armor", "Amount" : -2 }
+            ]
+        },
+        {
+            "Name" : "Broken Arm",
+            "ID" : "arm_broken",
+            "Description" : "",
+            "Damage Types" : [
+                "Blunt"
+            ],
+            "Slot" : "Slot_Arm",
+            "Stats" : [
+                { "Stat" : "Strength", "Amount" : -1 },
+                { "Stat" : "Armor", "Amount" : -2 }
+            ]
+        },
+        {
+            "Name" : "Broken Rib",
+            "ID" : "rib_broken",
+            "Description" : "",
+            "Damage Types" : [
+                "Blunt"
+            ],
+            "Slot" : "Slot_Chest",
+            "Stats" : [
+                { "Stat" : "Endurance", "Amount" : -2 },
+                { "Stat" : "Armor", "Amount" : -2 }
+            ]
+        },
+        {
+            "Name" : "Cracked Spine",
+            "ID" : "back_broken",
+            "Description" : "",
+            "Damage Types" : [
+                "Blunt"
+            ],
+            "Slot" : "Slot_Back",
+            "Stats" : [
+                { "Stat" : "Endurance", "Amount" : -3 },
+                { "Stat" : "Armor", "Amount" : -2 }
+            ]
+        },
+		{
+			"Name" : "Dislocated Shoulder",
+			"ID" : "dislocate_arm",
+			"Description" : "",
+			"Damage Types" : [
+				"Pull"
+			],
+			"Slot" : "Slot_Arm",
+			"Stats" : [
+				{ "Stat" : "Strength", "Amount" : -1 }
+			]
+		},
+        {
+            "Name" : "Broken Wing",
+            "ID" : "wing_broken",
+            "Description" : "",
+            "Damage Types" : [
+                "Blunt"
+            ],
+            "Slot" : "Slot_Wing",
+            "Stats" : [
+                { "Stat" : "Move Speed", "Amount" : -3 },
+                { "Stat" : "Armor", "Amount" : -2 }
+            ]
+        },
+        {
+            "Name" : "Broken Tail",
+            "ID" : "tail_broken",
+            "Description" : "",
+            "Damage Types" : [
+                "Blunt"
+            ],
+            "Slot" : "Slot_Tail",
+            "Stats" : [
+                { "Stat" : "Move Speed", "Amount" : -1 },
+                { "Stat" : "Armor", "Amount" : -2 }
+            ]
+        },
+        {
+            "Name" : "Laceration",
+            "ID" : "laceration",
+            "Description" : "",
+            "Damage Types" : [
+                "Slash", "Claw"
+            ],
+            "Slot" : "None",
+            "Stats" : [
+                { "Stat" : "Health", "Amount" : -5 },
+                { "Stat" : "Stamina", "Amount" : -3 }
+            ]
+        },
+        {
+            "Name" : "Puncture",
+            "ID" : "puncture",
+            "Description" : "",
+            "Damage Types" : [
+                "Pierce"
+            ],
+            "Slot" : "None",
+            "Stats" : [
+                { "Stat" : "Health", "Amount" : -2 },
+                { "Stat" : "Stamina", "Amount" : -2 }
+            ]
+        },
+        {
+            "Name" : "Bruise",
+            "ID" : "bruise",
+            "Description" : "",
+            "Damage Types" : [
+                "Blunt", "Pull"
+            ],
+            "Slot" : "None",
+            "Stats" : [
+                { "Stat" : "Stamina", "Amount" : -2 }
+            ]
+        },
+		{
+			"Name" : "Torn Ligament",
+			"ID" : "ligament_torn",
+			"Description" : "",
+			"Damage Types" : [
+				"Pull", "Blunt"
+			],
+			"Slot" : "None",
+			"Stats" : [
+				{ "Stat" : "Armor", "Amount" : -2 }
+			]
+		},
+		{
+			"Name" : "Pulled Muscle",
+			"ID" : "muscle_pulled",
+			"Description" : "",
+			"Damage Types" : [
+				"Pull"
+			],
+			"Slot" : "None",
+			"Stats" : [
+				{ "Stat" : "Dexterity", "Amount" : -1 }
+			]
+		},
+		{
+			"Name" : "Severed Tendon",
+			"ID" : "tendon_sev",
+			"Description" : "",
+			"Damage Types" : [
+				"Claw", "Slash", "Pull"
+			],
+			"Slot" : "None",
+			"Stats" : [
+				{ "Stat" : "Health", "Amount" : -2 },
+				{ "Stat" : "Armor", "Amount" : -1 }
+			]
+		},
+        {
+            "Name" : "Burn",
+            "ID" : "burn",
+            "Description" : "",
+            "Damage Types" : [
+                "Heat"
+            ],
+            "Slot" : "None",
+            "Stats" : [
+                { "Stat" : "Armor", "Amount" : -1 }
+            ]
+        },
+        {
+            "Name" : "Frostbite",
+            "ID" : "frostbite",
+            "Description" : "",
+            "Damage Types" : [
+                "Cold"
+            ],
+            "Slot" : "None",
+            "Stats" : [
+                { "Stat" : "Stamina", "Amount" : -2 },
+                { "Stat" : "Attack Delay", "Amount" : 2 }
+            ]
+        }
+    ]
+}

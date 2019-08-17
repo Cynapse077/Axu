@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using LitJson;
 
 [System.Serializable]
 [MoonSharp.Interpreter.MoonSharpUserData]
-public class Trait
+public class Trait : IAsset
 {
     public string _name { get; protected set; }
-    public string ID { get; protected set; }
+    public string ID { get; set; }
     public string description;
 
     public bool stackable;
@@ -62,6 +63,11 @@ public class Trait
 
         replaceBodyPart = other.replaceBodyPart;
         turnAcquired = other.turnAcquired;
+    }
+
+    public Trait(JsonData dat)
+    {
+        FromJson(dat);
     }
 
     public int GetStatIncrease(string name)
@@ -289,6 +295,102 @@ public class Trait
                 entity.body.bodyParts[i].equippedItem = ItemList.GetNone();
             }
         }
+    }
+
+    void FromJson(JsonData dat)
+    {
+        name = dat["Name"].ToString();
+        ID = dat["ID"].ToString();
+        description = dat["Description"].ToString();
+
+        //Stat changes
+        if (dat.ContainsKey("Stats"))
+        {
+            for (int s = 0; s < dat["Stats"].Count; s++)
+            {
+                string name = dat["Stats"][s]["Stat"].ToString();
+                int amount = (int)dat["Stats"][s]["Amount"];
+                stats.Add(new Stat_Modifier(name, amount));
+            }
+        }
+
+        //Limb replacement via Mutations.
+        if (dat.ContainsKey("Replace_Body_Part"))
+        {
+            JsonData newData = dat["Replace_Body_Part"];
+
+            string slotString = newData["Slot"].ToString();
+            ItemProperty slot = slotString.ToEnum<ItemProperty>();
+            string bpName = newData.ContainsKey("BodyPartName") ? newData["BodyPartName"].ToString() : "";
+            string newItem = (newData.ContainsKey("NewEquippedItem")) ? newData["NewEquippedItem"].ToString() : null;
+            bool cwg = newData.ContainsKey("CanWearGear") ? (bool)newData["CanWearGear"] : true;
+            bool aot = newData.ContainsKey("AllOfType") ? (bool)newData["AllOfType"] : false;
+
+            replaceBodyPart = new ReplaceBodyPart(slot, bpName, newItem, cwg, aot)
+            {
+                removeAll = newData.ContainsKey("RemoveAll") ? (bool)newData["RemoveAll"] : false
+            };
+
+            //Add in extra parts.
+            if (newData.ContainsKey("ExtraParts"))
+            {
+                replaceBodyPart.extraLimbs = new List<BodyPart>();
+                for (int j = 0; j < newData["ExtraParts"].Count; j++)
+                {
+                    string bName = newData["ExtraParts"][j]["Name"].ToString();
+                    BodyPart bp = EntityList.GetBodyPart(bName);
+
+                    replaceBodyPart.extraLimbs.Add(bp);
+                }
+            }
+        }
+
+        //Effects (enum/string)
+        if (dat.ContainsKey("Tags"))
+        {
+            for (int e = 0; e < dat["Tags"].Count; e++)
+            {
+                string effect = dat["Tags"][e].ToString();
+                effects.Add(effect.ToEnum<TraitEffects>());
+            }
+        }
+
+        //Cancellations
+        slot = dat.ContainsKey("Cancels") ? dat["Cancels"].ToString() : "";
+
+        //Abilities
+        if (dat.ContainsKey("Abilities"))
+        {
+            for (int a = 0; a < dat["Abilities"].Count; a++)
+            {
+                string abName = dat["Abilities"][a].ToString();
+                abilityIDs.Add(abName);
+            }
+        }
+
+        //Scripts
+        if (dat.ContainsKey("Scripts"))
+        {
+            for (int s = 0; s < dat["Scripts"].Count; s++)
+            {
+                if (dat["Scripts"][s]["Action"].ToString() == "OnTurn")
+                {
+                    luaCall = new LuaCall(dat["Scripts"][s]["File"].ToString(), dat["Scripts"][s]["Function"].ToString());
+                }
+            }
+        }
+
+        //Prerequisites and Next Tiers
+        tier = (dat.ContainsKey("Tier")) ? (int)dat["Tier"] : 0;
+        if (dat.ContainsKey("Prerequisite"))
+            prerequisite = dat["Prerequisite"].ToString();
+        if (dat.ContainsKey("Next Tier"))
+            nextTier = dat["Next Tier"].ToString();
+
+        if (dat.ContainsKey("Stackable"))
+            stackable = (bool)dat["Stackable"];
+
+        maxStacks = (dat.ContainsKey("Max Stacks")) ? (int)dat["Max Stacks"] : 1;
     }
 
     public bool ContainsEffect(TraitEffects te)

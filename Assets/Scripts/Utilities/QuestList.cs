@@ -5,35 +5,14 @@ using UnityEngine;
 
 public static class QuestList
 {
-    static List<Quest> quests;
-    public static string dataPath;
-
-    public static void InitializeFromJson()
+    static List<Quest> quests
     {
-        new EventHandler();
-
-        quests = new List<Quest>();
-
-        string jsonString = File.ReadAllText(Application.streamingAssetsPath + dataPath);
-
-        JsonData data = JsonMapper.ToObject(jsonString);
-
-        for (int i = 0; i < data["Quests"].Count; i++)
-        {
-            quests.Add(new Quest(data["Quests"][i]));
-        }
+        get { return GameData.instance.GetAll<Quest>(); }
     }
 
     public static Quest GetByID(string id)
     {
-        Quest q = quests.Find(x => x.ID == id);
-
-        if (q == null)
-        {
-            MyConsole.Error("No quest with ID of \"" + id);
-        }
-
-        return q;
+        return new Quest(GameData.instance.Get<Quest>(id) as Quest);
     }
 
     static Coord GetZone(string zone)

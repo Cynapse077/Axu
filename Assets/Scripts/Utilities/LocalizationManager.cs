@@ -6,7 +6,7 @@ using LitJson;
 public static class LocalizationManager
 {
     public static string defaultText = "Untranslated Data";
-    public static string filePath = "/Data/Dialogue/Localization.json";
+    public static string filePath = "/Mods/Core/Dialogue/Localization.json";
 
     static JsonData data;
     static Dictionary<string, string[]> LocalizedContent;

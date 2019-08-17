@@ -1,31 +1,37 @@
 ﻿using System.Collections.Generic;
 using LitJson;
 
-public class NPC_Blueprint
+public class NPC_Blueprint : IAsset
 {
-    public readonly string name = "", id = "";
-    public readonly Faction faction;
-    public readonly int health, stamina;
-    public readonly int heatResist, coldResist;
-    public readonly string quest = "", dialogue = "";
-    public readonly int maxItems, maxItemRarity;
-    public readonly string firearm;
-    public readonly string Corpse_Item;
-    public readonly Coord localPosition;
-    public readonly int elevation;
-    public readonly string zone;
-    public readonly int weaponSkill;
+    public string name = "";
+    public string ID { get; set; }
+    public Faction faction;
+    public int health, stamina;
+    public int heatResist, coldResist;
+    public string quest = "", dialogue = "";
+    public int maxItems, maxItemRarity;
+    public string firearm;
+    public string Corpse_Item;
+    public Coord localPosition;
+    public int elevation;
+    public string zone;
+    public int weaponSkill;
 
-    public readonly string[] spriteIDs;
-    public readonly KeyValuePair<string, Coord>[] inventory;
-    public readonly KeyValuePair<string, int>[] skills;
+    public string[] spriteIDs;
+    public KeyValuePair<string, Coord>[] inventory;
+    public KeyValuePair<string, int>[] skills;
 
-    public readonly List<BodyPart> bodyParts;
-    public readonly List<NPC_Flags> flags;
-    public readonly List<string> weaponPossibilities;
+    public List<BodyPart> bodyParts;
+    public List<NPC_Flags> flags;
+    public List<string> weaponPossibilities;
     public Dictionary<string, int> attributes;
 
     public NPC_Blueprint(JsonData dat)
+    {
+        FromJson(dat);    
+    }
+
+    void FromJson(JsonData dat)
     {
         attributes = DefaultAttributes();
         flags = new List<NPC_Flags>();
@@ -33,8 +39,9 @@ public class NPC_Blueprint
         bodyParts = EntityList.GetBodyStructure(dat["Body Structure"].ToString());
 
         name = dat["Name"].ToString();
-        id = dat["ID"].ToString();
-        faction = FactionList.GetFactionByID(dat["Faction"].ToString());
+        ID = dat["ID"].ToString();
+        
+        faction = GameData.instance.Get<Faction>(dat["Faction"].ToString()) as Faction;
         health = (int)dat["Stats"]["Health"];
         stamina = (int)dat["Stats"]["Stamina"];
         maxItems = (dat.ContainsKey("MaxItems")) ? (int)dat["MaxItems"] : 0;
@@ -118,31 +125,11 @@ public class NPC_Blueprint
             weaponPossibilities.Add(dat["Weapon_Choices"][w].ToString());
         }
 
-        if (dat.ContainsKey("Weapon Skill"))
-        {
-            weaponSkill = (int)dat["Weapon Skill"];
-        }
-
-        if (dat.ContainsKey("Firearm"))
-        {
-            firearm = dat["Firearm"].ToString();
-        }
-            
-
-        if (dat.ContainsKey("Corpse_Item"))
-        {
-            Corpse_Item = dat["Corpse_Item"].ToString();
-        }
-
-        if (dat.ContainsKey("Quest"))
-        {
-            quest = dat["Quest"].ToString();
-        }
-
-        if (dat.ContainsKey("Dialogue"))
-        {
-            dialogue = dat["Dialogue"].ToString();
-        }
+        dat.TryGetValue("Weapon Skill", out weaponSkill);
+        dat.TryGetValue("Firearm", out firearm);
+        dat.TryGetValue("Corpse_Item", out Corpse_Item);
+        dat.TryGetValue("Quest", out quest);
+        dat.TryGetValue("Dialogue", out dialogue);
 
         if (dat.ContainsKey("Position"))
         {

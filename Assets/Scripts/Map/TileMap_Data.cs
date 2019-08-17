@@ -758,7 +758,7 @@ public class TileMap_Data
 
     bool LoadSpecificMap(string mapName)
     {
-        List<JsonData> datas = GetDataFromPath(Application.streamingAssetsPath + defaultMapPath, mapName);
+        List<JsonData> datas = GetDataFromPath(defaultMapPath, mapName);
 
         if (datas.Count == 0)
             return false;
@@ -774,7 +774,7 @@ public class TileMap_Data
 
     bool LoadCustomMap()
     {
-        List<JsonData> datas = GetDataFromPath(Application.streamingAssetsPath + defaultMapPath);
+        List<JsonData> datas = GetDataFromPath(defaultMapPath);
 
         if (datas.Count == 0)
         {
@@ -831,7 +831,7 @@ public class TileMap_Data
                     NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
 
                     //If this NPC is static and has died, do not spawn it.
-                    if (bp.flags.Contains(NPC_Flags.Static) && ObjectManager.playerJournal != null && ObjectManager.playerJournal.staticNPCKills.Contains(bp.id))
+                    if (bp.flags.Contains(NPC_Flags.Static) && ObjectManager.playerJournal != null && ObjectManager.playerJournal.staticNPCKills.Contains(bp.ID))
                     {
                         continue;
                     }

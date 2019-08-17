@@ -9,8 +9,14 @@ using LitJson;
 [Serializable]
 public class WorldMap_Data
 {
-    public static string ZonePath;
     public static List<SMapFeature> featuresToAdd;
+    public static string ZonePath
+    {
+        get
+        {
+            return "/Mods/Core/Maps/Locations.json";
+        }
+    }
 
     public Coord startPosition;
     public List<Coord> ruinsPos = new List<Coord>(), vaultAreas = new List<Coord>();

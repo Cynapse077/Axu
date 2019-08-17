@@ -1,0 +1,2215 @@
+{
+    "Dialogue Options" : [
+		{
+			"ID" : "Dialogue_Talk",
+			"Display" : "Inquire"
+		},
+        {
+            "ID" : "Dialogue_Chat",
+            "Display" : "Chat"
+        },
+        {
+            "ID" : "Dialogue_Quest",
+            "Display" : "<color=orange>Quest</color>"
+        },
+        {
+            "ID" : "Dialogue_Turn In Quest",
+            "Display" : "Turn in <color=cyan>[INPUT]</color>"
+        },
+        {
+            "ID" : "Dialogue_Trade",
+            "Display" : "Trade"
+        },
+        {
+            "ID" : "Dialogue_Heal Wounds",
+            "Display" : "Heal Wounds/Diseases"
+        },
+        {
+            "ID" : "Dialogue_Replace Limb",
+            "Display" : "Replace Limb"
+        },
+        {
+            "ID" : "Dialogue_Amputate Limb",
+            "Display" : "<color=red>Amputate</color> Limb"
+        },
+        {
+            "ID" : "Dialogue_Hire",
+            "Display" : "Hire"
+        },
+        {
+            "ID" : "Dialogue_Leave",
+            "Display" : "Leave"
+        },
+        {
+            "ID" : "Dialogue_Manage_Equipment",
+            "Display" : "Manage Equipment"
+        },
+        {
+            "ID" : "Dialogue_Follow_Me",
+            "Display" : "Follow Me"
+        },
+        {
+            "ID" : "Dialogue_Send_Home",
+            "Display" : "Send to Base"
+        }
+    ],
+    "Options Menu" : [
+        {
+            "ID" : "Button_Game",
+            "Display" : "Game"
+        },
+        {
+            "ID" : "Button_Controls",
+            "Display" : "Controls"
+        },
+        {
+            "ID" : "Button_Defaults",
+            "Display" : "Restore Defaults"
+        },
+        {
+            "ID" : "Button_VIM",
+            "Display" : "VIM Keybinds"
+        },
+		{
+			"ID" : "Button_Numpad",
+			"Display" : "Numpad Keybinds"
+		},
+		{
+			"ID" : "Button_WASD",
+			"Display" : "WASD Keybinds"
+		},
+        {
+            "ID" : "Button_Apply",
+            "Display" : "APPLY"
+        },
+        {
+            "ID" : "Button_Cancel",
+            "Display" : "CLOSE"
+        },
+        {
+            "ID" : "Options_Resolution",
+            "Display" : "Resolution"
+        },
+        {
+            "ID" : "Options_Fullscreen",
+            "Display" : "Fullscreen"
+        },
+        {
+            "ID" : "Options_Vsync",
+            "Display" : "Vsync"
+        },
+        {
+            "ID" : "Options_Anim_Speed",
+            "Display" : "Animation Speed"
+        },
+        {
+            "ID" : "Options_Mouse",
+            "Display" : "Mouse Movement"
+        },
+        {
+            "ID" : "Options_Permadeath",
+            "Display" : "Delete Save on Death"
+        },
+        {
+            "ID" : "Options_Simple_DMG",
+            "Display" : "Simple Damage Display"
+        },
+        {
+            "ID" : "Options_Console",
+            "Display" : "Enable Console"
+        },
+        {
+            "ID" : "Options_Weather",
+            "Display" : "Weather Effects"
+        },
+        {
+            "ID" : "Options_Particles",
+            "Display" : "Particle Effects"
+        },
+        {
+            "ID" : "Volume_Master",
+            "Display" : "Master Volume"
+        },
+        {
+            "ID" : "Volume_Music",
+            "Display" : "Music Volume"
+        },
+        {
+            "ID" : "Volume_SFX",
+            "Display" : "SFX Volume"
+        },
+        {
+            "ID" : "Volume_Mute",
+            "Display" : "Mute"
+        }
+    ],
+    "Item Tooltip" : [
+        {
+            "ID" : "IT_Randart",
+            "Display" : " - This item is special."
+        },
+        {
+            "ID" : "IT_Drain",
+            "Display" : " - Attacking with this item may heal you."
+        },
+        {
+            "ID" : "IT_Quest",
+            "Display" : "Quest Item"
+        },
+        {
+            "ID" : "IT_Edible_Replace",
+            "Display" : "Edible/Replacement Limb"
+        },
+        {
+            "ID" : "IT_Container",
+            "Display" : "Liquid Container"
+        },
+        {
+            "ID" : "IT_Edible",
+            "Display" : "Edible"
+        },
+        {
+            "ID" : "IT_Liquid",
+            "Display" : "Liquid"
+        },
+        {
+            "ID" : "IT_Replace",
+            "Display" : "Replacement Limb"
+        },
+        {
+            "ID" : "IT_Legible",
+            "Display" : "Legible"
+        },
+        {
+            "ID" : "IT_Currency",
+            "Display" : "Currency"
+        },
+        {
+            "ID" : "IT_Ammo",
+            "Display" : "Ammunition"
+        },
+        {
+            "ID" : "IT_Usable",
+            "Display" : "Usable"
+        },
+        {
+            "ID" : "IT_ReturnPad_Empty",
+            "Display" : "Destination not set."
+        },
+        {
+            "ID" : "IT_ReturnPad_Set",
+            "Display" : "<color=yellow>Destination</color>: [INPUT]"
+        },
+        {
+            "ID" : "IT_Wieldable",
+            "Display" : "Misc"
+        },
+        {
+            "ID" : "IT_Weapon",
+            "Display" : "Weapon"
+        },
+        {
+            "ID" : "IT_Weapon2",
+            "Display" : "Two-Handed Weapon"
+        },
+        {
+            "ID" : "IT_Firearm",
+            "Display" : "Ranged Weapon"
+        },
+        {
+            "ID" : "IT_Acc",
+            "Display" : "<color=yellow>Accuracy</color>: [INPUT]"
+        },
+        {
+            "ID" : "IT_Ability",
+            "Display" : "<color=magenta>{Ability: [INPUT]}</color>"
+        },
+		{
+			"ID" : "IT_Req",
+			"Display" : "<color=red>Requires: [INPUT]</color>"
+		},
+        {
+            "ID" : "IT_Wearable",
+            "Display" : "Wearable"
+        },
+        {
+            "ID" : "IT_Armor",
+            "Display" : "<color=yellow>Armor</color>: [INPUT]"
+        },
+        {
+            "ID" : "IT_Type",
+            "Display" : "<color=yellow>Type</color>: [INPUT]"
+        },
+        {
+            "ID" : "IT_Slot",
+            "Display" : "<color=yellow>Slot</color>: [INPUT]"
+        },
+        {
+            "ID" : "IT_OffHand",
+            "Display" : "Off-Hand"
+        },
+        {
+            "ID" : "IT_Block",
+            "Display" : " - [BLOCK]: <color=orange>[INPUT]%</color> chance to block incoming attacks."
+        },
+        {
+            "ID" : "IT_Disarm",
+            "Display" : " - [DISARM] : Small chance to disarm attackers upon being struck."
+        },
+        {
+            "ID" : "IT_Coat",
+            "Display" : " - [COATED] with [INPUT1] ([INPUT2])"
+        },
+        {
+            "ID" : "IT_Damage",
+            "Display" : "<color=yellow>Damage</color>: <color=orange>[INPUT1]</color>"
+        },
+        {
+            "ID" : "IT_Dmg_Cold",
+            "Display" : "(<color=blue>Cold</color>)"
+        },
+        {
+            "ID" : "IT_Dmg_Heat",
+            "Display" : "(<color=orange>Heat</color>)"
+        },
+        {
+            "ID" : "IT_Dmg_Energy",
+            "Display" : "(<color=yellow>Energy</color>)"
+        },
+        {
+            "ID" : "IT_Dmg_Corrupt",
+            "Display" : "(<color=olive>Corruption</color>)"
+        },
+        {
+            "ID" : "IT_Dmg_Phys",
+            "Display" : " "
+        },
+        {
+            "ID" : "IT_Cleave",
+            "Display" : " - Sharp. Can <color=red>sever enemy limbs</color> more easily."
+        },
+        {
+            "ID" : "IT_Knockback",
+            "Display" : " - Can knock enemies back."
+        },
+        {
+            "ID" : "IT_Shock",
+            "Display" : " - Can <color=yellow>shock</color> enemies adjacent to your target."
+        },
+        {
+            "ID" : "IT_Confuse",
+            "Display" : " - Can <color=magenta>confuse</color> enemies."
+        },
+        {
+            "ID" : "IT_Bleed",
+            "Display" : " - Serrated. Can cause enemies to <color=red>bleed</color>."
+        },
+        {
+            "ID" : "IT_Poison",
+            "Display" : " - Poisoned. Can <color=green>poison</color> enemies."
+        },
+        {
+            "ID" : "IT_Speed",
+            "Display" : "<color=yellow>Speed</color>: [INPUT]"
+        },
+        {
+            "ID" : "IT_Firearm_Ammo",
+            "Display" : "Ammo: <color=cyan>([INPUT1] / [INPUT2])</color>"
+        },
+        {
+            "ID" : "IT_OnConsume_Poison",
+            "Display" : "<color=yellow>On Consume</color>: Induces poison."
+        },
+        {
+            "ID" : "IT_OnConsume_Antidote",
+            "Display" : "<color=yellow>On Consume</color>: Cures poisoning."
+        },
+        {
+            "ID" : "IT_OnConsume_CureRad",
+            "Display" : "<color=yellow>On Consume</color>: Removes radiation."
+        },
+        {
+            "ID" : "IT_OnUse_Bandage",
+            "Display" : "<color=yellow>On Use</color>: Stops bleeding."
+        },
+        {
+            "ID" : "IT_OnUse_Stam",
+            "Display" : "<color=yellow>On Use</color>: Restores ST."
+        },
+        {
+            "ID" : "IT_OnUse_SurfTel",
+            "Display" : "<color=yellow>On Use</color>: Teleports you to the surface."
+        },
+        {
+            "ID" : "IT_Addictive",
+            "Display" : "<color=red>It is addictive.</color>"
+        },
+        {
+            "ID" : "IT_Explode",
+            "Display" : " - Explosive: Damages enemies in a radius when thrown."
+        },
+        {
+            "ID" : "IT_Dig",
+            "Display" : " - Can dig through some walls."
+        },
+        {
+            "ID" : "IT_Uses",
+            "Display" : "Uses: ([INPUT1] / [INPUT2])"
+        },
+        {
+            "ID" : "IT_Spoils",
+            "Display" : "Spoils in [INPUT1] turns."
+        },
+        {
+            "ID" : "IT_Satiates",
+            "Display" : "<color=yellow>On Consume</color>: Satiates hunger."
+        },
+        {
+            "ID" : "IT_Restore",
+            "Display" : "<color=yellow>On Use</color>: Restores ST."
+        },
+        {
+            "ID" : "IT_Speed1",
+            "Display" : "Very Fast"
+        },
+        {
+            "ID" : "IT_Speed2",
+            "Display" : "Fast"
+        },
+        {
+            "ID" : "IT_Speed3",
+            "Display" : "Average"
+        },
+        {
+            "ID" : "IT_Speed4",
+            "Display" : "Slow"
+        },
+        {
+            "ID" : "IT_Speed5",
+            "Display" : "Very Slow"
+        },
+        {
+            "ID" : "IT_Light",
+            "Display" : "Increased sight range."
+        },
+        {
+            "ID" : "MechWing",
+            "Display" : "Mech Wing"
+        },
+        {
+            "ID" : "MechHead",
+            "Display" : "Mech Head"
+        },
+        {
+            "ID" : "MechArm",
+            "Display" : "Mech Arm"
+        },
+        {
+            "ID" : "Slot_Hand",
+            "Display" : "Hand"
+        },
+        {
+            "ID" : "IT_NotSet",
+            "Display" : "Location Not Set"
+        },
+        {
+            "ID" : "IT_LiquidUnits",
+            "Display" : "Contains: <color=yellow>[INPUT1]</color> unit(s) of [INPUT2]."
+        },
+        {
+            "ID" : "IT_LiquidUnits_Empty",
+            "Display" : "<color=grey>Empty</color>"
+        }
+    ],
+    "Item Actions" : [
+        {
+            "ID" : "Action_Wield",
+            "Display" : "Wield"
+        },
+        {
+            "ID" : "Action_Equip",
+            "Display" : "Equip"
+        },
+        {
+            "ID" : "Action_Eat",
+            "Display" : "Eat"
+        },
+        {
+            "ID" : "Action_Drink",
+            "Display" : "Drink"
+        },
+        {
+            "ID" : "Action_Throw",
+            "Display" : "Throw"
+        },
+        {
+            "ID" : "Action_Ready",
+            "Display" : "Ready"
+        },
+        {
+            "ID" : "Action_Attach",
+            "Display" : "Attach"
+        },
+        {
+            "ID" : "Action_Reload",
+            "Display" : "Reload"
+        },
+        {
+            "ID" : "Action_Unload",
+            "Display" : "Unload"
+        },
+        {
+            "ID" : "Action_Use",
+            "Display" : "Use"
+        },
+        {
+            "ID" : "Action_Drop",
+            "Display" : "Drop"
+        },
+        {
+            "ID" : "Action_DropAll",
+            "Display" : "Drop All"
+        },
+        {
+            "ID" : "Action_Read",
+            "Display" : "Read"
+        },
+        {
+            "ID" : "Action_Set",
+            "Display" : "Set"
+        },
+        {
+            "ID" : "Action_Butcher",
+            "Display" : "Butcher"
+        },
+        {
+            "ID" : "Action_Mix",
+            "Display" : "Mix"
+        },
+        {
+            "ID" : "Action_Pour",
+            "Display" : "Pour"
+        }
+    ],
+    "Keybinds" : [
+        {
+            "ID" : "North",
+            "Display" : "North"
+        },
+        {
+            "ID" : "NorthEast",
+            "Display" : "North East"
+        },
+        {
+            "ID" : "East",
+            "Display" : "East"
+        },
+        {
+            "ID" : "SouthEast",
+            "Display" : "South East"
+        },
+        {
+            "ID" : "South",
+            "Display" : "South"
+        },
+        {
+            "ID" : "SouthWest",
+            "Display" : "South West"
+        },
+        {
+            "ID" : "West",
+            "Display" : "West"
+        },
+        {
+            "ID" : "NorthWest",
+            "Display" : "North West"
+        },
+        {
+            "ID" : "Wait",
+            "Display" : "Wait"
+        },
+        {
+            "ID" : "GoUpStairs",
+            "Display" : "Ascend"
+        },
+        {
+            "ID" : "GoDownStairs",
+            "Display" : "Descend"
+        },
+        {
+            "ID" : "Enter",
+            "Display" : "Select"
+        },
+        {
+            "ID" : "Pause",
+            "Display" : "Pause/Back"
+        },
+        {
+            "ID" : "Pickup",
+            "Display" : "Pick Up"
+        },
+        {
+            "ID" : "Interact",
+            "Display" : "Interact"
+        },
+        {
+            "ID" : "Contextual Actions",
+            "Display" : "Contextual Actions"
+        },
+        {
+            "ID" : "Look",
+            "Display" : "Look"
+        },
+        {
+            "ID" : "Switch Target",
+            "Display" : "Switch Target"
+        },
+		{
+            "ID" : "AlternateAttack",
+            "Display" : "Targeted Attack"
+        },
+		{
+			"ID" : "GrappleAttack",
+			"Display" : "Grapple Attack"
+		},
+        {
+            "ID" : "Walk",
+            "Display" : "Continuous Walk"
+        },
+        {
+            "ID" : "Throw",
+            "Display" : "Throw"
+        },
+        {
+            "ID" : "Reload",
+            "Display" : "Reload Ranged"
+        },
+        {
+            "ID" : "Rest",
+            "Display" : "Rest"
+        },
+        {
+            "ID" : "Fire",
+            "Display" : "Fire Ranged"
+        },
+        {
+            "ID" : "Inventory",
+            "Display" : "Inventory"
+        },
+        {
+            "ID" : "Character",
+            "Display" : "Character"
+        },
+        {
+            "ID" : "Abilities",
+            "Display" : "Abilities"
+        },
+        {
+            "ID" : "Map",
+            "Display" : "Map"
+        },
+        {
+            "ID" : "Journal",
+            "Display" : "Journal"
+        },
+        {
+            "ID" : "Toggle Mouse",
+            "Display" : "Toggle Mouse"
+        },
+		{
+			"ID" : "Toggle Minimap",
+			"Display" : "Toggle Minimap"
+		}
+    ],
+    "Stats" : [
+        {
+            "ID" : "Health",
+            "Display" : "HP",
+            "Tooltip" : "Your Health. Once it hits 0, you die."
+        },
+        {
+            "ID" : "Stamina",
+            "Display" : "ST",
+            "Tooltip" : "Your Stamina. It is used to perform special actions."
+        },
+        {
+            "ID" : "Level",
+            "Display" : "Lvl",
+            "Tooltip" : "Your current experience level."
+        },
+        {
+            "ID" : "Experience",
+            "Display" : "xp",
+            "Tooltip" : "The amount of experience you have."
+        },
+        {
+            "ID" : "Strength",
+            "Display" : "Strength",
+            "Tooltip" : "Increases physical melee damage and inventory carrying capacity."
+        },
+        {
+            "ID" : "Dexterity",
+            "Display" : "Dexterity",
+            "Tooltip" : "Increases ranged/throwing damage and impacts Attack Delay slightly."
+        },
+        {
+            "ID" : "Endurance",
+            "Display" : "Endurance",
+            "Tooltip" : "Impacts your ability to shrug off status effects."
+        },
+        {
+            "ID" : "Intelligence",
+            "Display" : "Intelligence",
+            "Tooltip" : "Increases non-physical ability damage and effectiveness. Increases proficiency XP gain."
+        },
+        {
+            "ID" : "Accuracy",
+            "Display" : "Accuracy",
+            "Tooltip" : "How often you hit with melee, ranged, and throwing weapons."
+        },
+        {
+            "ID" : "Stealth",
+            "Display" : "Stealth",
+            "Tooltip" : "How easily you can move unnoticed."
+        },
+        {
+            "ID" : "Influence",
+            "Display" : "Influence",
+            "Tooltip" : "Impacts shop prices, and some mental actions."
+        },
+        {
+            "ID" : "Move Speed",
+            "Display" : "Move Speed",
+            "Tooltip" : "How fast you move."
+        },
+        {
+            "ID" : "Speed",
+            "Display" : "Move Speed",
+            "Tooltip" : "How fast you move."
+        },
+        {
+            "ID" : "Attack Delay",
+            "Display" : "Attack Delay",
+            "Tooltip" : "Decreases action points used during attacking actions."
+        },
+        {
+            "ID" : "Heat Resist",
+            "Display" : "Heat Resist",
+            "Tooltip" : "Your resistance to Heat damage."
+        },
+        {
+            "ID" : "Cold Resist",
+            "Display" : "Cold Resist",
+            "Tooltip" : "Your resistance to Cold damage."
+        },
+        {
+            "ID" : "Energy Resist",
+            "Display" : "Energy Resist",
+            "Tooltip" : "Your resistance to Energy damage."
+        },
+        {
+            "ID" : "Storage Capacity",
+            "Display" : "Storage Capacity",
+            "Tooltip" : "The amount of items you can hold."
+        },
+        {
+            "ID" : "Light",
+            "Display" : "Light Radius",
+            "Tooltip" : "Determines how far you can see."
+        },
+        {
+            "ID" : "Haste",
+            "Display" : "Grants <color=yellow>Haste</color> for <color=orange>[INPUT]</color> turns.",
+            "Tooltip" : ""
+        }
+    ],
+    "Display Radiation" : [
+        {
+            "ID" : "Rad_1",
+            "Display" : "<color=green>None</color>",
+            "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have none."
+        },
+        {
+            "ID" : "Rad_2",
+            "Display" : "<color=cyan>Low</color>",
+            "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have little."
+        },
+        {
+            "ID" : "Rad_3",
+            "Display" : "<color=yellow>Moderate</color>",
+            "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have a moderate level."
+        },
+        {
+            "ID" : "Rad_4",
+            "Display" : "<color=orange>Plenty</color>",
+            "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have lots."
+        },
+        {
+            "ID" : "Rad_5",
+            "Display" : "<color=red>Extreme!</color>",
+            "Tooltip" : "The amount of radiation soaked into your body. This can cause mutations. You have a large amount."
+        }
+    ],
+    "Hover Tooltip": [
+        {
+            "ID" : "TT_Weapon",
+            "Display" : "Wielding"
+        },
+        {
+            "ID" : "TT_Ranged",
+            "Display" : "Ranged"
+        },
+        {
+            "ID" : "TT_Armor",
+            "Display" : "Armor"
+        },
+        {
+            "ID" : "TT_Hostile",
+            "Display" : "<color=red>Hostile</color>"
+        },
+        {
+            "ID" : "TT_Passive",
+            "Display" : "<color=cyan>Passive</color>"
+        },
+        {
+            "ID" : "TT_Follower",
+            "Display" : "<color=green>Follower</color>"
+        },
+        {
+            "ID" : "TT_Aware",
+            "Display" : "<color=orange>Aware</color>"
+        },
+        {
+            "ID" : "TT_Unaware",
+            "Display" : "<color=cyan>Unaware</color>"
+        },
+        {
+            "ID" : "TT_More",
+            "Display" : "(more...)"
+        }
+    ],
+    "Proficiencies" : [
+        {
+            "ID" : "Blade",
+            "Display" : "Blade",
+            "Tooltip" : "Your skill with bladed weapons."
+        },
+        {
+            "ID" : "Blunt",
+            "Display" : "Blunt",
+            "Tooltip" : "Your skill with blunt weapons."
+        },
+        {
+            "ID" : "Polearm",
+            "Display" : "Polearm",
+            "Tooltip" : "Your skill with polearm weapons."
+        },
+        {
+            "ID" : "Axe",
+            "Display" : "Axe",
+            "Tooltip" : "Your skill with axe-like weapons."
+        },
+        {
+            "ID" : "Firearm",
+            "Display" : "Firearm",
+            "Tooltip" : "Your skill with firearms."
+        },
+        {
+            "ID" : "Throwing",
+            "Display" : "Throwing",
+            "Tooltip" : "Your skill with throwing weapons and items"
+        },
+        {
+            "ID" : "Unarmed",
+            "Display" : "Unarmed",
+            "Tooltip" : "Your skill with fist weapons."
+        },
+        {
+            "ID" : "Misc",
+            "Display" : "Misc",
+            "Tooltip" : "Your skill with wielding random items as weapons."
+        },
+        {
+            "ID" : "Armor",
+            "Display" : "Armor",
+            "Tooltip" : "Your familiarity with all armor types."
+        },
+        {
+            "ID" : "Shield",
+            "Display" : "Shield",
+            "Tooltip" : "Your familiarity with shields. Increases your chance to block."
+        },
+        {
+            "ID" : "Butchery",
+            "Display" : "Butchery",
+            "Tooltip" : "Your skill with carving up corpses."
+        },
+        {
+            "ID" : "MartialArts",
+            "Display" : "Martial Arts",
+            "Tooltip" : "Your ability to use throws and grips."
+        }
+    ],
+    "Status Effects" : [
+        {
+            "ID" : "SE_Poison",
+            "Display" : "Poison",
+            "Tooltip" : "Poison: Deals damage every turn for its duration."
+        },
+        {
+            "ID" : "SE_Bleed",
+            "Display" : "Bleed",
+            "Tooltip" : "Bleeding: Deals damage every turn for its duration."
+        },
+        {
+            "ID" : "SE_Flying",
+            "Display" : "Flying",
+            "Tooltip" : "Flying: You are not affected by movement penalties in water."
+        },
+        {
+            "ID" : "SE_Confuse",
+            "Display" : "Confuse",
+            "Tooltip" : "Confused: Causes you to act in the wrong direction at random intervals."
+        },
+        {
+            "ID" : "SE_Slow",
+            "Display" : "Slow",
+            "Tooltip" : "Slowed: Reduces the move speed of your character."
+        },
+        {
+            "ID" : "SE_Stun",
+            "Display" : "Stun",
+            "Tooltip" : "Stunned: Causes you to miss turns for the duration."
+        },
+        {
+            "ID" : "SE_Topple",
+            "Display" : "Toppled",
+            "Tooltip" : "Toppled: Prevents you from moving, and reduces your attack speed."
+        },
+        {
+            "ID" : "SE_Haste",
+            "Display" : "Haste",
+            "Tooltip" : "Haste: Increases the move speed of your character."
+        },
+        {
+            "ID" : "SE_Regen",
+            "Display" : "Regen",
+            "Tooltip" : "Regeneration: Heals you gradually over time."
+        },
+        {
+            "ID" : "SE_Stuck",
+            "Display" : "Stuck",
+            "Tooltip" : "Stuck: You cannot move for the duration of this effect."
+        },
+        {
+            "ID" : "SE_Held",
+            "Display" : "Held",
+            "Tooltip" : "Held: A creature has a grip on one of your limbs. Break out by moving away."
+        },
+        {
+            "ID" : "SE_Unconscious",
+            "Display" : "Unconscious",
+            "Tooltip" : "Unconscious: You cannot act during the duration of this effect."
+        },
+        {
+            "ID" : "SE_Shield",
+            "Display" : "Bracing",
+            "Tooltip" : "Bracing: Your defense vs non-elemental attacks is doubled."
+        },
+        {
+            "ID" : "SE_Drunk",
+            "Display" : "Drunk",
+            "Tooltip" : "Drunk: You are intoxicated and have trouble walking straight. May cause vomiting."
+        },
+		{
+            "ID" : "SE_Sick",
+            "Display" : "Sick",
+            "Tooltip" : "Sick: You may vomit until this effect clears."
+        },
+		{
+			"ID" : "SE_Over",
+			"Display" : "Overburdened",
+			"Tooltip" : "Overburdened: You are carrying more than you should. Speed is reduced."
+		},
+        {
+            "ID" : "SE_Burning",
+            "Display" : "Aflame",
+            "Tooltip" : "Aflame: You will take damage every turn, unless doused with water or wait for flames to sputter out."
+        },
+		{
+			"ID" : "SE_OffBalance",
+			"Display" : "Off Balance",
+			"Tooltip" : "Off Balance: You are more susceptible to attacks that would move you around or trip you."
+		}
+    ],
+    "Difficulties" : [
+        {
+            "ID" : "Difficulty",
+            "Display" : "Difficulty",
+            "Tooltip" : "How hard the game is."
+        },
+        {
+            "ID" : "Diff_0",
+            "Display" : "Adventurer",
+            "Tooltip" : "A more relaxed experience.\n\n  - Death sends you back to your base. No items, money, or XP are taken away.\n  - Reduced encounter rate."
+        },
+        {
+            "ID" : "Diff_1",
+            "Display" : "Scavenger",
+            "Tooltip" : "A moderate difficulty.\n\n  - Death sends you back to your base.\n - Upon death, 10% of your money is taken away, some items may be dropped, and you suffer minor stat and/or XP loss."
+        },
+        {
+            "ID" : "Diff_2",
+            "Display" : "Rogue",
+            "Tooltip" : "The way Axu was meant to be played.\n\n  - Death is <color=red>final</color>, causing you to start from the beginning.\n -  Some substances may cause <color=red>addiction</color>."
+        },
+        {
+            "ID" : "Diff_3",
+            "Display" : "Hunted",
+            "Tooltip" : "A more challenging experience.\n\n  - Death is <color=red>final</color>, causing you to start from the beginning.\n  - More difficult enemies spawn earlier.\n  - Some substances may cause <color=red>addiction</color>. (More likely than Rogue difficulty)\n - You are hunted by a mysterious group of assassins."
+        }
+    ],
+    "Profs" : [
+        {
+            "ID" : "Prof_L0",
+            "Display" : "Unskilled"
+        },
+        {
+            "ID" : "Prof_L1",
+            "Display" : "Dabbling"
+        },
+        {
+            "ID" : "Prof_L2",
+            "Display" : "Apprentice"
+        },
+        {
+            "ID" : "Prof_L3",
+            "Display" : "Competent"
+        },
+        {
+            "ID" : "Prof_L4",
+            "Display" : "Skilled"
+        },
+        {
+            "ID" : "Prof_L5",
+            "Display" : "Talented"
+        },
+        {
+            "ID" : "Prof_L6",
+            "Display" : "Gifted"
+        },
+        {
+            "ID" : "Prof_L7",
+            "Display" : "Adept"
+        },
+        {
+            "ID" : "Prof_L8",
+            "Display" : "Prodigy"
+        },
+        {
+            "ID" : "Prof_L9",
+            "Display" : "<color=cyan>Master</color>"
+        }
+    ],
+    "Titles" : [
+        {
+            "ID" : "Title_Loading",
+            "Display" : "Loading..."
+        },
+        {
+            "ID" : "Title_Poetry",
+            "Display" : "You manage to crudely decipher the old text..."
+        },
+        {
+            "ID" : "Title_Options",
+            "Display" : "Options"
+        },
+        {
+            "ID" : "Title_LevelUp",
+            "Display" : "Select A Trait:"
+        },
+        {
+            "ID" : "Title_Proficiencies",
+            "Display" : "Proficiencies"
+        },
+        {
+            "ID" : "Title_Attributes",
+            "Display" : "Attributes"
+        },
+        {
+            "ID" : "Title_Traits",
+            "Display" : "Traits"
+        },
+        {
+            "ID" : "Title_BodyParts",
+            "Display" : "Body Parts"
+        },
+        {
+            "ID" : "Title_Inventory",
+            "Display" : "Inventory"
+        },
+        {
+            "ID" : "Title_Equipment",
+            "Display" : "Equipment"
+        },
+        {
+            "ID" : "Title_Abilities",
+            "Display" : "Abilities"
+        },
+        {
+            "ID" : "Title_Journal",
+            "Display" : "Journal"
+        },
+        {
+            "ID" : "Title_Loot",
+            "Display" : "Loot"
+        },
+        {
+            "ID" : "Title_Use",
+            "Display" : "Mix With What?"
+        },
+		{
+			"ID" : "Title_Give",
+			"Display" : "Give What?"
+		},
+        {
+            "ID" : "Title_Throw",
+            "Display" : "Throw What?"
+        },
+        {
+            "ID" : "Title_Paused",
+            "Display" : "Paused"
+        },
+        {
+            "ID" : "Title_ContextualActions",
+            "Display" : "Available Actions"
+        },
+        {
+            "ID" : "Title_Shop_Merchant",
+            "Display" : "Merchant's Wares"
+        },
+        {
+            "ID" : "Title_Shop_Player",
+            "Display" : "Your Inventory"
+        },
+        {
+            "ID" : "Title_Felony",
+            "Display" : "Felony"
+        },
+        {
+            "ID" : "Title_Name",
+            "Display" : "Name"
+        },
+        {
+            "ID" : "Feature_List",
+            "Display" : "Things Here:"
+        },
+        {
+            "ID" : "Title_ReplaceLimb",
+            "Display" : "Select a Limb to Replace:"
+        },
+        {
+            "ID" : "Title_ReplaceLimb_Item",
+            "Display" : "Select an Item to Use:"
+        },
+		{
+            "ID" : "Title_CybLimb",
+            "Display" : "Select a Limb to Attach to:"
+        },
+        {
+            "ID" : "Title_CybLimb_Cyb",
+            "Display" : "Select a Cybernetic:"
+        },
+        {
+            "ID" : "Title_AmpLimb",
+            "Display" : "Select a Limb to Amputate:"
+        },
+        {
+            "ID" : "Title_TargetPart",
+            "Display" : "Select a Limb to Target"
+        },
+        {
+            "ID" : "Title_Grappling",
+            "Display" : "Grappling"
+        },
+        {
+            "ID" : "Title_LiquidActions",
+            "Display" : "Pour Where?"
+        }
+    ],
+    "Buttons" : [
+        {
+            "ID" : "Button_Continue",
+            "Display" : "Continue"
+        },
+        {
+            "ID" : "Button_Load",
+            "Display" : "Load Game"
+        },
+        {
+            "ID" : "Button_NG",
+            "Display" : "New Game"
+        },
+        {
+            "ID" : "Button_Quit",
+            "Display" : "Quit"
+        },
+        {
+            "ID" : "Button_Yes",
+            "Display" : "YES"
+        },
+        {
+            "ID" : "Button_No",
+            "Display" : "NO"
+        },
+        {
+            "ID" : "Delete Save",
+            "Display" : "Delete Save"
+        },
+        {
+            "ID" : "Map Editor",
+            "Display" : "Map Editor"
+        },
+        {
+            "ID" : "Changelog",
+            "Display" : "Changelog"
+        },
+        {
+            "ID" : "Forum",
+            "Display" : "Forum"
+        },
+        {
+            "ID" : "Button_RandomName",
+            "Display" : "Random"
+        }
+    ],
+    "Misc" : [
+        {
+            "ID" : "None",
+            "Display" : "None"
+        },
+        {
+            "ID" : "Cannot_Level_Up",
+            "Display" : "<color=grey>[Cannot Level Up]</color>"
+        },
+        {
+            "ID" : "Show_Severed",
+            "Display" : "<color=red>(Severed)</color>"
+        },
+        {
+            "ID" : "Flames",
+            "Display" : "<color=orange>flames</color>"
+        },
+        {
+            "ID" : "Bullet",
+            "Display" : "bullet"
+        },
+        {
+            "ID" : "Chill",
+            "Display" : "<color=blue>chill</color>"
+        },
+        {
+            "ID" : "Shock",
+            "Display" : "<color=yellow>shock</color>"
+        },
+        {
+            "ID" : "Explosion",
+            "Display" : "<color=orange>explosion</color>"
+        },
+        {
+            "ID" : "Poisonous Gas",
+            "Display" : "<color=green>poisonous gas</color>"
+        },
+        {
+            "ID" : "Confusing Gas",
+            "Display" : "<color=magenta>disorienting gas</color>"
+        },
+        {
+            "ID" : "Projectile",
+            "Display" : "<color=silver>projectile</color>"
+        },
+        {
+            "ID" : "Impact",
+            "Display" : "<color=olive>impact</color>"
+        },
+        {
+            "ID" : "Grapple_Grab",
+            "Display" : "Grab"
+        },
+        {
+            "ID" : "Grapple_Release",
+            "Display" : "Release [NAME]"
+        },
+        {
+            "ID" : "Grapple_Push",
+            "Display" : "Push [NAME]"
+        },
+        {
+            "ID" : "Grapple_TakeDown",
+            "Display" : "Take Down [NAME]"
+        },
+        {
+            "ID" : "Grapple_Strangle",
+            "Display" : "Strangle [NAME]"
+        },
+        {
+            "ID" : "Grapple_Pull",
+            "Display" : "Pull [NAME]"
+        },
+		{
+			"ID" : "Grapple_PressurePoint",
+			"Display" : "Apply Pressure to [NAME]"
+		},
+        {
+            "ID" : "Takedown_Name",
+            "Display" : "<color=silver>takedown</color>"
+        },
+        {
+            "ID" : "Limb_Left",
+            "Display" : "(L)"
+        },
+        {
+            "ID" : "Limb_Right",
+            "Display" : "(R)"
+        },
+        {
+            "ID" : "Dialogue_TooManyFollowers",
+            "Display" : "You have so many followers already. I think I'll stay here until I'm needed..."
+        },
+        {
+            "ID" : "Dialogue_Follow",
+            "Display" : "Gotcha, I'll follow you."
+        }
+    ],
+    "YesNo" : [
+        {
+            "ID" : "YN_Amputate",
+            "Display" : "Are you sure you want to amputate your [INPUT]?"
+        },
+        {
+            "ID" : "YN_MainMenu",
+            "Display" : "Return to the main menu?"
+        },
+        {
+            "ID" : "YN_StartProf",
+            "Display" : "Do you wish to start as the [INPUT]?"
+        },
+        {
+            "ID" : "YN_BanditAmbush",
+            "Display" : "<color=red>You have been ambushed by the Skull Bandits!</color>\n\nYou there! We have a proposition for you. <color=yellow>Give us $[INPUT]</color>, or <color=red>die</color>. What do you say to that fair trade? Limited time offer, friend."
+        },
+        {
+            "ID" : "YN_BanditAmbush_Item",
+            "Display" : "<color=red>You have been ambushed by the Skull Bandits!</color>\n\nYou there! We have a proposition for you, friend. <color=yellow>Give us that [INPUT]</color>, or <color=red>die</color>. What do you say to that wonderous deal?"
+        },
+        {
+            "ID" : "YN_SaveQuit",
+            "Display" : "Would you like to save and exit the game?"
+        },
+        {
+            "ID" : "YN_Quit",
+            "Display" : "Would you like to quit the game without saving?"
+        },
+        {
+            "ID" : "YN_Hire",
+            "Display" : "Would you like to hire this mercenary for <color=yellow>$[INPUT]</color>?"
+        },
+        {
+            "ID" : "YN_AttackPassive",
+            "Display" : "This character is not hostile. Attack them anyway?"
+        },
+        {
+            "ID" : "YN_GoUp",
+            "Display" : "Ascend the stairs?"
+        },
+        {
+            "ID" : "YN_GoDown",
+            "Display" : "Descend the stairs?"
+        },
+        {
+            "ID" : "YN_TravelDown",
+            "Display" : "Travel to the down stairs?"
+        },
+        {
+            "ID" : "YN_TravelUp",
+            "Display" : "Travel to the up stairs?"
+        },
+        {
+            "ID" : "YN_Read_Bookshelf",
+            "Display" : "There is a book on the shelf here. Read a snippet?"
+        }
+    ],
+    "Alerts" : [
+        {
+            "ID" : "Start_Message",
+            "Title" : "Welcome to Axu",
+            "Message" : "You are [NAME], an exiled criminal sent to the planet Axu. After days of travel, your supplies are running dry. Luckily you have come across some sort of structure with <color=cyan>a man beckoning you</color> nearby. Is he a friend or foe? Further away from home than comprehension allows, will you attempt to find a way back to Earth, or come to terms with your exile?"
+        },
+		{
+			"ID" : "FoundMerchant",
+			"Title" : "Merchant Found",
+			"Message" : "A merchant beckons you over to peruse their wares!"
+		},
+		{
+			"ID" : "CannotEquip",
+			"Title" : "Cannot Equip",
+			"Message" : "You cannot equip this item since you do not meet its requirements."
+		},
+		{
+			"ID" : "CannotRead",
+			"Title" : "Too Complicted",
+			"Message" : "The tome is too complex to comprehend! You become confused."
+		},
+        {
+            "ID" : "Pour_No_Room",
+            "Title" : "No Room",
+            "Message" : "This container has no room left for any more liquid."
+        },
+        {
+            "ID" : "Become_Addicted",
+            "Title" : "Addiction",
+            "Message" : "You have become addicted to this item! If you go without one for a period of time, you can suffer from withdrawals."
+        },
+        {
+            "ID" : "Undie",
+            "Title" : "Defeat",
+            "Message" : "Defeated, you race back to a familiar location in hopes of staying alive. It seems you have bitten off more than you can chew this time."
+        },
+        {
+            "ID" : "Need_Dig",
+            "Title" : "Tool Required",
+            "Message" : "You need a digging tool, like a Pickaxe, to interact with this object."
+        },
+        {
+            "ID" : "Bandit_Yes",
+            "Title" : "Toll Paid",
+            "Message" : "<color=grey>[You meet their demands]</color> \nPleasure doing business with you. Go along your way, friend. Be sure not to come back around these parts, if you know what's good for you."
+        },
+        {
+            "ID" : "Bandit_Yes_NoMoney",
+            "Title" : "Insufficient Funds",
+            "Message" : "<color=grey>[You had nothing to give]</color> \nNothing at all? I guess taking your life will suffice."
+        },
+        {
+            "ID" : "Bandit_No",
+            "Title" : "Toll Rejected",
+            "Message" : "What an unforunate mistake. Get them, boys!"
+        },
+        {
+            "ID" : "Dead",
+            "Title" : "You Died!",
+            "Message" : "You were killed by: [NAME]."
+        },
+        {
+            "ID" : "Became_Cannibal",
+            "Title" : "Tarnished Reputation",
+            "Message" : "You have gained a reputation for devouring human flesh!"
+        },
+        {
+            "ID" : "Quest_Complete",
+            "Title" : "<color=white>Quest Complete!</color>",
+            "Message" : "<color=white>[INPUT]</color>"
+        },
+        {
+            "ID" : "Quest_Complete2",
+            "Title" : "<color=white>Quest Complete!</color>",
+            "Message" : "<color=white>You have completed the quest \"[NAME]\". [INPUT]</color>"
+        },
+        {
+            "ID" : "Quest_Failed",
+            "Title" : "Quest Failed",
+            "Message" : "You have failed the quest \"[NAME]\"."
+        },
+        {
+            "ID" : "Found_Base",
+            "Title" : "A New Home",
+            "Message" : "Such a quaint little structure with nobody around. This would make for a suitable place to rest your head and use as a base of operations."
+        },
+        {
+            "ID" : "Hire_No_Money",
+            "Title" : "Not Enough Money",
+            "Message" : "You don't have enough money to hire this individual."
+        },
+        {
+            "ID" : "Hire_Too_Many_Followers",
+            "Title" : "Too Many Followers",
+            "Message" : "Your party cannot support another mouth to feed."
+        },
+        {
+            "ID" : "Inv_Full_Follower",
+            "Title" : "Carrying Too Much",
+            "Message" : "They cannot hold any more!"
+        },
+        {
+            "ID" : "No_Ammo",
+            "Title" : "No Ammo",
+            "Message" : "You have no ammunition for this weapon."
+        },
+        {
+            "ID" : "No_Throw",
+            "Title" : "No Items",
+            "Message" : "You have nothing to throw"
+        },
+        {
+            "ID" : "Cannot_Amputate",
+            "Title" : "Cannot Amputate",
+            "Message" : "You can't amputate your head!"
+        },
+        {
+            "ID" : "On_Surface",
+            "Title" : "Already On Surface",
+            "Message" : "You are already on the surface, and don't need to use this item."
+        },
+        {
+            "ID" : "Cannot_Remove",
+            "Title" : "Oops!",
+            "Message" : "You cannot remove that item!"
+        },
+        {
+            "ID" : "Starving",
+            "Title" : "Starving!",
+            "Message" : "You are too hungry to fast travel."
+        },
+        {
+            "ID" : "Ambush",
+            "Title" : "Ambush!",
+            "Message" : "You have been ambushed! Flee or fight for your life!"
+        },
+        {
+            "ID" : "Cannot_Travel_Enemies",
+            "Title" : "Cannot Travel!",
+            "Message" : "You cannot travel with enemies in plain sight."
+        },
+        {
+            "ID" : "Cannot_Travel_Hunger",
+            "Title" : "Cannot Travel!",
+            "Message" : "You cannot travel while starving!"
+        },
+        {
+            "ID" : "Cannot_Rest_Enemies",
+            "Title" : "Cannot Rest!",
+            "Message" : "You cannot rest while enemies are so close!"
+        },
+        {
+            "ID" : "Cannot_Rest_Hunger",
+            "Title" : "Cannot Rest!",
+            "Message" : "You cannot rest while starving!"
+        },
+        {
+            "ID" : "No_Hands",
+            "Title" : "No Hands",
+            "Message" : "You have no hands to equip that to!"
+        },
+        {
+            "ID" : "Not_Enough_Hands",
+            "Title" : "Not Enough Hands",
+            "Message" : "You don't have an extra hand to equip this item to."
+        },
+        {
+            "ID" : "Two_Handed",
+            "Title" : "Need Unoccupied Hands",
+            "Message" : "You need two free hands to wield this weapon!"
+        },
+        {
+            "ID" : "Mastery",
+            "Title" : "Mastery",
+            "Message" : "There is no more knowledge you can gain from this tome."
+        },
+        {
+            "ID" : "No_Charges",
+            "Title" : "No Charges",
+            "Message" : "This item has no charges remaining."
+        },
+        {
+            "ID" : "No_Recharge",
+            "Title" : "No Items",
+            "Message" : "There are no items that you can recharge!"
+        },
+        {
+            "ID" : "Too_Full",
+            "Title" : "Too Full",
+            "Message" : "Your stomach couldn't possibly take any more."
+        },
+        {
+            "ID" : "Cannot_Eat",
+            "Title" : "Cannot Eat",
+            "Message" : "As a Vampire, you cannot eat normal food."
+        },
+        {
+            "ID" : "Dis_Lep_Eat",
+            "Title" : "Diseased!",
+            "Message" : "You have contracted Leprosy from eating infected meat!"
+        },
+        {
+            "ID" : "Dis_Lep_Attach",
+            "Title" : "Diseased!",
+            "Message" : "You have contracted Leprosy from attaching an infected limb!"
+        },
+        {
+            "ID" : "Dis_Cry_Attach",
+            "Title" : "Diseased!",
+            "Message" : "You have contracted Leprosy from attaching an infected limb!"
+        },
+        {
+            "ID" : "Dis_Cry_Eat",
+            "Title" : "Diseased!",
+            "Message" : "You have contracted Crystallization from eating infected meat!"
+        },
+		{
+            "ID" : "Dis_Vamp_Attach",
+            "Title" : "Diseased!",
+            "Message" : "You have contracted Fledgling Vampirism from attaching an infected limb!"
+        },
+        {
+            "ID" : "Dis_Vamp",
+            "Title" : "Diseased!",
+            "Message" : "You have contracted Vampirism!"
+        },
+        {
+            "ID" : "Locked",
+            "Title" : "Locked",
+            "Message" : "The door won't budge!"
+        },
+        {
+            "ID" : "Cooldown",
+            "Title" : "On Cooldown",
+            "Message" : "This ability is on cooldown. You can use it again in <b><color=grey>[INPUT]</color></b> turns."
+        },
+        {
+            "ID" : "Not_Enough_Stamina",
+            "Title" : "Not Enough Stamina",
+            "Message" : "You don't have enough stamina to use this ability."
+        }
+    ],
+    "Log" : [
+		{
+			"ID" : "Message_ThrowItem",
+			"Display" : "[NAME] throws a [ITEM]."
+		},
+		{
+			"ID" : "Message_Overburdened",
+			"Display" : "Your movement is slowed from carrying so much."
+		},
+		{
+			"ID" : "Message_FireWeapon",
+			"Display" : "[NAME] fires their [ITEM]."
+		},
+        {
+            "ID" : "Message_SetTarget",
+            "Display" : "Followers' targets set."
+        },
+        {
+            "ID" : "Message_DrankLiquid",
+            "Display" : "[NAME] drank one unit of [ITEM]."
+        },
+        {
+            "ID" : "Message_Wound",
+            "Display" : "<color=red>[NAME]'s [PART] has been wounded! (<color=yellow>[WOUND]</color>)</color>"
+        },
+        {
+            "ID" : "Message_Wound_Cure",
+            "Display" : "<color=green>Your [NAME]'s [ITEM] has been cured.</color>"
+        },
+        {
+            "ID" : "Messgae_Det_Stat",
+            "Display" : "Your [NAME] deteriorates..."
+        },
+        {
+            "ID" : "Message_Sent_Home",
+            "Display" : "You sent [NAME] back to the home base."
+        },
+        {
+            "ID" : "Message_New_Follower",
+            "Display" : "[NAME] is now following you!"
+        },
+        {
+            "ID" : "Message_Add_Subside",
+            "Display" : "<color=green>Your addiction to [NAME] has subsided."
+        },
+        {
+            "ID" : "Message_Add_Crave",
+            "Display" : "You crave a nice [NAME] right about now..."
+        },
+        {
+            "ID" : "Message_Add_Withdrawal",
+            "Display" : "<color=red>Your [NAME] addiction is causing withdrawals!</color>"
+        },
+        {
+            "ID" : "Brain_Rot",
+            "Display" : "<color=red>Your brain deteriorates due to Brain Rot!</color>"
+        },
+        {
+            "ID" : "Butcher_Corpse",
+            "Display" : "You carve up the corpse."
+        },
+        {
+            "ID" : "Message_2_Handed_No_Req",
+            "Display" : "You do not have the strength to wield the [NAME] in one hand. Attacks with it will be slower and easier to dodge."
+        },
+        {
+            "ID" : "Message_Hunt_Available",
+            "Display" : "Saira has a new hunt available."
+        },
+        {
+            "ID" : "Message_Arena_Available",
+            "Display" : "There is a new challenge at the arena."
+        },
+        {
+            "ID" : "Message_Web_Break",
+            "Display" : "You break free of the web."
+        },
+        {
+            "ID" : "Message_Web_Stuck",
+            "Display" : "The tangled web holds you tight."
+        },
+        {
+            "ID" : "Message_Die",
+            "Display" : "<color=red>[NAME] dies!</color>"
+        },
+        {
+            "ID" : "Message_Darkness",
+            "Display" : "<color=magenta>The world seems more dark and sinister somehow...</color>"
+        },
+        {
+            "ID" : "Miss",
+            "Display" : "[ATTACKER] misses [DEFENDER] with their [ITEM]."
+        },
+        {
+            "ID" : "Message_Disarm",
+            "Display" : "[DEFENDER]'s weapon is twisted out of their hands by [ATTACKER]!"
+        },
+        {
+            "ID" : "Message_Riposte",
+            "Display" : "[DEFENDER] ripostes [ATTACKER]."
+        },
+        {
+            "ID" : "Message_Heal",
+            "Display" : "<color=green>You are healed for <color=yellow><b>[NAME]</b></color>!</color>"
+        },
+        {
+            "ID" : "Damage_Weapon",
+            "Display" : "[ATTACKER] strikes [DEFENDER]'s [BODY PART] with their [ITEM] for <color=yellow><b>[DAMAGE]</b></color> damage."
+        },
+        {
+            "ID" : "Damage_Weapon_Crit",
+            "Display" : "[ATTACKER] <color=yellow>critically</color> strikes [DEFENDER]'s [BODY PART] with their [ITEM] for <color=yellow><b>[DAMAGE]</b></color> damage!!"
+        },
+        {
+            "ID" : "Damage_Poison",
+            "Display" : "You take damage from <color=green>Poison</color>."
+        },
+        {
+            "ID" : "Damage_Bleed",
+            "Display" : "You take damage from <color=red>blood loss</color>."
+        },
+        {
+            "ID" : "Damage_Heat",
+            "Display" : "You take damage from the <color=red>flames</color>."
+        },
+        {
+            "ID" : "Damage_Hunger",
+            "Display" : "You are overcome by pangs of <color=orange>hunger</color>."
+        },
+        {
+            "ID" : "Damage_Indirect",
+            "Display" : "The [SOURCE] deals <color=yellow><b>[DAMAGE]</b></color> damage to [DEFENDER]'s [BODY PART]."
+        },
+        {
+            "ID" : "Damage_External",
+            "Display" : "[DEFENDER]'s [BODY PART] takes <color=yellow>[DAMAGE]</color> damage from the [SOURCE]."
+        },
+        {
+            "ID" : "Damage_Status",
+            "Display" : "[DEFENDER] takes <color=yellow><b>[DAMAGE]</b></color> damage from [SOURCE]."
+        },
+        {
+            "ID" : "Damage_Simplified",
+            "Display" : "[DEFENDER] takes <color=yellow><b>[DAMAGE]</b></color> damage."
+        },
+        {
+            "ID" : "Block_Defense",
+            "Display" : "[DEFENDER] blocks [ATTACKER]'s attack"
+        },
+        {
+            "ID" : "Shoves",
+            "Display" : "[ATTACKER] shoves [DEFENDER]!"
+        },
+        {
+            "ID" : "Bites",
+            "Display" : "[ATTACKER] bites [DEFENDER]!"
+        },
+        {
+            "ID" : "Message_Juke",
+            "Display" : "[ATTACKER] leaps over [DEFENDER]!"
+        },
+        {
+            "ID" : "Message_Hiss",
+            "Display" : "[ATTACKER] growls deeply at [DEFENDER]!"
+        },
+        {
+            "ID" : "Message_SuckBlood",
+            "Display" : "[ATTACKER] drains [DEFENDER]'s blood!"
+        },
+        {
+            "ID" : "Message_Call",
+            "Display" : "[NAME] calls for reinforcements!"
+        },
+        {
+            "ID" : "Message_Hire",
+            "Display" : "[NAME] has joined you!"
+        },
+        {
+            "ID" : "Item_Impact_Shatter",
+            "Display" : "The [NAME] shatters on impact."
+        },
+        {
+            "ID" : "Item_Remove",
+            "Display" : "The [NAME] is removed with the severed part."
+        },
+        {
+            "ID" : "Replace_Limb",
+            "Display" : "Your [NAME] has been refitted with the [ITEM]."
+        },
+        {
+            "ID" : "Attach_Limb",
+            "Display" : "You attach the [NAME] to your body. It responds to your commands almost instantly."
+        },
+        {
+            "ID" : "Sever_Limb",
+            "Display" : "<color=red>[NAME]'s [ITEM] has been hewn from their body!</color>"
+        },
+        {
+            "ID" : "No_Effect",
+            "Display" : "<color=grey>It had no effect...</color>"
+        },
+        {
+            "ID" : "Message_Mutate",
+            "Display" : "<color=magenta>Your body changes. You now have the mutation \"<color=yellow>[NAME]</color>\".</color>"
+        },
+		{
+			"ID" : "Message_MutFail",
+			"Display" : "You resist the radiation."
+		},
+        {
+            "ID" : "Message_Lep",
+            "Display" : "<color=red>[NAME]'s [ITEM] has fallen off...</color>"
+        },
+        {
+            "ID" : "Message_Crys_Flex",
+            "Display" : "<color=red>You feel less flexible.</color>"
+        },
+        {
+            "ID" : "Message_Crys",
+            "Display" : "Your [NAME] feels more sturdy. <color=cyan>It has a crystaline sheen.</color>"
+        },
+        {
+            "ID" : "Message_Teleport",
+            "Display" : "[NAME] teleports to another location."
+        },
+        {
+            "ID" : "Message_Dig_Win",
+            "Display" : "You dig up the grave... You find treasures inside!"
+        },
+        {
+            "ID" : "Message_Dig_Lose",
+            "Display" : "You dig up the grave... but find nothing of worth inside."
+        },
+        {
+            "ID" : "Message_Reload",
+            "Display" : "<color=grey>You reload your firearm.</color>"
+        },
+        {
+            "ID" : "Message_Sprint",
+            "Display" : "<color=yellow>You begin to sprint.</color>"
+        },
+        {
+            "ID" : "Reveal_Map",
+            "Display" : "The map has been revealed to you."
+        },
+        {
+            "ID" : "Learn_Skill",
+            "Display" : "The tome teaches you ancient secrets. You learn to use \"[NAME]\"."
+        },
+        {
+            "ID" : "Increase_Skill",
+            "Display" : "Your knowledge of the ability \"[NAME]\" has increased."
+        },
+        {
+            "ID" : "Message_Action",
+            "Display" : "You [ACTION] the [NAME]."
+        },
+        {
+            "ID" : "Message_Action_Drink",
+            "Display" : "You drink from the [NAME]."
+        },
+		{
+            "ID" : "Message_Action_Consume",
+            "Display" : "You consume the [NAME]."
+        },
+        {
+            "ID" : "Message_SE_Confuse",
+            "Display" : "[NAME] is confused!"
+        },
+        {
+            "ID" : "Message_SE_Stun",
+            "Display" : "[NAME] is stunned!"
+        },
+        {
+            "ID" : "Message_SE_Unconscious",
+            "Display" : "[NAME] is unconscious!"
+        },
+        {
+            "ID" : "Message_SE_Bleed",
+            "Display" : "[NAME] is bleeding!"
+        },
+        {
+            "ID" : "Message_SE_Topple",
+            "Display" : "[NAME] topples to the ground!"
+        },
+        {
+            "ID" : "Message_SE_Aflame",
+            "Display" : "[NAME] is on fire!"
+        },
+        {
+            "ID" : "Message_SE_Poison",
+            "Display" : "[NAME] is poisoned!"
+        },
+        {
+            "ID" : "Message_SE_Blind",
+            "Display" : "[NAME] is blind!"
+        },
+		{
+			"ID" : "Message_SE_OffBalance",
+			"Display" : "[NAME] is off balance!"
+		},
+        {
+            "ID" : "Lose_Hold",
+            "Display" : "[NAME] loses hold of the [ITEM]."
+        },
+        {
+            "ID" : "Remove_Item",
+            "Display" : "The [NAME] is removed with the severed part."
+        },
+        {
+            "ID" : "Grow_Back_Limb",
+            "Display" : "You grow your [NAME] back!"
+        },
+        {
+            "ID" : "Give_Item",
+            "Display" : "<color=green>[NAME] hands you a [ITEM].</color>"
+        },
+        {
+            "ID" : "Inc_Prof",
+            "Display" : "<color=green>Your [NAME] skill has increased to level [ITEM]!</color>"
+        },
+        {
+            "ID" : "Start_Quest",
+            "Display" : "<color=yellow>The quest \"[NAME]\" has been added to your <color=cyan>journal</color>.</color>"
+        },
+        {
+            "ID" : "Terminal_Win",
+            "Display" : "<color=green>You turn the machine on. You hear the hum of engines resuming in the distance.</color>"
+        },
+        {
+            "ID" : "Terminal_Fail",
+            "Display" : "<color=grey>You fiddle with the terminal. Nothing seems to happen.</color>"
+        },
+        {
+            "ID" : "Cryo_Rad",
+            "Display" : "<color=red>Radiated material spews out of the cryopod!</color>"
+        },
+        {
+            "ID" : "Cryo_Enemy",
+            "Display" : "<color=red>Something comes out of the pod!</color>"
+        },
+        {
+            "ID" : "Cryo_Item",
+            "Display" : "<color=green>Something falls out of the pod!</color>"
+        },
+        {
+            "ID" : "Break_Statue",
+            "Display" : "The statue has been broken!"
+        },
+        {
+            "ID" : "Crystal_Tele",
+            "Display" : "You are transported far away!"
+        },
+        {
+            "ID" : "Crystal_Rad",
+            "Display" : "<color=red>The residual energy from the transport soaks into your body.</color>"
+        },
+        {
+            "ID" : "Message_LevelUp",
+            "Display" : "<color=green>Your skills have grown! You are now level <color=yellow><b>[NAME]</b></color>.</color>"
+        },
+        {
+            "ID" : "Item_Rot",
+            "Display" : "<color=olive>Your [NAME] has withered away...</color>"
+        },
+        {
+            "ID" : "Weather_Clear",
+            "Display" : "The weather has cleared up."
+        },
+        {
+            "ID" : "Weather_Rain",
+            "Display" : "It has started <color=blue>raining</color>."
+        },
+        {
+            "ID" : "Weather_Snow",
+            "Display" : "It has started <color=cyan>snow</color>."
+        },
+        {
+            "ID" : "Weather_Sandstorm",
+            "Display" : "The wind has kicked up a <color=maroon>sandstorm</color>."
+        },
+        {
+            "ID" : "Message_Rest",
+            "Display" : "You begin to rest..."
+        },
+        {
+            "ID" : "Add_To_Stash",
+            "Display" : "<color=grey>You add the [NAME] to your quiver.</color>"
+        },
+        {
+            "ID" : "Add_To_Inventory",
+            "Display" : "<color=grey>You pick up the [NAME].</color>"
+        },
+        {
+            "ID" : "Pass_By",
+            "Display" : "<color=grey>You pass by: [NAME]</color>"
+        },
+        {
+            "ID" : "Return_Link",
+            "Display" : "You linked your current position with the device."
+        },
+        {
+            "ID" : "Return_Tele",
+            "Display" : "You teleport to the designated location."
+        },
+        {
+            "ID" : "Drink_Poison",
+            "Display" : "<color=red>Your insides are wracked with pain!</color>"
+        },
+        {
+            "ID" : "Reduce_Rad",
+            "Display" : "You feel the radiation sickness subside."
+        },
+        {
+            "ID" : "Eat_Lep",
+            "Display" : "<color=red>You probably shouldn't have done that...</color>"
+        },
+        {
+            "ID" : "Break_Inhibitor",
+            "Display" : "<color=green>The shackle on your ankle breaks, and you feel more like yourself!</color>"
+        },
+        {
+            "ID" : "Quest_Update",
+            "Display" : "The quest \"<color=yellow>[NAME]</color>\" has been updated. Open your journal for more information."
+        },
+        {
+            "ID" : "Quest_GiveItem",
+            "Display" : "You gave [NAME] [ITEM]."
+        },
+        {
+            "ID" : "Cannot_Afford",
+            "Display" : "You cannot afford to pay for this service..."
+        },
+        {
+            "ID" : "Healed_Wounds",
+            "Display" : "All done!"
+        },
+        {
+            "ID" : "Limb_Stat_Gain",
+            "Display" : "Your [NAME] feels stronger."
+        },
+        {
+            "ID" : "Gr_Grab",
+            "Display" : "[ATTACKER] grabs [DEFENDER]'s [DEFENDER_LIMB] with their [ATTACKER_LIMB]."
+        },
+        {
+            "ID" : "Gr_Shove",
+            "Display" : "[ATTACKER] shoves [DEFENDER]."
+        },
+		{
+			"ID" : "Gr_Shove_Fail",
+			"Display" : "[ATTACKER] tries to shove [DEFENDER], but it fails."
+		},
+        {
+            "ID" : "Gr_TakeDown",
+            "Display" : "[ATTACKER] takes down [DEFENDER] by their [DEFENDER_LIMB]."
+        },
+		{
+			"ID" : "Gr_TakeDown_Fail",
+			"Display" : "[ATTACKER] tries to take [DEFENDER] down, but it fails."
+		},
+        {
+            "ID" : "Gr_Strangle",
+            "Display" : "[ATTACKER] strangles [DEFENDER]!"
+        },
+        {
+            "ID" : "Gr_Strangle_Fail",
+            "Display" : "[ATTACKER] presses on [DEFENDER]'s windpipe to no effect."
+        },
+        {
+            "ID" : "Gr_Release",
+            "Display" : "[ATTACKER] releases [DEFENDER]'s [DEFENDER_LIMB]."
+        },
+        {
+            "ID" : "Gr_BreakGrip",
+            "Display" : "[DEFENDER] breaks [ATTACKER]'s grip."
+        },
+        {
+            "ID" : "Gr_ReleaseGrip",
+            "Display" : "[ATTACKER] releases their grip on [DEFENDER]."
+        },
+        {
+            "ID" : "Gr_Pull_Success",
+            "Display" : "[ATTACKER] <color=red>rips off</color> [DEFENDER]'s [DEFENDER_LIMB]!"
+        },
+        {
+            "ID" : "Gr_Pull_Fail",
+            "Display" : "[ATTACKER] tugs on [DEFENDER]'s [DEFENDER_LIMB], but nothing happens."
+        }
+    ],
+    "Locations" : [
+        {
+            "ID" : "Biome_Plains",
+            "Display" : "Plains"
+        },
+        {
+            "ID" : "Biome_Forest",
+            "Display" : "Forest"
+        },
+        {
+            "ID" : "Biome_Ocean",
+            "Display" : "Ocean"
+        },
+        {
+            "ID" : "Biome_Shore",
+            "Display" : "Shore"
+        },
+        {
+            "ID" : "Biome_Swamp",
+            "Display" : "Swamp"
+        },
+        {
+            "ID" : "Biome_Mountain",
+            "Display" : "Mountains"
+        },
+        {
+            "ID" : "Biome_Tundra",
+            "Display" : "Tundra"
+        },
+        {
+            "ID" : "Biome_Desert",
+            "Display" : "Red Desert"
+        },
+        {
+            "ID" : "loc_village",
+            "Display" : "Village of [NAME]"
+        }
+    ],
+    "Naming" : [
+        {
+            "ID" : "Unnamed NPC",
+            "Display" : "the [NAME]"
+        },
+        {
+            "ID" : "Named NPC",
+            "Display" : "[NAME]"
+        }
+    ],
+    "Map Features" : [
+        {
+            "ID" : "MF_Merchant",
+            "Display" : "Merchant"
+        },
+        {
+            "ID" : "MF_BookMerchant",
+            "Display" : "Book Merchant"
+        },
+        {
+            "ID" : "MF_Mercenary",
+            "Display" : "Mercenary"
+        },
+        {
+            "ID" : "MF_Doctor",
+            "Display" : "Doctor"
+        },
+        {
+            "ID" : "MF_Quest",
+            "Display" : "Quest"
+        }
+    ],
+
+	"Help" : [
+		{
+			"ID" : "Help0",
+			"Display" : "TIP: Once Vampirism has passed beyond the Fledgling state, you can no longer cure it. Seek a doctor before you become a creature of the night!"
+		},
+		{
+			"ID" : "Help1",
+			"Display" : "TIP: Mutations can be cured with a very rare liquid called Lunium."
+		},
+		{
+			"ID" : "Help2",
+			"Display" : "TIP: If one of your limbs gets severed, visit a doctor to reattach it, or buy a prosthetic. This can be a costly operation though."
+		},
+		{
+			"ID" : "Help3",
+			"Display" : "TIP: Most diseases can be cured at a Doctor. Some may have positive effects that you won't want to get rid of."
+		},
+		{
+			"ID" : "Help4",
+			"Display" : "TIP: Every three levels, you can aquire a new trait."
+		},
+		{
+			"ID" : "Help5",
+			"Display" : "TIP: New abilities can be learned from Tomes. Some rare items may give you powerful abilities when equipped as well."
+		},
+		{
+			"ID" : "Help6",
+			"Display" : "TIP: Living weapons gain increased effectiveness with use."
+		},
+		{
+			"ID" : "Help7",
+			"Display" : "TIP: Mod Kits add special effects to a selected item. Only one can be applied at any time, so be careful when choosing!"
+		},
+		{
+			"ID" : "Help8",
+			"Display" : "TIP: You can coat your weapons in various liquids. The effects will be transferred to a target when they are struck."
+		},
+		{
+			"ID" : "Help9",
+			"Display" : "TIP: If you find yourself on fire, you can pour liquids onto yourself to douse the flames."
+		},
+		{
+			"ID" : "Help10",
+			"Display" : "TIP: Holding the Targeted Attack button (Default Left Ctrl) and pressing a movement key allows you to strike at a specific body part of an adjacent creature."
+		},
+		{
+			"ID" : "Help11",
+			"Display" : "TIP: Holding The Grappling Attack button (Default Left Alt) and pressing a movment key allows you to perform grappling moves on an adjacent target."
+		},
+		{
+			"ID" : "Help12",
+			"Display" : "TIP: Enemies can follow you up or down stairs, and between screens. Be sure to keep your distance if you plan to flee."
+		},
+		{
+			"ID" : "Help13",
+			"Display" : "TIP: Spending time in radioactive areas can cause you to mutate."
+		},
+		{
+			"ID" : "Help14",
+			"Display" : "TIP: Attacks with your off-hand weapons will be triggered more often with higher Dexterity."
+		},
+		{
+			"ID" : "Help15",
+			"Display" : "TIP: Digging tools like Shovels and Pickaxes have limited uses. Each time you dig through stone, it loses one point of durability."
+		},
+		{
+			"ID" : "Help16",
+			"Display" : "You can store items in chests at your base by dropping them while standing on the same tile."
+		}
+	]
+}

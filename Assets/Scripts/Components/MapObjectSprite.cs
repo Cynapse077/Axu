@@ -636,7 +636,7 @@ public class MapObjectSprite : MonoBehaviour
                 World.userInterface.YesNoAction("YN_Read_Bookshelf",
                     () => {
                         World.userInterface.CloseWindows();
-                        string filePath = Application.streamingAssetsPath + "/Data/Dialogue/Books.json";
+                        string filePath = Application.streamingAssetsPath + "/Mods/Core/Dialogue/Books.json";
                         string jsonText = File.ReadAllText(filePath);
                         JsonData dat = JsonMapper.ToObject(jsonText);
 

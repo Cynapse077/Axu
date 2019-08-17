@@ -131,6 +131,7 @@
     <Compile Include="Assets\Scripts\Models\Difficulty.cs" />
     <Compile Include="Assets\Scripts\Models\Direction.cs" />
     <Compile Include="Assets\Scripts\Models\Faction.cs" />
+    <Compile Include="Assets\Scripts\Models\Felony.cs" />
     <Compile Include="Assets\Scripts\Models\GroupBlueprint.cs" />
     <Compile Include="Assets\Scripts\Models\Item.cs" />
     <Compile Include="Assets\Scripts\Models\ItemActions.cs" />
@@ -147,7 +148,6 @@
     <Compile Include="Assets\Scripts\Models\NPCGroupList.cs" />
     <Compile Include="Assets\Scripts\Models\PlayerBuilder.cs" />
     <Compile Include="Assets\Scripts\Models\PlayerProficiencies.cs" />
-    <Compile Include="Assets\Scripts\Models\Profession.cs" />
     <Compile Include="Assets\Scripts\Models\Quest.cs" />
     <Compile Include="Assets\Scripts\Models\QuestEvent.cs" />
     <Compile Include="Assets\Scripts\Models\QuestGoal.cs" />
@@ -229,7 +229,6 @@
     <Compile Include="Assets\Scripts\UI\UserInterface.cs" />
     <Compile Include="Assets\Scripts\UI\YesNoPanel.cs" />
     <Compile Include="Assets\Scripts\Utilities\EntityList.cs" />
-    <Compile Include="Assets\Scripts\Utilities\FactionList.cs" />
     <Compile Include="Assets\Scripts\Utilities\GameSettings.cs" />
     <Compile Include="Assets\Scripts\Utilities\JsonHelper.cs" />
     <Compile Include="Assets\Scripts\Utilities\LocalizationManager.cs" />
@@ -247,6 +246,7 @@
     <Compile Include="Assets\Scripts\Utilities\Managers\SpawnController.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\SpriteManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\TurnManager.cs" />
+    <Compile Include="Assets\Scripts\Utilities\ModUtility.cs" />
     <Compile Include="Assets\Scripts\Utilities\NameGenerator.cs" />
     <Compile Include="Assets\Scripts\Utilities\NewWorld.cs" />
     <Compile Include="Assets\Scripts\Utilities\Noise.cs" />

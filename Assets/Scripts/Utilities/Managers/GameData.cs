@@ -1,87 +1,129 @@
 ﻿using System;
-using System.IO;
-using LitJson;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
+public interface IAsset
+{
+    string ID { get; set; }
+}
 
 public class GameData
 {
     public static GameData instance;
+    private Dictionary<Type, DataList<IAsset>> data;
 
-    readonly ItemData items;
-    readonly QuestData quests;
-
-    public void InitializeData()
+    public GameData()
     {
-        instance = this;
-        //items = new ItemData();
-        //quests = new QuestData();
+        if (instance == null)
+        {
+            instance = this;
+            data = new Dictionary<Type, DataList<IAsset>>();
+        }
     }
 
-    protected abstract class DataList<T>
+    public void Add<T>(IAsset asset)
     {
-        public bool initialized { get; protected set; }
-        protected List<T> list;
+        if (!data.ContainsKey(typeof(T)))
+        {
+            data.Add(typeof(T), new DataList<IAsset>());
+        }
 
-        protected abstract void Initialize();
-        public abstract T Get(string id);
+        data[typeof(T)].Add(asset);
+    }
+
+    public void Remove<T>(IAsset asset)
+    {
+        if (!data.ContainsKey(typeof(T)))
+        {
+            return;
+        }
+
+        data[typeof(T)].Remove(asset);
+    }
+
+    public List<IAsset> Get<T>(Predicate<IAsset> p)
+    {
+        if (!data.ContainsKey(typeof(T)))
+        {
+            return new List<IAsset>();
+        }
+
+        return data[typeof(T)].Get(p);
+    }
+
+    public IAsset Get<T>(string id)
+    {
+        if (!data.ContainsKey(typeof(T)))
+        {
+            Debug.LogError("Asset List: " + typeof(T).ToString() + " does not exist.");
+            return null;
+        }
+
+        return data[typeof(T)].Get(id);
+    }
+
+    public List<T> GetAll<T>()
+    {
+        if (!data.ContainsKey(typeof(T)))
+        {
+            return new List<T>();
+        }
+
+        return data[typeof(T)].GetAll().Cast<T>().ToList();
+    }
+
+    public bool TryGet<T>(string id, out IAsset o)
+    {
+        if (!data.ContainsKey(typeof(T)))
+        {
+            Debug.LogError("Asset List: " + typeof(T).ToString() + " does not exist.");
+            o = null;
+            return false;
+        }
+
+        o = data[typeof(T)].Get(id);
+        return true;
+    }
+
+    private class DataList<T> where T : IAsset
+    {
+        private List<T> list;
+
+        public DataList()
+        {
+            list = new List<T>();
+        }
+
+        public T Get(string id)
+        {
+            T t = list.Find(x => x.ID == id);
+
+            if (t != null)
+                return list.Find(x => x.ID == id);
+
+            Debug.LogError("Asset of type " + typeof(T).ToString() + " with ID " + id + " does not exist.");
+            return default(T);
+        }
 
         public List<T> Get(Predicate<T> p)
         {
-            if (!initialized)
-            {
-                Debug.LogError("DataList::Get(Predicate) - List is not initialized.");
-            }
-
             return list.FindAll(p);
         }
-    }
 
-    protected class ItemData : DataList<Item>
-    {
-        public ItemData()
+        public List<T> GetAll()
         {
-            Initialize();
+            return list;
         }
 
-        protected override void Initialize()
+        public void Add(T t)
         {
-            list = new List<Item>();
-            initialized = true;
+            list.Add(t);
         }
 
-        public override Item Get(string id)
+        public void Remove(T t)
         {
-            if (!initialized)
-            {
-                Debug.LogError("ItemData::Get() - List is not initialized.");
-            }
-
-            return list.Find(x => x.ID == id);
-        }
-    }
-
-    protected class QuestData : DataList<Quest>
-    {
-        public QuestData()
-        {
-            Initialize();
-        }
-
-        protected override void Initialize()
-        {
-            list = new List<Quest>();
-            initialized = true;
-        }
-
-        public override Quest Get(string id)
-        {
-            if (!initialized)
-            {
-                Debug.LogError("QuestData::Get() - List is not initialized.");
-            }
-
-            return list.Find(x => x.ID == id);
+            list.Remove(t);
         }
     }
 }

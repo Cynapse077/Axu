@@ -36,7 +36,7 @@ public static class Dialogue
 
     static void LoadDialogue()
     {
-        string myFile = File.ReadAllText(Application.streamingAssetsPath + "/Data/Dialogue/Dialogue.json");
+        string myFile = File.ReadAllText(Application.streamingAssetsPath + "/Mods/Core/Dialogue/Dialogue.json");
         JsonData data = JsonMapper.ToObject(myFile);
 
         greetings = new string[data["Greetings"].Count];

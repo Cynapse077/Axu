@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using LitJson;
 using MoonSharp.Interpreter;
 
 [System.Serializable]
 [MoonSharpUserData]
-public class Item : ComponentHolder<CComponent>
+public class Item : ComponentHolder<CComponent>, IAsset
 {
-    public string ID, Name, displayName = "", flavorText;
+    public string ID { get; set; }
+    public string Name, displayName = "", flavorText;
     public Proficiencies itemType;
     public int armor, amount = 1, accuracy, rarity, tileID = -1;
     public bool lootable, stackable = false;
@@ -52,6 +54,11 @@ public class Item : ComponentHolder<CComponent>
     {
         Defaults();
         CopyFrom(other);
+    }
+
+    public Item(JsonData dat)
+    {
+        FromJson(dat);
     }
 
     public Item(string name)
@@ -494,12 +501,7 @@ public class Item : ComponentHolder<CComponent>
 
     public void AddModifier(ItemModifier mod)
     {
-        if (mod == null || mod.name == "" || mod.ID == "")
-        {
-            return;
-        }
-
-        if (modifier != null)
+        if (modifier == null || mod == null || mod.name == "" || mod.ID == "")
         {
             return;
         }
@@ -953,6 +955,95 @@ public class Item : ComponentHolder<CComponent>
     public enum AttackType
     {
         Bash, Slash, Sweep, Spear, Claw, Psy, Knife, Bite
+    }
+
+    void FromJson(JsonData dat)
+    {
+        ID = dat["ID"].ToString();
+        dat.TryGetValue("Name", out Name);
+        dat.TryGetValue("TileID", out tileID);
+        dat.TryGetValue("Type", out itemType, true);
+        dat.TryGetValue("Rarity", out rarity, 100);
+        dat.TryGetValue("Lootable", out lootable);
+        dat.TryGetValue("Stackable", out stackable);
+        dat.TryGetValue("Armor", out armor);
+        dat.TryGetValue("Accuracy", out accuracy);
+        dat.TryGetValue("FlavorText", out flavorText);
+
+        if (rarity < 100 && rarity > ItemUtility.MaxRarity)
+            ItemUtility.MaxRarity = rarity;
+
+        components = new List<CComponent>();
+
+        if (dat.ContainsKey("Damage"))
+        {
+            string dmgString = dat["Damage"].ToString();
+            damage = Damage.GetByString(dmgString);
+        }
+        else
+            damage = new Damage(1, 3, 0, DamageTypes.Blunt);
+
+        if (dat.ContainsKey("Cost"))
+            SetBaseCost((int)dat["Cost"]);
+
+        if (dat.ContainsKey("Components"))
+            SetComponentList(ItemUtility.GetComponentsFromData(dat["Components"]));
+
+        //Properties
+        if (dat.ContainsKey("Properties"))
+        {
+            for (int p = 0; p < dat["Properties"].Count; p++)
+            {
+                string prop = dat["Properties"][p].ToString();
+                ItemProperty pr = prop.ToEnum<ItemProperty>();
+                properties.Add(pr);
+            }
+        }
+
+        //Damage Types
+        if (dat.ContainsKey("DmgTypes"))
+        {
+            if (dat["DmgTypes"].Count > 0)
+                damageTypes.Clear();
+            for (int d = 0; d < dat["DmgTypes"].Count; d++)
+            {
+                string dmg = dat["DmgTypes"][d].ToString();
+                DamageTypes dt = dmg.ToEnum<DamageTypes>();
+                damageTypes.Add(dt);
+            }
+        }
+
+        if (dat.ContainsKey("Attack Type"))
+        {
+            string atype = dat["Attack Type"].ToString();
+            attackType = atype.ToEnum<Item.AttackType>();
+        }
+        else
+        {
+            attackType = (ContainsDamageType(DamageTypes.Claw)) ? AttackType.Claw : AttackType.Bash;
+        }
+
+
+        //Stat Modifiers
+        statMods = new List<Stat_Modifier>();
+        if (dat.ContainsKey("Stat Mods"))
+        {
+            for (int s = 0; s < dat["Stat Mods"].Count; s++)
+            {
+                string statName = dat["Stat Mods"][s]["Stat"].ToString();
+                int amount = (int)dat["Stat Mods"][s]["Amount"];
+
+                statMods.Add(new Stat_Modifier(statName, amount));
+            }
+        }
+
+        if (dat.ContainsKey("Display"))
+        {
+            string ground = (dat["Display"].ContainsKey("On Ground")) ? dat["Display"]["On Ground"].ToString() : "";
+            string player = (dat["Display"].ContainsKey("On Player")) ? dat["Display"]["On Player"].ToString() : "";
+            string slot = (dat["Display"].ContainsKey("Layer")) ? dat["Display"]["Layer"].ToString() : "";
+            renderer = new Item.ItemRenderer(ItemUtility.GetSlot(slot), ground, player);
+        }
     }
 
 

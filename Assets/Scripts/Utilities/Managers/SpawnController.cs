@@ -45,7 +45,7 @@ public static class SpawnController
         {
             GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
 
-            if (bp.Name.Contains("Bandits") && bp.level <= World.DangerLevel())
+            if (bp.ID.Contains("Bandits") && bp.level <= World.DangerLevel())
             {
                 bps.Add(bp);
             }
@@ -59,7 +59,7 @@ public static class SpawnController
         GroupBlueprint spawn = bps.GetRandom();
         int amount = rng.Next(2, 7);
 
-        SpawnFromGroupName(spawn.Name, amount);
+        SpawnFromGroupName(spawn.ID, amount);
 
         World.tileMap.CheckNPCTiles();
     }
@@ -104,7 +104,7 @@ public static class SpawnController
         {
             GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
 
-            if (bp.Name.Contains("Eversight") && bp.level <= World.DangerLevel())
+            if (bp.ID.Contains("Eversight") && bp.level <= World.DangerLevel())
             {
                 bps.Add(bp);
             }
@@ -118,7 +118,7 @@ public static class SpawnController
         GroupBlueprint spawn = bps.GetRandom();
         int amount = rng.Next(2, 5);
 
-        SpawnFromGroupName(spawn.Name, amount);
+        SpawnFromGroupName(spawn.ID, amount);
 
         World.tileMap.CheckNPCTiles();
     }
@@ -216,7 +216,7 @@ public static class SpawnController
             {
                 GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
 
-                if (bp.Name.Contains("Minibosses") && bp.level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
+                if (bp.ID.Contains("Minibosses") && bp.level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
                 {
                     bps.Add(bp);
                 }
@@ -224,7 +224,7 @@ public static class SpawnController
 
             if (bps.Count > 0)
             {
-                SpawnFromGroupName(bps.GetRandom().Name);
+                SpawnFromGroupName(bps.GetRandom().ID);
             }
         }
     }

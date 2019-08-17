@@ -4,8 +4,7 @@ using LitJson;
 
 public static class GameSettings
 {
-    public static int defaultScreenX = 1280, defaultScreenY = 720;
-
+    public static Coord DefaultScreenSize;
     public static InputKeys Keybindings;
     public static double SE_Volume, Mus_Volume, Master_Volume, Animation_Speed;
     public static bool SimpleDamage, MuteAll;
@@ -31,7 +30,7 @@ public static class GameSettings
             string jsonString = File.ReadAllText(Manager.SettingsDirectory);
             JsonData dat = JsonMapper.ToObject(jsonString);
 
-            ScreenSize = dat.ContainsKey("ScreenSize") && dat["ScreenSize"].Count > 1 ? new Coord((int)dat["ScreenSize"][0], (int)dat["ScreenSize"][1]) : new Coord(defaultScreenX, defaultScreenY);
+            ScreenSize = dat.ContainsKey("ScreenSize") && dat["ScreenSize"].Count > 1 ? new Coord((int)dat["ScreenSize"][0], (int)dat["ScreenSize"][1]) : DefaultScreenSize;
             Master_Volume = dat.ContainsKey("Master_Volume") ? (double)dat["Master_Volume"] : 1.0;
             Mus_Volume = dat.ContainsKey("Music_Volume") ? (double)dat["Music_Volume"] : 1.0;
             SE_Volume = dat.ContainsKey("SFX_Volume") ? (double)dat["SFX_Volume"] : 1.0;
@@ -87,7 +86,7 @@ public static class GameSettings
 
         MuteAll = false;
         Fullscreen = false;
-        ScreenSize = new Coord(defaultScreenX, defaultScreenY);
+        ScreenSize = DefaultScreenSize;
         UseMouse = false;
         Allow_Console = true;
         Animation_Speed = 40.0;

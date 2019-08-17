@@ -537,27 +537,6 @@ public class Console : MonoBehaviour
                 ObjectManager.playerEntity.body.MainHand.EquippedItem.AddModifier(im);
                 MyConsole.NewMessage("Mod added.");
                 break;
-
-            case "mods":
-                List<ItemModifier> mods = ItemList.modifiers;
-                MyConsole.NewMessage("<b><color=yellow>--- MODS ---</color></b>");
-
-                for (int i = 0; i < mods.Count; i++)
-                {
-                    MyConsole.NewMessage("[" + mods[i].ID + "] " + mods[i].name);
-                }
-                break;
-
-            case "traits":
-                List<Trait> traits = TraitList.traits;
-                MyConsole.NewMessage("<b><color=yellow>--- TRAITS ---</color></b>");
-
-                for (int i = 0; i < traits.Count; i++)
-                {
-                    MyConsole.NewMessage("[" + traits[i].ID + "] " + traits[i].name);
-                }
-                break;
-
             case "givetrait":
                 if (parsedText.Length < 2)
                 {
@@ -673,21 +652,14 @@ public class Console : MonoBehaviour
                 }
                 else
                 {
-                    if (parsedText[1] == "randart")
-                    {
-                        item = ItemList.GetRandart(ItemList.items.FindAll(x => (x.HasProp(ItemProperty.Weapon) || x.HasProp(ItemProperty.Armor) && x.lootable && x.rarity < 100)).GetRandom(SeedManager.combatRandom));
-                    }
-                    else
-                    {
-                        if (parsedText.Length > 2)
-                            itemID += " " + parsedText[2];
-                        if (parsedText.Length > 3)
-                            itemID += " " + parsedText[3];
-                        if (parsedText.Length > 4)
-                            itemID += " " + parsedText[4];
+                    if (parsedText.Length > 2)
+                        itemID += " " + parsedText[2];
+                    if (parsedText.Length > 3)
+                        itemID += " " + parsedText[3];
+                    if (parsedText.Length > 4)
+                        itemID += " " + parsedText[4];
 
-                        item = ItemList.GetItemByName(itemID);
-                    }
+                    item = ItemList.GetItemByName(itemID);
                 }
 
                 if (item != null && playerInventory != null)
@@ -872,19 +844,6 @@ public class Console : MonoBehaviour
                 }
                 break;
 
-            case "items":
-                if (ItemList.items.Count <= 0)
-                {
-                    MyConsole.Error("No items in directory");
-                    return;
-                }
-                MyConsole.NewMessage("<b><color=yellow>--- ITEMS: ---</color></b>");
-                for (int i = 0; i < ItemList.items.Count; i++)
-                {
-                    MyConsole.NewMessage("    [ " + ItemList.items[i].ID + " ]  " + ItemList.items[i].Name);
-                }
-                break;
-
             case "questflag":
                 if (parsedText.Length < 2)
                 {
@@ -991,15 +950,12 @@ public class Console : MonoBehaviour
                 MyConsole.NewMessage("  - <b>sever</b> <i>[limb index] or \"random\"</i>\n      Severs numbered limb, or random.");
                 MyConsole.NewMessage("  - <b>reattach</b> <i>[limb index] or \"all\"</i>\n      Re-attaches limb at index, or all.");
 
-                MyConsole.NewMessage("  - <b>items</b>\n      Displays all item names with their IDs.");
                 MyConsole.NewMessage("  - <b>give/grant</b> <i>[item name]</i>\n      Give a specified item to the player.");
                 MyConsole.NewMessage("  - <b>multigive/multigrant</b> <i>[amount] [item name]</i>\n      Give a specific number of a specified item to the player.");
                 MyConsole.NewMessage("  - <b>mods</b>\n    Lists all the item modifiers.");
                 MyConsole.NewMessage("  - <b>modwep</b> <i>[mod ID]</i>\n    Modifies the first non-severed hand's equipped weapon with the selected modifier ID.");
 
-                MyConsole.NewMessage("  - <b>abilities</b>\n      Displays all ability names with their IDs.");
                 MyConsole.NewMessage("  - <b>levelabilities</b>\n    Gives all current abilities enough XP to level up. Does not work on abilities that do not gain XP.");
-                MyConsole.NewMessage("  - <b>traits</b>\n      Displays all the trait names with their IDs.");
                 MyConsole.NewMessage("  - <b>givetrait</b> <i>[trait ID]</i>\n      Give a specified trait or mutation to the player.");
                 MyConsole.NewMessage("  - <b>removetrait</b> <i>[trait ID]</i>\n      Remove a specified trait or mutation from the player.");
                 MyConsole.NewMessage("  - <b>mutate</b> <i>[mutation ID]</i>\n      Gives the player the specified mutation.");

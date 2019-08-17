@@ -2,12 +2,19 @@
 using System.IO;
 using LitJson;
 using System.Linq;
+using UnityEngine;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public static class Tile
 {
     public static Dictionary<string, Tile_Data> tiles;
-    public static string filePath;
+    public static string filePath
+    {
+        get
+        {
+            return Application.streamingAssetsPath + "/Mods/Core/Maps/LocalTiles.json";
+        }
+    }
 
     public static string GetKey(int value)
     {

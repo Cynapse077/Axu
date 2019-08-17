@@ -2,51 +2,34 @@
 using System.IO;
 using System.Collections.Generic;
 
+public enum SpriteType
+{
+    Object,
+    NPC
+}
+
 [MoonSharp.Interpreter.MoonSharpUserData]
 public static class SpriteManager
 {
-    public static bool initialized;
-    static Dictionary<string, Sprite> npcSprites;
-    static Dictionary<string, Sprite> objectSprites;
+    static Dictionary<string, Sprite> npcSprites = new Dictionary<string, Sprite>();
+    static Dictionary<string, Sprite> objectSprites = new Dictionary<string, Sprite>();
 
-    public static void Init()
+    public static void AddObjectSprites(string directoryPath, SpriteType spriteType)
     {
-        initialized = false;
-        FillSpriteData();
-        initialized = true;
-    }
-
-    static void FillSpriteData()
-    {
-        //Objects
-        objectSprites = new Dictionary<string, Sprite>();
-        string objectSpritePath = (Application.streamingAssetsPath + "/Data/Art/Objects");
-        DirectoryInfo di = new DirectoryInfo(objectSpritePath);
-        FileInfo[] info = di.GetFiles("*.png");
-
-        foreach (FileInfo f in info)
+        if (!Directory.Exists(directoryPath))
         {
-            objectSprites.Add(Path.GetFileName(f.FullName), SpriteFromFile(f, false));
+            return;
         }
 
-        objectSpritePath = (Application.streamingAssetsPath + "/Data/Art/Objects/Items");
-        di = new DirectoryInfo(objectSpritePath);
-        info = di.GetFiles("*.png");
+        DirectoryInfo di = new DirectoryInfo(directoryPath);
+        FileInfo[] info = di.GetFiles("*.png", SearchOption.AllDirectories);
 
         foreach (FileInfo f in info)
         {
-            objectSprites.Add(Path.GetFileName(f.Name), SpriteFromFile(f, false));
-        }
-
-        //NPCs
-        npcSprites = new Dictionary<string, Sprite>();
-        string npcSpritePath = (Application.streamingAssetsPath + "/Data/Art/NPCs");
-        di = new DirectoryInfo(npcSpritePath);
-        info = di.GetFiles("*.png");
-
-        foreach (FileInfo f in info)
-        {
-            npcSprites.Add(Path.GetFileName(f.FullName), SpriteFromFile(f, true));
+            if (spriteType == SpriteType.Object)
+                objectSprites.Add(Path.GetFileName(f.FullName), SpriteFromFile(f, false));
+            else if (spriteType == SpriteType.NPC)
+                npcSprites.Add(Path.GetFileName(f.FullName), SpriteFromFile(f, true));
         }
     }
 

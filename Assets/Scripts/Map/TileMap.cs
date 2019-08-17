@@ -95,8 +95,6 @@ public class TileMap : MonoBehaviour
             InitializeVaults();
         }
 
-        QuestList.InitializeFromJson();
-
         if (WorldMap_Data.featuresToAdd != null)
         {
             for (int i = 0; i < WorldMap_Data.featuresToAdd.Count; i++)

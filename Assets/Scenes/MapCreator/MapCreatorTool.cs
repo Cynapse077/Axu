@@ -54,7 +54,7 @@ namespace MapCreator
 
         void Start()
         {
-            if (!SpriteManager.initialized)
+            if (!ModManager.IsInitialized)
             {
                 UnityEngine.SceneManagement.SceneManager.LoadScene(0);
                 return;
@@ -102,7 +102,7 @@ namespace MapCreator
             foreach (NPC_Blueprint bp in EntityList.npcs)
             {
                 Sprite s = SpriteManager.GetNPCSprite(bp.spriteIDs[0]);
-                npcSprites.Add(new NPCSpriteHolder(bp.id, n, s));
+                npcSprites.Add(new NPCSpriteHolder(bp.ID, n, s));
 
                 GameObject g = Instantiate(buttonPrefab, npcAnchor);
                 g.GetComponent<MapCreator_SideButton>().Init(this, n, MapCreator_SideButton.MC_ButtonType.NPC);
@@ -622,7 +622,7 @@ namespace MapCreator
                     }
                     if (cells[x, y].npcID >= 0)
                     {
-                        string t = EntityList.npcs[cells[x, y].npcID].id;
+                        string t = EntityList.npcs[cells[x, y].npcID].ID;
                         sc.npcs.Add(new MapCreator_Object(t, new Coord(x, y)));
                     }
                 }

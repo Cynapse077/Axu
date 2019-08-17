@@ -12,7 +12,7 @@ public static class DialogueList
     {
         nodes = new List<DialogueNode>();
 
-        string listToJson = File.ReadAllText(Application.streamingAssetsPath + "/Data/Dialogue/DialogueOptions.json");
+        string listToJson = File.ReadAllText(Application.streamingAssetsPath + "/Mods/Core/Dialogue/DialogueOptions.json");
         JsonData dat = JsonMapper.ToObject(listToJson);
 
         for (int i = 0; i < dat.Count; i++)

@@ -92,7 +92,7 @@ public class NPC
     void FromBlueprint(NPC_Blueprint blueprint)
     {
         name = blueprint.name;
-        ID = blueprint.id;
+        ID = blueprint.ID;
         faction = blueprint.faction;
         dialogueID = blueprint.dialogue;
         maxHealth = blueprint.health;
@@ -110,7 +110,7 @@ public class NPC
 
         if (wep == null)
         {
-            UnityEngine.Debug.LogError("Weapon with ID \"" + wepID + "\" not found. From NPC Blueprint \"" + blueprint.id + "\".");
+            UnityEngine.Debug.LogError("Weapon with ID \"" + wepID + "\" not found. From NPC Blueprint \"" + blueprint.ID + "\".");
             wep = ItemList.GetItemByID("fists");
         }
 
@@ -166,7 +166,7 @@ public class NPC
         {
             if (RNG.Next(1000) <= (1.25f * blueprint.maxItemRarity))
             {
-                inventory.Add(ItemList.GetRandomArtifact());
+                //Get random artifact
             }
 
             int numItems = RNG.Next(HasFlag(NPC_Flags.Merchant) ? 4 : 0, blueprint.maxItems + 2);
@@ -213,18 +213,27 @@ public class NPC
 
         if (HasFlag(NPC_Flags.Doctor))
         {
-            List<Item> items = ItemList.items.FindAll(x => x.ContainsProperty(ItemProperty.Replacement_Limb) && !x.HasCComponent<CRot>());
+            Predicate<IAsset> p = (IAsset asset) => {
+                Item i = asset as Item;
+
+                if (i != null)
+                    return i.HasProp(ItemProperty.ReplaceLimb) && !i.HasCComponent<CRot>();
+
+                return false;
+            };
+
+            List<IAsset> items = GameData.instance.Get<Item>(p);
 
             for (int i = 0; i < RNG.Next(0, 2); i++)
             {
-                inventory.Add(items.GetRandom(RNG));
+                inventory.Add(items.GetRandom(RNG) as Item);
             }
         }
     }
 
     public void MakeFollower()
     {
-        faction = FactionList.GetFactionByID("followers");
+        faction = GameData.instance.Get<Faction>("followers") as Faction;
         flags.Add(NPC_Flags.Follower);
 
         if (flags.Contains(NPC_Flags.Stationary_While_Passive))

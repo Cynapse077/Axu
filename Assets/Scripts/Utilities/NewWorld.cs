@@ -208,7 +208,7 @@ public class OldWorld
 
             n.name = npcData["Name"].ToString();
             n.UID = (int)npcData["UID"];
-            n.faction = FactionList.GetFactionByID(npcData["Fac"].ToString());
+            n.faction = GameData.instance.Get<Faction>(npcData["Fac"].ToString()) as Faction;
             n.isHostile = (bool)npcData["Host"];
             n.inventory = SetUpInventory(i);
             n.spriteID = npcData["Spr"].ToString();
