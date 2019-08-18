@@ -121,7 +121,7 @@ public static class JsonHelper {
         return false;
     }
 
-    public static bool TryGetValue(this JsonData dat, string key, out bool o)
+    public static bool TryGetValue(this JsonData dat, string key, out bool o, bool defaultValue = false)
     {
         if (dat.ContainsKey(key))
         {
@@ -129,7 +129,7 @@ public static class JsonHelper {
             return true;
         }
 
-        o = false;
+        o = defaultValue;
         return false;
     }
 

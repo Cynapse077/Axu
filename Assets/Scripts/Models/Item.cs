@@ -964,10 +964,10 @@ public class Item : ComponentHolder<CComponent>, IAsset
         dat.TryGetValue("TileID", out tileID);
         dat.TryGetValue("Type", out itemType, true);
         dat.TryGetValue("Rarity", out rarity, 100);
-        dat.TryGetValue("Lootable", out lootable);
-        dat.TryGetValue("Stackable", out stackable);
-        dat.TryGetValue("Armor", out armor);
-        dat.TryGetValue("Accuracy", out accuracy);
+        dat.TryGetValue("Lootable", out lootable, true);
+        dat.TryGetValue("Stackable", out stackable, false);
+        dat.TryGetValue("Armor", out armor, 0);
+        dat.TryGetValue("Accuracy", out accuracy, 0);
         dat.TryGetValue("FlavorText", out flavorText);
 
         if (rarity < 100 && rarity > ItemUtility.MaxRarity)
@@ -1042,7 +1042,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             string ground = (dat["Display"].ContainsKey("On Ground")) ? dat["Display"]["On Ground"].ToString() : "";
             string player = (dat["Display"].ContainsKey("On Player")) ? dat["Display"]["On Player"].ToString() : "";
             string slot = (dat["Display"].ContainsKey("Layer")) ? dat["Display"]["Layer"].ToString() : "";
-            renderer = new Item.ItemRenderer(ItemUtility.GetSlot(slot), ground, player);
+            renderer = new ItemRenderer(ItemUtility.GetSlot(slot), ground, player);
         }
     }
 

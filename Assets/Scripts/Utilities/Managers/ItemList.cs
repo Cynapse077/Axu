@@ -129,7 +129,7 @@ public static class ItemList
 
     public static Item GetItemByID(string id)
     {
-        if (string.IsNullOrEmpty(id) || id == "none" || id == "None" || id == GetNone().ID)
+        if (string.IsNullOrEmpty(id) || id == GetNone().ID)
             return GetNone();
         else if (id.Contains("Random"))
         {
