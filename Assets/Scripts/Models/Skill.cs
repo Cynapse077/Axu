@@ -11,7 +11,7 @@ public class Skill : IAsset
 
     public string Name, Description;
     public string ID { get; set; }
-    public int staminaCost, cooldown, maxCooldown, level, range = 20;
+    public int staminaCost, cooldown, maxCooldown, level = 1, range = 20;
     public CastType castType;
     public DamageTypes damageType;
     public bool CanLevelUp = true;

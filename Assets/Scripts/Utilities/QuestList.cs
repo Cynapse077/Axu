@@ -7,12 +7,12 @@ public static class QuestList
 {
     static List<Quest> quests
     {
-        get { return GameData.instance.GetAll<Quest>(); }
+        get { return GameData.GetAll<Quest>(); }
     }
 
     public static Quest GetByID(string id)
     {
-        return new Quest(GameData.instance.Get<Quest>(id) as Quest);
+        return new Quest(GameData.Get<Quest>(id) as Quest);
     }
 
     static Coord GetZone(string zone)

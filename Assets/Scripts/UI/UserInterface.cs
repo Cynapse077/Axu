@@ -1163,7 +1163,7 @@ public class UserInterface : MonoBehaviour
     void FillLevelTraits()
     {
         levelUpTraits = new List<Trait>();
-        List<Trait> availableTraits = TraitList.traits.FindAll(x => x.ContainsEffect(TraitEffects.Random_Trait) && !playerStats.traits.Contains(x));
+        List<Trait> availableTraits = GameData.GetAll<Trait>().FindAll(x => x.ContainsEffect(TraitEffects.Random_Trait) && !playerStats.traits.Contains(x));
         int tr = availableTraits.Count;
 
         if (tr == 0)

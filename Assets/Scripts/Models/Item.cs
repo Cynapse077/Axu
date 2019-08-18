@@ -59,6 +59,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
     public Item(JsonData dat)
     {
         FromJson(dat);
+
+        if (modifier == null)
+            modifier = new ItemModifier();
     }
 
     public Item(string name)
@@ -123,8 +126,8 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
         if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
         {
-            Skill sk = SkillList.GetSkillByID(GetCComponent<CAbility>().abID);
-            
+            Skill sk = new Skill(GameData.Get<Skill>(GetCComponent<CAbility>().abID) as Skill);
+
             if (sk != null)
             {
                 stats.entity.skills.AddSkill(sk, Skill.AbilityOrigin.Item);

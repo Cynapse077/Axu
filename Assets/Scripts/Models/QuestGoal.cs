@@ -427,7 +427,7 @@ public class FactionKillGoal : Goal
             return description;
         }
 
-        Faction fac = GameData.instance.Get<Faction>(faction) as Faction;
+        Faction fac = GameData.Get<Faction>(faction) as Faction;
 
         return string.Format("Kill {0}x members of the {1} faction. ({2}/{1})", max.ToString(), fac.Name, amount.ToString());
     }

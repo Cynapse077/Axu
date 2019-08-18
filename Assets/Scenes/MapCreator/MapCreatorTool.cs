@@ -81,11 +81,11 @@ namespace MapCreator
             Menu.SetActive(false);
 
             //Setup Object Sprites.
-            objectSprites = new Sprite[ItemList.mapObjectBlueprints.Count];
+            objectSprites = new Sprite[GameData.GetAll<MapObjectBlueprint>().Count];
 
             for (int i = 0; i < objectSprites.Length; i++)
             {
-                objectSprites[i] = SpriteManager.GetObjectSprite(ItemList.mapObjectBlueprints[i].spriteID);
+                objectSprites[i] = SpriteManager.GetObjectSprite(GameData.GetAll<MapObjectBlueprint>()[i].spriteID);
 
                 //Clip image to bottom left
                 if (objectSprites[i].texture.width > 20)
@@ -368,10 +368,10 @@ namespace MapCreator
 
         public void AutotileObjects(int px, int py, bool initial)
         {
-            if (cells[px, py].objectID > 0 && ItemList.mapObjectBlueprints[cells[px, py].objectID].autotile)
+            if (cells[px, py].objectID > 0 && GameData.GetAll<MapObjectBlueprint>()[cells[px, py].objectID].autotile)
             {
                 int xOffset = BitwiseNeighbors(px, py, cells[px, py].objectID) * 16;
-                Texture2D t = SpriteManager.GetObjectSprite(ItemList.mapObjectBlueprints[cells[px, py].objectID].spriteID).texture;
+                Texture2D t = SpriteManager.GetObjectSprite(GameData.GetAll<MapObjectBlueprint>()[cells[px, py].objectID].spriteID).texture;
                 cells[px, py].mapObject.sprite = Sprite.Create(t, new Rect(xOffset, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
             }
 
@@ -617,7 +617,7 @@ namespace MapCreator
 
                     if (cells[x, y].objectID >= 0)
                     {
-                        string t = ItemList.mapObjectBlueprints[cells[x, y].objectID].objectType;
+                        string t = GameData.GetAll<MapObjectBlueprint>()[cells[x, y].objectID].objectType;
                         sc.objects.Add(new MapCreator_Object(t, new Coord(x, y)));
                     }
                     if (cells[x, y].npcID >= 0)

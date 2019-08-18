@@ -81,7 +81,7 @@ public class Journal : MonoBehaviour
 
     void MakeHostile(string facID)
     {
-        Faction f = GameData.instance.Get<Faction>(facID) as Faction;
+        Faction f = GameData.Get<Faction>(facID) as Faction;
 
         if (f != null)
         {

@@ -142,10 +142,10 @@
     <Compile Include="Assets\Scripts\Models\MapFeatures.cs" />
     <Compile Include="Assets\Scripts\Models\MapObject.cs" />
     <Compile Include="Assets\Scripts\Models\MissionSystem.cs" />
+    <Compile Include="Assets\Scripts\Models\Mod.cs" />
     <Compile Include="Assets\Scripts\Models\NPC.cs" />
     <Compile Include="Assets\Scripts\Models\NPC_Blueprint.cs" />
     <Compile Include="Assets\Scripts\Models\NPCCharacter.cs" />
-    <Compile Include="Assets\Scripts\Models\NPCGroupList.cs" />
     <Compile Include="Assets\Scripts\Models\PlayerBuilder.cs" />
     <Compile Include="Assets\Scripts\Models\PlayerProficiencies.cs" />
     <Compile Include="Assets\Scripts\Models\Quest.cs" />
@@ -238,6 +238,7 @@
     <Compile Include="Assets\Scripts\Utilities\Managers\ItemList.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\Manager.cs" />
+    <Compile Include="Assets\Scripts\Utilities\Managers\ModManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\MusicManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\ObjectManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\PoolManager.cs" />
@@ -267,7 +268,6 @@
     <Compile Include="Assets\Scripts\Utilities\SaveImage.cs" />
     <Compile Include="Assets\Scripts\Utilities\ShadowCasting.cs" />
     <Compile Include="Assets\Scripts\Utilities\SimplePool.cs" />
-    <Compile Include="Assets\Scripts\Utilities\SkillList.cs" />
     <Compile Include="Assets\Scripts\Utilities\StatInitializer.cs" />
     <Compile Include="Assets\Scripts\Utilities\TraitList.cs" />
     <Compile Include="Assets\Scripts\Utilities\Utility.cs" />

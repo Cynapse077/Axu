@@ -34,7 +34,7 @@ public class CharacterCreation : MonoBehaviour
     List<WeaponProficiency> profs;
     int selectedNum = 0, selectedMax = 3, profNum = 0;
     bool confirmStart = false, confirmReturn = false, loading = false, done = false, waitBufferFinished = true;
-    List<Felony> professions { get { return GameData.instance.GetAll<Felony>(); } }
+    List<Felony> professions { get { return GameData.GetAll<Felony>(); } }
     Difficulty[] difficulties;
     Felony currentProf;
     Difficulty currentDiff = null;
@@ -320,7 +320,7 @@ public class CharacterCreation : MonoBehaviour
 
         for (int z = 0; z < p.skills.Count; z++)
         {
-            Skill s = SkillList.GetSkillByID(p.skills[z].Name);
+            Skill s = new Skill(GameData.Get<Skill>(p.skills[z].Name) as Skill);
             GameObject g = SimplePool.Spawn(textPrefab, abilAnchor);
             g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", s.Name, s.Description);
         }
@@ -573,7 +573,7 @@ public class CharacterCreation : MonoBehaviour
 
         for (int i = 0; i < currentProf.skills.Count; i++)
         {
-            Skill s = SkillList.GetSkillByID(currentProf.skills[i].Name);
+            Skill s = new Skill(GameData.Get<Skill>(currentProf.skills[i].Name) as Skill);
             FlagsHelper.Set(ref s.origin, Skill.AbilityOrigin.Book);
 
             Manager.playerBuilder.skills.Add(s);

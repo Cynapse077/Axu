@@ -41,13 +41,11 @@ public static class SpawnController
     {
         List<GroupBlueprint> bps = new List<GroupBlueprint>();
 
-        for (int i = 0; i < NPCGroupList.groupBlueprints.Count; i++)
+        foreach (GroupBlueprint gb in GameData.GetAll<GroupBlueprint>())
         {
-            GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
-
-            if (bp.ID.Contains("Bandits") && bp.level <= World.DangerLevel())
+            if (gb.ID.Contains("Bandits") && gb.level <= World.DangerLevel())
             {
-                bps.Add(bp);
+                bps.Add(gb);
             }
         }
 
@@ -100,13 +98,11 @@ public static class SpawnController
     {
         List<GroupBlueprint> bps = new List<GroupBlueprint>();
 
-        for (int i = 0; i < NPCGroupList.groupBlueprints.Count; i++)
+        foreach (GroupBlueprint gb in GameData.GetAll<GroupBlueprint>())
         {
-            GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
-
-            if (bp.ID.Contains("Eversight") && bp.level <= World.DangerLevel())
+            if (gb.ID.Contains("Eversight") && gb.level <= World.DangerLevel())
             {
-                bps.Add(bp);
+                bps.Add(gb);
             }
         }
 
@@ -183,7 +179,7 @@ public static class SpawnController
 
     static List<GroupBlueprint> GroupsThatCanSpawnHere(TileMap_Data mapData)
     {
-        return NPCGroupList.groupBlueprints.FindAll(x => x.CanSpawnHere(mapData));
+        return GameData.GetAll<GroupBlueprint>().FindAll(x => x.CanSpawnHere(mapData));
     }
 
     static void Encounter()
@@ -212,13 +208,11 @@ public static class SpawnController
         {
             List<GroupBlueprint> bps = new List<GroupBlueprint>();
 
-            for (int i = 0; i < NPCGroupList.groupBlueprints.Count; i++)
+            foreach (GroupBlueprint gb in GameData.GetAll<GroupBlueprint>())
             {
-                GroupBlueprint bp = NPCGroupList.groupBlueprints[i];
-
-                if (bp.ID.Contains("Minibosses") && bp.level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
+                if (gb.ID.Contains("Minibosses") && gb.level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
                 {
-                    bps.Add(bp);
+                    bps.Add(gb);
                 }
             }
 
@@ -314,7 +308,7 @@ public static class SpawnController
     //Summon a random minion from a particular group
     public static void SummonFromGroup(string groupName, Coord localPosition)
     {
-        GroupBlueprint gbp = NPCGroupList.GetGroupByName(groupName);
+        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(groupName) as GroupBlueprint;
         SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
 
         NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, World.tileMap.CurrentMap.mapInfo.position, localPosition);
@@ -450,13 +444,13 @@ public static class SpawnController
 
     public static void SpawnFromGroupName(string name, int amount = 1)
     {
-        GroupBlueprint gbp = NPCGroupList.GetGroupByName(name);
+        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(name) as GroupBlueprint;
         SpawnSingleGroup(gbp, amount);
     }
 
     public static List<NPC> SpawnFromGroupNameAt(string name, int amount, Coord position, int elevation)
     {
-        GroupBlueprint gbp = NPCGroupList.GetGroupByName(name);
+        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(name) as GroupBlueprint;
         SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
         List<NPC> spawned = new List<NPC>();
 

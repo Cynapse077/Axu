@@ -23,8 +23,10 @@ public class EntitySkills : MonoBehaviour
 
             for (int i = 0; i < sks.Length; i++)
             {
-                Skill s = SkillList.GetSkillByID(sks[i].Key);
-                s.level = sks[i].Value;
+                Skill s = new Skill(GameData.Get<Skill>(sks[i].Key) as Skill)
+                {
+                    level = sks[i].Value
+                };
                 AddSkill(s, Skill.AbilityOrigin.Book);
             }
         }

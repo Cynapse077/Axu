@@ -8,21 +8,11 @@ public interface IAsset
     string ID { get; set; }
 }
 
-public class GameData
+public static class GameData
 {
-    public static GameData instance;
-    private Dictionary<Type, DataList<IAsset>> data;
+    static Dictionary<Type, DataList<IAsset>> data = new Dictionary<Type, DataList<IAsset>>();
 
-    public GameData()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            data = new Dictionary<Type, DataList<IAsset>>();
-        }
-    }
-
-    public void Add<T>(IAsset asset)
+    public static void Add<T>(IAsset asset)
     {
         if (!data.ContainsKey(typeof(T)))
         {
@@ -32,17 +22,15 @@ public class GameData
         data[typeof(T)].Add(asset);
     }
 
-    public void Remove<T>(IAsset asset)
+    public static void Remove<T>(IAsset asset)
     {
-        if (!data.ContainsKey(typeof(T)))
+        if (data.ContainsKey(typeof(T)))
         {
-            return;
+            data[typeof(T)].Remove(asset);
         }
-
-        data[typeof(T)].Remove(asset);
     }
 
-    public List<IAsset> Get<T>(Predicate<IAsset> p)
+    public static List<IAsset> Get<T>(Predicate<IAsset> p)
     {
         if (!data.ContainsKey(typeof(T)))
         {
@@ -52,7 +40,7 @@ public class GameData
         return data[typeof(T)].Get(p);
     }
 
-    public IAsset Get<T>(string id)
+    public static IAsset Get<T>(string id)
     {
         if (!data.ContainsKey(typeof(T)))
         {
@@ -63,7 +51,7 @@ public class GameData
         return data[typeof(T)].Get(id);
     }
 
-    public List<T> GetAll<T>()
+    public static List<T> GetAll<T>()
     {
         if (!data.ContainsKey(typeof(T)))
         {
@@ -73,7 +61,7 @@ public class GameData
         return data[typeof(T)].GetAll().Cast<T>().ToList();
     }
 
-    public bool TryGet<T>(string id, out IAsset o)
+    public static bool TryGet<T>(string id, out IAsset o)
     {
         if (!data.ContainsKey(typeof(T)))
         {

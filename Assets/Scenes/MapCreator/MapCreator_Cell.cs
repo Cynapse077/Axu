@@ -117,9 +117,9 @@ namespace MapCreator
         {
             MapObjectBlueprint mob = ItemList.GetMOB(name);
 
-            for (int i = 0; i < ItemList.mapObjectBlueprints.Count; i++)
+            for (int i = 0; i < GameData.GetAll<MapObjectBlueprint>().Count; i++)
             {
-                if (ItemList.mapObjectBlueprints[i].objectType == name)
+                if (GameData.GetAll<MapObjectBlueprint>()[i].objectType == name)
                 {
                     objectID = i;
                     break;
@@ -174,7 +174,7 @@ namespace MapCreator
         string GetTootip()
         {
             string tt = Tile.GetKey(tileID);
-            string ot = (objectID > -1) ? ItemList.mapObjectBlueprints[objectID].Name : "No Object";
+            string ot = (objectID > -1) ? GameData.GetAll<MapObjectBlueprint>()[objectID].Name : "No Object";
             string nt = (npcID > -1) ? EntityList.npcs[npcID].name : "No NPC";
 
             return string.Format("{0}\n{1}\n{2}", tt, ot, nt);

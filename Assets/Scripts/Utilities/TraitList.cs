@@ -1,27 +1,16 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using System.IO;
-using LitJson;
+﻿using System.Collections.Generic;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public static class TraitList
 {
-    public static List<Trait> traits
-    {
-        get
-        {
-            return GameData.instance.GetAll<Trait>();
-        }
-    }
-
     public static Trait GetTraitByID(string id)
     {
-        return GameData.instance.Get<Trait>(id) as Trait;
+        return GameData.Get<Trait>(id) as Trait;
     }
 
     public static List<Trait> GetAvailableMutations(Stats stats)
     {
-        List<Trait> muts = traits.FindAll(x => x.ContainsEffect(TraitEffects.Mutation) && x.tier < 2);
+        List<Trait> muts = GameData.GetAll<Trait>().FindAll(x => x.ContainsEffect(TraitEffects.Mutation) && x.tier < 2);
         List<Trait> possibilities = new List<Trait>();
 
         for (int i = 0; i < muts.Count; i++)
@@ -44,20 +33,19 @@ public static class TraitList
     public static List<Wound> GetAvailableWounds(BodyPart bp, HashSet<DamageTypes> dts)
     {
         List<Wound> ws = new List<Wound>();
-        List<Wound> wounds = GameData.instance.GetAll<Wound>();
 
-        for (int i = 0; i < wounds.Count; i++)
+        foreach (Wound w in GameData.GetAll<Wound>())
         {
-            if (wounds[i].slot != ItemProperty.None && wounds[i].slot != bp.slot || bp.wounds.Find(x => x.ID == wounds[i].ID) != null)
+            if (w.slot != ItemProperty.None && w.slot != bp.slot || bp.wounds.Find(x => x.ID == w.ID) != null)
             {
                 continue;
             }
 
             bool canAdd = false;
 
-            for (int j = 0; j < wounds[i].damTypes.Count; j++)
+            for (int j = 0; j < w.damTypes.Count; j++)
             {
-                if (dts.Contains(wounds[i].damTypes[j]))
+                if (dts.Contains(w.damTypes[j]))
                 {
                     canAdd = true;
                     break;
@@ -66,7 +54,7 @@ public static class TraitList
 
             if (canAdd)
             {
-                ws.Add(new Wound(wounds[i]));
+                ws.Add(new Wound(w));
             }
         }
 

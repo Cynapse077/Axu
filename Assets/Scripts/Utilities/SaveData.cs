@@ -357,8 +357,9 @@ public class SaveData : MonoBehaviour
         for (int i = 0; i < playerJson["Skills"].Count; i++)
         {
             string sID = playerJson["Skills"][i]["Name"].ToString();
-            Skill s = SkillList.GetSkillByID(sID);
-            s.level = (int)playerJson["Skills"][i]["Lvl"];
+            Skill s = new Skill(GameData.Get<Skill>(sID) as Skill);
+
+            playerJson["Skills"][i]["Lvl"].TryGetValue("Skills", out s.level);
             s.XP = (double)playerJson["Skills"][i]["XP"];
             s.origin = playerJson["Skills"][i].ContainsKey("Flg") ? (Skill.AbilityOrigin)(int)playerJson["Skills"][i]["Flg"] : Skill.AbilityOrigin.None;
 

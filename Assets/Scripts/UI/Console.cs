@@ -117,9 +117,9 @@ public class Console : MonoBehaviour
                 break;
 
             case "alltraits":
-                for (int i = 0; i < TraitList.traits.Count; i++)
+                for (int i = 0; i < GameData.GetAll<Trait>().Count; i++)
                 {
-                    playerEntity.stats.GiveTrait(TraitList.traits[i].ID);
+                    playerEntity.stats.GiveTrait(GameData.GetAll<Trait>()[i].ID);
                 }
                 break;
 
@@ -611,10 +611,10 @@ public class Console : MonoBehaviour
                 }
 
                 string skillID = parsedText[1];
+                Skill s = new Skill(GameData.Get<Skill>(skillID) as Skill);
 
-                if (SkillList.GetSkillByID(skillID) != null)
+                if (s != null)
                 {
-                    Skill s = new Skill(SkillList.GetSkillByID(skillID));
                     ObjectManager.player.GetComponent<EntitySkills>().AddSkill(s, Skill.AbilityOrigin.Book);
                     MyConsole.NewMessage("Gave the player the ability \"" + s.Name + "\".");
                 }
@@ -826,22 +826,6 @@ public class Console : MonoBehaviour
                     ents[i].GetComponent<Stats>().SimpleDamage(1000);
                 }
                 MyConsole.NewMessage("    All on-screen NPCs killed.");
-                break;
-
-            case "abilities":
-                if (SkillList.skills.Count <= 0)
-                {
-                    MyConsole.Error("No abilities in directory.");
-                    return;
-                }
-                MyConsole.NewMessage("<b><color=yellow>--- ABILITIES: ---</color></b>");
-                for (int i = 0; i < SkillList.skills.Count; i++)
-                {
-                    if (SkillList.skills[i].luaAction != null && SkillList.skills[i].luaAction.functionName != "")
-                    {
-                        MyConsole.NewMessage("    [ " + SkillList.skills[i].ID + " ] " + SkillList.skills[i].Name);
-                    }
-                }
                 break;
 
             case "questflag":

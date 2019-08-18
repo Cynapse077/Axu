@@ -195,7 +195,7 @@ public static class ItemTooltip
         if (item.GetCComponent<CAbility>() != null)
         {
             CAbility cab = item.GetCComponent<CAbility>();
-            Skill skill = SkillList.GetSkillByID(cab.abID);
+            Skill skill = new Skill(GameData.Get<Skill>(cab.abID) as Skill);
 
             if (skill != null)
             {

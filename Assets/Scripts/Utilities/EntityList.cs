@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public static class EntityList
 {
-    public static List<NPC_Blueprint> npcs { get { return GameData.instance.GetAll<NPC_Blueprint>(); } }
+    public static List<NPC_Blueprint> npcs { get { return GameData.GetAll<NPC_Blueprint>(); } }
     static string bodyDataPath { get { return Application.streamingAssetsPath + "/Mods/Core/Entities/BodyStructures.json"; } }
     static List<BodyPart> humanoidStructure;
     static JsonData bodyPartJson;
@@ -23,7 +23,7 @@ public static class EntityList
 
     public static NPC_Blueprint GetBlueprintByID(string search)
     {
-        return GameData.instance.Get<NPC_Blueprint>(search) as NPC_Blueprint;
+        return GameData.Get<NPC_Blueprint>(search) as NPC_Blueprint;
     }
 
     public static NPC GetNPCByID(string id, Coord worldPos, Coord localPos, int elevation = 0)

@@ -41,7 +41,7 @@ public class NPC_Blueprint : IAsset
         name = dat["Name"].ToString();
         ID = dat["ID"].ToString();
         
-        faction = GameData.instance.Get<Faction>(dat["Faction"].ToString()) as Faction;
+        faction = GameData.Get<Faction>(dat["Faction"].ToString()) as Faction;
         health = (int)dat["Stats"]["Health"];
         stamina = (int)dat["Stats"]["Stamina"];
         maxItems = (dat.ContainsKey("MaxItems")) ? (int)dat["MaxItems"] : 0;

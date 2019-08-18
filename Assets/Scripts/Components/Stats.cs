@@ -987,7 +987,7 @@ public class Stats : MonoBehaviour
 
             for (int i = 0; i < t.abilityIDs.Count; i++)
             {
-                if (SkillList.GetSkillByID(t.abilityIDs[i]) != null && skills.abilities.Find(x => x.ID == t.abilityIDs[i]) != null)
+                if ((GameData.Get<Skill>(t.abilityIDs[i]) as Skill) != null && skills.abilities.Find(x => x.ID == t.abilityIDs[i]) != null)
                 {
                     skills.RemoveSkill(t.abilityIDs[i], Skill.AbilityOrigin.Trait);
                 }
@@ -1421,12 +1421,12 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < t.abilityIDs.Count; i++)
         {
-            Skill s = SkillList.GetSkillByID(t.abilityIDs[i]);
+            Skill s = new Skill(GameData.Get<Skill>(t.abilityIDs[i]) as Skill);
 
             if (s != null)
             {
                 s.SetFlag(Skill.AbilityOrigin.Trait);
-                entity.skills.AddSkill(SkillList.GetSkillByID(t.abilityIDs[i]), Skill.AbilityOrigin.Trait);
+                entity.skills.AddSkill(s, Skill.AbilityOrigin.Trait);
             }
         }
     }

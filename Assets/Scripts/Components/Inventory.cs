@@ -479,9 +479,11 @@ public class Inventory : MonoBehaviour
 
         if (i.HasProp(ItemProperty.Blink))
         {
-            Skill s = SkillList.GetSkillByID("blink");
-            s.staminaCost = 0;
-            s.timeCost = 10;
+            Skill s = new Skill(GameData.Get<Skill>("blink") as Skill)
+            {
+                staminaCost = 0,
+                timeCost = 10
+            };
             GetComponent<PlayerInput>().UseSelectTileSkill(s);
         }
         if (i.HasProp(ItemProperty.Surface_Tele) && entity.TeleportToSurface())
@@ -511,11 +513,11 @@ public class Inventory : MonoBehaviour
                 string abName = i.GetCComponent<CAbility>().abID;
 
                 EntitySkills eSkills = GetComponent<EntitySkills>();
-                Skill skill = new Skill(SkillList.GetSkillByID(abName));
+                Skill skill = new Skill(GameData.Get<Skill>(abName) as Skill);
 
                 if (eSkills.abilities.Find(x => x.ID == skill.ID) == null)
                 {
-                    Skill s = SkillList.GetSkillByID(abName);
+                    Skill s = new Skill(GameData.Get<Skill>(abName) as Skill);
 
                     if (s != null)
                     {

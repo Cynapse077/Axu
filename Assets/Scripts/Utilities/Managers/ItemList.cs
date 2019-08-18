@@ -11,15 +11,7 @@ public static class ItemList
 
     public static Item GetNone()
     {
-        return new Item(GameData.instance.Get<Item>("none") as Item);
-    }
-
-    public static List<MapObjectBlueprint> mapObjectBlueprints
-    {
-        get
-        {
-            return GameData.instance.GetAll<MapObjectBlueprint>();
-        }
+        return new Item(GameData.Get<Item>("none") as Item);
     }
 
     public static Item GetRandart(Item i)
@@ -162,7 +154,7 @@ public static class ItemList
             return newItem;
         }
 
-        return new Item(GameData.instance.Get<Item>(id) as Item);
+        return new Item(GameData.Get<Item>(id) as Item);
     }
 
     //Really only used in console
@@ -183,7 +175,7 @@ public static class ItemList
             return false;
         };
 
-        List<IAsset> ass = GameData.instance.Get<Item>(p);
+        List<IAsset> ass = GameData.Get<Item>(p);
 
         if (ass.Count > 0)
             return new Item(ass[0] as Item);
@@ -216,7 +208,7 @@ public static class ItemList
                 return false;
             };
 
-            return GameData.instance.Get<Item>(p).Cast<Item>().ToList().GetRandom();
+            return GameData.Get<Item>(p).Cast<Item>().ToList().GetRandom();
         }
 
         return null;
@@ -227,7 +219,7 @@ public static class ItemList
         if (search == "")
             return ItemModifier.Empty();
 
-        return new ItemModifier(GameData.instance.Get<ItemModifier>(search) as ItemModifier);
+        return new ItemModifier(GameData.Get<ItemModifier>(search) as ItemModifier);
     }
 
     public static int TimedDropRarity(int maxRarity)
@@ -261,7 +253,7 @@ public static class ItemList
 
     static Item GetRandomPredicatedItem(Predicate<IAsset> p, bool tryAddMod = true)
     {
-        Item item = new Item(GameData.instance.Get<Item>(p).GetRandom() as Item);
+        Item item = new Item(GameData.Get<Item>(p).GetRandom() as Item);
 
         if (tryAddMod)
             TryAddMod(ref item, modChance);
@@ -296,7 +288,7 @@ public static class ItemList
 
                 return false;
             };
-            List<IAsset> ms = GameData.instance.Get<ItemModifier>(p);
+            List<IAsset> ms = GameData.Get<ItemModifier>(p);
 
             if (ms.Count > 0)
             {
@@ -322,17 +314,17 @@ public static class ItemList
 
     public static MapObjectBlueprint GetMOB(string objType)
     {
-        return GameData.instance.Get<MapObjectBlueprint>(objType) as MapObjectBlueprint;
+        return GameData.Get<MapObjectBlueprint>(objType) as MapObjectBlueprint;
     }
 
     public static Liquid GetLiquidByID(string search, int amount = -1)
     {
-        return new Liquid(GameData.instance.Get<Liquid>(search) as Liquid, amount < 0 ? 1 : amount);
+        return new Liquid(GameData.Get<Liquid>(search) as Liquid, amount < 0 ? 1 : amount);
     }
 
     public static Liquid GetRandomLiquid(int amount = -1)
     {
-        return new Liquid(Utility.WeightedChoice(GameData.instance.GetAll<Liquid>()), amount < 0 ? 1 : amount);
+        return new Liquid(Utility.WeightedChoice(GameData.GetAll<Liquid>()), amount < 0 ? 1 : amount);
     }
 }
 

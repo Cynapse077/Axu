@@ -139,7 +139,7 @@ public class NPC
         }
         else if (!HasFlag(NPC_Flags.Static) && SeedManager.combatRandom.Next(500) < World.DangerLevel() + 1)
         {
-            List<Trait> muts = TraitList.traits.FindAll(x => x.effects.Contains(TraitEffects.Mutation));
+            List<Trait> muts = GameData.GetAll<Trait>().FindAll(x => x.effects.Contains(TraitEffects.Mutation));
 
             for (int i = 0; i < SeedManager.combatRandom.Next(1, 4); i++)
             {
@@ -222,7 +222,7 @@ public class NPC
                 return false;
             };
 
-            List<IAsset> items = GameData.instance.Get<Item>(p);
+            List<IAsset> items = GameData.Get<Item>(p);
 
             for (int i = 0; i < RNG.Next(0, 2); i++)
             {
@@ -233,7 +233,7 @@ public class NPC
 
     public void MakeFollower()
     {
-        faction = GameData.instance.Get<Faction>("followers") as Faction;
+        faction = GameData.Get<Faction>("followers") as Faction;
         flags.Add(NPC_Flags.Follower);
 
         if (flags.Contains(NPC_Flags.Stationary_While_Passive))
