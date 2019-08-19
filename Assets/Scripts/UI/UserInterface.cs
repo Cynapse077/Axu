@@ -557,7 +557,7 @@ public class UserInterface : MonoBehaviour
     public void OpenSaveAndQuitDialogue()
     {
         CloseWindows();
-        YesNoAction("YN_SaveQuit", () => { fadePanel.CrossFadeAlpha(1.0f, 0.3f, true); SaveAndQuit(); }, () => { CloseWindows(); }, "");
+        YesNoAction("YN_SaveQuit".Translate(), () => { fadePanel.CrossFadeAlpha(1.0f, 0.3f, true); SaveAndQuit(); }, () => { CloseWindows(); }, "");
     }
 
     public void LookToolipOn(Transform tr, BaseAI npc)
@@ -622,18 +622,13 @@ public class UserInterface : MonoBehaviour
     {
         selectedItemNum = 0;
 
-        if (!DialogueList.initialized)
-        {
-            DialogueList.Init();
-        }
-
         if (nodeID == "End")
         {
             CloseWindows();
             return;
         }
 
-        DialogueList.DialogueNode node = DialogueList.GetNode(nodeID);
+        DialogueNode node = GameData.Get<DialogueNode>(nodeID) as DialogueNode;
         DPanel.Display(node);
 
         if (node.onSelect != null)
@@ -794,7 +789,7 @@ public class UserInterface : MonoBehaviour
                 else
                 {
                     CloseWindows();
-                    YesNoAction("YN_Amputate", () => {
+                    YesNoAction("YN_Amputate".Translate(), () => {
                         CloseWindows();
                         playerInventory.entity.body.RemoveLimb(parts[indexToUse]);
                     }, null, parts[indexToUse].displayName);

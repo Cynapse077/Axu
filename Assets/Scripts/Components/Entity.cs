@@ -1236,7 +1236,7 @@ public class Entity : MonoBehaviour
         {
             if (isPlayer && !e.AI.isHostile && e != fighter.lastTarget)
             {
-                World.userInterface.YesNoAction("YN_AttackPassive", () =>
+                World.userInterface.YesNoAction("YN_AttackPassive".Translate(), () =>
                 {
                     fighter.Attack(e.stats, freeAction, null);
                     hitAnEnemy = true;

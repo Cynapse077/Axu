@@ -7,7 +7,7 @@ public class PlayerBuilder
     public int radiation;
     public PlayerProficiencies proficiencies;
     public List<Trait> traits;
-    public List<Skill> skills;
+    public List<Ability> abilities;
     public Dictionary<string, int> statusEffects;
     public Dictionary<string, int> attributes;
     public List<Addiction> addictions;
@@ -28,7 +28,7 @@ public class PlayerBuilder
     {
         proficiencies = new PlayerProficiencies();
         traits = new List<Trait>();
-        skills = new List<Skill>();
+        abilities = new List<Ability>();
         statusEffects = new Dictionary<string, int>();
         killedStaticNPCs = new List<string>();
         addictions = new List<Addiction>();

@@ -4,6 +4,7 @@ using LitJson;
 public class Quest : EventContainer, IAsset
 {
     public string ID { get; set; }
+    public string ModID { get; set; }
     public string Name;
     public string Description;
     public Goal[] goals;

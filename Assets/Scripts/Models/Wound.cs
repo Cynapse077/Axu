@@ -5,6 +5,7 @@ public class Wound : IAsset
 {
     public string Name, Desc;
     public string ID { get; set; }
+    public string ModID { get; set; }
     public ItemProperty slot;
     public List<DamageTypes> damTypes;
     public List<Stat_Modifier> statMods;

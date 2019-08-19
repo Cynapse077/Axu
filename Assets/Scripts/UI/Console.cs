@@ -508,7 +508,7 @@ public class Console : MonoBehaviour
                     }
                     else
                     {
-                        Coord newLocation = World.tileMap.worldMap.GetLandmark(zb.id);
+                        Coord newLocation = World.tileMap.worldMap.GetLandmark(zb.ID);
                         World.tileMap.worldCoordX = newLocation.x;
                         World.tileMap.worldCoordY = newLocation.y;
                         World.tileMap.currentElevation = 0;
@@ -611,11 +611,11 @@ public class Console : MonoBehaviour
                 }
 
                 string skillID = parsedText[1];
-                Skill s = new Skill(GameData.Get<Skill>(skillID) as Skill);
+                Ability s = new Ability(GameData.Get<Ability>(skillID) as Ability);
 
                 if (s != null)
                 {
-                    ObjectManager.player.GetComponent<EntitySkills>().AddSkill(s, Skill.AbilityOrigin.Book);
+                    ObjectManager.player.GetComponent<EntitySkills>().AddSkill(s, Ability.AbilityOrigin.Book);
                     MyConsole.NewMessage("Gave the player the ability \"" + s.Name + "\".");
                 }
                 else

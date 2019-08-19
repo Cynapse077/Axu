@@ -1,86 +1,66 @@
 ﻿using LitJson;
 
-public class ZoneBlueprint
+public class ZoneBlueprint : IAsset
 {
-    public string id, name, underground;
+    public string ID { get; set; }
+    public string ModID { get; set; }
+    public string name, underground;
     public int tileID, amount, radiation;
     public bool walkable, expand, isStart, friendly;
     public Placement placement;
     public ZoneBlueprint[] neighbors;
     public ZoneBlueprint parent;
 
-    public ZoneBlueprint(string _id, string _name, int _tileID, bool _walkable, bool _friendly, int _amount, bool _expand, bool _isStart)
+    public ZoneBlueprint(JsonData dat)
     {
-        id = _id;
-        name = _name;
-        tileID = _tileID;
-        walkable = _walkable;
-        amount = _amount;
-        expand = _expand;
-        isStart = _isStart;
-        friendly = _friendly;
-
-        placement = null;
-        underground = null;
-        radiation = 0;
+        FromJson(dat);
     }
 
-    public static ZoneBlueprint LoadFromJson(JsonData dat)
+    void FromJson(JsonData dat)
     {
-        if (dat == null)
-        {
-            return null;
-        }
+        ID = dat["ID"].ToString();
 
-        int tileID = (int)dat["Tile Index"];
-        bool walkable = (bool)dat["Walkable"];
-        int amount = (dat.ContainsKey("Amount")) ? (int)dat["Amount"] : 1;
-        bool expand = (dat.ContainsKey("Expand")) ? (bool)dat["Expand"] : false;
-        bool isStart = (dat.ContainsKey("Start Location")) ? (bool)dat["Start Location"] : false;
-        bool isFriendly = (dat.ContainsKey("Friendly")) ? (bool)dat["Friendly"] : false;
-
-        ZoneBlueprint zb = new ZoneBlueprint(dat["ID"].ToString(), dat["Display"].ToString(), tileID, walkable, isFriendly, amount, expand, isStart);
+        dat.TryGetValue("Display", out name);
+        dat.TryGetValue("Tile Index", out tileID);
+        dat.TryGetValue("Walkable", out walkable, true);
+        dat.TryGetValue("Amount", out amount, 1);
+        dat.TryGetValue("Expand", out expand, false);
+        dat.TryGetValue("Start Location", out isStart);
+        dat.TryGetValue("Friendly", out friendly);
+        dat.TryGetValue("Underground", out underground);
+        dat.TryGetValue("Radiation", out radiation);
 
         if (dat.ContainsKey("Place At"))
         {
-            zb.placement = new Placement();
+            placement = new Placement();
 
             if (dat["Place At"].ContainsKey("Biome"))
-                zb.placement.zoneID = dat["Place At"]["Biome"].ToString();
+                placement.zoneID = dat["Place At"]["Biome"].ToString();
             if (dat["Place At"].ContainsKey("Location"))
-                zb.placement.landmark = dat["Place At"]["Location"].ToString();
+                placement.landmark = dat["Place At"]["Location"].ToString();
             if (dat["Place At"].ContainsKey("Relative"))
-                zb.placement.relativePosition = new Coord((int)dat["Place At"]["Relative"][0], (int)dat["Place At"]["Relative"][1]);
+                placement.relativePosition = new Coord((int)dat["Place At"]["Relative"][0], (int)dat["Place At"]["Relative"][1]);
             if (dat["Place At"].ContainsKey("Location"))
-                zb.placement.landmark = dat["Place At"]["Location"].ToString();
+                placement.landmark = dat["Place At"]["Location"].ToString();
 
             if (dat["Place At"].ContainsKey("Mainland"))
             {
-                zb.placement.onMain = (bool)dat["Place At"]["Mainland"];
+                placement.onMain = (bool)dat["Place At"]["Mainland"];
             }
         }
 
         if (dat.ContainsKey("Neighbors"))
         {
-            zb.neighbors = new ZoneBlueprint[dat["Neighbors"].Count];
+            neighbors = new ZoneBlueprint[dat["Neighbors"].Count];
 
             for (int i = 0; i < dat["Neighbors"].Count; i++)
             {
-                zb.neighbors[i] = LoadFromJson(dat["Neighbors"][i]);
-                zb.neighbors[i].parent = zb;
+                neighbors[i] = new ZoneBlueprint(dat["Neighbors"][i])
+                {
+                    parent = this
+                };
             }
         }
-
-        if (dat.ContainsKey("Underground"))
-            zb.underground = dat["Underground"].ToString();
-
-        if (dat.ContainsKey("Expand"))
-            zb.expand = (bool)dat["Expand"];
-
-        if (dat.ContainsKey("Radiation"))
-            zb.radiation = (int)dat["Radiation"];
-
-        return zb;
     }
 
     public class Placement
@@ -92,48 +72,40 @@ public class ZoneBlueprint
     }
 }
 
-public class ZoneBlueprint_Underground
+public class ZoneBlueprint_Underground :IAsset
 {
-    public string id, name;
+    public string ID { get; set; }
+    public string ModID { get; set; }
+    public string name;
     public int depth, light;
     public Rules rules;
     public TileInfo tileInfo;
 
-    public ZoneBlueprint_Underground(string _id, string _name, int _depth, int _light, Rules _rules, TileInfo tInfo)
+    public ZoneBlueprint_Underground(JsonData dat)
     {
-        id = _id;
-        name = _name;
-        depth = _depth;
-        light = _light;
-        rules = _rules;
-        tileInfo = tInfo;
+        FromJson(dat);
     }
 
-    public static ZoneBlueprint_Underground FromJson(JsonData dat)
+    void FromJson(JsonData dat)
     {
-        if (dat == null)
-        {
-            return null;
-        }
-
-        string _id = dat["ID"].ToString();
-        string _name = dat["Display"].ToString();
-        int _depth = (int)dat["Depth"];
-        int _light = (int)dat["Light"];
-        Rules _rules = Rules.Empty();
+        ID = dat["ID"].ToString();
+        name = dat["Display"].ToString();
+        depth = (int)dat["Depth"];
+        light = (int)dat["Light"];
+        rules = Rules.Empty();
 
         if (dat.ContainsKey("Rules"))
         {
             if (dat["Rules"].ContainsKey("Load"))
-                _rules.loadFromData = (bool)dat["Rules"]["Load"];
+                rules.loadFromData = (bool)dat["Rules"]["Load"];
 
             if (dat["Rules"].ContainsKey("Algorithms"))
             {
-                _rules.algorithms = new string[dat["Rules"]["Algorithms"].Count];
+                rules.algorithms = new string[dat["Rules"]["Algorithms"].Count];
 
                 for (int i = 0; i < dat["Rules"]["Algorithms"].Count; i++)
                 {
-                    _rules.algorithms[i] = dat["Rules"]["Algorithms"][i].ToString();
+                    rules.algorithms[i] = dat["Rules"]["Algorithms"][i].ToString();
                 }
             }
 
@@ -141,7 +113,7 @@ public class ZoneBlueprint_Underground
             {
                 string layerID = (dat["Rules"]["Feature"].ContainsKey("ID")) ? dat["Rules"]["Feature"]["ID"].ToString() : "";
                 int chance = (dat["Rules"]["Feature"].ContainsKey("Chance")) ? (int)dat["Rules"]["Feature"]["Chance"] : 0;
-                _rules.layer2 = new StringInt(layerID, chance);
+                rules.layer2 = new StringInt(layerID, chance);
             }
         }
 
@@ -163,9 +135,7 @@ public class ZoneBlueprint_Underground
             }
         }
 
-        TileInfo ti = new TileInfo(wallTile, wt);
-
-        return new ZoneBlueprint_Underground(_id, _name, _depth, _light, _rules, ti);
+        tileInfo = new TileInfo(wallTile, wt);
     }
 
     public struct Rules

@@ -31,7 +31,7 @@ public class DialoguePanel : MonoBehaviour
 
         GameObject txt = SimplePool.Spawn(text, transform);
         dialogueText = txt.GetComponentInChildren<Text>();
-        dialogueText.text = Dialogue.Greeting(dc.GetComponent<BaseAI>().npcBase.faction);
+        dialogueText.text = Dialogue.Chat("Greetings");
 
         for (int i = 0; i < controller.dialogueChoices.Count; i++)
         {
@@ -51,7 +51,7 @@ public class DialoguePanel : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(transform.GetChild(2).gameObject);
     }
 
-    public void Display(DialogueList.DialogueNode node)
+    public void Display(DialogueNode node)
     {
         transform.DestroyChildren();
         cMax = node.options.Count - 1;

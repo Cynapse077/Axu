@@ -231,12 +231,12 @@ public class MouseController : MonoBehaviour
         {
             if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == Tile.tiles["Stairs_Up"].ID)
             {
-                userInterface.YesNoAction("YN_GoUp", () => { playerInput.GoUp(); }, null, "");
+                userInterface.YesNoAction("YN_GoUp".Translate(), () => { playerInput.GoUp(); }, null, "");
                 return;
             }
             else if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == Tile.tiles["Stairs_Down"].ID)
             {
-                userInterface.YesNoAction("YN_GoDown", () => { playerInput.GoDown(); }, null, "");
+                userInterface.YesNoAction("YN_GoDown".Translate(), () => { playerInput.GoDown(); }, null, "");
                 return;
             }
 
@@ -267,7 +267,7 @@ public class MouseController : MonoBehaviour
         }
 
         //Move to the selected position.
-        Path_AStar path = new Path_AStar(playerEntity.myPos, targetPos, playerEntity.inventory.CanFly());
+        Path_AStar path = new Path_AStar(playerEntity.myPos, targetPos, playerEntity.inventory.CanFly(), true);
         playerEntity.CancelWalk();
         playerInput.localPath = path;
     }

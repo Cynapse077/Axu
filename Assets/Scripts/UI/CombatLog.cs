@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using MoonSharp.Interpreter;
 
 [MoonSharpUserData]
@@ -21,12 +20,12 @@ public static class CombatLog
 
     public static void SimpleMessage(string key)
     {
-        Append(LocalizationManager.GetLocalizedContent(key)[0]);
+        Append(LocalizationManager.GetContent(key));
     }
 
     public static void NameItemMessage(string key, string n, string item)
     {
-        StringBuilder sb = new StringBuilder(LocalizationManager.GetLocalizedContent(key)[0]);
+        StringBuilder sb = new StringBuilder(LocalizationManager.GetContent(key));
 
         sb.Replace("[ITEM]", item);
         sb.Replace("[NAME]", n);
@@ -36,7 +35,7 @@ public static class CombatLog
 
     public static void Action(string key, string action, string itemName)
     {
-        StringBuilder sb = new StringBuilder(LocalizationManager.GetLocalizedContent(key)[0]);
+        StringBuilder sb = new StringBuilder(LocalizationManager.GetContent(key));
 
         sb.Replace("[ACTION]", action);
         sb.Replace("[NAME]", itemName);
@@ -48,7 +47,7 @@ public static class CombatLog
     {
         string colorCode = defenderIsPlayer ? "<color=orange>" : "<color=cyan>";
 
-        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetLocalizedContent(key)[0] + "</color>");
+        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetContent(key) + "</color>");
 
         sb.Replace("[ATTACKER]", attacker);
         sb.Replace("[DEFENDER]", defender);
@@ -60,7 +59,7 @@ public static class CombatLog
     {
         string colorCode = defenderIsPlayer ? "<color=orange>" : "<color=cyan>";
 
-        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetLocalizedContent(key)[0] + "</color>");
+        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetContent(key) + "</color>");
 
         sb.Replace("[SOURCE]", source);
         sb.Replace("[DEFENDER]", defender);
@@ -74,7 +73,7 @@ public static class CombatLog
     {
         string colorCode = defenderIsPlayer ? "<color=orange>" : "<color=cyan>";
 
-        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetLocalizedContent(key)[0] + "</color>");
+        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetContent(key) + "</color>");
 
         sb.Replace("[DEFENDER]", defender);
         sb.Replace("[DAMAGE]", dmg.ToString());
@@ -91,7 +90,7 @@ public static class CombatLog
             key = "Miss";
         string colorCode = defenderIsPlayer ? "<color=orange>" : "<color=cyan>";
 
-        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetLocalizedContent(key)[0] + "</color>");
+        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetContent(key) + "</color>");
 
         sb.Replace("[ATTACKER]", attacker);
         sb.Replace("[DEFENDER]", defender);
@@ -104,7 +103,7 @@ public static class CombatLog
 
     public static void NameMessage(string key, string miscName)
     {
-        StringBuilder sb = new StringBuilder(LocalizationManager.GetLocalizedContent(key)[0]);
+        StringBuilder sb = new StringBuilder(LocalizationManager.GetContent(key));
 
         sb.Replace("[NAME]", miscName);
 

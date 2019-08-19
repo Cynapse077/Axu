@@ -5,6 +5,7 @@ public class NPC_Blueprint : IAsset
 {
     public string name = "";
     public string ID { get; set; }
+    public string ModID { get; set; }
     public Faction faction;
     public int health, stamina;
     public int heatResist, coldResist;

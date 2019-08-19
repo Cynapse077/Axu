@@ -940,7 +940,12 @@
 			"ID" : "SE_OffBalance",
 			"Display" : "Off Balance",
 			"Tooltip" : "Off Balance: You are more susceptible to attacks that would move you around or trip you."
-		}
+		},
+        {
+            "ID" : "SE_Blind",
+            "Display" : "Blind",
+            "Tooltip" : "You cannot see. Attacking anything out of sight will be much less accurate."
+        }
     ],
     "Difficulties" : [
         {
@@ -1179,6 +1184,10 @@
             "Display" : "Forum"
         },
         {
+            "ID" : "Mods",
+            "Display" : "Mods"
+        },
+        {
             "ID" : "Button_RandomName",
             "Display" : "Random"
         }
@@ -1342,242 +1351,242 @@
     "Alerts" : [
         {
             "ID" : "Start_Message",
-            "Title" : "Welcome to Axu",
+            "Display" : "Welcome to Axu",
             "Message" : "You are [NAME], an exiled criminal sent to the planet Axu. After days of travel, your supplies are running dry. Luckily you have come across some sort of structure with <color=cyan>a man beckoning you</color> nearby. Is he a friend or foe? Further away from home than comprehension allows, will you attempt to find a way back to Earth, or come to terms with your exile?"
         },
 		{
 			"ID" : "FoundMerchant",
-			"Title" : "Merchant Found",
+			"Display" : "Merchant Found",
 			"Message" : "A merchant beckons you over to peruse their wares!"
 		},
 		{
 			"ID" : "CannotEquip",
-			"Title" : "Cannot Equip",
+			"Display" : "Cannot Equip",
 			"Message" : "You cannot equip this item since you do not meet its requirements."
 		},
 		{
 			"ID" : "CannotRead",
-			"Title" : "Too Complicted",
+			"Display" : "Too Complicted",
 			"Message" : "The tome is too complex to comprehend! You become confused."
 		},
         {
             "ID" : "Pour_No_Room",
-            "Title" : "No Room",
+            "Display" : "No Room",
             "Message" : "This container has no room left for any more liquid."
         },
         {
             "ID" : "Become_Addicted",
-            "Title" : "Addiction",
+            "Display" : "Addiction",
             "Message" : "You have become addicted to this item! If you go without one for a period of time, you can suffer from withdrawals."
         },
         {
             "ID" : "Undie",
-            "Title" : "Defeat",
+            "Display" : "Defeat",
             "Message" : "Defeated, you race back to a familiar location in hopes of staying alive. It seems you have bitten off more than you can chew this time."
         },
         {
             "ID" : "Need_Dig",
-            "Title" : "Tool Required",
+            "Display" : "Tool Required",
             "Message" : "You need a digging tool, like a Pickaxe, to interact with this object."
         },
         {
             "ID" : "Bandit_Yes",
-            "Title" : "Toll Paid",
+            "Display" : "Toll Paid",
             "Message" : "<color=grey>[You meet their demands]</color> \nPleasure doing business with you. Go along your way, friend. Be sure not to come back around these parts, if you know what's good for you."
         },
         {
             "ID" : "Bandit_Yes_NoMoney",
-            "Title" : "Insufficient Funds",
+            "Display" : "Insufficient Funds",
             "Message" : "<color=grey>[You had nothing to give]</color> \nNothing at all? I guess taking your life will suffice."
         },
         {
             "ID" : "Bandit_No",
-            "Title" : "Toll Rejected",
+            "Display" : "Toll Rejected",
             "Message" : "What an unforunate mistake. Get them, boys!"
         },
         {
             "ID" : "Dead",
-            "Title" : "You Died!",
+            "Display" : "You Died!",
             "Message" : "You were killed by: [NAME]."
         },
         {
             "ID" : "Became_Cannibal",
-            "Title" : "Tarnished Reputation",
+            "Display" : "Tarnished Reputation",
             "Message" : "You have gained a reputation for devouring human flesh!"
         },
         {
             "ID" : "Quest_Complete",
-            "Title" : "<color=white>Quest Complete!</color>",
+            "Display" : "<color=white>Quest Complete!</color>",
             "Message" : "<color=white>[INPUT]</color>"
         },
         {
             "ID" : "Quest_Complete2",
-            "Title" : "<color=white>Quest Complete!</color>",
+            "Display" : "<color=white>Quest Complete!</color>",
             "Message" : "<color=white>You have completed the quest \"[NAME]\". [INPUT]</color>"
         },
         {
             "ID" : "Quest_Failed",
-            "Title" : "Quest Failed",
+            "Display" : "Quest Failed",
             "Message" : "You have failed the quest \"[NAME]\"."
         },
         {
             "ID" : "Found_Base",
-            "Title" : "A New Home",
+            "Display" : "A New Home",
             "Message" : "Such a quaint little structure with nobody around. This would make for a suitable place to rest your head and use as a base of operations."
         },
         {
             "ID" : "Hire_No_Money",
-            "Title" : "Not Enough Money",
+            "Display" : "Not Enough Money",
             "Message" : "You don't have enough money to hire this individual."
         },
         {
             "ID" : "Hire_Too_Many_Followers",
-            "Title" : "Too Many Followers",
+            "Display" : "Too Many Followers",
             "Message" : "Your party cannot support another mouth to feed."
         },
         {
             "ID" : "Inv_Full_Follower",
-            "Title" : "Carrying Too Much",
+            "Display" : "Carrying Too Much",
             "Message" : "They cannot hold any more!"
         },
         {
             "ID" : "No_Ammo",
-            "Title" : "No Ammo",
+            "Display" : "No Ammo",
             "Message" : "You have no ammunition for this weapon."
         },
         {
             "ID" : "No_Throw",
-            "Title" : "No Items",
+            "Display" : "No Items",
             "Message" : "You have nothing to throw"
         },
         {
             "ID" : "Cannot_Amputate",
-            "Title" : "Cannot Amputate",
+            "Display" : "Cannot Amputate",
             "Message" : "You can't amputate your head!"
         },
         {
             "ID" : "On_Surface",
-            "Title" : "Already On Surface",
+            "Display" : "Already On Surface",
             "Message" : "You are already on the surface, and don't need to use this item."
         },
         {
             "ID" : "Cannot_Remove",
-            "Title" : "Oops!",
+            "Display" : "Oops!",
             "Message" : "You cannot remove that item!"
         },
         {
             "ID" : "Starving",
-            "Title" : "Starving!",
+            "Display" : "Starving!",
             "Message" : "You are too hungry to fast travel."
         },
         {
             "ID" : "Ambush",
-            "Title" : "Ambush!",
+            "Display" : "Ambush!",
             "Message" : "You have been ambushed! Flee or fight for your life!"
         },
         {
             "ID" : "Cannot_Travel_Enemies",
-            "Title" : "Cannot Travel!",
+            "Display" : "Cannot Travel!",
             "Message" : "You cannot travel with enemies in plain sight."
         },
         {
             "ID" : "Cannot_Travel_Hunger",
-            "Title" : "Cannot Travel!",
+            "Display" : "Cannot Travel!",
             "Message" : "You cannot travel while starving!"
         },
         {
             "ID" : "Cannot_Rest_Enemies",
-            "Title" : "Cannot Rest!",
+            "Display" : "Cannot Rest!",
             "Message" : "You cannot rest while enemies are so close!"
         },
         {
             "ID" : "Cannot_Rest_Hunger",
-            "Title" : "Cannot Rest!",
+            "Display" : "Cannot Rest!",
             "Message" : "You cannot rest while starving!"
         },
         {
             "ID" : "No_Hands",
-            "Title" : "No Hands",
+            "Display" : "No Hands",
             "Message" : "You have no hands to equip that to!"
         },
         {
             "ID" : "Not_Enough_Hands",
-            "Title" : "Not Enough Hands",
+            "Display" : "Not Enough Hands",
             "Message" : "You don't have an extra hand to equip this item to."
         },
         {
             "ID" : "Two_Handed",
-            "Title" : "Need Unoccupied Hands",
+            "Display" : "Need Unoccupied Hands",
             "Message" : "You need two free hands to wield this weapon!"
         },
         {
             "ID" : "Mastery",
-            "Title" : "Mastery",
+            "Display" : "Mastery",
             "Message" : "There is no more knowledge you can gain from this tome."
         },
         {
             "ID" : "No_Charges",
-            "Title" : "No Charges",
+            "Display" : "No Charges",
             "Message" : "This item has no charges remaining."
         },
         {
             "ID" : "No_Recharge",
-            "Title" : "No Items",
+            "Display" : "No Items",
             "Message" : "There are no items that you can recharge!"
         },
         {
             "ID" : "Too_Full",
-            "Title" : "Too Full",
+            "Display" : "Too Full",
             "Message" : "Your stomach couldn't possibly take any more."
         },
         {
             "ID" : "Cannot_Eat",
-            "Title" : "Cannot Eat",
+            "Display" : "Cannot Eat",
             "Message" : "As a Vampire, you cannot eat normal food."
         },
         {
             "ID" : "Dis_Lep_Eat",
-            "Title" : "Diseased!",
+            "Display" : "Diseased!",
             "Message" : "You have contracted Leprosy from eating infected meat!"
         },
         {
             "ID" : "Dis_Lep_Attach",
-            "Title" : "Diseased!",
+            "Display" : "Diseased!",
             "Message" : "You have contracted Leprosy from attaching an infected limb!"
         },
         {
             "ID" : "Dis_Cry_Attach",
-            "Title" : "Diseased!",
+            "Display" : "Diseased!",
             "Message" : "You have contracted Leprosy from attaching an infected limb!"
         },
         {
             "ID" : "Dis_Cry_Eat",
-            "Title" : "Diseased!",
+            "Display" : "Diseased!",
             "Message" : "You have contracted Crystallization from eating infected meat!"
         },
 		{
             "ID" : "Dis_Vamp_Attach",
-            "Title" : "Diseased!",
+            "Display" : "Diseased!",
             "Message" : "You have contracted Fledgling Vampirism from attaching an infected limb!"
         },
         {
             "ID" : "Dis_Vamp",
-            "Title" : "Diseased!",
+            "Display" : "Diseased!",
             "Message" : "You have contracted Vampirism!"
         },
         {
             "ID" : "Locked",
-            "Title" : "Locked",
+            "Display" : "Locked",
             "Message" : "The door won't budge!"
         },
         {
             "ID" : "Cooldown",
-            "Title" : "On Cooldown",
+            "Display" : "On Cooldown",
             "Message" : "This ability is on cooldown. You can use it again in <b><color=grey>[INPUT]</color></b> turns."
         },
         {
             "ID" : "Not_Enough_Stamina",
-            "Title" : "Not Enough Stamina",
+            "Display" : "Not Enough Stamina",
             "Message" : "You don't have enough stamina to use this ability."
         }
     ],
@@ -1661,6 +1670,10 @@
         {
             "ID" : "Message_Web_Stuck",
             "Display" : "The tangled web holds you tight."
+        },
+        {
+            "ID" : "Message_SE_Stuck",
+            "Display" : "[NAME] is stuck in a web!"
         },
         {
             "ID" : "Message_Die",

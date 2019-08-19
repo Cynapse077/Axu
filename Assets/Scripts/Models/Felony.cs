@@ -6,6 +6,7 @@ public class Felony : IAsset
 {
 	public string name;
 	public string ID { get; set; }
+    public string ModID { get; set; }
 	public string description;
 
 	public int HP, ST;
@@ -81,7 +82,7 @@ public class Felony : IAsset
         for (int s = 0; s < dat["Skills"].Count; s++)
         {
             string skillName = dat["Skills"][s].ToString();
-            skills.Add(new SSkill(skillName, 1, 0, 0));
+            skills.Add(new SSkill(skillName, 1, 0, 0, 0));
         }
     }
 

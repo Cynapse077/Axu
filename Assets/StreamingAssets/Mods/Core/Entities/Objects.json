@@ -110,7 +110,8 @@
             "ObjectType" : "Door_Closed",
             "Sprite" : "object-door_wood_closed.png",
             "Description" : "A wood door.",
-			"Opaque" : true
+			"Opaque" : true,
+            "Path Cost" : 100
         },
         {
             "Name" : "Door",
@@ -129,7 +130,8 @@
 			"Opaque" : true,
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+            "Path Cost" : 100
         },
         {
             "Name" : "Prison Door",
@@ -153,7 +155,8 @@
 			"Pulse" : {
 				"Receive" : true
 			},
-			"Permissions" : [ "Can_Enter_Ensis" ]
+			"Permissions" : [ "Can_Enter_Ensis" ],
+            "Path Cost" : 100
         },
         {
             "Name" : "Ensistic Door",
@@ -178,7 +181,8 @@
 			"Pulse" : {
 				"Receive" : true
 			},
-			"Permissions" : [ "Can_Enter_Magna" ]
+			"Permissions" : [ "Can_Enter_Magna" ],
+            "Path Cost" : 100
         },
 		{
             "Name" : "Strange Door",
@@ -203,7 +207,8 @@
 			"Pulse" : {
 				"Receive" : true
 			},
-			"Permissions" : [ "Can_Enter_Fab" ]
+			"Permissions" : [ "Can_Enter_Fab" ],
+            "Path Cost" : 100
 		},
 		{
 			"Name" : "Magnetic Door",
@@ -227,7 +232,8 @@
 			"Opaque" : true,
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+            "Path Cost" : 100
 		},
 		{
 			"Name" : "Barred Door",

@@ -371,7 +371,14 @@ public class BaseAI : MonoBehaviour
 
     void GetNewPath(Coord dest)
     {
-        path = new Path_AStar(entity.myPos, dest, entity.inventory.CanFly());
+        path = new Path_AStar(entity.myPos, dest, entity.inventory.CanFly(), false);
+
+        if (path.steps == null)
+        {
+            Wander();
+            return;
+        }
+
         Coord next = path.GetNextStep();
 
         if (next.x == entity.posX && next.y == entity.posY)
@@ -896,7 +903,7 @@ public class BaseAI : MonoBehaviour
         return false;
     }
 
-    List<Skill> possible;
+    List<Ability> possible;
 
     bool UseAbility_Lua()
     {
@@ -907,7 +914,7 @@ public class BaseAI : MonoBehaviour
 
         if (possible == null)
         {
-            possible = new List<Skill>();
+            possible = new List<Ability>();
         }
         else
         {
@@ -916,7 +923,7 @@ public class BaseAI : MonoBehaviour
 
         for (int i = 0; i < entity.skills.abilities.Count; i++)
         {
-            Skill skill = entity.skills.abilities[i];
+            Ability skill = entity.skills.abilities[i];
 
             if (skill.aiAction == null || skill.cooldown > 0 || !entity.skills.CanUseSkill(skill.staminaCost) || 
                 skill.castType == CastType.Target && entity.myPos.DistanceTo(target.myPos) > skill.range)
@@ -935,7 +942,7 @@ public class BaseAI : MonoBehaviour
 
         if (possible.Count > 0)
         {
-            Skill choice = possible.GetRandom(SeedManager.combatRandom);
+            Ability choice = possible.GetRandom(SeedManager.combatRandom);
 
             switch (choice.castType)
             {

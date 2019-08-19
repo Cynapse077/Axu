@@ -36,7 +36,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
         newTex = new Texture2D(baseSprite.width, baseSprite.height, TextureFormat.ARGB32, true)
         {
             filterMode = FilterMode.Point,
-            mipMapBias = 1
+            mipMapBias = 0f
         };
     }
 

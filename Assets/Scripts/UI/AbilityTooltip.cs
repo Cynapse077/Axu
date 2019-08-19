@@ -10,9 +10,9 @@ public class AbilityTooltip : MonoBehaviour {
 	public Text stCooldown;
 	public Text description;
 
-	public void UpdateTooltip(Skill ability) {
+	public void UpdateTooltip(Ability ability) {
 		title.text = ability.Name;
-		lvXP.text = (ability.CanLevelUp) ? "Lv " + ability.level + "\n<color=silver>(" + (ability.XP/10.0).ToString() + "% xp)</color>" : LocalizationManager.GetLocalizedContent("Cannot_Level_Up")[0];
+		lvXP.text = (ability.CanLevelUp) ? "Lv " + ability.level + "\n<color=silver>(" + (ability.XP/10.0).ToString() + "% xp)</color>" : LocalizationManager.GetContent("Cannot_Level_Up");
 		stCooldown.text = "<color=green>ST</color> Cost: " + ability.staminaCost.ToString() + "\n<color=orange>Cooldown</color>: " + ability.maxCooldown;
 		description.text = ability.Description;
 

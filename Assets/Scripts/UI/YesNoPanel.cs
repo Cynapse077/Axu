@@ -16,27 +16,19 @@ public class YesNoPanel : MonoBehaviour
 
 	public void Display(string text, Action ycb, Action ncb, string input)
     {
-		if (LocalizationManager.GetContent(text) != LocalizationManager.defaultText)
-			GetLocalizedContent(text, input);
-		else
-			question.text = text;
-		
+		if (text != TranslatedText.defaultText)
+        {
+            if (text.Contains("[INPUT]") && !string.IsNullOrEmpty(input))
+            {
+                text = text.Replace("[INPUT]", input);
+            }
+        }
+
+        question.text = text;
 		YesCallback = ycb;
 		NoCallback = ncb;
 
 		Setup();
-	}
-
-	void GetLocalizedContent(string qs, string input)
-    {
-		string s = LocalizationManager.GetContent(qs);
-
-		if (s.Contains("[INPUT]") && !string.IsNullOrEmpty(input))
-        {
-			s = s.Replace("[INPUT]", input);
-        }
-
-		question.text = s;
 	}
 
 	void Setup()

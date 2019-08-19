@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class RebindButton : MonoBehaviour {
@@ -10,7 +8,7 @@ public class RebindButton : MonoBehaviour {
 	public Button button;
 
 	public void SetTexts(string bindingName, string keyName) {
-		KeyNameText.text = LocalizationManager.GetLocalizedContent(bindingName)[0];
+		KeyNameText.text = LocalizationManager.GetContent(bindingName);
 		KeyCodeText.text = keyName;
 	}
 }

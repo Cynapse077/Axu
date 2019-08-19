@@ -9,6 +9,7 @@ public class Liquid : IWeighted, IAsset
     static List<MixingOutput> mixingOutputs;
 
     public string ID { get; set; }
+    public string ModID { get; set; }
     public string Name, Description;
     public int units;
     public int pricePerUnit;

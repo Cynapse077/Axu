@@ -41,6 +41,11 @@ public static class LuaManager
         }
     }
 
+    public static void ResetLuaFiles()
+    {
+        scripts.Clear();
+    }
+
     static void RegisterAssembly()
     {
         UserData.RegisterAssembly();
@@ -91,7 +96,6 @@ public static class LuaManager
 
     public static void SetGlobals()
     {
-
         foreach (Script sc in scripts.Values)
         {
             //Singletons

@@ -19,8 +19,8 @@ public class LookTooltipPanel : MonoBehaviour
         if (npc.isFollower())
             hostility = "TT_Follower";
 
-        string localizedHos = LocalizationManager.GetLocalizedContent(hostility)[0];
-        string localizedAwa = LocalizationManager.GetLocalizedContent(awareness)[0];
+        string localizedHos = LocalizationManager.GetContent(hostility);
+        string localizedAwa = LocalizationManager.GetContent(awareness);
 
         Content1.text = "<color=silver>[" + npc.npcBase.faction.Name + "]</color>";
         Content2.text = "(" + localizedHos + " / " + localizedAwa + ")";
@@ -51,8 +51,8 @@ public class LookTooltipPanel : MonoBehaviour
             wepName += ", " + npc.entity.inventory.firearm.DisplayName();
         }
 
-        Content3.text = LocalizationManager.GetLocalizedContent("TT_Weapon")[0] + ": " + wepName + "\n"
-            + LocalizationManager.GetLocalizedContent("TT_Armor")[0] + ": " + npc.npcBase.Attributes["Defense"].ToString() + 
+        Content3.text = LocalizationManager.GetContent("TT_Weapon") + ": " + wepName + "\n"
+            + LocalizationManager.GetContent("TT_Armor") + ": " + npc.npcBase.Attributes["Defense"].ToString() + 
             "\n\nPress [" + GameSettings.Keybindings.GetKeyCode("Interact").ToString() + "] to view more info.";
     }
 
@@ -79,7 +79,7 @@ public class LookTooltipPanel : MonoBehaviour
 
             if (inv.items.Count > 4)
             {
-                Content2.text = LocalizationManager.GetLocalizedContent("TT_More")[0];
+                Content2.text = LocalizationManager.GetContent("TT_More");
             }
         }
         else

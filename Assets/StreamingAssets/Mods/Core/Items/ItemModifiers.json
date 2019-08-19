@@ -3,7 +3,7 @@
         {
             "Name" : "<color=silver>Heavy</color>",
             "ID" : "heavy",
-            "Damage Modifier" : "0d0+2",
+            "Damage" : "0d0+2",
             "Stat Mods" : [
                 { "Stat" : "Attack Delay", "Amount" : 2 }
             ],
@@ -14,7 +14,7 @@
         {
             "Name" : "<color=silver>Sharp</color>",
             "ID" : "sharp",
-            "Damage Modifier" : "0d1+1",
+            "Damage" : "0d1+1",
             "Damage Type" : "Cleave",
             "Cost" : 25,
             "Description" : "It is very sharp.",
@@ -33,7 +33,7 @@
         {
             "Name" : "<color=red>Serrated</color>",
             "ID" : "serrated",
-            "Damage Modifier" : "0d1-1",
+            "Damage" : "0d1-1",
             "Damage Type" : "Bleed",
             "Cost" : 15,
             "Description" : "It is likely to cause bleeding.",
@@ -42,7 +42,7 @@
         {
             "Name" : "<color=magenta>Runed</color>",
             "ID" : "runed",
-            "Damage Modifier" : "1d0",
+            "Damage" : "1d0",
             "Properties" : [
                 "Confusion"
             ],
@@ -53,7 +53,7 @@
         {
             "Name" : "<color=orange>Scalding</color>",
             "ID" : "scalding",
-            "Damage Modifier" : "0d1+1",
+            "Damage" : "0d1+1",
             "Damage Type" :"Heat",
             "Cost" : 31,
             "Description" : "Heat radiates from its surface.",
@@ -62,7 +62,7 @@
         {
             "Name" : "<color=blue>Frozen</color>",
             "ID" : "frozen",
-            "Damage Modifier" : "0d1+1",
+            "Damage" : "0d1+1",
             "Damage Type" :"Cold",
             "Cost" : 31,
             "Description" : "Its surface is cold to the touch.",
@@ -94,7 +94,7 @@
         {
             "Name" : "<color=red>Vampiric</color>",
             "ID" : "vampiric",
-            "Damage Modifier" : "0d0-1",
+            "Damage" : "0d0-1",
             "Components" : [
                 { "ID" : "LuaEvent", "Trigger" : "OnHit", "File" : "ItemActions", "Function" : "DrainHealth" }
             ],
@@ -108,7 +108,7 @@
         {
             "Name" : "<color=green>Glowing</color>",
             "ID" : "glowing",
-            "Damage Modifier" : "0d1+0",
+            "Damage" : "0d1+0",
             "Properties" : [
                 "OnAttack_Radiation"
             ],

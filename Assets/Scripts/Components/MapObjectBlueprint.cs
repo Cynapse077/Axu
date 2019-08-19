@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class MapObjectBlueprint : IAsset
 {
     public string ID { get; set; }
+    public string ModID { get; set; }
     public string Name, spriteID;
     public string objectType;
     public int light, pathCost;

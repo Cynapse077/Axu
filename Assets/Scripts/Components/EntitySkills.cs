@@ -5,7 +5,7 @@ using MoonSharp.Interpreter;
 [MoonSharpUserData]
 public class EntitySkills : MonoBehaviour
 {
-    public List<Skill> abilities;
+    public List<Ability> abilities;
     public Entity entity;
 
     int grappleLevel
@@ -23,18 +23,18 @@ public class EntitySkills : MonoBehaviour
 
             for (int i = 0; i < sks.Length; i++)
             {
-                Skill s = new Skill(GameData.Get<Skill>(sks[i].Key) as Skill)
+                Ability s = new Ability(GameData.Get<Ability>(sks[i].Key) as Ability)
                 {
                     level = sks[i].Value
                 };
-                AddSkill(s, Skill.AbilityOrigin.Book);
+                AddSkill(s, Ability.AbilityOrigin.Book);
             }
         }
         else
         {
-            for (int i = 0; i < Manager.playerBuilder.skills.Count; i++)
+            for (int i = 0; i < Manager.playerBuilder.abilities.Count; i++)
             {
-                AddSkill(new Skill(Manager.playerBuilder.skills[i]), Manager.playerBuilder.skills[i].origin);
+                AddSkill(new Ability(Manager.playerBuilder.abilities[i]), Manager.playerBuilder.abilities[i].origin);
             }
         }
     }
@@ -49,11 +49,11 @@ public class EntitySkills : MonoBehaviour
 
     public bool HasAndCanUseSkill(string id)
     {
-        Skill s = abilities.Find(x => x.ID == id);
+        Ability s = abilities.Find(x => x.ID == id);
         return (s != null && s.cooldown <= 0 && CanUseSkill(s.staminaCost));
     }
 
-    public void AddSkill(Skill s, Skill.AbilityOrigin origin)
+    public void AddSkill(Ability s, Ability.AbilityOrigin origin)
     {
         if (s == null)
         {
@@ -72,15 +72,15 @@ public class EntitySkills : MonoBehaviour
         }
     }
 
-    public void RemoveSkill(string id, Skill.AbilityOrigin origin)
+    public void RemoveSkill(string id, Ability.AbilityOrigin origin)
     {
-        Skill s = abilities.Find(x => x.ID == id);
+        Ability s = abilities.Find(x => x.ID == id);
 
         if (s != null)
         {
             s.RemoveFlag(origin);
 
-            if (s.origin == Skill.AbilityOrigin.None)
+            if (s.origin == Ability.AbilityOrigin.None)
             {
                 s.UnregisterCallbacks();
                 abilities.Remove(s);

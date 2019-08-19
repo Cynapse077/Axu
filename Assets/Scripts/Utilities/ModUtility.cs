@@ -5,6 +5,9 @@ public static class ModUtility
 {
     public const string ItemsFoler = "Items";
     public const string EntitiesFolder = "Entities";
+    public const string MapsFolder = "Maps";
+    public const string MapFilesFolder = "MapFiles";
+    public const string DialogueFilesFoler = "Dialogue";
     public const string ModSettingsFileName = "ModSettings.json";
     public const string CoreModID = "Core";
 

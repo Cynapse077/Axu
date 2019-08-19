@@ -633,19 +633,15 @@ public class MapObjectSprite : MonoBehaviour
                 break;
 
             case "Bookshelf":
-                World.userInterface.YesNoAction("YN_Read_Bookshelf",
+                World.userInterface.YesNoAction("YN_Read_Bookshelf".Translate(),
                     () => {
                         World.userInterface.CloseWindows();
-                        string filePath = Application.streamingAssetsPath + "/Mods/Core/Dialogue/Books.json";
-                        string jsonText = File.ReadAllText(filePath);
-                        JsonData dat = JsonMapper.ToObject(jsonText);
-
-                        int num = SeedManager.combatRandom.Next(dat.Count);
-                        string title = dat[num]["Title"].ToString();
-                        string text = dat[num]["Text"].ToString();
-
-                        Alert.CustomAlert_WithTitle(title, text);
                         SetTypeAndSwapSprite("Bookshelf_Empty");
+                        Book book = GameData.GetRandom<Book>() as Book;
+                        if (book != null)
+                        {
+                            book.Read();
+                        }
                     },
                     () => { World.userInterface.CloseWindows(); }, "");
                 break;

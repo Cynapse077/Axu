@@ -71,28 +71,19 @@ public class TileMap : MonoBehaviour
 
     public void Init()
     {
-        sprites = LoadImageFromStreamingAssets(10, 12);
+        sprites = LoadImageFromStreamingAssets();
         CacheVars();
         SetupTileRenderers();
 
         currentElevation = Manager.startElevation;
+        startCoord = Manager.newGame ? worldMap.startPosition : worldData.GetStartPos();
+        worldCoordX = startCoord.x;
+        worldCoordY = startCoord.y;
+        InitializeVaults();
 
         if (Manager.newGame)
         {
-            startCoord = worldMap.startPosition;
-            worldCoordX = startCoord.x;
-            worldCoordY = startCoord.y;
-
-            InitializeVaults();
             SpawnController.SpawnStaticNPCs();
-        }
-        else
-        {
-            startCoord = worldData.GetStartPos();
-            worldCoordX = startCoord.x;
-            worldCoordY = startCoord.y;
-
-            InitializeVaults();
         }
 
         if (WorldMap_Data.featuresToAdd != null)
@@ -129,10 +120,8 @@ public class TileMap : MonoBehaviour
         }
     }
 
-    public static Sprite[] LoadImageFromStreamingAssets(int width, int height)
+    public static Sprite[] LoadImageFromStreamingAssets()
     {
-        Sprite[] ss = new Sprite[width * height];
-        int tileRes = Manager.tileResolution;
         byte[] imageBytes = File.ReadAllBytes(Application.streamingAssetsPath + imagePath);
         Texture2D tex = new Texture2D(169, 186, TextureFormat.ARGB32, false)
         {
@@ -142,16 +131,20 @@ public class TileMap : MonoBehaviour
 
         tex.LoadImage(imageBytes);
 
+        int width = tex.width / Manager.tileResolution;
+        int height = tex.height / Manager.tileResolution;
+        Sprite[] ss = new Sprite[width * height];
+
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                Rect r = new Rect(x * tileRes, y * tileRes, tileRes, tileRes);
+                Rect r = new Rect(x * Manager.tileResolution, y * Manager.tileResolution, Manager.tileResolution, Manager.tileResolution);
 
                 r.x += (x != 0) ? x : 0;
                 r.y += (y != 0) ? y : 0;
 
-                Sprite s = Sprite.Create(tex, r, new Vector2(0.5f, 0.5f), tileRes);
+                Sprite s = Sprite.Create(tex, r, new Vector2(0.5f, 0.5f), Manager.tileResolution);
                 ss[width * y + x] = s;
             }
         }
@@ -170,7 +163,7 @@ public class TileMap : MonoBehaviour
         }
 
         DateTime dt = DateTime.Now;
-        string path = scPath + "/" + string.Format("Axu-{0}-{1}-{2}-{3}{4}{5}.png", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
+        string path = Path.Combine(scPath, string.Format("Axu-{0}-{1}-{2}-{3}{4}{5}.png", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second));
         Texture2D screenImage = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
 
         screenImage.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0, false);
@@ -192,6 +185,7 @@ public class TileMap : MonoBehaviour
                 cells[x, y] = new Cell(new Coord(x, y));
                 GameObject t = Instantiate(tilePrefab, new Vector3(x + 0.5f, y - (Manager.localMapSize.y - 0.5f), 0), Quaternion.identity, transform);
                 tileRenderers[x, y] = t.GetComponent<TileRenderer>();
+                tileRenderers[x, y].GiveCoords(x, y);
             }
         }
     }
@@ -211,7 +205,7 @@ public class TileMap : MonoBehaviour
             if (string.IsNullOrEmpty(zb.underground))
                 continue;
 
-            ZoneBlueprint_Underground vault = worldMap.GetUndergroundFromLandmark(zb.id);
+            ZoneBlueprint_Underground vault = worldMap.GetUndergroundFromLandmark(zb.ID);
             Vault v = new Vault(worldMap.vaultAreas[i], vault);
 
             Vaults.Add(v);
@@ -272,7 +266,6 @@ public class TileMap : MonoBehaviour
         {
             for (int x = 0; x < size_x; x++)
             {
-                tileRenderers[x, y].SetParams(false, CurrentMap.has_seen[x, y]);
                 cells[x, y].UpdateInSight(false, CurrentMap.has_seen[x, y]);
             }
         }
@@ -282,9 +275,15 @@ public class TileMap : MonoBehaviour
         foreach (Coord c in cos)
         {
             CurrentMap.has_seen[c.x, c.y] = true;
-
-            tileRenderers[c.x, c.y].SetParams(true, CurrentMap.has_seen[c.x, c.y]);
             cells[c.x, c.y].UpdateInSight(true, CurrentMap.has_seen[c.x, c.y]);
+        }
+
+        for (int y = 0; y < size_y; y++)
+        {
+            for (int x = 0; x < size_x; x++)
+            {
+                tileRenderers[x, y].SetParams(cells[x, y].InSight, CurrentMap.has_seen[x, y]);
+            }
         }
     }
 

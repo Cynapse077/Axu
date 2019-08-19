@@ -254,7 +254,7 @@ public static class SpawnController
 
                 if (item != null && SeedManager.combatRandom.CoinFlip())
                 {
-                    World.userInterface.YesNoAction("YN_BanditAmbush_Item", () =>
+                    World.userInterface.YesNoAction("YN_BanditAmbush_Item".Translate(), () =>
                     {
                         World.userInterface.BanditYes(goldAmount, item);
                         entity.inventory.RemoveInstance_All(item);
@@ -262,7 +262,7 @@ public static class SpawnController
                 }
                 else
                 {
-                    World.userInterface.YesNoAction("YN_BanditAmbush", () =>
+                    World.userInterface.YesNoAction("YN_BanditAmbush".Translate(), () =>
                     {
                         World.userInterface.BanditYes(goldAmount, item);
                         entity.inventory.gold -= goldAmount;
@@ -335,7 +335,7 @@ public static class SpawnController
         Vault v = World.tileMap.GetVaultAt(World.tileMap.WorldPosition);
 
         //Don't do random spawns on these floors. Will need a way to determine this in the json file
-        if (v.blueprint.id == "Prison")
+        if (v.blueprint.ID == "Prison")
         {
             int ele = Mathf.Abs(map.elevation);
 
@@ -382,7 +382,7 @@ public static class SpawnController
             }
         }
 
-        if (v != null && v.blueprint.id == "Cave_Ice")
+        if (v != null && v.blueprint.ID == "Cave_Ice")
         {
             SpawnObject("Ore", SeedManager.localRandom.Next(2, 5));
         }

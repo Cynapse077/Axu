@@ -9,7 +9,7 @@ namespace Pathfinding
     {
         public Queue<Path_Node> steps;
 
-        public Path_AStar(Coord startCoord, Coord endCoord, bool ignoreCosts)
+        public Path_AStar(Coord startCoord, Coord endCoord, bool ignoreCosts, bool isPlayer)
         {
             if (World.tileMap.tileGraph == null)
             {
@@ -36,7 +36,10 @@ namespace Pathfinding
                 return;
             }
 
-            Calculate(World.tileMap.tileGraph.nodes, start, end, ignoreCosts);
+            if (!Calculate(World.tileMap.tileGraph.nodes, start, end, ignoreCosts, isPlayer))
+            {
+                steps = null;
+            }
         }
 
         public Path_AStar(Coord startCoord, Coord endCoord, WorldMap_Data gr)
@@ -53,12 +56,15 @@ namespace Pathfinding
 
             Path_TileData start = gr.GetPathDataAt(startCoord.x, startCoord.y), end = gr.GetPathDataAt(endCoord.x, endCoord.y);
 
-            Calculate(World.worldMap.tileGraph.nodes, start, end, true);
+            if (!Calculate(World.worldMap.tileGraph.nodes, start, end, true, true))
+            {
+                steps = null;
+            }
         }
 
         public static List<Coord> GetPath(Coord start, Coord end, bool ignoreCosts)
         {
-            Path_AStar p = new Path_AStar(start, end, ignoreCosts);
+            Path_AStar p = new Path_AStar(start, end, ignoreCosts, true);
             List<Coord> points = new List<Coord>();
 
             foreach (Path_Node pn in p.steps)
@@ -69,7 +75,7 @@ namespace Pathfinding
             return points;
         }
 
-        void Calculate(Dictionary<Path_TileData, Path_Node> nodes, Path_TileData start, Path_TileData end, bool ignoreCosts)
+        bool Calculate(Dictionary<Path_TileData, Path_Node> nodes, Path_TileData start, Path_TileData end, bool ignoreCosts, bool isPlayer)
         {
             List<Path_Node> ClosedSet = new List<Path_Node>();
             SimplePriorityQueue<Path_Node> OpenSet = new SimplePriorityQueue<Path_Node>();
@@ -102,7 +108,7 @@ namespace Pathfinding
                 if (current == nodes[end])
                 {
                     ReconstructPath(Came_From, current);
-                    return;
+                    return true;
                 }
 
                 ClosedSet.Add(current);
@@ -111,19 +117,19 @@ namespace Pathfinding
                 {
                     Path_Node neighbor = edge_neighbor.node;
 
-                    if (ClosedSet.Contains(neighbor))
+                    if (ClosedSet.Contains(neighbor) || !neighbor.data.walkable)
                     {
                         continue;
                     }
 
                     float tentative_g_score = g_score[current] + GetDistance(current, neighbor) + neighbor.data.costToEnter;
 
-                    if (!ignoreCosts)
+                    if (ignoreCosts && neighbor.data.costToEnter < 100)
                     {
-                        tentative_g_score = neighbor.data.costToEnter;
+                        tentative_g_score -= neighbor.data.costToEnter;
                     }
 
-                    if (OpenSet.Contains(neighbor) && tentative_g_score >= g_score[neighbor])
+                    if (OpenSet.Contains(neighbor) && tentative_g_score > g_score[neighbor] || !isPlayer && neighbor.data.costToEnter >= 100)
                     {
                         continue;
                     }
@@ -138,6 +144,8 @@ namespace Pathfinding
                     }
                 }
             }
+
+            return false;
         }
 
 

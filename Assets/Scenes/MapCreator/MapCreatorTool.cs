@@ -114,12 +114,8 @@ namespace MapCreator
         void SetupTiles()
         {
             cells = new MapCreator_Cell[mapSize.x, mapSize.y];
-
-            if (Tile.tiles == null || Tile.tiles.Count <= 0)
-                Tile.InitializeTileDictionary();
-
             CurrentTile = 0;
-            Sprites = TileMap.LoadImageFromStreamingAssets(10, 12);
+            Sprites = TileMap.LoadImageFromStreamingAssets();
 
             List<string> tileIDs = new List<string>();
 
@@ -631,7 +627,7 @@ namespace MapCreator
             sc.IDs = ids;
 
             JsonData mapJson = JsonMapper.ToJson(sc);
-            string path = Application.streamingAssetsPath + TileMap_Data.defaultMapPath + "/" + MapName + ".map";
+            string path = TileMap_Data.defaultMapPath + "/" + MapName + ".map";
 
             File.WriteAllText(path, mapJson.ToString());
             mapNameTitle.text = mapNameInput.text + ".map";
@@ -660,7 +656,7 @@ namespace MapCreator
             savedMaps = new List<MapCreator_Screen>();
             loadButtonAnchor.DespawnChildren();
 
-            string modPath = (Application.streamingAssetsPath + TileMap_Data.defaultMapPath);
+            string modPath = TileMap_Data.defaultMapPath;
             string[] ss = Directory.GetFiles(modPath, "*.map", SearchOption.AllDirectories);
 
             GetDataFromDirectory(ss);
@@ -757,7 +753,7 @@ namespace MapCreator
 
         public void DeleteMap()
         {
-            string mapToDeletePath = (Application.streamingAssetsPath + TileMap_Data.defaultMapPath + "/" + savedMaps[mapToDeleteIndex].Name + ".map");
+            string mapToDeletePath = TileMap_Data.defaultMapPath + "/" + savedMaps[mapToDeleteIndex].Name + ".map";
 
             if (File.Exists(mapToDeletePath))
             {

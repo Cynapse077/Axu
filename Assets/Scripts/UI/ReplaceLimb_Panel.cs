@@ -81,7 +81,7 @@ public class ReplaceLimb_Panel : MonoBehaviour
             {
                 if (i.statMods[j].Stat != "Hunger" && i.statMods[j].Amount < 999)
                 {
-                    myText += LocalizationManager.GetLocalizedContent(i.statMods[j].Stat)[0] + " (" + i.statMods[j].Amount + ") ";
+                    myText += LocalizationManager.GetContent(i.statMods[j].Stat) + " (" + i.statMods[j].Amount + ") ";
                 }
             }
 

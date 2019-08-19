@@ -479,7 +479,7 @@ public class Inventory : MonoBehaviour
 
         if (i.HasProp(ItemProperty.Blink))
         {
-            Skill s = new Skill(GameData.Get<Skill>("blink") as Skill)
+            Ability s = new Ability(GameData.Get<Ability>("blink") as Ability)
             {
                 staminaCost = 0,
                 timeCost = 10
@@ -513,15 +513,15 @@ public class Inventory : MonoBehaviour
                 string abName = i.GetCComponent<CAbility>().abID;
 
                 EntitySkills eSkills = GetComponent<EntitySkills>();
-                Skill skill = new Skill(GameData.Get<Skill>(abName) as Skill);
+                Ability skill = new Ability(GameData.Get<Ability>(abName) as Ability);
 
                 if (eSkills.abilities.Find(x => x.ID == skill.ID) == null)
                 {
-                    Skill s = new Skill(GameData.Get<Skill>(abName) as Skill);
+                    Ability s = new Ability(GameData.Get<Ability>(abName) as Ability);
 
                     if (s != null)
                     {
-                        eSkills.AddSkill(s, Skill.AbilityOrigin.Book);
+                        eSkills.AddSkill(s, Ability.AbilityOrigin.Book);
                         CombatLog.NameMessage("Learn_Skill", skill.Name);
                     }
                 }
@@ -529,7 +529,7 @@ public class Inventory : MonoBehaviour
                 {
                     skill = eSkills.abilities.Find(x => x.ID == abName);
 
-                    if (skill.level < Skill.maxLvl && skill.CanLevelUp)
+                    if (skill.level < Ability.maxLvl && skill.CanLevelUp)
                     {
                         skill.level++;
                         skill.XP = 0;

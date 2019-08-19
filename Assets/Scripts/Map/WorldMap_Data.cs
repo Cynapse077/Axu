@@ -10,13 +10,6 @@ using LitJson;
 public class WorldMap_Data
 {
     public static List<SMapFeature> featuresToAdd;
-    public static string ZonePath
-    {
-        get
-        {
-            return "/Mods/Core/Maps/Locations.json";
-        }
-    }
 
     public Coord startPosition;
     public List<Coord> ruinsPos = new List<Coord>(), vaultAreas = new List<Coord>();
@@ -30,8 +23,6 @@ public class WorldMap_Data
     readonly JsonData worldTileData;
     MapGenInfo mapGenInfo;
     List<Coord> mountains, ocean;
-    Dictionary<string, ZoneBlueprint> zoneBlueprints;
-    Dictionary<string, ZoneBlueprint_Underground> ugZoneBlueprints;
     Action callbackAction;
 
     const int riversMin = 8, riversMax = 16;
@@ -71,31 +62,8 @@ public class WorldMap_Data
             }
         }
 
-        LoadZoneBlueprints();
-
         Thread t = new Thread(new ThreadStart(GenerateTerrain));
         t.Start();
-    }
-
-    void LoadZoneBlueprints()
-    {
-        zoneBlueprints = new Dictionary<string, ZoneBlueprint>();
-        ugZoneBlueprints = new Dictionary<string, ZoneBlueprint_Underground>();
-
-        string path = Application.streamingAssetsPath + ZonePath;
-        string listFromJson = File.ReadAllText(path);
-
-        JsonData dat = JsonMapper.ToObject(listFromJson);
-
-        for (int i = 0; i < dat["Underground Areas"].Count; i++)
-        {
-            ugZoneBlueprints.Add(dat["Underground Areas"][i]["ID"].ToString(), ZoneBlueprint_Underground.FromJson(dat["Underground Areas"][i]));
-        }
-
-        for (int i = 0; i < dat["Locations"].Count; i++)
-        {
-            zoneBlueprints.Add(dat["Locations"][i]["ID"].ToString(), ZoneBlueprint.LoadFromJson(dat["Locations"][i]));
-        }
     }
 
     public void NewPostGenLandmark(Coord c, string zoneID)
@@ -117,24 +85,12 @@ public class WorldMap_Data
 
                 switch (values[x, y])
                 {
-                    case 0:
-                        height = 0.1f;
-                        break;
-                    case 5:
-                        height = 0.22f;
-                        break;
-                    case 1:
-                        height = 0.4f;
-                        break;
-                    case 2:
-                        height = 0.6f;
-                        break;
-                    case 3:
-                        height = 0.8f;
-                        break;
-                    case 4:
-                        height = 0.99f;
-                        break;
+                    case 0: height = 0.1f; break;
+                    case 5: height = 0.22f; break;
+                    case 1: height = 0.4f; break;
+                    case 2: height = 0.6f; break;
+                    case 3: height = 0.8f; break;
+                    case 4: height = 0.99f; break;
                 }
 
                 SetBiome(height, x, y);
@@ -428,7 +384,7 @@ public class WorldMap_Data
 
     void PlaceZones()
     {
-        foreach (ZoneBlueprint z in zoneBlueprints.Values)
+        foreach (ZoneBlueprint z in GameData.GetAll<ZoneBlueprint>())
         {
             for (int i = 0; i < z.amount; i++)
             {
@@ -491,7 +447,7 @@ public class WorldMap_Data
             tiles[pos.x, pos.y].radiation = zb.radiation;
         }
 
-        tiles[pos.x, pos.y].landmark = zb.id;
+        tiles[pos.x, pos.y].landmark = zb.ID;
         tiles[pos.x, pos.y].friendly = zb.friendly;
         tileData[pos.x, pos.y].walkable = zb.walkable;
 
@@ -502,11 +458,6 @@ public class WorldMap_Data
 
         if (zb.isStart)
         {
-            if (startPosition != null)
-            {
-                Debug.Log("More than one start position set.");
-            }
-
             startPosition = pos;
         }
 
@@ -518,7 +469,7 @@ public class WorldMap_Data
             }
         }
 
-        if (zb.id == "Village")
+        if (zb.ID == "Village")
         {
             Village_Data vd = new Village_Data(pos, NameGenerator.CityName(rng), pos);
             villages.Add(vd);
@@ -529,7 +480,7 @@ public class WorldMap_Data
             }
         }
 
-        landmarks.Add(new Landmark(pos, (zb.id == "Village" ? "Village of " + zb.name : zb.name)));
+        landmarks.Add(new Landmark(pos, (zb.ID == "Village" ? "Village of " + zb.name : zb.name)));
         return pos;
     }
 
@@ -913,23 +864,17 @@ public class WorldMap_Data
 
     public ZoneBlueprint GetZone(string search)
     {
-        if (zoneBlueprints.ContainsKey(search))
+        foreach (ZoneBlueprint bp in GameData.GetAll<ZoneBlueprint>())
         {
-            return zoneBlueprints[search];
-        }
-        else
-        {
-            foreach (ZoneBlueprint zb in zoneBlueprints.Values)
+            if (bp.ID == search)
+                return bp;
+
+            if (bp.neighbors != null)
             {
-                if (zb.neighbors != null)
+                foreach (ZoneBlueprint n in bp.neighbors)
                 {
-                    for (int i = 0; i < zb.neighbors.Length; i++)
-                    {
-                        if (zb.neighbors[i].id == search)
-                        {
-                            return zb.neighbors[i];
-                        }
-                    }
+                    if (n.ID == search)
+                        return n;
                 }
             }
         }
@@ -942,30 +887,19 @@ public class WorldMap_Data
     {
         ZoneBlueprint zb = GetZone(search);
 
-        if (zb != null)
+        if (zb != null && !string.IsNullOrEmpty(zb.underground))
         {
-            if (ugZoneBlueprints.ContainsKey(zb.underground))
-            {
-                return ugZoneBlueprints[zb.underground];
-            }
-            else
-            {
-                Debug.LogError("Underground area \"" + search + "\" does not exist.");
-            }
+            return GameData.Get<ZoneBlueprint_Underground>(zb.underground) as ZoneBlueprint_Underground;
         }
+
+        Debug.LogError("Underground area \"" + search + "\" does not exist.");
 
         return null;
     }
 
     public ZoneBlueprint_Underground GetUnderground(string search)
     {
-        if (ugZoneBlueprints.ContainsKey(search))
-        {
-            return ugZoneBlueprints[search];
-        }
-
-        Debug.LogError("No ZoneBlueprint_Underground with the ID \"" + search + "\".");
-        return null;
+        return GameData.Get<ZoneBlueprint_Underground>(search) as ZoneBlueprint_Underground;
     }
 
     public string GetZoneNameAt(int x, int y, int ele)

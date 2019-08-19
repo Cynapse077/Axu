@@ -5,6 +5,7 @@ public class ItemModifier : IAsset
 {
 
     public string ID { get; set; }
+    public string ModID { get; set; }
     public string name;
     public Damage damage;
     public int armor, accuracy, cost;
@@ -18,21 +19,13 @@ public class ItemModifier : IAsset
 
     public static ItemModifier Empty()
     {
-        return new ItemModifier("", "");
+        return new ItemModifier();
     }
 
     public ItemModifier()
     {
         name = "";
         ID = "";
-        damage = new Damage(0, 0, 0, DamageTypes.Blunt);
-        damageType = DamageTypes.Blunt;
-        description = "";
-    }
-    public ItemModifier(string nam, string id)
-    {
-        name = nam;
-        ID = id;
         damage = new Damage(0, 0, 0, DamageTypes.Blunt);
         damageType = DamageTypes.Blunt;
         description = "";
@@ -90,9 +83,9 @@ public class ItemModifier : IAsset
         dat.TryGetValue("Damage Type", out damageType, true);
         dat.TryGetValue("Unique", out unique);
 
-        if (dat.ContainsKey("Damage Modifier"))
+        if (dat.ContainsKey("Damage"))
         {
-            string mDamage = dat["Damage Modifier"].ToString();
+            string mDamage = dat["Damage"].ToString();
             damage = Damage.GetByString(mDamage);
         }
         if (dat.ContainsKey("Properties"))

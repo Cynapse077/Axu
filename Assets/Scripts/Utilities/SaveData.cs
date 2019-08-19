@@ -178,8 +178,8 @@ public class SaveData : MonoBehaviour
             }
         }
 
-        SetUpInventory();
         SetUpSkills();
+        SetUpInventory();
 
         Manager.playerBuilder.money = (int)playerJson["Gold"];
         int weatherInt = (int)playerJson["CWeather"];
@@ -352,21 +352,22 @@ public class SaveData : MonoBehaviour
 
     void SetUpSkills()
     {
-        List<Skill> skills = new List<Skill>();
+        List<Ability> abilities = new List<Ability>();
 
         for (int i = 0; i < playerJson["Skills"].Count; i++)
         {
             string sID = playerJson["Skills"][i]["Name"].ToString();
-            Skill s = new Skill(GameData.Get<Skill>(sID) as Skill);
+            Ability s = new Ability(GameData.Get<Ability>(sID) as Ability);
 
-            playerJson["Skills"][i]["Lvl"].TryGetValue("Skills", out s.level);
+            playerJson["Skills"][i].TryGetValue("Lvl", out s.level);
             s.XP = (double)playerJson["Skills"][i]["XP"];
-            s.origin = playerJson["Skills"][i].ContainsKey("Flg") ? (Skill.AbilityOrigin)(int)playerJson["Skills"][i]["Flg"] : Skill.AbilityOrigin.None;
+            s.origin = playerJson["Skills"][i].ContainsKey("Flg") ? (Ability.AbilityOrigin)(int)playerJson["Skills"][i]["Flg"] : Ability.AbilityOrigin.None;
+            playerJson.TryGetValue("CD", out s.cooldown);
 
-            skills.Add(s);
+            abilities.Add(s);
         }
 
-        Manager.playerBuilder.skills = skills;
+        Manager.playerBuilder.abilities = abilities;
     }
 
     public static Item GetItemFromJsonData(JsonData data)

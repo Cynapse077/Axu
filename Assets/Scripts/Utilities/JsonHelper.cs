@@ -1,6 +1,7 @@
 ﻿using LitJson;
-using System.Text;
 using System;
+using System.Text;
+using System.Collections.Generic;
 
 public static class JsonHelper {
 	public static string Indent = "    ";
@@ -179,6 +180,24 @@ public static class JsonHelper {
         }
 
         o = default(T);
+        return false;
+    }
+
+    //For lists of strings
+    public static bool TryGetValue(this JsonData dat, string key, out List<string> o)
+    {
+        o = new List<string>();
+
+        if (dat.ContainsKey(key))
+        {
+            for (int i = 0; i < dat[key].Count; i++)
+            {
+                o.Add(dat[key][i].ToString());
+            }
+
+            return true;
+        }
+
         return false;
     }
 }

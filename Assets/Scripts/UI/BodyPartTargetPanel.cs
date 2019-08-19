@@ -71,7 +71,7 @@ public class BodyPartTargetPanel : MonoBehaviour
                 else
                 {
                     World.userInterface.CloseWindows();
-                    World.userInterface.YesNoAction("YN_Amputate", () => { targetBody.RemoveLimb(bp); World.userInterface.CloseWindows(); }, null, bp.name);
+                    World.userInterface.YesNoAction("YN_Amputate".Translate(), () => { targetBody.RemoveLimb(bp); World.userInterface.CloseWindows(); }, null, bp.name);
                 }
                 break;
 

@@ -6,11 +6,17 @@ using System.Linq;
 public interface IAsset
 {
     string ID { get; set; }
+    string ModID { get; set; }
 }
 
 public static class GameData
 {
     static Dictionary<Type, DataList<IAsset>> data = new Dictionary<Type, DataList<IAsset>>();
+
+    public static void ResetGameData()
+    {
+        data = new Dictionary<Type, DataList<IAsset>>();
+    }
 
     public static void Add<T>(IAsset asset)
     {
@@ -51,6 +57,22 @@ public static class GameData
         return data[typeof(T)].Get(id);
     }
 
+    public static IAsset GetFirst<T>(Predicate<IAsset> p)
+    {
+        return data[typeof(T)].GetFirst(p);
+    }
+
+    public static IAsset GetRandom<T>()
+    {
+        if (!data.ContainsKey(typeof(T)))
+        {
+            Debug.LogError("Asset List: " + typeof(T).ToString() + " does not exist.");
+            return null;
+        }
+
+        return data[typeof(T)].GetRandom();
+    }
+
     public static List<T> GetAll<T>()
     {
         if (!data.ContainsKey(typeof(T)))
@@ -85,10 +107,10 @@ public static class GameData
 
         public T Get(string id)
         {
-            T t = list.Find(x => x.ID == id);
+            T t = list.Find(x => x.ID.ToLower() == id.ToLower());
 
             if (t != null)
-                return list.Find(x => x.ID == id);
+                return t;
 
             Debug.LogError("Asset of type " + typeof(T).ToString() + " with ID " + id + " does not exist.");
             return default(T);
@@ -102,6 +124,27 @@ public static class GameData
         public List<T> GetAll()
         {
             return list;
+        }
+
+        public T GetFirst(Predicate<T> p)
+        {
+            List <T> ts = list.FindAll(p);
+
+            if (ts.Count > 0)
+                return ts[0];
+
+            return default(T);
+        }
+
+        public T GetRandom()
+        {
+            if (list.Count <= 0)
+            {
+                Debug.LogError("No assets to grab.");
+                return default(T);
+            }
+
+            return list.GetRandom();
         }
 
         public void Add(T t)

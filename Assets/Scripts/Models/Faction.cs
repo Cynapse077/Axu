@@ -7,6 +7,7 @@ public class Faction : IAsset
 {
     public string Name { get; protected set; }
     public string ID { get; set; }
+    public string ModID { get; set; }
     public List<string> hostileTo;
 
     public Faction(JsonData dat)

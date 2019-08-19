@@ -27,7 +27,7 @@ public class PlayerInput : MonoBehaviour
     List<NPC> npcsToMove;
     Path_AStar worldPath;
 
-    public Skill activeSkill;
+    public Ability activeSkill;
     public CursorMode cursorMode = CursorMode.None;
     public GameObject restingIcon;
     public InputKeys keybindings;
@@ -465,7 +465,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    public void UseDirectionalSkill(Skill newSkill)
+    public void UseDirectionalSkill(Ability newSkill)
     {
         if (entity.stats.SkipTurn())
         {
@@ -476,7 +476,7 @@ public class PlayerInput : MonoBehaviour
         ChangeCursorMode(CursorMode.Direction);
     }
 
-    public void UseSelectTileSkill(Skill newSkill)
+    public void UseSelectTileSkill(Ability newSkill)
     {
         if (entity.stats.SkipTurn())
         {
@@ -901,7 +901,7 @@ public class PlayerInput : MonoBehaviour
 
                 if (targetPos != null && World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
                 {
-                    World.userInterface.YesNoAction("YN_TravelUp", () => { FindStairsUp(); }, null, "");
+                    World.userInterface.YesNoAction("YN_TravelUp".Translate(), () => { FindStairsUp(); }, null, "");
                 }
 
                 return false;
@@ -916,7 +916,7 @@ public class PlayerInput : MonoBehaviour
 
                 if (targetPos != null && World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
                 {
-                    World.userInterface.YesNoAction("YN_TravelDown", () => { FindStairsDown(); }, null, "");
+                    World.userInterface.YesNoAction("YN_TravelDown".Translate(), () => { FindStairsDown(); }, null, "");
                 }
 
                 return false;
@@ -978,7 +978,7 @@ public class PlayerInput : MonoBehaviour
         if (targetPos != null && !World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
             return;
 
-        localPath = new Path_AStar(entity.myPos, targetPos, entity.inventory.CanFly());
+        localPath = new Path_AStar(entity.myPos, targetPos, entity.inventory.CanFly(), true);
     }
     #endregion
 

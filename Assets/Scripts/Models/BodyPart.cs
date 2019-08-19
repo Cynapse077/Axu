@@ -302,7 +302,7 @@ public class BodyPart : IWeighted
         {
             if (g.GripBroken())
             {
-                string message = LocalizationManager.GetLocalizedContent("Gr_BreakGrip")[0];
+                string message = LocalizationManager.GetContent("Gr_BreakGrip");
                 message = message.Replace("[ATTACKER]", g.myPart.myBody.entity.MyName);
                 message = message.Replace("[DEFENDER]", myBody.entity.MyName);
                 message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message;

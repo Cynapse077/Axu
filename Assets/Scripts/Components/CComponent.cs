@@ -77,6 +77,12 @@ public class CCharges : CComponent
         ID = "Charges";
     }
 
+    public CCharges(int _max)
+    {
+        ID = "Charges";
+        current = max = _max;
+    }
+
     public CCharges(int _cur, int _max)
     {
         ID = "Charges";

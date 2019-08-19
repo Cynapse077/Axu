@@ -32,7 +32,7 @@ public class ItemActionsPanel : MonoBehaviour
         {
             GameObject g = SimplePool.Spawn(ActionButton, transform);
 
-            g.GetComponentInChildren<Text>().text = LocalizationManager.GetLocalizedContent(actions.Actions[i].Display)[0];
+            g.GetComponentInChildren<Text>().text = LocalizationManager.GetContent(actions.Actions[i].Display);
             g.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(i); });
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(2, UIWindow.Inventory, false, true);
         }

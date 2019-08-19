@@ -31,7 +31,6 @@ public class MainMenu : MonoBehaviour
         background.CrossFadeAlpha(0.1f, 0.01f, false);
         background2.CrossFadeAlpha(0.05f, 0.01f, false);
 
-        LocalizationManager.LoadLocalizedData();
         loadMenu.gameObject.SetActive(false);
         Manager.playerName = "";
         ObjectManager.playerJournal = null;
@@ -41,7 +40,6 @@ public class MainMenu : MonoBehaviour
 
     IEnumerator Init()
     {
-        yield return LocalizationManager.done;
         ObjectManager.SpawnedNPCs = 0;
 
         GameObject g = Instantiate(menuScreen, canvas);
@@ -59,6 +57,7 @@ public class MainMenu : MonoBehaviour
         FillDataLists();
         soundManager.InitializeAndPlay();
         partSys.SetActive(true);
+        yield return ModManager.IsInitialized;
     }
 
     void FillDataLists()
@@ -78,7 +77,6 @@ public class MainMenu : MonoBehaviour
         SeedManager.InitializeSeeds();
         ModManager.InitializeAllMods();
         EntityList.FillListFromData(); //Necessary for body structures
-        Tile.InitializeTileDictionary(); // Temporary
 
         canUseInput = true;
     }

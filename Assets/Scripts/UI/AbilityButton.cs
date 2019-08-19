@@ -5,7 +5,7 @@ public class AbilityButton : MonoBehaviour
 {
     public Text NameText;
 
-    public void Setup(Skill s, int index)
+    public void Setup(Ability s, int index)
     {
         NameText.alignment = TextAnchor.MiddleLeft;
 

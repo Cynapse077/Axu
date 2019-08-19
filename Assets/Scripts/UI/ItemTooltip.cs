@@ -156,7 +156,7 @@ public static class ItemTooltip
 
         if (item.HasCComponent<CBlock>())
         {
-            string s = LocalizationManager.GetLocalizedContent("IT_Block")[0];
+            string s = LocalizationManager.GetContent("IT_Block");
 
             if (s.Contains("[INPUT]"))
                 s = s.Replace("[INPUT]", (item.GetCComponent<CBlock>().level * 5).ToString());
@@ -195,7 +195,7 @@ public static class ItemTooltip
         if (item.GetCComponent<CAbility>() != null)
         {
             CAbility cab = item.GetCComponent<CAbility>();
-            Skill skill = new Skill(GameData.Get<Skill>(cab.abID) as Skill);
+            Ability skill = new Ability(GameData.Get<Ability>(cab.abID) as Ability);
 
             if (skill != null)
             {
@@ -236,7 +236,7 @@ public static class ItemTooltip
                     displayItems.Add(GetContent("IT_Light"));
                 else if (mod.Stat == "Attack Delay")
                 {
-                    string stat = LocalizationManager.GetLocalizedContent(mod.Stat)[0];
+                    string stat = LocalizationManager.GetContent(mod.Stat);
 
                     if (mod.Amount > 0)
                         displayItems.Add("<color=red>" + stat + " + " + mod.Amount + "</color>");
@@ -245,13 +245,13 @@ public static class ItemTooltip
                 }
                 else if (mod.Stat == "Haste")
                 {
-                    string haste = LocalizationManager.GetLocalizedContent("Haste")[0];
+                    string haste = LocalizationManager.GetContent("Haste");
                     haste = haste.Replace("[INPUT]", mod.Amount.ToString());
                     displayItems.Add(haste);
                 }
                 else
                 {
-                    string stat = LocalizationManager.GetLocalizedContent(mod.Stat)[0];
+                    string stat = LocalizationManager.GetContent(mod.Stat);
                     if (item.HasProp(ItemProperty.Severed_BodyPart) || item.HasProp(ItemProperty.Replacement_Limb))
                     {
                         displayItems.Add("<color=silver>" + stat + " (" + mod.Amount.ToString() + ")</color>");
@@ -298,16 +298,16 @@ public static class ItemTooltip
     {
         if (itemType)
         {
-            string s = LocalizationManager.GetLocalizedContent(key)[0];
+            string s = LocalizationManager.GetContent(key);
             return "<color=silver>=" + s + "=</color>";
         }
 
-        return LocalizationManager.GetLocalizedContent(key)[0];
+        return LocalizationManager.GetContent(key);
     }
 
     static string GetContent_Input(string key, string input1, string input2 = "")
     {
-        string content = LocalizationManager.GetLocalizedContent(key)[0];
+        string content = LocalizationManager.GetContent(key);
 
         if (!string.IsNullOrEmpty(input1))
         {

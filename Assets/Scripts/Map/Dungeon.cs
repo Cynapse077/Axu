@@ -19,9 +19,9 @@ public class Dungeon
     {
         get
         {
-            if (blueprint.id == "Cave_Volcano")
+            if (blueprint.ID == "Cave_Volcano")
                 return Tile.tiles["Lava"].ID;
-            else if (blueprint.id == "Cave_Ice")
+            else if (blueprint.ID == "Cave_Ice")
                 return Tile.tiles["Ice"].ID;
 
             return Tile.tiles["Water"].ID;

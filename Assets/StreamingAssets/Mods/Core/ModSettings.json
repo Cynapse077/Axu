@@ -1,5 +1,6 @@
 {
 	"ID" : "Core",
 	"Name" : "Core",
-	"Load Order" : 0
+	"Description" : "Core module for Axu. Do not remove.",
+	"Creator" : "Ravensong Games"
 }

@@ -22,7 +22,7 @@ public class CursorControl : MonoBehaviour
     bool waitForRefresh = false;
     float moveTimer = 0;
 
-    [HideInInspector] Skill activeSkill;
+    [HideInInspector] Ability activeSkill;
     List<GameObject> lineObjects = new List<GameObject>();
     int _myPosX, _myPosY;
     ObjectManager objectManager;

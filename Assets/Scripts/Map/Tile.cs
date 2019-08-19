@@ -8,13 +8,6 @@ using UnityEngine;
 public static class Tile
 {
     public static Dictionary<string, Tile_Data> tiles;
-    public static string filePath
-    {
-        get
-        {
-            return Application.streamingAssetsPath + "/Mods/Core/Maps/LocalTiles.json";
-        }
-    }
 
     public static string GetKey(int value)
     {
@@ -27,19 +20,21 @@ public static class Tile
         return "";
     }
 
-    public static void InitializeTileDictionary()
+    public static void LoadTiles(string path)
     {
-        if (tiles != null)
-            return;
+        if (tiles == null)
+            tiles = new Dictionary<string, Tile_Data>();
 
-        tiles = new Dictionary<string, Tile_Data>();
-
-        string jsonString = File.ReadAllText(filePath);
+        string jsonString = File.ReadAllText(path);
         JsonData dat = JsonMapper.ToObject(jsonString);
 
         for (int i = 0; i < dat.Count; i++)
         {
             string ID = dat[i]["ID"].ToString();
+
+            if (tiles.ContainsKey(ID))
+                continue;
+
             int tIndex = (int)dat[i]["TileIndex"];
             List<string> tags = new List<string>();
 

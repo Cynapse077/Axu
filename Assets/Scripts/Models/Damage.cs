@@ -3,91 +3,112 @@ using System.Collections;
 
 [System.Serializable]
 [MoonSharp.Interpreter.MoonSharpUserData]
-public class Damage {
-	public int Num;
-	public int Sides;
-	public int Inc;
-	public DamageTypes Type;
+public class Damage
+{
+    public int Num;
+    public int Sides;
+    public int Inc;
+    public DamageTypes Type;
 
-	public Damage() {}
+    public Damage() { }
 
-	public Damage(int numDice, int diceSides, int increase, DamageTypes type = DamageTypes.Blunt) {
-		Num = numDice;
-		Sides = diceSides;
-		Inc = increase;
-		Type = type;
-	}
+    public Damage(int numDice, int diceSides, int increase, DamageTypes type = DamageTypes.Blunt)
+    {
+        Num = numDice;
+        Sides = diceSides;
+        Inc = increase;
+        Type = type;
+    }
 
-	public override string ToString() {
-		if (GameSettings.SimpleDamage)
-			return Simplified();
+    public override string ToString()
+    {
+        if (GameSettings.SimpleDamage)
+            return Simplified();
 
-		if (Inc > 0)
-			return string.Format("{0}d{1} +{2}", Num, Sides, Inc);
-		if (Inc < 0)
-			return string.Format("{0}d{1} {2}", Num, Sides, Inc);
-		
-		return string.Format("{0}d{1}", Num, Sides);
-	}
+        if (Inc > 0)
+            return string.Format("{0}d{1} +{2}", Num, Sides, Inc);
+        if (Inc < 0)
+            return string.Format("{0}d{1} {2}", Num, Sides, Inc);
 
-	public string Simplified() {
-		int min = Inc, max = Inc;
+        return string.Format("{0}d{1}", Num, Sides);
+    }
 
-		for (int i = 0; i < Num; i++) {
-			min++;
-			max += Sides;
-		}
+    public string Simplified()
+    {
+        int min = Inc, max = Inc;
 
-		return min + "-" + max;
-	}
+        for (int i = 0; i < Num; i++)
+        {
+            min++;
+            max += Sides;
+        }
 
-	public void ChangeValues(int numDice, int diceSides, int increase) {
-		Num += numDice;
-		Sides += diceSides;
-		Inc += increase;
-	}
+        return min + "-" + max;
+    }
 
-	public int Roll() {
-		int damage = Inc;
+    public void ChangeValues(int numDice, int diceSides, int increase)
+    {
+        Num += numDice;
+        Sides += diceSides;
+        Inc += increase;
+    }
 
-		for (int i = 0; i < Num; i++) {
-			damage += SeedManager.combatRandom.Next(Sides) + 1;
-		}
+    public int Roll()
+    {
+        int damage = Inc;
 
-		return damage;
-	}
-		
-	public static Damage operator + (Damage d1, Damage d2) {
-		return new Damage(d1.Num + d2.Num, d1.Sides + d2.Sides, d1.Inc + d2.Inc, d1.Type); 
-	}
-	public static Damage operator - (Damage d1, Damage d2) {
-		return new Damage(d1.Num - d2.Num, d1.Sides - d2.Sides, d1.Inc - d2.Inc, d1.Type); 
-	}
+        for (int i = 0; i < Num; i++)
+        {
+            damage += SeedManager.combatRandom.Next(Sides) + 1;
+        }
 
-	public static Damage GetByString(string dmgString) {
-		int dice = 0, sides = 0, inc = 0;
-		string[] ss = dmgString.Split("d"[0]);
+        return damage;
+    }
 
-		if (ss[1].Contains("+")) {
-			string[] ss2 = ss[1].Split("+"[0]);
-			sides = int.Parse(ss2[0]);
-			inc = int.Parse(ss2[1]);
-		} else if (ss[1].Contains("-")) {
-			string[] ss2 = ss[1].Split("-"[0]);
-			sides = int.Parse(ss2[0]);
-			inc = int.Parse(ss2[1]) * -1;
-		} else {
-			inc = 0;
-			sides = int.Parse(ss[1]);
-		}
+    public static Damage operator +(Damage d1, Damage d2)
+    {
+        if (d2 == null)
+            return d1;
+        return new Damage(d1.Num + d2.Num, d1.Sides + d2.Sides, d1.Inc + d2.Inc, d1.Type);
+    }
+    public static Damage operator -(Damage d1, Damage d2)
+    {
+        if (d2 == null)
+            return d1;
+        return new Damage(d1.Num - d2.Num, d1.Sides - d2.Sides, d1.Inc - d2.Inc, d1.Type);
+    }
 
-		dice = int.Parse(ss[0]);
+    public static Damage GetByString(string dmgString)
+    {
+        int dice = 0, sides = 0, inc = 0;
+        string[] ss = dmgString.Split("d"[0]);
 
-		return new Damage(dice, sides, inc, DamageTypes.Blunt);
-	}
+        if (ss[1].Contains("+"))
+        {
+            string[] ss2 = ss[1].Split("+"[0]);
+            sides = int.Parse(ss2[0]);
+            inc = int.Parse(ss2[1]);
+        }
+        else if (ss[1].Contains("-"))
+        {
+            string[] ss2 = ss[1].Split("-"[0]);
+            sides = int.Parse(ss2[0]);
+            inc = int.Parse(ss2[1]) * -1;
+        }
+        else
+        {
+            inc = 0;
+            sides = int.Parse(ss[1]);
+        }
+
+        dice = int.Parse(ss[0]);
+
+        return new Damage(dice, sides, inc, DamageTypes.Blunt);
+    }
 }
 
 [System.Serializable]
-public enum DamageTypes {
+public enum DamageTypes
+{
     None, Blunt, Slash, Pierce, Cleave, Energy, Heat, Cold, Venom, Claw, Bleed, Hunger, Corruption, NonLethal, Radiation, Pull
 }

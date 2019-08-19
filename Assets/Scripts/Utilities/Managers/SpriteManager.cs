@@ -8,32 +8,44 @@ public enum SpriteType
     NPC
 }
 
+public struct ModSprite
+{
+    public Sprite sprite;
+    public string modID;
+
+    public ModSprite(Sprite spr, string mID)
+    {
+        sprite = spr;
+        modID = mID;
+    }
+}
+
 [MoonSharp.Interpreter.MoonSharpUserData]
 public static class SpriteManager
 {
-    static Dictionary<string, Sprite> npcSprites = new Dictionary<string, Sprite>();
-    static Dictionary<string, Sprite> objectSprites = new Dictionary<string, Sprite>();
+    static Dictionary<string, ModSprite> npcSprites = new Dictionary<string, ModSprite>();
+    static Dictionary<string, ModSprite> objectSprites = new Dictionary<string, ModSprite>();
 
-    public static void AddObjectSprites(string directoryPath, SpriteType spriteType)
+    public static void AddObjectSprites(Mod mod, string directoryPath, SpriteType spriteType)
     {
-        if (!Directory.Exists(directoryPath))
+        if (Directory.Exists(directoryPath))
         {
-            return;
-        }
+            DirectoryInfo di = new DirectoryInfo(directoryPath);
+            FileInfo[] info = di.GetFiles("*.png", SearchOption.AllDirectories);
 
-        DirectoryInfo di = new DirectoryInfo(directoryPath);
-        FileInfo[] info = di.GetFiles("*.png", SearchOption.AllDirectories);
+            foreach (FileInfo f in info)
+            {
+                string fileName = Path.GetFileName(f.FullName);
 
-        foreach (FileInfo f in info)
-        {
-            if (spriteType == SpriteType.Object)
-                objectSprites.Add(Path.GetFileName(f.FullName), SpriteFromFile(f, false));
-            else if (spriteType == SpriteType.NPC)
-                npcSprites.Add(Path.GetFileName(f.FullName), SpriteFromFile(f, true));
+                if (spriteType == SpriteType.Object)
+                    objectSprites.Add(fileName, SpriteFromFile(mod, f, false));
+                else if (spriteType == SpriteType.NPC)
+                    npcSprites.Add(fileName, SpriteFromFile(mod, f, true));
+            }
         }
     }
 
-    static Sprite SpriteFromFile(FileInfo f, bool overridePivot)
+    static ModSprite SpriteFromFile(Mod mod, FileInfo f, bool overridePivot)
     {
         Texture2D tex = new Texture2D(2, 2, TextureFormat.ARGB32, true);
         byte[] imageBytes = File.ReadAllBytes(f.FullName);
@@ -47,7 +59,7 @@ public static class SpriteManager
             pivot = new Vector2(0.5f, 0);
         }
 
-        return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot, 16f);
+        return new ModSprite(Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot, 16f), mod.id);
     }
 
     public static Sprite GetObjectSprite(string id)
@@ -58,7 +70,7 @@ public static class SpriteManager
             return Sprite.Create(null, new Rect(0, 0, 0, 0), Vector2.zero);
         }
 
-        return objectSprites[id];
+        return objectSprites[id].sprite;
     }
 
     public static Sprite GetNPCSprite(string id)
@@ -69,6 +81,6 @@ public static class SpriteManager
             return Sprite.Create(null, new Rect(0, 0, 0, 0), Vector2.zero);
         }
 
-        return npcSprites[id];
+        return npcSprites[id].sprite;
     }
 }

@@ -5,6 +5,7 @@ using LitJson;
 public class GroupBlueprint : IAsset
 {
     public string ID { get; set; }
+    public string ModID { get; set; }
     public int level;
     public int depth;
     public WorldMap.Biome[] biomes;
@@ -32,7 +33,7 @@ public class GroupBlueprint : IAsset
 
             for (int i = 0; i < vaultTypes.Length; i++)
             {
-                if (tileMapData.vault.blueprint.id == vaultTypes[i] && depth <= Mathf.Abs(tileMapData.elevation))
+                if (tileMapData.vault.blueprint.ID == vaultTypes[i] && depth <= Mathf.Abs(tileMapData.elevation))
                 {
                     return true;
                 }

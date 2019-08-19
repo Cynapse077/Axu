@@ -52,7 +52,6 @@ public class ObjectManager : MonoBehaviour
 
     IEnumerator Initialize(string playerName)
     {
-        Alert.LoadAlerts();
         GetComponent<UserInterface>().loadingGO.SetActive(true);
 
         if (!Manager.newGame)
@@ -67,7 +66,7 @@ public class ObjectManager : MonoBehaviour
             yield return null;
         }
 
-        ModManager.LoadQuests();
+        ModManager.PostLoadData();
 
         worldMap.BuildTexture();
 
@@ -381,12 +380,12 @@ public class ObjectManager : MonoBehaviour
         td.ApplyDamage();
     }
 
-    public void SpawnEffect(int index, string effectName, Entity spawner, int x, int y, int dmg, Skill skill, float rotation)
+    public void SpawnEffect(int index, string effectName, Entity spawner, int x, int y, int dmg, Ability skill, float rotation)
     {
         SpawnEffect(index, effectName, spawner, new Coord(x, y), dmg, skill, rotation);
     }
 
-    void SpawnEffect(int index, string effectName, Entity spawner, Coord position, int dmg, Skill skill, float rotation)
+    void SpawnEffect(int index, string effectName, Entity spawner, Coord position, int dmg, Ability skill, float rotation)
     {
         if (playerEntity.inSight(position))
         {

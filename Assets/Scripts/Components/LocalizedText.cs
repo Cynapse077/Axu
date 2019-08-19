@@ -31,13 +31,13 @@ public class LocalizedText : MonoBehaviour
         if (searchKey == "")
             searchKey = key;
 
-        string[] content = LocalizationManager.GetLocalizedContent(searchKey);
+        TranslatedText content = LocalizationManager.GetLocalizedContent(searchKey);
 
-        _baseText = content[0];
+        _baseText = content.display;
 
         if (GetComponent<OnHover_ShowTooltip>() != null)
         {
-            GetComponent<OnHover_ShowTooltip>().textToDisplay = content[1];
+            GetComponent<OnHover_ShowTooltip>().textToDisplay = content.display2;
         }
     }
 

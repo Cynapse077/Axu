@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public static class ModManager
 {
     public static bool IsInitialized;
-    static List<Mod> mods = new List<Mod>();
+    public static List<Mod> mods = new List<Mod>();
 
     public static void InitializeAllMods()
     {
@@ -21,7 +21,7 @@ public static class ModManager
 
             if (mods.Find(x => x.id == newMod.id) != null)
             {
-                newMod.ChangeID("MOD_" + ModUtility.GetNextFreeID());
+                newMod.ChangeID(newMod.id + ModUtility.GetNextFreeID());
             }
 
             mods.Add(newMod);
@@ -31,19 +31,26 @@ public static class ModManager
 
         foreach (Mod m in mods)
         {
-            m.LoadSprites();
-            m.LoadItemFolderData();
-            m.LoadLuaFiles();
+            m.PreLoadData();
         }
 
         IsInitialized = true;
     }
 
-    public static void LoadQuests()
+    public static void ResetAllMods()
+    {
+        LuaManager.ResetLuaFiles();
+        GameData.ResetGameData();
+        IsInitialized = false;
+
+        InitializeAllMods();
+    }
+
+    public static void PostLoadData()
     {
         foreach (Mod m in mods)
         {
-            m.LoadQuests();
+            m.PostLoadData();
         }
     }
 

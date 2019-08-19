@@ -44,13 +44,13 @@ public static class ContextualMenu
             if (tileID == Tile.tiles["Stairs_Up"].ID)
             {
                 actions.Add(new ContextualAction("Ascend Stairs", () => {
-                    World.userInterface.YesNoAction(LocalizationManager.GetContent("YN_GoUp"), inp.GoUp, World.userInterface.CloseWindows, "");
+                    World.userInterface.YesNoAction("YN_GoUp".Translate(), inp.GoUp, World.userInterface.CloseWindows, "");
                 }));
             }
             else if (tileID == Tile.tiles["Stairs_Down"].ID)
             {
                 actions.Add(new ContextualAction("Ascend Stairs", () => {
-                    World.userInterface.YesNoAction(LocalizationManager.GetContent("YN_GoDown"), inp.GoDown, World.userInterface.CloseWindows, "");
+                    World.userInterface.YesNoAction("YN_GoDown".Translate(), inp.GoDown, World.userInterface.CloseWindows, "");
                 }));
             }
         }

@@ -7,6 +7,7 @@ using MoonSharp.Interpreter;
 public class Item : ComponentHolder<CComponent>, IAsset
 {
     public string ID { get; set; }
+    public string ModID { get; set; }
     public string Name, displayName = "", flavorText;
     public Proficiencies itemType;
     public int armor, amount = 1, accuracy, rarity, tileID = -1;
@@ -62,12 +63,6 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
         if (modifier == null)
             modifier = new ItemModifier();
-    }
-
-    public Item(string name)
-    {
-        Defaults();
-        Name = name;
     }
 
     void Defaults()
@@ -126,11 +121,11 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
         if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
         {
-            Skill sk = new Skill(GameData.Get<Skill>(GetCComponent<CAbility>().abID) as Skill);
+            Ability sk = new Ability(GameData.Get<Ability>(GetCComponent<CAbility>().abID) as Ability);
 
             if (sk != null)
             {
-                stats.entity.skills.AddSkill(sk, Skill.AbilityOrigin.Item);
+                stats.entity.skills.AddSkill(sk, Ability.AbilityOrigin.Item);
             }
         }
 
@@ -168,7 +163,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             //Remove the ability if it is not present on other equipment.
             if (entity.inventory.EquippedItems().Find(x => x.HasCComponent<CAbility>() && x.GetCComponent<CAbility>().abID == cab.abID && x != this) == null)
             {
-                entity.skills.RemoveSkill(cab.abID, Skill.AbilityOrigin.Item);
+                entity.skills.RemoveSkill(cab.abID, Ability.AbilityOrigin.Item);
             }
         }
 
@@ -1019,7 +1014,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (dat.ContainsKey("Attack Type"))
         {
             string atype = dat["Attack Type"].ToString();
-            attackType = atype.ToEnum<Item.AttackType>();
+            attackType = atype.ToEnum<AttackType>();
         }
         else
         {

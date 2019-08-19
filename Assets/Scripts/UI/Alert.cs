@@ -1,33 +1,12 @@
-﻿using UnityEngine;
-using System.IO;
-using LitJson;
-using System.Collections.Generic;
-
+﻿
 [MoonSharp.Interpreter.MoonSharpUserData]
 public static class Alert
 {
-    static Dictionary<string, string[]> Alerts;
     static UIWindow previousWindow = UIWindow.None;
 
     static UserInterface userInterface
     {
         get { return World.userInterface; }
-    }
-
-    public static void LoadAlerts()
-    {
-        Alerts = new Dictionary<string, string[]>();
-
-        string myFile = File.ReadAllText(Application.streamingAssetsPath + LocalizationManager.filePath);
-        JsonData data = JsonMapper.ToObject(myFile);
-
-        for (int i = 0; i < data["Alerts"].Count; i++)
-        {
-            string key = data["Alerts"][i]["ID"].ToString();
-            string[] value = new string[2] { data["Alerts"][i]["Title"].ToString(), data["Alerts"][i]["Message"].ToString() };
-
-            Alerts.Add(key, value);
-        }
     }
 
     public static void CustomAlert(string content)
@@ -44,59 +23,37 @@ public static class Alert
 
     public static void NewAlert(string alertKey, UIWindow _previousWindow = UIWindow.None)
     {
-        if (Alerts == null)
-        {
-            LoadAlerts();
-        }
+        TranslatedText t = LocalizationManager.GetLocalizedContent(alertKey);
+        string title = t.display;
+        string message = t.display2;
 
-        if (Alerts.ContainsKey(alertKey))
-        {
-            string title = Alerts[alertKey][0];
-            string message = Alerts[alertKey][1];
-
-            userInterface.NewAlert(title, message);
-            previousWindow = _previousWindow;
-        }
-        else
-        {
-            Debug.LogError("No alert with key : " + alertKey);
-        }
+        userInterface.NewAlert(title, message);
+        previousWindow = _previousWindow;
     }
 
     public static void NewAlert(string alertKey, string name, string input)
     {
-        if (Alerts == null)
-        {
-            LoadAlerts();
-        }
+        TranslatedText t = LocalizationManager.GetLocalizedContent(alertKey);
+        string title = t.display;
+        string message = t.display2;
 
-        if (Alerts.ContainsKey(alertKey))
+        if (message.Contains("[NAME]"))
         {
-            string title = Alerts[alertKey][0];
-            string message = Alerts[alertKey][1];
-
-            if (message.Contains("[NAME]"))
+            if (name != null && name != "")
             {
-                if (name != null && name != "")
-                {
-                    message = message.Replace("[NAME]", name);
-                }
+                message = message.Replace("[NAME]", name);
             }
-            if (message.Contains("[INPUT]"))
-            {
-                if (input != null && input != "")
-                {
-                    message = message.Replace("[INPUT]", input);
-                }
-            }
-
-            userInterface.NewAlert(title, message);
-            previousWindow = UIWindow.None;
         }
-        else
+        if (message.Contains("[INPUT]"))
         {
-            Debug.Log("No alert with key : " + alertKey);
+            if (input != null && input != "")
+            {
+                message = message.Replace("[INPUT]", input);
+            }
         }
+
+        userInterface.NewAlert(title, message);
+        previousWindow = UIWindow.None;
     }
 
     public static void CloseAlert()

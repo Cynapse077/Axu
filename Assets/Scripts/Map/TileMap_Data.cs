@@ -401,7 +401,7 @@ public class TileMap_Data
                     if (elevation != 0 && World.tileMap.GetVaultAt(mapInfo.position) != null)
                     {
                         //TODO: Hard-coded. Switch this out to check the vault's wall tile.
-                        string t = World.tileMap.GetVaultAt(mapInfo.position).blueprint.id;
+                        string t = World.tileMap.GetVaultAt(mapInfo.position).blueprint.ID;
 
                         if (t == "Caves_Volcano")
                             tIndex = 13;
@@ -746,7 +746,7 @@ public class TileMap_Data
         if (Mathf.Abs(elevation) == Mathf.Abs(ele))
         {
             if (elevation == 0 && mapInfo.HasLandmark() && locID == mapInfo.landmark ||
-                elevation != 0 && locID == World.tileMap.GetVaultAt(mapInfo.position).blueprint.id ||
+                elevation != 0 && locID == World.tileMap.GetVaultAt(mapInfo.position).blueprint.ID ||
                 locID == "Random_Encounter" && !mapInfo.HasLandmark())
             {
                 return true;
@@ -921,7 +921,7 @@ public class TileMap_Data
 
                 if (WalkableTile(x, y) && map_data[x, y] != Tile.tiles["Stairs_Up"] && map_data[x, y] != Tile.tiles["Stairs_Down"])
                 {
-                    if (v.blueprint.id == "Cave_Start" && RNG.Next(1000) < 12 || v.blueprint.id == "Spider" && RNG.Next(1000) < 40)
+                    if (v.blueprint.ID == "Cave_Start" && RNG.Next(1000) < 12 || v.blueprint.ID == "Spider" && RNG.Next(1000) < 40)
                         World.objectManager.NewObjectAtOtherScreen("Web", new Coord(x, y), mapInfo.position, -elevation);
                     else if (RNG.Next(10000) < Mathf.Abs(elevation) + 1)
                         World.objectManager.NewObjectAtOtherScreen("Chest", new Coord(x, y), mapInfo.position, -elevation);
@@ -948,7 +948,7 @@ public class TileMap_Data
             map_data[stairsDown.x, stairsDown.y] = Tile.tiles["Stairs_Down"];
         }
 
-        if (v.blueprint.id == "Cellar" && !visited)
+        if (v.blueprint.ID == "Cellar" && !visited)
         {
             PlaceCellarLoot();
         }

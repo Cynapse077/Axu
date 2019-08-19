@@ -1,441 +1,443 @@
-[
-	{
-		"ID" : "akklune_init",
-		"Display" : "Yes?",
-		"Responses" : [
-			{
-				"Display" : "Where am I?",
-				"GoTo" : "akklune_where"
-			},
-			{
-				"Display" : "Who are you?",
-				"GoTo" : "akklune_who"
-			},
-			{
-				"Display" : "Nothing, goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "akklune_where",
-		"Display" : "You are on the planet Axu, far from home. It has been a prison colony planet for generations now, a place you are sent to when you are too different or dangerous to keep around. I do not know your crimes, but it does not matter. There is no reason we cannot work together.",
-		"OnSelect" : { "File" : "DialogueActions", "Function" : "TestDialogue" },
-		"Responses" : [
-			{
-				"Display" : "What should I do now?",
-				"GoTo" : "akklune_todo"
-			},
-			{
-				"Display" : "I see. Can I ask something else?",
-				"GoTo" : "akklune_init"
-			},
-			{
-				"Display" : "Thank you. Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "akklune_todo",
-		"Display" : "Well, I would advise you get to know the Ensis. I'm sure there is something you could do for them to make yourself useful. You could also explore the continent if you like. Be careful though. There are dangers lurking around every corner. Do not be afraid to turn heel and run away from anything that looks at you funny.",
-		"Responses" : [
-			{
-				"Display" : "I see. Can I ask something else?",
-				"GoTo" : "akklune_init"
-			},
-			{
-				"Display" : "Thank you. Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "akklune_who",
-		"Display" : "My name is Akk-Lune. I represent the Ensis, a group of people dedicated to making the best of our exile. Many of us, like myself, were born on Axu. I make a living traveling to various sites to recover artifacts or information.",
-		"Responses" : [
-			{
-				"Display" : "I see. Can I ask something else?",
-				"GoTo" : "akklune_init"
-			},
-			{
-				"Display" : "Thank you. Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
+{
+	"Dialogue Options" : [
+		{
+			"ID" : "akklune_init",
+			"Display" : "Yes?",
+			"Responses" : [
+				{
+					"Display" : "Where am I?",
+					"GoTo" : "akklune_where"
+				},
+				{
+					"Display" : "Who are you?",
+					"GoTo" : "akklune_who"
+				},
+				{
+					"Display" : "Nothing, goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "akklune_where",
+			"Display" : "You are on the planet Axu, far from home. It has been a prison colony planet for generations now, a place you are sent to when you are too different or dangerous to keep around. I do not know your crimes, but it does not matter. There is no reason we cannot work together.",
+			"OnSelect" : { "File" : "DialogueActions", "Function" : "TestDialogue" },
+			"Responses" : [
+				{
+					"Display" : "What should I do now?",
+					"GoTo" : "akklune_todo"
+				},
+				{
+					"Display" : "I see. Can I ask something else?",
+					"GoTo" : "akklune_init"
+				},
+				{
+					"Display" : "Thank you. Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "akklune_todo",
+			"Display" : "Well, I would advise you get to know the Ensis. I'm sure there is something you could do for them to make yourself useful. You could also explore the continent if you like. Be careful though. There are dangers lurking around every corner. Do not be afraid to turn heel and run away from anything that looks at you funny.",
+			"Responses" : [
+				{
+					"Display" : "I see. Can I ask something else?",
+					"GoTo" : "akklune_init"
+				},
+				{
+					"Display" : "Thank you. Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "akklune_who",
+			"Display" : "My name is Akk-Lune. I represent the Ensis, a group of people dedicated to making the best of our exile. Many of us, like myself, were born on Axu. I make a living traveling to various sites to recover artifacts or information.",
+			"Responses" : [
+				{
+					"Display" : "I see. Can I ask something else?",
+					"GoTo" : "akklune_init"
+				},
+				{
+					"Display" : "Thank you. Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
 
-	{
-		"ID" : "lomis_init",
-		"Display" : "What do you wish to know about?",
-		"Responses" : [
-			{
-				"Display" : "The Ensis",
-				"GoTo" : "lomis_ensis"
-			},
-			{
-				"Display" : "The Kin of the Deep",
-				"GoTo" : "lomis_kin"
-			},
-			{
-				"Display" : "The Frostborne",
-				"GoTo" : "lomis_frostborne"
-			},
-			{
-				"Display" : "Nothing, goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "lomis_ensis",
-		"Display" : "We are The Ensis, a faction of scholars and lawbringers and the direct descendants to the guards and staff left on Axu to oversee the colony's population. My people hope to preserve the knowledge of our previous home world in an attempt to realize who we are, and what we are able to become. The Ensis aid those in need, protecting them from gangs of bandits or wildlife, providing technology for agriculture, building, and medicine. Without us, I truly believe we never would have made it this far.",
-		"Responses" : [
-			{
-				"Display" : "I want to ask something else.",
-				"GoTo" : "lomis_init"
-			},
-			{
-				"Display" : "That is all. Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "lomis_kin",
-		"Display" : "The Kin of the Deep, or just The Kindred, is a cult hell-bent on destroying everything we have worked so hard for. They have destroyed our libraries, indoctrinated our people, and worship strange entities that they name \"Gods\". What these deities actually are is beyond my knowledge. The highest members of the Kindred have strange powers. I believe these may be due to radiation exposure, but we cannot be too sure. Do not fall for their lies. They are a poison, and we will destroy them.",
-		"Responses" : [
-			{
-				"Display" : "Can you not work with them for a brighter future?",
-				"GoTo" : "lomis_kin2"
-			},
-			{
-				"Display" : "I want to ask something else.",
-				"GoTo" : "lomis_init"
-			},
-			{
-				"Display" : "That is all. Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "lomis_kin2",
-		"Display" : "I'm afraid not. They have been a thorn in our side for years now. They have destroyed priceless information, killed our people, and turned any who would listen against us. Behind their words of peace is a viciousness I have never seen before. They pretend we are acting like a ruling faction, when in reality we only ask for cooperation from those who work beside us.",
-		"Responses" : [
-			{
-				"Display" : "I see. Can I ask something else?",
-				"GoTo" : "lomis_init"
-			},
-			{
-				"Display" : "Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "lomis_frostborne",
-		"Display" : "The Frostborne are a clan of people who craved isolation, and so moved into the northern part of the continent. They refuse to speak with outsiders, and spend much of their time perfecting their skills in robotics. It would be wise to stay away from the tundra unless you have a dire need to approach these people. They are dangerous, and should be treated as such.",
-		"Responses" : [
-			{
-				"Display" : "I want to ask something else.",
-				"GoTo" : "lomis_init"
-			},
-			{
-				"Display" : "That is all. Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
+		{
+			"ID" : "lomis_init",
+			"Display" : "What do you wish to know about?",
+			"Responses" : [
+				{
+					"Display" : "The Ensis",
+					"GoTo" : "lomis_ensis"
+				},
+				{
+					"Display" : "The Kin of the Deep",
+					"GoTo" : "lomis_kin"
+				},
+				{
+					"Display" : "The Frostborne",
+					"GoTo" : "lomis_frostborne"
+				},
+				{
+					"Display" : "Nothing, goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "lomis_ensis",
+			"Display" : "We are The Ensis, a faction of scholars and lawbringers and the direct descendants to the guards and staff left on Axu to oversee the colony's population. My people hope to preserve the knowledge of our previous home world in an attempt to realize who we are, and what we are able to become. The Ensis aid those in need, protecting them from gangs of bandits or wildlife, providing technology for agriculture, building, and medicine. Without us, I truly believe we never would have made it this far.",
+			"Responses" : [
+				{
+					"Display" : "I want to ask something else.",
+					"GoTo" : "lomis_init"
+				},
+				{
+					"Display" : "That is all. Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "lomis_kin",
+			"Display" : "The Kin of the Deep, or just The Kindred, is a cult hell-bent on destroying everything we have worked so hard for. They have destroyed our libraries, indoctrinated our people, and worship strange entities that they name \"Gods\". What these deities actually are is beyond my knowledge. The highest members of the Kindred have strange powers. I believe these may be due to radiation exposure, but we cannot be too sure. Do not fall for their lies. They are a poison, and we will destroy them.",
+			"Responses" : [
+				{
+					"Display" : "Can you not work with them for a brighter future?",
+					"GoTo" : "lomis_kin2"
+				},
+				{
+					"Display" : "I want to ask something else.",
+					"GoTo" : "lomis_init"
+				},
+				{
+					"Display" : "That is all. Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "lomis_kin2",
+			"Display" : "I'm afraid not. They have been a thorn in our side for years now. They have destroyed priceless information, killed our people, and turned any who would listen against us. Behind their words of peace is a viciousness I have never seen before. They pretend we are acting like a ruling faction, when in reality we only ask for cooperation from those who work beside us.",
+			"Responses" : [
+				{
+					"Display" : "I see. Can I ask something else?",
+					"GoTo" : "lomis_init"
+				},
+				{
+					"Display" : "Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "lomis_frostborne",
+			"Display" : "The Frostborne are a clan of people who craved isolation, and so moved into the northern part of the continent. They refuse to speak with outsiders, and spend much of their time perfecting their skills in robotics. It would be wise to stay away from the tundra unless you have a dire need to approach these people. They are dangerous, and should be treated as such.",
+			"Responses" : [
+				{
+					"Display" : "I want to ask something else.",
+					"GoTo" : "lomis_init"
+				},
+				{
+					"Display" : "That is all. Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
 
-	{
-		"ID" : "arthomas_init",
-		"Display" : "Hm?",
-		"Responses" : [
-			{
-				"Display" : "Who are you?",
-				"GoTo" : "arthomas_you"
-			},
-			{
-				"Display" : "Nothing, goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "arthomas_you",
-		"Display" : "I am Arthomas. All you really need to know is that I am of the Ensis, and I know how to wield this spear.",
-		"Responses" : [
-			{
-				"Display" : "What a beautiful spear you have there.",
-				"GoTo" : "arthomas_spear"
-			},
-			{
-				"Display" : "Okay then...",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "arthomas_spear",
-		"Display" : "This spear was crafted by my ancestor, a general. He was sent to this planet for betraying his people to the enemy. I wield it to give it new purpose, to wash away the sins of my family. My devotion to my people is unwavering, and we shall be redeemed.",
-		"Responses" : [
-			{
-				"Display" : "Thank you for sharing. I shall let you be.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "arthomas_init2",
-		"Display" : "Yes?",
-		"Responses" : [
-			{
-				"Display" : "What happened at the stronghold?",
-				"GoTo" : "arthomas2_attack"
-			},
-			{
-				"Display" : "Nothing, goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "arthomas2_attack",
-		"Display" : "It was horrific. I don't wish to speak of such a tragedy. Too many good men and women died at Xzol's hand. I feel guilty to even have survived such an assault while so many perished...",
-		"Responses" : [
-			{
-				"Display" : "I'm sorry for bringing it up.",
-				"GoTo" : "End"
-			}
-		]
-	},
+		{
+			"ID" : "arthomas_init",
+			"Display" : "Hm?",
+			"Responses" : [
+				{
+					"Display" : "Who are you?",
+					"GoTo" : "arthomas_you"
+				},
+				{
+					"Display" : "Nothing, goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "arthomas_you",
+			"Display" : "I am Arthomas. All you really need to know is that I am of the Ensis, and I know how to wield this spear.",
+			"Responses" : [
+				{
+					"Display" : "What a beautiful spear you have there.",
+					"GoTo" : "arthomas_spear"
+				},
+				{
+					"Display" : "Okay then...",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "arthomas_spear",
+			"Display" : "This spear was crafted by my ancestor, a general. He was sent to this planet for betraying his people to the enemy. I wield it to give it new purpose, to wash away the sins of my family. My devotion to my people is unwavering, and we shall be redeemed.",
+			"Responses" : [
+				{
+					"Display" : "Thank you for sharing. I shall let you be.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "arthomas_init2",
+			"Display" : "Yes?",
+			"Responses" : [
+				{
+					"Display" : "What happened at the stronghold?",
+					"GoTo" : "arthomas2_attack"
+				},
+				{
+					"Display" : "Nothing, goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "arthomas2_attack",
+			"Display" : "It was horrific. I don't wish to speak of such a tragedy. Too many good men and women died at Xzol's hand. I feel guilty to even have survived such an assault while so many perished...",
+			"Responses" : [
+				{
+					"Display" : "I'm sorry for bringing it up.",
+					"GoTo" : "End"
+				}
+			]
+		},
 
-	{
-		"ID" : "isazna_init",
-		"Display" : "What do you wish to know of, my child?",
-		"Responses" : [
-			{
-				"Display" : "The Kindred of the Deep.",
-				"GoTo" : "isazna_kin"
-			},
-			{
-				"Display" : "The Ensis.",
-				"GoTo" : "isazna_ensis"
-			},
-			{
-				"Display" : "Nothing, goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "isazna_kin",
-		"Display" : "We are a group dedicated to improving humanity by moving past our shackled past. Our predecessors were blind and hateful, unable to work together to create unity. We must be rid of those who cast us away. Our gods, the Deep Ones, share their power with us. The Kindred have become more than human because of their influence.",
-		"Responses" : [
-			{
-				"Display" : "I want to ask something else.",
-				"GoTo" : "isazna_init"
-			},
-			{
-				"Display" : "That is all. Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "isazna_ensis",
-		"Display" : "Such arrogant people. They pretend to work towards the greater good, but succumb to our desire to control. Lomis, their leader, is so stuck in the past that I do not think he can even comprehend where we will be in the future. The Ensis create war where they walk. I fear that we must eliminate them completely, lest we suffer.",
-		"Responses" : [
-			{
-				"Display" : "I want to ask something else.",
-				"GoTo" : "isazna_init"
-			},
-			{
-				"Display" : "That is all. Goodbye.",
-				"GoTo" : "End"
-			}
-		]
-	},
+		{
+			"ID" : "isazna_init",
+			"Display" : "What do you wish to know of, my child?",
+			"Responses" : [
+				{
+					"Display" : "The Kindred of the Deep.",
+					"GoTo" : "isazna_kin"
+				},
+				{
+					"Display" : "The Ensis.",
+					"GoTo" : "isazna_ensis"
+				},
+				{
+					"Display" : "Nothing, goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "isazna_kin",
+			"Display" : "We are a group dedicated to improving humanity by moving past our shackled past. Our predecessors were blind and hateful, unable to work together to create unity. We must be rid of those who cast us away. Our gods, the Deep Ones, share their power with us. The Kindred have become more than human because of their influence.",
+			"Responses" : [
+				{
+					"Display" : "I want to ask something else.",
+					"GoTo" : "isazna_init"
+				},
+				{
+					"Display" : "That is all. Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "isazna_ensis",
+			"Display" : "Such arrogant people. They pretend to work towards the greater good, but succumb to our desire to control. Lomis, their leader, is so stuck in the past that I do not think he can even comprehend where we will be in the future. The Ensis create war where they walk. I fear that we must eliminate them completely, lest we suffer.",
+			"Responses" : [
+				{
+					"Display" : "I want to ask something else.",
+					"GoTo" : "isazna_init"
+				},
+				{
+					"Display" : "That is all. Goodbye.",
+					"GoTo" : "End"
+				}
+			]
+		},
 
-	{
-		"ID" : "blacksmith_init",
-		"Display" : "Yes?",
-		"Responses" : [
-			{
-				"Display" : "Can you tell me about the Xul?",
-				"GoTo" : "blacksmith_xul"
-			},
-			{
-				"Display" : "Nevermind.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "blacksmith_xul",
-		"Display" : "We are the dwellers of the Red Desert, exiled by exiles. Long ago, we were cast by the Ensis. From what I have heard, there were disagreements over who should govern the people. We ended up here, and have resided ever since. It's really not so bad if you can get over the heat. We do our best to stay out of the quarrels of our Northern neighbors. The Kin and the Ensis have been at each other's throats, and I would prefer not to be involved. We were nomads before finally settling down here.",
-		"Responses" : [
-			{
-				"Display" : "I see. Thank you.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "oromir_init",
-		"Display" : "How may I elucidate?",
-		"Responses" : [
-			{
-				"Display" : "Exile",
-				"GoTo" : "oromir_exile"
-			},
-			{
-				"Display" : "Creatures",
-				"GoTo" : "oromir_creatures"
-			},
-			{
-				"Display" : "Nevermind.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "oromir_exile",
-		"Display" : "Lomis is a strict man with high moral standards. My experimentation with energies from The Deep are controvertial in his eyes. Especially with the Kindred of the Deep being a great threat to The Ensis. He was furious when he found out, destroying all my research. I was forced to promise to abandon my fascination with such a dangerous tool. A promise I broke. I am now known as The Duke of Lies for my betrayals, a moniker I wear proudly. I have done great things in my abscence, and will continue to do so without interference. If only he knew wha devious experiments Ka-Nil, one of his own, continues to do under his nose.",
-		"Responses" : [
-			{
-				"Display" : "Tell me something else.",
-				"GoTo" : "oromir_init"
-			},
-			{
-				"Display" : "Thank you.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "oromir_creatures",
-		"Display" : "The creatures you see around Magna Dwyll are of my creation. Their consciousness may not be on par with a human's, but I am proud nonetheless.",
-		"Responses" : [
-			{
-				"Display" : "Interesting. I'd like to know something else.",
-				"GoTo" : "oromir_init"
-			},
-			{
-				"Display" : "Thank you. That will be all. (Leave)",
-				"GoTo" : "End"
-			}
-		]
-	},
+		{
+			"ID" : "blacksmith_init",
+			"Display" : "Yes?",
+			"Responses" : [
+				{
+					"Display" : "Can you tell me about the Xul?",
+					"GoTo" : "blacksmith_xul"
+				},
+				{
+					"Display" : "Nevermind.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "blacksmith_xul",
+			"Display" : "We are the dwellers of the Red Desert, exiled by exiles. Long ago, we were cast by the Ensis. From what I have heard, there were disagreements over who should govern the people. We ended up here, and have resided ever since. It's really not so bad if you can get over the heat. We do our best to stay out of the quarrels of our Northern neighbors. The Kin and the Ensis have been at each other's throats, and I would prefer not to be involved. We were nomads before finally settling down here.",
+			"Responses" : [
+				{
+					"Display" : "I see. Thank you.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "oromir_init",
+			"Display" : "How may I elucidate?",
+			"Responses" : [
+				{
+					"Display" : "Exile",
+					"GoTo" : "oromir_exile"
+				},
+				{
+					"Display" : "Creatures",
+					"GoTo" : "oromir_creatures"
+				},
+				{
+					"Display" : "Nevermind.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "oromir_exile",
+			"Display" : "Lomis is a strict man with high moral standards. My experimentation with energies from The Deep are controvertial in his eyes. Especially with the Kindred of the Deep being a great threat to The Ensis. He was furious when he found out, destroying all my research. I was forced to promise to abandon my fascination with such a dangerous tool. A promise I broke. I am now known as The Duke of Lies for my betrayals, a moniker I wear proudly. I have done great things in my abscence, and will continue to do so without interference. If only he knew wha devious experiments Ka-Nil, one of his own, continues to do under his nose.",
+			"Responses" : [
+				{
+					"Display" : "Tell me something else.",
+					"GoTo" : "oromir_init"
+				},
+				{
+					"Display" : "Thank you.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "oromir_creatures",
+			"Display" : "The creatures you see around Magna Dwyll are of my creation. Their consciousness may not be on par with a human's, but I am proud nonetheless.",
+			"Responses" : [
+				{
+					"Display" : "Interesting. I'd like to know something else.",
+					"GoTo" : "oromir_init"
+				},
+				{
+					"Display" : "Thank you. That will be all. (Leave)",
+					"GoTo" : "End"
+				}
+			]
+		},
 
-	{
-		"ID" : "grum_init",
-		"Display" : "Want to hear good thought Grum have?",
-		"Responses" : [
-			{
-				"Display" : "Sure.",
-				"GoTo" : "grum_yes"
-			},
-			{
-				"Display" : "Not really.",
-				"GoTo" : "grum_no"
-			},
-			{
-				"Display" : "I don't have time for this. (Leave)",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "grum_yes",
-		"Display" : "Me hate Puggles. They nasty bunch who laugh at Grum for shiny head! Whole village of Puggles who speak to Grum, but me no like to go there anymore. I tell them I make new clothes out of fur if they keep laughing at me! Got big bite on my leg from that...\nWant to hear more thought?",
-		"Responses" : [
-			{
-				"Display" : "Go ahead.",
-				"GoTo" : "grum_yes2"
-			},
-			{
-				"Display" : "Spare me.",
-				"GoTo" : "grum_no"
-			}
-		]
-	},
-	{
-		"ID" : "grum_no",
-		"Display" : "Why so mean to Grum? Me just want friend.",
-		"Responses" : [
-			{
-				"Display" : "Okay fine. Tell me your \"thought\".",
-				"GoTo" : "grum_yes"
-			},
-			{
-				"Display" : "I'll be going now.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "grum_yes2",
-		"Display" : "Grum hear science man say Scrags made by humans. Maybe we made from different being? Father used to say that we made from rock, but me too soft and squishy. Have you seen soft and squishy rock?",
-		"Responses" : [
-			{
-				"Display" : "I can't say I have.",
-				"GoTo" : "grum_rock"
-			},
-			{
-				"Display" : "I'm going to leave now.",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "grum_rock",
-		"Display" : "If you see soft and squishy rock, tell Grum. Grum want to make a friend.",
-		"Responses" : [
-			{
-				"Display" : "I certainly will. (Leave)",
-				"GoTo" : "End"
-			}
-		]
-	},
+		{
+			"ID" : "grum_init",
+			"Display" : "Want to hear good thought Grum have?",
+			"Responses" : [
+				{
+					"Display" : "Sure.",
+					"GoTo" : "grum_yes"
+				},
+				{
+					"Display" : "Not really.",
+					"GoTo" : "grum_no"
+				},
+				{
+					"Display" : "I don't have time for this. (Leave)",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "grum_yes",
+			"Display" : "Me hate Puggles. They nasty bunch who laugh at Grum for shiny head! Whole village of Puggles who speak to Grum, but me no like to go there anymore. I tell them I make new clothes out of fur if they keep laughing at me! Got big bite on my leg from that...\nWant to hear more thought?",
+			"Responses" : [
+				{
+					"Display" : "Go ahead.",
+					"GoTo" : "grum_yes2"
+				},
+				{
+					"Display" : "Spare me.",
+					"GoTo" : "grum_no"
+				}
+			]
+		},
+		{
+			"ID" : "grum_no",
+			"Display" : "Why so mean to Grum? Me just want friend.",
+			"Responses" : [
+				{
+					"Display" : "Okay fine. Tell me your \"thought\".",
+					"GoTo" : "grum_yes"
+				},
+				{
+					"Display" : "I'll be going now.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "grum_yes2",
+			"Display" : "Grum hear science man say Scrags made by humans. Maybe we made from different being? Father used to say that we made from rock, but me too soft and squishy. Have you seen soft and squishy rock?",
+			"Responses" : [
+				{
+					"Display" : "I can't say I have.",
+					"GoTo" : "grum_rock"
+				},
+				{
+					"Display" : "I'm going to leave now.",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "grum_rock",
+			"Display" : "If you see soft and squishy rock, tell Grum. Grum want to make a friend.",
+			"Responses" : [
+				{
+					"Display" : "I certainly will. (Leave)",
+					"GoTo" : "End"
+				}
+			]
+		},
 
-	{
-		"ID" : "pugelder_init",
-		"Display" : "Hello, human. \n\n<color=grey><i>The Puggle Elder sniffs the air.</i></color>",
-		"Responses" : [
-			{
-				"Display" : "Wait, you're not going to attack me?",
-				"GoTo" : "pugelder_attack"
-			},
-			{
-				"Display" : "Hello and goodbye. (Leave)",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "pugelder_attack",
-		"Display" : "Should I? You don't seem very dangerous to me. You must be confusing us with the wild ones. In our society, we set aside our base instincts to further evolve. Make no mistake, if you prove to be an enemy, I will not hesitate to call for your head.",
-		"Responses" : [
-			{
-				"Display" : "You are much too trusting.",
-				"GoTo" : "pugelder_trust"
-			},
-			{
-				"Display" : "That won't be necessary. (Leave)",
-				"GoTo" : "End"
-			}
-		]
-	},
-	{
-		"ID" : "pugelder_trust",
-		"Display" : "I see no need for senseless violence. I am afraid I must be going. Do not cause trouble. I've had to ban too many humans from my village.",
-		"Responses" : [
-			{
-				"Display" : "Fair enough. (Leave)",
-				"GoTo" : "End"
-			}
-		]
-	}
-]
+		{
+			"ID" : "pugelder_init",
+			"Display" : "Hello, human. \n\n<color=grey><i>The Puggle Elder sniffs the air.</i></color>",
+			"Responses" : [
+				{
+					"Display" : "Wait, you're not going to attack me?",
+					"GoTo" : "pugelder_attack"
+				},
+				{
+					"Display" : "Hello and goodbye. (Leave)",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "pugelder_attack",
+			"Display" : "Should I? You don't seem very dangerous to me. You must be confusing us with the wild ones. In our society, we set aside our base instincts to further evolve. Make no mistake, if you prove to be an enemy, I will not hesitate to call for your head.",
+			"Responses" : [
+				{
+					"Display" : "You are much too trusting.",
+					"GoTo" : "pugelder_trust"
+				},
+				{
+					"Display" : "That won't be necessary. (Leave)",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "pugelder_trust",
+			"Display" : "I see no need for senseless violence. I am afraid I must be going. Do not cause trouble. I've had to ban too many humans from my village.",
+			"Responses" : [
+				{
+					"Display" : "Fair enough. (Leave)",
+					"GoTo" : "End"
+				}
+			]
+		}
+	]
+}

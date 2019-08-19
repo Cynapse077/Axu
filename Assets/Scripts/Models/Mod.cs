@@ -1,14 +1,16 @@
-﻿using UnityEngine;
-using LitJson;
-using System;
+﻿using System;
 using System.IO;
+using UnityEngine;
+using LitJson;
 
 public class Mod
 {
     public string id;
     public string name;
-    public string filePath;
+    public string description;
+    public string creator;
     public int loadOrder = 0;
+    string filePath;
 
     public Mod(string filPth)
     {
@@ -32,9 +34,11 @@ public class Mod
         dat.TryGetValue("ID", out id, "MOD_" + ModUtility.GetNextFreeID());
         dat.TryGetValue("Name", out name, "Unnamed");
         dat.TryGetValue("Load Order", out loadOrder, ModUtility.GetNextLoadOrder(this));
+        dat.TryGetValue("Description", out description, "No description.");
+        dat.TryGetValue("Creator", out creator, "Unknown");
     }
 
-    void AddData<T>(string folderPath, string fileName, string key)
+    bool AddData<T>(string folderPath, string fileName, string key)
     {
         string path = Path.Combine(filePath, folderPath);
         string file = Path.Combine(path, fileName);
@@ -47,13 +51,29 @@ public class Mod
             foreach (JsonData dat in data)
             {
                 IAsset t = (IAsset)Activator.CreateInstance(typeof(T), dat);
+                t.ModID = id;
                 GameData.Add<T>(t);
             }
+
+            return true;
         }
+
+        return false;
     }
 
-    public void LoadItemFolderData()
+    public void PreLoadData()
     {
+        //Sprites
+        string artPath = Path.Combine(filePath, "Art");
+        if (Directory.Exists(artPath))
+        {
+            string objFilePath = Path.Combine(artPath, "Objects");
+            string npcFilePath = Path.Combine(artPath, "NPCs");
+
+            SpriteManager.AddObjectSprites(this, objFilePath, SpriteType.Object);
+            SpriteManager.AddObjectSprites(this, npcFilePath, SpriteType.NPC);
+        }
+
         //Item folder
         string itemPath = Path.Combine(filePath, ModUtility.ItemsFoler);
         if (Directory.Exists(itemPath))
@@ -70,14 +90,17 @@ public class Mod
                 JsonData tables = JsonMapper.ToObject(contents);
 
                 if (tables.ContainsKey("Mixing Tables"))
+                {
                     Liquid.SetupMixingTables(tables);
+                }
             }
         }
 
+        //Entities folder
         string entityPath = Path.Combine(filePath, ModUtility.EntitiesFolder);
         if (Directory.Exists(entityPath))
         {
-            AddData<Skill>(entityPath, "Abilities.json", "Abilities");
+            AddData<Ability>(entityPath, "Abilities.json", "Abilities");
             AddData<Trait>(entityPath, "Traits.json", "Traits");
             AddData<Wound>(entityPath, "Wounds.json", "Wounds");
             AddData<Felony>(entityPath, "Felonies.json", "Felonies");
@@ -86,35 +109,52 @@ public class Mod
             AddData<NPC_Blueprint>(entityPath, "NPCs.json", "NPCs");
             AddData<GroupBlueprint>(entityPath, "Encounters.json", "Encounters");
         }
-    }
-    public void LoadLuaFiles()
-    {
+
+        //Lua folder
         string luaPath = Path.Combine(filePath, "Lua");
         if (Directory.Exists(luaPath))
         {
             string[] luaFiles = Directory.GetFiles(luaPath, "*lua", SearchOption.AllDirectories);
 
-            for (int i = 0; i < luaFiles.Length; i++)
+            foreach (string luaFile in luaFiles)
             {
-                LuaManager.AddFile(luaFiles[i]);
+                LuaManager.AddFile(luaFile);
+            }
+        }
+
+        //Map folder
+        string mapPath = Path.Combine(filePath, ModUtility.MapsFolder);
+        if (Directory.Exists(mapPath))
+        {
+            AddData<ZoneBlueprint>(mapPath, "Locations.json", "Zones");
+            AddData<ZoneBlueprint_Underground>(mapPath, "Locations.json", "Undergrounds");
+
+            string tilesPath = Path.Combine(mapPath, "LocalTiles.json");
+            if (File.Exists(tilesPath))
+            {
+                Tile.LoadTiles(tilesPath);
+            }
+        }
+
+        //Dialogue Folder
+        string diaPath = Path.Combine(filePath, ModUtility.DialogueFilesFoler);
+        if (Directory.Exists(diaPath))
+        {
+            AddData<Book>(diaPath, "Books.json", "Books");
+            AddData<DialogueNode>(diaPath, "DialogueOptions.json", "Dialogue Options");
+            AddData<DialogueSingle>(diaPath, "Dialogue.json", "Dialogue");
+
+            string content = File.ReadAllText(Path.Combine(diaPath, "Localization.json"));
+            JsonData dat = JsonMapper.ToObject(content);
+
+            foreach (string s in dat.Keys)
+            {
+                AddData<TranslatedText>(diaPath, "Localization.json", s);
             }
         }
     }
 
-    public void LoadSprites()
-    {
-        string artPath = Path.Combine(filePath, "Art");
-        if (Directory.Exists(artPath))
-        {
-            string objFilePath = Path.Combine(artPath, "Objects");
-            string npcFilePath = Path.Combine(artPath, "NPCs");
-
-            SpriteManager.AddObjectSprites(objFilePath, SpriteType.Object);
-            SpriteManager.AddObjectSprites(npcFilePath, SpriteType.NPC);
-        }
-    }
-
-    public void LoadQuests()
+    public void PostLoadData()
     {
         AddData<Quest>(filePath, "Quests.json", "Quests");
     }

@@ -8,11 +8,13 @@ public class MainMenuPanel : MonoBehaviour
     public GameObject titleAndButtons;
     public GameObject optionsMenu;
     public GameObject loadingObject;
+    public GameObject modsPanel;
 
     void Start()
     {
         loadingObject = GameObject.Find("LoadingText");
         loadingObject.SetActive(false);
+        CloseModsPanel();
         versionText.text = "(v. <color=cyan>" + GameSettings.version + "</color>)";
     }
 
@@ -21,6 +23,7 @@ public class MainMenuPanel : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             CloseOptionsMenu();
+            CloseModsPanel();
         }
     }
 
@@ -68,5 +71,15 @@ public class MainMenuPanel : MonoBehaviour
     public void CloseOptionsMenu()
     {
         optionsMenu.SetActive(false);
+    }
+
+    public void OpenModsPanel()
+    {
+        modsPanel.SetActive(true);
+    }
+
+    public void CloseModsPanel()
+    {
+        modsPanel.SetActive(false);
     }
 }

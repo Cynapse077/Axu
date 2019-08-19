@@ -170,7 +170,9 @@ public static class ItemList
             Item i = asset as Item;
 
             if (i != null)
+            {
                 return i.Name == nam;
+            }
 
             return false;
         };
@@ -178,7 +180,9 @@ public static class ItemList
         List<IAsset> ass = GameData.Get<Item>(p);
 
         if (ass.Count > 0)
+        {
             return new Item(ass[0] as Item);
+        }
 
         return null;
     }
@@ -203,7 +207,9 @@ public static class ItemList
                 Item i = asset as Item;
 
                 if (i != null)
+                {
                     return i.HasProp(ItemProperty.Tome);
+                }
 
                 return false;
             };
@@ -216,8 +222,10 @@ public static class ItemList
 
     public static ItemModifier GetModByID(string search)
     {
-        if (search == "")
+        if (string.IsNullOrEmpty(search))
+        {
             return ItemModifier.Empty();
+        }
 
         return new ItemModifier(GameData.Get<ItemModifier>(search) as ItemModifier);
     }
@@ -230,7 +238,9 @@ public static class ItemList
         for (int r = 1; r < maxRarity; r++)
         {
             if (SeedManager.combatRandom.Next(100) < divisible / r)
+            {
                 rarity++;
+            }
         }
 
         return rarity;
@@ -243,7 +253,9 @@ public static class ItemList
             Item it = (asset as Item);
 
             if (it != null)
+            {
                 return it.rarity == rar;
+            }
 
             return false;
         };
@@ -251,12 +263,14 @@ public static class ItemList
         return GetRandomPredicatedItem(p);
     }
 
-    static Item GetRandomPredicatedItem(Predicate<IAsset> p, bool tryAddMod = true)
+    static Item GetRandomPredicatedItem(Predicate<IAsset> p, bool addMod = true)
     {
         Item item = new Item(GameData.Get<Item>(p).GetRandom() as Item);
 
-        if (tryAddMod)
+        if (addMod)
+        {
             TryAddMod(ref item, modChance);
+        }
 
         return item;
     }
@@ -264,10 +278,12 @@ public static class ItemList
     public static Item GetWeaponByRarity(int rar)
     {
         Predicate<IAsset> p = (IAsset asset) => {
-            Item it = (asset as Item);
+            Item it = asset as Item;
 
             if (it != null)
+            {
                 return it.HasProp(ItemProperty.Weapon) && it.rarity == rar;
+            }
 
             return false;
         };
@@ -284,7 +300,9 @@ public static class ItemList
                 ItemModifier mod = asset as ItemModifier;
 
                 if (mod != null)
+                {
                     return !mod.unique && mod.CanAddToItem(newItem);
+                }
 
                 return false;
             };
@@ -343,7 +361,7 @@ public static class ItemUtility
             if (ID == "Charges")
             {
                 int charges = (int)data[i]["Max"];
-                CCharges cc = new CCharges(charges, charges);
+                CCharges cc = new CCharges(charges);
                 comps.Add(cc);
 
             }

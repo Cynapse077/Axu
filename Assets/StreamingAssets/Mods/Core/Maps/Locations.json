@@ -1,5 +1,5 @@
 {
-    "Locations" : [
+    "Zones" : [
         {
             "ID" : "Village",
             "Display" : "Village",
@@ -341,7 +341,17 @@
 						"Biome" : "Any Land",
 						"Relative" : { "x" : 0, "y" : 1 }
 					}
-				}
+				},
+                {
+                    "ID" : "Prison_NE",
+                    "Display" : "Abandoned Prison",
+                    "Tile Index" : 28,
+                    "Walkable" : false,
+                    "Place At" : {
+                        "Biome" : "Any Land",
+                        "Relative" : { "x" : 1, "y" : 1 }
+                    }
+                }
 			]
 		},
         {
@@ -456,8 +466,7 @@
         }
     ],
 
-
-	"Underground Areas" : [
+	"Undergrounds" : [
 		{
 			"ID" : "Default",
 			"Display" : "Cave",

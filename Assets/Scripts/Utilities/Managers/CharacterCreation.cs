@@ -227,14 +227,14 @@ public class CharacterCreation : MonoBehaviour
     {
         for (int i = 0; i < difficulties.Length; i++)
         {
-            diffAnchor.GetChild(i).GetComponentInChildren<Text>().text = LocalizationManager.GetLocalizedContent(difficulties[i].descTag)[0];
+            diffAnchor.GetChild(i).GetComponentInChildren<Text>().text = LocalizationManager.GetLocalizedContent(difficulties[i].descTag).display;
             diffAnchor.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
             diffAnchor.GetChild(i).GetComponent<Button>().onClick.AddListener(ConfirmStart);
         }
 
         selectedNum = 2;
         currentDiff = difficulties[2];
-        diffDescText.text = LocalizationManager.GetLocalizedContent(difficulties[2].descTag)[1];
+        diffDescText.text = LocalizationManager.GetLocalizedContent(difficulties[2].descTag).display2;
         EventSystem.current.SetSelectedGameObject(diffAnchor.GetChild(selectedNum).gameObject);
     }
 
@@ -256,7 +256,7 @@ public class CharacterCreation : MonoBehaviour
         {
             currentDiff = difficulties[selectedNum];
             EventSystem.current.SetSelectedGameObject(diffAnchor.GetChild(selectedNum).gameObject);
-            diffDescText.text = LocalizationManager.GetLocalizedContent(difficulties[selectedNum].descTag)[1];
+            diffDescText.text = LocalizationManager.GetLocalizedContent(difficulties[selectedNum].descTag).display2;
         }
     }
 
@@ -320,7 +320,7 @@ public class CharacterCreation : MonoBehaviour
 
         for (int z = 0; z < p.skills.Count; z++)
         {
-            Skill s = new Skill(GameData.Get<Skill>(p.skills[z].Name) as Skill);
+            Ability s = new Ability(GameData.Get<Ability>(p.skills[z].Name) as Ability);
             GameObject g = SimplePool.Spawn(textPrefab, abilAnchor);
             g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", s.Name, s.Description);
         }
@@ -348,7 +348,7 @@ public class CharacterCreation : MonoBehaviour
             else
             {
                 YNPanel.gameObject.SetActive(true);
-                YNPanel.Display("YN_MainMenu", () => { LoadMainMenu(); }, () => { EndConfirmReturn(); }, "");
+                YNPanel.Display("YN_MainMenu".Translate(), () => { LoadMainMenu(); }, () => { EndConfirmReturn(); }, "");
                 confirmReturn = true;
             }
         }
@@ -379,7 +379,7 @@ public class CharacterCreation : MonoBehaviour
     {
         confirmStart = true;
         YNPanel.gameObject.SetActive(true);
-        YNPanel.Display("YN_StartProf", () => { SendDataToManager(); }, () => { EndConfirmStart(); }, currentProf.name);
+        YNPanel.Display("YN_StartProf".Translate(), () => { SendDataToManager(); }, () => { EndConfirmStart(); }, currentProf.name);
     }
 
     void EndConfirmStart()
@@ -569,14 +569,14 @@ public class CharacterCreation : MonoBehaviour
 
         SetupEquipment();
 
-        Manager.playerBuilder.skills = new List<Skill>();
+        Manager.playerBuilder.abilities = new List<Ability>();
 
         for (int i = 0; i < currentProf.skills.Count; i++)
         {
-            Skill s = new Skill(GameData.Get<Skill>(currentProf.skills[i].Name) as Skill);
-            FlagsHelper.Set(ref s.origin, Skill.AbilityOrigin.Book);
+            Ability s = new Ability(GameData.Get<Ability>(currentProf.skills[i].Name) as Ability);
+            FlagsHelper.Set(ref s.origin, Ability.AbilityOrigin.Book);
 
-            Manager.playerBuilder.skills.Add(s);
+            Manager.playerBuilder.abilities.Add(s);
         }
 
         for (int i = 0; i < currentProf.items.Count; i++)

@@ -184,14 +184,14 @@ public class DialogueController : MonoBehaviour
 
     void Hire()
     {
-        World.userInterface.YesNoAction("YN_Hire", () => HireMe(), null, costToHire.ToString());
+        World.userInterface.YesNoAction("YN_Hire".Translate(), () => HireMe(), null, costToHire.ToString());
     }
 
     public void HireMe()
     {
         if (ObjectManager.playerEntity.inventory.gold < costToHire)
         {
-            Alert.NewAlert("Hire_No_Money", UIWindow.Dialogue);
+            Alert.NewAlert("Hire_No_Money".Translate(), UIWindow.Dialogue);
         }
         else if (World.objectManager.NumFollowers() < 3)
         {

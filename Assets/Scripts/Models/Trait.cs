@@ -7,6 +7,7 @@ public class Trait : IAsset
 {
     public string _name { get; protected set; }
     public string ID { get; set; }
+    public string ModID { get; set; }
     public string description;
 
     public bool stackable;

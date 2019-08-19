@@ -202,7 +202,7 @@ public class Stats : MonoBehaviour
         {
             statusEffects.Add(effectName, turns - 1);
 
-            if (LocalizationManager.GetContent("Message_SE_" + effectName) != LocalizationManager.defaultText)
+            if (LocalizationManager.GetContent("Message_SE_" + effectName) != TranslatedText.defaultText)
             {
                 CombatLog.NameMessage("Message_SE_" + effectName, entity.MyName);
             }
@@ -987,9 +987,9 @@ public class Stats : MonoBehaviour
 
             for (int i = 0; i < t.abilityIDs.Count; i++)
             {
-                if ((GameData.Get<Skill>(t.abilityIDs[i]) as Skill) != null && skills.abilities.Find(x => x.ID == t.abilityIDs[i]) != null)
+                if ((GameData.Get<Ability>(t.abilityIDs[i]) as Ability) != null && skills.abilities.Find(x => x.ID == t.abilityIDs[i]) != null)
                 {
-                    skills.RemoveSkill(t.abilityIDs[i], Skill.AbilityOrigin.Trait);
+                    skills.RemoveSkill(t.abilityIDs[i], Ability.AbilityOrigin.Trait);
                 }
             }
 
@@ -1421,12 +1421,12 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < t.abilityIDs.Count; i++)
         {
-            Skill s = new Skill(GameData.Get<Skill>(t.abilityIDs[i]) as Skill);
+            Ability s = new Ability(GameData.Get<Ability>(t.abilityIDs[i]) as Ability);
 
             if (s != null)
             {
-                s.SetFlag(Skill.AbilityOrigin.Trait);
-                entity.skills.AddSkill(s, Skill.AbilityOrigin.Trait);
+                s.SetFlag(Ability.AbilityOrigin.Trait);
+                entity.skills.AddSkill(s, Ability.AbilityOrigin.Trait);
             }
         }
     }
