@@ -373,7 +373,7 @@ public class BaseAI : MonoBehaviour
     {
         path = new Path_AStar(entity.myPos, dest, entity.inventory.CanFly(), false);
 
-        if (path.steps == null)
+        if (path == null || !path.Traversable)
         {
             Wander();
             return;
@@ -381,7 +381,13 @@ public class BaseAI : MonoBehaviour
 
         Coord next = path.GetNextStep();
 
-        if (next.x == entity.posX && next.y == entity.posY)
+        if (next == null)
+        {
+            Wander();
+            return;
+        }
+
+        if (next.x == entity.posX && next.y == entity.posY && path.StepCount > 0)
         {
             next = path.GetNextStep();
         }
@@ -448,7 +454,11 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        if (path == null || path.steps == null || path.steps.Count <= 0)
+        if (path != null && path.Traversable)
+        {
+            FollowPath();
+        }
+        else
         {
             Coord targetPosition = World.tileMap.CurrentMap.GetRandomFloorTile();
 
@@ -456,10 +466,6 @@ public class BaseAI : MonoBehaviour
             {
                 GetNewPath(targetPosition);
             }
-        }
-        else
-        {
-            FollowPath();
         }
     }
 
@@ -501,16 +507,20 @@ public class BaseAI : MonoBehaviour
 
     public void FollowPath()
     {
-        if (path != null)
+        if (path != null && path.Traversable)
         {
             Coord next = path.GetNextStep();
 
-            if (next == entity.myPos && path.steps.Count > 0)
+            if (next == entity.myPos && path.StepCount > 0)
             {
                 next = path.GetNextStep();
             }
 
             ConfirmAction(next.x - entity.posX, next.y - entity.posY);
+        }
+        else
+        {
+            Wander();
         }
     }
 

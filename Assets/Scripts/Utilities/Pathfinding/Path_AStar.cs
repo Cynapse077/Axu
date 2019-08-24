@@ -1,16 +1,50 @@
 ﻿using UnityEngine;
 using Priority_Queue;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
 namespace Pathfinding
 {
+    public enum PathResult
+    {
+        Success,
+        Fail
+    }
+
     public class Path_AStar
     {
-        public Queue<Path_Node> steps;
+        Queue<Path_Node> steps;
+        public readonly PathResult result;
+        public readonly Coord Start;
+        public readonly Coord End;
+
+        Dictionary<Path_Node, Path_Node> Came_From = new Dictionary<Path_Node, Path_Node>();
+        Dictionary<Path_Node, float> g_score = new Dictionary<Path_Node, float>();
+        Dictionary<Path_Node, float> f_score = new Dictionary<Path_Node, float>();
+        List<Path_Node> ClosedSet = new List<Path_Node>();
+        SimplePriorityQueue<Path_Node> OpenSet = new SimplePriorityQueue<Path_Node>();
+
+        public int StepCount
+        {
+            get
+            {
+                return steps == null ? 0 : steps.Count;
+            }
+        }
+
+        public bool Traversable
+        {
+            get
+            {
+                return result == PathResult.Success && StepCount > 0;
+            }
+        }
 
         public Path_AStar(Coord startCoord, Coord endCoord, bool ignoreCosts, bool isPlayer)
         {
+            Start = startCoord;
+            End = endCoord;
             if (World.tileMap.tileGraph == null)
             {
                 World.tileMap.tileGraph = new Path_TileGraph(World.tileMap.CurrentMap);
@@ -24,22 +58,18 @@ namespace Pathfinding
             Path_TileData start = World.tileMap.CurrentMap.GetTileData(startCoord.x, startCoord.y);
             Path_TileData end = World.tileMap.CurrentMap.GetTileData(endCoord.x, endCoord.y);
 
-            if (start == null)
+            if (start == null || end == null)
             {
-                Debug.LogError("Path start null.");
-                return;
-            }
-
-            if (end == null)
-            {
-                Debug.LogError("Path end null.");
                 return;
             }
 
             if (!Calculate(World.tileMap.tileGraph.nodes, start, end, ignoreCosts, isPlayer))
             {
                 steps = null;
+                result = PathResult.Fail;
             }
+
+            result = PathResult.Success;
         }
 
         public Path_AStar(Coord startCoord, Coord endCoord, WorldMap_Data gr)
@@ -77,14 +107,7 @@ namespace Pathfinding
 
         bool Calculate(Dictionary<Path_TileData, Path_Node> nodes, Path_TileData start, Path_TileData end, bool ignoreCosts, bool isPlayer)
         {
-            List<Path_Node> ClosedSet = new List<Path_Node>();
-            SimplePriorityQueue<Path_Node> OpenSet = new SimplePriorityQueue<Path_Node>();
-
             OpenSet.Enqueue(nodes[start], 0);
-
-            Dictionary<Path_Node, Path_Node> Came_From = new Dictionary<Path_Node, Path_Node>();
-            Dictionary<Path_Node, float> g_score = new Dictionary<Path_Node, float>();
-            Dictionary<Path_Node, float> f_score = new Dictionary<Path_Node, float>();
 
             foreach (Path_Node n in nodes.Values)
             {
@@ -122,11 +145,12 @@ namespace Pathfinding
                         continue;
                     }
 
-                    float tentative_g_score = g_score[current] + GetDistance(current, neighbor) + neighbor.data.costToEnter;
+                    const float costToEnterFactor = 0.8f;
+                    float tentative_g_score = g_score[current] + GetDistance(current, neighbor) + neighbor.data.costToEnter * costToEnterFactor;
 
                     if (ignoreCosts && neighbor.data.costToEnter < 100)
                     {
-                        tentative_g_score -= neighbor.data.costToEnter;
+                        tentative_g_score -= neighbor.data.costToEnter * costToEnterFactor;
                     }
 
                     if (OpenSet.Contains(neighbor) && tentative_g_score > g_score[neighbor] || !isPlayer && neighbor.data.costToEnter >= 100)
@@ -194,9 +218,9 @@ namespace Pathfinding
 
         public Coord GetNextStep()
         {
-            if (steps == null || steps.Count == 0)
+            if (steps == null || steps.Count <= 0)
             {
-                return new Coord(0, 0);
+                return null;
             }
 
             Coord nextPosition = steps.Dequeue().data.position;
@@ -204,11 +228,59 @@ namespace Pathfinding
         }
     }
 
-    public static class PathRequestManager
+    public class PathRequestManager
     {
-        public static void RequestPath(Coord start, Coord end, bool ignoreCosts)
-        {
+        public static PathRequestManager instance;
+        Queue<PathRequest> pathRequests;
 
+        public PathRequestManager()
+        {
+            instance = this;
+            pathRequests = new Queue<PathRequest>();
+        }
+
+        public void RequestPath(PathRequest request)
+        {
+            lock (pathRequests)
+            {
+                pathRequests.Enqueue(request);
+            }
+        }
+
+        public void FindPath(PathRequest req)
+        {
+            Path_AStar path = new Path_AStar(req.start, req.end, req.entity.inventory.CanFly(), req.entity.isPlayer);
+            req.callback(path);
+        }
+
+        public void Update()
+        {
+            if (pathRequests.Count > 0)
+            {
+                PathRequest req;
+                lock (pathRequests)
+                {
+                    req = pathRequests.Dequeue();
+                }
+
+                FindPath(req);
+            }
+        }
+    }
+
+    public struct PathRequest
+    {
+        public Coord start;
+        public Coord end;
+        public Entity entity;
+        public Action<Path_AStar> callback;
+
+        public PathRequest(Coord start, Coord end, Entity entity, Action<Path_AStar> callback)
+        {
+            this.start = start;
+            this.end = end;
+            this.entity = entity;
+            this.callback = callback;
         }
     }
 }

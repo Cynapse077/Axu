@@ -4,31 +4,37 @@
             "Name" : "Gib",
             "ObjectType" : "Body",
             "Sprite" : "object-limb.png",
-            "Description" : "Freshly segmented flesh."
+            "Description" : "Freshly segmented flesh.",
+            "Render Layer" : "Back",
+            "Random Rotation" : true
         },
         {
             "Name" : "Bloodstain",
             "ObjectType" : "Bloodstain",
             "Sprite" : "object-bloodstain.png",
             "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
-            "Render In Back" : true,
-            "Description" : "A pool of blood."
+            "Render Layer" : "Back",
+            "Description" : "A pool of blood.",
+            "Saved" : false,
+            "Random Rotation" : true
         },
         {
             "Name" : "Bloodstain",
             "ObjectType" : "Bloodstain_Permanent",
             "Sprite" : "object-bloodstain.png",
             "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
-            "Render In Back" : true,
-            "Description" : "A pool of blood."
+            "Render Layer" : "Back",
+            "Description" : "A pool of blood.",
+            "Random Rotation" : true
         },
         {
             "Name" : "Bloodstain",
             "ObjectType" : "Bloodstain_Wall",
             "Sprite" : "object-bloodstain_wall.png",
             "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
-            "Render In Back" : true,
-            "Description" : "A pool of blood."
+            "Render Layer" : "Back",
+            "Description" : "A pool of blood.",
+            "Saved" : false
         },
         {
             "Name" : "Small Chest",
@@ -78,7 +84,7 @@
             "ObjectType" : "Table",
             "Sprite" : "object-table_small.png",
 			"Path Cost" : 2,
-            "Render In Back" : true,
+            "Render Layer" : "Back",
             "Description" : "A crudely crafted wooden table."
         },
 		{
@@ -86,7 +92,7 @@
             "ObjectType" : "Table_Large",
             "Sprite" : "object-table_big.png",
 			"Path Cost" : 2,
-            "Render In Back" : true,
+            "Render Layer" : "Back",
             "Description" : "A crudely crafted wooden table."
         },
 		{
@@ -94,7 +100,7 @@
 			"ObjectType" : "Chair_Right",
 			"Sprite" : "object-chair_right.png",
 			"Path Cost" : 2,
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"Description" : ""
 		},
 		{
@@ -102,7 +108,7 @@
 			"ObjectType" : "Chair_Left",
 			"Sprite" : "object-chair_left.png",
 			"Path Cost" : 2,
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"Description" : ""
 		},
         {
@@ -118,7 +124,7 @@
             "ObjectType" : "Door_Open",
             "Sprite" : "object-door_wood_open.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door"}
 			],
             "Description" : "A wood door, open."
         },
@@ -138,8 +144,8 @@
             "ObjectType" : "Prison_Door_Open",
             "Sprite" : "object-door_metal_open.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" },
-				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Door_OnPulseReceived" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door" },
+                { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Door_OnPulseReceived" }
 			],
             "Description" : "A steel door.",
 			"Pulse" : {
@@ -163,8 +169,8 @@
             "ObjectType" : "Ensis_Door_Open",
             "Sprite" : "object-door_ensis_open.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" },
-				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Door_OnPulseReceived" }
+				{ "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door" },
+                { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Door_OnPulseReceived" }
 			],
             "Description" : "A door only the Ensis can open.",
 			"Pulse" : {
@@ -189,8 +195,8 @@
             "ObjectType" : "Magna_Door_Open",
             "Sprite" : "object-door_magna_open.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" },
-				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Door_OnPulseReceived" }
+				{ "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door" },
+                { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Door_OnPulseReceived" }
 			],
             "Description" : "A strange door. Open.",
 			"Pulse" : {
@@ -215,8 +221,8 @@
 			"ObjectType" : "Kin_Door_Open",
 			"Sprite" : "object-door_kin_open.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Door" },
-				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Door_OnPulseReceived" }
+				{ "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door" },
+                { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Door_OnPulseReceived" }
 			],
 			"Description" : "A steel door. Open.",
 			"Pulse" : {
@@ -250,7 +256,7 @@
 			"Sprite" : "object-switch_on.png",
 			"Description" : "A lever. It is set to the \"ON\" position.",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Switch" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Switch" }
 			],
 			"Pulse" : {
 				"Send" : true
@@ -262,7 +268,7 @@
 			"Sprite" : "object-switch_off.png",
 			"Description" : "A lever. It is set to the \"OFF\" position.",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Switch" }
+				{ "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Switch" }
 			],
 			"Pulse" : {
 				"Send" : true
@@ -272,20 +278,21 @@
             "Name" : "Bed",
             "ObjectType" : "Bed",
             "Sprite" : "object-bed_small.png",
-            "Render In Back" : true,
+            "Render Layer" : "Back",
             "Description" : "Someone's bed."
         },
         {
             "Name" : "Sign",
             "ObjectType" : "Sign_House",
             "Sprite" : "object-sign.png",
-            "Description" : "A sign."
+            "Description" : "A sign.",
+            "Render Layer" : "Back"
         },
         {
             "Name" : "Bed Roll",
             "ObjectType" : "Bed_Roll",
             "Sprite" : "object-bedroll.png",
-            "Render In Back" : true,
+            "Render Layer" : "Back",
             "Description" : "A portable sleeping spot."
         },
         {
@@ -293,14 +300,14 @@
             "ObjectType" : "Brazier",
             "Sprite" : "object-brazier.png",
             "Light" : 4,
-            "Render In Back" : true,
+            "Render Layer" : "Back",
             "Description" : "A large braier filled with a flammable ore and incense. It burns brightly."
         },
         {
             "Name" : "Terminal",
             "ObjectType" : "Terminal_On",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Terminal" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Terminal" }
 			],
             "Sprite" : "object-terminal_on.png",
             "Description" : "A computer terminal. Its screen flashes brightly with text."
@@ -309,7 +316,7 @@
             "Name" : "Terminal",
             "ObjectType" : "Terminal_Off",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Terminal" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Terminal" }
 			],
             "Sprite" : "object-terminal_off.png",
             "Description" : "A computer terminal. It appears to be off."
@@ -319,7 +326,7 @@
             "ObjectType" : "Statue",
             "Sprite" : "object-statue.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A faceless statue made of solid gold. It appears to be praying.",
 			"Opaque" : true
         },
@@ -328,7 +335,7 @@
             "ObjectType" : "Statue_Broken",
             "Sprite" : "object-statue_broken.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A faceless statue made of solid gold. It was broken."
         },
         {
@@ -337,19 +344,19 @@
             "Sprite" : "object-crystal_on.png",
             "Physics" : "Solid",
             "Light" : 1,
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "What made such a curious structure? What could it do?"
         },
 		{
             "Name" : "Surface Crystal",
             "ObjectType" : "Crystal_Surface",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "OnInteract_SurfaceTele" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.OnInteract_SurfaceTele" }
 			],
             "Sprite" : "object-crystal_on.png",
 			"Physics" : "Solid",
             "Light" : 1,
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A large green crystal that seems to float in place. It will likely take you to the surface."
         },
         {
@@ -357,7 +364,7 @@
             "ObjectType" : "Bookshelf",
             "Sprite" : "object-bookshelf.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A shelf containing several pieces of literature."
         },
         {
@@ -365,7 +372,7 @@
             "ObjectType" : "Bookshelf_Burnt",
             "Sprite" : "object-bookshelf_burnt.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A shelf that contained literature. It is burnt, and the books within are illegible."
         },
 		{
@@ -373,7 +380,7 @@
 			"ObjectType" : "Bookshelf_Empty",
 			"Sprite" : "object-bookshelf_empty.png",
 			"Physics" : "Solid",
-			"Render In Front" : true,
+			"Render Layer" : "Front",
 			"Description" : "This shelf once contained pieces of literature."
 		},
         {
@@ -382,9 +389,9 @@
             "Sprite" : "object-cryopod_closed.png",
             "Physics" : "Solid",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Cryopod" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Cryopod" }
 			],
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A pod made to house people in a deep sleep during space travel."
         },
         {
@@ -392,14 +399,30 @@
             "ObjectType" : "Cryopod_Open",
             "Sprite" : "object-cryopod_open.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A pod made to house people in a deep sleep during space travel."
+        },
+        {
+            "Name" : "Cloning Chamber",
+            "ObjectType" : "CloningChamber_Empty",
+            "Sprite" : "object-cloningchamber.png",
+            "Physics" : "Solid",
+            "Render Layer" : "Front",
+            "Description" : "A large vat filled with a viscous green liquid. Its empty chamber is used to clone creatures."
+        },
+        {
+            "Name" : "Cloning Chamber",
+            "ObjectType" : "CloningChamber_Full",
+            "Sprite" : "object-cloningchamber_full.png",
+            "Physics" : "Solid",
+            "Render Layer" : "Front",
+            "Description" : "A large vat filled with a viscous green liquid. It contains some kind of being."
         },
         {
             "Name" : "Stone",
             "ObjectType" : "Stone",
             "Sprite" : "object-stone.png",
-            "Render In Back" : true,
+            "Render Layer" : "Back",
             "Description" : "A stone protruding from the earth."
         },
         {
@@ -407,10 +430,10 @@
             "ObjectType" : "Web",
 			"Path Cost" : 3,
             "Sprite" : "object-web.png",
-            "Render In Back" : true,
+            "Render Layer" : "Back",
 			"LuaEvents" : [
-				{ "Event" : "OnEntityEnter", "File" : "Objects", "Function" : "OnEnter_Web" },
-				{ "Event" : "OnEntityExit", "File" : "Objects", "Function" : "OnExit_Web" }
+                { "Event" : "OnEntityEnter", "Script" : "Core.Objects.OnEnter_Web" },
+                { "Event" : "OnEntityExit", "Script" : "Core.Objects.OnExit_Web" }
 			],
             "Description" : "A strongly woven web, probably made by a large arachnid."
         },
@@ -419,7 +442,7 @@
             "ObjectType" : "Anvil",
             "Sprite" : "object-anvil.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A tool used by blacksmiths and other metal workers."
         },
         {
@@ -427,7 +450,7 @@
             "ObjectType" : "Ore",
             "Sprite" : "object-ore.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A tool used by blacksmiths and other metal workers."
         },
         {
@@ -436,9 +459,9 @@
         	"Sprite" : "object-stairlock.png",
         	"Physics" : "Solid",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Stairlock" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Stairlock" }
 			],
-        	"Render In Front" : true,
+        	"Render Layer" : "Front",
         	"Description" : "A blocking stone, heavy and chained. It is used to cover staircases.",
 			"Opaque" : true
         },
@@ -447,17 +470,17 @@
 			"ObjectType" : "Portal",
 			"Sprite" : "object-portal.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Portal" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Portal" }
 			],
 			"Description" : "A translucent portal.",
-			"Render In Front" : true
+			"Render Layer" : "Front"
 		},
         {
             "Name" : "Fence",
             "ObjectType" : "Fence",
             "Sprite" : "object-fence.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
 			"Autotile" : true,
             "Description" : "A sturdy wood fence."
         },
@@ -466,7 +489,7 @@
             "ObjectType" : "Bars",
             "Sprite" : "object-bars.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
 			"Autotile" : true,
             "Description" : "Thick bars made of rusted metal."
         },
@@ -475,7 +498,7 @@
             "ObjectType" : "Headstone",
             "Sprite" : "object-gravestone.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A headstone for a deceased person."
         },
         {
@@ -483,16 +506,16 @@
             "ObjectType" : "Grave",
             "Sprite" : "object-grave.png",
             "LuaEvents" : [
-				{ "Event" : "OnInteract", "File" : "Objects", "Function" : "Interact_Grave" }
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Grave" }
 			],
-            "Render In Back" : true,
+            "Render Layer" : "Back",
             "Description" : ""
         },
         {
             "Name" : "Open Grave",
             "ObjectType" : "Grave_Dug",
             "Sprite" : "object-grave_dug.png",
-            "Render In Back" : true,
+            "Render Layer" : "Back",
             "Description" : ""
         },
         {
@@ -500,7 +523,7 @@
             "ObjectType" : "Tree_Pine",
             "Sprite" : "object-tree_pine.png",
             "Physics" : "Solid",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "A sturdy pine tree.",
 			"Opaque" : true
         },
@@ -508,7 +531,7 @@
             "Name" : "Tall Grass",
             "ObjectType" : "Tall_Grass",
             "Sprite" : "object-grass.png",
-            "Render In Front" : true,
+            "Render Layer" : "Front",
             "Description" : "Tall grass, perfect for hiding."
         },
         {
@@ -516,14 +539,14 @@
             "ObjectType" : "Robot_Frame",
             "Sprite" : "object-robot.png",
 			"Physics" : "Solid",
-			"Render In Front" : true,
+			"Render Layer" : "Front",
             "Description" : "An empty robotic chasis. It requires an AI Core to interact with."
         },
 		{
 			"Name" : "Wire",
 			"ObjectType" : "Wire",
 			"Sprite" : "object-wire.png",
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"Autotile" : true,
 			"Description" : "A strand of electrical wire.",
 			"Pulse" : {
@@ -535,7 +558,7 @@
 			"Name" : "Hidden Wire",
 			"ObjectType" : "Wire_Hidden",
 			"Sprite" : "object-empty.png",
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"Description" : "",
 			"Pulse" : {
 				"Send" : true,
@@ -547,14 +570,14 @@
 			"ObjectType" : "Battery",
 			"Sprite" : "object-battery.png",
 			"Physics" : "Solid",
-			"Render In Front" : true,
+			"Render Layer" : "Front",
 			"Description" : "Storage for electrical power."
 		},
 		{
 			"Name" : "Track",
 			"ObjectType" : "Track",
 			"Sprite" : "object-track.png",
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"Autotile" : true,
 			"Description" : ""
 		},
@@ -562,7 +585,7 @@
 			"Name" : "Minecart",
 			"ObjectType" : "Minecart",
 			"Sprite" : "object-minecart.png",
-			"Render In Front" : true,
+			"Render Layer" : "Front",
 			"Physics" : "Solid",
 			"Description" : ""
 		},
@@ -570,29 +593,29 @@
 			"Name" : "Spike Trap",
 			"ObjectType" : "Trap_Spike",
 			"Sprite" : "object-trap_spike.png",
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"LuaEvents" : [
-				{ "Event" : "OnEntityEnter", "File" : "Objects", "Function" : "OnEnter_SpikeTrap" }
+                { "Event" : "OnEntityEnter", "Script" : "Core.Objects.OnEnter_SpikeTrap" }
 			],
 			"Description" : "A floor panel with holes. You can see a thin coating of blood."
 		},
 		{
 			"Name" : "Poison Trap",
 			"ObjectType" : "Trap_Poison",
-			"Sprite" : "object-trap_spike.png",
-			"Render In Back" : true,
+			"Sprite" : "object-trap_gas.png",
+			"Render Layer" : "Back",
 			"LuaEvents" : [
-				{ "Event" : "OnEntityEnter", "File" : "Objects", "Function" : "OnEnter_PoisonTrap" }
+				{ "Event" : "OnEntityEnter", "Script" : "Core.Objects.OnEnter_PoisonTrap" }
 			],
 			"Description" : "A floor panel with holes. There is a foul smell coming from it."
 		},
 		{
 			"Name" : "Blinding Gas Trap",
 			"ObjectType" : "Trap_Gas",
-			"Sprite" : "object-trap_spike.png",
-			"Render In Back" : true,
+			"Sprite" : "object-trap_gas.png",
+			"Render Layer" : "Back",
 			"LuaEvents" : [
-				{ "Event" : "OnEntityEnter", "File" : "Objects", "Function" : "OnEnter_BlindTrap" }
+				{ "Event" : "OnEntityEnter", "Script" : "Core.Objects.OnEnter_BlindTrap" }
 			],
 			"Description" : "A floor panel with holes. There is a foul smell coming from it."
 		},
@@ -601,11 +624,11 @@
 			"ObjectType" : "PressurePlate",
 			"Sprite" : "object-pressureplate.png",
 			"LuaEvents" : [
-				{ "Event" : "OnEntityEnter", "File" : "Objects", "Function" : "OnEnter_PressurePlate" },
-				{ "Event" : "OnEntityExit", "File" : "Objects", "Function" : "OnExit_PressurePlate" }
+                { "Event" : "OnEntityEnter", "Script" : "Core.Objects.OnEnter_PressurePlate" },
+                { "Event" : "OnEntityExit", "Script" : "Core.Objects.OnExit_PressurePlate" }
 			],
 			"Description" : "A raised piece of floor.",
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"Pulse" : {
 				"Send" : true
 			}
@@ -615,7 +638,7 @@
 			"ObjectType" : "Light_On",
 			"Sprite" : "object-light_on.png",
 			"LuaEvents" : [
-				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Light_PulseReceived" }
+                { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Light_PulseReceived" }
 			],
 			"Description" : "",
 			"Pulse" : {
@@ -627,7 +650,7 @@
 			"ObjectType" : "Light_Off",
 			"Sprite" : "object-light_off.png",
 			"LuaEvents" : [
-				{ "Event" : "OnPulseReceived", "File" : "Objects", "Function" : "Light_PulseReceived" }
+                { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Light_PulseReceived" }
 			],
 			"Description" : "",
 			"Pulse" : {
@@ -639,7 +662,7 @@
 			"ObjectType" : "Coffin",
 			"Sprite" : "object-coffin.png",
 			"Physics" : "Solid",
-			"Render In Front" : true,
+			"Render Layer" : "Front",
 			"Description" : "Storage for the dead."
 		},
 		{
@@ -647,7 +670,7 @@
 			"ObjectType" : "Forge",
 			"Sprite" : "object-forge.png",
 			"Physics" : "Solid",
-			"Render In Front" : true,
+			"Render Layer" : "Front",
 			"Description" : "A hearth used for heating metals for blacksmithing."
 		},
 		{
@@ -655,7 +678,7 @@
 			"ObjectType" : "PolReverse",
 			"Sprite" : "object-reverse.png",
 			"Description" : "Reverses the polarity of a wire's signal.",
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"Pulse" : {
 				"Send" : true,
 				"Receive" : true,
@@ -668,9 +691,9 @@
 			"Sprite" : "object-spike_down.png",
 			"Description" : "",
 			"Path Cost" : 10,
-			"Render In Back" : true,
+			"Render Layer" : "Back",
 			"LuaEvents" : [
-				{ "Event" : "OnTurn", "File" : "Objects", "Function" : "OnTurn_Spike" }
+                { "Event" : "OnTurn", "Script" : "Core.Objects.OnTurn_Spike" }
 			]
 		},
 		{
@@ -678,8 +701,9 @@
 			"ObjectType" : "Spike_Up",
 			"Sprite" : "object-spike_up.png",
 			"Description" : "",
+            "Render Layer" : "Back",
 			"LuaEvents" : [
-				{ "Event" : "OnTurn", "File" : "Objects", "Function" : "OnTurn_Spike" }
+                { "Event" : "OnTurn", "Script" : "Core.Objects.OnTurn_Spike" }
 			]
 		}
     ]

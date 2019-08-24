@@ -167,6 +167,20 @@ public class NPC
             if (RNG.Next(1000) <= (1.25f * blueprint.maxItemRarity))
             {
                 //Get random artifact
+                Predicate<IAsset> p = (IAsset asset) => {
+                    Item i = asset as Item;
+
+                    if (i != null)
+                        return i.HasProp(ItemProperty.Artifact) && !i.HasProp(ItemProperty.Unique) && !i.HasProp(ItemProperty.Quest_Item);
+
+                    return false;
+                };
+                Item item = GameData.Get<Item>(p).GetRandom() as Item;
+
+                if (item != null)
+                {
+                    inventory.Add(new Item(item));
+                }
             }
 
             int numItems = RNG.Next(HasFlag(NPC_Flags.Merchant) ? 4 : 0, blueprint.maxItems + 2);
@@ -177,6 +191,20 @@ public class NPC
             }
 
             if (RNG.Next(100) < 10)
+            {
+                Item ammo = ItemList.GetItemByID("arrow");
+                ammo.amount = RNG.Next(5, 25);
+                inventory.Insert(0, ammo);
+            }
+
+            if (RNG.Next(100) < 8)
+            {
+                Item ammo = ItemList.GetItemByID("bolt");
+                ammo.amount = RNG.Next(5, 25);
+                inventory.Insert(0, ammo);
+            }
+
+            if (RNG.Next(100) < 5)
             {
                 Item ammo = ItemList.GetItemByID("bullet");
                 ammo.amount = RNG.Next(1, 25);

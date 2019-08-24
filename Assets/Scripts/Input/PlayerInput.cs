@@ -89,12 +89,12 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator FollowPath()
     {
-        if (worldPath == null || worldPath.steps == null)
+        if (worldPath.result == PathResult.Fail)
         {
             yield break;
         }
 
-        int moveCount = worldPath.steps.Count;
+        int moveCount = worldPath.StepCount;
 
         for (int i = 0; i < moveCount; i++)
         {
@@ -104,6 +104,12 @@ public class PlayerInput : MonoBehaviour
             }
 
             Coord next = worldPath.GetNextStep();
+
+            if (next == null)
+            {
+                yield break;
+            }
+
             int wx = next.x - World.tileMap.worldCoordX;
             int wy = next.y - World.tileMap.worldCoordY;
 
@@ -120,7 +126,7 @@ public class PlayerInput : MonoBehaviour
         {
             Path_AStar path = new Path_AStar(World.tileMap.WorldPosition, targetPos, World.tileMap.worldMap);
 
-            if (path.steps != null)
+            if (path.Traversable)
             {
                 worldPath = path;
             }

@@ -37,6 +37,22 @@ public class Coord
         _y = other.y;
     }
 
+    public int[] ToArray()
+    {
+        int[] arr = new int[] { x, y };
+        return arr;
+    }
+
+    public static float Distance(Coord c0, Coord c1)
+    {
+        return Vector2.Distance(c0.toVector2(), c1.toVector2());
+    }
+
+    public float DistanceTo(Coord c1)
+    {
+        return Distance(this, c1);
+    }
+
     public bool Equals(Coord other)
     {
         if (ReferenceEquals(null, other))
@@ -90,16 +106,6 @@ public class Coord
     public static Coord operator -(Coord c0, Coord c1)
     {
         return new Coord(c0.x - c1.x, c0.y - c1.y);
-    }
-
-    public static float Distance(Coord c0, Coord c1)
-    {
-        return Vector2.Distance(c0.toVector2(), c1.toVector2());
-    }
-
-    public float DistanceTo(Coord c1)
-    {
-        return Distance(this, c1);
     }
 }
 

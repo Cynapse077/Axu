@@ -6,6 +6,7 @@ using Augments;
 
 public class CyberneticsPanel : UIPanel
 {
+    const string purchaseItemID = "bottlecap";
     public Text bpTitle;
     public Text cybTitle;
 
@@ -20,17 +21,20 @@ public class CyberneticsPanel : UIPanel
     Mode mode;
     List<Cybernetic> availableCybernetics;
     List<BodyPart> augmentableBodyParts;
-    const string purchaseItemID = "bottlecap";
 
     public override void Initialize()
     {
         mode = Mode.BodyPart;
         bpIndex = 0;
-        mode = Mode.BodyPart;
         bpTitle.text = LocalizationManager.GetContent("Title_CybLimb");
         cybTitle.text = LocalizationManager.GetContent("Title_CybLimb_Cyb");
 
         base.Initialize();
+    }
+
+    private void OnDisable()
+    {
+        UITooltip.instance.Hide();
     }
 
     public void SetupLists(Body bod)
@@ -59,6 +63,32 @@ public class CyberneticsPanel : UIPanel
         SelectedMax = augmentableBodyParts.Count;
 
         ChangeSelectedNum(0);
+    }
+
+    public override void Update()
+    {
+        if (GameSettings.Keybindings.GetKey("Pause") || GameSettings.Keybindings.GetKey("West"))
+        {
+            if (mode == Mode.Cybernetic)
+            {
+                mode = Mode.BodyPart;
+                SelectedMax = augmentableBodyParts.Count;
+                ChangeSelectedNum(bpIndex);
+                return;
+            }
+        }
+
+        if (GameSettings.Keybindings.GetKey("East"))
+        {
+            if (mode == Mode.BodyPart)
+            {
+                OnSelect(SelectedNum);
+                return;
+            }
+        }
+
+        base.Update();
+
     }
 
     void SetupCybernetics()
@@ -90,12 +120,20 @@ public class CyberneticsPanel : UIPanel
                 SetupCybernetics();
                 EventSystem.current.SetSelectedGameObject(bpAnchor.GetChild(SelectedNum).gameObject);
                 bpScroll.value = 1f / (SelectedNum / (float)augmentableBodyParts.Count);
+                UITooltip.instance.Hide();
                 break;
 
             case Mode.Cybernetic:
                 SelectedNum = Mathf.Clamp(SelectedNum, 0, availableCybernetics.Count - 1);                
                 EventSystem.current.SetSelectedGameObject(cybAnchor.GetChild(SelectedNum).gameObject);
                 cybScroll.value = 1f / (SelectedNum / (float)availableCybernetics.Count);
+
+                if (cybAnchor.childCount > 0)
+                {
+                    Transform parentTransform = cybAnchor.GetChild(SelectedNum);
+                    UITooltip.instance.Show(parentTransform.position + Vector3.right * 300f , availableCybernetics[SelectedNum].Desc);
+                }
+                
                 break;
         }
     }

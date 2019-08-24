@@ -191,13 +191,13 @@ public class Ability : IAsset
         ID = dat["ID"].ToString();
         Description = dat["Description"].ToString();
 
-        dat.TryGetValue("Stamina Cost", out staminaCost, 0);
-        dat.TryGetValue("Time Cost", out timeCost, 0);
-        dat.TryGetValue("Cooldown", out maxCooldown, 0);
-        dat.TryGetValue("Damage Type", out damageType, true);
-        dat.TryGetValue("Cast Type", out castType, true);
-        dat.TryGetValue("Levels Up", out CanLevelUp, false);
-        dat.TryGetValue("Range", out range, 0);
+        dat.TryGetInt("Stamina Cost", out staminaCost, 0);
+        dat.TryGetInt("Time Cost", out timeCost, 0);
+        dat.TryGetInt("Cooldown", out maxCooldown, 0);
+        dat.TryGetEnum("Damage Type", out damageType, DamageTypes.None);
+        dat.TryGetEnum("Cast Type", out castType, CastType.Instant);
+        dat.TryGetBool("Levels Up", out CanLevelUp, false);
+        dat.TryGetInt("Range", out range, 0);
 
         if (dat.ContainsKey("Dice"))
         {
@@ -221,15 +221,12 @@ public class Ability : IAsset
 
         if (dat.ContainsKey("Script"))
         {
-            if (dat["Script"].Count > 2)
-                luaAction = new LuaCall(dat["Script"][0].ToString(), dat["Script"][1].ToString(), dat["Script"][2].ToString());
-            else
-                luaAction = new LuaCall(dat["Script"][0].ToString(), dat["Script"][1].ToString());
+            luaAction = new LuaCall(dat["Script"].ToString());
         }
 
         if (dat.ContainsKey("AI"))
         {
-            aiAction = new LuaCall(dat["AI"][0].ToString(), dat["AI"][1].ToString());
+            aiAction = new LuaCall(dat["AI"].ToString());
         }
     }
 
@@ -252,10 +249,10 @@ public class Ability : IAsset
     public enum AbilityOrigin
     {
         None = 0,
-        Book = 1,
-        Trait = 2,
-        Item = 4, 
-        Cybernetic = 8
+        Book = 1 << 0,
+        Trait = 1 << 1,
+        Item = 1 << 2, 
+        Cybernetic = 1 << 3
     }
 }
 

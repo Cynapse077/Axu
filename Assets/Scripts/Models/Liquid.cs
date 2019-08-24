@@ -64,11 +64,11 @@ public class Liquid : IWeighted, IAsset
 
         events = new List<CLuaEvent>();
 
-        if (d.ContainsKey("Events"))
+        if (d.ContainsKey("LuaEvents"))
         {
-            for (int j = 0; j < d["Events"].Count; j++)
+            for (int j = 0; j < d["LuaEvents"].Count; j++)
             {
-                CLuaEvent cl = new CLuaEvent(d["Events"][j]["Event"].ToString(), d["Events"][j]["File"].ToString(), d["Events"][j]["Function"].ToString(), null);
+                CLuaEvent cl = new CLuaEvent(d["LuaEvents"][j]["Event"].ToString(), d["LuaEvents"][j]["Script"].ToString());
                 events.Add(cl);
             }
         }

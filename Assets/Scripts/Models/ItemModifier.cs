@@ -77,11 +77,11 @@ public class ItemModifier : IAsset
         ID = dat["ID"].ToString();
         description = dat["Description"].ToString();
 
-        dat.TryGetValue("Armor", out armor);
-        dat.TryGetValue("Cost", out cost);
-        dat.TryGetValue("Mod Type", out modType, true);
-        dat.TryGetValue("Damage Type", out damageType, true);
-        dat.TryGetValue("Unique", out unique);
+        dat.TryGetInt("Armor", out armor);
+        dat.TryGetInt("Cost", out cost);
+        dat.TryGetEnum("Mod Type", out modType, ModType.All);
+        dat.TryGetEnum("Damage Type", out damageType, DamageTypes.None);
+        dat.TryGetBool("Unique", out unique);
 
         if (dat.ContainsKey("Damage"))
         {

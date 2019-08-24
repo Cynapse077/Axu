@@ -41,9 +41,6 @@ public class MainMenu : MonoBehaviour
     IEnumerator Init()
     {
         ObjectManager.SpawnedNPCs = 0;
-
-        GameObject g = Instantiate(menuScreen, canvas);
-        mmp = g.GetComponent<MainMenuPanel>();
         soundManager = GetComponent<SoundManager>();
 
         if (!Directory.Exists(Manager.SaveDirectory))
@@ -58,6 +55,7 @@ public class MainMenu : MonoBehaviour
         soundManager.InitializeAndPlay();
         partSys.SetActive(true);
         yield return ModManager.IsInitialized;
+        mmp = Instantiate(menuScreen, canvas).GetComponent<MainMenuPanel>();
     }
 
     void FillDataLists()
@@ -182,8 +180,8 @@ public class MainMenu : MonoBehaviour
 
         if (dat.ContainsKey("Day Length"))
         {
-            dat["Day Length"].TryGetValue("Day", out TurnManager.dayLength, 4000);
-            dat["Day Length"].TryGetValue("Night", out TurnManager.nightLength, 2000);
+            dat["Day Length"].TryGetInt("Day", out TurnManager.dayLength, 4000);
+            dat["Day Length"].TryGetInt("Night", out TurnManager.nightLength, 2000);
         }
         else
         {
@@ -191,18 +189,18 @@ public class MainMenu : MonoBehaviour
             TurnManager.nightLength = 2000;
         }
 
-        dat.TryGetValue("Default Screen Size", out GameSettings.DefaultScreenSize, new Coord(1280, 720));
+        dat.TryGetCoord("Default Screen Size", out GameSettings.DefaultScreenSize, new Coord(1280, 720));
 
         if (dat.ContainsKey("World Map"))
         {
-            dat["World Map"].TryGetValue("Size", out Manager.worldMapSize, new Coord(200, 200));
+            dat["World Map"].TryGetCoord("Size", out Manager.worldMapSize, new Coord(200, 200));
             WorldMap.BiomePath = dat["World Map"]["Texture"].ToString();
             WorldMap.LandmarkPath = dat["World Map"]["Location Texture"].ToString();
         }
 
         if (dat.ContainsKey("Local Map"))
         {
-            dat["Local Map"].TryGetValue("Size", out Manager.localMapSize, new Coord(45, 30));
+            dat["Local Map"].TryGetCoord("Size", out Manager.localMapSize, new Coord(45, 30));
             TileMap.imagePath = dat["Local Map"]["Texture"].ToString();
         }
 

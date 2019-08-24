@@ -958,15 +958,15 @@ public class Item : ComponentHolder<CComponent>, IAsset
     void FromJson(JsonData dat)
     {
         ID = dat["ID"].ToString();
-        dat.TryGetValue("Name", out Name);
-        dat.TryGetValue("TileID", out tileID);
-        dat.TryGetValue("Type", out itemType, true);
-        dat.TryGetValue("Rarity", out rarity, 100);
-        dat.TryGetValue("Lootable", out lootable, true);
-        dat.TryGetValue("Stackable", out stackable, false);
-        dat.TryGetValue("Armor", out armor, 0);
-        dat.TryGetValue("Accuracy", out accuracy, 0);
-        dat.TryGetValue("FlavorText", out flavorText);
+        dat.TryGetString("Name", out Name);
+        dat.TryGetInt("TileID", out tileID);
+        dat.TryGetEnum("Type", out itemType, Proficiencies.Misc_Object);
+        dat.TryGetInt("Rarity", out rarity, 100);
+        dat.TryGetBool("Lootable", out lootable, true);
+        dat.TryGetBool("Stackable", out stackable, false);
+        dat.TryGetInt("Armor", out armor, 0);
+        dat.TryGetInt("Accuracy", out accuracy, 0);
+        dat.TryGetString("FlavorText", out flavorText);
 
         if (rarity < 100 && rarity > ItemUtility.MaxRarity)
             ItemUtility.MaxRarity = rarity;

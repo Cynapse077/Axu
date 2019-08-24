@@ -82,7 +82,6 @@ public class ObjectManager : MonoBehaviour
         GameObject.FindObjectOfType<SidePanelUI>().Init();
         MyConsole.NewMessageColor("Type \"?\" or \"help\" to show a list of commands", Color.cyan);
 
-        World.userInterface.CloseWindows();
         World.userInterface.ShowInitialMessage(Manager.playerName);
         doneLoading = true;
         GetComponent<MusicManager>().Init(World.tileMap.CurrentMap);

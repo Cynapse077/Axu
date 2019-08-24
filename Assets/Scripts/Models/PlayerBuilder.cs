@@ -23,6 +23,7 @@ public class PlayerBuilder
     public List<string> completedQuests;
     public List<string> killedStaticNPCs;
     public List<ProgressFlags> progressFlags;
+    public PlayerCharacter playerClone;
      
     public PlayerBuilder()
     {
@@ -47,5 +48,21 @@ public class PlayerBuilder
         quests = new List<Quest>();
         completedQuests = new List<string>();
         progressFlags = new List<ProgressFlags>();
+        playerClone = null;
+    }
+
+    public void SetClone(PlayerCharacter character, int elevation = int.MinValue, Coord worldPosition = null, Coord localPosition = null)
+    {
+        if (elevation != int.MinValue && worldPosition != null)
+        {
+            character.WP = new int[] { worldPosition.x, worldPosition.y, elevation };
+        }
+
+        if (localPosition != null)
+        {
+            character.LP = localPosition.ToArray();
+        }
+
+        playerClone = character;
     }
 }

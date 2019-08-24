@@ -61,7 +61,7 @@ public class DialogueNode : IAsset
 
         if (dat.ContainsKey("OnSelect"))
         {
-            onSelect = new LuaCall(dat["OnSelect"]["File"].ToString(), dat["OnSelect"]["Function"].ToString());
+            onSelect = new LuaCall(dat["OnSelect"].ToString());
         }
     }
 

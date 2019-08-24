@@ -964,8 +964,8 @@
             "Name" : "Leprosy",
             "ID" : "leprosy",
             "Description" : "You have contracted this vile disease. Your limbs will fall off one by one unless cured.",
-            "Scripts" : [
-                { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_Leprosy" }
+            "LuaEvents" : [
+                { "Event" : "OnTurn", "Script" : "Core.Traits.OnTurn_Leprosy" }
             ],
             "Tags" : [ "Disease", "Leprosy" ],
             "Stackable" : false
@@ -974,8 +974,8 @@
             "Name" : "Crystallization",
             "ID" : "crystal",
             "Description" : "Your limbs slowly begin to be covered by a sort of crystal. Crystal limbs are less flexible but more resistant.",
-            "Scripts" : [
-                { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_Crystallization" }
+            "LuaEvents" : [
+                { "Event" : "OnTurn", "Script" : "Core.Traits.OnTurn_Crystallization" }
             ],
             "Tags" : [ "Disease", "Crystallization" ],
             "Stackable" : false
@@ -1001,8 +1001,8 @@
                 { "Stat" : "Speed", "Amount" : 2 },
                 { "Stat" : "Strength", "Amount" : -1 }
             ],
-            "Scripts" : [
-                { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_PreVamp" }
+            "LuaEvents" : [
+                { "Event" : "OnTurn", "Script" : "Core.Traits.OnTurn_PreVamp" }
             ],
             "Tags" : [ "Disease", "PreVamp" ],
             "Stackable" : false
@@ -1011,8 +1011,8 @@
             "Name" : "Brain Rot",
             "ID" : "brain_rot",
             "Description" : "Your brain function is slowly deteriorating over time.",
-            "Scripts" : [
-                { "Action" : "OnTurn", "File" : "Traits", "Function" : "OnTurn_BrainRot" }
+            "LuaEvents" : [
+                { "Event" : "OnTurn", "Script" : "Core.Traits.OnTurn_BrainRot" }
             ],
             "Tags" : [ "Disease", "Drain_Int" ],
             "Stackable" : false

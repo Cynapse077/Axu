@@ -33,7 +33,7 @@ public class NewWorld
         //world
         List<MapObject> mapObjects = World.objectManager.mapObjects;
         w2json = new WorldToJson(chars, mapObjects, Turn_Num, World.DangerLevel(), ObjectManager.SpawnedNPCs, World.difficulty, 
-            World.worldMap.worldMapData.postGenLandmarks, World.tileMap.GetCustomFeatures());
+            World.worldMap.worldMapData.postGenLandmarks, World.tileMap.GetCustomFeatures(), Manager.playerBuilder.playerClone);
 
         //local
         ScreenHolder holder = new ScreenHolder(tileMap.worldCoordX, tileMap.worldCoordY);
@@ -76,7 +76,7 @@ public class NewWorld
     void SaveFile(GameSave save, string playerName)
     {
         JsonData saveJson = JsonMapper.ToJson(save);
-        string saveFilePath = Manager.SaveDirectory + "/" + playerName + ".axu";
+        string saveFilePath = Path.Combine(Manager.SaveDirectory, playerName + ".axu");
 
         File.WriteAllText(saveFilePath, saveJson.ToString());
         doneSaving = true;
@@ -189,6 +189,18 @@ public class OldWorld
                 WorldMap_Data.featuresToAdd.Add(SMapFeature.FromJson(wData["Features"][i]));
             }
         }
+
+        //Clone
+        if (wData.ContainsKey("playerClone"))
+        {
+            JsonData cloneData = wData["playerClone"];
+            if (cloneData != null)
+            {
+                PlayerCharacter clone = JsonMapper.ToObject<PlayerCharacter>(new JsonReader(cloneData.ToString()));
+                Manager.playerBuilder.SetClone(clone);
+            }
+        }
+        
     }
 
     void LoadNPCs()
@@ -363,8 +375,9 @@ public class WorldToJson
     public int Turn_Num, Danger_Level, Spawned_NPCs;
     public Difficulty Diff;
     public string Time;
+    public PlayerCharacter playerClone;
 
-    public WorldToJson(List<NPCCharacter> npcs, List<MapObject> objects, int tn, int dl, int spwned, Difficulty diff, List<Landmark> landmarks, List<SMapFeature> feats)
+    public WorldToJson(List<NPCCharacter> npcs, List<MapObject> objects, int tn, int dl, int spwned, Difficulty diff, List<Landmark> landmarks, List<SMapFeature> feats, PlayerCharacter clone)
     {
         NPCs = npcs;
         Turn_Num = tn;
@@ -376,10 +389,11 @@ public class WorldToJson
 
         Objects = new List<WorldObject>();
         PGLm = landmarks;
+        playerClone = clone;
 
         for (int i = 0; i < objects.Count; i++)
         {
-            if (objects[i].objectType != "Bloodstain" && objects[i].objectType != "Bloodstain_Wall")
+            if (objects[i].saved)
             {
                 Objects.Add(new WorldObject(objects[i].worldPosition, objects[i].localPosition, objects[i].elevation, objects[i].objectType, objects[i].inv));
             }

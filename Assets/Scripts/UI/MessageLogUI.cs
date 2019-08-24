@@ -33,7 +33,7 @@ public class MessageLogUI : MonoBehaviour
         if (message == messageInfo[0])
         {
             repetitions++;
-            messages[0].text = message + string.Format(" (x{0})", repetitions);
+            messages[0].text = string.Format("{0} (x{1})", message, repetitions);
         }
         else
         {

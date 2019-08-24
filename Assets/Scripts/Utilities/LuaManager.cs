@@ -1,16 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using UnityEngine;
 using MoonSharp.Interpreter;
-using MoonSharp.Interpreter.Loaders;
 
 [MoonSharpUserData]
 public static class LuaManager
 {
-    static Dictionary<string, Script> scripts;
-    static string pathToLua = Application.streamingAssetsPath + "/Mods/Core/Lua";
     static bool assemblyRegistered = false;
+    static Dictionary<string, Script> scripts;
 
     public static void AddFile(string s)
     {
@@ -22,11 +19,7 @@ public static class LuaManager
         }
 
         string rawLua = File.ReadAllText(s);
-        string modulePath = pathToLua + "/?.lua";
-        Script sc = new Script(CoreModules.Preset_SoftSandbox);
-
-        ((ScriptLoaderBase)sc.Options.ScriptLoader).IgnoreLuaPathGlobal = true;
-        ((ScriptLoaderBase)sc.Options.ScriptLoader).ModulePaths = ScriptLoaderBase.UnpackStringPaths(modulePath);
+        Script sc = new Script(CoreModules.Preset_HardSandbox);
         sc.DoString(rawLua);
 
         string path = Path.GetFileNameWithoutExtension(s);

@@ -8,8 +8,8 @@
             "Time Cost" : 12,
             "Cooldown" : 150,
             "Cast Type" : "Instant",
-            "Script" : [ "Abilities", "Blind" ],
-			"AI" : [ "AbilityAI", "Empty" ]
+            "Script" : "Core.Abilities.Blind",
+            "AI" : "Core.AbilityAI.Empty"
         },
 		{
 			"Name" : "Drain",
@@ -20,8 +20,8 @@
 			"Time Cost" : 15,
 			"Cooldown" : 12,
 			"Cast Type" : "Target",
-            "Script" : [ "Abilities", "DrainStamina" ],
-			"AI" : [ "AbilityAI", "Drain" ]
+            "Script" : "Core.Abilities.DrainStamina",
+            "AI" : "Core.AbilityAI.Drain"
 		},
 		{
 			"Name" : "Poisonous Bite",
@@ -32,8 +32,8 @@
 			"Time Cost" : 10,
 			"Cooldown" : 6,
 			"Cast Type" : "Direction",
-			"Script" : [ "Abilities", "Bite_Poison" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+			"Script" : "Core.Abilities.Bite_Poison",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
 		},
         {
             "Name" : "Scratch Eyes",
@@ -43,8 +43,8 @@
             "Time Cost" : 10,
             "Cooldown" : 25,
             "Cast Type" : "Direction",
-            "Script" : [ "Abilities", "Blind" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.Blind",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
             "Name" : "Ink Spray",
@@ -56,8 +56,8 @@
             "Cast Type" : "Instant",
             "Damage Type" : "NonLethal",
             "Tags" : [ "Blind", "Small_Square" ],
-            "Script" : [ "Abilities", "Square" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget_AOE" ]
+            "Script" : "Core.Abilities.Square",
+            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE"
         },
         {
             "Name" : "Shove",
@@ -68,8 +68,8 @@
             "Time Cost" : 5,
             "Cooldown" : 10,
             "Cast Type" : "Direction",
-            "Script" : [ "Abilities", "Shove" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.Shove",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
             "Name" : "Sprint",
@@ -79,8 +79,8 @@
             "Time Cost" : 0,
             "Cooldown" : 50,
             "Cast Type" : "Instant",
-            "Script" : [ "Abilities", "Sprint" ],
-			"AI" : [ "AbilityAI", "Sprint" ]
+            "Script" : "Core.Abilities.Sprint",
+            "AI" : "Core.AbilityAI.Sprint"
         },
         {
             "Name" : "Grapple",
@@ -91,8 +91,8 @@
             "Cooldown" : 0,
             "Cast Type" : "Instant",
             "Tags" : [ "OpensNewWindow" ],
-            "Script" : [ "Abilities", "Grapple" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.Grapple",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
             "Name" : "Called Shot",
@@ -104,8 +104,8 @@
             "Cooldown" : 20,
             "Cast Type" : "Direction",
             "Tags" : [ "OpensNewWindow" ],
-            "Script" : [ "Abilities", "CalledShot" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.CalledShot",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
             "Name" : "Juke",
@@ -115,8 +115,8 @@
             "Cooldown" : 10,
             "Time Cost" : 10,
             "Cast Type" : "Direction",
-            "Script" : [ "Abilities", "Juke" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.Juke",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
             "Name" : "Charge",
@@ -126,8 +126,8 @@
             "Cooldown" : 12,
             "Time Cost" : 10,
             "Cast Type" : "Direction",
-            "Script" : [ "Abilities", "Charge" ],
-			"AI" : [ "AbilityAI", "Charge" ]
+            "Script" : "Core.Abilities.Charge",
+            "AI" : "Core.AbilityAI.Charge"
         },
         {
             "Name" : "Shield Bash",
@@ -139,9 +139,9 @@
             "Time Cost" : 10,
             "Cooldown" : 10,
             "Cast Type" : "Direction",
-            "Script" : [ "Abilities", "ShieldBash" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ],
-            "Levels Up" : false
+            "Levels Up" : false,
+            "Script" : "Core.Abilities.ShieldBash",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
         	"Name" : "Trip",
@@ -153,8 +153,8 @@
         	"Time Cost" : 12,
         	"Cooldown" : 25,
         	"Cast Type" : "Direction",
-        	"Script" : [ "Abilities", "Trip" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.Trip",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
             "Name" : "Gore",
@@ -167,8 +167,8 @@
             "Time Cost" : 10,
             "Cast Type" : "Direction",
             "Levels Up" : false,
-            "Script" : [ "Abilities", "Gore" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.Gore",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
 
         {
@@ -180,8 +180,8 @@
             "Cooldown" : 100,
             "Cast Type" : "Instant",
             "Tags" : [ "Summon" ],
-            "Script" : [ "Abilities", "Summon", "echo" ],
-			"AI" : [ "AbilityAI", "Empty" ]
+            "Script" : "Core.Abilities.Summon:echo",
+            "AI" : "Core.AbilityAI.Empty"
         },
         {
             "Name" : "Summon Spirit",
@@ -192,8 +192,8 @@
             "Cooldown" : 120,
             "Cast Type" : "Instant",
             "Tags" : [ "Summon" ],
-            "Script" : [ "Abilities", "Summon", "spirit" ],
-			"AI" : [ "AbilityAI", "Empty" ]
+            "Script" : "Core.Abilities.Summon:spirit",
+            "AI" : "Core.AbilityAI.Empty"
         },
         {
             "Name" : "Summon Scritter",
@@ -204,8 +204,8 @@
             "Cooldown" : 135,
             "Cast Type" : "Instant",
             "Tags" : [ "Summon" ],
-            "Script" : [ "Abilities", "Summon", "scritter_follower" ],
-			"AI" : [ "AbilityAI", "Empty" ]
+            "Script" : "Core.Abilities.Summon:scritter_follower",
+            "AI" : "Core.AbilityAI.Empty"
         },
         {
             "Name" : "Lesser Healing",
@@ -217,8 +217,8 @@
             "Time Cost" : 15,
             "Cooldown" : 20,
             "Cast Type" : "Instant",
-            "Script" : [ "Abilities", "Healing" ],
-			"AI" : [ "AbilityAI", "Healing" ]
+            "Script" : "Core.Abilities.Healing",
+            "AI" : "Core.AbilityAI.Healing"
         },
         {
             "Name" : "Healing",
@@ -230,8 +230,8 @@
             "Time Cost" : 15,
             "Cooldown" : 45,
             "Cast Type" : "Instant",
-            "Script" : [ "Abilities", "Healing" ],
-			"AI" : [ "AbilityAI", "Healing" ]
+            "Script" : "Core.Abilities.Healing",
+            "AI" : "Core.AbilityAI.Healing"
         },
         {
             "Name" : "Rejuvenation",
@@ -241,8 +241,8 @@
             "Time Cost" : 20,
             "Cooldown" : 60,
             "Cast Type" : "Instant",
-            "Script" : [ "Abilities", "FullHeal" ],
-			"AI" : [ "AbilityAI", "Healing" ]
+            "Script" : "Core.Abilities.FullHeal",
+            "AI" : "Core.AbilityAI.Healing"
         },
         {
             "Name" : "Brace",
@@ -252,8 +252,8 @@
             "Time Cost" : 5,
             "Cooldown" : 45,
             "Cast Type" : "Instant",
-            "Script" : [ "Abilities", "Brace" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.Brace",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },  
         {
             "Name" : "Return",
@@ -264,8 +264,8 @@
             "Cooldown" : 350,
             "Cast Type" : "Instant",
             "Levels Up" : false,
-            "Script" : [ "Abilities", "ReturnHome" ],
-			"AI" : [ "AbilityAI", "Empty" ]
+            "Script" : "Core.Abilities.ReturnHome",
+            "AI" : "Core.AbilityAI.Empty"
         },
         {
             "Name" : "Drain Blood",
@@ -278,8 +278,8 @@
             "Cooldown" : 150,
             "Cast Type" : "Direction",
             "Levels Up" : false,
-            "Script" : [ "Abilities", "DrainBlood" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.DrainBlood",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
             "Name" : "Spin Webs",
@@ -290,8 +290,8 @@
             "Time Cost" : 10,
             "Cooldown" : 30,
             "Cast Type" : "Target",
-            "Script" : [ "Abilities", "SpinWebs" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget_AOE" ]
+            "Script" : "Core.Abilities.SpinWebs",
+            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE"
         },
         {
             "Name" : "Rock Spires",
@@ -304,8 +304,8 @@
             "Cooldown" : 15,
             "Damage Type" : "Blunt",
             "Cast Type" : "Target",
-            "Script" : [ "Abilities", "Line" ],
-			"AI" : [ "AbilityAI", "Line" ]
+            "Script" : "Core.Abilities.Line",
+            "AI" : "Core.AbilityAI.Line"
         },
         {
             "Name" : "Firestream",
@@ -319,8 +319,8 @@
             "Range" : 10,
             "Damage Type" : "Heat",
             "Cast Type" : "Target",
-            "Script" : [ "Abilities", "Line" ],
-			"AI" : [ "AbilityAI", "Line" ]
+            "Script" : "Core.Abilities.Line",
+            "AI" : "Core.AbilityAI.Line"
         },
         {
             "Name" : "Fire Breath",
@@ -333,8 +333,8 @@
             "Cooldown" : 20,
             "Damage Type" : "Heat",
             "Cast Type" : "Direction",
-            "Script" : [ "Abilities", "Cone" ],
-			"AI" : [ "AbilityAI", "Cone" ]
+            "Script" : "Core.Abilities.Cone",
+            "AI" : "Core.AbilityAI.Cone"        
         },
         {
             "Name" : "Ice Breath",
@@ -347,8 +347,8 @@
             "Cooldown" : 20,
             "Damage Type" : "Cold",
             "Cast Type" : "Direction",
-            "Script" : [ "Abilities", "Cone" ],
-			"AI" : [ "AbilityAI", "Cone" ]
+            "Script" : "Core.Abilities.Cone",
+            "AI" : "Core.AbilityAI.Cone"
         },
         {
             "Name" : "Radiation Blast",
@@ -363,8 +363,8 @@
             "Damage Type" : "Radiation",
             "Cast Type" : "Target",
             "Tags" : [ "Radiate_Self" ],
-            "Script" : [ "Abilities", "Line" ],
-			"AI" : [ "AbilityAI", "Line" ]
+            "Script" : "Core.Abilities.Line",
+            "AI" : "Core.AbilityAI.Line"
         },
         {
             "Name" : "Ice Beam",
@@ -378,8 +378,8 @@
             "Range" : 10,
             "Damage Type" : "Cold",
             "Cast Type" : "Target",
-            "Script" : [ "Abilities", "Line" ],
-			"AI" : [ "AbilityAI", "Line" ]
+            "Script" : "Core.Abilities.Line",
+            "AI" : "Core.AbilityAI.Line"
         },
         {
             "Name" : "Ember Wall",
@@ -393,8 +393,8 @@
             "Damage Type" : "Heat",
             "Cast Type" : "Instant",
             "Tags" : [ "Small_Square" ],
-            "Script" : [ "Abilities", "Square" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget" ]
+            "Script" : "Core.Abilities.Square",
+            "AI" : "Core.AbilityAI.AdjacentToTarget"
         },
         {
             "Name" : "Cloud of Flame",
@@ -409,8 +409,8 @@
             "Damage Type" : "Heat",
             "Cast Type" : "Target",
             "Tags" : [ "Small_Square" ],
-            "Script" : [ "Abilities", "Square" ],
-			"AI" : [ "AbilityAI", "AOE" ]
+            "Script" : "Core.Abilities.Square",
+            "AI" : "Core.AbilityAI.AOE"
         },
         {
             "Name" : "Disorienting Gas",
@@ -423,8 +423,8 @@
             "Cast Type" : "Instant",
             "Levels Up" : false,
             "Tags" : [ "Small_Square" ],
-            "Script" : [ "Abilities", "Square" ],
-			"AI" : [ "AbilityAI", "AdjacentToTarget_AOE" ]
+            "Script" : "Core.Abilities.Square",
+            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE"
         },
         {
             "Name" : "Toxic Cloud",
@@ -437,8 +437,8 @@
             "Damage Type" : "Venom",
             "Cast Type" : "Target",
             "Tags" : [ "Small_Square" ],
-            "Script" : [ "Abilities", "Square" ],
-			"AI" : [ "AbilityAI", "AOE" ]
+            "Script" : "Core.Abilities.Square",
+            "AI" : "Core.AbilityAI.AOE"
         },
         {
             "Name" : "Confusion",
@@ -451,9 +451,9 @@
             "Damage Type" : "NonLethal",
             "Cast Type" : "Target",
             "Tags" : [ "Small_Square" ],
-            "Script" : [ "Abilities", "Square" ],
             "Levels Up" : false,
-			"AI" : [ "AbilityAI", "AOE" ]
+            "Script" : "Core.Abilities.Square",
+            "AI" : "Core.AbilityAI.AOE"
         },
         {
             "Name" : "Lightning Bolt",
@@ -466,8 +466,8 @@
             "Cooldown" : 15,
             "Damage Type" : "Energy",
             "Cast Type" : "Direction",
-            "Script" : [ "Abilities", "Beam" ],
-			"AI" : [ "AbilityAI", "Beam" ]
+            "Script" : "Core.Abilities.Beam",
+            "AI" : "Core.AbilityAI.Beam"
         },
         {
             "Name" : "Blink",
@@ -478,9 +478,9 @@
             "Cooldown" : 20,
             "Range" : 40,
             "Cast Type" : "Target",
-            "Script" : [ "Abilities", "Blink" ],
             "Levels Up" : false,
-			"AI" : [ "AbilityAI", "Empty" ]
+            "Script" : "Core.Abilities.Blink",
+            "AI" : "Core.AbilityAI.Empty"
         }
     ]
 }

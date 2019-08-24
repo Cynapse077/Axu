@@ -399,8 +399,7 @@ public static class ItemUtility
             }
             else if (ID == "LuaEvent")
             {
-                string exP = (data[i].ContainsKey("Param")) ? data[i]["Param"].ToString() : "";
-                CLuaEvent cl = new CLuaEvent(data[i]["Trigger"].ToString(), data[i]["File"].ToString(), data[i]["Function"].ToString(), exP);
+                CLuaEvent cl = new CLuaEvent(data[i]["Event"].ToString(), data[i]["Script"].ToString());
                 comps.Add(cl);
             }
             else if (ID == "LiquidContainer")
@@ -452,16 +451,18 @@ public static class ItemUtility
 
     public static int GetSlot(string slot)
     {
-        if (slot == "Back") return 0;
-        else if (slot == "Offhand") return 1;
-        else if (slot == "Torso") return 2;
-        else if (slot == "Leg") return 3;
-        else if (slot == "Arm") return 4;
-        else if (slot == "Cloak") return 5;
-        else if (slot == "Head") return 6;
-        else if (slot == "Neck") return 7;
-        else if (slot == "Weapon") return 8;
-
-        return -1;
+        switch (slot)
+        {
+            case "Back": return 0;
+            case "Offhand": return 1;
+            case "Torso": return 2;
+            case "Leg": return 3;
+            case "Arm": return 4;
+            case "Cloak": return 5;
+            case "Head": return 6;
+            case "Neck": return 7;
+            case "Weapon": return 8;
+            default: return -1;
+        }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
-using LitJson;
 
 public static class LocalizationManager
 {
@@ -27,14 +24,7 @@ public static class LocalizationManager
             }
         }
 
-        if (helpMessages.Count > 0)
-        {
-            return helpMessages.GetRandom();
-        }
-        else
-        {
-            return " ";
-        }
+        return (helpMessages.Count > 0) ? helpMessages.GetRandom() : "";
     }
 
     public static string Translate(this string s)

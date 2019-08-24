@@ -301,7 +301,7 @@
             "Name" : "Chasis",
             "ID" : "chest_robot",
             "Slot" : "Slot_Chest",
-            "Size" : 25,
+            "Size" : 20,
             "Tags" : [ "Synthetic", "NonSeverable" ],
             "Default Equipped" : "chasis"
         },

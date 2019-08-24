@@ -102,6 +102,7 @@ public class UserInterface : MonoBehaviour
 
     public void ShowInitialMessage(string name)
     {
+        CloseWindows();
         loadingGO.SetActive(false);
         fadePanel.CrossFadeAlpha(0, 1.5f, false);
 

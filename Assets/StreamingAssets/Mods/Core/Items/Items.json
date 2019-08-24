@@ -118,7 +118,7 @@
             "FlavorText" : "A metal glove fixed with a solar battery pack. It will send an electrical current through anything unlucky enough to be on the bad end.",
             "Cost" : 47,
             "Components" : [
-                { "ID" : "LuaEvent", "Trigger" : "OnHit", "File" : "ItemActions", "Function" : "ShockAdjacent" }
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
             ],
             "Properties" : [ "Weapon", "Stun", "Shock_Nearby" ],
             "DmgTypes" : [ "Blunt", "Energy" ],
@@ -300,7 +300,7 @@
             "FlavorText" : "An Ensis-designed baton. It has electricity coursing down its length, allowing the user to stun opponents.",
             "Cost" : 103,
             "Components" : [
-                { "ID" : "LuaEvent", "Trigger" : "OnHit", "File" : "ItemActions", "Function" : "ShockAdjacent" }
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
             ],
             "Properties" : [ "Weapon", "Stun", "Shock_Nearby" ],
             "DmgTypes" : [ "Blunt", "Energy" ],
@@ -2356,7 +2356,7 @@
             "Rarity" : 5,
             "Attack Type" : "Spear",
             "Components" : [
-                { "ID" : "LuaEvent", "Trigger" : "OnHit", "File" : "ItemActions", "Function" : "ShockAdjacent" }
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
             ],
             "Properties" : [
                 "Weapon",
@@ -2384,7 +2384,7 @@
             "Rarity" : 5,
             "Attack Type" : "Sweep",
             "Components" : [
-                { "ID" : "LuaEvent", "Trigger" : "OnHit", "File" : "ItemActions", "Function" : "ShockAdjacent" }
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
             ],
             "Properties" : [
                 "Weapon",
@@ -2538,10 +2538,10 @@
             "FlavorText" : "Mechanical wings with a back strap. Enables the wearer to fly.",
             "Cost" :  1450,
             "Components" : [
-                { "ID" : "LuaEvent", "Trigger" : "OnEquip", "File" : "ItemActions", "Function" : "AddMechBodyPart", "Param" : "wing_mech" },
-                { "ID" : "LuaEvent", "Trigger" : "OnEquip", "File" : "ItemActions", "Function" : "AddMechBodyPart", "Param" : "wing_mech" },
-                { "ID" : "LuaEvent", "Trigger" : "OnUnequip", "File" : "ItemActions", "Function" : "RemoveMechBodyPart", "Param" : "wing_mech" },
-                { "ID" : "LuaEvent", "Trigger" : "OnUnequip", "File" : "ItemActions", "Function" : "RemoveMechBodyPart", "Param" : "wing_mech" }
+                { "ID" : "LuaEvent", "Event" : "OnEquip", "Script" : "Core.ItemActions.AddMechBodyPart:wing_mech" },
+                { "ID" : "LuaEvent", "Event" : "OnEquip", "Script" : "Core.ItemActions.AddMechBodyPart:wing_mech" },
+                { "ID" : "LuaEvent", "Event" : "OnUnequip", "Script" : "Core.ItemActions.RemoveMechBodyPart:wing_mech" },
+                { "ID" : "LuaEvent", "Event" : "OnUnequip", "Script" : "Core.ItemActions.RemoveMechBodyPart:wing_mech" }
             ],
             "Properties" : [
                 "Armor",
@@ -2563,13 +2563,7 @@
             "FlavorText" : "A mechanical arm.It floats in mid-air as to not impede your movements, granting increased strength and dexterity. It it moved by thought alone.",
             "Cost" :  1450,
             "Components" : [
-                { 
-                    "ID" : "LuaEvent", 
-                    "Trigger" : "OnAttach", 
-                    "File" : "ItemActions", 
-                    "Function" : "AddMechBodyPart", 
-                    "Param" : "arm_mech" 
-                }
+                { "ID" : "LuaEvent", "Event" : "OnAttach", "Script" : "Core.ItemActions.AddMechBodyPart:arm_mech" }
             ],
             "Display" : {
                 "On Ground" : "item-intrine-arm.png"
@@ -2584,13 +2578,7 @@
             "FlavorText" : "An additional mechanical head attached to the base of your neck. Grants you extra accuracy and intelligence.",
             "Cost" :  1450,
             "Components" : [
-                { 
-                    "ID" : "LuaEvent", 
-                    "Trigger" : "OnAttach", 
-                    "File" : "ItemActions", 
-                    "Function" : "AddMechBodyPart", 
-                    "Param" : "head_mech" 
-                }
+                { "ID" : "LuaEvent", "Event" : "OnAttach", "Script" : "Core.ItemActions.AddMechBodyPart:head_mech" }
             ],
             "Display" : {
                 "On Ground" : "item-intrine-head.png"
@@ -4025,7 +4013,8 @@
             "Properties" : [
                 "Weapon",
                 "Quick",
-                "Proc_Attack"
+                "Proc_Attack",
+                "Cannot_Remove"
             ],
             "DmgTypes" : [
                 "Slash"
@@ -4042,10 +4031,11 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 2, "Max" : 10, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged" ],
+            "Properties" : [ "Ranged", "Cannot_Remove" ],
             "Display" : {
                 "On Ground" : "item-pistol.png"
-            }
+            },
+            "Lootable" : false
         },
         {
             "ID" : "stump",
@@ -4356,7 +4346,8 @@
             "Cost" : 0,
             "Properties" : [
                 "Weapon",
-                "Quick"
+                "Quick",
+                "Cannot_Remove"
             ],
             "Lootable" : false
         }

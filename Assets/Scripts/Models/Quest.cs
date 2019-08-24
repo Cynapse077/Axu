@@ -161,19 +161,19 @@ public class Quest : EventContainer, IAsset
             }
         }
 
-        q.TryGetValue("Start Dialogue", out startDialogue);
-        q.TryGetValue("End Dialogue", out endDialogue);
-        q.TryGetValue("Chained Quest", out chainedQuest);
-        q.TryGetValue("Fail On Death", out failOnDeath);
-        q.TryGetValue("Sequential", out sequential);
+        q.TryGetString("Start Dialogue", out startDialogue);
+        q.TryGetString("End Dialogue", out endDialogue);
+        q.TryGetString("Chained Quest", out chainedQuest);
+        q.TryGetBool("Fail On Death", out failOnDeath);
+        q.TryGetBool("Sequential", out sequential);
 
         if (q.ContainsKey("Rewards"))
         {
             int xp, money;
             string[] items = new string[0];
 
-            q["Rewards"].TryGetValue("XP", out xp);
-            q["Rewards"].TryGetValue("Money", out money);
+            q["Rewards"].TryGetInt("XP", out xp);
+            q["Rewards"].TryGetInt("Money", out money);
 
             if (q["Rewards"].ContainsKey("Items"))
             {

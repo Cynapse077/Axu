@@ -54,7 +54,7 @@ public class NPC_Blueprint : IAsset
 
             if (s.Contains("|"))
             {
-                string[] ids = s.Split("|"[0]);
+                string[] ids = s.Split('|');
                 spriteIDs = new string[ids.Length];
 
                 for (int i = 0; i < ids.Length; i++)
@@ -126,11 +126,11 @@ public class NPC_Blueprint : IAsset
             weaponPossibilities.Add(dat["Weapon_Choices"][w].ToString());
         }
 
-        dat.TryGetValue("Weapon Skill", out weaponSkill);
-        dat.TryGetValue("Firearm", out firearm);
-        dat.TryGetValue("Corpse_Item", out Corpse_Item);
-        dat.TryGetValue("Quest", out quest);
-        dat.TryGetValue("Dialogue", out dialogue);
+        dat.TryGetInt("Weapon Skill", out weaponSkill);
+        dat.TryGetString("Firearm", out firearm);
+        dat.TryGetString("Corpse_Item", out Corpse_Item);
+        dat.TryGetString("Quest", out quest);
+        dat.TryGetString("Dialogue", out dialogue);
 
         if (dat.ContainsKey("Position"))
         {

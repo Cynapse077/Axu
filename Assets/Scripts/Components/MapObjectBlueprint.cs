@@ -10,13 +10,15 @@ public class MapObjectBlueprint : IAsset
     public string objectType;
     public int light, pathCost;
     public Vector4 tint;
-    public bool randomRotation, renderInBack, renderInFront, opaque, autotile;
+    public bool randomRotation, opaque, autotile;
     public string description;
     public MapOb_Interactability solid;
     public Container container;
     public Dictionary<string, LuaCall> luaEvents;
     public ObjectPulseInfo pulseInfo;
     public ProgressFlags[] permissions;
+    public bool saved = true;
+    public ObjectRenderLayer renderLayer;
 
     public MapObjectBlueprint()
     {
@@ -40,8 +42,7 @@ public class MapObjectBlueprint : IAsset
         objectType = "None";
         tint = new Vector4(1, 1, 1, 1);
         randomRotation = false;
-        renderInBack = false;
-        renderInFront = false;
+        renderLayer = ObjectRenderLayer.Mid;
         autotile = false;
         opaque = false;
         description = "";
@@ -50,6 +51,7 @@ public class MapObjectBlueprint : IAsset
         solid = MapOb_Interactability.No;
         luaEvents = new Dictionary<string, LuaCall>();
         permissions = new ProgressFlags[0];
+        saved = true;
     }
 
     void FromJson(JsonData dat)
@@ -59,14 +61,15 @@ public class MapObjectBlueprint : IAsset
         spriteID = dat["Sprite"].ToString();
         description = dat["Description"].ToString();
 
-        dat.TryGetValue("Path Cost", out pathCost);
-        dat.TryGetValue("Physics", out solid, true);
-        dat.TryGetValue("Opaque", out opaque);
-        dat.TryGetValue("Autotile", out autotile);
-        dat.TryGetValue("Render In Back", out renderInBack);
-        dat.TryGetValue("Render In Front", out renderInFront);
-        dat.TryGetValue("Random Rotation", out randomRotation);
-        dat.TryGetValue("Light", out light);
+        dat.TryGetInt("Path Cost", out pathCost);
+        dat.TryGetEnum("Physics", out solid, MapOb_Interactability.No);
+        dat.TryGetBool("Opaque", out opaque);
+        dat.TryGetBool("Autotile", out autotile);
+        dat.TryGetEnum("Render Layer", out renderLayer, ObjectRenderLayer.Mid);
+        dat.TryGetBool("Random Rotation", out randomRotation);
+        dat.TryGetInt("Light", out light);
+        dat.TryGetBool("Saved", out saved, true);
+        dat.TryGetBool("Random Rotation", out randomRotation, false);
 
         if (dat.ContainsKey("Container"))
         {
@@ -115,7 +118,7 @@ public class MapObjectBlueprint : IAsset
             {
                 JsonData luaEvent = dat["LuaEvents"][j];
                 string key = luaEvent["Event"].ToString();
-                LuaCall lc = new LuaCall(luaEvent["File"].ToString(), luaEvent["Function"].ToString());
+                LuaCall lc = new LuaCall(luaEvent["Script"].ToString());
 
                 luaEvents.Add(key, lc);
             }
@@ -138,6 +141,13 @@ public class MapObjectBlueprint : IAsset
             capacity = _capacity;
         }
     }
+}
+
+public enum ObjectRenderLayer
+{
+    Front,
+    Mid, 
+    Back
 }
 
 public struct ObjectPulseInfo

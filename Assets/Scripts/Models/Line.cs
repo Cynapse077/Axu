@@ -120,28 +120,9 @@ public class Line
 [MoonSharpUserData]
 public static class LineHelper
 {
-    static List<Coord> points;
-
     public static List<Coord> GetPoints(Coord c0, Coord c1)
     {
         Line l = new Line(c0, c1);
-        points = l.GetPoints();
-
-        return points;
-    }
-
-    public static Coord GetPoint(int index)
-    {
-        if (points == null || index > points.Count - 1)
-        {
-            return null;
-        }
-
-        return points[index];
-    }
-
-    public static int LineLength()
-    {
-        return points.Count;
+        return l.GetPoints();
     }
 }

@@ -168,11 +168,6 @@ public static class Utility
         list[newIndex] = tmp;
     }
 
-    public static bool ContainsKey(this JsonData data, string key)
-    {
-        return (data.Keys.Contains(key) && data[key] != null);
-    }
-
     public static int Clamp(this int num, int min, int max)
     {
         return Mathf.Clamp(num, min, max);
@@ -308,7 +303,7 @@ public static class Utility
 
     public static T WeightedChoice<T>(List<T> list) where T : IWeighted
     {
-        return WeightedChoice<T>(list.ToArray());
+        return WeightedChoice(list.ToArray());
     }
 
     public static T WeightedChoice<T>(T[] list) where T : IWeighted
@@ -343,7 +338,9 @@ public static class Utility
         Coord stPos = new Coord(startPos);
 
         if (stPos.y < 0)
+        {
             stPos.y += Manager.localMapSize.y;
+        }
 
         myQueue.Enqueue(stPos);
         regionTiles.Add(stPos);
@@ -358,7 +355,9 @@ public static class Utility
                 for (int y = next.y - 1; y <= next.y + 1; y++)
                 {
                     if (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y)
+                    {
                         continue;
+                    }
 
                     if ((x == next.x || y == next.y) && !processed[x, y] && p(map_data[x, y]))
                     {
@@ -373,6 +372,11 @@ public static class Utility
         }
 
         return regionTiles;
+    }
+
+    public static string Format(this string s, params string[] args)
+    {
+        return string.Format(s, args);
     }
 }
 

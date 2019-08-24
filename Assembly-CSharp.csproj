@@ -74,7 +74,7 @@
     <Compile Include="Assets\Scenes\MapCreator\MapCreator_Cell.cs" />
     <Compile Include="Assets\Scenes\MapCreator\MapCreator_SideButton.cs" />
     <Compile Include="Assets\Scenes\MapCreator\MapCreatorTool.cs" />
-    <Compile Include="Assets\Scripts\Components\BaseAI.cs" />
+    <Compile Include="Assets\Scripts\Components\AI\BaseAI.cs" />
     <Compile Include="Assets\Scripts\Components\Body.cs" />
     <Compile Include="Assets\Scripts\Components\CComponent.cs" />
     <Compile Include="Assets\Scripts\Components\ComoponentHolder.cs" />
@@ -145,7 +145,6 @@
     <Compile Include="Assets\Scripts\Models\LuaCall.cs" />
     <Compile Include="Assets\Scripts\Models\MapFeatures.cs" />
     <Compile Include="Assets\Scripts\Models\MapObject.cs" />
-    <Compile Include="Assets\Scripts\Models\MissionSystem.cs" />
     <Compile Include="Assets\Scripts\Models\Mod.cs" />
     <Compile Include="Assets\Scripts\Models\NPC.cs" />
     <Compile Include="Assets\Scripts\Models\NPC_Blueprint.cs" />
@@ -226,6 +225,7 @@
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\UI\ThrowItemPanel.cs" />
     <Compile Include="Assets\Scripts\UI\TooltipPanel.cs" />
+    <Compile Include="Assets\Scripts\UI\UIButton.cs" />
     <Compile Include="Assets\Scripts\UI\UIPanel.cs" />
     <Compile Include="Assets\Scripts\UI\UIPanel_Base.cs" />
     <Compile Include="Assets\Scripts\UI\UITooltip.cs" />
@@ -251,6 +251,7 @@
     <Compile Include="Assets\Scripts\Utilities\Managers\SpawnController.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\SpriteManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\TurnManager.cs" />
+    <Compile Include="Assets\Scripts\Utilities\MissionSystem.cs" />
     <Compile Include="Assets\Scripts\Utilities\ModUtility.cs" />
     <Compile Include="Assets\Scripts\Utilities\NameGenerator.cs" />
     <Compile Include="Assets\Scripts\Utilities\NewWorld.cs" />

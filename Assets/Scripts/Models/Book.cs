@@ -15,8 +15,8 @@ public class Book : IAsset
 
     void FromJson(JsonData dat)
     {
-        dat.TryGetValue("Title", out title);
-        dat.TryGetValue("Text", out contents);
+        dat.TryGetString("Title", out title);
+        dat.TryGetString("Text", out contents);
     }
 
     public void Read()

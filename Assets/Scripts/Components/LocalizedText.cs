@@ -11,6 +11,9 @@ public class LocalizedText : MonoBehaviour
     {
         get
         {
+            if (!ModManager.IsInitialized)
+                return "";
+
             if (string.IsNullOrEmpty(_baseText))
                 GetLocalizedText(key);
 

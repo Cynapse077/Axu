@@ -18,11 +18,11 @@ public class TranslatedText : IAsset
     void FromJson(JsonData dat)
     {
         ID = dat["ID"].ToString();
-        dat.TryGetValue("Display", out display, defaultText);
+        dat.TryGetString("Display", out display, defaultText);
 
         if (dat.ContainsKey("Tooltip"))
-            dat.TryGetValue("Tooltip", out display2, defaultText);
+            dat.TryGetString("Tooltip", out display2, defaultText);
         else if (dat.ContainsKey("Message"))
-            dat.TryGetValue("Message", out display2, defaultText);
+            dat.TryGetString("Message", out display2, defaultText);
     }
 }

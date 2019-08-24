@@ -140,6 +140,8 @@ public static class SimplePool
             GameObject.Destroy(obj);
         }
         else
+        {
             pm.myPool.Despawn(obj);
+        }
     }
 }

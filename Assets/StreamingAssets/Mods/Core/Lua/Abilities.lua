@@ -351,7 +351,7 @@ function Summon(caster, skill, npcID)
 
 	npc = NPC.__new(npcID, TileMap.WorldPosition, localPos, TileMap.currentElevation)
 	npc.maxHealth = npc.maxHealth + (5 * skill.level)
-	npc.Attributes["Strength"] = npc.Attributes["Strength"] + skill.level
+	npc.Attributes["Strength"] = npc.Attributes["Strength"] + skill.level - 1
 	npc.MakeFollower()
 	npc.AddFlag(NPC_Flags.Deteriortate_HP)
 	ObjectManager.SpawnNPC(npc)
@@ -406,7 +406,7 @@ function DrainBlood(caster, direction, skill)
 		if (target.isPlayer and Random(0, 100) < 5) then
 			if (not target.stats.hasTrait("pre_vamp") and not target.stats.hasTrait("vampirism")) then
 				target.stats.InitializeNewTrait(TraitList.GetTraitByID("pre_vamp"))
-				Alert.CustomAlert("You have been bitten by a Vampire, and become a Fledgling Vampire yourself! Cure this disease or become one of them!")
+				Alert.CustomAlert("You have been bitten by a Vampire, becoming a Fledgling Vampire yourself! Cure this disease or let the disease fester.")
 			end
 		end
 	end
@@ -546,10 +546,8 @@ function ApplyChanges(caster, skill)
 
 	if (caster.isPlayer) then
 		skill.AddXP(caster.stats.Intelligence)
-	end
 
-	if (skill.HasTag(AbilityTags.Radiate_Self)) then
-		if (caster.isPlayer and Random(0, 100) <= 20) then
+		if (skill.HasTag(AbilityTags.Radiate_Self) and Random(0, 100) <= 20) then
 			caster.stats.Radiate(Random(0, 6))
 		end
 	end

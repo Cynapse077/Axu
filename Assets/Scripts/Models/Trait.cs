@@ -370,13 +370,13 @@ public class Trait : IAsset
         }
 
         //Scripts
-        if (dat.ContainsKey("Scripts"))
+        if (dat.ContainsKey("LuaEvents"))
         {
-            for (int s = 0; s < dat["Scripts"].Count; s++)
+            for (int s = 0; s < dat["LuaEvents"].Count; s++)
             {
-                if (dat["Scripts"][s]["Action"].ToString() == "OnTurn")
+                if (dat["LuaEvents"][s]["Event"].ToString() == "OnTurn")
                 {
-                    luaCall = new LuaCall(dat["Scripts"][s]["File"].ToString(), dat["Scripts"][s]["Function"].ToString());
+                    luaCall = new LuaCall(dat["LuaEvents"][s]["Script"].ToString());
                 }
             }
         }

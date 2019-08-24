@@ -83,7 +83,7 @@ public class SaveData : MonoBehaviour
     {
         Manager.playerBuilder = new PlayerBuilder();
 
-        string jsonString = File.ReadAllText(Manager.SaveDirectory + "/" + charName + ".axu");
+        string jsonString = File.ReadAllText(Path.Combine(Manager.SaveDirectory, charName + ".axu"));
         playerJson = JsonMapper.ToObject(jsonString)["Player"];
 
         //Name
@@ -182,6 +182,8 @@ public class SaveData : MonoBehaviour
         SetUpInventory();
 
         Manager.playerBuilder.money = (int)playerJson["Gold"];
+
+        //Weather
         int weatherInt = (int)playerJson["CWeather"];
         Manager.startWeather = (Weather)weatherInt;
     }
@@ -359,10 +361,10 @@ public class SaveData : MonoBehaviour
             string sID = playerJson["Skills"][i]["Name"].ToString();
             Ability s = new Ability(GameData.Get<Ability>(sID) as Ability);
 
-            playerJson["Skills"][i].TryGetValue("Lvl", out s.level);
+            playerJson["Skills"][i].TryGetInt("Lvl", out s.level);
             s.XP = (double)playerJson["Skills"][i]["XP"];
             s.origin = playerJson["Skills"][i].ContainsKey("Flg") ? (Ability.AbilityOrigin)(int)playerJson["Skills"][i]["Flg"] : Ability.AbilityOrigin.None;
-            playerJson.TryGetValue("CD", out s.cooldown);
+            playerJson.TryGetInt("CD", out s.cooldown);
 
             abilities.Add(s);
         }

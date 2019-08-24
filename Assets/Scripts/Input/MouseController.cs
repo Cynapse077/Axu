@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Pathfinding;
+using System.Collections.Generic;
 
 public class MouseController : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class MouseController : MonoBehaviour
     public Transform worldCursorObject;
     public Vector3 cursorPosition;
     public Sprite[] sprites;
+    public GameObject pathObject;
 
     GameObject arrow;
     UserInterface userInterface;
@@ -16,6 +18,8 @@ public class MouseController : MonoBehaviour
     Entity playerEntity;
     PlayerInput playerInput;
     Camera worldCamera;
+    int storedXPos = -1, storedYPos = -1;
+    List<GameObject> lineObjects = new List<GameObject>();
 
     void Start()
     {
@@ -74,12 +78,65 @@ public class MouseController : MonoBehaviour
         }
     }
 
+    void MapCoordChanged()
+    {
+        if (storedXPos >= 0 && storedXPos < Manager.localMapSize.x && storedYPos < 0 && storedYPos >= -Manager.localMapSize.y)
+        {
+            DrawPath(new Coord(storedXPos, storedYPos + Manager.localMapSize.y));
+        }
+    }
+
+    public void DrawPath(Coord newPos)
+    {
+        ClearUIObjects();
+        if (!World.OutOfLocalBounds(newPos.x, newPos.y) && World.tileMap.CurrentMap.has_seen[newPos.x, newPos.y])
+        {
+            Path_AStar path = new Path_AStar(playerEntity.myPos, newPos, playerEntity.inventory.CanFly(), true);
+
+            if (path != null && path.Traversable)
+            {
+                while (true)
+                {
+                    Coord c = path.GetNextStep();
+                    if (c == null)
+                    {
+                        break;
+                    }
+
+                    GameObject g = SimplePool.Spawn(pathObject, new Vector2(c.x, c.y - Manager.localMapSize.y));
+                    lineObjects.Add(g);
+                }
+
+                for (int i = 0; i < path.StepCount; i++)
+                {
+                    
+                    Coord c = path.GetNextStep();
+                    if (c != null)
+                    {
+                        GameObject g = SimplePool.Spawn(pathObject, new Vector2(c.x, c.y - Manager.localMapSize.y));
+                        lineObjects.Add(g);
+                    }
+                }
+            }
+        }
+    }
+
+    public void ClearUIObjects()
+    {
+        for (int i = 0; i < lineObjects.Count; i++)
+        {
+            SimplePool.Despawn(lineObjects[i].gameObject);
+        }
+
+        lineObjects.Clear();
+    }
+
     void LocalMapHandling(Vector3 pos)
     {
         if (playerEntity == null)
             return;
 
-        cursor.transform.position = pos;
+        cursor.position = pos;
         int posX = (int)cursor.position.x, posY = (int)cursor.position.y;
 
         if (posX < 0 || posX > Manager.localMapSize.x - 1 || posY >= 0 || posY < -Manager.localMapSize.y)

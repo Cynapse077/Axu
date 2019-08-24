@@ -14,6 +14,7 @@ public class MapObject
     public Coord localPosition, worldPosition;
     public ObjectPulseInfo pulseInfo;
     public ProgressFlags[] permissions;
+    public bool saved = true;
 
     Dictionary<string, LuaCall> luaEvents;
 
@@ -39,11 +40,12 @@ public class MapObject
     {
         ReInitialize(bp);
 
-        if (objectType.Contains("Bloodstain_"))
+        if (bp.randomRotation)
         {
             SetRotation();
         }
-        else if (objectType == "Chest")
+
+        if (objectType == "Chest")
         {
             inv = Inventory.GetDrops(SeedManager.combatRandom.Next(1, 4));
         }
@@ -67,6 +69,7 @@ public class MapObject
         luaEvents = bp.luaEvents;
         pulseInfo = bp.pulseInfo;
         permissions = bp.permissions;
+        saved = bp.saved;
     }
 
     void SetRotation()
@@ -74,6 +77,11 @@ public class MapObject
         if (SeedManager.combatRandom.Next(100) < 10 || objectType == "Bloodstain_Permanent")
         {
             rotation = Random.Range(0, 360);
+            return;
+        }
+
+        if (!objectType.Contains("Bloodstain"))
+        {
             return;
         }
 
@@ -125,16 +133,16 @@ public class MapObject
 
     public bool HasEvent(string eventName)
     {
-        if (luaEvents == null)
-        {
-            return false;
-        }
-
-        return luaEvents.ContainsKey(eventName);
+        return (luaEvents != null && luaEvents.ContainsKey(eventName)) ;
     }
 
     public LuaCall GetEvent(string eventName)
     {
+        if (luaEvents == null)
+        {
+            return null;
+        }
+
         return luaEvents[eventName];
     }
 

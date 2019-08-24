@@ -84,18 +84,20 @@ public class MapObjectSprite : MonoBehaviour
             return;
         }
         
-        spriteRenderer.sortingLayerName = "Items";
-        spriteRenderer.sortingOrder = 2;
-
-        if (bp.renderInFront)
+        switch (bp.renderLayer)
         {
-            spriteRenderer.sortingLayerName = "Characters";
-        }
-        else if (bp.renderInBack)
-        {
-            spriteRenderer.sortingLayerName = "Items";
-            spriteRenderer.sortingOrder = 0;
-            renderInBack = true;
+            case ObjectRenderLayer.Back:
+                spriteRenderer.sortingLayerName = "Items";
+                spriteRenderer.sortingOrder = 0;
+                renderInBack = true;
+                break;
+            case ObjectRenderLayer.Mid:
+                spriteRenderer.sortingLayerName = "Items";
+                spriteRenderer.sortingOrder = 2;
+                break;
+            case ObjectRenderLayer.Front:
+                spriteRenderer.sortingLayerName = "Characters";
+                break;
         }
 
         if (objectBase.solid)

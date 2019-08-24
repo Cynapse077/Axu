@@ -7,8 +7,8 @@
             "Frequency" : 1,
             "Color" : [ 175, 175, 175 ],
             "Price Per Unit" : 0,
-            "Events" : [
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -18,9 +18,9 @@
             "Frequency" : 1,
             "Color" : [ 255, 255, 0 ],
             "Price Per Unit" : 3,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Unstable" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Unstable" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Unstable" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Unstable" }
             ]
         },
         {
@@ -30,9 +30,9 @@
             "Frequency" : 100,
             "Color" : [ 0, 155, 255 ],
             "Price Per Unit" : 1,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Water" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Water" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -42,9 +42,9 @@
             "Frequency" : 100,
             "Color" : [ 100, 187, 243 ],
             "Price Per Unit" : 1,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_SaltWater" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_SaltWater" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
 		{
@@ -54,9 +54,9 @@
 			"Frequency" : 10,
 			"Color" : [ 100, 187, 243 ],
 			"Price Per Unit" : 10,
-			"Events" : [
-				{ "Event" : "OnCoat", "File" : "Liquids", "Function" : "OnCoat_Preservative" },
-				{ "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Preservative" }
+			"LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Preservative" },
+                { "Event" : "OnCoat", "Script" : "Core.Liquids.OnCoat_Preservative" }
 			]
 		},
         {
@@ -66,9 +66,9 @@
             "Frequency" : 10,
             "Color" : [ 240, 170, 33 ],
             "Price Per Unit" : 500,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Salamandis" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Salamandis" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -79,9 +79,9 @@
             "Color" : [ 130, 236, 88 ],
             "Addictiveness" : 10,
             "Price Per Unit" : 60,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Regenitrol" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Regenitrol" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Regenitrol" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Regenitrol" }
             ]
         },
         {
@@ -91,9 +91,9 @@
             "Frequency" : 50,
             "Color" : [ 110, 164, 88 ],
             "Price Per Unit" : 10,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Poison" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Poison" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Poison" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Poison" }
             ]
         },
         {
@@ -103,9 +103,9 @@
             "Frequency" : 50,
             "Color" : [ 213, 188, 230 ],
             "Price Per Unit" : 15,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Antidote" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Antidote" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -115,9 +115,9 @@
             "Frequency" : 8,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 150,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Mutagen" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Mutagen" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
             ]
         },
         {
@@ -127,9 +127,9 @@
             "Color" : [ 215, 222, 33 ],
             "Frequency" : 14,
             "Price Per Unit" : 150,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Lunium" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Lunium" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Lunium" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Lunium" }
             ]
         },
         {
@@ -140,9 +140,9 @@
             "Color" : [ 160, 100, 28 ],
             "Addictiveness" : 4,
             "Price Per Unit" : 25,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Alcohol" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Alcohol" } 
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Alcohol" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Alcohol" }
             ]
         },
         {
@@ -152,9 +152,9 @@
             "Frequency" : 8,
             "Color" : [ 231, 75, 15 ],
             "Price Per Unit" : 55,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Lava" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Lava" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Lava" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Lava" }
             ]
         },
         {
@@ -164,9 +164,9 @@
             "Frequency" : 1,
             "Color" : [ 145, 184, 38 ],
             "Price Per Unit" : 0,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Vomit" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Vomit" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -176,9 +176,9 @@
             "Frequency" : 5,
             "Color" : [ 255, 0, 0 ],
             "Price Per Unit" : 0,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Blood" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Blood" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -188,9 +188,9 @@
             "Frequency" : 5,
             "Color" : [ 184, 38, 38 ],
             "Price Per Unit" : 50,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Blood_Vamp" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Blood_Vamp" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -200,9 +200,9 @@
             "Frequency" : 5,
             "Color" : [ 184, 38, 38 ],
             "Price Per Unit" : 0,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Blood_Poison" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Blood_Poison" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Blood_Poison" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Blood_Poison" }
             ]
         },
         {
@@ -212,9 +212,9 @@
             "Frequency" : 5,
             "Color" : [ 184, 38, 38 ],
             "Price Per Unit" : 0,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Blood_Lep" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Blood_Lep" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -225,9 +225,9 @@
             "Color" : [ 0, 255, 0 ],
             "Addictiveness" : 30,
             "Price Per Unit" : 150,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Cytopke" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Cytopke" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Regenitrol" }
             ]
         },
         {
@@ -237,9 +237,9 @@
             "Frequency" : 50,
             "Color" : [ 160, 100, 28 ],
             "Price Per Unit" : 20,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Float" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Base" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Float" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
             ]
         },
         {
@@ -249,9 +249,9 @@
             "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Mutagen_Bird" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Mutagen" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Bird" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
             ]
         },
         {
@@ -261,9 +261,9 @@
             "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Mutagen_Spider" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Mutagen" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Spider" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
             ]
         },
         {
@@ -273,9 +273,9 @@
             "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Mutagen_Reptile" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Mutagen" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Reptile" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
             ]
         },
         {
@@ -285,9 +285,9 @@
             "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Mutagen_Chimera" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Mutagen" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Chimera" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
             ]
         },
         {
@@ -297,9 +297,9 @@
             "Frequency" : 0,
             "Color" : [ 155, 55, 217 ],
             "Price Per Unit" : 300,
-            "Events" : [
-                { "Event" : "OnDrink", "File" : "Liquids", "Function" : "OnDrink_Mutagen_Aquatic" },
-                { "Event" : "OnSplash", "File" : "Liquids", "Function" : "OnSplash_Mutagen" }
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Aquatic" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
             ]
         }
     ],

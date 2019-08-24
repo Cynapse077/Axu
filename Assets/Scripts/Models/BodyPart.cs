@@ -532,12 +532,12 @@ public class BodyPart : IWeighted
     {
         None = 0,
         Synthetic = 1,
-        External = 2,
-        Crystal = 4,
-        Vampire = 8,
-        Leprosy = 16, 
-        NonSeverable = 32,
-        CannotWearGear = 64
+        External = 1 << 1,
+        Crystal = 1 << 2,
+        Vampire = 1 << 3,
+        Leprosy = 1 << 4, 
+        NonSeverable = 1 << 5,
+        CannotWearGear = 1 << 6
     }
 }
 

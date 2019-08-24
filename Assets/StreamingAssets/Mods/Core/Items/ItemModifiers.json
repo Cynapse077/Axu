@@ -81,7 +81,7 @@
             "ID" : "voltaic",
             "Damage Type" : "Energy",
             "Components" : [
-                { "ID" : "LuaEvent", "Trigger" : "OnHit", "File" : "ItemActions", "Function" : "ShockAdjacent" }
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
             ],
             "Properties" : [
             	"Stun",
@@ -96,7 +96,7 @@
             "ID" : "vampiric",
             "Damage" : "0d0-1",
             "Components" : [
-                { "ID" : "LuaEvent", "Trigger" : "OnHit", "File" : "ItemActions", "Function" : "DrainHealth" }
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.DrainHealth" }
             ],
             "Properties" : [
                 "DrainHealth"

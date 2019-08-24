@@ -20,15 +20,15 @@ public class ZoneBlueprint : IAsset
     {
         ID = dat["ID"].ToString();
 
-        dat.TryGetValue("Display", out name);
-        dat.TryGetValue("Tile Index", out tileID);
-        dat.TryGetValue("Walkable", out walkable, true);
-        dat.TryGetValue("Amount", out amount, 1);
-        dat.TryGetValue("Expand", out expand, false);
-        dat.TryGetValue("Start Location", out isStart);
-        dat.TryGetValue("Friendly", out friendly);
-        dat.TryGetValue("Underground", out underground);
-        dat.TryGetValue("Radiation", out radiation);
+        dat.TryGetString("Display", out name);
+        dat.TryGetInt("Tile Index", out tileID);
+        dat.TryGetBool("Walkable", out walkable, true);
+        dat.TryGetInt("Amount", out amount, 1);
+        dat.TryGetBool("Expand", out expand, false);
+        dat.TryGetBool("Start Location", out isStart);
+        dat.TryGetBool("Friendly", out friendly);
+        dat.TryGetString("Underground", out underground);
+        dat.TryGetInt("Radiation", out radiation);
 
         if (dat.ContainsKey("Place At"))
         {

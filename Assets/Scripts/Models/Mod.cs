@@ -12,6 +12,8 @@ public class Mod
     public int loadOrder = 0;
     string filePath;
 
+    static bool LogAll = false;
+
     public Mod(string filPth)
     {
         Init(filPth);
@@ -31,11 +33,11 @@ public class Mod
         string settingContents = File.ReadAllText(modSettingsPath);
         JsonData dat = JsonMapper.ToObject(settingContents);
 
-        dat.TryGetValue("ID", out id, "MOD_" + ModUtility.GetNextFreeID());
-        dat.TryGetValue("Name", out name, "Unnamed");
-        dat.TryGetValue("Load Order", out loadOrder, ModUtility.GetNextLoadOrder(this));
-        dat.TryGetValue("Description", out description, "No description.");
-        dat.TryGetValue("Creator", out creator, "Unknown");
+        dat.TryGetString("ID", out id, "MOD_" + ModUtility.GetNextFreeID());
+        dat.TryGetString("Name", out name, "Unnamed");
+        dat.TryGetInt("Load Order", out loadOrder, ModUtility.GetNextLoadOrder(this));
+        dat.TryGetString("Description", out description, "No description.");
+        dat.TryGetString("Creator", out creator, "Unknown");
     }
 
     bool AddData<T>(string folderPath, string fileName, string key)
@@ -45,6 +47,9 @@ public class Mod
         
         if (File.Exists(file))
         {
+            if (LogAll)
+                Debug.Log("------- Loading <" + typeof(T).ToString() + "> -------");
+
             string contents = File.ReadAllText(file);
             JsonData data = JsonMapper.ToObject(contents)[key];
 
@@ -52,8 +57,15 @@ public class Mod
             {
                 IAsset t = (IAsset)Activator.CreateInstance(typeof(T), dat);
                 t.ModID = id;
+
+                if (LogAll)
+                    Debug.Log("    " + t.ID + " - Success!");
+
                 GameData.Add<T>(t);
             }
+
+            if (LogAll)
+                Debug.Log("------- Finished Loading <" + typeof(T).ToString() + "> -------");
 
             return true;
         }

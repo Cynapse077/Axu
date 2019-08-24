@@ -309,32 +309,21 @@ public class CConsole : CComponent
 public class CLuaEvent : CComponent
 {
     public string evName;
-    public string file;
-    public string func;
-    public string xprm;
+    public LuaCall luaCall;
 
     public CLuaEvent() { ID = "LuaEvent"; }
-    public CLuaEvent(string eventName, string fle, string fnc, string xp)
+    public CLuaEvent(string eventName, string script)
     {
         ID = "LuaEvent";
         evName = eventName;
-        file = fle;
-        func = fnc;
-        xprm = xp;
+        luaCall = new LuaCall(script);
     }
 
     public void CallEvent(string eventToCall, Entity ent)
     {
         if (eventToCall == evName)
         {
-            if (string.IsNullOrEmpty(xprm))
-            {
-                LuaManager.CallScriptFunction(file, func, ent);
-            }
-            else
-            {
-                LuaManager.CallScriptFunction(file, func, ent, xprm);
-            }
+            LuaManager.CallScriptFunction(luaCall, ent);
         }
     }
 
@@ -342,7 +331,7 @@ public class CLuaEvent : CComponent
     {
         if (eventToCall == evName)
         {
-            LuaManager.CallScriptFunction(file, func, obj);
+            LuaManager.CallScriptFunction(luaCall, obj);
         }
     }
 }

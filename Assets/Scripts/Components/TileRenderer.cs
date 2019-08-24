@@ -62,18 +62,19 @@ public class TileRenderer : MonoBehaviour
 
     int BitwiseAutotile()
     {
-        int sum = 0;
+        byte sum = 0;
         int width = Manager.localMapSize.x;
         int height = Manager.localMapSize.y;
 
-        if (posY < height - 1 && TileNotInSight(posX, posY + 1))
-            sum++;
-        if (posX > 0 && TileNotInSight(posX - 1, posY))
-            sum += 2;
-        if (posX < width - 1 && TileNotInSight(posX + 1, posY))
-            sum += 4;
-        if (posY > 0 && TileNotInSight(posX, posY - 1))
-            sum += 8;
+        bool N = (posY < height - 1 && TileNotInSight(posX, posY + 1));
+        bool E = (posX < width - 1 && TileNotInSight(posX + 1, posY));
+        bool S = (posY > 0 && TileNotInSight(posX, posY - 1));
+        bool W = (posX > 0 && TileNotInSight(posX - 1, posY));
+
+        if (N) sum |= 1;
+        if (W) sum |= 2;
+        if (E) sum |= 4;
+        if (S) sum |= 8;
 
         return sum;
     }

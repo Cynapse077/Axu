@@ -287,7 +287,7 @@ public class Entity : MonoBehaviour
         {            
             if (playerInput.localPath != null) //Pathing
             {
-                if (playerInput.localPath.steps != null && playerInput.localPath.steps.Count > 0)
+                if (playerInput.localPath.Traversable)
                 {
                     Coord c = playerInput.localPath.GetNextStep();
 
@@ -1358,20 +1358,31 @@ public class Entity : MonoBehaviour
     }
 
     //Only used for the player's character to be transfered to a writeable string.
-    public PlayerCharacter ToCharacter()
+    public PlayerCharacter ToCharacter(bool includeInventory = true)
     {
         SStats myStats = stats.ToSimpleStats();
 
         List<SItem> items = new List<SItem>();
-        for (int i = 0; i < inventory.items.Count; i++)
+
+        if (includeInventory)
         {
-            items.Add(inventory.items[i].ToSerializedItem());
+            for (int i = 0; i < inventory.items.Count; i++)
+            {
+                items.Add(inventory.items[i].ToSerializedItem());
+            }
         }
 
         List<SBodyPart> bodyParts = new List<SBodyPart>();
         for (int b = 0; b < body.bodyParts.Count; b++)
         {
-            bodyParts.Add(body.bodyParts[b].ToSerializedBodyPart());
+            SBodyPart sb = body.bodyParts[b].ToSerializedBodyPart();
+            
+            if (!includeInventory)
+            {
+                sb.item = null;
+            }
+
+            bodyParts.Add(sb);
         }
 
         List<STrait> traits = new List<STrait>();
@@ -1397,7 +1408,14 @@ public class Entity : MonoBehaviour
         List<SItem> handItems = new List<SItem>();
         for (int i = 0; i < body.Hands.Count; i++)
         {
-            handItems.Add(body.Hands[i].EquippedItem.ToSerializedItem());
+            SItem handItem = body.Hands[i].EquippedItem.ToSerializedItem();
+
+            if (!includeInventory && body.Hands[i].baseItem != handItem.ID)
+            {
+                handItem = (GameData.Get<Item>(body.Hands[i].baseItem) as Item).ToSerializedItem();
+            }
+
+            handItems.Add(handItem);
         }
 
         PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, MyName, Manager.profName, stats.MyLevel, myStats,

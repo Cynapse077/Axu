@@ -86,7 +86,12 @@ public static class JsonHelper {
 		return str.ToString().IsEscaped(index);
 	}
 
-    public static bool TryGetValue(this JsonData dat, string key, out string o, string defaultValue = "")
+    public static bool ContainsKey(this JsonData data, string key)
+    {
+        return (data.Keys.Contains(key) && data[key] != null);
+    }
+
+    public static bool TryGetString(this JsonData dat, string key, out string o, string defaultValue = "")
     {
         if (dat.ContainsKey(key))
         {
@@ -98,7 +103,7 @@ public static class JsonHelper {
         return false;
     }
 
-    public static bool TryGetValue(this JsonData dat, string key, out int o, int defaultValue = 0)
+    public static bool TryGetInt(this JsonData dat, string key, out int o, int defaultValue = 0)
     {
         if (dat.ContainsKey(key))
         {
@@ -110,7 +115,7 @@ public static class JsonHelper {
         return false;
     }
 
-    public static bool TryGetValue(this JsonData dat, string key, out float o, float defaultValue = 0f)
+    public static bool TryGetFloat(this JsonData dat, string key, out float o, float defaultValue = 0f)
     {
         if (dat.ContainsKey(key))
         {
@@ -122,7 +127,19 @@ public static class JsonHelper {
         return false;
     }
 
-    public static bool TryGetValue(this JsonData dat, string key, out bool o, bool defaultValue = false)
+    public static bool TryGetDouble(this JsonData dat, string key, out double o, double defaultValue = 0.0)
+    {
+        if (dat.ContainsKey(key))
+        {
+            o = (double)dat[key];
+            return true;
+        }
+
+        o = 0.0;
+        return false;
+    }
+
+    public static bool TryGetBool(this JsonData dat, string key, out bool o, bool defaultValue = false)
     {
         if (dat.ContainsKey(key))
         {
@@ -134,7 +151,7 @@ public static class JsonHelper {
         return false;
     }
 
-    public static bool TryGetValue(this JsonData dat, string key, out JsonData o)
+    public static bool TryGetJsonData(this JsonData dat, string key, out JsonData o)
     {
         if (dat.ContainsKey(key))
         {
@@ -146,14 +163,14 @@ public static class JsonHelper {
         return false;
     }
 
-    public static bool TryGetValue(this JsonData dat, string key, out Coord o, Coord defaultValue = null)
+    public static bool TryGetCoord(this JsonData dat, string key, out Coord o, Coord defaultValue = null)
     {
         if (dat.ContainsKey(key) && dat[key].Count == 2)
         {
             int x = 0;
             int y = 0;
 
-            if (dat.TryGetValue("x", out x) && dat.TryGetValue("y", out y))
+            if (dat.TryGetInt("x", out x) && dat.TryGetInt("y", out y))
             {
                 o = new Coord(x, y);
                 return true;
@@ -165,11 +182,11 @@ public static class JsonHelper {
     }
 
     //For enums
-    public static bool TryGetValue<T>(this JsonData dat, string key, out T o, bool parseEnum) where T : struct, IConvertible
+    public static bool TryGetEnum<T>(this JsonData dat, string key, out T o, T defaultValue) where T : struct, IConvertible
     {
-        if (parseEnum && !typeof(T).IsEnum)
+        if (!typeof(T).IsEnum)
         {
-            throw new ArgumentException("T must be an enumerated type");
+            throw new ArgumentException("<T> must be an enumerated type");
         }
 
         if (dat.ContainsKey(key))
@@ -179,7 +196,7 @@ public static class JsonHelper {
             return true;
         }
 
-        o = default(T);
+        o = defaultValue;
         return false;
     }
 
