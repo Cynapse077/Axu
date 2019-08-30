@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class PlayerProficiencies
 {
-    public Dictionary<string, WeaponProficiency> Profs;
+    public readonly Dictionary<string, WeaponProficiency> Profs;
 
     public PlayerProficiencies()
     {

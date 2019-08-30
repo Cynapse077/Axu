@@ -14,7 +14,7 @@ namespace Augments
         {
             new SyntheticMuscle(), new SubdermalScales(), new RadiationScrubber(), 
             new FoldingBlade(), new ArmCannon(), new ImpactSole(), new NanoRegen(),
-            new NanoAdrenal(), new TargetSensor(), new Shielding()
+            new NanoAdrenal(), new TargetSensor(), new Shielding(), new SpringTendon()
         };
 
         public static void AddCyberneticToData(Cybernetic c)
@@ -99,7 +99,7 @@ namespace Augments
         {
             Name = "Synthetic Muscle";
             ID = "SyntheticMuscle";
-            Desc = "The muscles in your arms are interwoven with synthetic materials, increasing their strength.";
+            Desc = "The muscles in your arms are interwoven with synthetic materials, increasing their strength. (+2 STR)";
         }
 
         public override void Attach(BodyPart bp)
@@ -130,7 +130,7 @@ namespace Augments
         {
             Name = "Subdermal Scales";
             ID = "SubdermalScales";
-            Desc = "You have small plates under the skin of this body part. They offer increased protection.";
+            Desc = "You have small plates under the skin of this body part. They offer increased protection. (+1 Armor)";
         }
 
         public override void Attach(BodyPart bp)
@@ -301,7 +301,7 @@ namespace Augments
         {
             Name = "Impact Sole";
             ID = "ImpactSole";
-            Desc = "Your sole has an impact dampener, reducing sounds made by this leg.";
+            Desc = "Your sole has an impact dampener, reducing sounds made by this leg. (+Stealth)";
         }
 
         public override void Attach(BodyPart bp)
@@ -333,7 +333,7 @@ namespace Augments
         {
             Name = "Healing Nanomachines";
             ID = "NanoRegen";
-            Desc = "Upon being injured, your body will release nanomachines to help close the wound.";
+            Desc = "Upon being injured, your body will release nanomachines to help close the wound. (+HP Regen)";
         }
 
         public override void Attach(BodyPart bp)
@@ -365,7 +365,7 @@ namespace Augments
         {
             Name = "Adrenal Nanomachines";
             ID = "NanoAdrenal";
-            Desc = "Your blood is filled with nanomachines that aid in removing fatigue from muscles.";
+            Desc = "Your blood is filled with nanomachines that aid in removing fatigue from muscles. (+ST Regen)";
         }
 
         public override void Attach(BodyPart bp)
@@ -397,7 +397,7 @@ namespace Augments
         {
             Name = "Target Sensor";
             ID = "TargetSensor";
-            Desc = "Your eyes are able to accurately predict a target's movement.";
+            Desc = "Your eyes are able to accurately predict a target's movement. (+ACC)";
         }
 
         public override void Attach(BodyPart bp)
@@ -417,6 +417,33 @@ namespace Augments
         public override bool CanAttach(BodyPart bp)
         {
             return bp.slot == ItemProperty.Slot_Head;
+        }
+    }
+
+    public class SpringTendon : Cybernetic
+    {
+        const int bonus = 3;
+        const string attribute = "Accuracy";
+
+        public SpringTendon()
+        {
+            Name = "Spring Tendon";
+            ID = "SpringTendon";
+            Desc = "Your achilles tendon is replaced by a stong, yet flexible material. (+SPD)";
+        }
+
+        public override void Attach(BodyPart bp)
+        {
+            base.Attach(bp);
+            bodyPart.AddAttribute(attribute, bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, bonus);
+        }
+
+        public override void Remove()
+        {
+            bodyPart.AddAttribute(attribute, -bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, -bonus);
+            base.Remove();
         }
     }
 }

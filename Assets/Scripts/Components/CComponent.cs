@@ -36,6 +36,7 @@ public class CComponent
             case "ModKit": return JsonMapper.ToObject<CModKit>(reader);
             case "ItemLevel": return JsonMapper.ToObject<CItemLevel>(reader);
             case "Requirement": return JsonMapper.ToObject<CRequirement>(reader);
+            case "CNDAHolder": return JsonMapper.ToObject<CDNAHolder>(reader);
 
             default: return null;
         }
@@ -60,6 +61,7 @@ public class CComponent
             case "ModKit": return typeof(CModKit);
             case "ItemLevel": return typeof(CItemLevel);
             case "Requirement": return typeof(CRequirement);
+            case "CDNAHolder": return typeof(CDNAHolder);
 
             default: return null;
         }
@@ -693,5 +695,57 @@ public class CRequirement : CComponent
         }
 
         return true;
+    }
+}
+
+[Serializable]
+public class CDNAHolder : CComponent
+{
+    string npc;
+
+    public bool IsEmpty
+    {
+        get
+        {
+            return string.IsNullOrEmpty(npc);
+        }
+    }
+
+    public CDNAHolder()
+    {
+        ID = "CDNAHolder";
+        npc = null;
+    }
+
+    public CDNAHolder(NPC n)
+    {
+        ID = "CDNAHolder";
+        npc = n.ID;
+    }
+
+    public void SetNPC(NPC n)
+    {
+        npc = n.ID;
+    }
+
+    public NPC_Blueprint GetNPC()
+    {
+        if (IsEmpty)
+        {
+            return null;
+        }
+
+        return GameData.Get<NPC_Blueprint>(npc) as NPC_Blueprint;
+    }
+
+    public string Display()
+    {
+        if (IsEmpty)
+        {
+            return "DNA: <color=grey>(Empty)</color>";
+        }
+
+        NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npc) as NPC_Blueprint;
+        return "DNA: " + bp.name;
     }
 }

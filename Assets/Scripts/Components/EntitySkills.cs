@@ -351,7 +351,7 @@ public class EntitySkills : MonoBehaviour
         }
         else
         {
-            CombatLog.NewMessage(entity.MyName + " fails to apply pressure to " + grip.HeldBody.entity.MyName + "'s " + grip.heldPart.name + ".");
+            CombatLog.NewMessage(entity.MyName + " fails to apply pressure to " + grip.HeldBody.entity.MyName + "'s " + grip.heldPart.displayName + ".");
         }
 
         if (!grip.HeldBody.entity.isPlayer)
@@ -429,22 +429,19 @@ public class EntitySkills : MonoBehaviour
 
         World.soundManager.TeleportSound();
         entity.ForcePosition();
-        entity.SetCell();
         CombatLog.NameMessage("Message_Teleport", gameObject.name);
     }
 
     public bool PassiveDisarm(Entity attacker)
     {
-        Entity ent = attacker;
-
-        if (!ent)
+        if (attacker == null)
         {
             return false;
         }
 
-        Inventory otherInventory = ent.inventory;
+        Inventory otherInventory = attacker.inventory;
 
-        if (otherInventory == null || !ent.body.MainHand.EquippedItem.lootable)
+        if (otherInventory == null || !attacker.body.MainHand.EquippedItem.lootable)
         {
             return false;
         }

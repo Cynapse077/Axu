@@ -510,13 +510,13 @@ public class Stats : MonoBehaviour
                 if (MyBody.bodyParts.FindAll(x => x.slot == ItemProperty.Slot_Head).Count > 1 || !entity.isPlayer)
                 {
                     MyBody.RemoveLimb(targetPart);
-                    CombatLog.NameItemMessage("Sever_Limb", gameObject.name, targetPart.displayName);
+                    CombatLog.NameItemMessage("Sever_Limb", entity.Name, targetPart.displayName);
                 }
             }
             else
             {
                 MyBody.RemoveLimb(targetPart);
-                CombatLog.NameItemMessage("Sever_Limb", gameObject.name, targetPart.displayName);
+                CombatLog.NameItemMessage("Sever_Limb", entity.Name, targetPart.displayName);
             }
         }
     }

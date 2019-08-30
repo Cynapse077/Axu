@@ -5,7 +5,7 @@ public static class TraitList
 {
     public static Trait GetTraitByID(string id)
     {
-        return GameData.Get<Trait>(id) as Trait;
+        return new Trait(GameData.Get<Trait>(id) as Trait);
     }
 
     public static List<Trait> GetAvailableMutations(Stats stats)
@@ -24,7 +24,7 @@ public static class TraitList
             if (muts[i].stackable && stats.TraitStacks(muts[i].ID) >= muts[i].maxStacks)
                 continue;
 
-            possibilities.Add(muts[i]);
+            possibilities.Add(new Trait(muts[i]));
         }
 
         return possibilities;

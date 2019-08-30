@@ -305,7 +305,7 @@ public class Body : MonoBehaviour
 
         if (bodyParts[id].equippedItem.lootable)
         {
-            if (!MyInventory.isNoneItem(bodyParts[id].equippedItem))
+            if (!MyInventory.IsNoneItem(bodyParts[id].equippedItem))
             {
                 Item i = bodyParts[id].equippedItem;
 

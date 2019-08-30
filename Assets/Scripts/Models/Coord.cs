@@ -73,10 +73,14 @@ public class Coord
         return obj.GetType() == typeof(Coord) && Equals((Coord)obj);
     }
 
-
-    public bool directionIsDiagonal()
+    public bool IsDiagonal()
     {
-        return (Mathf.Abs(x) + Mathf.Abs(y) > 1);
+        return (Mathf.Abs(x) == Mathf.Abs(y));
+    }
+
+    public bool IsCardinal()
+    {
+        return (x != 0 ^ y != 0);
     }
 
     public Vector2 toVector2()

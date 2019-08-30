@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scenes\MapCreator\MapCreator_Cell.cs" />
     <Compile Include="Assets\Scenes\MapCreator\MapCreator_SideButton.cs" />
     <Compile Include="Assets\Scenes\MapCreator\MapCreatorTool.cs" />
+    <Compile Include="Assets\Scripts\Components\AI\AI.cs" />
     <Compile Include="Assets\Scripts\Components\AI\BaseAI.cs" />
     <Compile Include="Assets\Scripts\Components\Body.cs" />
     <Compile Include="Assets\Scripts\Components\CComponent.cs" />

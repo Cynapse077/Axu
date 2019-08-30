@@ -14,7 +14,7 @@ public class BaseAI : MonoBehaviour
     public DialogueController dialogueController;
     public Entity target { get; protected set; }
 
-    readonly int sightRange = 17;
+    readonly int sightRange = 14;
 
     Path_AStar path;
     float distanceToTarget;

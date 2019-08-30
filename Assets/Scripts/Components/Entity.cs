@@ -47,7 +47,7 @@ public class Entity : MonoBehaviour
     }
     public string MyName
     {
-        get { return gameObject.name; }
+        get { return Name; }
     }
 
     public bool Walking
@@ -291,15 +291,18 @@ public class Entity : MonoBehaviour
                 {
                     Coord c = playerInput.localPath.GetNextStep();
 
-                    if (c.x == posX && c.y == posY)
+                    if (c.x == posX && c.y == posY && playerInput.localPath.StepCount > 0)
                     {
                         c = playerInput.localPath.GetNextStep();
                     }
 
-                    int moveX = c.x - posX, moveY = c.y - posY;
+                    if (c != null)
+                    {
+                        int moveX = c.x - posX, moveY = c.y - posY;
 
-                    playerInput.CheckFacingDirection(posX + moveX);
-                    Action(moveX, moveY);
+                        playerInput.CheckFacingDirection(posX + moveX);
+                        Action(moveX, moveY);
+                    }
                 }
 
                 if (!World.objectManager.SafeToRest())
@@ -377,7 +380,6 @@ public class Entity : MonoBehaviour
 
         if (World.tileMap.WalkableTile(posX + x, posY + y))
         {
-            //Break statues by moving into them.
             Cell targetCell = World.tileMap.GetCellAt(posX + x, posY + y);
 
             if (targetCell == null)

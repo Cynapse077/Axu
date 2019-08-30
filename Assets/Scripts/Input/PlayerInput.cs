@@ -847,7 +847,7 @@ public class PlayerInput : MonoBehaviour
                 timePass /= 2;
             }
 
-            if (entity.inventory.overCapacity())
+            if (entity.inventory.OverCapacity())
             {
                 timePass += 5;
             }

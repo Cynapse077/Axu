@@ -84,6 +84,11 @@ public class NPC
         return HasFlag(NPC_Flags.Merchant) || HasFlag(NPC_Flags.Book_Merchant) || HasFlag(NPC_Flags.Doctor);
     }
 
+    public bool IsHostileTo(Entity other)
+    {
+        return (other.isPlayer && faction.isHostileTo("Player") || !other.isPlayer && faction.isHostileTo(other.AI.npcBase.faction));
+    }
+
     public SStats GetSimpleStats()
     {
         return new SStats(maxHealth, maxStamina, new Dictionary<string, int>(Attributes), new Dictionary<string, int>(), 0, null);

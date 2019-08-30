@@ -4,16 +4,12 @@ function Interact_Door(obj)
 	if (obj.cell.entity == nil) then
 		if (obj.objectType == "Door_Open") then
 			obj.SetTypeAndSwapSprite("Door_Closed")
-
 		elseif (obj.objectType == "Ensis_Door_Open") then
 			obj.SetTypeAndSwapSprite("Ensis_Door_Closed")
-
 		elseif (obj.objectType == "Prison_Door_Open") then
 			obj.SetTypeAndSwapSprite("Prison_Door_Closed")
-
 		elseif (obj.objectType == "Magna_Door_Open") then
 			obj.SetTypeAndSwapSprite("Magna_Door_Closed")
-
 		elseif (obj.objectType == "Kin_Door_Open") then
 			obj.SetTypeAndSwapSprite("Kin_Door_Closed")
 		else
@@ -62,7 +58,7 @@ function Interact_Stairlock(obj)
 end
 
 function Interact_Grave(obj)
-	if (PlayerEntity.body.MainHand.equippedItem.HasProp(ItemProperty.Dig)) then
+	if (PlayerEntity.inventory.DiggingEquipped()) then
 		obj.SetTypeAndSwapSprite("Grave_Dug")
 		Log("You excavate the grave.")
 	end

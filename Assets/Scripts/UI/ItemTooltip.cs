@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public static class ItemTooltip
 {
@@ -35,23 +36,12 @@ public static class ItemTooltip
 
             for (int i = 0; i < cr.req.Count; i++)
             {
-                if (cr.CanUse(ObjectManager.playerEntity.stats, i))
-                {
-                    req += "<color=green>";
-                }
-                else
-                {
-                    req += "<color=red>";
-                }
-
-                req += LocalizationManager.GetContent(cr.req[i].String) + " " + cr.req[i].Int;
-
+                req += (cr.CanUse(ObjectManager.playerEntity.stats, i)) ? "<color=green>" : "<color=red>";
+                req += LocalizationManager.GetContent(cr.req[i].String) + " " + cr.req[i].Int + "</color>";
                 if (i < cr.req.Count - 1)
                 {
                     req += ", ";
                 }
-
-                req += "</color>";
             }
 
             displayItems.Add(GetContent_Input("IT_Req", req));
@@ -102,9 +92,7 @@ public static class ItemTooltip
             else if (item.ContainsDamageType(DamageTypes.Corruption))
                 damageString += "  " + GetContent("IT_Dmg_Corrupt");
             else
-            {
                 damageString += "  " + GetContent("IT_Dmg_Phys");
-            }
 
             displayItems.Add(damageString);
 
@@ -192,7 +180,7 @@ public static class ItemTooltip
             displayItems.Add(GetContent_Input("IT_Acc", item.Accuracy.ToString()));
 
         //Ability
-        if (item.GetCComponent<CAbility>() != null)
+        if (item.HasCComponent<CAbility>())
         {
             CAbility cab = item.GetCComponent<CAbility>();
             Ability skill = new Ability(GameData.Get<Ability>(cab.abID) as Ability);
@@ -258,10 +246,8 @@ public static class ItemTooltip
                     }
                     else
                     {
-                        if (mod.Amount > 0)
-                            displayItems.Add("<color=green>" + stat + " + " + mod.Amount + "</color>");
-                        else
-                            displayItems.Add("<color=red>" + stat + " - " + (-mod.Amount).ToString() + "</color>");
+                        bool positive = mod.Amount > 0;
+                        displayItems.Add((positive ? "<color=green>" : "<color=red>") + stat + (positive ? " +" : " -") + Mathf.Abs(mod.Amount) + "</color>");
                     }
                 }
             }
@@ -334,32 +320,9 @@ public static class ItemTooltip
     {
         string itemType = "Misc";
 
-        switch (item.itemType)
+        if (item.itemType != Proficiencies.Misc_Object)
         {
-            case Proficiencies.Unarmed:
-                itemType = "Unarmed";
-                break;
-            case Proficiencies.Blade:
-                itemType = "Blade";
-                break;
-            case Proficiencies.Axe:
-                itemType = "Axe";
-                break;
-            case Proficiencies.Blunt:
-                itemType = "Blunt";
-                break;
-            case Proficiencies.Polearm:
-                itemType = "Polearm";
-                break;
-            case Proficiencies.Firearm:
-                itemType = "Firearm";
-                break;
-            case Proficiencies.Shield:
-                itemType = "Shield";
-                break;
-            default:
-                itemType = "Misc";
-                break;
+            itemType = item.itemType.ToString();
         }
 
         return LocalizationManager.GetContent(itemType);

@@ -29,7 +29,7 @@ public class StatusEffectPanel : MonoBehaviour
             return;
         }
 
-        overburdened.UpdateSE(stats.entity.inventory.overCapacity(), 0);
+        overburdened.UpdateSE(stats.entity.inventory.OverCapacity(), 0);
         flying.UpdateSE(stats.IsFlying(), 0);
         held.UpdateSE(stats.entity.body.AllGripsAgainst().Count > 0, 0);
 

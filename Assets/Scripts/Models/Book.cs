@@ -17,6 +17,7 @@ public class Book : IAsset
     {
         dat.TryGetString("Title", out title);
         dat.TryGetString("Text", out contents);
+        ID = title;
     }
 
     public void Read()

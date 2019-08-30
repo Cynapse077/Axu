@@ -234,7 +234,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        if (b.equippedItem != null && !isNoneItem(b.equippedItem) && b.equippedItem.lootable)
+        if (b.equippedItem != null && !IsNoneItem(b.equippedItem) && b.equippedItem.lootable)
         {
             UnEquipArmor(b, true);
         }
@@ -287,7 +287,7 @@ public class Inventory : MonoBehaviour
             return;
         }
 
-        if (!isNoneItem(firearm))
+        if (!IsNoneItem(firearm))
         {
             if (firearm.HasProp(ItemProperty.Cannot_Remove))
             {
@@ -340,7 +340,7 @@ public class Inventory : MonoBehaviour
 
     public int BurdenPenalty()
     {
-        if (!overCapacity() || !entity.isPlayer)
+        if (!OverCapacity() || !entity.isPlayer)
         {
             return 0;
         }
@@ -628,7 +628,7 @@ public class Inventory : MonoBehaviour
         World.objectManager.UpdateDialogueOptions();
         items.Add(i);
 
-        if (overCapacity() && entity.isPlayer)
+        if (OverCapacity() && entity.isPlayer)
         {
             CombatLog.SimpleMessage("Message_Overburdened");
         }
@@ -1072,21 +1072,11 @@ public class Inventory : MonoBehaviour
             return eItems;
         }
 
-        List<BodyPart.Hand> hands = body.Hands;
+        CheckIntegrity();
 
-        for (int i = 0; i < hands.Count; i++)
+        foreach (BodyPart.Hand h in body.Hands)
         {
-            if (hands[i].EquippedItem == null)
-            {
-                hands[i].SetEquippedItem(ItemList.GetItemByID(hands[i].baseItem), entity);
-            }
-
-            eItems.Add(hands[i].EquippedItem);
-        }
-
-        if (firearm == null)
-        {
-            firearm = ItemList.GetNone();
+            eItems.Add(h.EquippedItem);
         }
 
         eItems.Add(firearm);
@@ -1096,12 +1086,42 @@ public class Inventory : MonoBehaviour
             return eItems;
         }
 
-        for (int i = 0; i < body.bodyParts.Count; i++)
+        foreach (BodyPart b in body.bodyParts)
         {
-            eItems.Add(body.bodyParts[i].equippedItem);
+            eItems.Add(b.equippedItem);
         }
 
         return eItems;
+    }
+
+    void CheckIntegrity()
+    {
+        foreach (BodyPart.Hand h in body.Hands)
+        {
+            if (h.EquippedItem == null)
+            {
+                h.RevertToBase(entity);
+            }
+        }
+
+        if (firearm == null)
+        {
+            firearm = ItemList.GetNone();
+        }
+
+        if (body.bodyParts == null)
+        {
+            Debug.LogError("BodyParts null on " + gameObject.name);
+            return;
+        }
+
+        foreach (BodyPart b in body.bodyParts)
+        {
+            if (b.equippedItem == null)
+            {
+                b.equippedItem = ItemList.GetNone();
+            }
+        }
     }
 
     public Coord RandomOpenDropLocation()
@@ -1127,17 +1147,17 @@ public class Inventory : MonoBehaviour
         return (possibleDropCoords.Count > 0) ? possibleDropCoords.GetRandom() : entity.myPos;
     }
 
-    public bool canAfford(int cost)
+    public bool CanAfford(int cost)
     {
         return (gold >= cost);
     }
 
-    public bool overCapacity()
+    public bool OverCapacity()
     {
         return (items.Count > maxItems);
     }
 
-    public bool isNoneItem(Item i)
+    public bool IsNoneItem(Item i)
     {
         return (i.ID == ItemList.GetNone().ID);
     }

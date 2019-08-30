@@ -844,7 +844,7 @@ public class UserInterface : MonoBehaviour
 
             int cost = shopInv.items[selectedItemNum].buyCost(charisma);
 
-            if ((playerInventory.canAfford(cost) || friendly))
+            if ((playerInventory.CanAfford(cost) || friendly))
             {
                 Item newItem = new Item(shopInv.items[selectedItemNum]);
 
@@ -856,7 +856,7 @@ public class UserInterface : MonoBehaviour
                 if (friendly)
                     cost = 0;
 
-                if (playerInventory.CanPickupItem(newItem) && playerInventory.canAfford(cost))
+                if (playerInventory.CanPickupItem(newItem) && playerInventory.CanAfford(cost))
                 {
                     if (World.soundManager != null)
                         World.soundManager.UseItem();
@@ -1169,7 +1169,7 @@ public class UserInterface : MonoBehaviour
 
         for (int i = 0; i < tr; i++)
         {
-            Trait t = availableTraits.GetRandom(SeedManager.combatRandom);
+            Trait t = new Trait(availableTraits.GetRandom(SeedManager.combatRandom));
             availableTraits.Remove(t);
             levelUpTraits.Add(t);
         }

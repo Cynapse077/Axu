@@ -236,7 +236,7 @@ public static class Utility
 
     public static T GetRandom<T>(this List<T> list, System.Random rng = null)
     {
-        if (list.Count <= 0)
+        if (list == null || list.Count <= 0)
         {
             return default(T);
         }
@@ -251,7 +251,7 @@ public static class Utility
 
     public static T GetRandom<T>(this T[] array, System.Random rng = null)
     {
-        if (array.Length <= 0)
+        if (array == null || array.Length <= 0)
         {
             return default(T);
         }
@@ -266,6 +266,11 @@ public static class Utility
 
     public static T GetRandom<T, U>(this Dictionary<T, U> dict, System.Random rng = null)
     {
+        if (dict == null || dict.Count <= 0)
+        {
+            return default(T);
+        }
+
         List<T> list = new List<T>();
 
         foreach (KeyValuePair<T, U> kvp in dict)
@@ -278,12 +283,19 @@ public static class Utility
 
     public static T GetRandomFromValue<T, IEquatable>(this Dictionary<T, IEquatable> dict, IEquatable value, System.Random rng = null)
     {
+        if (dict == null || dict.Count <= 0)
+        {
+            return default(T);
+        }
+
         List<T> list = new List<T>();
 
         foreach (KeyValuePair<T, IEquatable> kvp in dict)
         {
             if (kvp.Value.Equals(value))
+            {
                 list.Add(kvp.Key);
+            }
         }
 
         return list.GetRandom(rng);

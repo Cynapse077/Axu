@@ -4004,24 +4004,6 @@
             "Lootable" : false
         },
         {
-            "ID" : "foldingblade",
-            "Name" : "Folding Blade",
-            "Type" : "Unarmed",
-            "Damage" : "1d8",
-            "FlavorText" : "A blade that can be folded into your arm.",
-            "Attack Type" : "Slash",
-            "Properties" : [
-                "Weapon",
-                "Quick",
-                "Proc_Attack",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Slash"
-            ],
-            "Lootable" : false
-        },
-        {
             "ID" : "armcannon",
             "Name" : "Arm Cannon",
             "Type" : "Firearm",
@@ -4037,6 +4019,13 @@
             },
             "Lootable" : false
         },
+
+
+
+
+
+
+        
         {
             "ID" : "stump",
             "Name" : "Stump",
@@ -4341,6 +4330,7 @@
             "ID" : "foldingblade",
             "Name" : "Folding Blade",
             "Type" : "Blade",
+            "Damage" : "1d8",
             "Rarity" : 100,
             "FlavorText" : "Made of a strong yet flexible metal. This blade is grafted to your arm.",
             "Cost" : 0,

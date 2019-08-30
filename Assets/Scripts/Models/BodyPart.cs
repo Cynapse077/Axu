@@ -21,10 +21,10 @@ public class BodyPart : IWeighted
     public Hand hand;
     public Cybernetic cybernetic;
     public List<Grip> holdsOnMe = new List<Grip>();
+    public Item equippedItem;
 
     double currXP = 0.0, maxXP = 1500.0;
     int _weight;
-    public Item equippedItem;
     string _baseName;
     bool _attached = true;
 
@@ -74,8 +74,7 @@ public class BodyPart : IWeighted
     public BodyPart(string na, ItemProperty itemSlot)
     {
         Attributes = new List<Stat_Modifier>();
-        _baseName = na;
-        name = na;
+        _baseName = name = na;
         _attached = true;
         equippedItem = ItemList.GetNone();
         slot = itemSlot;
@@ -112,7 +111,7 @@ public class BodyPart : IWeighted
 
         if (ws.Count > 0)
         {
-            Wound w = ws.GetRandom(SeedManager.combatRandom);
+            Wound w = new Wound(ws.GetRandom(SeedManager.combatRandom));
             w.Inflict(this);
         }
     }
@@ -159,7 +158,7 @@ public class BodyPart : IWeighted
 
     public void LevelUp(Entity entity)
     {
-        if (level >= 4)
+        if (level >= maxLevel)
         {
             return;
         }
@@ -186,7 +185,7 @@ public class BodyPart : IWeighted
                 stat = "Speed";
                 break;
             case ItemProperty.Slot_Tail:
-                stat = (level % 2 == 0) ? "Dexterity" : "Strength";
+                stat = (level % 2 == 0) ? "Dexterity" : "Speed";
                 break;
         }
 
@@ -211,6 +210,11 @@ public class BodyPart : IWeighted
         name = _baseName;
         myBody = stats.entity.body;
         wounds.Clear();
+
+        if (!stats.entity.isPlayer)
+        {
+            showMessage = false;
+        }
 
         if (FlagsHelper.IsSet(flags, BPTags.Leprosy) && !stats.hasTrait("leprosy"))
         {
