@@ -23,9 +23,9 @@ public class DoctorActionsPanel : UIPanel
 
     }
 
-    public override void ChangeSelectedNum(int newIndex)
+    public override void ChangeSelectedNum(int newIndex, bool scroll)
     {
-        base.ChangeSelectedNum(newIndex);
+        base.ChangeSelectedNum(newIndex, scroll);
     }
 
     public override void Update()

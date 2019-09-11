@@ -71,7 +71,7 @@ public class ItemModifier : IAsset
         return false;
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
         name = dat["Name"].ToString();
         ID = dat["ID"].ToString();

@@ -2,15 +2,24 @@
 using UnityEngine.EventSystems;
 using System;
 using System.Linq;
-using LitJson;
 using System.Collections.Generic;
 
 public static class Utility
 {
-    public static void Highlight(this EventSystem ev, GameObject go)
+    public static void Highlight(this GameObject g)
     {
-        ev.SetSelectedGameObject(null);
-        ev.SetSelectedGameObject(go);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(g);
+    }
+
+    public static void Highlight(this Transform t)
+    {
+        Highlight(t.gameObject);
+    }
+
+    public static void SendMessage(this GameObject g, string methodName)
+    {
+        g.SendMessage(methodName, SendMessageOptions.DontRequireReceiver);
     }
 
     //Called from Lua
@@ -60,14 +69,14 @@ public static class Utility
 
     static int GetOctant(Coord direction)
     {
-        if (direction.x == 0 && direction.y == 1)        return 0;
-        else if (direction.x == 1 && direction.y == 1)   return 1;
-        else if (direction.x == 1 && direction.y == 0)   return 2;
-        else if (direction.x == 1 && direction.y == -1)  return 3;
-        else if (direction.x == 0 && direction.y == -1)  return 4;
-        else if (direction.x == -1 && direction.y == -1) return 5;
-        else if (direction.x == -1 && direction.y == 0)  return 6;
-        else if (direction.x == -1 && direction.y == 1)  return 7;
+        if (direction.x == 0 && direction.y == 1)        return 0; //N
+        else if (direction.x == 1 && direction.y == 1)   return 1; //NE
+        else if (direction.x == 1 && direction.y == 0)   return 2; //E
+        else if (direction.x == 1 && direction.y == -1)  return 3; //SE
+        else if (direction.x == 0 && direction.y == -1)  return 4; //S
+        else if (direction.x == -1 && direction.y == -1) return 5; //SW
+        else if (direction.x == -1 && direction.y == 0)  return 6; //W
+        else if (direction.x == -1 && direction.y == 1)  return 7; //SE
 
         return 0;
     }
@@ -88,6 +97,26 @@ public static class Utility
         {
             l.Clear();
         }
+    }
+
+    public static bool IsBetween(this float f, float min, float max)
+    {
+        return min < f && f < max;
+    }
+
+    public static bool IsBetweenInclusive(this float f, float min, float max)
+    {
+        return min <= f && f <= max;
+    }
+
+    public static bool NullOrEmpty<T>(this List<T> l)
+    {
+        return l == null || l.Count == 0;
+    }
+
+    public static bool Empty<T>(this List<T> l)
+    {
+        return l.Count == 0;
     }
 
     static float Bearing(Coord c1, Coord c2)
@@ -321,7 +350,9 @@ public static class Utility
     public static T WeightedChoice<T>(T[] list) where T : IWeighted
     {
         if (list.Length == 0)
+        {
             return default(T);
+        }
 
         int totalweight = list.Sum(c => c.Weight);
         int choice = SeedManager.combatRandom.Next(totalweight + 1);
@@ -332,7 +363,9 @@ public static class Utility
             for (int i = sum; i < obj.Weight + sum; i++)
             {
                 if (i >= choice)
+                {
                     return obj;
+                }
             }
 
             sum += obj.Weight;
@@ -389,6 +422,11 @@ public static class Utility
     public static string Format(this string s, params string[] args)
     {
         return string.Format(s, args);
+    }
+
+    public static bool NullOrEmpty(this string s)
+    {
+        return string.IsNullOrEmpty(s);
     }
 }
 

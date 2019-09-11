@@ -179,9 +179,16 @@ public class Journal : MonoBehaviour
                 progressFlags.Add(ProgressFlags.Found_Base);
 
                 //Spawn chest with return tome in it.
+                //Hard-coded. No like.
+                List<Item> chestContents = new List<Item>();
+                Item item1 = ItemList.GetItemByID("tome_return");
+                if (item1 != ItemList.GetNone()) chestContents.Add(item1);
+                Item item2 = ItemList.GetItemByID("journal_hunter");
+                if (item2 != ItemList.GetNone()) chestContents.Add(item2);
+
                 MapObject moj = new MapObject("Chest", new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y - 8), newMap.mapInfo.position, newMap.elevation)
                 {
-                    inv = new List<Item>() { ItemList.GetItemByID("tome_return") }
+                    inv = chestContents
                 };
 
                 World.objectManager.SpawnObject(moj);

@@ -43,8 +43,7 @@ public class JournalPanel : UIPanel
 
         if (SelectedMax > 0)
         {
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(journalBase.GetChild(SelectedNum).gameObject);
+            journalBase.GetChild(SelectedNum).Highlight();
         }
     }
 
@@ -93,13 +92,13 @@ public class JournalPanel : UIPanel
         }
     }
 
-    public override void ChangeSelectedNum(int newIndex)
+    public override void ChangeSelectedNum(int newIndex, bool scroll)
     {
-        base.ChangeSelectedNum(newIndex);
+        base.ChangeSelectedNum(newIndex, scroll);
 
         if (SelectedMax > 0)
         {
-            EventSystem.current.SetSelectedGameObject(journalBase.GetChild(SelectedNum).gameObject);
+            journalBase.GetChild(SelectedNum).Highlight();
         }
 
         UpdateTooltip();
@@ -127,8 +126,7 @@ public class JournalPanel : UIPanel
 
         if (SelectedMax > 0)
         {
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(journalBase.GetChild(SelectedNum).gameObject);
+            journalBase.GetChild(SelectedNum).Highlight();
         }
     }
 }

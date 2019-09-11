@@ -10,7 +10,6 @@ public class PoolManager : MonoBehaviour
     public GameObject throwEffect;
     public GameObject teleBeam;
     public GameObject splash;
-    public GameObject damageEffect;
     public GameObject blockEffect;
     public GameObject lightningBolt;
     public GameObject roarEffect;

@@ -55,7 +55,6 @@ public class TileRenderer : MonoBehaviour
     public void SetSpriteColor()
     {
         maskRenderer.sprite = maskTextures[inSight ? BitwiseAutotile() : 16];
-
         maskRenderer.color = (hasSeen ? outOfSightColor : Color.white);
         spriteRenderer.color = (inSight && lit ? litColor : Color.white);
     }

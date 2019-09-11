@@ -1,10 +1,23 @@
 --OnInteract functions for Objects.
 
+function Interact_HomeDoor(obj)
+	if (obj.objectType == "Home_Door_Closed" and PlayerInventory.HasItem("keycard_home")) then
+		local item = PlayerInventory.GetItem("keycard_home")
+		PlayerInventory.RemoveInstance(item)
+
+		obj.SetTypeAndSwapSprite("Home_Door_Open")
+		Log("You place the keycard into the slot. The door opens.")
+		TileMap.SoftRebuild()
+		SoundManager.CloseDoor()
+	else
+		Log("You do not have the required keycard to open this door.")
+	end
+end
+
+--From pulses received
 function Interact_Door(obj)
 	if (obj.cell.entity == nil) then
-		if (obj.objectType == "Door_Open") then
-			obj.SetTypeAndSwapSprite("Door_Closed")
-		elseif (obj.objectType == "Ensis_Door_Open") then
+		if (obj.objectType == "Ensis_Door_Open") then
 			obj.SetTypeAndSwapSprite("Ensis_Door_Closed")
 		elseif (obj.objectType == "Prison_Door_Open") then
 			obj.SetTypeAndSwapSprite("Prison_Door_Closed")
@@ -95,6 +108,7 @@ function OnEnter_Web(entity, obj)
 		return
 	end
 
+	--Ignore webs
 	if (entity.isPlayer) then 
 		if (entity.stats.hasTraitEffect(TraitEffects.Resist_Webs)) then 
 			return
@@ -111,8 +125,20 @@ function OnEnter_Web(entity, obj)
 end
 
 function OnExit_Web(entity, obj)
-	--FIXME: Disrupts the foreach loop
-	--obj.DestroyMe()
+	--Ignore webs
+	if (entity.isPlayer) then 
+		if (entity.stats.hasTraitEffect(TraitEffects.Resist_Webs)) then 
+			return
+		end
+	elseif (entity.AI.npcBase.HasFlag(NPC_Flags.Resist_Webs)) then 
+		return 
+	end
+	
+	if (obj.InSight()) then
+		Log("The web breaks!")
+	end
+
+	obj.DestroyMe()
 end
 
 function OnEnter_SpikeTrap(entity, obj)

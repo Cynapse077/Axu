@@ -31,7 +31,7 @@ public class ObjectManager : MonoBehaviour
     #region "Initialization"
     void Start()
     {
-        if (!ModManager.IsInitialized)
+        if (!ModManager.PreInitialized)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             return;

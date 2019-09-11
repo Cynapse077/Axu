@@ -103,6 +103,9 @@ public static class LuaManager
 
             //Entities
             sc.Globals["PlayerEntity"] = ObjectManager.playerEntity;
+            sc.Globals["PlayerStats"] = ObjectManager.playerEntity.stats;
+            sc.Globals["PlayerInventory"] = ObjectManager.playerEntity.inventory;
+            sc.Globals["PlayerFighter"] = ObjectManager.playerEntity.fighter;
             sc.Globals["NPCs"] = World.objectManager.onScreenNPCObjects;
 
             //Functions
@@ -113,9 +116,10 @@ public static class LuaManager
             sc.Globals["Console"] = (Action<string>)ConsoleCommand;
             sc.Globals["Log_Combat"] = (Action<string, string, string, bool>)CombatMessage;
             sc.Globals["SetTile"] = (Action<int, int, string>)ChangeTileInCurrentMap;
-            sc.Globals["LocalPath"] = (Func<Coord, Coord, bool, List<Coord>>)Pathfinding.Path_AStar.GetPath;
+            sc.Globals["LocalPath"] = (Func<Coord, Coord, bool, Entity, List<Coord>>)Pathfinding.Path_AStar.GetPath;
             sc.Globals["PositionsInCone"] = (Func<Entity, Coord, Coord, int, List<Coord>>)Utility.Cone;
             sc.Globals["GetTile"] = (Func<string, Tile_Data>)Tile.GetByName;
+            sc.Globals["Error"] = (Action<object>)Error;
 
             //Constants
             sc.Globals["LocalMapSize"] = Manager.localMapSize;
@@ -144,11 +148,17 @@ public static class LuaManager
         sc.Globals["NPC"] = typeof(NPC);
         sc.Globals["Damage"] = typeof(Damage);
         sc.Globals["DiceRoll"] = typeof(DiceRoll);
+        sc.Globals["Item"] = typeof(Item);
     }
 
     static void PrintMessage(object message)
     {
         CombatLog.NewMessage(message.ToString());
+    }
+
+    static void Error(object message)
+    {
+        CombatLog.NewMessage(string.Format("<color=red>LUA ERROR: {0}</color>", message));
     }
 
     static void CombatMessage(string key, string attacker, string defender, bool isPlayer)

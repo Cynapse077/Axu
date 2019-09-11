@@ -48,7 +48,7 @@
             "ObjectType" : "Chest_Open",
             "Sprite" : "object-chest_open.png",
             "Container" : { "Capacity" : 20 },
-            "Description" : "A small wooden chest. I wonder what it could contain?"
+            "Description" : "A small wooden chest. It is open."
         },
         {
             "Name" : "Loot",
@@ -123,9 +123,6 @@
             "Name" : "Door",
             "ObjectType" : "Door_Open",
             "Sprite" : "object-door_wood_open.png",
-			"LuaEvents" : [
-                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door"}
-			],
             "Description" : "A wood door, open."
         },
         {
@@ -144,7 +141,6 @@
             "ObjectType" : "Prison_Door_Open",
             "Sprite" : "object-door_metal_open.png",
 			"LuaEvents" : [
-                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door" },
                 { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Door_OnPulseReceived" }
 			],
             "Description" : "A steel door.",
@@ -169,7 +165,6 @@
             "ObjectType" : "Ensis_Door_Open",
             "Sprite" : "object-door_ensis_open.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door" },
                 { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Door_OnPulseReceived" }
 			],
             "Description" : "A door only the Ensis can open.",
@@ -195,7 +190,6 @@
             "ObjectType" : "Magna_Door_Open",
             "Sprite" : "object-door_magna_open.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door" },
                 { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Door_OnPulseReceived" }
 			],
             "Description" : "A strange door. Open.",
@@ -221,7 +215,6 @@
 			"ObjectType" : "Kin_Door_Open",
 			"Sprite" : "object-door_kin_open.png",
 			"LuaEvents" : [
-				{ "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Door" },
                 { "Event" : "OnPulseReceived", "Script" : "Core.Objects.Door_OnPulseReceived" }
 			],
 			"Description" : "A steel door. Open.",
@@ -250,6 +243,23 @@
 				"Receive" : true
 			}
 		},
+        {
+            "Name" : "Closed Door",
+            "ObjectType" : "Home_Door_Closed",
+            "Sprite" : "object-door-electric-closed.png",
+            "Description" : "A closed steel door. There is a slot beside it on the wall.",
+            "LuaEvents" : [
+                { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_HomeDoor" }
+            ],
+            "Opaque" : true,
+            "Path Cost" : 100
+        },
+        {
+            "Name" : "Open Door",
+            "ObjectType" : "Home_Door_Open",
+            "Sprite" : "object-door-electric-open.png",
+            "Description" : "An open steel door. There is a slot beside it on the wall."
+        },
 		{
 			"Name" : "Switch",
 			"ObjectType" : "Switch_On",

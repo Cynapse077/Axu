@@ -41,7 +41,7 @@ namespace Pathfinding
             }
         }
 
-        public Path_AStar(Coord startCoord, Coord endCoord, bool ignoreCosts, bool isPlayer)
+        public Path_AStar(Coord startCoord, Coord endCoord, bool ignoreCosts, Entity entity)
         {
             Start = startCoord;
             End = endCoord;
@@ -63,7 +63,7 @@ namespace Pathfinding
                 return;
             }
 
-            if (!Calculate(World.tileMap.tileGraph.nodes, start, end, ignoreCosts, isPlayer))
+            if (!Calculate(World.tileMap.tileGraph.nodes, start, end, ignoreCosts, entity))
             {
                 steps = null;
                 result = PathResult.Fail;
@@ -86,15 +86,15 @@ namespace Pathfinding
 
             Path_TileData start = gr.GetPathDataAt(startCoord.x, startCoord.y), end = gr.GetPathDataAt(endCoord.x, endCoord.y);
 
-            if (!Calculate(World.worldMap.tileGraph.nodes, start, end, true, true))
+            if (!Calculate(World.worldMap.tileGraph.nodes, start, end, true, ObjectManager.playerEntity))
             {
                 steps = null;
             }
         }
 
-        public static List<Coord> GetPath(Coord start, Coord end, bool ignoreCosts)
+        public static List<Coord> GetPath(Coord start, Coord end, bool ignoreCosts, Entity entity)
         {
-            Path_AStar p = new Path_AStar(start, end, ignoreCosts, true);
+            Path_AStar p = new Path_AStar(start, end, ignoreCosts, entity);
             List<Coord> points = new List<Coord>();
 
             foreach (Path_Node pn in p.steps)
@@ -105,7 +105,7 @@ namespace Pathfinding
             return points;
         }
 
-        bool Calculate(Dictionary<Path_TileData, Path_Node> nodes, Path_TileData start, Path_TileData end, bool ignoreCosts, bool isPlayer)
+        bool Calculate(Dictionary<Path_TileData, Path_Node> nodes, Path_TileData start, Path_TileData end, bool ignoreCosts, Entity entity)
         {
             OpenSet.Enqueue(nodes[start], 0);
 
@@ -153,7 +153,8 @@ namespace Pathfinding
                         tentative_g_score -= neighbor.data.costToEnter * costToEnterFactor;
                     }
 
-                    if (OpenSet.Contains(neighbor) && tentative_g_score > g_score[neighbor] || !isPlayer && neighbor.data.costToEnter >= 100)
+                    //Skip doors for NPCs.
+                    if (OpenSet.Contains(neighbor) && tentative_g_score > g_score[neighbor] || !entity.isPlayer  && neighbor.data.costToEnter >= 100)
                     {
                         continue;
                     }
@@ -225,62 +226,6 @@ namespace Pathfinding
 
             Coord nextPosition = steps.Dequeue().data.position;
             return nextPosition;
-        }
-    }
-
-    public class PathRequestManager
-    {
-        public static PathRequestManager instance;
-        Queue<PathRequest> pathRequests;
-
-        public PathRequestManager()
-        {
-            instance = this;
-            pathRequests = new Queue<PathRequest>();
-        }
-
-        public void RequestPath(PathRequest request)
-        {
-            lock (pathRequests)
-            {
-                pathRequests.Enqueue(request);
-            }
-        }
-
-        public void FindPath(PathRequest req)
-        {
-            Path_AStar path = new Path_AStar(req.start, req.end, req.entity.inventory.CanFly(), req.entity.isPlayer);
-            req.callback(path);
-        }
-
-        public void Update()
-        {
-            if (pathRequests.Count > 0)
-            {
-                PathRequest req;
-                lock (pathRequests)
-                {
-                    req = pathRequests.Dequeue();
-                }
-
-                FindPath(req);
-            }
-        }
-    }
-
-    public struct PathRequest
-    {
-        public Coord start;
-        public Coord end;
-        public Entity entity;
-        public Action<Path_AStar> callback;
-
-        public PathRequest(Coord start, Coord end, Entity entity, Action<Path_AStar> callback)
-        {
-            this.start = start;
-            this.end = end;
-            this.entity = entity;
-            this.callback = callback;
         }
     }
 }

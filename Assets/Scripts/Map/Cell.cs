@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MoonSharp.Interpreter;
 using System;
 
 [MoonSharpUserData]
 public class Cell
 {
+    public static readonly int EntityInCellCost = 2;
+
     public Coord position;
     public Entity entity;
     public List<MapObjectSprite> mapObjects;
@@ -32,7 +35,7 @@ public class Cell
     public bool InSight
     {
         get { return inSight; }
-        protected set { inSight = value; }
+        set { inSight = value; }
     }
 
     public void AddOnEnterCallback(Action<Entity> act)
@@ -60,19 +63,19 @@ public class Cell
 
     public bool Walkable
     {
-        get { return (entity == null && mapObjects.FindAll(x => x.objectBase.solid).Count == 0); }
+        get { return (entity == null && !mapObjects.Any(x => x.objectBase.solid)); }
     }
 
     public bool Walkable_IgnoreEntity
     {
-        get { return (mapObjects.FindAll(x => x.objectBase.solid || x.isDoor_Closed).Count == 0); }
+        get { return (!mapObjects.Any(x => x.objectBase.solid || x.isDoor_Closed)); }
     }
 
     public void RecievePulse(Coord previous, int moveCount, bool on)
     {
-        foreach (MapObjectSprite m in mapObjects)
+        for (int i = mapObjects.Count - 1; i >= 0; i--)
         {
-            m.ReceivePulse(previous, moveCount, on);
+            mapObjects[i].ReceivePulse(previous, moveCount, on);
         }
     }
 
@@ -94,7 +97,7 @@ public class Cell
             
             if (World.tileMap.CurrentMap != null)
             {
-                World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, 2);
+                World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, EntityInCellCost);
             }
 
             if (onEntityEnter != null)
@@ -102,9 +105,9 @@ public class Cell
                 onEntityEnter(entity);
             }
 
-            foreach (MapObjectSprite mos in mapObjects)
+            for (int i = mapObjects.Count - 1; i >= 0; i--)
             {
-                mos.OnEntityEnter(e);
+                mapObjects[i].OnEntityEnter(e);
             }
         }
     }
@@ -115,16 +118,16 @@ public class Cell
 
         if (entity == e)
         {
-            foreach (MapObjectSprite mos in mapObjects)
+            for (int i = mapObjects.Count - 1; i >= 0; i--)
             {
-                mos.OnEntityExit(e);
+                mapObjects[i].OnEntityExit(e);
             }
 
             entity = null;
 
             if (World.tileMap.CurrentMap != null)
             {
-                World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, -2);
+                World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, -EntityInCellCost);
             }
         }
     }
@@ -178,7 +181,7 @@ public class Cell
 
     public bool HasInventory()
     {
-        return (mapObjects.Find(x => x.inv != null) != null);
+        return (mapObjects.Any(x => x.inv != null));
     }
 
     public Inventory MyInventory()

@@ -31,12 +31,12 @@ public class OnHover_SetSelectedIndex : MonoBehaviour, IPointerEnterHandler
             else if (World.userInterface.SelectItemActions)
                 World.userInterface.IAPanel.SetSelectedNum(transform.GetSiblingIndex() + offset);
             else if (World.userInterface.DPanel.gameObject.activeSelf || World.userInterface.pausePanel.gameObject.activeSelf)
-                World.userInterface.SetSelectedNumber(transform.GetSiblingIndex() + offset);
+                World.userInterface.SetSelectedNumber(transform.GetSiblingIndex() + offset, false);
         }
         else
         {
             World.userInterface.column = column;
-            World.userInterface.SetSelectedNumber(transform.GetSiblingIndex() + offset);
+            World.userInterface.SetSelectedNumber(transform.GetSiblingIndex() + offset, false);
         }
 
         if (window == UIWindow.Inventory)
@@ -45,12 +45,12 @@ public class OnHover_SetSelectedIndex : MonoBehaviour, IPointerEnterHandler
 
             if (World.userInterface.column == 0)
             {
-                World.userInterface.EqPanel.ChangeSelectedNum(transform.GetSiblingIndex() + offset);
+                World.userInterface.EqPanel.ChangeSelectedNum(transform.GetSiblingIndex() + offset, false);
                 index = World.userInterface.EqPanel.SelectedNum;
             }
             else if (World.userInterface.column == 1)
             {
-                World.userInterface.InvPanel.ChangeSelectedNum(transform.GetSiblingIndex() + offset);
+                World.userInterface.InvPanel.ChangeSelectedNum(transform.GetSiblingIndex() + offset, false);
                 index = World.userInterface.InvPanel.SelectedNum;
             }
 

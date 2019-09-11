@@ -70,28 +70,30 @@ public class Wound : IAsset
 
         foreach (Stat_Modifier sm in statMods)
         {
-            if (sm.Stat == "Health")
+            switch (sm.Stat)
             {
-                bp.myBody.entity.stats.maxHealth += (sm.Amount * am);
-                bp.myBody.entity.stats.health += (sm.Amount * am);
-            }
-            else if (sm.Stat == "Stamina")
-            {
-                bp.myBody.entity.stats.maxStamina += (sm.Amount * am);
-                bp.myBody.entity.stats.stamina += (sm.Amount * am);
-            }
-            else if (sm.Stat == "Armor")
-            {
-                bp.armor += sm.Amount * am;
-            }
-            else
-            {
-                bp.myBody.entity.stats.ChangeAttribute(sm.Stat, sm.Amount * am);
+                case "Health":
+                    bp.myBody.entity.stats.maxHealth += (sm.Amount * am);
+                    bp.myBody.entity.stats.health += (sm.Amount * am);
+                    break;
+
+                case "Stamina":
+                    bp.myBody.entity.stats.maxStamina += (sm.Amount * am);
+                    bp.myBody.entity.stats.stamina += (sm.Amount * am);
+                    break;
+
+                case "Armor":
+                    bp.armor += sm.Amount * am;
+                    break;
+
+                default:
+                    bp.myBody.entity.stats.ChangeAttribute(sm.Stat, sm.Amount * am);
+                    break;
             }
         }
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
         Name = dat["Name"].ToString();
         ID = dat["ID"].ToString();

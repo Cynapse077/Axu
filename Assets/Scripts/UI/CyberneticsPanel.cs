@@ -62,7 +62,7 @@ public class CyberneticsPanel : UIPanel
 
         SelectedMax = augmentableBodyParts.Count;
 
-        ChangeSelectedNum(0);
+        ChangeSelectedNum(0, true);
     }
 
     public override void Update()
@@ -73,7 +73,7 @@ public class CyberneticsPanel : UIPanel
             {
                 mode = Mode.BodyPart;
                 SelectedMax = augmentableBodyParts.Count;
-                ChangeSelectedNum(bpIndex);
+                ChangeSelectedNum(bpIndex, true);
                 return;
             }
         }
@@ -109,9 +109,9 @@ public class CyberneticsPanel : UIPanel
         }
     }
 
-    public override void ChangeSelectedNum(int newIndex)
+    public override void ChangeSelectedNum(int newIndex, bool scroll)
     {
-        base.ChangeSelectedNum(newIndex);
+        base.ChangeSelectedNum(newIndex, scroll);
         
         switch (mode)
         {
@@ -119,14 +119,19 @@ public class CyberneticsPanel : UIPanel
                 bpIndex = SelectedNum = Mathf.Clamp(SelectedNum, 0, SelectedMax);
                 SetupCybernetics();
                 EventSystem.current.SetSelectedGameObject(bpAnchor.GetChild(SelectedNum).gameObject);
-                bpScroll.value = 1f / (SelectedNum / (float)augmentableBodyParts.Count);
+
+                if (scroll)
+                    bpScroll.value = 1f / (SelectedNum / (float)augmentableBodyParts.Count);
+
                 UITooltip.instance.Hide();
                 break;
 
             case Mode.Cybernetic:
                 SelectedNum = Mathf.Clamp(SelectedNum, 0, availableCybernetics.Count - 1);                
                 EventSystem.current.SetSelectedGameObject(cybAnchor.GetChild(SelectedNum).gameObject);
-                cybScroll.value = 1f / (SelectedNum / (float)availableCybernetics.Count);
+
+                if (scroll)
+                    cybScroll.value = 1f / (SelectedNum / (float)availableCybernetics.Count);
 
                 if (cybAnchor.childCount > 0)
                 {
@@ -145,7 +150,7 @@ public class CyberneticsPanel : UIPanel
             case Mode.BodyPart:
                 mode = Mode.Cybernetic;
                 SelectedMax = availableCybernetics.Count;
-                ChangeSelectedNum(0);
+                ChangeSelectedNum(0, true);
                 break;
 
             case Mode.Cybernetic:

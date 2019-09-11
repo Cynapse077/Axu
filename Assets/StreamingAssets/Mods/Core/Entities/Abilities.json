@@ -9,7 +9,8 @@
             "Cooldown" : 150,
             "Cast Type" : "Instant",
             "Script" : "Core.Abilities.Blind",
-            "AI" : "Core.AbilityAI.Empty"
+            "AI" : "Core.AbilityAI.Empty",
+            "Icon" : "Mods/Core/Art/Abilities/ability-call.png"
         },
 		{
 			"Name" : "Drain",
@@ -21,7 +22,8 @@
 			"Cooldown" : 12,
 			"Cast Type" : "Target",
             "Script" : "Core.Abilities.DrainStamina",
-            "AI" : "Core.AbilityAI.Drain"
+            "AI" : "Core.AbilityAI.Drain",
+            "Icon" : "Mods/Core/Art/Abilities/ability-sap.png"
 		},
 		{
 			"Name" : "Poisonous Bite",
@@ -33,7 +35,8 @@
 			"Cooldown" : 6,
 			"Cast Type" : "Direction",
 			"Script" : "Core.Abilities.Bite_Poison",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-bite-poison.png"
 		},
         {
             "Name" : "Scratch Eyes",
@@ -44,7 +47,8 @@
             "Cooldown" : 25,
             "Cast Type" : "Direction",
             "Script" : "Core.Abilities.Blind",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-scratch.png"
         },
         {
             "Name" : "Ink Spray",
@@ -57,7 +61,8 @@
             "Damage Type" : "NonLethal",
             "Tags" : [ "Blind", "Small_Square" ],
             "Script" : "Core.Abilities.Square",
-            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE"
+            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE",
+            "Icon" : "Mods/Core/Art/Abilities/ability-ink.png"
         },
         {
             "Name" : "Shove",
@@ -69,7 +74,8 @@
             "Cooldown" : 10,
             "Cast Type" : "Direction",
             "Script" : "Core.Abilities.Shove",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-shove.png"
         },
         {
             "Name" : "Sprint",
@@ -80,7 +86,8 @@
             "Cooldown" : 50,
             "Cast Type" : "Instant",
             "Script" : "Core.Abilities.Sprint",
-            "AI" : "Core.AbilityAI.Sprint"
+            "AI" : "Core.AbilityAI.Sprint",
+            "Icon" : "Mods/Core/Art/Abilities/ability-sprint.png"
         },
         {
             "Name" : "Grapple",
@@ -92,7 +99,8 @@
             "Cast Type" : "Instant",
             "Tags" : [ "OpensNewWindow" ],
             "Script" : "Core.Abilities.Grapple",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-grapple.png"
         },
         {
             "Name" : "Called Shot",
@@ -105,7 +113,8 @@
             "Cast Type" : "Direction",
             "Tags" : [ "OpensNewWindow" ],
             "Script" : "Core.Abilities.CalledShot",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-calledshot.png"
         },
         {
             "Name" : "Juke",
@@ -116,7 +125,8 @@
             "Time Cost" : 10,
             "Cast Type" : "Direction",
             "Script" : "Core.Abilities.Juke",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-juke.png"
         },
         {
             "Name" : "Charge",
@@ -127,7 +137,8 @@
             "Time Cost" : 10,
             "Cast Type" : "Direction",
             "Script" : "Core.Abilities.Charge",
-            "AI" : "Core.AbilityAI.Charge"
+            "AI" : "Core.AbilityAI.Charge",
+            "Icon" : "Mods/Core/Art/Abilities/ability-charge.png"
         },
         {
             "Name" : "Shield Bash",
@@ -141,7 +152,8 @@
             "Cast Type" : "Direction",
             "Levels Up" : false,
             "Script" : "Core.Abilities.ShieldBash",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-shieldbash.png"
         },
         {
         	"Name" : "Trip",
@@ -154,7 +166,8 @@
         	"Cooldown" : 25,
         	"Cast Type" : "Direction",
             "Script" : "Core.Abilities.Trip",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-trip.png"
         },
         {
             "Name" : "Gore",
@@ -168,7 +181,8 @@
             "Cast Type" : "Direction",
             "Levels Up" : false,
             "Script" : "Core.Abilities.Gore",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-gore.png"
         },
 
         {
@@ -181,7 +195,8 @@
             "Cast Type" : "Instant",
             "Tags" : [ "Summon" ],
             "Script" : "Core.Abilities.Summon:echo",
-            "AI" : "Core.AbilityAI.Empty"
+            "AI" : "Core.AbilityAI.Empty",
+            "Icon" : "Mods/Core/Art/Abilities/ability-summon-echo.png"
         },
         {
             "Name" : "Summon Spirit",
@@ -193,7 +208,8 @@
             "Cast Type" : "Instant",
             "Tags" : [ "Summon" ],
             "Script" : "Core.Abilities.Summon:spirit",
-            "AI" : "Core.AbilityAI.Empty"
+            "AI" : "Core.AbilityAI.Empty",
+            "Icon" : "Mods/Core/Art/Abilities/ability-summon-spirit.png"
         },
         {
             "Name" : "Summon Scritter",
@@ -205,7 +221,8 @@
             "Cast Type" : "Instant",
             "Tags" : [ "Summon" ],
             "Script" : "Core.Abilities.Summon:scritter_follower",
-            "AI" : "Core.AbilityAI.Empty"
+            "AI" : "Core.AbilityAI.Empty",
+            "Icon" : "Mods/Core/Art/Abilities/ability-summon-scritter.png"
         },
         {
             "Name" : "Lesser Healing",
@@ -218,7 +235,8 @@
             "Cooldown" : 20,
             "Cast Type" : "Instant",
             "Script" : "Core.Abilities.Healing",
-            "AI" : "Core.AbilityAI.Healing"
+            "AI" : "Core.AbilityAI.Healing",
+            "Icon" : "Mods/Core/Art/Abilities/ability-heal1.png"
         },
         {
             "Name" : "Healing",
@@ -231,7 +249,8 @@
             "Cooldown" : 45,
             "Cast Type" : "Instant",
             "Script" : "Core.Abilities.Healing",
-            "AI" : "Core.AbilityAI.Healing"
+            "AI" : "Core.AbilityAI.Healing",
+            "Icon" : "Mods/Core/Art/Abilities/ability-heal2.png"
         },
         {
             "Name" : "Rejuvenation",
@@ -242,7 +261,8 @@
             "Cooldown" : 60,
             "Cast Type" : "Instant",
             "Script" : "Core.Abilities.FullHeal",
-            "AI" : "Core.AbilityAI.Healing"
+            "AI" : "Core.AbilityAI.Healing",
+            "Icon" : "Mods/Core/Art/Abilities/ability-heal3.png"
         },
         {
             "Name" : "Brace",
@@ -253,7 +273,8 @@
             "Cooldown" : 45,
             "Cast Type" : "Instant",
             "Script" : "Core.Abilities.Brace",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-brace.png"
         },  
         {
             "Name" : "Return",
@@ -265,7 +286,8 @@
             "Cast Type" : "Instant",
             "Levels Up" : false,
             "Script" : "Core.Abilities.ReturnHome",
-            "AI" : "Core.AbilityAI.Empty"
+            "AI" : "Core.AbilityAI.Empty",
+            "Icon" : "Mods/Core/Art/Abilities/ability-return.png"
         },
         {
             "Name" : "Drain Blood",
@@ -279,7 +301,8 @@
             "Cast Type" : "Direction",
             "Levels Up" : false,
             "Script" : "Core.Abilities.DrainBlood",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-bite-vamp.png"
         },
         {
             "Name" : "Spin Webs",
@@ -291,7 +314,8 @@
             "Cooldown" : 30,
             "Cast Type" : "Target",
             "Script" : "Core.Abilities.SpinWebs",
-            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE"
+            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE",
+            "Icon" : "Mods/Core/Art/Abilities/ability-web.png"
         },
         {
             "Name" : "Rock Spires",
@@ -305,7 +329,8 @@
             "Damage Type" : "Blunt",
             "Cast Type" : "Target",
             "Script" : "Core.Abilities.Line",
-            "AI" : "Core.AbilityAI.Line"
+            "AI" : "Core.AbilityAI.Line",
+            "Icon" : "Mods/Core/Art/Abilities/ability-spire.png"
         },
         {
             "Name" : "Firestream",
@@ -320,7 +345,8 @@
             "Damage Type" : "Heat",
             "Cast Type" : "Target",
             "Script" : "Core.Abilities.Line",
-            "AI" : "Core.AbilityAI.Line"
+            "AI" : "Core.AbilityAI.Line",
+            "Icon" : "Mods/Core/Art/Abilities/ability-firestream.png"
         },
         {
             "Name" : "Fire Breath",
@@ -334,7 +360,8 @@
             "Damage Type" : "Heat",
             "Cast Type" : "Direction",
             "Script" : "Core.Abilities.Cone",
-            "AI" : "Core.AbilityAI.Cone"        
+            "AI" : "Core.AbilityAI.Cone",
+            "Icon" : "Mods/Core/Art/Abilities/ability-firebreath.png"
         },
         {
             "Name" : "Ice Breath",
@@ -348,7 +375,8 @@
             "Damage Type" : "Cold",
             "Cast Type" : "Direction",
             "Script" : "Core.Abilities.Cone",
-            "AI" : "Core.AbilityAI.Cone"
+            "AI" : "Core.AbilityAI.Cone",
+            "Icon" : "Mods/Core/Art/Abilities/ability-icebreath.png"
         },
         {
             "Name" : "Radiation Blast",
@@ -364,7 +392,8 @@
             "Cast Type" : "Target",
             "Tags" : [ "Radiate_Self" ],
             "Script" : "Core.Abilities.Line",
-            "AI" : "Core.AbilityAI.Line"
+            "AI" : "Core.AbilityAI.Line",
+            "Icon" : "Mods/Core/Art/Abilities/ability-radblast.png"
         },
         {
             "Name" : "Ice Beam",
@@ -379,7 +408,8 @@
             "Damage Type" : "Cold",
             "Cast Type" : "Target",
             "Script" : "Core.Abilities.Line",
-            "AI" : "Core.AbilityAI.Line"
+            "AI" : "Core.AbilityAI.Line",
+            "Icon" : "Mods/Core/Art/Abilities/ability-icebeam.png"
         },
         {
             "Name" : "Ember Wall",
@@ -394,7 +424,8 @@
             "Cast Type" : "Instant",
             "Tags" : [ "Small_Square" ],
             "Script" : "Core.Abilities.Square",
-            "AI" : "Core.AbilityAI.AdjacentToTarget"
+            "AI" : "Core.AbilityAI.AdjacentToTarget",
+            "Icon" : "Mods/Core/Art/Abilities/ability-emberwall.png"
         },
         {
             "Name" : "Cloud of Flame",
@@ -410,7 +441,25 @@
             "Cast Type" : "Target",
             "Tags" : [ "Small_Square" ],
             "Script" : "Core.Abilities.Square",
-            "AI" : "Core.AbilityAI.AOE"
+            "AI" : "Core.AbilityAI.AOE",
+            "Icon" : "Mods/Core/Art/Abilities/ability-flamecloud.png"
+        },
+        {
+            "Name" : "Cloud of Cold",
+            "ID" : "icesquare",
+            "Description" : "A ball of cold consumes a 3x3 square, damaging enemies for [ROLL] damage.",
+            "Dice" : "3d3",
+            "Dice Scale" : "0d0+2",
+            "Stamina Cost" : 4,
+            "Time Cost" : 10,
+            "Cooldown" : 10,
+            "Range" : 13,
+            "Damage Type" : "Cold",
+            "Cast Type" : "Target",
+            "Tags" : [ "Small_Square" ],
+            "Script" : "Core.Abilities.Square",
+            "AI" : "Core.AbilityAI.AOE",
+            "Icon" : "Mods/Core/Art/Abilities/ability-cold.png"
         },
         {
             "Name" : "Disorienting Gas",
@@ -424,7 +473,8 @@
             "Levels Up" : false,
             "Tags" : [ "Small_Square" ],
             "Script" : "Core.Abilities.Square",
-            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE"
+            "AI" : "Core.AbilityAI.AdjacentToTarget_AOE",
+            "Icon" : "Mods/Core/Art/Abilities/ability-disgas.png"
         },
         {
             "Name" : "Toxic Cloud",
@@ -438,7 +488,8 @@
             "Cast Type" : "Target",
             "Tags" : [ "Small_Square" ],
             "Script" : "Core.Abilities.Square",
-            "AI" : "Core.AbilityAI.AOE"
+            "AI" : "Core.AbilityAI.AOE",
+            "Icon" : "Mods/Core/Art/Abilities/ability-toxiccloud.png"
         },
         {
             "Name" : "Confusion",
@@ -453,7 +504,8 @@
             "Tags" : [ "Small_Square" ],
             "Levels Up" : false,
             "Script" : "Core.Abilities.Square",
-            "AI" : "Core.AbilityAI.AOE"
+            "AI" : "Core.AbilityAI.AOE",
+            "Icon" : "Mods/Core/Art/Abilities/ability-confusion.png"
         },
         {
             "Name" : "Lightning Bolt",
@@ -467,7 +519,8 @@
             "Damage Type" : "Energy",
             "Cast Type" : "Direction",
             "Script" : "Core.Abilities.Beam",
-            "AI" : "Core.AbilityAI.Beam"
+            "AI" : "Core.AbilityAI.Beam",
+            "Icon" : "Mods/Core/Art/Abilities/ability-lightning.png"
         },
         {
             "Name" : "Blink",
@@ -480,7 +533,8 @@
             "Cast Type" : "Target",
             "Levels Up" : false,
             "Script" : "Core.Abilities.Blink",
-            "AI" : "Core.AbilityAI.Empty"
+            "AI" : "Core.AbilityAI.Empty",
+            "Icon" : "Mods/Core/Art/Abilities/ability-blink.png"
         }
     ]
 }

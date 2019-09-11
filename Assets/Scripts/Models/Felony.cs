@@ -21,6 +21,11 @@ public class Felony : IAsset
 
     public Felony(JsonData dat)
     {
+        FromJson(dat);
+    }
+
+    public void FromJson(JsonData dat)
+    {
         name = dat["Name"].ToString();
         ID = dat["ID"].ToString();
         description = dat["Description"].ToString();

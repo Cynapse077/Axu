@@ -91,12 +91,12 @@ public class ShopPanel : MonoBehaviour
 
         if (playerInv)
         {
-            EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(UserInterface.selectedItemNum).gameObject);
+            inventoryBase.GetChild(UserInterface.selectedItemNum).Highlight();
             invScroll.value = 1f - (UserInterface.selectedItemNum / (float)playerInventory.items.Count);
         }
         else if (merchInv)
         {
-            EventSystem.current.SetSelectedGameObject(merchantBase.GetChild(UserInterface.selectedItemNum).gameObject);
+            merchantBase.GetChild(UserInterface.selectedItemNum).Highlight();
             merchScroll.value = 1f - (UserInterface.selectedItemNum / (float)merchantInventory.items.Count);
         }
 

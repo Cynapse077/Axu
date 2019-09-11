@@ -73,6 +73,11 @@ public class Body : MonoBehaviour
             bodyParts.Add(new BodyPart(entity.AI.npcBase.bodyParts[i]));
         }
 
+        if (bodyParts.NullOrEmpty())
+        {
+            bodyParts = EntityList.DefaultBodyStructure();
+        }
+
         Item handItem = (entity.AI.npcBase.handItems.Count > 0 && entity.AI.npcBase.handItems[0] != null) ? entity.AI.npcBase.handItems[0] : ItemList.GetItemByName("fists");
         defaultHand = new BodyPart.Hand(GetBodyPartBySlot(ItemProperty.Slot_Head), handItem, handItem.ID);
 
@@ -87,11 +92,6 @@ public class Body : MonoBehaviour
                     Hands[i].baseItem = entity.AI.npcBase.handItems[i].ID;
                 }
             }
-        }
-
-        if (bodyParts == null || bodyParts.Count <= 0)
-        {
-            bodyParts = EntityList.DefaultBodyStructure();
         }
 
         for (int i = 0; i < bodyParts.Count; i++)
@@ -251,7 +251,7 @@ public class Body : MonoBehaviour
                 }
                 else if (bp.grip != null && bp.grip.heldPart != null && bp.grip.HeldBody != null)
                 {
-                    bp.grip.HeldBody.entity.cell.UnSetEntity(bp.grip.HeldBody.entity);
+                    bp.grip.HeldBody.entity.UnSetCell();
                     bp.grip.HeldBody.entity.myPos = entity.myPos;
                     bp.grip.HeldBody.entity.SetCell();
                 }
@@ -527,7 +527,7 @@ public class Body : MonoBehaviour
                 }
 
                 bodyParts[i].myBody = this;
-                bodyParts[i].equippedItem.UpdateUserSprite(MyStats, false);
+                bodyParts[i].equippedItem.UpdateUserSprite(MyStats, false, false);
 
                 if (bodyParts[i].equippedItem.statMods.Find(x => x.Stat == "Heat Resist") != null)
                 {

@@ -85,21 +85,15 @@ public static class ContextualMenu
                     mos.Interact();
                 }));
             }
+            else if (mos.objectBase.HasEvent("OnInteract"))
+            {
+                actions.Add(new ContextualAction(string.Format("Interact with {0} {1}", mos.name, dir), () => { mos.Interact(); }));
+            }
             else if (mos.isDoor_Closed)
             {
                 string acName = string.Format("Open {0} {1}", mos.name, dir);
 
                 actions.Add(new ContextualAction(acName, () => { mos.OpenDoor(true); }));
-            }
-            else if (mos.isDoor_Open)
-            {
-                string acName = string.Format("Close {0} {1}", mos.name, dir);
-
-                actions.Add(new ContextualAction(acName, () => { mos.Interact(); }));
-            }
-            else if (mos.objectBase.HasEvent("OnInteract"))
-            {
-                actions.Add(new ContextualAction(string.Format("Interact with {0} {1}", mos.name, dir), () => { mos.Interact(); }));
             }
             else
             {

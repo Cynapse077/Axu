@@ -675,7 +675,7 @@ public class Stats : MonoBehaviour
                 targetPart.WoundMe(damageTypes);
             }
 
-            ApplyDamage(damage, crit, Color.white);
+            ApplyDamage(damage, crit);
         }
 
         return damage;
@@ -689,21 +689,9 @@ public class Stats : MonoBehaviour
     }
 
     //The actual application of damage, from Damage()
-    void ApplyDamage(int amount, bool crit, Color col, bool bloodstain = false, bool noNumber = false)
+    void ApplyDamage(int amount, bool crit, bool bloodstain = false)
     {
         health -= amount;
-
-        if (!noNumber)
-        {
-            Color color = (crit) ? Color.yellow : Color.red;
-
-            if (col != Color.white)
-            {
-                color = col;
-            }
-
-            CreateDamageNumber(amount.ToString(), color);
-        }
 
         if (RNG.Next(100) < 20 && bloodstain)
         {
@@ -733,16 +721,8 @@ public class Stats : MonoBehaviour
             return;
         }
 
-        Color c = Color.red;
-
-        if (damageType == DamageTypes.Venom)
+        if (damageType == DamageTypes.Bleed)
         {
-            c = Color.green;
-        }
-        else if (damageType == DamageTypes.Bleed)
-        {
-            c = Color.magenta;
-            
             if (entity.isPlayer || !entity.AI.npcBase.HasFlag(NPC_Flags.No_Blood))
             {
                 entity.CreateBloodstain(false, 30);
@@ -765,7 +745,7 @@ public class Stats : MonoBehaviour
                 CombatLog.SimpleMessage("Damage_Heat");
         }
 
-        ApplyDamage(amount, false, c, damageType == DamageTypes.Bleed);
+        ApplyDamage(amount, false, damageType == DamageTypes.Bleed);
     }
 
     public void RestoreStamina(int amount)
@@ -885,9 +865,9 @@ public class Stats : MonoBehaviour
         Mutate();
     }
 
-    public void Mutate(string mutID = "")
+    public void Mutate(string mutID = null)
     {
-        if (mutID == "" && TraitList.GetAvailableMutations(this).Count <= 0)
+        if (mutID.NullOrEmpty() && TraitList.GetAvailableMutations(this).Count <= 0)
         {
             radiation = 0;
             return;
@@ -905,19 +885,17 @@ public class Stats : MonoBehaviour
             return;
         }
 
-        if (string.IsNullOrEmpty(mutID))
+        if (mutID.NullOrEmpty())
         {
             List<Trait> availableMuts = TraitList.GetAvailableMutations(this);
 
-            if (availableMuts.Count <= 0)
+            if (availableMuts.NullOrEmpty())
             {
                 radiation = 0;
                 return;
             }
-            else
-            {
-                mutID = availableMuts.GetRandom(RNG).ID;
-            }
+
+            mutID = availableMuts.GetRandom(RNG).ID;
         }
 
         Trait mutation = TraitList.GetTraitByID(mutID);
@@ -928,7 +906,7 @@ public class Stats : MonoBehaviour
             return;
         }
 
-        if (!mutation.stackable && hasTrait(mutation.ID) && !string.IsNullOrEmpty(mutation.nextTier))
+        if (!mutation.stackable && hasTrait(mutation.ID) && !mutation.nextTier.NullOrEmpty())
         {
             //Evolve mutation
             Trait newMut = TraitList.GetTraitByID(mutation.nextTier);
@@ -951,30 +929,28 @@ public class Stats : MonoBehaviour
     {
         int amt = 0;
 
-        for (int i = 0; i < traits.Count; i++)
+        foreach (Trait t in traits)
         {
-            if (traits[i].ID == id)
+            if (t.ID == id)
             {
                 amt++;
             }
         }
-
+        
         return amt;
     }
 
     void CheckMutationIntegrity(Trait newMut)
     {
-        if (string.IsNullOrEmpty(newMut.slot))
+        if (!newMut.slot.NullOrEmpty())
         {
-            return;
-        }
+            List<Trait> traitsToRemove = traits.FindAll(x => x.slot == newMut.slot);
 
-        List<Trait> traitsToRemove = traits.FindAll(x => x.slot == newMut.slot);
-
-        for (int i = 0; i < traitsToRemove.Count; i++)
-        {
-            RemoveTrait(traitsToRemove[i].ID);
-        }
+            for (int i = 0; i < traitsToRemove.Count; i++)
+            {
+                RemoveTrait(traitsToRemove[i].ID);
+            }
+        }        
     }
 
     public void RemoveTrait(string id)
@@ -1081,7 +1057,6 @@ public class Stats : MonoBehaviour
         {
             FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Synthetic);
         }
-
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Crystallization))
         {
@@ -1247,7 +1222,7 @@ public class Stats : MonoBehaviour
 
         if (!entity.isPlayer && entity.AI.npcBase.HasFlag(NPC_Flags.Deteriortate_HP))
         {
-            ApplyDamage(1, false, Color.white, false, true);
+            ApplyDamage(1, false);
         }
 
         TerrainEffects();
@@ -1612,18 +1587,6 @@ public class Stats : MonoBehaviour
                 }
             }
         }
-    }
-
-    void CreateDamageNumber(string text, Color col)
-    {
-        if (!GameSettings.Particle_Effects || !entity.isPlayer && !entity.AI.InSightOfPlayer())
-        {
-            return;
-        }
-
-        GameObject t = SimplePool.Spawn(World.poolManager.damageEffect, transform.position + new Vector3(0.5f, 0.5f, -1));
-        t.transform.parent = transform;
-        t.GetComponentInChildren<DamageText>().DisplayText(col, text);
     }
 
     public SStats ToSimpleStats()

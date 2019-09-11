@@ -189,6 +189,7 @@ public class Trait : IAsset
                     if (!replaceBodyPart.canWearGear)
                     {
                         entity.inventory.PickupItem(bps[i].equippedItem);
+                        bps[i].equippedItem.OnUnequip(entity, false);
                         bps[i].equippedItem = ItemList.GetNone();
                     }
 
@@ -238,9 +239,10 @@ public class Trait : IAsset
                 if (hands[i].EquippedItem.ID == hands[i].baseItem)
                 {
                     hands[i].SetEquippedItem(ItemList.GetItemByID(replaceBodyPart.newEquippedItem), entity);
-                }
+                } 
 
                 hands[i].baseItem = replaceBodyPart.newEquippedItem;
+                hands[i].EquippedItem.OnEquip(entity.stats, hands[i].IsMainHand);
             }
         }
 
@@ -298,7 +300,7 @@ public class Trait : IAsset
         }
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
         name = dat["Name"].ToString();
         ID = dat["ID"].ToString();

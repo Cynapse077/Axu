@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 public class LootPanel : MonoBehaviour
@@ -24,6 +23,7 @@ public class LootPanel : MonoBehaviour
     {
         inv = lootInv;
         UpdateInventory();
+        UpdateTooltip(true);
     }
 
     public void UpdateInventory()
@@ -70,7 +70,7 @@ public class LootPanel : MonoBehaviour
             capacityText.text = string.Format("<color=olive>Your Capacity: ({0}/{1})</color>", playerInventory.items.Count, playerInventory.maxItems);
         }
 
-        UpdateTooltip();
+        UpdateTooltip(true);
     }
 
     Sprite SwitchSprite(Item item)
@@ -80,14 +80,20 @@ public class LootPanel : MonoBehaviour
         return SpriteManager.GetObjectSprite(id);
     }
 
-    public void UpdateTooltip()
+    public void UpdateTooltip(bool scroll)
     {
+        if (inventoryBase.childCount > 0 && inventoryBase.childCount > UserInterface.selectedItemNum)
+            inventoryBase.GetChild(UserInterface.selectedItemNum).Highlight();
+
         if (inventoryBase.childCount <= 0 || relevantItems == null || inv == null || inv.items == null 
             || relevantItems.Count <= UserInterface.selectedItemNum || relevantItems[UserInterface.selectedItemNum] == null)
         {
             toolTipPanel.gameObject.SetActive(false);
             return;
         }
+
+        if (scroll && inventoryBase.childCount > 0)
+            scrollbar.value = 1f - (UserInterface.selectedItemNum / (float)inventoryBase.childCount);
 
         toolTipPanel.gameObject.SetActive(true);
         bool display = (inv.items.Count > 0 && UserInterface.selectedItemNum < inv.items.Count);
@@ -121,6 +127,7 @@ public class LootPanel : MonoBehaviour
             {
                 inv.gameObject.BroadcastMessage("CheckInventory", SendMessageOptions.DontRequireReceiver);
                 Init(inv);
+                UpdateTooltip(true);
             }
         }
         else if (newItem.HasProp(ItemProperty.Pool) && newItem.HasCComponent<CLiquidContainer>())
@@ -149,17 +156,10 @@ public class LootPanel : MonoBehaviour
             return;
         }
 
-        if (inventoryBase.childCount > 0 && inventoryBase.childCount > UserInterface.selectedItemNum)
-        {
-            EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(UserInterface.selectedItemNum).gameObject);
-        }
-
         for (int i = 0; i < inventoryBase.childCount; i++)
         {
             inventoryBase.GetChild(i).GetComponent<ItemButton>().selected = (i == UserInterface.selectedItemNum);
         }
-
-        scrollbar.value = 1f - (UserInterface.selectedItemNum / (float)relevantItems.Count);
 
         if (GameSettings.Keybindings.GetKey("Enter"))
         {

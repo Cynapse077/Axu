@@ -13,27 +13,27 @@ public class ZoneBlueprint : IAsset
 
     public ZoneBlueprint(JsonData dat)
     {
+        placement = new Placement();
         FromJson(dat);
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
-        ID = dat["ID"].ToString();
+        if (dat.ContainsKey("ID"))
+            ID = dat["ID"].ToString();
 
-        dat.TryGetString("Display", out name);
-        dat.TryGetInt("Tile Index", out tileID);
+        dat.TryGetString("Display", out name, name);
+        dat.TryGetInt("Tile Index", out tileID, tileID);
         dat.TryGetBool("Walkable", out walkable, true);
         dat.TryGetInt("Amount", out amount, 1);
         dat.TryGetBool("Expand", out expand, false);
-        dat.TryGetBool("Start Location", out isStart);
-        dat.TryGetBool("Friendly", out friendly);
-        dat.TryGetString("Underground", out underground);
-        dat.TryGetInt("Radiation", out radiation);
+        dat.TryGetBool("Start Location", out isStart, isStart);
+        dat.TryGetBool("Friendly", out friendly, friendly);
+        dat.TryGetString("Underground", out underground, underground);
+        dat.TryGetInt("Radiation", out radiation, radiation);
 
         if (dat.ContainsKey("Place At"))
         {
-            placement = new Placement();
-
             if (dat["Place At"].ContainsKey("Biome"))
                 placement.zoneID = dat["Place At"]["Biome"].ToString();
             if (dat["Place At"].ContainsKey("Location"))
@@ -83,19 +83,25 @@ public class ZoneBlueprint_Underground :IAsset
 
     public ZoneBlueprint_Underground(JsonData dat)
     {
+        rules = Rules.Empty();
         FromJson(dat);
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
-        ID = dat["ID"].ToString();
-        name = dat["Display"].ToString();
-        depth = (int)dat["Depth"];
-        light = (int)dat["Light"];
-        rules = Rules.Empty();
+        if (dat.ContainsKey("ID"))
+            ID = dat["ID"].ToString();
+        if (dat.ContainsKey("Display"))
+            name = dat["Display"].ToString();
+        if (dat.ContainsKey("Depth"))
+            depth = (int)dat["Depth"];
+        if (dat.ContainsKey("Light"))
+            light = (int)dat["Light"];
 
         if (dat.ContainsKey("Rules"))
         {
+            rules = Rules.Empty();
+
             if (dat["Rules"].ContainsKey("Load"))
                 rules.loadFromData = (bool)dat["Rules"]["Load"];
 

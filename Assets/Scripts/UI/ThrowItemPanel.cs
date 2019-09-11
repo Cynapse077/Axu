@@ -22,15 +22,17 @@ public class ThrowItemPanel : UIPanel
         base.Initialize();
     }
 
-    public override void ChangeSelectedNum(int newIndex)
+    public override void ChangeSelectedNum(int newIndex, bool scroll)
     {
         if (World.userInterface.column == 1 && SelectedMax > 0 && SelectedMax > SelectedNum)
         {
-            EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(SelectedNum).gameObject);
-            scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
+            inventoryBase.GetChild(SelectedNum).Highlight();
+
+            if (scroll)
+                scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
         }
 
-        base.ChangeSelectedNum(newIndex);
+        base.ChangeSelectedNum(newIndex, scroll);
     }
 
     protected override void OnSelect(int index)
@@ -62,8 +64,7 @@ public class ThrowItemPanel : UIPanel
 
         if (SelectedMax > 0)
         {
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(0).gameObject);
+            inventoryBase.GetChild(SelectedNum).Highlight();
             scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
         }
 

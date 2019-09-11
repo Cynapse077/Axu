@@ -26,6 +26,12 @@ public static class SpriteManager
     static Dictionary<string, ModSprite> npcSprites = new Dictionary<string, ModSprite>();
     static Dictionary<string, ModSprite> objectSprites = new Dictionary<string, ModSprite>();
 
+    public static void ResetAll()
+    {
+        npcSprites.Clear();
+        objectSprites.Clear();
+    }
+
     public static void AddObjectSprites(Mod mod, string directoryPath, SpriteType spriteType)
     {
         if (Directory.Exists(directoryPath))

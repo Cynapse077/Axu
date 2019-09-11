@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
 using LitJson;
 
 public static class GameSettings
@@ -12,6 +13,14 @@ public static class GameSettings
     public static bool Allow_Console, Particle_Effects;
     public static Coord ScreenSize;
     public static bool ShowLog;
+    public static bool FourWayMovement;
+
+    public static readonly List<Coord> SupportedResolutions = new List<Coord>()
+    {
+        new Coord(800, 600), new Coord(1024, 768), new Coord(1280, 720),
+        new Coord(1366, 768), new Coord(1600, 900), new Coord(1920, 1080),
+        new Coord(2560, 1440)
+    };
 
     public static string version
     {
@@ -42,6 +51,7 @@ public static class GameSettings
             Particle_Effects = dat.ContainsKey("Particle_Effects") ? (bool)dat["Particle_Effects"] : true;
             SimpleDamage = dat.ContainsKey("SimpleDmg") ? (bool)dat["SimpleDmg"] : false;
             ShowLog = dat.ContainsKey("Show_Log") ? (bool)dat["Show_Log"] : true;
+            FourWayMovement = dat.ContainsKey("FourWayMovement") ? (bool)dat["FourWayMovement"] : false;
 
             if (dat.Keys.Contains("Input"))
             {
@@ -68,7 +78,7 @@ public static class GameSettings
     public static void Save()
     {
         SSettings settings = new SSettings(Fullscreen, ScreenSize, Master_Volume, Mus_Volume, SE_Volume, MuteAll,
-            UseMouse, Keybindings, Animation_Speed, Enable_Weather, Particle_Effects, SimpleDamage, ShowLog);
+            UseMouse, Keybindings, Animation_Speed, Enable_Weather, Particle_Effects, SimpleDamage, ShowLog, FourWayMovement);
 
         JsonData data = JsonMapper.ToJson(settings);
         string prettyData = data.ToString();
@@ -94,6 +104,7 @@ public static class GameSettings
         Particle_Effects = true;
         SimpleDamage = false;
         ShowLog = true;
+        FourWayMovement = false;
 
         Keybindings = new InputKeys();
 
@@ -119,13 +130,14 @@ public class SSettings
     public bool Particle_Effects { get; set; }
     public bool SimpleDmg { get; set; }
     public bool ShowLog { get; set; }
+    public bool FourWayMovement { get; set; }
 
     public InputKeys Input;
 
     public SSettings() { }
 
     public SSettings(bool fullscreen, Coord scSize, double masvol, double musvol, double sfxvol, bool mute,
-        bool mouse, InputKeys keys, double animspeed, bool wea, bool part, bool sdmg, bool log)
+        bool mouse, InputKeys keys, double animspeed, bool wea, bool part, bool sdmg, bool log, bool fourWayMove)
     {
         Fullscreen = fullscreen;
         ScreenSize = scSize;
@@ -140,5 +152,6 @@ public class SSettings
         Particle_Effects = part;
         SimpleDmg = sdmg;
         ShowLog = log;
+        FourWayMovement = fourWayMove;
     }
 }

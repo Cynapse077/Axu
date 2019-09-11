@@ -91,7 +91,7 @@ public class MouseController : MonoBehaviour
         ClearUIObjects();
         if (!World.OutOfLocalBounds(newPos.x, newPos.y) && World.tileMap.CurrentMap.has_seen[newPos.x, newPos.y])
         {
-            Path_AStar path = new Path_AStar(playerEntity.myPos, newPos, playerEntity.inventory.CanFly(), true);
+            Path_AStar path = new Path_AStar(playerEntity.myPos, newPos, playerEntity.inventory.CanFly(), playerEntity);
 
             if (path != null && path.Traversable)
             {
@@ -324,7 +324,7 @@ public class MouseController : MonoBehaviour
         }
 
         //Move to the selected position.
-        Path_AStar path = new Path_AStar(playerEntity.myPos, targetPos, playerEntity.inventory.CanFly(), true);
+        Path_AStar path = new Path_AStar(playerEntity.myPos, targetPos, playerEntity.inventory.CanFly(), playerEntity);
         playerEntity.CancelWalk();
         playerInput.localPath = path;
     }

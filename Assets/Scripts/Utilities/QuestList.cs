@@ -35,9 +35,19 @@ public static class QuestList
                     npcLocalPos.y = (int)data["Local Position"]["y"];
                 }
 
-                string giveItem = data.ContainsKey("Give Item") ? data["Give Item"].ToString() : "";
+                string giveItem = data.ContainsKey("Give Item") ? data["Give Item"].ToString() : string.Empty;
 
-                return new SpawnNPCEvent(npcID, data["Coordinate"].ToString(), npcLocalPos, npcElevation, giveItem);
+                List<string> giveItems = new List<string>();
+
+                if (data.ContainsKey("Give Items"))
+                {
+                    for (int i = 0; i < data["Give Items"].Count; i++)
+                    {
+                        giveItems.Add(data["Give Items"][i].ToString());
+                    }
+                }
+
+                return new SpawnNPCEvent(npcID, data["Coordinate"].ToString(), npcLocalPos, npcElevation, giveItem, giveItems);
 
             case "Spawn Group":
                 string groupID = data["Group"].ToString();

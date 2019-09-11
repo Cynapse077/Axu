@@ -54,20 +54,24 @@ public class MapObjectBlueprint : IAsset
         saved = true;
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
-        Name = dat["Name"].ToString();
-        ID = objectType = dat["ObjectType"].ToString();
-        spriteID = dat["Sprite"].ToString();
-        description = dat["Description"].ToString();
+        if (dat.ContainsKey("Name"))
+            Name = dat["Name"].ToString();
+        if (dat.ContainsKey("ObjectType"))
+            ID = objectType = dat["ObjectType"].ToString();
+        if (dat.ContainsKey("Sprite"))
+            spriteID = dat["Sprite"].ToString();
+        if (dat.ContainsKey("Description"))
+            description = dat["Description"].ToString();
 
-        dat.TryGetInt("Path Cost", out pathCost);
-        dat.TryGetEnum("Physics", out solid, MapOb_Interactability.No);
-        dat.TryGetBool("Opaque", out opaque);
-        dat.TryGetBool("Autotile", out autotile);
+        dat.TryGetInt("Path Cost", out pathCost, pathCost);
+        dat.TryGetEnum("Physics", out solid, solid);
+        dat.TryGetBool("Opaque", out opaque, opaque);
+        dat.TryGetBool("Autotile", out autotile, autotile);
         dat.TryGetEnum("Render Layer", out renderLayer, ObjectRenderLayer.Mid);
-        dat.TryGetBool("Random Rotation", out randomRotation);
-        dat.TryGetInt("Light", out light);
+        dat.TryGetBool("Random Rotation", out randomRotation, randomRotation);
+        dat.TryGetInt("Light", out light, light);
         dat.TryGetBool("Saved", out saved, true);
         dat.TryGetBool("Random Rotation", out randomRotation, false);
 
@@ -114,6 +118,8 @@ public class MapObjectBlueprint : IAsset
 
         if (dat.ContainsKey("LuaEvents"))
         {
+            luaEvents = new Dictionary<string, LuaCall>();
+
             for (int j = 0; j < dat["LuaEvents"].Count; j++)
             {
                 JsonData luaEvent = dat["LuaEvents"][j];

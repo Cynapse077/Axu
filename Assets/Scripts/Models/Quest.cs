@@ -114,7 +114,7 @@ public class Quest : EventContainer, IAsset
         }
     }
 
-    void FromJson(JsonData q)
+    public void FromJson(JsonData q)
     {
         spawnedNPCs = new List<int>();
 

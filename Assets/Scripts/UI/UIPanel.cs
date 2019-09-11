@@ -60,11 +60,11 @@ public abstract class UIPanel : MonoBehaviour
     {
         if (GameSettings.Keybindings.GetKey("North"))
         {
-            ChangeSelectedNum(SelectedNum - 1);
+            ChangeSelectedNum(SelectedNum - 1, true);
         }
         else if (GameSettings.Keybindings.GetKey("South"))
         {
-            ChangeSelectedNum(SelectedNum + 1);
+            ChangeSelectedNum(SelectedNum + 1, true);
         }
     }
 
@@ -74,12 +74,12 @@ public abstract class UIPanel : MonoBehaviour
         {
             if (GameSettings.Keybindings.GetKey("North", KeyPress.Held))
             {
-                ChangeSelectedNum(SelectedNum - 1);
+                ChangeSelectedNum(SelectedNum - 1, true);
                 StartCoroutine(HeldKeyRefresh());
             }
             else if (GameSettings.Keybindings.GetKey("South", KeyPress.Held))
             {
-                ChangeSelectedNum(SelectedNum + 1);
+                ChangeSelectedNum(SelectedNum + 1, true);
                 StartCoroutine(HeldKeyRefresh());
             }
         }
@@ -92,7 +92,7 @@ public abstract class UIPanel : MonoBehaviour
         waitForRefresh = false;
     }
 
-    public virtual void ChangeSelectedNum(int newIndex)
+    public virtual void ChangeSelectedNum(int newIndex, bool scroll)
     {
         SelectedNum = newIndex;
 

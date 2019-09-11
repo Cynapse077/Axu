@@ -8,16 +8,23 @@ public class Faction : IAsset
     public string Name { get; protected set; }
     public string ID { get; set; }
     public string ModID { get; set; }
-    public List<string> hostileTo;
+    public List<string> hostileTo = new List<string>();
 
     public Faction(JsonData dat)
     {
-        hostileTo = new List<string>();
-        Name = dat["Name"].ToString();
-        ID = dat["ID"].ToString();
+        FromJson(dat);
+    }
+
+    public void FromJson(JsonData dat)
+    {
+        if (dat.ContainsKey("Name"))
+            Name = dat["Name"].ToString();
+        if (dat.ContainsKey("ID"))
+            ID = dat["ID"].ToString();
 
         if (dat.ContainsKey("Hostile To"))
         {
+            hostileTo = new List<string>();
             for (int j = 0; j < dat["Hostile To"].Count; j++)
             {
                 hostileTo.Add(dat["Hostile To"][j].ToString());

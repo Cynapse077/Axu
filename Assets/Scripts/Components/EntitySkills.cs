@@ -7,6 +7,7 @@ public class EntitySkills : MonoBehaviour
 {
     public List<Ability> abilities;
     public Entity entity;
+    public MindWalker mindWalker;
 
     int grappleLevel
     {
@@ -36,6 +37,9 @@ public class EntitySkills : MonoBehaviour
             {
                 AddSkill(new Ability(Manager.playerBuilder.abilities[i]), Manager.playerBuilder.abilities[i].origin);
             }
+
+
+            mindWalker = new MindWalker(entity);
         }
     }
 
@@ -70,6 +74,24 @@ public class EntitySkills : MonoBehaviour
         {
             abilities.Find(x => x.ID == s.ID).SetFlag(origin);
         }
+
+        ResetHotkeyManager();
+    }
+
+    void ResetHotkeyManager()
+    {
+        if (entity.isPlayer)
+        {
+            HotkeyManager hkm = GameObject.FindObjectOfType<HotkeyManager>();
+            hkm.Initialize();
+
+            for (int i = 0; i < abilities.Count; i++)
+            {
+                int index = i;
+                System.Action doAction = () => { abilities[index].Cast(ObjectManager.playerEntity); };
+                hkm.AssignAction(abilities[i], i, doAction);
+            }
+        }
     }
 
     public void RemoveSkill(string id, Ability.AbilityOrigin origin)
@@ -86,6 +108,8 @@ public class EntitySkills : MonoBehaviour
                 abilities.Remove(s);
             }
         }
+
+        ResetHotkeyManager();
     }
 
     public void Grapple_GrabPart(BodyPart targetLimb)
@@ -424,7 +448,7 @@ public class EntitySkills : MonoBehaviour
     public void Teleport()
     {
         entity.BeamDown();
-        entity.cell.UnSetEntity(entity);
+        entity.UnSetCell();
         entity.myPos = World.tileMap.InSightCoords().GetRandom(SeedManager.combatRandom);
 
         World.soundManager.TeleportSound();
@@ -472,5 +496,25 @@ public class EntitySkills : MonoBehaviour
     bool TargetAvailable(Coord direction)
     {
         return (World.tileMap.WalkableTile(entity.posX + direction.x, entity.posY + direction.y) && World.tileMap.GetCellAt(entity.myPos + direction).entity != null);
+    }
+}
+
+public class MindWalker
+{
+    public Entity entity;
+    Stats stats;
+
+    public int Strength
+    {
+        get
+        {
+            return stats.Intelligence;
+        }
+    }
+
+    public MindWalker(Entity ent)
+    {
+        entity = ent;
+        stats = entity.stats;
     }
 }

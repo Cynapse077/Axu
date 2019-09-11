@@ -13,16 +13,18 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
     Color[] emptyColors;
     Color blank;
 
+    const int BaseBodySlot = 2;
+
     void Init()
     {
         baseSprite = new Texture2D(18, 18, TextureFormat.ARGB32, true);
-        spritePath = Application.streamingAssetsPath + "/Mods/Core/Art/Player/Bases/char-baseBody.png";
+        spritePath = Path.Combine(Application.streamingAssetsPath,"Mods/Core/Art/Player/Bases/char-baseBody.png");
         byte[] imageBytes = File.ReadAllBytes(spritePath);
         baseSprite.LoadImage(imageBytes);
         baseSprite.filterMode = FilterMode.Point;
 
         //Fill array of transparent colors.
-        blank = new Color(1, 1, 1, 0);
+        blank = Color.clear;
         emptyColors = new Color[baseSprite.width * baseSprite.height];
 
         for (int x = 0; x < baseSprite.width; x++)
@@ -40,16 +42,18 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
         };
     }
 
-    public void SetSprite(Item.ItemRenderer rend, bool remove = false)
+    public void SetSprite(Item.ItemRenderer rend, bool remove)
     {
         if (rend.slot < 0 || string.IsNullOrEmpty(rend.onPlayer))
         {
             return;
         }
 
+        Debug.Log(rend.ToString());
+
         if (bodyPieces == null || bodyPieces.Length <= 0)
         {
-            bodyPieces = new Texture2D[9];
+            bodyPieces = new Texture2D[10];
         }
 
         if (remove)
@@ -59,7 +63,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
         else
         {
             ApplyTextureDefaults(rend.slot);
-            string path = Application.streamingAssetsPath + rend.onPlayer;
+            string path = Path.Combine(Application.streamingAssetsPath, rend.onPlayer);
 
             if (File.Exists(path))
             {
@@ -87,7 +91,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
         for (int i = 0; i < bodyPieces.Length; i++)
         {
             //Body - After back/offhand
-            if (i == 2 && baseSprite != null)
+            if (i == BaseBodySlot && baseSprite != null)
             {
                 MergeTextures(ref newTex, baseSprite);
             }
@@ -106,6 +110,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
     {
         Color[] c1 = t1.GetPixels(), c2 = t2.GetPixels();
 
+        //Skip if the textures are different sizes. For now.
         if (c2.Length != c1.Length)
         {
             return;
@@ -134,18 +139,9 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
 
     public void SetSwimming(bool swim)
     {
-        if (baseSprite == null)
+        if (baseSprite != null)
         {
-            return;
+            body.sprite = (swim) ? swimmingSprite : Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), new Vector2(0.5f, 0), 16f);
         }
-
-        if (swim)
-        {
-            body.sprite = swimmingSprite;
-        }
-        else
-        {
-            body.sprite = Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), new Vector2(0.5f, 0), 16f);
-        }        
     }
 }

@@ -3,28 +3,25 @@ using UnityEngine.UI;
 
 public class AbilityButton : MonoBehaviour
 {
-    public Text NameText;
+    public Text nameText;
+    public Image image;
+    public bool selected;
 
-    public void Setup(Ability s, int index)
+    Vector3 selectedSize = new Vector3(1.5f, 1.5f, 1f);
+
+    public void Setup(Ability s)
     {
-        NameText.alignment = TextAnchor.MiddleLeft;
-
-        string n = "  " + s.Name;
-
-        if (index < 9)
-        {
-            n = "  " + (index + 1).ToString() + ") " + s.Name;
-        }
-        else if (index == 9)
-        {
-            n = "  0) " + s.Name;
-        }
-
-        NameText.text = n;
+        nameText.text = s.Name;
+        image.sprite = s.IconSprite;
 
         if (s.cooldown > 0)
         {
-            NameText.text = "<color=grey>" + n + " (" + s.cooldown + ")</color>";
+            nameText.text = "<color=grey>" + nameText.text + " (" + s.cooldown + ")</color>";
         }
+    }
+
+    void Update()
+    {
+        image.rectTransform.localScale = Vector3.Lerp(image.rectTransform.localScale, (selected) ? selectedSize : Vector3.one, Time.deltaTime * 10f);
     }
 }

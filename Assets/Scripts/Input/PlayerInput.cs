@@ -291,8 +291,6 @@ public class PlayerInput : MonoBehaviour
             SingleInput();
         }
 
-        AbilityHotkeys();
-
         if (KeyDown("Look") && !fireWeapon)
         {
             World.userInterface.CloseWindows();
@@ -421,13 +419,13 @@ public class PlayerInput : MonoBehaviour
             Action(0, -1);
         else if (KeyDown("West"))
             Action(-1, 0);
-        else if (KeyDown("NorthEast"))
+        else if (KeyDown("NorthEast") && !GameSettings.FourWayMovement)
             Action(1, 1);
-        else if (KeyDown("SouthEast"))
+        else if (KeyDown("SouthEast") && !GameSettings.FourWayMovement)
             Action(1, -1);
-        else if (KeyDown("SouthWest"))
+        else if (KeyDown("SouthWest") && !GameSettings.FourWayMovement)
             Action(-1, -1);
-        else if (KeyDown("NorthWest"))
+        else if (KeyDown("NorthWest") && !GameSettings.FourWayMovement)
             Action(-1, 1);
         else if (KeyDown("Wait"))
             Action(0, 0);
@@ -445,13 +443,13 @@ public class PlayerInput : MonoBehaviour
                 HeldKeyAction(0, -1);
             else if (KeyHeld("West"))
                 HeldKeyAction(-1, 0);
-            else if (KeyHeld("NorthEast"))
+            else if (KeyHeld("NorthEast") && !GameSettings.FourWayMovement)
                 HeldKeyAction(1, 1);
-            else if (KeyHeld("SouthEast"))
+            else if (KeyHeld("SouthEast") && !GameSettings.FourWayMovement)
                 HeldKeyAction(1, -1);
-            else if (KeyHeld("SouthWest"))
+            else if (KeyHeld("SouthWest") && !GameSettings.FourWayMovement)
                 HeldKeyAction(-1, -1);
-            else if (KeyHeld("NorthWest"))
+            else if (KeyHeld("NorthWest") && !GameSettings.FourWayMovement)
                 HeldKeyAction(-1, 1);
             else if (KeyHeld("Wait"))
                 HeldKeyAction(0, 0);
@@ -608,50 +606,6 @@ public class PlayerInput : MonoBehaviour
         {
             waitForRefresh = true;
             Invoke("Refresh", waitTime);
-        }
-    }
-
-    void AbilityHotkeys()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && entity.skills.abilities.Count > 0)
-        {
-            entity.skills.abilities[0].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && entity.skills.abilities.Count > 1)
-        {
-            entity.skills.abilities[1].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && entity.skills.abilities.Count > 2)
-        {
-            entity.skills.abilities[2].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4) && entity.skills.abilities.Count > 3)
-        {
-            entity.skills.abilities[3].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5) && entity.skills.abilities.Count > 4)
-        {
-            entity.skills.abilities[4].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6) && entity.skills.abilities.Count > 5)
-        {
-            entity.skills.abilities[5].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha7) && entity.skills.abilities.Count > 6)
-        {
-            entity.skills.abilities[6].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha8) && entity.skills.abilities.Count > 8)
-        {
-            entity.skills.abilities[7].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha9) && entity.skills.abilities.Count > 9)
-        {
-            entity.skills.abilities[8].Cast(entity);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha0) && entity.skills.abilities.Count > 10)
-        {
-            entity.skills.abilities[9].Cast(entity);
         }
     }
 
@@ -984,7 +938,7 @@ public class PlayerInput : MonoBehaviour
         if (targetPos != null && !World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
             return;
 
-        localPath = new Path_AStar(entity.myPos, targetPos, entity.inventory.CanFly(), true);
+        localPath = new Path_AStar(entity.myPos, targetPos, entity.inventory.CanFly(), entity);
     }
     #endregion
 
@@ -1050,7 +1004,8 @@ public class PlayerInput : MonoBehaviour
     public bool AnyInputDown()
     {
         return (KeyDown("North") || KeyDown("South") || KeyDown("East") || KeyDown("West") ||
-               KeyDown("NorthEast") || KeyDown("NorthWest") || KeyDown("SouthEast") || KeyDown("SouthWest") ||
+               KeyDown("NorthEast") && !GameSettings.FourWayMovement || KeyDown("NorthWest") && !GameSettings.FourWayMovement 
+               || KeyDown("SouthEast") && !GameSettings.FourWayMovement || KeyDown("SouthWest") && !GameSettings.FourWayMovement ||
                KeyDown("Pause") || KeyDown("Enter") || KeyDown("Interact") || KeyDown("Wait") ||
                KeyDown("Walk"));
     }
@@ -1058,14 +1013,16 @@ public class PlayerInput : MonoBehaviour
     public bool AnyInputUp()
     {
         return (KeyUp("North") || KeyUp("South") || KeyUp("East") || KeyUp("West") ||
-               KeyUp("NorthEast") || KeyUp("NorthWest") || KeyUp("SouthEast") || KeyUp("SouthWest")
+               KeyUp("NorthEast") && !GameSettings.FourWayMovement || KeyUp("NorthWest") && !GameSettings.FourWayMovement 
+               || KeyUp("SouthEast") && !GameSettings.FourWayMovement || KeyUp("SouthWest") && !GameSettings.FourWayMovement
                || KeyUp("Wait"));
     }
 
     public bool AnyInput()
     {
         return (KeyHeld("North") || KeyHeld("South") || KeyHeld("East") || KeyHeld("West") ||
-               KeyHeld("NorthEast") || KeyHeld("NorthWest") || KeyHeld("SouthEast") || KeyHeld("SouthWest")
+               KeyHeld("NorthEast") && !GameSettings.FourWayMovement || KeyHeld("NorthWest") && !GameSettings.FourWayMovement 
+               || KeyHeld("SouthEast") && !GameSettings.FourWayMovement || KeyHeld("SouthWest") && !GameSettings.FourWayMovement
                || KeyHeld("Wait"));
     }
     #endregion

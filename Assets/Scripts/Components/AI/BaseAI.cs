@@ -7,7 +7,6 @@ using MoonSharp.Interpreter;
 public class BaseAI : MonoBehaviour
 {
     public NPC npcBase;
-    public GameObject passiveMarker;
     public SpriteRenderer spriteRenderer;
     public GameObject explosive;
     public Entity entity;
@@ -22,6 +21,8 @@ public class BaseAI : MonoBehaviour
     NPCSprite spriteComponent;
     int perception = 10;
     bool canAct, hasAskedForHelp = false, doneInit = false;
+    int currentPathFails = 0;
+    int turnsLeftToPath = 30;
 
     System.Random RNG
     {
@@ -66,12 +67,12 @@ public class BaseAI : MonoBehaviour
         dialogueController.SetupDialogueOptions();
         npcBase.onScreen = true;
 
-        passiveMarker.SetActive(!isHostile && InSightOfPlayer());
-
         if (!World.tileMap.WalkableTile(entity.myPos))
         {
             entity.ForcePosition(World.tileMap.CurrentMap.GetRandomFloorTile());
         }
+
+        turnsLeftToPath = SeedManager.combatRandom.Next(3, 10);
 
         doneInit = true;
     }
@@ -84,12 +85,12 @@ public class BaseAI : MonoBehaviour
         }
     }
 
+    //Called from lua
     public void SetPath(Path_AStar newPath)
     {
         path = newPath;
     }
 
-    //FIXME: This is doing more than 1 function.
     bool CanDoAnAction()
     {
         if (entity == null)
@@ -136,11 +137,6 @@ public class BaseAI : MonoBehaviour
 
             FaceMe(target.myPos);
         }
-    }
-
-    void Update()
-    {
-        passiveMarker.SetActive(!isHostile && InSightOfPlayer());
     }
 
     public void Decision()
@@ -359,7 +355,7 @@ public class BaseAI : MonoBehaviour
             }
         }
 
-        if (HasThrowingItem(target) && distanceToTarget < 7 && RNG.Next(100) < 5 && TargetInSight())
+        if (HasThrowingItem(target) && distanceToTarget.IsBetweenInclusive(3, 7) && RNG.Next(100) < 3 && TargetInSight())
         {
             ThrowItem();
         }
@@ -371,10 +367,12 @@ public class BaseAI : MonoBehaviour
 
     void GetNewPath(Coord dest)
     {
-        path = new Path_AStar(entity.myPos, dest, entity.inventory.CanFly(), false);
+        path = new Path_AStar(entity.myPos, dest, entity.inventory.CanFly(), entity);
 
         if (path == null || !path.Traversable)
         {
+            currentPathFails++;
+            turnsLeftToPath = SeedManager.combatRandom.Next(5, 40);
             Wander();
             return;
         }
@@ -410,13 +408,14 @@ public class BaseAI : MonoBehaviour
         }
 
         ConfirmAction(moveX, moveY);
+        currentPathFails = 0;
     }
 
     bool SearchForTarget()
     {
         possibleTargets.Refresh();
 
-        if (npcBase.faction.isHostileTo("player") || isHostile)
+        if (npcBase.faction.HostileToPlayer() || isHostile)
         {
             possibleTargets.Add(ObjectManager.playerEntity);
         }
@@ -462,9 +461,13 @@ public class BaseAI : MonoBehaviour
         {
             Coord targetPosition = World.tileMap.CurrentMap.GetRandomFloorTile();
 
-            if (targetPosition != null)
+            if (targetPosition != null && currentPathFails < 3 && turnsLeftToPath <= 0)
             {
                 GetNewPath(targetPosition);
+            }
+            else
+            {
+                turnsLeftToPath--;
             }
         }
     }
@@ -792,7 +795,7 @@ public class BaseAI : MonoBehaviour
             npcBase.hostilityOverride = true;
         }
 
-        if (npcBase.faction.isHostileTo("player"))
+        if (npcBase.faction.HostileToPlayer())
         {
             OverrideHostility(true);
         }

@@ -41,6 +41,7 @@ public class EquipmentPanel : UIPanel
             wep.transform.GetChild(1).GetComponent<Text>().text = n;
             wep.GetComponent<Button>().onClick.AddListener(() => OnSelect(wep.transform.GetSiblingIndex()));
             wep.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
+            wep.GetComponent<ItemButton>().icon.sprite = SwitchSprite(hands[i].EquippedItem);
             SelectedMax++;
         }
 
@@ -49,6 +50,7 @@ public class EquipmentPanel : UIPanel
         fire.transform.GetChild(1).GetComponent<Text>().text = "<color=orange>" + LocalizationManager.GetContent("TT_Ranged") + "</color>";
         fire.GetComponent<Button>().onClick.AddListener(() => OnSelect(fire.transform.GetSiblingIndex()));
         fire.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
+        fire.GetComponent<ItemButton>().icon.sprite = SwitchSprite(curInv.firearm);
         SelectedMax++;
 
         foreach (BodyPart bp in curInv.entity.body.bodyParts)
@@ -58,12 +60,25 @@ public class EquipmentPanel : UIPanel
             g.transform.GetChild(1).GetComponent<Text>().text = bp.displayName;
             g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex()));
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
+            g.GetComponent<ItemButton>().icon.sprite = SwitchSprite(bp.equippedItem);
             SelectedMax++;
         }
     }
 
+    public static Sprite SwitchSprite(Item item)
+    {
+        string id = (string.IsNullOrEmpty(item.renderer.onGround)) ? "item-empty.png" : item.renderer.onGround;
+
+        return SpriteManager.GetObjectSprite(id);
+    }
+
     public override void Update()
     {
+        for (int i = 0; i < equipmentBase.childCount; i++)
+        {
+            equipmentBase.GetChild(i).GetComponent<ItemButton>().selected = (i == SelectedNum && World.userInterface.column == 0);
+        }
+
         if (World.userInterface.column != 0 || World.userInterface.CurrentState() != UIWindow.Inventory || 
             World.userInterface.SelectBodyPart || World.userInterface.SelectItemActions)
             return;
@@ -76,13 +91,13 @@ public class EquipmentPanel : UIPanel
         base.Update();
     }
 
-    public override void ChangeSelectedNum(int newIndex)
+    public override void ChangeSelectedNum(int newIndex, bool scroll)
     {
         if (!World.userInterface.SelectItemActions && !World.userInterface.SelectBodyPart && World.userInterface.column == 0)
         {
-            base.ChangeSelectedNum(newIndex);
+            base.ChangeSelectedNum(newIndex, scroll);
 
-            if (SelectedMax > 0)
+            if (SelectedMax > 0 && scroll)
                 scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
 
             World.userInterface.InvPanel.UpdateTooltip(SelectedNum);
@@ -97,11 +112,20 @@ public class EquipmentPanel : UIPanel
         List<BodyPart.Hand> hands = curInv.entity.body.Hands;
 
         if (index < hands.Count)
-            curInv.UnEquipWeapon(hands[index].EquippedItem, index);
+        {
+            if (!curInv.UnEquipWeapon(hands[index].EquippedItem, index))
+            {
+                return;
+            }
+        }
         else if (index == hands.Count)
+        {
             curInv.UnEquipFirearm(true);
+        }
         else
+        {
             curInv.UnEquipArmor(curInv.entity.body.bodyParts[index - curInv.entity.body.Hands.Count - 1], true);
+        }
 
         World.userInterface.InitializeAllWindows(curInv);
         World.userInterface.InvPanel.UpdateTooltip(SelectedNum);

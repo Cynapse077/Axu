@@ -1,4 +1,3 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System;
 using LitJson;
@@ -154,7 +153,14 @@ public static class ItemList
             return newItem;
         }
 
-        return new Item(GameData.Get<Item>(id) as Item);
+        Item i = GameData.Get<Item>(id) as Item;
+
+        if (i == null)
+        {
+            return GetNone();
+        }
+
+        return new Item(i);
     }
 
     //Really only used in console
@@ -350,41 +356,44 @@ public static class ItemUtility
 {
     public static int MaxRarity = 0;
 
+
+    //This should really be in Item or CComponent for consistency. This reads from data, not save file
     public static List<CComponent> GetComponentsFromData(JsonData data)
     {
         List<CComponent> comps = new List<CComponent>();
 
         for (int i = 0; i < data.Count; i++)
         {
-            string ID = data[i]["ID"].ToString();
+            JsonData dat = data[i];
+            string ID = dat["ID"].ToString();
 
             if (ID == "Charges")
             {
-                int charges = (int)data[i]["Max"];
+                int charges = (int)dat["Max"];
                 CCharges cc = new CCharges(charges);
                 comps.Add(cc);
 
             }
             else if (ID == "Firearm")
             {
-                int shots = (int)data[i]["ShotsPerTurn"];
-                int max = (int)data[i]["Max"];
-                string ammoID = data[i]["AmmoID"].ToString();
+                int shots = (int)dat["ShotsPerTurn"];
+                int max = (int)dat["Max"];
+                string ammoID = dat["AmmoID"].ToString();
                 CFirearm cc = new CFirearm(max, max, shots, ammoID);
                 comps.Add(cc);
 
             }
             else if (ID == "Rot")
             {
-                int charges = (int)data[i]["Max"];
+                int charges = (int)dat["Max"];
                 CRot cc = new CRot(charges);
                 comps.Add(cc);
 
             }
             else if (ID == "Ability")
             {
-                int lvl = (data[i].ContainsKey("Level") ? (int)data[i]["Level"] : 1);
-                CAbility cc = new CAbility(data[i]["Ability"].ToString(), lvl);
+                int lvl = (data[i].ContainsKey("Level") ? (int)dat["Level"] : 1);
+                CAbility cc = new CAbility(dat["Ability"].ToString(), lvl);
                 comps.Add(cc);
             }
             else if (ID == "Coordinate")
@@ -394,23 +403,23 @@ public static class ItemUtility
             }
             else if (ID == "Console")
             {
-                CConsole cc = new CConsole(data[i]["Action"].ToString(), data[i]["Command"].ToString());
+                CConsole cc = new CConsole(dat["Action"].ToString(), dat["Command"].ToString());
                 comps.Add(cc);
             }
             else if (ID == "LuaEvent")
             {
-                CLuaEvent cl = new CLuaEvent(data[i]["Event"].ToString(), data[i]["Script"].ToString());
+                CLuaEvent cl = new CLuaEvent(dat["Event"].ToString(), dat["Script"].ToString());
                 comps.Add(cl);
             }
             else if (ID == "LiquidContainer")
             {
-                int cap = (int)data[i]["Capacity"];
+                int cap = (int)dat["Capacity"];
                 CLiquidContainer cl = new CLiquidContainer(cap);
                 comps.Add(cl);
             }
             else if (ID == "Block")
             {
-                int amt = (int)data[i]["Level"];
+                int amt = (int)dat["Level"];
                 CBlock cb = new CBlock(amt);
                 comps.Add(cb);
             }
@@ -420,7 +429,7 @@ public static class ItemUtility
             }
             else if (ID == "ModKit")
             {
-                string modID = data[i]["Mod ID"].ToString();
+                string modID = dat["Mod ID"].ToString();
                 CModKit cm = new CModKit(modID);
                 comps.Add(cm);
             }
@@ -433,23 +442,32 @@ public static class ItemUtility
             {
                 CRequirement cr = new CRequirement();
 
-                for (int j = 0; j < data[i]["Requirements"].Count; j++)
+                for (int j = 0; j < dat["Requirements"].Count; j++)
                 {
-                    cr.req.Add(new StringInt(data[i]["Requirements"][j]["Stat"].ToString(), (int)data[i]["Requirements"][j]["Amount"]));
+                    cr.req.Add(new StringInt(dat["Requirements"][j]["Stat"].ToString(), (int)dat["Requirements"][j]["Amount"]));
                 }
 
                 comps.Add(cr);
             }
-            else
+            else if (ID == "OnHitAddStatus")
             {
-                Debug.LogError("Need to assign the new component to ItemList::GetComponentsFromData() - " + ID);
+                string status = dat["Status"].ToString();
+                IntRange turnRange = new IntRange(dat["Turns"]);
+                float chance = (float)(double)dat["Chance"];
+
+                COnHitAddStatus onhit = new COnHitAddStatus(status, turnRange, chance);
+                comps.Add(onhit);
+            }
+            else if (UnityEngine.Application.isEditor)
+            {
+                Log.Error("Need to assign the new component to ItemList.GetComponentsFromData() - " + ID);
             }
         }
 
         return comps;
     }
 
-    public static int GetSlot(string slot)
+    public static int GetRenderLayer(string slot)
     {
         switch (slot)
         {
@@ -462,6 +480,7 @@ public static class ItemUtility
             case "Head": return 6;
             case "Neck": return 7;
             case "Weapon": return 8;
+            case "Front": return 9;
             default: return -1;
         }
     }

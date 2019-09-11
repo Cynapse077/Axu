@@ -54,7 +54,7 @@ namespace MapCreator
 
         void Start()
         {
-            if (!ModManager.IsInitialized)
+            if (!ModManager.PreInitialized)
             {
                 UnityEngine.SceneManagement.SceneManager.LoadScene(0);
                 return;

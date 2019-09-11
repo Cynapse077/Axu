@@ -649,7 +649,7 @@
             "ID" : "tendrils2",
             "Tier" : 2,
             "Prerequisite" : "tendrils",
-            "Description" : "Your arms have turned into long tentacles. (Tendrils II)",
+            "Description" : "Your arms have turned into long tentacles. <color=green>+DEX</color> (Tendrils II)",
             "Stats" : [
             	{ "Stat" : "Strength", "Amount" : -1 },
                 { "Stat" : "Dexterity", "Amount" : 2 }

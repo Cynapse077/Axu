@@ -107,6 +107,10 @@
             "Display" : "Mouse Movement"
         },
         {
+            "ID" : "4Way",
+            "Display" : "Four-Way Movement"
+        },
+        {
             "ID" : "Options_Permadeath",
             "Display" : "Delete Save on Death"
         },
@@ -945,6 +949,11 @@
             "ID" : "SE_Blind",
             "Display" : "Blind",
             "Tooltip" : "You cannot see. Attacking anything out of sight will be much less accurate."
+        },
+        {
+            "ID" : "SE_Frozen",
+            "Display" : "Frozen",
+            "Tooltip" : "You are frozen solid and cannot act until you warm up."
         }
     ],
     "Difficulties" : [
@@ -1672,10 +1681,6 @@
             "Display" : "The tangled web holds you tight."
         },
         {
-            "ID" : "Message_SE_Stuck",
-            "Display" : "[NAME] is stuck in a web!"
-        },
-        {
             "ID" : "Message_Die",
             "Display" : "<color=red>[NAME] dies!</color>"
         },
@@ -1895,6 +1900,34 @@
 			"ID" : "Message_SE_OffBalance",
 			"Display" : "[NAME] is off balance!"
 		},
+		{
+			"ID" : "Message_SE_Shield",
+			"Display" : "[NAME] braces for impact."
+		},
+		{
+			"ID" : "Message_SE_Frozen",
+			"Display" : "[NAME] is frozen solid!"
+		},
+		{
+			"ID" : "Message_SE_Float",
+			"Display" : "[NAME] floats into the air."
+		},
+		{
+            "ID" : "Message_SE_Stuck",
+            "Display" : "[NAME] is stuck in a web!"
+        },
+        {
+        	"ID" : "Message_SE_Sick",
+        	"Display" : "[NAME] retches."
+        },
+        {
+        	"ID" : "Message_SE_Drunk",
+        	"Display" : "[NAME] feels wobbly."
+        },
+        {
+        	"ID" : "Message_SE_Regen",
+        	"Display" : "[NAME] feels healthy."
+        },
         {
             "ID" : "Lose_Hold",
             "Display" : "[NAME] loses hold of the [ITEM]."

@@ -197,6 +197,14 @@ public class Entity : MonoBehaviour
         }
     }
 
+    public void UnSetCell()
+    {
+        if (cell != null)
+        {
+            cell.UnSetEntity(this);
+        }
+    }
+
     public bool OnScreenChange(TileMap_Data oldMap, TileMap_Data newMap)
     {
         SetCell();
@@ -205,10 +213,7 @@ public class Entity : MonoBehaviour
 
     void OnDisable()
     {
-        if (cell != null)
-        {
-            cell.UnSetEntity(this);
-        }
+        UnSetCell();
 
         if (isPlayer)
         {
@@ -221,11 +226,7 @@ public class Entity : MonoBehaviour
     {
         if (pos != null)
         {
-            if (cell != null)
-            {
-                cell.UnSetEntity(this);
-            }
-
+            UnSetCell();
             myPos = pos;
             SetCell();
         }
@@ -234,7 +235,7 @@ public class Entity : MonoBehaviour
 
         if (isPlayer)
         {
-            Camera.main.SendMessage("ForcePosition", SendMessageOptions.DontRequireReceiver);
+            Camera.main.SendMessage("ForcePosition");
         }
     }
 
@@ -401,14 +402,10 @@ public class Entity : MonoBehaviour
                 }
                 else
                 {
-                    for (int i = 0; i < targetCell.mapObjects.Count; i++)
+                    //Handle solid objects and doors.
+                    foreach (MapObjectSprite m in targetCell.mapObjects)
                     {
-                        if (targetCell.mapObjects[i].objectBase.solid)
-                        {
-                            CancelWalk();
-                            return true;
-                        }
-                        if (targetCell.mapObjects[i].isDoor_Closed)
+                        if (isPlayer && m.isDoor_Closed)
                         {
                             if (Walking)
                             {
@@ -416,42 +413,35 @@ public class Entity : MonoBehaviour
                                 return true;
                             }
 
-                            if (isPlayer || AI.npcBase.HasFlag(NPC_Flags.Can_Open_Doors))
-                            {
-                                OpenDoor(targetCell.mapObjects[i]);
-                            }
-                            else
-                            {
-                                Wait();
-                            }
-
+                            OpenDoor(m);
+                            return true;
+                        }
+                        else if (m.objectBase.solid)
+                        {
+                            CancelWalk();
                             return true;
                         }
                     }
                 }
             }
-            else
+            else if(inventory.HasSpearEquipped())
             {
                 //try other tiles if you have a spear
-                if (body.MainHand == null || body.MainHand.EquippedItem == null)
+                const int range = 2;
+                int rangeX = x * range;
+                int newY = y * range;
+
+                if (!World.tileMap.WalkableTile(posX + rangeX, posY + newY))
                 {
-                    return false;
+                    Move(x, y);
+                    return true;
                 }
 
-                if (inventory.HasSpearEquipped())
+                Cell tCell = World.tileMap.GetCellAt(posX + rangeX, posY + newY);
+
+                if (tCell != null && tCell.entity != null)
                 {
-                    if (!World.tileMap.WalkableTile(posX + (x * 2), posY + (y * 2)))
-                    {
-                        Move(x, y);
-                        return true;
-                    }
-
-                    Cell tCell = World.tileMap.GetCellAt(posX + (x * 2), posY + (y * 2));
-
-                    if (tCell != null && tCell.entity != null)
-                    {
-                        return EntityBasedDecision(tCell, x * 2, y * 2, true);
-                    }
+                    return EntityBasedDecision(tCell, rangeX, newY, true);
                 }
             }
 
@@ -566,11 +556,7 @@ public class Entity : MonoBehaviour
             return;
         }
 
-        if (cell != null)
-        {
-            cell.UnSetEntity(this);
-        }
-
+        UnSetCell();
         body.CheckGripIntegrities();
 
         if (World.turnManager.turn % 4 == 0)
@@ -692,10 +678,7 @@ public class Entity : MonoBehaviour
                         break;
                     }
 
-                    if (cell != null)
-                    {
-                        cell.UnSetEntity(this);
-                    }
+                    UnSetCell();
                     posX += x;
                     posY += y;
                     SetCell();
@@ -778,7 +761,7 @@ public class Entity : MonoBehaviour
                 }
                 else
                 {
-                    cell.UnSetEntity(this);
+                    UnSetCell();
                     posX += dir.x;
                     posY += dir.y;
                     SetCell();
@@ -815,15 +798,8 @@ public class Entity : MonoBehaviour
         direction.x = Mathf.Clamp(direction.x, -1, 1);
         direction.y = Mathf.Clamp(direction.y, -1, 1);
 
-        if (cell != null)
-        {
-            cell.UnSetEntity(this);
-        }
-
-        if (otherEntity.cell != null)
-        {
-            otherEntity.cell.UnSetEntity(otherEntity);
-        }
+        UnSetCell();
+        otherEntity.UnSetCell();
 
         Coord tempPos = new Coord(myPos.x, myPos.y);
         myPos += direction;
@@ -994,7 +970,6 @@ public class Entity : MonoBehaviour
             canCancelWalk = false;
             playerInput.localPath = null;
         }
-            
     }
 
     //Check to see if enities or items are in sight

@@ -2,9 +2,16 @@
     {
         "ID" : "Default",
         "TileIndex" : 9,
-        "Tags" : [  ],
+        "Tags" : [ ],
         "Biome" : "None",
 		"Path Cost" : 0
+    },
+    {
+        "ID" : "Default_NoBlock",
+        "TileIndex" : 14,
+        "Tags" : [ ],
+        "Biome" : "None",
+        "Path Cost" : 0
     },
     {
         "ID" : "Water",

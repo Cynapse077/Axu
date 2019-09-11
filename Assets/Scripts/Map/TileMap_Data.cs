@@ -620,6 +620,9 @@ public class TileMap_Data
             }
         }
 
+        const string roadTile = "Floor_Brick_2";
+        const string floorTile = "Floor_Brick";
+
         //If it overlaps roads, discard
         for (int i = 0; i < h.rooms.Length; i++)
         {
@@ -627,7 +630,7 @@ public class TileMap_Data
             {
                 for (int y = h.rooms[i].bottom - 1; y < h.rooms[i].top + 1; y++)
                 {
-                    if (map_data[x, y] == Tile.tiles["Floor_Brick_2"])
+                    if (map_data[x, y] == Tile.tiles[roadTile])
                         return false;
                 }
             }
@@ -642,7 +645,7 @@ public class TileMap_Data
             {
                 for (int y = h.rooms[i].bottom; y < h.rooms[i].top; y++)
                 {
-                    map_data[x, y] = Tile.tiles["Floor_Brick"];
+                    map_data[x, y] = Tile.tiles[floorTile];
                 }
             }
         }
@@ -651,7 +654,7 @@ public class TileMap_Data
         {
             for (int y = h.Bottom() - 1; y <= h.Top(); y++)
             {
-                if (World.OutOfLocalBounds(x, y) || map_data[x, y] == Tile.tiles["Floor_Brick"] || map_data[x, y] == Tile.tiles[wallType])
+                if (World.OutOfLocalBounds(x, y) || map_data[x, y] == Tile.tiles[floorTile] || map_data[x, y] == Tile.tiles[wallType])
                     continue;
 
                 bool visited = false;
@@ -665,13 +668,15 @@ public class TileMap_Data
                         if (x + ex <= 0 || x + ex >= Manager.localMapSize.x - 1 || y + ey <= 0 || y + ey >= Manager.localMapSize.y - 1)
                             continue;
 
-                        if (map_data[x + ex, y + ey] == Tile.tiles["Floor_Brick"])
+                        if (map_data[x + ex, y + ey] == Tile.tiles[floorTile])
                         {
                             map_data[x, y] = Tile.tiles[wallType];
                             Coord newWall = new Coord(x, y);
 
                             if (x == h.Left() - 1 || x == h.Right() || y == h.Bottom() - 1 || y == h.Top())
+                            {
                                 possinleDoorPos.Add(newWall);
+                            }
 
                             visited = true;
                         }
@@ -680,13 +685,13 @@ public class TileMap_Data
             }
         }
 
-        PlaceDoorInHouse(h, possinleDoorPos);
+        PlaceDoorInHouse(h, possinleDoorPos, wallType);
 
         houses.Add(h);
         return true;
     }
 
-    void PlaceDoorInHouse(House h, List<Coord> possibleDoorPos)
+    void PlaceDoorInHouse(House h, List<Coord> possibleDoorPos, string wallType)
     {
         List<Coord> finalDoors = new List<Coord>();
 
@@ -694,8 +699,8 @@ public class TileMap_Data
         {
             int dx = possibleDoorPos[i].x, dy = possibleDoorPos[i].y;
 
-            if (map_data[dx + 1, dy] == Tile.tiles["Wall_Brick"] && map_data[dx - 1, dy] == Tile.tiles["Wall_Brick"] ||
-                map_data[dx, dy + 1] == Tile.tiles["Wall_Brick"] && map_data[dx, dy - 1] == Tile.tiles["Wall_Brick"])
+            if (map_data[dx + 1, dy] == Tile.tiles[wallType] && map_data[dx - 1, dy] == Tile.tiles[wallType] ||
+                map_data[dx, dy + 1] == Tile.tiles[wallType] && map_data[dx, dy - 1] == Tile.tiles[wallType])
             {
                 finalDoors.Add(possibleDoorPos[i]);
             }
@@ -705,12 +710,42 @@ public class TileMap_Data
 
         //place door
         if (finalDoors.Count > 0)
+        {
             door = finalDoors.GetRandom(RNG);
+        }
+        //Fallback
         else if (possibleDoorPos.Count > 0)
+        {
             door = possibleDoorPos.GetRandom(RNG);
+        }
 
         if (door != null)
+        {
             map_data[door.x, door.y] = Tile.tiles["Door"];
+            RemoveTreesAroundDoor(door.x, door.y, wallType);
+        }
+    }
+
+    void RemoveTreesAroundDoor(int x, int y, string wallType)
+    {
+        for (int ex = -1; ex <= 1; ex++)
+        {
+            for (int ey = -1; ey <= 1; ey++)
+            {
+                if (World.OutOfLocalBounds(x + ex, y + ey) || ex == 0 && ey == 0)
+                {
+                    continue;
+                }
+
+                Tile_Data t = map_data[x + ex, y + ey];
+
+                if (t != Tile.tiles[wallType] && !t.HasTag("Walkable"))
+                {
+                    map_data[x + ex, y + ey] = TileMap_Generator.TileFromBiome(mapInfo.biome);
+                }
+            }
+        }
+            
     }
 
     List<JsonData> GetDataFromPath(string path, string mapName = "")
@@ -801,12 +836,21 @@ public class TileMap_Data
             for (int y = 0; y < maxY; y++)
             {
                 if (x >= Width || y >= Height)
+                {
                     continue;
+                }
 
                 int id = (int)data["IDs"][x * maxY + y];
 
                 if (id != Tile.tiles["Default"].ID)
+                {
                     map_data[x, y] = Tile.GetByID(id);
+                }
+
+                if (id == Tile.tiles["Default_NoBlock"].ID)
+                {
+                    map_data[x, y] = TileMap_Generator.TileFromBiome(mapInfo.biome, false);
+                }
             }
         }
 

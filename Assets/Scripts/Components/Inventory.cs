@@ -34,6 +34,14 @@ public class Inventory : MonoBehaviour
 
             return (entity != null) ? _maxItems + stats.Strength - 1 : _maxItems;
         }
+        set
+        {
+            //Used only for map object inventories.
+            if (entity == null)
+            {
+                _maxItems = value;
+            }
+        }
     }
 
     public Item firearm
@@ -129,6 +137,11 @@ public class Inventory : MonoBehaviour
     public bool HasItem(string id)
     {
         return items.Find(x => x.ID == id) != null;
+    }
+
+    public Item GetItem(string id)
+    {
+        return items.Find(x => x.ID == id);
     }
 
     public void ThrowItem(Coord destination, Item i, Explosive exp)
@@ -412,16 +425,18 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void UnEquipWeapon(Item i, int armSlot)
+    public bool UnEquipWeapon(Item i, int armSlot)
     {
-        List<BodyPart.Hand> hands = body.Hands;
-        BodyPart.Hand hand = hands[armSlot];
+        BodyPart.Hand hand = body.Hands[armSlot];
 
         if (!hand.EquippedItem.HasProp(ItemProperty.Cannot_Remove))
         {
             PickupItem(hand.EquippedItem);
-            hand.SetEquippedItem(ItemList.GetItemByID(hand.baseItem), entity);
+            hand.RevertToBase(entity);
+            return true;
         }
+
+        return false;
     }
 
     public void UnEquipArmor(BodyPart b, bool overrideMax = false)
@@ -501,11 +516,14 @@ public class Inventory : MonoBehaviour
             if (!i.GetCComponent<CRequirement>().CanUse(stats))
             {
                 Alert.NewAlert("CannotRead");
-                stats.AddStatusEffect("Confuse", 11);
+                stats.AddStatusEffect("Confuse", Random.Range(6, 14));
                 return;
             }
         }
 
+        i.RunCommands("OnRead", entity);
+
+        //For skill books
         if (i.HasProp(ItemProperty.Tome))
         {
             if (i.HasCComponent<CAbility>())
@@ -542,10 +560,10 @@ public class Inventory : MonoBehaviour
                     }
                 }
             }
+
+            items.Remove(i);
         }
 
-        i.RunCommands("OnRead", entity);
-        items.Remove(i);
         entity.EndTurn(0.1f, 20);
     }
 
@@ -815,8 +833,8 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        item.RunCommands("OnButcher", entity);
         CombatLog.SimpleMessage("Butcher_Corpse");
+        item.RunCommands("OnButcher", entity);
         stats.AddProficiencyXP(stats.proficiencies.Butchery, SeedManager.localRandom.Next(3, 6));
         entity.CreateBloodstain(true, 100);
         RemoveInstance(item);
@@ -836,16 +854,16 @@ public class Inventory : MonoBehaviour
 
     void Consume(Item i)
     {
-        i.OnConsume(stats);
-
         if (i.HasCComponent<CLiquidContainer>())
         {
             CombatLog.NameMessage("Message_Action_Drink", i.DisplayName());
+            i.OnConsume(stats);
         }
         else
         {
-            RemoveInstance(i);
             CombatLog.NameMessage("Message_Action_Consume", i.DisplayName());
+            i.OnConsume(stats);
+            RemoveInstance(i);
         }
 
         entity.Wait();
@@ -1109,17 +1127,14 @@ public class Inventory : MonoBehaviour
             firearm = ItemList.GetNone();
         }
 
-        if (body.bodyParts == null)
+        if (body.bodyParts != null)
         {
-            Debug.LogError("BodyParts null on " + gameObject.name);
-            return;
-        }
-
-        foreach (BodyPart b in body.bodyParts)
-        {
-            if (b.equippedItem == null)
+            foreach (BodyPart b in body.bodyParts)
             {
-                b.equippedItem = ItemList.GetNone();
+                if (b.equippedItem == null)
+                {
+                    b.equippedItem = ItemList.GetNone();
+                }
             }
         }
     }

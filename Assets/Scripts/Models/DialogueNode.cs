@@ -10,13 +10,22 @@ public class DialogueSingle : IAsset
     public DialogueSingle() { dialogues = new string[0]; }
     public DialogueSingle(JsonData dat)
     {
-        ID = dat["ID"].ToString();
-        dialogues = new string[dat["Dialogues"].Count];
+        FromJson(dat);
+    }
 
-        for (int i = 0; i < dat["Dialogues"].Count; i++)
+    public void FromJson(JsonData dat)
+    {
+        if (dat.ContainsKey("ID"))
+            ID = dat["ID"].ToString();
+        if (dat.ContainsKey("Dialogues"))
         {
-            dialogues[i] = dat["Dialogues"][i].ToString();
-        }
+            dialogues = new string[dat["Dialogues"].Count];
+
+            for (int i = 0; i < dat["Dialogues"].Count; i++)
+            {
+                dialogues[i] = dat["Dialogues"][i].ToString();
+            }
+        } 
     }
 }
 
@@ -40,15 +49,17 @@ public class DialogueNode : IAsset
 
     public DialogueNode(JsonData dat)
     {
+        options = new List<DialogueResponse>();
         FromJson(dat);
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
-        ID = dat["ID"].ToString();
-        display = dat["Display"].ToString();
-        options = new List<DialogueResponse>();
-
+        if (dat.ContainsKey("ID"))
+            ID = dat["ID"].ToString();
+        if (dat.ContainsKey("Display"))
+            display = dat["Display"].ToString();
+        
         for (int i = 0; i < dat["Responses"].Count; i++)
         {
             string disp = dat["Responses"][i]["Display"].ToString();

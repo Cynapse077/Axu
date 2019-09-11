@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using LitJson;
 
 public interface IAsset
 {
     string ID { get; set; }
     string ModID { get; set; }
+    void FromJson(JsonData dat);
 }
 
 public static class GameData
@@ -50,6 +52,17 @@ public static class GameData
         }
 
         return data[typeof(T)].Get(p);
+    }
+
+    public static IAsset Get<T>(int index)
+    {
+        if (!data.ContainsKey(typeof(T)))
+        {
+            Debug.LogError("GameData.Get<T>() - No data list of type " + typeof(T).ToString() + " exists. Returning empty list.");
+            return null;
+        }
+
+        return data[typeof(T)].Get(index);
     }
 
     public static IAsset Get<T>(string id)
@@ -120,9 +133,31 @@ public static class GameData
             list = new List<T>();
         }
 
+        public void Clear()
+        {
+            list.Clear();
+        }
+
         public T Get(string id)
         {
             return list.FirstOrDefault(x => x.ID.ToLower() == id.ToLower());
+        }
+
+        public T Get(int index)
+        {
+            if (list.Count == 0)
+            {
+                Log.Error("DataList<" + dataType + "> is empty.");
+                return default(T);
+            }
+
+            if (index >= list.Count)
+            {
+                Log.Error("DataList<" + dataType + "> out of range exception.");
+                return default(T);
+            }
+
+            return list[index];
         }
 
         public List<T> Get(Predicate<T> p)
@@ -133,7 +168,9 @@ public static class GameData
         public List<T> GetAll()
         {
             if (list.Count == 0)
+            {
                 Debug.LogError("DataList<" + dataType + "> is empty.");
+            }
 
             return list;
         }

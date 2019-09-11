@@ -11,7 +11,6 @@
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
-                "Can_Open_Doors",
 				"Merchant"
             ],
             "Position" : { "Zone" : "Xul Camp", "x" : 28, "y" : 7, "z" : 0 },
@@ -45,8 +44,7 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Xul Camp", "x" : 5, "y" : 8, "z" : 0 },
             "Stats" : {
@@ -80,8 +78,7 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Cave_Entrance", "x" : 40, "y" : 20, "z" : 0 },
             "Stats" : {
@@ -186,7 +183,6 @@
             "Flags" : [
                 "Human",
                 "Can_Speak",
-                "Can_Open_Doors",
                 "Stationary_While_Passive",
                 "Static",
                 "Boss"
@@ -219,7 +215,6 @@
             "Flags" : [
                 "Human",
                 "Can_Speak",
-                "Can_Open_Doors",
                 "Stationary_While_Passive",
                 "Static"
             ],
@@ -259,8 +254,7 @@
                 "Can_Speak",
                 "Static",
                 "Merchant",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Xul Camp", "x" : 10, "y" : 20, "z" : 0 },
             "Stats" : {
@@ -303,7 +297,6 @@
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
-                "Can_Open_Doors",
                 "Boss"
             ],
             "Position" : { "Zone" : "Ensis Exterior", "x" : 20, "y" : 27, "z" : 0 },
@@ -338,7 +331,6 @@
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
-                "Can_Open_Doors",
                 "Arena_Master"
             ],
             "Position" : { "Zone" : "Arena", "x" : 25, "y" : 3, "z" : 0 },
@@ -373,7 +365,6 @@
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
-                "Can_Open_Doors",
                 "OnDisable_Regen",
                 "Boss"
             ],
@@ -409,8 +400,7 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 22, "y" : 16, "z" : -5 },
             "Stats" : {
@@ -480,8 +470,7 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 10, "y" : 10, "z" : -5 },
             "Quest" : "homonculus",
@@ -516,8 +505,7 @@
                 "Can_Speak",
                 "Static",
                 "Merchant",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Abandoned Building", "x" : 20, "y" : 3, "z" : 0 },
             "Quest" : "ensis0",
@@ -557,8 +545,7 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 20, "y" : 24, "z" : 0 },
             "Quest" : "ensis_sub0",
@@ -593,8 +580,7 @@
                 "Book_Merchant",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 18, "y" : 24, "z" : 0 },
             "Stats" : {
@@ -632,7 +618,6 @@
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
-                "Can_Open_Doors",
                 "OnDisable_Regen",
                 "Boss"
             ],
@@ -671,8 +656,7 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Cathedral", "x" : 37, "y" : 14, "z" : 0 },
             "Stats" : {
@@ -704,8 +688,7 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Kin Hideout", "x" : 22, "y" : 14, "z" : 0 },
             "Quest" : "kin0",
@@ -741,7 +724,6 @@
 			"Dialogue" : "oromir_init",
             "Flags" : [
                 "Can_Speak",
-                "Can_Open_Doors",
                 "Static",
                 "RPois",
                 "Boss",
@@ -785,7 +767,6 @@
             "Flags" : [
 				"Human",
 				"Static",
-                "Can_Open_Doors",
                 "Boss",
 				"Stationary_While_Passive"
             ],
@@ -923,7 +904,6 @@
                 "Named_NPC",
                 "No_Blood",
                 "Can_Speak",
-                "Can_Open_Doors",
                 "RPois"
             ],
             "Stats" : {
@@ -955,7 +935,6 @@
                 "Named_NPC",
                 "Can_Speak",
                 "Radiation",
-                "Can_Open_Doors",
                 "RPois"
             ],
             "Stats" : {
@@ -1017,8 +996,7 @@
             "Flags" : [
                 "Named_NPC",
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 36,
@@ -1050,8 +1028,7 @@
             "Sprite" : "npc-villager_m0.png|npc-villager_m1.png|npc-villager_f0.png|npc-villager_f1.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 36,
@@ -1086,8 +1063,7 @@
                 "Named_NPC",
                 "Human",
                 "Can_Speak",
-                "Mercenary",
-                "Can_Open_Doors"
+                "Mercenary"
             ],
             "Stats" : {
                 "Health" : 35,
@@ -1115,8 +1091,7 @@
             "Body Structure" : "Hauler",
             "Sprite" : "npc-hauler.png",
             "Flags" : [
-				"Solid_Limbs",
-                "Can_Open_Doors"
+				"Solid_Limbs"
             ],
             "Stats" : {
                 "Health" : 55,
@@ -1149,8 +1124,7 @@
             "Sprite" : "npc-guard.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 80,
@@ -1184,8 +1158,7 @@
             "Flags" : [
                 "Human",
                 "Named_NPC",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 40,
@@ -1219,8 +1192,7 @@
                 "Human",
                 "Merchant",
                 "Can_Speak",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Stats" : {
                 "Health" : 48,
@@ -1257,8 +1229,7 @@
                 "Human",
                 "Doctor",
                 "Can_Speak",
-                "Stationary_While_Passive",
-                "Can_Open_Doors"
+                "Stationary_While_Passive"
             ],
             "Stats" : {
                 "Health" : 65,
@@ -1301,8 +1272,7 @@
             "Sprite" : "npc-villager_m0.png|npc-villager_m1.png|npc-villager_f0.png|npc-villager_f1.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 45,
@@ -1331,8 +1301,7 @@
             "Sprite" : "npc-scholar.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 35,
@@ -1361,8 +1330,7 @@
             "Sprite" : "npc-cultist.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 35,
@@ -1394,8 +1362,7 @@
             "Sprite" : "npc-cultist.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 50,
@@ -1431,8 +1398,7 @@
             "Sprite" : "npc-kin_blademaster.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 65,
@@ -1470,8 +1436,7 @@
             "Sprite" : "npc-bandit0.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 32,
@@ -1506,8 +1471,7 @@
             "Sprite" : "npc-bandit1.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 17,
@@ -1543,8 +1507,7 @@
             "Sprite" : "npc-bandit2.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 39,
@@ -1582,8 +1545,7 @@
             "Sprite" : "npc-bandit3.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 70,
@@ -1622,8 +1584,7 @@
             "Sprite" : "npc-bandit4.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 60,
@@ -1660,8 +1621,7 @@
             "Sprite" : "npc-bandit5.png",
             "Flags" : [
                 "Human",
-                "Can_Speak",
-                "Can_Open_Doors"
+                "Can_Speak"
             ],
             "Stats" : {
                 "Health" : 150,
@@ -1694,8 +1654,7 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-frostborne.png",
             "Flags" : [
-                "Human",
-                "Can_Open_Doors"
+                "Human"
             ],
             "Stats" : {
                 "Health" : 70,
@@ -1726,8 +1685,7 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-frostborne.png",
             "Flags" : [
-                "Human",
-                "Can_Open_Doors"
+                "Human"
             ],
             "Stats" : {
                 "Health" : 80,
@@ -2664,7 +2622,6 @@
             "Flags" : [
                 "No_Blood",
                 "Radiation",
-                "Can_Open_Doors",
                 "RPois",
                 "RBleed"
             ],
@@ -2700,7 +2657,6 @@
             "Sprite" : "npc-testsubject.png",
             "Flags" : [
                 "Radiation",
-                "Can_Open_Doors",
                 "RPois"
             ],
             "Stats" : {
@@ -2734,7 +2690,6 @@
             "Body Structure" : "Homonculus",
             "Sprite" : "npc-testsubject.png",
             "Flags" : [
-                "Can_Open_Doors",
 				"Can_Speak"
             ],
             "Stats" : {
@@ -2827,9 +2782,7 @@
             "Faction" : "puggles",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-puggle0.png",
-            "Flags" : [
-                "Can_Open_Doors"
-            ],
+            "Flags" : [ ],
             "Stats" : {
                 "Health" : 14,
                 "Stamina" : 6,
@@ -2859,9 +2812,7 @@
             "Faction" : "puggles",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-puggle0.png",
-            "Flags" : [
-                "Can_Open_Doors"
-            ],
+            "Flags" : [ ],
             "Stats" : {
                 "Health" : 20,
                 "Stamina" : 6,
@@ -2891,9 +2842,7 @@
             "Faction" : "puggles",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-puggle1.png",
-            "Flags" : [
-                "Can_Open_Doors"
-            ],
+            "Flags" : [ ],
             "Stats" : {
                 "Health" : 31,
                 "Stamina" : 10,
@@ -2924,8 +2873,7 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-puggle0.png",
             "Flags" : [
-				"Can_Speak",
-                "Can_Open_Doors"
+				"Can_Speak"
             ],
             "Stats" : {
                 "Health" : 20,
@@ -2958,8 +2906,7 @@
             "Sprite" : "npc-puggle0.png",
 			"Dialogue" : "pugelder_init",
             "Flags" : [
-				"Can_Speak",
-                "Can_Open_Doors"
+				"Can_Speak"
             ],
             "Stats" : {
                 "Health" : 60,
@@ -2992,7 +2939,6 @@
             "Sprite" : "npc-slimemancer.png",
             "Flags" : [
                 "Summon_Adds",
-                "Can_Open_Doors",
                 "RPois"
             ],
             "Stats" : {
@@ -3262,7 +3208,6 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-ibot.png",
             "Flags" : [
-                "Can_Open_Doors",
                 "No_Blood",
                 "RPois",
                 "RBleed",
@@ -3449,7 +3394,6 @@
             "Sprite" : "npc-demigod.png",
             "Flags" : [
                 "Radiation",
-                "Can_Open_Doors",
                 "No_Body",
                 "Boss"
             ],
@@ -3486,7 +3430,6 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-phlogistonist.png",
             "Flags" : [
-                "Can_Open_Doors",
                 "No_Body",
                 "Boss"
             ],
@@ -3524,7 +3467,6 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-nightmare.png",
             "Flags" : [
-                "Can_Open_Doors",
                 "Skills_Leprosy",
                 "Boss"
             ],
@@ -3556,7 +3498,6 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-terror.png",
             "Flags" : [
-                "Can_Open_Doors",
                 "Boss"
             ],
             "Stats" : {
@@ -3587,7 +3528,6 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-corruptor.png",
             "Flags" : [
-                "Can_Open_Doors",
                 "Boss"
             ],
             "Stats" : {
@@ -3692,9 +3632,7 @@
             "Faction" : "deepones",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-deephunter.png",
-            "Flags" : [
-                "Can_Open_Doors"
-            ],
+            "Flags" : [ ],
             "Stats" : {
                 "Health" : 25,
                 "Stamina" : 23,
@@ -3731,8 +3669,7 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-deephunter.png",
             "Flags" : [
-                "Radiation",
-                "Can_Open_Doors"
+                "Radiation"
             ],
             "Stats" : {
                 "Health" : 30,
@@ -3770,7 +3707,6 @@
             "Sprite" : "npc-virashsaint.png",
             "Flags" : [
                 "Radiation",
-                "Can_Open_Doors",
                 "Boss"
             ],
             "Stats" : {
@@ -3809,7 +3745,6 @@
             "Flags" : [
                 "Radiation",
                 "Boss",
-                "Can_Open_Doors",
                 "OnDisable_Regen"
             ],
             "Stats" : {
@@ -3950,7 +3885,6 @@
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-rubblegolem.png",
             "Flags" : [
-                "Can_Open_Doors",
                 "No_Blood",
                 "RPois",
                 "RBleed",
@@ -3985,9 +3919,7 @@
             "Faction" : "magna",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-oromir_clone.png",
-            "Flags" : [
-                "Can_Open_Doors"
-            ],
+            "Flags" : [ ],
             "Stats" : {
                 "Health" : 100,
                 "Stamina" : 30,
@@ -4014,9 +3946,7 @@
             "Faction" : "eversight",
             "Body Structure" : "Humanoid",
             "Sprite" : "npc-assassin0.png",
-            "Flags" : [
-                "Can_Open_Doors"
-            ],
+            "Flags" : [ ],
             "Stats" : {
                 "Health" : 100,
                 "Stamina" : 30,

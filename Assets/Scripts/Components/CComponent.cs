@@ -36,7 +36,8 @@ public class CComponent
             case "ModKit": return JsonMapper.ToObject<CModKit>(reader);
             case "ItemLevel": return JsonMapper.ToObject<CItemLevel>(reader);
             case "Requirement": return JsonMapper.ToObject<CRequirement>(reader);
-            case "CNDAHolder": return JsonMapper.ToObject<CDNAHolder>(reader);
+            case "DNAHolder": return JsonMapper.ToObject<CDNAHolder>(reader);
+            case "OnHitAddStatus": return JsonMapper.ToObject<COnHitAddStatus>(reader);
 
             default: return null;
         }
@@ -61,7 +62,8 @@ public class CComponent
             case "ModKit": return typeof(CModKit);
             case "ItemLevel": return typeof(CItemLevel);
             case "Requirement": return typeof(CRequirement);
-            case "CDNAHolder": return typeof(CDNAHolder);
+            case "DNAHolder": return typeof(CDNAHolder);
+            case "OnHitAddStatus": return typeof(COnHitAddStatus);
 
             default: return null;
         }
@@ -471,7 +473,7 @@ public class CLiquidContainer : CComponent
 
     public void Drink(Entity ent)
     {
-        if (liquid != null)
+        if (liquid != null && !isEmpty())
         {
             liquid.Drink(ent.stats);
             liquid.units--;
@@ -713,13 +715,13 @@ public class CDNAHolder : CComponent
 
     public CDNAHolder()
     {
-        ID = "CDNAHolder";
+        ID = "DNAHolder";
         npc = null;
     }
 
     public CDNAHolder(NPC n)
     {
-        ID = "CDNAHolder";
+        ID = "DNAHolder";
         npc = n.ID;
     }
 
@@ -747,5 +749,39 @@ public class CDNAHolder : CComponent
 
         NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npc) as NPC_Blueprint;
         return "DNA: " + bp.name;
+    }
+}
+
+public class COnHitAddStatus : CComponent
+{
+    readonly string statusID;
+    readonly IntRange turns;
+    readonly float chance;
+
+    public COnHitAddStatus()
+    {
+        ID = "OnHitAddStatus";
+        statusID = null;
+        turns = new IntRange(0, 0);
+        chance = 0;
+    }
+
+    public COnHitAddStatus(string _statusID, IntRange _turns, float _chance)
+    {
+        ID = "OnHitAddStatus";
+        statusID = _statusID;
+        turns = _turns;
+        chance = _chance;
+    }
+
+    public void AddToEntity(Entity target)
+    {
+        if (!statusID.NullOrEmpty() && target != null)
+        {
+            if (SeedManager.combatRandom.Next(100) < chance)
+            {
+                target.stats.AddStatusEffect(statusID, turns.GetRandom());
+            }
+        }
     }
 }

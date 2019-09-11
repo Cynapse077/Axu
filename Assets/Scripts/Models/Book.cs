@@ -13,10 +13,10 @@ public class Book : IAsset
         FromJson(dat);
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
-        dat.TryGetString("Title", out title);
-        dat.TryGetString("Text", out contents);
+        dat.TryGetString("Title", out title, title);
+        dat.TryGetString("Text", out contents, contents);
         ID = title;
     }
 

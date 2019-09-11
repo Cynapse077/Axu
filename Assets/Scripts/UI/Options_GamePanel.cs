@@ -10,6 +10,7 @@ public class Options_GamePanel : MonoBehaviour
     public Toggle fullToggle;
     public Toggle muteToggle;
     public Toggle mouseToggle;
+    public Toggle fourwayToggle;
     public Toggle simpleDmgToggle;
     public Toggle consoleToggle;
     public Toggle weatherToggle;
@@ -22,10 +23,18 @@ public class Options_GamePanel : MonoBehaviour
 
     public void Initialize()
     {
+        resoDropdown.ClearOptions();
+        
+        foreach (Coord c in GameSettings.SupportedResolutions)
+        {
+            resoDropdown.options.Add(new Dropdown.OptionData(string.Format("{0} x {1}", c.x, c.y)));
+        }
+
         ResolutionDropDownSelect();
 
         fullToggle.isOn = GameSettings.Fullscreen;
         muteToggle.isOn = GameSettings.MuteAll;
+        fourwayToggle.isOn = GameSettings.FourWayMovement;
         mouseToggle.isOn = GameSettings.UseMouse;
         simpleDmgToggle.isOn = GameSettings.SimpleDamage;
         consoleToggle.isOn = GameSettings.Allow_Console;
@@ -49,40 +58,14 @@ public class Options_GamePanel : MonoBehaviour
             return;
         }
 
-        if (GameSettings.ScreenSize.x <= 1280)
-            resoDropdown.value = 0;
-        else if (GameSettings.ScreenSize.x <= 1366)
-            resoDropdown.value = 1;
-        else if (GameSettings.ScreenSize.x <= 1600)
-            resoDropdown.value = 2;
-        else if (GameSettings.ScreenSize.x <= 1920)
-            resoDropdown.value = 3;
-        else
-            resoDropdown.value = 3;
+        int res = GameSettings.SupportedResolutions.IndexOf(GameSettings.ScreenSize);
+
+        resoDropdown.value = res >= 0 ? res : 0;
     }
 
     public void ResolutionChange()
     {
-        if (resoDropdown.value == 0)
-        {
-            GameSettings.ScreenSize.x = 1280;
-            GameSettings.ScreenSize.y = 720;
-        }
-        else if (resoDropdown.value == 1)
-        {
-            GameSettings.ScreenSize.x = 1366;
-            GameSettings.ScreenSize.y = 786;
-        }
-        else if (resoDropdown.value == 2)
-        {
-            GameSettings.ScreenSize.x = 1600;
-            GameSettings.ScreenSize.y = 900;
-        }
-        else if (resoDropdown.value == 3)
-        {
-            GameSettings.ScreenSize.x = 1920;
-            GameSettings.ScreenSize.y = 1080;
-        }
+        GameSettings.ScreenSize = GameSettings.SupportedResolutions[resoDropdown.value];
 
         Screen.SetResolution(GameSettings.ScreenSize.x, GameSettings.ScreenSize.y, GameSettings.Fullscreen);
     }
@@ -102,6 +85,10 @@ public class Options_GamePanel : MonoBehaviour
     public void SetMouse()
     {
         GameSettings.UseMouse = mouseToggle.isOn;
+    }
+    public void SetFourWay()
+    {
+        GameSettings.FourWayMovement = fourwayToggle.isOn;
     }
     public void SetSimpleDmg()
     {

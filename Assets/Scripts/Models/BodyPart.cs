@@ -111,7 +111,7 @@ public class BodyPart : IWeighted
 
         if (ws.Count > 0)
         {
-            Wound w = new Wound(ws.GetRandom(SeedManager.combatRandom));
+            Wound w = ws.GetRandom();
             w.Inflict(this);
         }
     }
@@ -388,7 +388,10 @@ public class BodyPart : IWeighted
 
         if (other.hand != null)
         {
-            hand = new Hand(other.hand);
+            hand = new Hand(other.hand)
+            {
+                arm = this
+            };
         }
 
     }
@@ -404,49 +407,70 @@ public class BodyPart : IWeighted
         {
             get { return (arm != null && arm.isAttached); }
         }
+        public bool IsMainHand
+        {
+            get
+            {
+                if (arm == null || arm.myBody == null)
+                {
+                    return false;
+                }
+
+                return this == arm.myBody.MainHand;
+            }
+        }
 
         public Hand(BodyPart _arm, Item _item, string _baseItem)
         {
             arm = _arm;
-            EquippedItem = _item;
+            EquippedItem = new Item(_item);
             baseItem = _baseItem;
         }
 
         public Hand(Hand other)
         {
             arm = other.arm;
-            EquippedItem = other.EquippedItem;
+            EquippedItem = new Item(other.EquippedItem);
             baseItem = other.baseItem;
         }
 
         public void SetEquippedItem(Item i, Entity entity)
         {
-            if (EquippedItem != null && entity != null)
+            if (i == null)
             {
-                EquippedItem.OnUnequip(entity, this == entity.body.MainHand);
+                i = ItemList.GetNone();
+            }
+
+            if (arm.myBody == null)
+            {
+                arm.myBody = entity.body;
+            }
+
+            if (EquippedItem != null)
+            {
+                EquippedItem.OnUnequip(entity, IsMainHand);
             }
 
             EquippedItem = i;
-
-            if (entity != null && EquippedItem != null)
-            {
-                EquippedItem.OnEquip(entity.stats, this == entity.body.MainHand);
-            }
+            EquippedItem.OnEquip(entity.stats, IsMainHand);
         }
 
         public void RevertToBase(Entity entity)
         {
-            if (EquippedItem != null && entity != null)
+            if (arm.myBody == null)
             {
-                EquippedItem.OnUnequip(entity, this == entity.body.MainHand);
+                arm.myBody = entity.body;
             }
 
-            EquippedItem = ItemList.GetItemByID(baseItem);
+            Item i = ItemList.GetItemByID(baseItem);
 
-            if (entity != null && EquippedItem != null)
+            if (EquippedItem != null)
             {
-                EquippedItem.OnEquip(entity.stats, this == entity.body.MainHand);
+                EquippedItem.OnUnequip(entity, IsMainHand);
             }
+
+            EquippedItem = i;
+            EquippedItem.OnEquip(entity.stats, IsMainHand);
         }
     }
 

@@ -44,14 +44,14 @@
 			"Events" : [
                 {
                     "Event" : "OnStart",
-                    "Spawn NPC" : { "NPC" : "deephunter_start", "Coordinate" : "Abandoned Building", "Elevation" : -4, "Give Item" : "artifact1" }
+                    "Spawn NPC" : { "NPC" : "deephunter_start", "Coordinate" : "Abandoned Building", "Elevation" : -4, "Give Items" : [ "artifact1", "keycard_home" ] }
                 }
             ],
             "Steps" : [
 				{ "Goal"  : "Kill Spawned", "Description" : "Kill the Deep Hunter and take the artifact." },
                 { "Goal" : "Fetch", "Item" : [ "artifact1" ], "Give To" : "akklune", "Description" : "Return the artifact to Akk-Lune." }
             ],
-            "End Dialogue" : "That took longer than expected! Did you encounter difficulties? A <color=red>Deep Hunter</color>? Here? My appologies for putting you in danger.\nThe item you retrieved for me is a special keycard, used to activate the terminals in the Power Plant. It was stolen from us not long ago, and has made communications a pain, as you can imagine. I need you to <color=cyan>turn the power on</color>. There are five sub-terranean levels, each with a <color=yellow>terminal</color>. Turn all of them on to give back power. I would go myself, but I have matters to attend to. You'll hear from us when you've completed this task.",
+            "End Dialogue" : "That took longer than expected! Did you encounter difficulties? A <color=red>Deep Hunter</color>? Here? My appologies for putting you in danger.\nThe item you retrieved for me is a remote activator, used to reboot the terminals in the Power Plant. It was stolen from us not long ago, and has made communications a pain, as you can imagine. I need you to <color=cyan>turn the power on</color>. There are five sub-terranean levels, each with a <color=yellow>terminal</color>. Turn all of them on to give back power. I would go myself, but I have matters to attend to. You'll hear from us when you've completed this task.",
 
             "Chained Quest" : "ensis3"
         },
@@ -117,7 +117,7 @@
         {
             "Name" : "Speak with Lomis",
             "ID" : "ensis6",
-            "Description" : "Arthomas told you to <color=yellow>meet</color> Lomis, head of the Ensis.",
+            "Description" : "Arthomas told you to meet <color=yellow>Lomis</color>, head of the Ensis.",
             "Rewards" : {
                 "XP" : 5
             },
@@ -360,7 +360,7 @@
 			"Steps" : [
 				{ "Goal" : "Go", "To" : [ "Cathedral", -8 ] }
 			],
-			"End Dialogue" : "[Isazna, the Kindred Prophet stands by the stairwell.]\nWell, look who it is, the Ensis' pet dog. I'm afraid you're too late. Xzol is already gone. I shall put you down. Goodbye, wanderer. I hope there's some peace for you in the afterlife.",
+			"End Dialogue" : "<i>[Isazna, the Kindred Prophet stands by the stairwell.]</i>\nWell, look who it is, the Ensis' pet dog. I'm afraid you're too late. Xzol is already gone. I shall put you down. Goodbye, wanderer. I hope there's some peace for you in the afterlife.",
 
 			"Chained Quest" : "ensis21"
 		},
@@ -387,7 +387,7 @@
 			"Steps" : [
 				{ "Goal" : "Kill NPC", "NPC" : [ "isazna", 1 ] }
 			],
-			"End Dialogue" : "[With her dying breath, Isazna chuckles.]\nYou really think killing me will do any good for your cause? Xzol has probably decimated The Ensis by now. You have lost.",
+			"End Dialogue" : "<i>[With her dying breath, Isazna chuckles.]</i>\nYou really think killing me will do any good for your cause? Xzol has probably decimated The Ensis by now. You have lost.",
 
 			"Chained Quest" : "ensis22"
 		},

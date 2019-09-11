@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
+using System;
 
 public class AbilityPanel : UIPanel
 {
@@ -25,18 +25,24 @@ public class AbilityPanel : UIPanel
         abilityBase.DespawnChildren();
         SelectedMax = 0;
 
+        HotkeyManager hm = GameObject.FindObjectOfType<HotkeyManager>();
+        hm.Initialize();
+
         for (int i = 0; i < skills.abilities.Count; i++)
         {
+            int index = i;
             GameObject g = SimplePool.Spawn(abilityButton, abilityBase);
-            g.GetComponent<AbilityButton>().Setup(skills.abilities[i], i);
+            g.GetComponent<AbilityButton>().Setup(skills.abilities[i]);
             g.GetComponent<Button>().onClick.AddListener(() => OnSelect(g.transform.GetSiblingIndex()));
             SelectedMax++;
+
+            Action doAction = () => { ObjectManager.playerEntity.skills.abilities[index].Cast(ObjectManager.playerEntity); };
+            hm.AssignAction(ObjectManager.playerEntity.skills.abilities[i], i, doAction);
         }
 
         if (SelectedMax > 0)
         {
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(abilityBase.GetChild(SelectedNum).gameObject);
+            abilityBase.GetChild(SelectedNum).Highlight();
         }
             
         UpdateTooltip();
@@ -65,19 +71,24 @@ public class AbilityPanel : UIPanel
                 {
                     int newIndex = SelectedNum + 1;
                     skills.abilities.Move(SelectedNum, newIndex);
-                    UpdateAbilities();
                     SelectedNum = newIndex;
+                    UpdateAbilities();
                 }
                 else if (GameSettings.Keybindings.GetKey("GoDownStairs") && SelectedNum > 0)
                 {
                     int newIndex = SelectedNum - 1;
                     skills.abilities.Move(SelectedNum, newIndex);
-                    UpdateAbilities();
                     SelectedNum = newIndex;
+                    UpdateAbilities();
                 }
             }
 
             base.Update();
+
+            for (int i = 0; i < abilityBase.childCount; i++)
+            {
+                abilityBase.GetChild(i).GetComponent<AbilityButton>().selected = (i == SelectedNum);
+            }
         }
 
         if (GameSettings.Keybindings.GetKey("Abilities"))
@@ -86,14 +97,15 @@ public class AbilityPanel : UIPanel
         }
     }
 
-    public override void ChangeSelectedNum(int newIndex)
+    public override void ChangeSelectedNum(int newIndex, bool scroll)
     {
-        base.ChangeSelectedNum(newIndex);
+        base.ChangeSelectedNum(newIndex, scroll);
 
         if (SelectedMax > 0)
         {
-            EventSystem.current.SetSelectedGameObject(abilityBase.GetChild(SelectedNum).gameObject);
-            scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
+            abilityBase.GetChild(SelectedNum).Highlight();
+            if (scroll)
+                scrollBar.value = 1f - (SelectedNum / (float)SelectedMax);
         }
 
         UpdateTooltip();

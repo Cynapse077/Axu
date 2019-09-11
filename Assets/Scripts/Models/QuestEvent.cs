@@ -84,18 +84,20 @@ public class ElevationChangeEvent : QuestEvent
 public class SpawnNPCEvent : QuestEvent
 {
     readonly string npcID;
+    readonly List<string> giveItems;
     readonly string giveItem;
     readonly string zone;
     readonly int elevation;
     readonly Coord localPos;
 
-    public SpawnNPCEvent(string nID, string z, Coord lPos, int ele, string gItem = "")
+    public SpawnNPCEvent(string nID, string z, Coord lPos, int ele, string gItem, List<string> gItems)
     {
         npcID = nID;
         zone = z;
         localPos = lPos;
         elevation = ele;
         giveItem = gItem;
+        giveItems = gItems;
     }
 
     public override void RunEvent()
@@ -103,9 +105,17 @@ public class SpawnNPCEvent : QuestEvent
         Coord wPos = World.worldMap.worldMapData.GetLandmark(zone);
         NPC n = new NPC(EntityList.GetBlueprintByID(npcID), wPos, localPos, elevation);
 
-        if (giveItem != "")
+        if (!giveItem.NullOrEmpty())
         {
             n.inventory.Add(ItemList.GetItemByID(giveItem));
+        }
+
+        if (giveItems != null)
+        {
+            foreach (string s in giveItems)
+            {
+                n.inventory.Add(ItemList.GetItemByID(s));
+            }
         }
 
         myQuest.SpawnNPC(n);

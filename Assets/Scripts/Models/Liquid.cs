@@ -51,7 +51,7 @@ public class Liquid : IWeighted, IAsset
         }
     }
 
-    void FromJson(JsonData d)
+    public void FromJson(JsonData d)
     {
         ID = d["ID"].ToString();
         Name = d["Name"].ToString();

@@ -7,6 +7,9 @@ using System.Collections.Generic;
 public class MapObjectSprite : MonoBehaviour
 {
     const int MAX_PULSES = 300;
+    const int AutotileSpriteSize = 16;
+    static readonly Rect SpriteRect = new Rect(0, 0, AutotileSpriteSize, AutotileSpriteSize);
+    static readonly Vector2 Pivot = new Vector2(0.5f, 0.5f);
 
     public MapObject objectBase;
     public Transform childObject;
@@ -119,13 +122,13 @@ public class MapObjectSprite : MonoBehaviour
         if (bp.autotile) 
         {
             Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID).texture;
-            spriteRenderer.sprite = Sprite.Create(t, new Rect(0, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+            spriteRenderer.sprite = Sprite.Create(t, new Rect(SpriteRect), Pivot, AutotileSpriteSize);
             Autotile(true);
         }
 
         if (bp.container != null)
         {
-            SetInventory(bp.container.capacity);
+            SetInventory(100);
         }
 
         if (objectBase.HasEvent("OnTurn"))
@@ -441,7 +444,7 @@ public class MapObjectSprite : MonoBehaviour
     void SetInventory(int capacity)
     {
         Inventory inv2 = gameObject.AddComponent<Inventory>();
-        inv2.SetStorage(capacity);
+        inv2.maxItems = 300;
 
         if (objectBase.inv != null)
         {

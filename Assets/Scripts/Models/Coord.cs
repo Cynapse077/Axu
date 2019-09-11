@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
+using System;
+using LitJson;
+using MoonSharp.Interpreter;
 
-[System.Serializable]
-[MoonSharp.Interpreter.MoonSharpUserData]
+[Serializable]
+[MoonSharpUserData]
 public class Coord
 {
     [SerializeField] private int _x;
@@ -21,26 +24,77 @@ public class Coord
 
     public Coord()
     {
-        _x = 0;
-        _y = 0;
+        x = 0;
+        y = 0;
+    }
+
+    public Coord(int xy)
+    {
+        x = xy;
+        y = xy;
     }
 
     public Coord(int mx, int my)
     {
-        _x = mx;
-        _y = my;
+        x = mx;
+        y = my;
     }
 
     public Coord(Coord other)
     {
-        _x = other.x;
-        _y = other.y;
+        x = other.x;
+        y = other.y;
+    }
+
+    public Coord(string value)
+    {
+        x = 0;
+        y = 0;
+        FromString(value);
+    }
+
+    public Coord(JsonData dat)
+    {
+        x = 0;
+        y = 0;
+        FromString(dat.ToString());
+    }
+
+    public void FromString(string value)
+    {
+
+        if (value.NullOrEmpty())
+        {
+            return;
+        }
+
+        if (value[0] == '(')
+        {
+            value.TrimStart('(');
+        }
+
+        if (value[value.Length - 1] == ')')
+        {
+            value.TrimEnd(')');
+        }
+
+        string[] values = value.Split(',');
+
+        //Trim spaces
+        for (int i = 0; i < values.Length; i++)
+        {
+            values[i] = values[i].Trim(' ');
+        }
+
+        if (values.Length < 2 || !int.TryParse(values[0], out _x) || !int.TryParse(values[1], out _y))
+        {
+            Log.Error("Could not parse Coord from \"" + value + "\"");
+        }
     }
 
     public int[] ToArray()
     {
-        int[] arr = new int[] { x, y };
-        return arr;
+        return new int[] { x, y };
     }
 
     public static float Distance(Coord c0, Coord c1)
@@ -112,97 +166,3 @@ public class Coord
         return new Coord(c0.x - c1.x, c0.y - c1.y);
     }
 }
-
-[System.Serializable]
-[MoonSharp.Interpreter.MoonSharpUserData]
-public class Coord3
-{
-    [SerializeField] private int _x;
-    [SerializeField] private int _y;
-    [SerializeField] private int _z;
-
-    public int x
-    {
-        get { return _x; }
-        set { _x = value; }
-    }
-
-    public int y
-    {
-        get { return _y; }
-        set { _y = value; }
-    }
-
-    public int z
-    {
-        get { return _z; }
-        set { z = value; }
-    }
-
-    public Coord3()
-    {
-        _x = 0;
-        _y = 0;
-        _z = 0;
-    }
-
-    public Coord3(int mx, int my, int mz)
-    {
-        _x = mx;
-        _y = my;
-        _z = mz;
-    }
-
-    public Coord3(Coord3 other)
-    {
-        _x = other.x;
-        _y = other.y;
-        _z = other.z;
-    }
-
-    public bool Equals(Coord3 other)
-    {
-        if (ReferenceEquals(null, other))
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-
-        return other.x == x && other.y == y && other.z == z;
-    }
-
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(null, obj))
-            return false;
-        if (ReferenceEquals(this, obj))
-            return true;
-
-        return obj.GetType() == typeof(Coord3) && Equals((Coord3)obj);
-    }
-
-    public override string ToString()
-    {
-        return string.Format("({0},{1},{2})", x, y, z);
-    }
-    public override int GetHashCode()
-    {
-        unchecked { return (x * 397) ^ y - z; }
-    }
-    public static bool operator ==(Coord3 c0, Coord3 c1)
-    {
-        return Equals(c0, c1);
-    }
-    public static bool operator !=(Coord3 c0, Coord3 c1)
-    {
-        return !Equals(c0, c1);
-    }
-    public static Coord3 operator +(Coord3 c0, Coord3 c1)
-    {
-        return new Coord3(c0.x + c1.x, c0.y + c1.y, c0.z + c1.z);
-    }
-    public static Coord3 operator -(Coord3 c0, Coord3 c1)
-    {
-        return new Coord3(c0.x - c1.x, c0.y - c1.y, c0.z - c1.z);
-    }
-}
-

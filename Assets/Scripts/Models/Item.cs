@@ -62,7 +62,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         FromJson(dat);
 
         if (modifier == null)
+        {
             modifier = new ItemModifier();
+        }
     }
 
     void Defaults()
@@ -90,7 +92,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         return !ContainsDamageType(DamageTypes.Slash) || !ContainsDamageType(DamageTypes.Blunt) || !ContainsDamageType(DamageTypes.Pierce);
     }
 
-    public void UpdateUserSprite(Stats stats, bool wield)
+    public void UpdateUserSprite(Stats stats, bool wieldMainHand, bool remove)
     {
         if (stats.entity.isPlayer && !string.IsNullOrEmpty(renderer.onPlayer))
         {
@@ -98,26 +100,27 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
             if (HasProp(ItemProperty.Weapon))
             {
-                if (wield || itemType == Proficiencies.Shield)
+                if (wieldMainHand || itemType == Proficiencies.Shield)
                 {
-                    dsc.SetSprite(renderer, false);
+                    dsc.SetSprite(renderer, remove);
                 }
             }
             else
             {
-                dsc.SetSprite(renderer, false);
+                dsc.SetSprite(renderer, remove);
             }
         }
     }
 
     #region On___ Functions
-    public void OnEquip(Stats stats, bool inMainHand, bool skipCommands = false)
+    public void OnEquip(Stats stats, bool wieldMainHand, bool skipCommands = false)
     {
         if (!OnUseReject())
         {
             ChangeStats(stats, false);
-            UpdateUserSprite(stats, inMainHand);
         }
+
+        UpdateUserSprite(stats, wieldMainHand, false);
 
         if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
         {
@@ -129,7 +132,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             }
         }
 
-        RunCommands(inMainHand ? "OnWield" : "OnEquip", stats.entity);
+        RunCommands(wieldMainHand ? "OnWield" : "OnEquip", stats.entity);
     }
 
     public void OnUnequip(Entity entity, bool inMainHand, bool skipCommands = false)
@@ -137,24 +140,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (!OnUseReject())
         {
             ChangeStats(entity.stats, true);
-
-            if (entity.isPlayer && !string.IsNullOrEmpty(renderer.onPlayer))
-            {
-                DynamicSpriteController dsc = entity.GetComponent<DynamicSpriteController>();
-
-                if (HasProp(ItemProperty.Weapon))
-                {
-                    if (inMainHand || itemType == Proficiencies.Shield)
-                    {
-                        dsc.SetSprite(renderer, true);
-                    }
-                }
-                else
-                {
-                    dsc.SetSprite(renderer, true);
-                }
-            }
         }
+
+        UpdateUserSprite(entity.stats, inMainHand, true);
 
         if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
         {
@@ -174,6 +162,11 @@ public class Item : ComponentHolder<CComponent>, IAsset
     {
         RunCommands_Params("OnHit", attackedEntity, myEntity);
 
+        if (attackedEntity == null)
+        {
+            return;
+        }
+
         if (myEntity.isPlayer && HasProp(ItemProperty.OnAttack_Radiation) && SeedManager.combatRandom.Next(100) < 5)
         {
             myEntity.stats.Radiate(1);
@@ -183,12 +176,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (HasCComponent<CCoat>())
         {
             CCoat cc = GetCComponent<CCoat>();
+            cc.OnStrike(attackedEntity.stats);
 
-            if (cc.strikes > 0)
-            {
-                cc.OnStrike(attackedEntity.stats);
-            }
-            else
+            if (cc.strikes <= 0)
             {
                 components.Remove(cc);
             }
@@ -200,7 +190,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             GetCComponent<CItemLevel>().AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
         }
 
-        //Status Effects
+        //Status Effects - Move To COnHit_AddStatus
         if (damageTypes.Contains(DamageTypes.Venom) && SeedManager.combatRandom.Next(100) <= 3)
         {
             attackedEntity.stats.AddStatusEffect("Poison", SeedManager.combatRandom.Next(2, 8));
@@ -251,11 +241,12 @@ public class Item : ComponentHolder<CComponent>, IAsset
         ApplyEffects(stats);
         RunCommands("OnConsume", stats.entity);
 
-        if (HasCComponent<CLiquidContainer>() && !GetCComponent<CLiquidContainer>().isEmpty())
+        if (HasCComponent<CLiquidContainer>())
         {
             GetCComponent<CLiquidContainer>().Drink(stats.entity);
         }
-        else if (HasCComponent<CCoat>())
+
+        if (HasCComponent<CCoat>())
         {
             GetCComponent<CCoat>().OnStrike(stats);
         }
@@ -272,40 +263,40 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public void RunCommands(string action, Entity ent)
     {
-        if (HasCComponent<CConsole>() || HasCComponent<CLuaEvent>())
+        //Loop in case we have multiple of the same component type.
+        foreach (CComponent comp in components)
         {
-            for (int i = 0; i < components.Count; i++)
+            switch (comp.ID)
             {
-                if (components[i].ID == "Console")
-                {
-                    CConsole cc = (CConsole)components[i];
+                case "Console":
+                    CConsole cc = (CConsole)comp;
                     cc.RunCommand(action);
-                }
-                else if (components[i].ID == "LuaEvent")
-                {
-                    CLuaEvent cl = (CLuaEvent)components[i];
+                    break;
+
+                case "LuaEvent":
+                    CLuaEvent cl = (CLuaEvent)comp;
                     cl.CallEvent(action, ent);
-                }
+                    break;
             }
         }
     }
 
     public void RunCommands_Params(string action, params object[] obj)
     {
-        if (HasCComponent<CConsole>() || HasCComponent<CLuaEvent>())
+        //Loop in case we have multiple of the same component type.
+        foreach (CComponent comp in components)
         {
-            for (int i = 0; i < components.Count; i++)
+            switch (comp.ID)
             {
-                if (components[i].ID == "Console")
-                {
-                    CConsole cc = (CConsole)components[i];
+                case "Console":
+                    CConsole cc = (CConsole)comp;
                     cc.RunCommand(action);
-                }
-                else if (components[i].ID == "LuaEvent")
-                {
-                    CLuaEvent cl = (CLuaEvent)components[i];
+                    break;
+
+                case "LuaEvent":
+                    CLuaEvent cl = (CLuaEvent)comp;
                     cl.CallEvent_Params(action, obj);
-                }
+                    break;
             }
         }
     }
@@ -933,7 +924,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         }
 
         if (damageTypes.Count <= 0)
+        {
             AddDamageType(DamageTypes.Blunt);
+        }
     }
 
     public bool CanReplaceBP()
@@ -955,7 +948,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         Bash, Slash, Sweep, Spear, Claw, Psy, Knife, Bite
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
         ID = dat["ID"].ToString();
         dat.TryGetString("Name", out Name);
@@ -969,7 +962,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         dat.TryGetString("FlavorText", out flavorText);
 
         if (rarity < 100 && rarity > ItemUtility.MaxRarity)
+        {
             ItemUtility.MaxRarity = rarity;
+        }
 
         components = new List<CComponent>();
 
@@ -979,13 +974,19 @@ public class Item : ComponentHolder<CComponent>, IAsset
             damage = Damage.GetByString(dmgString);
         }
         else
+        {
             damage = new Damage(1, 3, 0, DamageTypes.Blunt);
+        }
 
         if (dat.ContainsKey("Cost"))
+        {
             SetBaseCost((int)dat["Cost"]);
+        }
 
         if (dat.ContainsKey("Components"))
+        {
             SetComponentList(ItemUtility.GetComponentsFromData(dat["Components"]));
+        }
 
         //Properties
         if (dat.ContainsKey("Properties"))
@@ -1040,7 +1041,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             string ground = (dat["Display"].ContainsKey("On Ground")) ? dat["Display"]["On Ground"].ToString() : "";
             string player = (dat["Display"].ContainsKey("On Player")) ? dat["Display"]["On Player"].ToString() : "";
             string slot = (dat["Display"].ContainsKey("Layer")) ? dat["Display"]["Layer"].ToString() : "";
-            renderer = new ItemRenderer(ItemUtility.GetSlot(slot), ground, player);
+            renderer = new ItemRenderer(ItemUtility.GetRenderLayer(slot), ground, player);
         }
     }
 
@@ -1056,6 +1057,11 @@ public class Item : ComponentHolder<CComponent>, IAsset
             onGround = _ground;
             onPlayer = _player;
             slot = _slot;
+        }
+
+        public override string ToString()
+        {
+            return "Renderer: (" + "OnGround: " + onGround + ", OnPlayer: " + onPlayer + ", Slot: " + slot + ")";  
         }
     }
 }

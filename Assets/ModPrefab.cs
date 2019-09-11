@@ -8,13 +8,24 @@ public class ModPrefab : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public Text title;
 
     Text descriptionText;
+    ModsPanel modsPanel;
     Image image;
     Color normColor;
+    bool pointerOver;
 
-    public void Setup(Mod m, Text descText)
+    void Update()
     {
+        if (!myMod.IsCore() && pointerOver && Input.GetMouseButtonDown(0))
+        {
+            modsPanel.SetActive(ModManager.mods.IndexOf(myMod), !myMod.IsActive);
+        }
+    }
+
+    public void Setup(Mod m, Text descText, ModsPanel mPanel)
+    {
+        modsPanel = mPanel;
         myMod = m;
-        title.text = myMod.name;
+        title.text = myMod.IsActive ? myMod.name : string.Format("<color=grey>{0}</color>", myMod.name);
         descriptionText = descText;
         image = GetComponent<Image>();
         normColor = image.color;
@@ -24,19 +35,22 @@ public class ModPrefab : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         if (myMod != null && descriptionText != null)
         {
-            descriptionText.text = GetDescriptionText();
+            string extra = (!myMod.IsActive) ? "<color=red>(Inactive)</color>" : "";
+            descriptionText.text = GetDescriptionText(extra);
         }
 
+        pointerOver = true;
         image.color = Color.white;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        pointerOver = false;
         image.color = normColor;
     }
 
-    string GetDescriptionText()
+    string GetDescriptionText(string extra)
     {
-        return myMod.name + "\n\nBy: " + myMod.creator + "\n\nLoad Order: " + myMod.loadOrder.ToString() + "\n\n\"" + myMod.description + "\"";
+        return string.Format("{0} {4}\n\nBy: {1}\n\nLoad Order: {2}\n\n{3}", myMod.name, myMod.creator, myMod.loadOrder, myMod.description, extra);
     }
 }

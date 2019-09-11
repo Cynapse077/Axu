@@ -71,7 +71,7 @@ public class GroupBlueprint : IAsset
         return false;
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
         npcs = new List<SpawnBlueprint>();
         ID = dat["Name"].ToString();
@@ -111,18 +111,17 @@ public class GroupBlueprint : IAsset
 
         for (int j = 0; j < dat["Possibilities"].Count; j++)
         {
-            SpawnBlueprint esf = new SpawnBlueprint();
-
-            esf.npcID = dat["Possibilities"][j]["Blueprint"].ToString();
-            esf.Weight = (int)dat["Possibilities"][j]["Weight"];
-
             string amountString = dat["Possibilities"][j]["Amount"].ToString();
-            string[] segString = amountString.Split("d"[0]);
+            string[] segString = amountString.Split('d');
             int numDice = int.Parse(segString[0]), diceSides = int.Parse(segString[1]);
 
-            esf.minAmount = numDice;
-            esf.maxAmount = numDice * diceSides;
-
+            SpawnBlueprint esf = new SpawnBlueprint
+            {
+                npcID = dat["Possibilities"][j]["Blueprint"].ToString(),
+                Weight = (int)dat["Possibilities"][j]["Weight"],
+                minAmount = numDice,
+                maxAmount = numDice * diceSides
+            };
             npcs.Add(esf);
         }
     }

@@ -69,6 +69,8 @@
     <Compile Include="Assets\Art\Materials\Shaders\PostEffectsHelper.cs" />
     <Compile Include="Assets\Art\Materials\Shaders\SR_EnabledBasedOnOther.cs" />
     <Compile Include="Assets\DisplayHelpMessages.cs" />
+    <Compile Include="Assets\HotkeyButton.cs" />
+    <Compile Include="Assets\HotkeyManager.cs" />
     <Compile Include="Assets\ModPrefab.cs" />
     <Compile Include="Assets\ModsPanel.cs" />
     <Compile Include="Assets\Scenes\MapCreator\MapCreator_Cell.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Assets\Scripts\Map\WorldMap_Data.cs" />
     <Compile Include="Assets\Scripts\Map\ZoneBlueprint.cs" />
     <Compile Include="Assets\Scripts\MapFeatureObject.cs" />
+    <Compile Include="Assets\Scripts\MessageBus.cs" />
     <Compile Include="Assets\Scripts\Models\Ability.cs" />
     <Compile Include="Assets\Scripts\Models\Addiction.cs" />
     <Compile Include="Assets\Scripts\Models\BodyPart.cs" />
@@ -155,7 +158,9 @@
     <Compile Include="Assets\Scripts\Models\Quest.cs" />
     <Compile Include="Assets\Scripts\Models\QuestEvent.cs" />
     <Compile Include="Assets\Scripts\Models\QuestGoal.cs" />
+    <Compile Include="Assets\Scripts\Models\Range.cs" />
     <Compile Include="Assets\Scripts\Models\SItem.cs" />
+    <Compile Include="Assets\Scripts\Models\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Models\TileDamage.cs" />
     <Compile Include="Assets\Scripts\Models\Trait.cs" />
     <Compile Include="Assets\Scripts\Models\TranslatedText.cs" />
@@ -184,7 +189,6 @@
     <Compile Include="Assets\Scripts\UI\ContextualActionsPanel.cs" />
     <Compile Include="Assets\Scripts\UI\ContextualMenu.cs" />
     <Compile Include="Assets\Scripts\UI\CyberneticsPanel.cs" />
-    <Compile Include="Assets\Scripts\UI\DamageText.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogue.cs" />
     <Compile Include="Assets\Scripts\UI\DialoguePanel.cs" />
     <Compile Include="Assets\Scripts\UI\DoctorActionsPanel.cs" />
@@ -237,6 +241,7 @@
     <Compile Include="Assets\Scripts\Utilities\GameSettings.cs" />
     <Compile Include="Assets\Scripts\Utilities\JsonHelper.cs" />
     <Compile Include="Assets\Scripts\Utilities\LocalizationManager.cs" />
+    <Compile Include="Assets\Scripts\Utilities\Log.cs" />
     <Compile Include="Assets\Scripts\Utilities\LuaManager.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\CharacterCreation.cs" />
     <Compile Include="Assets\Scripts\Utilities\Managers\GameData.cs" />
@@ -283,51 +288,29 @@
     <None Include="Assets\Art\Materials\Shaders\WorldspaceTiling.shader" />
     <None Include="Assets\Art\Materials\Shaders\BlendOneOne.shader" />
     <None Include="Assets\Art\Materials\Shaders\ShowAlphaChannel.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Art\Materials\Shaders\MobileBloom.shader" />
     <None Include="Assets\Art\Materials\Shaders\Sprite-Outline.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Art\Materials\Shaders\ContrastComposite.shader" />
     <None Include="Assets\Art\Materials\Shaders\AxuSprite.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\Art\Materials\Shaders\frag_ao.cginc" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\Art\Materials\Shaders\ChromaticAberrationShader.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\Art\Materials\Shaders\ColorCorrectionSelective.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\Art\Materials\Shaders\SeparableBlurPlus.shader" />
     <None Include="Assets\Art\Materials\Shaders\BlurEffectConeTaps.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\Art\Materials\Shaders\BrightPassFilter2.shader" />
     <None Include="Assets\Art\Materials\Shaders\UnlitAlphaWithFade.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\DesignDoc.txt" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\StreamingAssets\Credits.txt" />
     <None Include="Assets\Art\Materials\Shaders\VignettingShader.shader" />
     <None Include="Assets\Art\Materials\Shaders\BrightPassFilter.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\Art\Materials\Shaders\Blend.shader" />
     <None Include="Assets\Art\Materials\Shaders\BlendModesOverlay.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
-    <None Include="Assets\Scripts\Utilities\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\Art\Materials\Shaders\BlendForBloom.shader" />
-    <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/mritc/Documents/Axu/Axu/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
       <HintPath>C:/Users/mritc/Documents/Axu/Axu/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
       <HintPath>C:/Users/mritc/Documents/Axu/Axu/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/mritc/Documents/Axu/Axu/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
       <HintPath>C:/Users/mritc/Documents/Axu/Axu/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
@@ -538,12 +521,6 @@
     </Reference>
     <Reference Include="MoonSharp.Interpreter">
       <HintPath>C:/Users/mritc/Documents/Axu/Axu/Assets/Plugins/MoonSharp.Interpreter.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>C:/Users/mritc/Documents/Axu/Axu/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Advertisements.Editor">
-      <HintPath>C:/Users/mritc/Documents/Axu/Axu/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>C:/Users/mritc/Documents/Axu/Axu/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>

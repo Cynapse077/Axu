@@ -32,7 +32,7 @@ public class NPC_Blueprint : IAsset
         FromJson(dat);    
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
         attributes = DefaultAttributes();
         flags = new List<NPC_Flags>();
@@ -153,5 +153,77 @@ public class NPC_Blueprint : IAsset
             { "Heat Resist", 0 }, { "Cold Resist", 0 }, { "Energy Resist", 0 }, { "Attack Delay", 0 },
             { "HP Regen", 0 }, { "ST Regen", 0 }
         };
+    }
+
+    float Difficulty
+    {
+        get
+        {
+            float difficulty = health / 5;
+            difficulty += attributes["Strength"] * 4;
+            difficulty += attributes["Dexterity"];
+            difficulty += attributes["Defense"] * 2;
+            difficulty += attributes["Intelligence"];
+
+            difficulty += skills.Length;
+            difficulty += weaponSkill * 2;
+
+            return (float)System.Math.Round(difficulty, 3);
+        }
+    }
+
+    class DifficultyLevel
+    {
+        public float difficulty;
+        public readonly string npcName;
+
+        public DifficultyLevel(float diff, string npc)
+        {
+            difficulty = diff;
+            npcName = npc;
+        }
+
+        public override string ToString()
+        {
+            return npcName + " : " + difficulty.ToString();
+        }
+    }
+
+    public static void PrintNPCDifficultyLevels()
+    {
+        Felony fel = GameData.Get<Felony>(0) as Felony;
+        float playerStart = 2;
+        playerStart += fel.HP / 10;
+        playerStart += fel.STR * 4;
+        playerStart += fel.DEX;
+        playerStart += fel.INT;
+
+        List<DifficultyLevel> dvals = new List<DifficultyLevel>();
+        float lowest = 1000;
+
+        foreach (NPC_Blueprint bp in GameData.GetAll<NPC_Blueprint>())
+        {
+            float diff = bp.Difficulty / playerStart * 10f;
+
+            if (diff < lowest)
+            {
+                lowest = diff;
+            }
+
+            dvals.Add(new DifficultyLevel(diff, bp.name));
+        }
+
+        dvals.Sort((x, y) => { return x.difficulty.CompareTo(y.difficulty); });
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.AppendLine("Difficulty Rankings of NPCs:\n");
+
+        foreach (DifficultyLevel d in dvals)
+        {
+            d.difficulty = (float)System.Math.Round(d.difficulty - lowest, 1);
+            sb.AppendLine(d.ToString());
+        }
+
+        System.IO.File.WriteAllText(UnityEngine.Application.streamingAssetsPath + "/Difficulty.txt", sb.ToString());
     }
 }

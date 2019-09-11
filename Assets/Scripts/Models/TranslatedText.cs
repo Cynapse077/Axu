@@ -15,7 +15,7 @@ public class TranslatedText : IAsset
         FromJson(dat);
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
         ID = dat["ID"].ToString();
         dat.TryGetString("Display", out display, defaultText);

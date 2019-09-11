@@ -396,11 +396,7 @@ public class CombatComponent
         entity.canAct = false;
         MyStats.dead = true;
         entity.CreateBloodstain(true);
-
-        if (entity.cell != null)
-        {
-            entity.cell.UnSetEntity(entity);
-        }
+        entity.UnSetCell();
 
         if (entity.isPlayer)
         {
@@ -452,11 +448,7 @@ public class CombatComponent
     {
         entity.canAct = false;
         MyStats.dead = true;
-
-        if (entity.cell != null)
-        {
-            entity.cell.UnSetEntity(entity);
-        }
+        entity.UnSetCell();
 
         World.objectManager.DemolishNPC(entity, entity.AI.npcBase);
         GameObject.Destroy(entity.gameObject);

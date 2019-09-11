@@ -110,6 +110,27 @@ public class Goal : EventContainer
     }
 }
 
+//A goal that cannot by itself complete. It must be completed through other code.
+public class EmptyGoal : Goal
+{
+    public EmptyGoal(Quest q, string desc)
+    {
+        goalType = "Empty";
+        myQuest = q;
+        description = desc;
+    }
+
+    public override void Init(bool skipEvent)
+    {
+        base.Init(skipEvent);
+    }
+
+    public override bool CanComplete()
+    {
+        return false;
+    }
+}
+
 //For simple one-step quests that require a choice, so I don't have to track progress. Otherwise it would break the SQuest stuffs.
 public class ChoiceGoal : Goal
 {
@@ -150,11 +171,6 @@ public class ChoiceGoal : Goal
         }
 
         return false;
-    }
-
-    public override void Complete()
-    {
-        base.Complete();
     }
 
     public override void Fail()
@@ -271,7 +287,7 @@ public class SpecificKillGoal : Goal
             }
         }
 
-        Debug.LogError("Quest step is either complete, or NPC UID is zero.");
+        Debug.LogError(myQuest.ID + " - Quest step is either complete, or NPC UID is zero.");
         return null;
     }
 

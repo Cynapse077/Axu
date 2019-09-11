@@ -6,7 +6,7 @@
 	    },
 	    {
 	        "Title" : "A Crumpled Letter",
-	        "Text" : "    \"Jershi,\n\n    I knew it was a bad idea to mess with that crystal. I've found myself somewhere up North after touching the damned thing. Not only that, but I can feel my body slowly stiffening. Whether it's from the cold, or some	residual effect from the crystal's energy, I have no idea. I'm slowly making my way back. Just know that I'm alive.\n\n    P.S. Your brother still owes me money. He has until I'm back to get it together. I'm serious this time.\n\n- Wes\""
+	        "Text" : "    \"Jershi,\n\n    I knew it was a bad idea to mess with that crystal. I've found myself somewhere up North after touching the damned thing. Not only that, but I can feel my body slowly stiffening. Whether it's from the cold, or some residual effect from the crystal's energy, I have no idea. I'm slowly making my way back. Just know that I'm alive.\n\nP.S. Your brother still owes me money. He has until I'm back to get it together. I'm serious this time.\n\n- Wes\""
 	    },
 	    {
 	        "Title" : "Scribbles",
@@ -14,13 +14,48 @@
 	    },
 		{
 			"Title" : "Drawings",
-			"Text" : "Inside this book are hundreds of pages of detailed drawings. There seems to be a common theme of robotics. Several diagrams actually look like they may work."
+			"Text" : "<i>[Inside this book are hundreds of pages of detailed drawings. There seems to be a common theme of robotics. Several diagrams actually look like they may work.]</i>"
+		},
+
+		{
+			"Title" : "Prisoner Manifest 8172-1",
+			"Text" : "Date: 451-VUN-09\n\n----Prisoner 44313AT----\nName: Bendro Pyl\nConviction: Mutant\n----Prisoner 44313AU----\nName: Aila Waters\nConviction: Heresy\n----Prisoner 44313AV----\nName: Robert Feshker\nConviction: [REDACTED]"
+		},
+		{
+			"Title" : "Prisoner Manifest 3171-3",
+			"Text" : "Date: 453-LUK-34\n\n----Prisoner 11297RA----\nName: Ash-Lor Ra\nConviction: Murder\n----Prisoner 11297RB----\nName: Bol Tommo\nConviction: Theft\n----Prisoner 11297RC----\nName: Faith Gulmer\nConviction: Heresy"
+		},
+
+
+		{
+			"Title" : "Warden's Log 001",
+			"Text" : "\"Arrival on Axu was smooth. We have begun construction of the first facility with the remains of the ship. It will take some time, but I'll feel much better with some bars between myself and the scum I oversee. If not for my father's influence, I'd be toiling in the mud with the rest of them.\n\n    - Berkran Fellis, Warden of Axu\""
+		},
+		{
+			"Title" : "Warden's Log 002",
+			"Text" : "\"I'm troubled by the lack of instruction given by the Imperials. Drop ships keep coming with new inmates every few weeks. Sometimes with supplies, sometimes without. It seems as if I'm on my own here. Only five more years, and I can go home.\""
+		},
+		{
+			"Title" : "Warden's Log 032",
+			"Text" : "\"The Faith tells us discipline is necessary, that it is good. Yet no matter how much I punish and torture, these criminals never seem to understand who is in charge. I've kept them alive and fed out of my good graces, and they repay me with resentment and blasphemy. Three more years. I need to keep reminding myself I have a home to go back to.\""
+		},
+		{
+			"Title" : "Warden's Log 055",
+			"Text" : "\"Another prison was built up north in the Tundra. There is precious ore out there that we need, but frostbite keeps taking workers' limbs. Some sick individual asked me if we could take apart a few of the drones to manufacture replacement hands so we could keep working. Just because we are on some forsaken planet doesn't mean we can forgo the teachings of the Faith. Our bodies must remain pure and natural. The freakish mutants sent here are enough to make me sick.\""
 		},
 	
 	
 		{
 			"Title" : "From Yoabos to Axu - Chapter I",
-			"Text" : "Yoabos, our home for millions of years. As a species, we were so awful to her. We dug into and built on top of her flesh to sate our lust to leave an imprint. Between the scars, there was an indescribable beauty. A warmth. She gave us	life, and we tore her to shreds. I still recall gazing out of my parents' window, watching the rains cascading down. The pitter-patter of the drops relieving any tension in the world. That was before I was taken. At twelve years old, I was put	   into cryosleep and forced to board a ship. One that would eventually take me to Axu. Apparently, my parents had died in a riot of some kind. I know not the details, only that a \"liability\" such as myself was considered as bad as the criminals    I now call my kin."
+			"Text" : "\"Yoabos, our home for millions of years. As a species, we were so awful to her. We dug into and built on top of her flesh to sate our lust to leave an imprint. Between the scars, there was an indescribable beauty. A warmth. She gave us life, and we tore her to shreds. I still recall gazing out of my parents' window, watching the rains cascading down. The pitter-patter of the drops relieving any tension in the world. That was before I was taken. At twelve years old, I was put into cryosleep and forced to board a ship. One that would eventually take me to Axu. Apparently, my parents had died in a riot of some kind. I know not the details, only that a \"liability\" such as myself was considered as bad as the criminals I now call my kin.\""
+		},
+		{
+			"Title" : "From Yoabos to Axu - Chapter II",
+			"Text" : "\"Fear.\nThat's the only emotion I'm capable of feeling at this moment. Two days ago, the prisoners in my facility staged a revolt. The guards could not stop the tide of animosity directed towards them. Most were killed in brutal fashions, their weapons taken to further fuel the carnage. I'm still here in my cell waiting for the screams of agony to cease. The Imperials may not even care about the dead. The guards were lesser criminals given a second chance, not high-ranking officials. I'll have to leave before the wildlife claims the prison.\""
+		},
+		{
+			"Title" : "From Yoabos to Axu - Chapter III",
+			"Text" : "\"It has been four months since the prisoner uprising. I've managed to find a small, empty building some kilometers away from my previous home. The war is still raging, or so I hear from passing nomads. As I assumed, the Imperials don't care about the carnage. They keep sending prisoners here like nothing is wrong, which worries me. Are we not getting more supplies? I've found I do not have the stomach for hunting, and charity is not a virtue here. In any case, factions have risen from the ashes of war. Once they ran out of guards and officials to kill, the bastards turned on each other. The Ensis seem to be winning the fight, from what I can tell. Surviving Imperials joined up with them for a better chance at surviving. Maybe I'll join, if they will have me.\""
 		}
 	]
 }

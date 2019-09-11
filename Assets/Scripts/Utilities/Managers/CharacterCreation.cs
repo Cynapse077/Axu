@@ -46,6 +46,12 @@ public class CharacterCreation : MonoBehaviour
 
     void Awake()
     {
+        if (!ModManager.PreInitialized)
+        {
+            SceneManager.LoadScene(0);
+            return;
+        }
+
         DiffPanel.SetActive(false);
         CharPanel.SetActive(true);
 
@@ -179,7 +185,7 @@ public class CharacterCreation : MonoBehaviour
             return;
         }
 
-        if (GetKey("Enter") || GetKey("Interact"))
+        if (GetKey("Enter"))
         {
             World.soundManager.MenuTick();
             if (EventSystem.current.currentSelectedGameObject == field.transform.GetChild(0).gameObject)
@@ -205,7 +211,14 @@ public class CharacterCreation : MonoBehaviour
 
         if (GetKey("Pause"))
         {
-            Back();
+            if (EventSystem.current.currentSelectedGameObject == field.transform.GetChild(0).gameObject)
+            {
+                EventSystem.current.SetSelectedGameObject(classAnchor.GetChild(selectedNum).gameObject);
+            }
+            else
+            {
+                Back();
+            }
         }
 
         if (UpPressed())
@@ -232,10 +245,12 @@ public class CharacterCreation : MonoBehaviour
             diffAnchor.GetChild(i).GetComponent<Button>().onClick.AddListener(ConfirmStart);
         }
 
-        selectedNum = 2;
-        currentDiff = difficulties[2];
-        diffDescText.text = LocalizationManager.GetLocalizedContent(difficulties[2].descTag).display2;
-        EventSystem.current.SetSelectedGameObject(diffAnchor.GetChild(selectedNum).gameObject);
+        int cur = 2;
+
+        selectedNum = cur;
+        currentDiff = difficulties[cur];
+        diffDescText.text = LocalizationManager.GetLocalizedContent(difficulties[cur].descTag).display2;
+        diffAnchor.GetChild(selectedNum).Highlight();
     }
 
     public void SetSelectedNumber(int num)

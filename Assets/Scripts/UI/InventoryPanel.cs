@@ -43,7 +43,7 @@ public class InventoryPanel : UIPanel
 
         if (SelectedMax > 0)
         {
-            EventSystem.current.Highlight(inventoryBase.GetChild(SelectedNum).gameObject);
+            inventoryBase.GetChild(SelectedNum).Highlight();
         }
 
         UpdateTooltip(SelectedNum);
@@ -137,7 +137,7 @@ public class InventoryPanel : UIPanel
                 curInv.items.Move(SelectedNum, SelectedNum + 1);
                 UpdateInventory();
                 SelectedNum = newIndex;
-                EventSystem.current.Highlight(inventoryBase.GetChild(SelectedNum).gameObject);
+                inventoryBase.GetChild(SelectedNum).Highlight();
             }
             else if (GameSettings.Keybindings.GetKey("GoDownStairs") && SelectedNum > 0)
             {
@@ -145,7 +145,7 @@ public class InventoryPanel : UIPanel
                 curInv.items.Move(SelectedNum, SelectedNum - 1);
                 UpdateInventory();
                 SelectedNum = newIndex;
-                EventSystem.current.Highlight(inventoryBase.GetChild(SelectedNum).gameObject);
+                inventoryBase.GetChild(SelectedNum).Highlight();
             }
             else if (GameSettings.Keybindings.GetKey("West"))
             {
@@ -162,9 +162,7 @@ public class InventoryPanel : UIPanel
             {
                 SelectedNum = 0;
                 World.userInterface.column++;
-                EventSystem.current.SetSelectedGameObject(null);
-                EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(0).gameObject);
-
+                inventoryBase.GetChild(SelectedNum).Highlight();
                 UpdateTooltip(SelectedNum);
                 World.soundManager.MenuTick();
             }
@@ -179,15 +177,16 @@ public class InventoryPanel : UIPanel
         Capacity.text = string.Format("<color=olive>({0} / {1})</color>", curInv.items.Count.ToString(), curInv.maxItems.ToString());
     }
 
-    public override void ChangeSelectedNum(int newIndex)
+    public override void ChangeSelectedNum(int newIndex, bool scroll)
     {
         if (!World.userInterface.SelectItemActions && !World.userInterface.SelectBodyPart && World.userInterface.column == 1)
         {
-            base.ChangeSelectedNum(newIndex);
+            base.ChangeSelectedNum(newIndex, scroll);
 
             if (SelectedMax > 0 && SelectedMax > SelectedNum)
             {
-                scrollBar.value = 1f - (SelectedNum / (float)curInv.items.Count);
+                if (scroll)
+                    scrollBar.value = 1f - (SelectedNum / (float)curInv.items.Count);
                 EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(SelectedNum).gameObject);
             }
 

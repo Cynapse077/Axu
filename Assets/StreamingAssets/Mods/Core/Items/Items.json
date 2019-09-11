@@ -6,7 +6,10 @@
             "Lootable" : false,
             "Type" : "Unarmed",
             "Rarity" : 100,
-            "FlavorText" : "There's nothing here."
+            "FlavorText" : "There's nothing here.",
+            "Display" : {
+                "On Ground" : "item-none.png"
+            }
         },
         {
             "ID" : "arrow",
@@ -73,7 +76,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-fist.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-fist.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-fist.png",
                 "Layer" : "Weapon"
             }
         },
@@ -89,7 +92,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-fist.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-fist.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-fist.png",
                 "Layer" : "Weapon"
             }
         },
@@ -105,7 +108,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-fist.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-fist.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-fist.png",
                 "Layer" : "Weapon"
             }
         },
@@ -124,7 +127,7 @@
             "DmgTypes" : [ "Blunt", "Energy" ],
             "Display" : {
                 "On Ground" : "item-shockglove.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-fist.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-fist.png",
                 "Layer" : "Weapon"
             }
         },
@@ -143,7 +146,7 @@
             "DmgTypes" : [ "Pierce", "Bleed" ],
             "Display" : {
                 "On Ground" : "item-drillfist.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-drillfist.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-drillfist.png",
                 "Layer" : "Weapon"
             }
         },
@@ -159,7 +162,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-club.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
                 "Layer" : "Weapon"
             }
         },
@@ -175,7 +178,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-femur.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-bone.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-bone.png",
                 "Layer" : "Weapon"
             }
         },
@@ -191,7 +194,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-club.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-club.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
                 "Layer" : "Weapon"
             }
         },
@@ -207,7 +210,7 @@
             "DmgTypes" : [ "Blunt", "Bleed" ],
             "Display" : {
                 "On Ground" : "item-spiked.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-club.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
                 "Layer" : "Weapon"
             }
         },
@@ -223,7 +226,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-hammer.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-club.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
                 "Layer" : "Weapon"
             }
         },
@@ -239,7 +242,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-chains.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-chains.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-chains.png",
                 "Layer" : "Weapon"
             }
         },
@@ -255,7 +258,7 @@
         	"DmgTypes" : [ "Blunt", "Bleed" ],
         	"Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-club.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
                 "Layer" : "Weapon"
             }
         },
@@ -271,7 +274,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-crowbar.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-crowbar.png",
                 "Layer" : "Weapon"
             }
         },
@@ -287,7 +290,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-stunbaton.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-stunbaton.png",
                 "Layer" : "Weapon"
             }
         },
@@ -306,7 +309,7 @@
             "DmgTypes" : [ "Blunt", "Energy" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-stunbaton.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-stunbaton.png",
                 "Layer" : "Weapon"
             }
         },
@@ -322,7 +325,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-mace.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-mace.png",
                 "Layer" : "Weapon"
             }
         },
@@ -338,7 +341,7 @@
         	"DmgTypes" : [ "Blunt" ],
         	"Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sledge.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sledge.png",
                 "Layer" : "Weapon"
             }
         },
@@ -354,7 +357,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sledge.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sledge.png",
                 "Layer" : "Weapon"
             }
         },
@@ -371,7 +374,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },        
@@ -388,7 +391,7 @@
             "DmgTypes" : [ "Slash", "Bleed" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -405,7 +408,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -422,7 +425,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -439,7 +442,7 @@
             "DmgTypes" : [ "Pierce", "Venom" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -456,7 +459,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sword.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sword.png",
                 "Layer" : "Weapon"
             }
         },
@@ -473,7 +476,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sword.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sword.png",
                 "Layer" : "Weapon"
             }
         },
@@ -490,7 +493,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sword.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sword.png",
                 "Layer" : "Weapon"
             }
         },
@@ -507,7 +510,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sword.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sword.png",
                 "Layer" : "Weapon"
             }
         },
@@ -524,7 +527,7 @@
             "DmgTypes" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-katana.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-katana.png",
                 "Layer" : "Weapon"
             }
         },
@@ -542,7 +545,7 @@
             "DmgTypes" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-greatsword.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-greatsword.png",
                 "Layer" : "Weapon"
             }
         },
@@ -559,7 +562,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-pole.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-pole.png",
                 "Layer" : "Weapon"
             }
         },
@@ -576,7 +579,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-pitchfork.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-pitchfork.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-pitchfork.png",
                 "Layer" : "Weapon"
             }
         },
@@ -593,7 +596,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-spear.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-spear.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-spear.png",
                 "Layer" : "Weapon"
             }
         },
@@ -610,7 +613,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-trident.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-pitchfork.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-pitchfork.png",
                 "Layer" : "Weapon"
             }
         },
@@ -627,7 +630,7 @@
             "DmgTypes" : [ "Pierce", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-glaive.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-glaive.png",
                 "Layer" : "Weapon"
             }
         },
@@ -645,7 +648,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-lance.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-lance.png",
                 "Layer" : "Weapon"
             }
         },
@@ -662,7 +665,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-axe-small.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-axe-small.png",
                 "Layer" : "Weapon"
             }
         },
@@ -679,7 +682,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-axe-small.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-axe-small.png",
                 "Layer" : "Weapon"
             }
         },
@@ -696,7 +699,7 @@
             "DmgTypes" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-axe.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-axe.png",
                 "Layer" : "Weapon"
             }
         },
@@ -713,16 +716,16 @@
             "DmgTypes" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-scythe.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-scythe.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-scythe.png",
                 "Layer" : "Weapon"
             }
         },
 		{
         	"ID" : "eversightaxe",
-            "Name" : "Axe of the Eversight",
+            "Name" : "Eversight Axe",
             "Type" : "Axe",
             "Damage" : "1d10",
-            "Rarity" : 4,
+            "Rarity" : 5,
             "FlavorText" : "An axe wielded by the assassin group, The Eversight.",
             "Cost" : 200,
             "Attack Type" : "Slash",
@@ -730,7 +733,7 @@
             "DmgTypes" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-axe.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-axe.png",
                 "Layer" : "Weapon"
             }
         },
@@ -897,7 +900,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -915,7 +918,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-axe-small.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-axe-small.png",
                 "Layer" : "Weapon"
             }
         },
@@ -933,7 +936,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-spear.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-spear.png",
                 "Layer" : "Weapon"
             }
         },
@@ -953,7 +956,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-pickaxe.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-pickaxe.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-pickaxe.png",
                 "Layer" : "Weapon"
             }
         },
@@ -973,7 +976,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-shovel.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-pickaxe.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-pickaxe.png",
                 "Layer" : "Weapon"
             }
         },
@@ -993,7 +996,7 @@
             "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-shield.png",
-                "On Player" : "/Mods/Core/Art/Player/Offhands/char-plywood-shield.png",
+                "On Player" : "Mods/Core/Art/Player/Offhands/char-plywood-shield.png",
                 "Layer" : "Offhand"
             }
         },
@@ -1012,7 +1015,7 @@
             "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-shield.png",
-                "On Player" : "/Mods/Core/Art/Player/Offhands/char-shield.png",
+                "On Player" : "Mods/Core/Art/Player/Offhands/char-shield.png",
                 "Layer" : "Offhand"
             }
         },
@@ -1035,7 +1038,7 @@
             "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-lanternshield.png",
-                "On Player" : "/Mods/Core/Art/Player/Offhands/char-lantern-shield.png",
+                "On Player" : "Mods/Core/Art/Player/Offhands/char-lantern-shield.png",
                 "Layer" : "Offhand"
             }
         },
@@ -1059,7 +1062,7 @@
            "Properties" : [ "Weapon" ],
            "Display" : {
                 "On Ground" : "item-shield.png",
-                "On Player" : "/Mods/Core/Art/Player/Offhands/char-lantern-shield.png",
+                "On Player" : "Mods/Core/Art/Player/Offhands/char-lantern-shield.png",
                 "Layer" : "Offhand"
             }
         },
@@ -1083,7 +1086,7 @@
             "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-riotshield.png",
-                "On Player" : "/Mods/Core/Art/Player/Offhands/char-riot-shield.png",
+                "On Player" : "Mods/Core/Art/Player/Offhands/char-riot-shield.png",
                 "Layer" : "Offhand"
             }
         },
@@ -1103,7 +1106,7 @@
             "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-energyshield.png",
-                "On Player" : "/Mods/Core/Art/Player/Offhands/char-energy-shield.png",
+                "On Player" : "Mods/Core/Art/Player/Offhands/char-energy-shield.png",
                 "Layer" : "Offhand"
             }
         },
@@ -1120,7 +1123,7 @@
             "Properties" : [ "Weapon", "Disarm" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -1136,7 +1139,7 @@
             "Properties" : [ "Weapon", "Disarm" ],
             "Display" : {
                 "On Ground" : "item-sai.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -1159,7 +1162,7 @@
             "Properties" : [ "Weapon", "Degrade", "DestroyOnZeroCharges", "NoMods" ],
             "Display" : {
 				"On Ground" : "item-torch.png",
-                "On Player" : "/Mods/Core/Art/Player/Offhands/char-torch.png",
+                "On Player" : "Mods/Core/Art/Player/Offhands/char-torch.png",
                 "Layer" : "Offhand"
             }
         },
@@ -1219,7 +1222,7 @@
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-skull.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-skull.png",
                 "Layer" : "Head"
             }
         },
@@ -1234,7 +1237,7 @@
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-hood.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-hood.png",
                 "Layer" : "Head"
             }
         },
@@ -1252,7 +1255,7 @@
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-miner-helm.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-miner-helm.png",
                 "Layer" : "Head"
             }
         },
@@ -1267,7 +1270,7 @@
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-infantry-helm.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-infantry-helm.png",
                 "Layer" : "Head"
             }
         },
@@ -1285,7 +1288,7 @@
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-steel-helm.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-steel-helm.png",
                 "Layer" : "Head"
             }
         },
@@ -1301,7 +1304,7 @@
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-horn-helm.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-horn-helm.png",
                 "Layer" : "Head"
             }
         },
@@ -1319,7 +1322,7 @@
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-spotter.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-spotter.png",
                 "Layer" : "Head"
             }
         },
@@ -1338,7 +1341,7 @@
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-circlet.png",
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-circlet.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-circlet.png",
                 "Layer" : "Head"
             }
         },
@@ -1353,7 +1356,7 @@
             "Properties" : [ "Armor", "Slot_Arm" ],
             "Display" : {
 				"On Ground" : "item-bracelet.png",
-                "On Player" : "/Mods/Core/Art/Player/Arms/char-bracelet.png",
+                "On Player" : "Mods/Core/Art/Player/Arms/char-bracelet.png",
                 "Layer" : "Arm"
             }
         },
@@ -1371,7 +1374,7 @@
             "Properties" : [ "Armor", "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
-                "On Player" : "/Mods/Core/Art/Player/Arms/char-gloves.png",
+                "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
                 "Layer" : "Arm"
             }
         },
@@ -1389,7 +1392,7 @@
             "Properties" : [ "Armor", "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
-                "On Player" : "/Mods/Core/Art/Player/Arms/char-gloves.png",
+                "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
                 "Layer" : "Arm"
             }
         },
@@ -1404,7 +1407,7 @@
             "Properties" : [ "Armor", "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
-                "On Player" : "/Mods/Core/Art/Player/Arms/char-gloves.png",
+                "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
                 "Layer" : "Arm"
             }
         },
@@ -1419,7 +1422,7 @@
             "Properties" : [ "Armor", "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
-                "On Player" : "/Mods/Core/Art/Player/Arms/char-gloves.png",
+                "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
                 "Layer" : "Arm"
             }
         },
@@ -1435,7 +1438,7 @@
             "Properties" : [ "Armor", "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
-                "On Player" : "/Mods/Core/Art/Player/Arms/char-gloves.png",
+                "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
                 "Layer" : "Arm"
             }
         },
@@ -1454,7 +1457,7 @@
             "Properties" : [ "Armor", "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
-                "On Player" : "/Mods/Core/Art/Player/Arms/char-gloves.png",
+                "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
                 "Layer" : "Arm"
             }
         },
@@ -1484,7 +1487,7 @@
             "Properties" : [ "Armor", "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
-                "On Player" : "/Mods/Core/Art/Player/Legs/char-boots.png",
+                "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
                 "Layer" : "Leg"
             }
         },
@@ -1502,7 +1505,7 @@
             "Properties" : [ "Armor", "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
-                "On Player" : "/Mods/Core/Art/Player/Legs/char-boots.png",
+                "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
                 "Layer" : "Leg"
             }
         },
@@ -1517,7 +1520,7 @@
             "Properties" : [ "Armor", "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
-                "On Player" : "/Mods/Core/Art/Player/Legs/char-boots.png",
+                "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
                 "Layer" : "Leg"
             }
         },
@@ -1535,7 +1538,7 @@
             "Properties" : [ "Armor", "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
-                "On Player" : "/Mods/Core/Art/Player/Legs/char-boots.png",
+                "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
                 "Layer" : "Leg"
             }
         },
@@ -1553,7 +1556,7 @@
             "Properties" : [ "Armor", "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
-                "On Player" : "/Mods/Core/Art/Player/Legs/char-boots.png",
+                "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
                 "Layer" : "Leg"
             }
         },
@@ -1571,7 +1574,7 @@
             "Properties" : [ "Armor", "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
-                "On Player" : "/Mods/Core/Art/Player/Legs/char-boots.png",
+                "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
                 "Layer" : "Leg"
             }
         },
@@ -1585,7 +1588,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-shirt.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-shirt.png",
                 "Layer" : "Torso"
             }
         },
@@ -1604,7 +1607,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-envirosuit.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-envirosuit.png",
                 "Layer" : "Torso"
             }
         },
@@ -1622,7 +1625,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-jacketleather.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-jacketleather.png",
                 "Layer" : "Torso"
             }
         },
@@ -1640,7 +1643,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-winterjacket.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-winterjacket.png",
                 "Layer" : "Torso"
             }
         },
@@ -1658,7 +1661,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-leather.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-leather.png",
                 "Layer" : "Torso"
             }
         },
@@ -1673,7 +1676,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-leather.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-leather.png",
                 "Layer" : "Torso"
             }
         },
@@ -1688,7 +1691,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-leadplate.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-leadplate.png",
                 "Layer" : "Torso"
             }
         },
@@ -1704,7 +1707,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-leadplate.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-leadplate.png",
                 "Layer" : "Torso"
             }
         },
@@ -1722,7 +1725,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-leadplate.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-leadplate.png",
                 "Layer" : "Torso"
             }
         },
@@ -1737,7 +1740,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Cloaks/char-cloak.png",
+                "On Player" : "Mods/Core/Art/Player/Cloaks/char-cloak.png",
                 "Layer" : "Cloak"
             }
         },
@@ -1755,7 +1758,7 @@
             "Properties" : [ "Armor", "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Cloaks/char-cloak-red.png",
+                "On Player" : "Mods/Core/Art/Player/Cloaks/char-cloak-red.png",
                 "Layer" : "Cloak"
             }
         },
@@ -1776,7 +1779,7 @@
             ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Cloaks/char-rubbertarp.png",
+                "On Player" : "Mods/Core/Art/Player/Cloaks/char-rubbertarp.png",
                 "Layer" : "Cloak"
             }
         },
@@ -1797,7 +1800,7 @@
             ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Cloaks/char-stealthcloak.png",
+                "On Player" : "Mods/Core/Art/Player/Cloaks/char-stealthcloak.png",
                 "Layer" : "Cloak"
             }
         },
@@ -1814,7 +1817,7 @@
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {
 				"On Ground" : "item-pack.png",
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-backpack.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-backpack.png",
                 "Layer" : "Back"
             }
         },
@@ -1832,7 +1835,7 @@
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {
 				"On Ground" : "item-pack.png",
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-backpack.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-backpack.png",
                 "Layer" : "Back"
             }
         },
@@ -1849,7 +1852,7 @@
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {
 				"On Ground" : "item-back.png",
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-scarf.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-scarf.png",
                 "Layer" : "Neck"
             }
         },
@@ -1864,7 +1867,7 @@
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png",
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-cape.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-cape.png",
                 "Layer" : "Back"
             }
         },
@@ -1879,7 +1882,7 @@
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png",
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-cape.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-cape.png",
                 "Layer" : "Back"
             }
         },
@@ -1918,7 +1921,7 @@
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png",
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-shell.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-shell.png",
                 "Layer" : "Back"
             }
         },
@@ -1935,7 +1938,7 @@
             "Properties" : [ "Armor", "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png",
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-cape.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-cape.png",
                 "Layer" : "Back"
             }
         },
@@ -1949,7 +1952,7 @@
             "Cost" : 45,
             "Properties" : [ "Armor", "Slot_Back", "Quick_Reload" ],
             "Display" : {
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-quiver.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-quiver.png",
                 "Layer" : "Back"
             }
         },
@@ -2324,7 +2327,7 @@
             "DmgTypes" : [ "Cold" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
                 "Layer" : "Weapon"
             }
         },
@@ -2341,7 +2344,7 @@
             "DmgTypes" : [ "Cold" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
                 "Layer" : "Weapon"
             }
         },
@@ -2369,7 +2372,7 @@
             ],
             "Display" : {
                 "On Ground" : "item-arclance.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-glaive.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-glaive.png",
                 "Layer" : "Weapon"
             }
         },
@@ -2397,7 +2400,7 @@
             ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
                 "Layer" : "Weapon"
             }
         },
@@ -2419,7 +2422,7 @@
             ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
                 "Layer" : "Weapon"
             }
         },
@@ -2440,7 +2443,7 @@
                 "Slot_Head"
             ],
             "Display" : {
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-helm-power.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-helm-power.png",
                 "Layer" : "Head"
             }
         },
@@ -2482,7 +2485,7 @@
             ],
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-chest-power.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-chest-power.png",
                 "Layer" : "Torso"
             }
         },
@@ -2525,7 +2528,7 @@
             ],
             "Display" : {
                 "On Ground" : "item-leg.png",
-                "On Player" : "/Mods/Core/Art/Player/Legs/char-legs-power.png",
+                "On Player" : "Mods/Core/Art/Player/Legs/char-legs-power.png",
                 "Layer" : "Leg"
             }
         },
@@ -2550,7 +2553,7 @@
             ],
             "Display" : {
 				"On Ground" : "item-mechwings.png",
-                "On Player" : "/Mods/Core/Art/Player/Backs/char-mechwings.png",
+                "On Player" : "Mods/Core/Art/Player/Backs/char-mechwings.png",
                 "Layer" : "Back"
             }
         },
@@ -2771,6 +2774,9 @@
                     ]
                 }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2788,6 +2794,9 @@
                     ]
                 }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2800,6 +2809,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "brace" }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2817,6 +2829,9 @@
                     ]
                 }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2834,6 +2849,9 @@
                     ]
                 }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2851,6 +2869,9 @@
                     ]
                 }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2863,6 +2884,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "firestream"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2875,11 +2899,29 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "firesquare"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
+            "Properties" : [ "Artifact", "Legible", "Tome" ]
+        },
+        {
+            "ID" : "tome_cloudofcold",
+            "Name" : "Tome of Hypothermia",
+            "Type" : "Misc_Object",
+            "Material" : "Paper",
+            "FlavorText" : "An acient tome containing a great secret.",
+            "Cost" : 300,
+            "Components" : [
+                { "ID" : "Ability", "Ability" : "icesquare"  }
+            ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
             "ID" : "tome_icebeam",
-            "Name" : "Tome of Hypothermia",
+            "Name" : "Tome of Icicle",
             "Type" : "Misc_Object",
             "Material" : "Paper",
             "FlavorText" : "An acient tome containing a great secret.",
@@ -2887,6 +2929,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "icestream"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible","Tome" ]
         },
         {
@@ -2899,6 +2944,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "zapline"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2916,6 +2964,9 @@
                     ]
                 }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2928,6 +2979,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "firewall"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2940,6 +2994,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "poisonsquare"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2952,6 +3009,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "radblast"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2964,6 +3024,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "confusion"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2976,6 +3039,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "sprint"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -2988,6 +3054,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "confsquare"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -3000,6 +3069,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "return" }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
 
@@ -3013,6 +3085,9 @@
             "Components" : [
                 { "ID" : "Ability", "Ability" : "charge"  }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
         {
@@ -3030,6 +3105,9 @@
                     ]
                 }
             ],
+            "Display" : {
+                "On Ground" : "item-book.png"
+            },
             "Properties" : [ "Artifact", "Legible", "Tome" ]
         },
 
@@ -3050,7 +3128,7 @@
             "DmgTypes" : [ "Pierce", "Venom", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-blackfang.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-blackfang.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3068,7 +3146,7 @@
             ],
             "Properties" : [ "Armor", "Slot_Head" ],
             "Display" : {
-                "On Player" : "/Mods/Core/Art/Player/Heads/char-circlet.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-circlet.png",
                 "Layer" : "Head"
             }
         },
@@ -3089,7 +3167,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-stunbaton.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-stunbaton.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3114,7 +3192,7 @@
             ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-mace.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-mace.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3136,7 +3214,7 @@
             "DmgTypes" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-mancleaver.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-scythe.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-scythe.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3156,7 +3234,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-ritualdagger.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3176,7 +3254,7 @@
             "DmgTypes" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3200,7 +3278,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-staffxzol.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-staffxzol.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3221,7 +3299,7 @@
             "DmgTypes" : [ "Pierce", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-swordoffate.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-swordoffate.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3242,7 +3320,7 @@
             "DmgTypes" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-spear.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-arthomasspear.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-arthomasspear.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3276,7 +3354,7 @@
             "Properties" : [ "Weapon", "Very_Slow", "Unique", "Two_Handed" ],
             "Display" : {
                 "On Ground" : "item-smiter.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-smiter.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-smiter.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3292,7 +3370,7 @@
             "DmgTypes" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-club.png",
-                "On Player" : "/Mods/Core/Art/Player/Weapons/char-club.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
                 "Layer" : "Weapon"
             }
         },
@@ -3302,7 +3380,19 @@
             "Name" : "Curious Artifact",
             "Type" : "Misc_Object",
             "Rarity" : 101,
-            "FlavorText" : "An ancient artifact. It is slim, and shaped like a playing card... Someone may need it.",
+            "FlavorText" : "An ancient artifact. Akk-Lune said he needed it.",
+            "Cost" : 0,
+            "Properties" : [ "Quest_Item", "Unique" ],
+            "Display" : {
+                "On Ground" : "item-artifact.png"
+            }
+        },
+        {
+            "ID" : "keycard_home",
+            "Name" : "Keycard",
+            "Type" : "Misc_Object",
+            "Rarity" : 101,
+            "FlavorText" : "A magnetic keycard. What it opens is unknown.",
             "Cost" : 0,
             "Properties" : [ "Quest_Item", "Unique" ],
             "Display" : {
@@ -3404,7 +3494,7 @@
             "Lootable" : false,
             "Display" : {
                 "On Ground" : "item-chest.png",
-                "On Player" : "/Mods/Core/Art/Player/Torsos/char-chasis.png",
+                "On Player" : "Mods/Core/Art/Player/Torsos/char-chasis.png",
                 "Layer" : "Torso"
             }
         },
@@ -3668,6 +3758,11 @@
             "DmgTypes" : [
                 "Pierce"
             ],
+            "Display" : {
+                "On Ground" : "item-tentacle.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-tentacle.png",
+                "Layer" : "Weapon"
+            },
             "Lootable" : false
         },
         {
@@ -3684,6 +3779,11 @@
             "DmgTypes" : [
                 "Pierce"
             ],
+            "Display" : {
+                "On Ground" : "item-tentacle.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-tentacle.png",
+                "Layer" : "Weapon"
+            },
             "Lootable" : false
         },
         {
@@ -3738,6 +3838,9 @@
             "DmgTypes" : [
                 "Blunt"
             ],
+            "Display" : {
+                "On Ground" : "item-tailbio.png"
+            },
             "Lootable" : false
         },
         {
@@ -3755,6 +3858,11 @@
             "DmgTypes" : [
                 "Claw"
             ],
+            "Display" : {
+                "On Ground" : "item-horns.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-horns.png",
+                "Layer" : "Weapon"
+            },
             "Lootable" : false
         },
         {
@@ -3766,6 +3874,11 @@
             "Attack Type" : "Claw",
             "Properties" : [ "Weapon", "Cannot_Remove", "Proc_Attack" ],
             "DmgTypes" : [ "Claw" ],
+            "Display" : {
+                "On Ground" : "item-horns.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-horns.png",
+                "Layer" : "Weapon"
+            },
             "Lootable" : false
         },
         {
@@ -3779,6 +3892,9 @@
                 "Slot_Head",
                 "Cannot_Remove"
             ],
+            "Display" : {
+                "On Ground" : "item-antennae.png"
+            },
             "Lootable" : false
         },
         {
@@ -3953,6 +4069,9 @@
             "DmgTypes" : [
                 "Blunt"
             ],
+            "Display" : {
+                "On Ground" : "item-fistbio.png"
+            },
             "Lootable" : false
         },
         {
@@ -4001,6 +4120,9 @@
             "DmgTypes" : [
                 "Blunt"
             ],
+            "Display" : {
+                "On Ground" : "item-fistbio.png"
+            },
             "Lootable" : false
         },
         {
@@ -4340,6 +4462,24 @@
                 "Cannot_Remove"
             ],
             "Lootable" : false
+        },
+
+
+
+        {
+            "ID" : "journal_hunter",
+            "Name" : "Hunter's Journal",
+            "Type" : "Misc_Object",
+            "Rarity" : 101,
+            "FlavorText" : "A dyed leather journal. Its cover is signed only \"The Hunter\".",
+            "Cost" : 25,
+            "Components" : [
+                { "ID" : "LuaEvent", "Event" : "OnRead", "Script" : "Core.ItemActions.Read_DeepHunterJournal" }
+            ],
+            "Display" : {
+                "On Ground" : "item-journal.png"
+            },
+            "Properties" : [ "Artifact", "Legible", "Unique" ]
         }
     ]
 }

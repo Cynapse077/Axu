@@ -13,18 +13,20 @@ public static class TraitList
         List<Trait> muts = GameData.GetAll<Trait>().FindAll(x => x.ContainsEffect(TraitEffects.Mutation) && x.tier < 2);
         List<Trait> possibilities = new List<Trait>();
 
-        for (int i = 0; i < muts.Count; i++)
+        foreach (Trait mut in muts)
         {
-            if (stats.hasTrait(muts[i].ID) && !muts[i].stackable || stats.hasTrait(muts[i].nextTier) || stats.hasTrait(muts[i].prerequisite))
+            //Check if the character has this mutation, or if it can/will stack
+            if (stats.hasTrait(mut.ID) && !mut.stackable || stats.hasTrait(mut.nextTier) || stats.hasTrait(mut.prerequisite))
                 continue;
 
-            if (muts[i].slot != "" && stats.traits.Find(x => x.slot == muts[i].slot) != null)
+            //Check overriding slots.
+            if (mut.slot != string.Empty && stats.traits.Find(x => x.slot == mut.slot) != null)
                 continue;
 
-            if (muts[i].stackable && stats.TraitStacks(muts[i].ID) >= muts[i].maxStacks)
+            if (mut.stackable && stats.TraitStacks(mut.ID) >= mut.maxStacks)
                 continue;
 
-            possibilities.Add(new Trait(muts[i]));
+            possibilities.Add(new Trait(mut));
         }
 
         return possibilities;
@@ -36,7 +38,7 @@ public static class TraitList
 
         foreach (Wound w in GameData.GetAll<Wound>())
         {
-            if (w.slot != ItemProperty.None && w.slot != bp.slot || bp.wounds.Find(x => x.ID == w.ID) != null)
+            if (w == null || w.slot != ItemProperty.None && w.slot != bp.slot || bp.wounds.Find(x => x.ID == w.ID) != null)
             {
                 continue;
             }

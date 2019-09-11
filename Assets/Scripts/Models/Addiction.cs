@@ -18,7 +18,7 @@ public class Addiction
     }
 
     public string Name
-    {
+    { 
         get
         {
             if (ItemList.GetItemByID(addictedID) != null)

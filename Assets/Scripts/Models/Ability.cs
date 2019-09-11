@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
+using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using LitJson;
+using UnityEngine;
 
 [System.Serializable]
 [MoonSharpUserData]
@@ -9,9 +11,10 @@ public class Ability : IAsset
     public const int maxLvl = 10;
     public const int XPToNext = 1000;
 
-    public string Name, Description;
     public string ID { get; set; }
     public string ModID { get; set; }
+    public string Name, Description;
+    public string iconPath;
     public int staminaCost, cooldown, maxCooldown, level = 1, range = 20;
     public CastType castType;
     public DamageTypes damageType;
@@ -25,6 +28,7 @@ public class Ability : IAsset
     
     List<AbilityTags> tags;
     double _xp;
+    Sprite cachedSprite;
 
     public DiceRoll totalDice
     {
@@ -46,6 +50,30 @@ public class Ability : IAsset
             }
 
             return roll;
+        }
+    }
+
+    public Sprite IconSprite
+    {
+        get
+        {
+            if (cachedSprite != null)
+                return cachedSprite;
+
+            Texture2D icon = new Texture2D(0, 0);
+            string path = Path.Combine(Application.streamingAssetsPath, iconPath);
+
+            if (!File.Exists(path))
+            {
+                Debug.LogError(path + " has no sprite.");
+                return null;
+            }
+
+            byte[] imageBytes = File.ReadAllBytes(path);
+            icon.LoadImage(imageBytes);
+            cachedSprite = Sprite.Create(icon, new Rect(0, 0, icon.width, icon.height), new Vector2(0.5f, 0.5f));
+
+            return cachedSprite;
         }
     }
 
@@ -76,6 +104,7 @@ public class Ability : IAsset
 
     public Ability(JsonData dat)
     {
+        tags = new List<AbilityTags>();
         FromJson(dat);
     }
 
@@ -89,6 +118,7 @@ public class Ability : IAsset
     {
         Name = other.Name;
         ID = other.ID;
+        iconPath = other.iconPath;
         staminaCost = other.staminaCost;
         cooldown = 0;
         maxCooldown = other.maxCooldown;
@@ -185,19 +215,23 @@ public class Ability : IAsset
         cooldown = maxCooldown;
     }
 
-    void FromJson(JsonData dat)
+    public void FromJson(JsonData dat)
     {
-        Name = dat["Name"].ToString();
-        ID = dat["ID"].ToString();
-        Description = dat["Description"].ToString();
+        if (dat.ContainsKey("Name"))
+            Name = dat["Name"].ToString();
+        if (dat.ContainsKey("ID"))
+            ID = dat["ID"].ToString();
+        if (dat.ContainsKey("Description"))
+            Description = dat["Description"].ToString();
 
-        dat.TryGetInt("Stamina Cost", out staminaCost, 0);
-        dat.TryGetInt("Time Cost", out timeCost, 0);
-        dat.TryGetInt("Cooldown", out maxCooldown, 0);
-        dat.TryGetEnum("Damage Type", out damageType, DamageTypes.None);
-        dat.TryGetEnum("Cast Type", out castType, CastType.Instant);
-        dat.TryGetBool("Levels Up", out CanLevelUp, false);
-        dat.TryGetInt("Range", out range, 0);
+        dat.TryGetString("Icon", out iconPath);
+        dat.TryGetInt("Stamina Cost", out staminaCost, staminaCost);
+        dat.TryGetInt("Time Cost", out timeCost, timeCost);
+        dat.TryGetInt("Cooldown", out maxCooldown, maxCooldown);
+        dat.TryGetEnum("Damage Type", out damageType, damageType);
+        dat.TryGetEnum("Cast Type", out castType, castType);
+        dat.TryGetBool("Levels Up", out CanLevelUp, CanLevelUp);
+        dat.TryGetInt("Range", out range, range);
 
         if (dat.ContainsKey("Dice"))
         {
@@ -208,10 +242,11 @@ public class Ability : IAsset
         {
             dicePerLevel = DiceRoll.GetByString(dat["Dice Scale"].ToString());
         }
-
-        tags = new List<AbilityTags>();
+        
         if (dat.ContainsKey("Tags"))
         {
+            tags = new List<AbilityTags>();
+
             for (int j = 0; j < dat["Tags"].Count; j++)
             {
                 string ef = dat["Tags"][j].ToString();

@@ -149,7 +149,7 @@ public class UserInterface : MonoBehaviour
                 ObjectManager.playerEntity.stats.health = ObjectManager.playerEntity.stats.maxHealth;
                 ObjectManager.playerEntity.stats.stamina = ObjectManager.playerEntity.stats.maxStamina;
                 ObjectManager.playerEntity.stats.statusEffects.Clear();
-                World.tileMap.GoToArea("Home_Base");
+                World.tileMap.GoToArea("Home");
                 World.tileMap.HardRebuild();
                 ObjectManager.playerEntity.UnDie();
                 dead = false;
@@ -547,7 +547,7 @@ public class UserInterface : MonoBehaviour
             if (uiState == UIWindow.Shop)
                 ShopPanel.UpdateTooltip();
             else if (uiState == UIWindow.Loot)
-                LPanel.UpdateTooltip();
+                LPanel.UpdateTooltip(true);
             else if (uiState == UIWindow.SelectItemToThrow)
                 ThrowPanel.UpdateTooltip();
             else if (uiState == UIWindow.PauseMenu)
@@ -1010,7 +1010,7 @@ public class UserInterface : MonoBehaviour
             LPanel.Init(boxInv);
     }
 
-    public void SetSelectedNumber(int num)
+    public void SetSelectedNumber(int num, bool scroll)
     {
         if (uiState != UIWindow.None)
         {
@@ -1027,13 +1027,13 @@ public class UserInterface : MonoBehaviour
             else if (uiState == UIWindow.SelectItemToThrow)
                 ThrowPanel.UpdateTooltip();
             else if (uiState == UIWindow.Loot)
-                LPanel.UpdateTooltip();
+                LPanel.UpdateTooltip(false);
             else if (uiState == UIWindow.PauseMenu)
                 pausePanel.UpdateSelected(selectedItemNum);
             else if (uiState == UIWindow.Abilities)
-                AbPanel.ChangeSelectedNum(num);
+                AbPanel.ChangeSelectedNum(num, scroll);
             else if (uiState == UIWindow.Journal)
-                JPanel.ChangeSelectedNum(num);
+                JPanel.ChangeSelectedNum(num, scroll);
         }
     }
 
