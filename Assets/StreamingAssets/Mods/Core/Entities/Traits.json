@@ -33,9 +33,19 @@
             "Stackable" : false
         },
         {
+            "Name" : "Puggish Rogue",
+            "ID" : "puggishrogue",
+            "Description" : "You have a natural knack for haggling and leadership. <color=green>Influence ▲</color>",
+            "Stats" : [
+                { "Stat" : "Charisma", "Amount" : 5 }
+            ],
+            "Tags" : [],
+            "Stackable" : false
+        },
+        {
             "Name" : "Blade Training",
             "ID" : "blade",
-            "Description" : "You are better with a blade. <color=green>Blade Skill +</color>",
+            "Description" : "You are better with a blade. <color=green>Blade Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Blade", "Amount" : 1 }
             ],
@@ -45,7 +55,7 @@
         {
             "Name" : "Blunt Training",
             "ID" : "blunt",
-            "Description" : "You are better with blunt weapons. <color=green>Blunt Skill +</color>",
+            "Description" : "You are better with blunt weapons. <color=green>Blunt Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Blunt", "Amount" : 1 }
             ],
@@ -55,7 +65,7 @@
         {
             "Name" : "Polearm Training",
             "ID" : "pole",
-            "Description" : "You are better with polearm weapons.. <color=green>Polearm Skill +</color>",
+            "Description" : "You are better with polearm weapons.. <color=green>Polearm Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Polearm", "Amount" : 1 }
             ],
@@ -65,7 +75,7 @@
         {
             "Name" : "Axe Training",
             "ID" : "axe",
-            "Description" : "You are better with axes. <color=green>Axe Skill +</color>",
+            "Description" : "You are better with axes. <color=green>Axe Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Axe", "Amount" : 1 }
             ],
@@ -75,7 +85,7 @@
         {
             "Name" : "Firearm Training",
             "ID" : "fire",
-            "Description" : "You are better with firearms. <color=green>Firearm Skill +</color>",
+            "Description" : "You are better with firearms. <color=green>Firearm Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Firearm", "Amount" : 1 }
             ],
@@ -85,7 +95,7 @@
         {
             "Name" : "Throwing Training",
             "ID" : "throw",
-            "Description" : "You are better with thrown weapons. <color=green>Throwing Skill +</color>",
+            "Description" : "You are better with thrown weapons. <color=green>Throwing Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Throwing", "Amount" : 1 }
             ],
@@ -95,7 +105,7 @@
         {
             "Name" : "Improvisation Training",
             "ID" : "improv",
-            "Description" : "You are better with misc weapons. <color=green>Misc Skill +</color>",
+            "Description" : "You are better with misc weapons. <color=green>Misc Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Misc", "Amount" : 1 }
             ],
@@ -103,9 +113,9 @@
             "Stackable" : false
         },
         {
-            "Name" : "CQC Training",
-            "ID" : "cqc",
-            "Description" : "You are more proficient while unarmed or wielding fist-type weapons. <color=green>Unarmed Skill +</color>",
+            "Name" : "Unarmed Training",
+            "ID" : "unarm",
+            "Description" : "You are more proficient while unarmed or wielding fist-type weapons. <color=green>Unarmed Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Unarmed", "Amount" : 1 }
             ],
@@ -115,7 +125,7 @@
         {
             "Name" : "Armor Training",
             "ID" : "armr",
-            "Description" : "You deflect attacks when wearing armor more often. <color=green>Armor Skill +</color>",
+            "Description" : "You deflect attacks when wearing armor more often. <color=green>Armor Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Armor", "Amount" : 1 }
             ],
@@ -125,7 +135,7 @@
         {
             "Name" : "Shield Training",
             "ID" : "shld",
-            "Description" : "You block more attacks while equipped with a shield. <color=green>Shield Skill +</color>",
+            "Description" : "You block more attacks while equipped with a shield. <color=green>Shield Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Shield", "Amount" : 1 }
             ],
@@ -133,9 +143,19 @@
             "Stackable" : false
         },
         {
+            "Name" : "Grappling Training",
+            "ID" : "grap",
+            "Description" : "You are more proficient with wrestling techniques. <color=green>Grappling Skill ▲</color>",
+            "Stats" : [
+                { "Stat" : "Grappling", "Amount" : 1 }
+            ],
+            "Tags" : [ "Random_Trait" ],
+            "Stackable" : false
+        },
+        {
             "Name" : "Charming",
             "ID" : "charming",
-            "Description" : "You have a way with words. Shopkeepers like you.",
+            "Description" : "You have a way with words. Shopkeepers like you. <color=green>Influence ▲</color>",
             "Stats" : [
                 { "Stat" : "Charisma", "Amount" : 5 }
             ],
@@ -152,7 +172,7 @@
         {
             "Name" : "Runner",
             "ID" : "runner",
-            "Description" : "Before coming to Axu, you ran as a hobby. <color=green>+SPD</color>",
+            "Description" : "Before coming to Axu, you ran as a hobby. <color=green>Speed ▲</color>",
             "Stats" : [
                 { "Stat" : "Speed", "Amount" : 2 }
             ],
@@ -162,7 +182,7 @@
         {
             "Name" : "Lithe",
             "ID" : "lithe",
-            "Description" : "Your hands are very quick. <color=green>+DEX</color>",
+            "Description" : "Your hands are very quick. <color=green>Dexterity ▲</color>",
             "Stats" : [
                 { "Stat" : "Dexterity", "Amount" : 1 }
             ],
@@ -172,7 +192,7 @@
         {
             "Name" : "Fortitudinous",
             "ID" : "fortitude",
-            "Description" : "You have greater tolerance for the wilds. <color=green>+END</color>",
+            "Description" : "You have greater tolerance for the wilds. <color=green>Endurance ▲</color>",
             "Stats" : [
                 { "Stat" : "Endurance", "Amount" : 1 }
             ],
@@ -182,7 +202,7 @@
         {
             "Name" : "Insightful",
             "ID" : "insight",
-            "Description" : "You have greater knowledge. <color=green>+INT</color>",
+            "Description" : "You have greater knowledge. <color=green>Intelligence ▲</color>",
             "Stats" : [
                 { "Stat" : "Intelligence", "Amount" : 1 }
             ],
@@ -192,7 +212,7 @@
         {
             "Name" : "Organized",
             "ID" : "organized",
-            "Description" : "You are able to pack your belongings efficiently. <color=green>+Storage</color>",
+            "Description" : "You are able to pack your belongings efficiently. <color=green>Storage ▲</color>",
             "Stats" : [
                 { "Stat" : "Storage Capacity", "Amount" : 3 }
             ],
@@ -202,7 +222,7 @@
         {
             "Name" : "Book Worm",
             "ID" : "bookworm",
-            "Description" : "You are more intelligent, but your strength suffers. <color=green>+INT</color> <color=red>-STR</color>",
+            "Description" : "You are more intelligent, but your strength suffers. <color=green>Intelligence ▲</color>, <color=red>Steangth ▼</color>",
             "Stats" : [
                 { "Stat" : "Intelligence", "Amount" : 1 },
                 { "Stat" : "Strength", "Amount" : -1 }
@@ -214,7 +234,7 @@
         {
             "Name" : "Simple",
             "ID" : "simple",
-            "Description" : "You have higher health and resiliance to attacks, but your stamina and intelligence are lower. <color=green>+HP +DEF</color> <color=red>-ST -INT</color>",
+            "Description" : "You have higher health and resiliance to attacks, but your stamina and intelligence are lower. <color=green>Health ▲, Defense ▲</color>, <color=red>Stamina ▼, Intelligence ▼</color>",
             "Stats" : [
                 { "Stat" : "Health", "Amount" : 10 },
                 { "Stat" : "Stamina", "Amount" : -5 },
@@ -228,7 +248,7 @@
         {
             "Name" : "Healthy",
             "ID" : "healthy",
-            "Description" : "You are at the peak of physical fitness. <color=green>+HP</color>.",
+            "Description" : "You are at the peak of physical fitness. <color=green>Health ▲</color>.",
             "Stats" : [
                 { "Stat" : "Health", "Amount" : 5 }
             ],
@@ -238,7 +258,7 @@
         {
             "Name" : "Energetic",
             "ID" : "energetic",
-            "Description" : "You have plenty of energy. <color=green>+ST</color>.",
+            "Description" : "You have plenty of energy. <color=green>Stamina ▲</color>.",
             "Stats" : [
                 { "Stat" : "Stamina", "Amount" : 5 }
             ],
@@ -272,7 +292,7 @@
         {
             "Name" : "Fast Walker",
             "ID" : "fastwalk",
-            "Description" : "You move slightly quicker than average. <color=green>+SPD</color>.",
+            "Description" : "You move slightly quicker than average. <color=green>Speed ▲</color>.",
             "Stats" : [
                 { "Stat" : "Speed", "Amount" : 1 }
             ],
@@ -290,7 +310,7 @@
         {
             "Name" : "Stealthy",
             "ID" : "stealthy",
-            "Description" : "Enemies are less likely to notice you. <color=green>+STLH</color>.",
+            "Description" : "Enemies are less likely to notice you. <color=green>Stealth ▲</color>.",
             "Stats" : [
                 { "Stat" : "Stealth", "Amount" : 3 }
             ],
@@ -300,7 +320,7 @@
         {
             "Name" : "Thick Skin",
             "ID" : "thickskin",
-            "Description" : "Your skin has several extra layers, providing protection from attacks. <color=green>+DEF</color>.",
+            "Description" : "Your skin has several extra layers, providing protection from attacks. <color=green>Defense ▲</color>.",
             "Stats" : [
                 { "Stat" : "Defense", "Amount" : 1 }
             ],
@@ -310,7 +330,7 @@
         {
             "Name" : "Keen Eye",
             "ID" : "keeneye",
-            "Description" : "You have impeccable eye sight. <color=green>+ACC</color>.",
+            "Description" : "You have impeccable eye sight. <color=green>Accuracy ▲</color>.",
             "Stats" : [
                 { "Stat" : "Accuracy", "Amount" : 1 }
             ],
@@ -327,7 +347,7 @@
         {
             "Name" : "Weathered",
             "ID" : "weathered",
-            "Description" : "You are tolerant to harsh conditions. <color=green>+Heat/Cold Resist</color>.",
+            "Description" : "You are tolerant to harsh conditions. <color=green>Heat/Cold Resist ▲</color>.",
             "Stats" : [
                 { "Stat" : "Heat Resist", "Amount" : 10 },
                 { "Stat" : "Cold Resist", "Amount" : 10 }
@@ -338,7 +358,7 @@
         {
             "Name" : "Reflective Iris",
             "ID" : "vision",
-            "Description" : "Your eyes are able to penetrate the darkness somewhat. <color=green>+VISION</color>",
+            "Description" : "Your eyes are able to penetrate the darkness somewhat. <color=green>Vision ▲</color>",
             "Stats" : [
             	{ "Stat" : "Light", "Amount" : 1 }
             ],
@@ -350,7 +370,7 @@
         {
             "Name" : "Cannibal",
             "ID" : "cannibal",
-            "Description" : "You have a reputation for devouring human flesh. <color=red>-Influence</color>",
+            "Description" : "You have a reputation for devouring human flesh. <color=red>Influence ▼</color>",
             "Stats" : [
                 { "Stat" : "Charisma", "Amount" : -5 }
             ],
@@ -360,7 +380,7 @@
         {
             "Name" : "Irritating",
             "ID" : "irritating",
-            "Description" : "You have an irritating personality. <color=red>-Influence</color>",
+            "Description" : "You have an irritating personality. <color=red>Influence ▼</color>",
             "Stats" : [
                 { "Stat" : "Charisma", "Amount" : -4 }
             ],
@@ -371,7 +391,7 @@
         {
             "Name" : "Slit Nostrils",
             "ID" : "slitnostrils",
-            "Description" : "Your nose is flush with your face, leaving only slits to breathe out of. <color=red>-ST Regen</color>",
+            "Description" : "Your nose is flush with your face, leaving only slits to breathe out of. <color=red>ST Regen ▼</color>",
             "Stats" : [
                 { "Stat" : "ST Regen", "Amount" : -2 }
             ],
@@ -381,7 +401,7 @@
         {
             "Name" : "Sickle Cells",
             "ID" : "sicklecells",
-            "Description" : "Your red blood cells are sickle-shaped, making it more difficult to recover from injuries. <color=red>-HP Regen</color>",
+            "Description" : "Your red blood cells are sickle-shaped, making it more difficult to recover from injuries. <color=red>HP Regen ▼</color>",
             "Stats" : [
                 { "Stat" : "HP Regen", "Amount" : -2 }
             ],
@@ -391,7 +411,7 @@
         {
             "Name" : "Asthmatic",
             "ID" : "athsmatic",
-            "Description" : "You have a hard time catching your breath. <color=red>-END -ST</color>",
+            "Description" : "You have a hard time catching your breath. <color=red>Endurance ▼, Stamina ▼</color>",
             "Stats" : [
                 { "Stat" : "Endurance", "Amount" : -1 },
                 { "Stat" : "Stamina", "Amount" : -2 }
@@ -402,7 +422,7 @@
         {
             "Name" : "Large Heart",
             "ID" : "bigheart",
-            "Description" : "Your heart is larger than normal. <color=green>+END +ST</color>",
+            "Description" : "Your heart is larger than normal. <color=green>Endurance ▲, Stamina ▲</color>",
             "Stats" : [
                 { "Stat" : "Endurance", "Amount" : 1 },
                 { "Stat" : "Stamina", "Amount" : 2 }
@@ -413,7 +433,7 @@
         {
             "Name" : "Night Vision",
             "ID" : "vision2",
-            "Description" : "You are very comfortable in darkness. It hides no secrets for you. <color=green>+VISION</color>",
+            "Description" : "You are very comfortable in darkness. It hides no secrets for you. <color=green>Vision ▲</color>",
             "Stats" : [
             	{ "Stat" : "Light", "Amount" : 4 }
             ],
@@ -439,7 +459,7 @@
         {
             "Name" : "Sluggish",
             "ID" : "sluggish",
-            "Description" : "Your movements and reaction time are slowed. <color=red>-SPD</color>.",
+            "Description" : "Your movements and reaction time are slowed. <color=red>Speed ▼</color>.",
             "Stats" : [
                 { "Stat" : "Speed", "Amount" : -2 },
                 { "Stat" : "Attack Delay", "Amount" : 2 }
@@ -450,7 +470,7 @@
         {
             "Name" : "Zarina",
             "ID" : "zarina",
-            "Description" : "Your skin is thin, like paper. <color=red>-DEF -Heat/Cold Resist</color>.",
+            "Description" : "Your skin is thin, like paper. <color=red>Defense ▼, Heat/Cold Resist ▼</color>.",
             "Stats" : [
                 { "Stat" : "Defense", "Amount" : -1 },
                 { "Stat" : "Heat Resist", "Amount" : -10 },
@@ -463,7 +483,7 @@
         {
             "Name" : "Serpentine",
             "ID" : "serpentine",
-            "Description" : "Your legs have been fused together, creating a hideous tail. <color=green>+Stealth</color> <color=red>-SPD</color>",
+            "Description" : "Your legs have been fused together, creating a hideous tail. <color=green>Stealth ▲</color>, <color=red>Speed ▼</color>",
             "Stats" : [
                 { "Stat" : "Stealth", "Amount" : 4 }
             ],
@@ -559,7 +579,7 @@
             "ID" : "claws",
             "Tier" : 1,
             "Next Tier" : "claws2",
-            "Description" : "Your hands are gnarled claws, unable to wear gauntlets or gloves. <color=green>+Unarmed</color>",
+            "Description" : "Your hands are gnarled claws, unable to wear gauntlets or gloves. <color=green>Unarmed Skill ▲</color>",
             "Stats" : [
                 { "Stat" : "Unarmed", "Amount" : 1 }
             ],
@@ -577,7 +597,7 @@
             "ID" : "claws2",
             "Tier" : 2,
             "Prerequisite" : "claws",
-            "Description" : "Your hands bear extremely sharp claws, unable to wear gauntlets or gloves. (Claws II)",
+            "Description" : "Your hands bear extremely sharp claws, unable to wear gauntlets or gloves. <color=green>Unarmed Skill ▲</color> <color=magenta>(Claws II)</color>",
             "Stats" : [
 				{ "Stat" : "Unarmed", "Amount" : 2 }
             ],
@@ -611,7 +631,7 @@
             "ID" : "horns2",
             "Prerequisite" : "horns",
             "Tier" : 2,
-            "Description" : "The horns on your head have become massive and encumbering. You cannot wear head gear, but can gore nearby opponents.",
+            "Description" : "The horns on your head have become massive and encumbering. You cannot wear head gear, but can gore nearby opponents. <color=magenta>(Horns II)</color>",
             "Replace_Body_Part" : {
                 "Slot" : "Slot_Head",
                 "NewEquippedItem" : "horns2",
@@ -630,7 +650,7 @@
             "ID" : "tendrils",
             "Tier" : 1,
             "Next Tier" : "tendrils2",
-            "Description" : "Your arms have turned into long whispy tendrils, capable of hitting enemies from a distance. <color=green>+DEX</color> <color=red>-STR</color>",
+            "Description" : "Your arms have turned into long whispy tendrils, capable of hitting enemies from a distance. <color=green>Dexterity ▲</color>, <color=red>Strength ▼</color>",
             "Stats" : [
 				{ "Stat" : "Strength", "Amount" : -1 },
                 { "Stat" : "Dexterity", "Amount" : 1 }
@@ -649,7 +669,7 @@
             "ID" : "tendrils2",
             "Tier" : 2,
             "Prerequisite" : "tendrils",
-            "Description" : "Your arms have turned into long tentacles. <color=green>+DEX</color> (Tendrils II)",
+            "Description" : "Your arms have turned into long tentacles. <color=green>Dexterity ▲</color> <color=magenta>(Tendrils II)</color>",
             "Stats" : [
             	{ "Stat" : "Strength", "Amount" : -1 },
                 { "Stat" : "Dexterity", "Amount" : 2 }
@@ -666,7 +686,7 @@
         {
             "Name" : "Large Cranium",
             "ID" : "bighead",
-            "Description" : "Your head is very large, and most head gear will not fit. <color=green>+INT</color>",
+            "Description" : "Your head is very large, and most head gear will not fit. <color=green>Intelligence ▲</color>",
             "Stats" : [
                 { "Stat" : "Intelligence", "Amount" : 1 }
             ],
@@ -684,7 +704,7 @@
         	"ID" : "rubberskin",
             "Next Tier" : "rubberskin2",
             "Tier" : 1,
-        	"Description" : "Your skin is stretchy, yet somewhat resilliant. <color=green>+Heat/Cold/Energy Resist</color>",
+        	"Description" : "Your skin is stretchy, yet somewhat resilliant. <color=green>Heat/Cold/Energy Resist ▲</color>",
         	"Stats" : [
         		{ "Stat" : "Heat Resist", "Amount" : 5 },
         		{ "Stat" : "Cold Resist", "Amount" : 5 },
@@ -699,7 +719,7 @@
             "ID" : "rubberskin2",
             "Prerequisite" : "rubberskin",
             "Tier" : 2,
-            "Description" : "Your skin is stretchy and very resilliant. <color=green>+Heat/Cold/Energy Resist</color>",
+            "Description" : "Your skin is stretchy and very resilliant. <color=green>Heat/Cold/Energy Resist ▲</color>",
             "Stats" : [
                 { "Stat" : "Heat Resist", "Amount" : 10 },
                 { "Stat" : "Cold Resist", "Amount" : 10 },
@@ -712,7 +732,7 @@
         {
         	"Name" : "Selective Pigmentation",
         	"ID" : "selpig",
-        	"Description" : "Your skin can adapt its colour to your surroundings. <color=green>+STLH</color>",
+        	"Description" : "Your skin can adapt its colour to your surroundings. <color=green>Stealth ▲</color>",
         	"Stats" : [
         		{ "Stat" : "Stealth", "Amount" : 5 }
         	],
@@ -722,7 +742,7 @@
         {
             "Name" : "Nimble",
             "ID" : "nimble",
-            "Description" : "You are faster, but your strength suffers. <color=green>+DEX</color>, <color=green>+SPD</color>, <color=red>-STR</color>",
+            "Description" : "You are faster, but your strength suffers. <color=green>Dexterity ▲</color>, <color=green>Speed ▲</color>, <color=red>Strength ▼</color>",
             "Stats" : [
                 { "Stat" : "Dexterity", "Amount" : 1 },
                 { "Stat" : "Strength", "Amount" : -1 },
@@ -734,7 +754,7 @@
         {
             "Name" : "Compound Eyes",
             "ID" : "flyeyes",
-            "Description" : "You have trouble focusing with your large fly-like eyes. <color=red>-ACC</color>",
+            "Description" : "You have trouble focusing with your large fly-like eyes. <color=red>Accuracy ▼</color>",
             "Stats" : [
                 { "Stat" : "Accuracy", "Amount" : -1 }
             ],
@@ -779,7 +799,7 @@
         {
             "Name" : "Wings",
             "ID" : "wings",
-            "Description" : "You have wings sprouting from your back. <color=green>+SPD</color>",
+            "Description" : "You have wings sprouting from your back. <color=green>Speed ▲</color>",
             "Stats" : [
                 { "Stat" : "Speed", "Amount" : 6 }
             ],
@@ -802,7 +822,7 @@
         {
             "Name" : "Antennae",
             "ID" : "antennae",
-            "Description" : "Your head bears two large, ugly antennae. <color=red>-Influence</color>",
+            "Description" : "Your head bears two large, ugly antennae. <color=red>Influence ▼</color>",
             "Stats" : [
                 { "Stat" : "Charisma", "Amount" : -3 }
             ],
@@ -820,7 +840,7 @@
         {
             "Name" : "Beak",
             "ID" : "beak",
-            "Description" : "Your mouth has been replaced by an unsightly beak. <color=red>-Influence</color>",
+            "Description" : "Your mouth has been replaced by an unsightly beak. <color=red>Influence ▼</color>",
             "Stats" : [
                 { "Stat" : "Charisma", "Amount" : -1 }
             ],
@@ -857,7 +877,7 @@
         {
             "Name" : "Hollow Bones",
             "ID" : "hollowbones",
-            "Description" : "Your bones have become hollow like a bird's. <color=red>-DEF</color>",
+            "Description" : "Your bones have become hollow like a bird's. <color=red>Defense ▼</color>",
             "Stats" : [
                 { "Stat" : "Defense", "Amount" : -1 }
             ],
@@ -868,7 +888,7 @@
         {
             "Name" : "Dense Bones",
             "ID" : "densebones",
-            "Description" : "Your bones' density has increased, protecting you. <color=green>+DEF</color>",
+            "Description" : "Your bones' density has increased, protecting you. <color=green>Defense ▲</color>",
             "Stats" : [
                 { "Stat" : "Defense", "Amount" : 1 }
             ],
@@ -879,7 +899,7 @@
         {
             "Name" : "Cold-Blooded",
             "ID" : "coldblood",
-            "Description" : "Your body temperature varies with your environment. <color=green>+Heat Res</color> <color=red>-Cold Res</color>.",
+            "Description" : "Your body temperature varies with your environment. <color=green>Heat Resist ▲</color>, <color=red>Cold Resist ▼</color>.",
             "Stats" : [
                 { "Stat" : "Heat Resist", "Amount" : 25 },
                 { "Stat" : "Cold Resist", "Amount" : -25 }
@@ -890,7 +910,7 @@
 		{
 			"Name" : "Smooth Skin",
 			"ID" : "smoothskin",
-			"Description" : "Your skin is extremely smooth and beautiful. <color=green>+Influence</color>",
+			"Description" : "Your skin is extremely smooth and beautiful. <color=green>Influence ▲</color>",
 			"Stats" : [
 				{ "Stat" : "Charisma", "Amount" : 4 }
 			],
@@ -901,7 +921,7 @@
 		{
 			"Name" : "Alluring Voice",
 			"ID" : "comvoice",
-			"Description" : "Your voice is quite pleasant to listen to. <color=green>+Influence</color>",
+			"Description" : "Your voice is quite pleasant to listen to. <color=green>Influence ▲</color>",
 			"Stats" : [
 				{ "Stat" : "Charisma", "Amount" : 2 }
 			],
@@ -911,7 +931,7 @@
         {
             "Name" : "Chitinous Skin",
             "ID" : "chitin",
-            "Description" : "Your skin is covered in a thin layer of chitin. <color=green>+DEF +Heat Resist</color>",
+            "Description" : "Your skin is covered in a thin layer of chitin. <color=green>Defense ▲, Heat Resist ▲</color>",
             "Stats" : [
                 { "Stat" : "Defense", "Amount" : 1 },
                 { "Stat" : "Heat Resist", "Amount" : 5 }
@@ -925,7 +945,7 @@
             "ID" : "scales",
             "Next Tier" : "scales2",
             "Tier" : 1,
-            "Description" : "Your body is covered in thick, tough scales. <color=green>+DEF</color>",
+            "Description" : "Your body is covered in thick, tough scales. <color=green>Defense ▲</color>",
             "Stats" : [
                 { "Stat" : "Defense", "Amount" : 1 }
             ],
@@ -938,7 +958,7 @@
             "ID" : "scales2",
             "Prerequisite" : "scales",
             "Tier" : 2,
-            "Description" : "Your body is covered in large segmented plates. It slightly impacts your movement. <color=green>+DEF</color> <color=red>-SPD</color> (Scales II)",
+            "Description" : "Your body is covered in large segmented plates. It slightly impacts your movement. <color=green>Defense ▲</color> <color=red>Speed ▼</color> <color=magenta>(Scales II)</color>",
             "Stats" : [
                 { "Stat" : "Defense", "Amount" : 2 },
                 { "Stat" : "Speed", "Amount" : -1 }
@@ -950,7 +970,7 @@
         {
             "Name" : "Second Heart",
             "ID" : "2ndheart",
-            "Description" : "You gain a second heart, and it miraculously doesn't interfere with your circulatory system. <color=green>+END +ST</color>",
+            "Description" : "You gain a second heart, and it miraculously doesn't interfere with your circulatory system. <color=green>Endurance ▲, Stamina ▲</color>",
             "Stats" : [
                 { "Stat" : "Endurance", "Amount" : 1 },
                 { "Stat" : "Stamina", "Amount" : 5 }
@@ -1020,7 +1040,7 @@
         {
             "Name" : "Regenitrol <color=red>Addiction</color>",
             "ID" : "addiction_liquid_regenitrol",
-            "Description" : "You are addicted to Regenitrol. Going without it can cause these withdrawal effects: (<color=red>-1 INT, -2 END</color>)",
+            "Description" : "You are addicted to Regenitrol. Going without it can cause these withdrawal effects: (<color=red>-1 Intelligence, -2 Endurance</color>)",
             "Stats" : [
                 { "Stat" : "Intelligence", "Amount" : -1 },
                 { "Stat" : "Endurance", "Amount" : -2 }
@@ -1031,7 +1051,7 @@
         {
             "Name" : "Caffeine <color=red>Addiction</color>",
             "ID" : "addiction_caffeine",
-            "Description" : "You are addicted to Caffeine Pills. Going without it can cause these withdrawal effects: (<color=red>-1 SPD -2 STR</color>)",
+            "Description" : "You are addicted to Caffeine Pills. Going without it can cause these withdrawal effects: (<color=red>-1 Speed, -2 Strength</color>)",
             "Stats" : [
                 { "Stat" : "Move Speed", "Amount" : -1 },
                 { "Stat" : "Strength", "Amount" : -2 }
@@ -1042,7 +1062,7 @@
         {
             "Name" : "Alcohol <color=red>Addiction</color>",
             "ID" : "addiction_liquid_alcohol",
-            "Description" : "You are addicted to Alcohol. Going without it can cause these withdrawal effects: (<color=red>-1 ACC -1 STR</color>)",
+            "Description" : "You are addicted to Alcohol. Going without it can cause these withdrawal effects: (<color=red>-1 Accuracy, -1 Strength</color>)",
             "Stats" : [
                 { "Stat" : "Accuracy", "Amount" : -1 },
                 { "Stat" : "Strength", "Amount" : -1 }
@@ -1053,7 +1073,7 @@
         {
             "Name" : "Cytopke <color=red>Addiction</color>",
             "ID" : "addiction_liquid_cytopke",
-            "Description" : "You are addicted to Cytopke. Going without it can cause these withdrawal effects: (<color=red>+1 STR -1 INT -2 SPD</color>)",
+            "Description" : "You are addicted to Cytopke. Going without it can cause these withdrawal effects: (<color=red>+1 Strength, -1 Intelligence, -2 Speed</color>)",
             "Stats" : [
                 { "Stat" : "Strength", "Amount" : 1 },
                 { "Stat" : "Move Speed", "Amount" : -2 },

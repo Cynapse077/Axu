@@ -57,6 +57,17 @@ public class TooltipPanel : MonoBehaviour
 
         //Description
         GameObject d = SimplePool.Spawn(TDescription, transform);
-        d.GetComponentInChildren<Text>().text = "<i>\"" + item.flavorText + " " + item.modifier.description + "\"</i>";
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append("<i>\"" + item.flavorText);
+
+        if (!item.modifier.description.NullOrEmpty())
+        {
+            sb.Append(" " + item.modifier.description);
+        }
+
+        sb.Append("\"</i>");
+
+        d.GetComponentInChildren<Text>().text = sb.ToString();
     }
 }

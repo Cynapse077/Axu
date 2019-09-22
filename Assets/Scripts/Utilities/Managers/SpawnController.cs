@@ -22,7 +22,7 @@ public static class SpawnController
                     npc.localPosition = new Coord(Random.Range(0, Manager.localMapSize.x), Random.Range(0, Manager.localMapSize.y));
 
                     string biome = bp.zone.Replace("Random_", "");
-                    WorldMap.Biome b = biome.ToEnum<WorldMap.Biome>();
+                    Biome b = biome.ToEnum<Biome>();
                     npc.worldPosition = World.worldMap.worldMapData.GetRandomFromBiome(b);
                 }
                 else
@@ -204,7 +204,7 @@ public static class SpawnController
         }
 
         //Random minibosses.
-        if (World.DangerLevel() >= 6 && rng.Next(1000) < 5)
+        if (World.DangerLevel() >= 6 && rng.Next(1000) < ObjectManager.playerEntity.stats.MyLevel.CurrentLevel + 1)
         {
             List<GroupBlueprint> bps = new List<GroupBlueprint>();
 
@@ -439,7 +439,7 @@ public static class SpawnController
 
         MapInfo mi = World.tileMap.worldMap.GetTileAt(World.tileMap.worldCoordX, World.tileMap.worldCoordY);
 
-        return (mi.biome != WorldMap.Biome.Ocean && !mi.friendly);
+        return (mi.biome != Biome.Ocean && !mi.friendly);
     }
 
     public static void SpawnFromGroupName(string name, int amount = 1)

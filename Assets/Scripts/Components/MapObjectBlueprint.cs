@@ -19,10 +19,17 @@ public class MapObjectBlueprint : IAsset
     public ProgressFlags[] permissions;
     public bool saved = true;
     public ObjectRenderLayer renderLayer;
+    public bool displayInEditor = true;
 
     public MapObjectBlueprint()
     {
         Defaults();
+    }
+
+    public MapObjectBlueprint(MapObjectBlueprint other)
+    {
+        Defaults();
+        CopyFrom(other);
     }
 
     public MapObjectBlueprint(JsonData dat)
@@ -39,6 +46,8 @@ public class MapObjectBlueprint : IAsset
     void Defaults()
     {
         Name = "";
+        ID = "";
+        ModID = "";
         objectType = "None";
         tint = new Vector4(1, 1, 1, 1);
         randomRotation = false;
@@ -52,10 +61,45 @@ public class MapObjectBlueprint : IAsset
         luaEvents = new Dictionary<string, LuaCall>();
         permissions = new ProgressFlags[0];
         saved = true;
+        displayInEditor = true;
+    }
+
+    void CopyFrom(MapObjectBlueprint other)
+    {
+        ID = other.ID;
+        ModID = other.ModID;
+        Name = other.Name;
+        objectType = other.objectType;
+        tint = other.tint;
+        randomRotation = other.randomRotation;
+        renderLayer = other.renderLayer;
+        autotile = other.autotile;
+        opaque = other.opaque;
+        description = other.description;
+        spriteID = other.spriteID;
+        light = other.light;
+        solid = other.solid;
+        luaEvents = new Dictionary<string, LuaCall>(other.luaEvents);
+        permissions = other.permissions;
+        saved = other.saved;
+        pathCost = other.pathCost;
+        pulseInfo = other.pulseInfo;
+        container = other.container;
+        displayInEditor = other.displayInEditor;
     }
 
     public void FromJson(JsonData dat)
     {
+        if (dat.ContainsKey("Base"))
+        {
+            MapObjectBlueprint other = GameData.Get<MapObjectBlueprint>(dat["Base"].ToString()) as MapObjectBlueprint;
+
+            if (other != null)
+            {
+                CopyFrom(other);
+            }
+        }
+
         if (dat.ContainsKey("Name"))
             Name = dat["Name"].ToString();
         if (dat.ContainsKey("ObjectType"))
@@ -69,11 +113,12 @@ public class MapObjectBlueprint : IAsset
         dat.TryGetEnum("Physics", out solid, solid);
         dat.TryGetBool("Opaque", out opaque, opaque);
         dat.TryGetBool("Autotile", out autotile, autotile);
-        dat.TryGetEnum("Render Layer", out renderLayer, ObjectRenderLayer.Mid);
+        dat.TryGetEnum("Render Layer", out renderLayer, renderLayer);
         dat.TryGetBool("Random Rotation", out randomRotation, randomRotation);
         dat.TryGetInt("Light", out light, light);
-        dat.TryGetBool("Saved", out saved, true);
-        dat.TryGetBool("Random Rotation", out randomRotation, false);
+        dat.TryGetBool("Saved", out saved, saved);
+        dat.TryGetBool("Display In Editor", out displayInEditor, displayInEditor);
+        dat.TryGetBool("Random Rotation", out randomRotation, randomRotation);
 
         if (dat.ContainsKey("Container"))
         {
@@ -107,18 +152,31 @@ public class MapObjectBlueprint : IAsset
 
         if (dat.ContainsKey("Permissions"))
         {
-            permissions = new ProgressFlags[dat["Permissions"].Count];
+            List<ProgressFlags> flags = new List<ProgressFlags>();
+
+            if (permissions != null)
+            {
+                for (int i = 0; i < permissions.Length; i++)
+                {
+                    flags.Add(permissions[i]);
+                }
+            }
 
             for (int j = 0; j < dat["Permissions"].Count; j++)
             {
                 string perm = dat["Permissions"][j].ToString();
-                permissions[j] = perm.ToEnum<ProgressFlags>();
+                flags.Add(perm.ToEnum<ProgressFlags>());
             }
+
+            permissions = flags.ToArray();
         }
 
         if (dat.ContainsKey("LuaEvents"))
         {
-            luaEvents = new Dictionary<string, LuaCall>();
+            if (luaEvents == null)
+            {
+                luaEvents = new Dictionary<string, LuaCall>();
+            }
 
             for (int j = 0; j < dat["LuaEvents"].Count; j++)
             {

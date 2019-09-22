@@ -397,9 +397,9 @@ public class Dungeon
 
     void MakeCorridors(bool strict = true, bool offset = true)
     {
-        for (int i = 1; i < rooms.Count; i++)
+        for (int i = 0; i < rooms.Count; i++)
         {
-            Room otherRoom = (strict) ? rooms[i].ClosestNonConnectedRoom(rooms) : rooms[i - 1];
+            Room otherRoom = (strict || i == 0) ? rooms[i].ClosestNonConnectedRoom(rooms) : rooms[i - 1];
 
             int x = rooms[i].centerX, y = rooms[i].centerY;
             int x1 = otherRoom.centerX, y1 = otherRoom.centerY;

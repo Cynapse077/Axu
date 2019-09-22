@@ -83,6 +83,12 @@ public class Damage
         int dice = 0, sides = 0, inc = 0;
         string[] ss = dmgString.Split("d"[0]);
 
+        if (ss.Length < 2)
+        {
+            Log.Error("Damage.GetByString - Could not parse string \"" + dmgString + "\"");
+            return new Damage();
+        }
+
         if (ss[1].Contains("+"))
         {
             string[] ss2 = ss[1].Split("+"[0]);

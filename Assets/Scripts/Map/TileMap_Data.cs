@@ -75,7 +75,7 @@ public class TileMap_Data
     /// </summary>
     public TileMap_Data(string mapName, bool friendly)
     {
-        mapInfo = new MapInfo(World.tileMap.WorldPosition, WorldMap.Biome.Default);
+        mapInfo = new MapInfo(World.tileMap.WorldPosition, Biome.Default);
         SeedManager.NPCSeed(mapName);
         Init();
         mapInfo.friendly = friendly;
@@ -155,7 +155,7 @@ public class TileMap_Data
                     break;
             }
         }
-        else if (mapInfo.biome != WorldMap.Biome.Ocean && mapInfo.biome != WorldMap.Biome.Mountain)
+        else if (mapInfo.biome != Biome.Ocean && mapInfo.biome != Biome.Mountain)
         {
             int ranNum = RNG.Next(1000);
 
@@ -236,7 +236,7 @@ public class TileMap_Data
 
     void PlaceAdjacentBiomes()
     {
-        if (mapInfo.biome == WorldMap.Biome.Ocean || mapInfo.biome == WorldMap.Biome.Mountain)
+        if (mapInfo.biome == Biome.Ocean || mapInfo.biome == Biome.Mountain)
         {
             return;
         }
@@ -244,7 +244,7 @@ public class TileMap_Data
         //N
         if (mapInfo.position.y > 0)
         {
-            WorldMap.Biome nBiome = WorldData.GetTileAt(mapInfo.position.x, mapInfo.position.y + 1).biome;
+            Biome nBiome = WorldData.GetTileAt(mapInfo.position.x, mapInfo.position.y + 1).biome;
 
             if (MapInfo.BiomeHasEdge(nBiome) && mapInfo.biome != nBiome)
             {
@@ -263,7 +263,7 @@ public class TileMap_Data
         //E
         if (mapInfo.position.x > 0)
         {
-            WorldMap.Biome eBiome = WorldData.GetTileAt(mapInfo.position.x + 1, mapInfo.position.y).biome;
+            Biome eBiome = WorldData.GetTileAt(mapInfo.position.x + 1, mapInfo.position.y).biome;
 
             if (MapInfo.BiomeHasEdge(eBiome) && mapInfo.biome != eBiome)
             {
@@ -282,7 +282,7 @@ public class TileMap_Data
         //S
         if (mapInfo.position.y < Manager.worldMapSize.y - 1)
         {
-            WorldMap.Biome sBiome = WorldData.GetTileAt(mapInfo.position.x, mapInfo.position.y - 1).biome;
+            Biome sBiome = WorldData.GetTileAt(mapInfo.position.x, mapInfo.position.y - 1).biome;
 
             if (MapInfo.BiomeHasEdge(sBiome) && mapInfo.biome != sBiome)
             {
@@ -301,7 +301,7 @@ public class TileMap_Data
         //W
         if (mapInfo.position.x < Manager.worldMapSize.x - 1)
         {
-            WorldMap.Biome wBiome = WorldData.GetTileAt(mapInfo.position.x - 1, mapInfo.position.y).biome;
+            Biome wBiome = WorldData.GetTileAt(mapInfo.position.x - 1, mapInfo.position.y).biome;
 
             if (MapInfo.BiomeHasEdge(wBiome) && mapInfo.biome != wBiome)
             {
@@ -339,13 +339,13 @@ public class TileMap_Data
             {
                 Tile_Data tile = map_data[x, y];
 
-                //TODO: Move bars/pews to map objects
+                //TODO: Move pews to map objects
                 if (tile == Tile.tiles["Door"] || tile == Tile.tiles["Stairs_Up"] || tile == Tile.tiles["Stairs_Down"])
                     continue;
 
                 if (Tile.isWaterTile(tile.ID, true))
                 {
-                    int tIndex = (elevation == 0 && mapInfo.biome != WorldMap.Biome.Mountain) ? 0 : 8;
+                    int tIndex = (elevation == 0 && mapInfo.biome != Biome.Mountain) ? 0 : 8;
                     BitwiseAutotile(x, y, tIndex, (z => Tile.isWaterTile(z, true)), true);
                 }
                 else if (tile.HasTag("Wall"))
@@ -420,23 +420,23 @@ public class TileMap_Data
                 else if (tile == Tile.tiles["Lava"])
                 {
                     int tIndex = 10;
-                    BitwiseAutotile(x, y, tIndex, (z => z == Tile.tiles["Lava"].ID), true);
+                    BitwiseAutotile(x, y, tIndex, (z => z == tile.ID), true);
                 }
                 else if (tile == Tile.tiles["Ice"])
                 {
                     int tIndex = 16;
-                    BitwiseAutotile(x, y, tIndex, (z => z == Tile.tiles["Ice"].ID), true);
+                    BitwiseAutotile(x, y, tIndex, (z => z == tile.ID), true);
                 }
                 else if (tile == Tile.tiles["Dream_Floor"])
                 {
                     int tIndex = 23;
-                    BitwiseAutotile(x, y, tIndex, (z => z == Tile.tiles["Dream_Floor"].ID), true);
+                    BitwiseAutotile(x, y, tIndex, (z => z == tile.ID), true);
                 }
                 else if (elevation == 0 && tile.biome != mapInfo.biome)
                 {
                     BitwiseAutotile(x, y, 21,
                         (
-                            z => Tile.GetByID(z).biome == WorldMap.Biome.Default && !Tile.isWaterTile(z, true) ||
+                            z => Tile.GetByID(z).biome == Biome.Default && !Tile.isWaterTile(z, true) ||
                             Tile.GetByID(z).biome == tile.biome
                         ), true, TileMap_Generator.TileFromBiome(mapInfo.biome, false).ID);
                 }
@@ -1089,7 +1089,7 @@ public class TileMap_Data
     bool RiverAt(int x, int y)
     {
         MapInfo mi = WorldData.GetTileAt(x, y);
-        return (mi.landmark == "River" || mi.biome == WorldMap.Biome.Ocean);
+        return (mi.landmark == "River" || mi.biome == Biome.Ocean);
     }
 
     bool VillageAt(int x, int y)
@@ -1136,7 +1136,7 @@ public class TileMap_Data
 
         //Place Ice instead of water
 
-        if (mapInfo.biome == WorldMap.Biome.Tundra)
+        if (mapInfo.biome == Biome.Tundra)
         {
             for (int ex = 0; ex < Width; ex++)
             {

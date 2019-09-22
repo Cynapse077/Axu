@@ -59,12 +59,8 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public Item(JsonData dat)
     {
+        Defaults();
         FromJson(dat);
-
-        if (modifier == null)
-        {
-            modifier = new ItemModifier();
-        }
     }
 
     void Defaults()
@@ -184,31 +180,21 @@ public class Item : ComponentHolder<CComponent>, IAsset
             }
         }
 
+        //Status effects
+        foreach (CComponent c in CComponentsOfType<COnHitAddStatus>())
+        {
+            COnHitAddStatus cOnHit = c as COnHitAddStatus;
+
+            if (cOnHit != null)
+            {
+                cOnHit.TryAddToEntity(attackedEntity);
+            }
+        }
+
         //Item level
         if (HasCComponent<CItemLevel>())
         {
             GetCComponent<CItemLevel>().AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
-        }
-
-        //Status Effects - Move To COnHit_AddStatus
-        if (damageTypes.Contains(DamageTypes.Venom) && SeedManager.combatRandom.Next(100) <= 3)
-        {
-            attackedEntity.stats.AddStatusEffect("Poison", SeedManager.combatRandom.Next(2, 8));
-        }
-
-        if (ContainsDamageType(DamageTypes.Bleed) && SeedManager.combatRandom.Next(100) <= 5)
-        {
-            attackedEntity.stats.AddStatusEffect("Bleed", SeedManager.combatRandom.Next(2, 8));
-        }
-
-        if (HasProp(ItemProperty.Stun) && SeedManager.combatRandom.Next(100) <= 5)
-        {
-            attackedEntity.stats.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 4));
-        }
-
-        if (HasProp(ItemProperty.Confusion) && SeedManager.combatRandom.Next(100) <= 5)
-        {
-            attackedEntity.stats.AddStatusEffect("Confuse", SeedManager.combatRandom.Next(2, 8));
         }
 
         if (HasProp(ItemProperty.Knockback) && SeedManager.combatRandom.Next(100) <= 5)
@@ -429,16 +415,6 @@ public class Item : ComponentHolder<CComponent>, IAsset
             stats.AddStatusEffect("Poison", SeedManager.combatRandom.Next(6, 10));
         }
 
-        if (HasProp(ItemProperty.Confusion))
-        {
-            stats.AddStatusEffect("Confuse", SeedManager.combatRandom.Next(5, 11));
-        }
-
-        if (HasProp(ItemProperty.Stun))
-        {
-            stats.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 3));
-        }
-
         if (HasProp(ItemProperty.Radiate))
         {
             stats.Radiate(SeedManager.combatRandom.Next(10, 40));
@@ -619,6 +595,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
     {
         if (HasCComponent<CRot>())
         {
+            GetCComponent<CRot>().OnRemove();
             RemoveCComponent<CRot>();
             AddProperty(ItemProperty.Preserved);
         }
@@ -874,6 +851,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             return;
 
         ID = other.ID;
+        ModID = other.ModID;
         Name = other.Name;
         itemType = other.itemType;
         damage = other.damage;
@@ -950,32 +928,45 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public void FromJson(JsonData dat)
     {
-        ID = dat["ID"].ToString();
-        dat.TryGetString("Name", out Name);
-        dat.TryGetInt("TileID", out tileID);
-        dat.TryGetEnum("Type", out itemType, Proficiencies.Misc_Object);
-        dat.TryGetInt("Rarity", out rarity, 100);
-        dat.TryGetBool("Lootable", out lootable, true);
-        dat.TryGetBool("Stackable", out stackable, false);
-        dat.TryGetInt("Armor", out armor, 0);
-        dat.TryGetInt("Accuracy", out accuracy, 0);
+        if (dat.ContainsKey("Base"))
+        {
+            string baseID = dat["Base"].ToString();
+
+            Item baseItem = GameData.Get<Item>(baseID) as Item;
+
+            if (baseItem != null && baseItem != ItemList.GetNone())
+            {
+                CopyFrom(baseItem);
+            }
+        }
+
+        if (dat.ContainsKey("ID"))
+        {
+            ID = dat["ID"].ToString();
+        }
+
+        if (dat.ContainsKey("Name"))
+        {
+            Name = dat["Name"].ToString();
+        }
+        else
+        {
+            Name = ID;
+        }
+
+        dat.TryGetInt("TileID", out tileID, tileID);
+        dat.TryGetEnum("Type", out itemType, itemType);
+        dat.TryGetInt("Rarity", out rarity, rarity);
+        dat.TryGetBool("Lootable", out lootable, lootable);
+        dat.TryGetBool("Stackable", out stackable, stackable);
+        dat.TryGetInt("Armor", out armor, armor);
+        dat.TryGetInt("Accuracy", out accuracy, accuracy);
         dat.TryGetString("FlavorText", out flavorText);
+        dat.TryGetDamage("Damage", out damage, damage);
 
         if (rarity < 100 && rarity > ItemUtility.MaxRarity)
         {
             ItemUtility.MaxRarity = rarity;
-        }
-
-        components = new List<CComponent>();
-
-        if (dat.ContainsKey("Damage"))
-        {
-            string dmgString = dat["Damage"].ToString();
-            damage = Damage.GetByString(dmgString);
-        }
-        else
-        {
-            damage = new Damage(1, 3, 0, DamageTypes.Blunt);
         }
 
         if (dat.ContainsKey("Cost"))
@@ -1000,13 +991,13 @@ public class Item : ComponentHolder<CComponent>, IAsset
         }
 
         //Damage Types
-        if (dat.ContainsKey("DmgTypes"))
+        if (dat.ContainsKey("Damage Types"))
         {
-            if (dat["DmgTypes"].Count > 0)
+            if (dat["Damage Types"].Count > 0)
                 damageTypes.Clear();
-            for (int d = 0; d < dat["DmgTypes"].Count; d++)
+            for (int d = 0; d < dat["Damage Types"].Count; d++)
             {
-                string dmg = dat["DmgTypes"][d].ToString();
+                string dmg = dat["Damage Types"][d].ToString();
                 DamageTypes dt = dmg.ToEnum<DamageTypes>();
                 damageTypes.Add(dt);
             }
@@ -1024,7 +1015,6 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
 
         //Stat Modifiers
-        statMods = new List<Stat_Modifier>();
         if (dat.ContainsKey("Stat Mods"))
         {
             for (int s = 0; s < dat["Stat Mods"].Count; s++)
@@ -1070,7 +1060,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 public enum ItemProperty
 {
     None, Artifact, Ammunition,
-    Confusion, Stop_Bleeding, Stun, Poison, Cure_Radiation, OnAttack_Radiation,
+    Stop_Bleeding, Stun, Poison, Cure_Radiation, OnAttack_Radiation,
     OnAttach_Leprosy, OnAttach_Crystallization,
     Armor, Slot_Head, Slot_Back, Slot_Chest, Slot_Tail, Slot_Wing, Slot_Arm, Slot_Leg, Slot_Misc,
     Cannot_Remove, Degrade, DestroyOnZeroCharges, ReplaceLimb,

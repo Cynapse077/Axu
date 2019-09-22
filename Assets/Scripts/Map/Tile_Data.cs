@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using MoonSharp.Interpreter;
 
-[MoonSharp.Interpreter.MoonSharpUserData]
+[MoonSharpUserData]
 public class Tile_Data
 {
     public int ID;
-    public WorldMap.Biome biome;
+    public Biome biome;
     List<string> tags;
     public int costToEnter;
 
-    public Tile_Data(int _id, WorldMap.Biome _biome, List<string> _tags, int _cost)
+    public Tile_Data(int _id, Biome _biome, List<string> _tags, int _cost)
     {
         ID = _id;
         tags = _tags;

@@ -32,7 +32,7 @@
             "Start Location" : true,
             "Friendly" : true,
             "Place At" : {
-                "Biome" : "Any Land",
+                "Biome" : "Plains",
                 "Location" : "Village",
                 "Mainland" : true
             },
@@ -303,11 +303,22 @@
 			},
 			"Underground" : "Cave_Norm"
 		},
+        {
+            "ID" : "Cave_Entrance_Random",
+            "Display" : "Cave Entrance",
+            "Tile Index" : 24,
+            "Walkable" : true,
+            "Place At" : {
+                "Biome" : "Any Land"
+            },
+            "Underground" : "Ruins_UG"
+        },
 		{
 			"ID" : "Tunnel Entrance",
 			"Display" : "Tunnel Entrance",
 			"Tile Index" : 24,
 			"Walkable" : true,
+            "Amount" : 0,
 			"Place At" : {
 				"Biome" : "Desert"
 			},
@@ -600,7 +611,7 @@
 		{
 			"ID" : "Ruins_UG",
 			"Display" : "Underground Ruins",
-			"Depth" : 15,
+			"Depth" : 10,
 			"Light" : 4,
 			"Rules" : {
 				"Algorithms" : [ "Rooms_Corridors", "Rooms_Corridors_Circle", "Corridors", "CellAuto" ],
@@ -609,9 +620,9 @@
 					"Chance" : 5
 				}
 			},
-			"Wall Tile" : "Mountain",
+			"Wall Tile" : "Wall_Brick",
 			"Floor Tiles" : [ 
-				{ "ID" : "UG_Dirt_1", "Weight" : 50 },
+				{ "ID" : "UG_Dirt_1", "Weight" : 10 },
 				{ "ID" : "UG_Tile", "Weight" : 5 },
 				{ "ID" : "UG_Dirt_2", "Weight" : 5 },
 				{ "ID" : "Floor_Brick", "Weight" : 50 }

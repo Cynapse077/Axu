@@ -56,13 +56,7 @@ public class Goal : EventContainer
     public virtual void Fail()
     {
         isComplete = false;
-
         RunEvent(myQuest, QuestEvent.EventType.OnFail);
-
-        if (myQuest != null)
-        {
-            myQuest.Fail();
-        }
     }
 
     public virtual Coord Destination()
@@ -214,6 +208,7 @@ public class ChoiceGoal : Goal
     }
 }
 
+//Kill all spawned NPCs.
 public class SpecificKillGoal : Goal
 {
     public SpecificKillGoal(Quest q, string desc)
@@ -502,6 +497,7 @@ public class GoToGoal : Goal
 
     public override void Fail()
     {
+        World.objectManager.RemoveMapIconAt(coordDest);
         EventHandler.instance.EnteredScreen -= EnteredArea;
         base.Fail();
     }
@@ -519,6 +515,79 @@ public class GoToGoal : Goal
         }
 
         string s = string.Format("Travel to the {0}", World.tileMap.worldMap.GetZoneNameAt(coordDest.x, coordDest.y, 0));
+
+        if (elevation != 0)
+        {
+            s += " Floor " + (-elevation).ToString() + ".";
+        }
+
+        return s;
+    }
+}
+
+public class GoToGoal_Specific : Goal
+{
+    readonly Coord destination;
+    readonly int elevation;
+
+    public GoToGoal_Specific(Quest q, Coord dest, int ele)
+    {
+        goalType = "GoToGoal_Specific";
+        myQuest = q;
+        destination = dest;
+        elevation = ele;
+        description = "Quest_SimpleGoToDescription".Translate();
+        isComplete = false;
+    }
+
+    public override void Init(bool skipEvent)
+    {
+        base.Init(skipEvent);
+        EventHandler.instance.EnteredScreen += EnteredArea;
+
+        World.objectManager.NewMapIcon(0, destination);
+    }
+
+    void EnteredArea(Coord c, int ele)
+    {
+        if (c == destination && Mathf.Abs(ele) == Mathf.Abs(elevation))
+        {
+            Complete();
+        }
+    }
+
+    public override bool CanComplete()
+    {
+        return (World.tileMap.CurrentMap.mapInfo.position == destination && Mathf.Abs(World.tileMap.currentElevation) == Mathf.Abs(elevation));
+    }
+
+    public override void Complete()
+    {
+        World.objectManager.RemoveMapIconAt(destination);
+        EventHandler.instance.EnteredScreen -= EnteredArea;
+        base.Complete();
+    }
+
+    public override void Fail()
+    {
+        World.objectManager.RemoveMapIconAt(destination);
+        EventHandler.instance.EnteredScreen -= EnteredArea;
+        base.Fail();
+    }
+
+    public override Coord Destination()
+    {
+        return destination;
+    }
+
+    public override string ToString()
+    {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
+        string s = string.Format("Travel to the {0}", World.tileMap.worldMap.GetZoneNameAt(destination.x, destination.y, 0));
 
         if (elevation != 0)
         {

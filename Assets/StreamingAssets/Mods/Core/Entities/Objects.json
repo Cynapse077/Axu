@@ -1,74 +1,73 @@
 {
     "Objects" : [
         {
-            "Name" : "Gib",
-            "ObjectType" : "Body",
-            "Sprite" : "object-limb.png",
-            "Description" : "Freshly segmented flesh.",
-            "Render Layer" : "Back",
-            "Random Rotation" : true
-        },
-        {
+            "ObjectType" : "BaseBloodstain",
             "Name" : "Bloodstain",
-            "ObjectType" : "Bloodstain",
             "Sprite" : "object-bloodstain.png",
             "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
             "Render Layer" : "Back",
-            "Description" : "A pool of blood.",
+            "Description" : "A pool of blood",
             "Saved" : false,
-            "Random Rotation" : true
+            "Display In Editor" : false
         },
         {
-            "Name" : "Bloodstain",
-            "ObjectType" : "Bloodstain_Permanent",
-            "Sprite" : "object-bloodstain.png",
-            "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
-            "Render Layer" : "Back",
-            "Description" : "A pool of blood.",
-            "Random Rotation" : true
-        },
-        {
-            "Name" : "Bloodstain",
-            "ObjectType" : "Bloodstain_Wall",
-            "Sprite" : "object-bloodstain_wall.png",
-            "Tint" : [ 1.0, 1.0, 1.0, 0.5 ],
-            "Render Layer" : "Back",
-            "Description" : "A pool of blood.",
-            "Saved" : false
-        },
-        {
+            "ObjectType" : "BaseChest",
             "Name" : "Small Chest",
-            "ObjectType" : "Chest",
+            "Container" : { "Capacity" : 25 },
+            "Description" : "A small wooden chest. It could contain various items.",
+            "Display In Editor" : false
+        },
+
+
+        {
+            "ObjectType" : "Bloodstain", 
+            "Base" : "BaseBloodstain",
+            "Random Rotation" : true
+        },
+        {
+            "ObjectType" : "Bloodstain_Permanent", 
+            "Base" : "BaseBloodstain",
+            "Saved" : true,
+            "Random Rotation" : true,
+            "Display In Editor" : true
+        },
+        {
+            "ObjectType" : "Bloodstain_Wall", 
+            "Base" : "BaseBloodstain",
+            "Sprite" : "object-bloodstain_wall.png"
+        },
+        {
+            "ObjectType" : "Chest", 
+            "Base" : "BaseChest",
             "Sprite" : "object-chest_closed.png",
-            "Container" : { "Capacity" : 20 },
-            "Description" : "A small wooden chest. I wonder what it could contain?"
+            "Display In Editor" : true
         },
         {
-            "Name" : "Small Chest",
-            "ObjectType" : "Chest_Open",
+            "ObjectType" : "Chest_Open", 
+            "Base" : "BaseChest",
             "Sprite" : "object-chest_open.png",
-            "Container" : { "Capacity" : 20 },
-            "Description" : "A small wooden chest. It is open."
+            "Display In Editor" : true
         },
         {
             "Name" : "Loot",
             "ObjectType" : "Loot",
             "Sprite" : "object-loot.png",
             "Container" : { "Capacity" : 20 },
-            "Description" : "Items strewn about the ground."
+            "Description" : "Items strewn about the ground.",
+            "Display In Editor" : false
         },
         {
             "Name" : "Wood Barrel",
             "ObjectType" : "Barrel",
             "Sprite" : "object-barrel_closed.png",
-            "Container" : { "Capacity" : 10 },
+            "Container" : { "Capacity" : 5 },
             "Description" : "A wood barrel with metal rings. It could contain loot."
         },
         {
             "Name" : "Wood Barrel",
             "ObjectType" : "Barrel_Open",
             "Sprite" : "object-barrel_open.png",
-            "Container" : { "Capacity" : 10 },
+            "Container" : { "Capacity" : 5 },
             "Description" : "A wood barrel with metal rings. It has been opened."
         },
         {
@@ -80,7 +79,7 @@
             "Description" : "A roaring fire."
         },
         {
-            "Name" : "Table",
+            "Name" : "Small Table",
             "ObjectType" : "Table",
             "Sprite" : "object-table_small.png",
 			"Path Cost" : 2,
@@ -252,13 +251,15 @@
                 { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_HomeDoor" }
             ],
             "Opaque" : true,
-            "Path Cost" : 100
+            "Path Cost" : 100,
+            "Display In Editor" : false
         },
         {
             "Name" : "Open Door",
             "ObjectType" : "Home_Door_Open",
             "Sprite" : "object-door-electric-open.png",
-            "Description" : "An open steel door. There is a slot beside it on the wall."
+            "Description" : "An open steel door. There is a slot beside it on the wall.",
+            "Display In Editor" : false
         },
 		{
 			"Name" : "Switch",
@@ -473,7 +474,8 @@
 			],
         	"Render Layer" : "Front",
         	"Description" : "A blocking stone, heavy and chained. It is used to cover staircases.",
-			"Opaque" : true
+			"Opaque" : true,
+            "Display In Editor" : false
         },
 		{
 			"Name" : "Portal",
@@ -535,7 +537,8 @@
             "Physics" : "Solid",
             "Render Layer" : "Front",
             "Description" : "A sturdy pine tree.",
-			"Opaque" : true
+			"Opaque" : true,
+            "Display In Editor" : false
         },
 		{
             "Name" : "Tall Grass",
@@ -653,7 +656,8 @@
 			"Description" : "",
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+            "Display In Editor" : false
 		},
 		{
 			"Name" : "Signal Light",
@@ -665,7 +669,8 @@
 			"Description" : "",
 			"Pulse" : {
 				"Receive" : true
-			}
+			},
+            "Display In Editor" : false
 		},
 		{
 			"Name" : "Coffin",

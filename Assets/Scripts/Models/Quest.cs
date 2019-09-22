@@ -10,6 +10,7 @@ public class Quest : EventContainer, IAsset
     public Goal[] goals;
     public QuestReward rewards;
     public List<int> spawnedNPCs;
+    public int turnsToFail = -999; //If -999, does not fail on turn counter.
 
     public string chainedQuest;
     public string startDialogue;
@@ -77,10 +78,24 @@ public class Quest : EventContainer, IAsset
     {
         CopyFrom(QuestList.GetByID(s.ID));
 
-        for (int i = 0; i < s.comp.Length; i++)
+        //HACK!
+        //Override steps and events for a simple "go to point" step.
+        if (s.storedGoal != null)
         {
-            goals[i].isComplete = s.comp[i].c;
-            goals[i].amount = s.comp[i].amt;
+            goals = new Goal[1]
+            {
+                new GoToGoal_Specific(this, s.storedGoal, 0)
+            };
+
+            AddEvent(QuestEvent.EventType.OnFail, new RemoveLocation_Specific(s.storedGoal));
+        }
+        else
+        {
+            for (int i = 0; i < s.comp.Length; i++)
+            {
+                goals[i].isComplete = s.comp[i].c;
+                goals[i].amount = s.comp[i].amt;
+            }
         }
 
         spawnedNPCs = new List<int>();
@@ -89,6 +104,8 @@ public class Quest : EventContainer, IAsset
         {
             spawnedNPCs.Add(s.sp[i]);
         }
+
+        turnsToFail = s.turnsToFail;
     }
 
     void CopyFrom(Quest other)
@@ -97,7 +114,6 @@ public class Quest : EventContainer, IAsset
         Name = other.Name;
         Description = other.Description;
         rewards = other.rewards;
-        goals = new Goal[other.goals.Length];
         onStart = other.onStart;
         onComplete = other.onComplete;
         onFail = other.onFail;
@@ -107,10 +123,16 @@ public class Quest : EventContainer, IAsset
         chainedQuest = other.chainedQuest;
         failOnDeath = other.failOnDeath;
         sequential = other.sequential;
+        turnsToFail = other.turnsToFail;
 
-        for (int i = 0; i < other.goals.Length; i++)
+        if (other.goals != null)
         {
-            goals[i] = other.goals[i].Clone();
+            goals = new Goal[other.goals.Length];
+
+            for (int i = 0; i < other.goals.Length; i++)
+            {
+                goals[i] = other.goals[i].Clone();
+            }
         }
     }
 
@@ -122,25 +144,28 @@ public class Quest : EventContainer, IAsset
         ID = q["ID"].ToString();
         Description = q["Description"].ToString();
 
-        goals = new Goal[q["Steps"].Count];
-
-        for (int i = 0; i < q["Steps"].Count; i++)
+        if (q.ContainsKey("Steps"))
         {
-            goals[i] = GetQuestGoalFromJson(q["Steps"][i]);
+            goals = new Goal[q["Steps"].Count];
 
-            if (goals[i] != null && q["Steps"][i].ContainsKey("Events"))
+            for (int i = 0; i < q["Steps"].Count; i++)
             {
-                JsonData events = q["Steps"][i]["Events"];
+                goals[i] = GetQuestGoalFromJson(q["Steps"][i]);
 
-                for (int j = 0; j < events.Count; j++)
+                if (goals[i] != null && q["Steps"][i].ContainsKey("Events"))
                 {
-                    QuestEvent.EventType eventType = (events[j]["Event"].ToString()).ToEnum<QuestEvent.EventType>();
-                    List<string> keys = new List<string>(events[j].Keys);
+                    JsonData events = q["Steps"][i]["Events"];
 
-                    for (int k = 1; k < events[j].Count; k++)
+                    for (int j = 0; j < events.Count; j++)
                     {
-                        QuestEvent questEvent = QuestList.GetEvent(keys[k], events[j][k]);
-                        goals[i].AddEvent(eventType, questEvent);
+                        QuestEvent.EventType eventType = (events[j]["Event"].ToString()).ToEnum<QuestEvent.EventType>();
+                        List<string> keys = new List<string>(events[j].Keys);
+
+                        for (int k = 1; k < events[j].Count; k++)
+                        {
+                            QuestEvent questEvent = QuestList.GetEvent(keys[k], events[j][k]);
+                            goals[i].AddEvent(eventType, questEvent);
+                        }
                     }
                 }
             }
@@ -166,10 +191,11 @@ public class Quest : EventContainer, IAsset
         q.TryGetString("Chained Quest", out chainedQuest);
         q.TryGetBool("Fail On Death", out failOnDeath);
         q.TryGetBool("Sequential", out sequential);
+        q.TryGetInt("Turns To Fail", out turnsToFail, -999);
 
         if (q.ContainsKey("Rewards"))
         {
-            int xp, money;
+            int xp, money = 0;
             string[] items = new string[0];
 
             q["Rewards"].TryGetInt("XP", out xp);
@@ -268,6 +294,19 @@ public class Quest : EventContainer, IAsset
         }
     }
 
+    public void OnTurn()
+    {
+        if (turnsToFail > -999)
+        {
+            turnsToFail--;
+
+            if (turnsToFail <= 0)
+            {
+                Fail();
+            }
+        }
+    }
+
     public void SpawnNPC(NPC n)
     {
         spawnedNPCs.Add(n.UID);
@@ -351,6 +390,14 @@ public class Quest : EventContainer, IAsset
 
     public void Fail()
     {
+        foreach (Goal g in goals)
+        {
+            if (!g.isComplete)
+            {
+                g.Fail();
+            }
+        }
+
         RunEvent(this, QuestEvent.EventType.OnFail);
         ObjectManager.playerJournal.FailQuest(this);
     }
@@ -379,8 +426,10 @@ public class Quest : EventContainer, IAsset
 public class SQuest
 {
     public string ID;
+    public Coord storedGoal;
     public SQuestStep[] comp; //Completeness of steps
     public int[] sp; //Spawned npcs
+    public int turnsToFail = -999;
 
     public SQuest() { }
 
@@ -392,6 +441,13 @@ public class SQuest
 
         for (int i = 0; i < q.goals.Length; i++)
         {
+            GoToGoal_Specific sp = q.goals[i] as GoToGoal_Specific;
+
+            if (sp != null)
+            {
+                storedGoal = sp.Destination();
+            }
+
             comp[i] = new SQuestStep(q.goals[i].isComplete, q.goals[i].amount);
         }
 
@@ -401,6 +457,8 @@ public class SQuest
         {
             sp[i] = q.spawnedNPCs[i];
         }
+
+        turnsToFail = q.turnsToFail;
     }
 
     public struct SQuestStep

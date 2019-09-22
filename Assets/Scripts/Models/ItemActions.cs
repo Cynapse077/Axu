@@ -58,7 +58,8 @@ public struct ItemActions
 
         if (item.HasProp(ItemProperty.Stop_Bleeding) || item.HasProp(ItemProperty.Reveal_Map) ||
             item.HasProp(ItemProperty.Blink) || item.HasProp(ItemProperty.Surface_Tele) ||
-            item.HasProp(ItemProperty.ReplaceLimb) || CanAdd(item, "OnUse") || item.HasCComponent<CModKit>())
+            item.HasProp(ItemProperty.ReplaceLimb) || CanAdd(item, "OnUse") 
+            || item.HasCComponent<CModKit>() || item.HasCComponent<CLocationMap>())
         {
             Actions.Add(new ItemAction("Use", "Action_Use"));
         }

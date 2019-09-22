@@ -15,7 +15,7 @@
 		{
 			"Name" : "Drain",
 			"ID" : "drainstamina",
-			"Description" : "Drains 2 - 6 ST from a target.",
+			"Description" : "Drains 2-6 ST from a target.",
 			"Levels Up" : false,
 			"Stamina Cost" : 3,
 			"Time Cost" : 15,

@@ -490,6 +490,14 @@ public class Inventory : MonoBehaviour
         {
             stats.RemoveStatusEffect("Bleed");
             RemoveInstance(i);
+            return;
+        }
+
+        if (i.HasCComponent<CLocationMap>())
+        {
+            i.GetCComponent<CLocationMap>().OnUse();
+            RemoveInstance(i);
+            return;
         }
 
         if (i.HasProp(ItemProperty.Blink))

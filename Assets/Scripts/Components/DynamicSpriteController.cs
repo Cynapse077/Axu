@@ -49,8 +49,6 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
             return;
         }
 
-        Debug.Log(rend.ToString());
-
         if (bodyPieces == null || bodyPieces.Length <= 0)
         {
             bodyPieces = new Texture2D[10];

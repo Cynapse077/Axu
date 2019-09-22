@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
-using System.Text;
 
 public struct IntRange
 {
@@ -17,8 +16,8 @@ public struct IntRange
         this.max = max;
     }
 
-    //Split with ~
-    //Eg. 2~5
+    //Split with '~'
+    //Eg. "2~5"
     public IntRange(string value)
     {
         min = 0;

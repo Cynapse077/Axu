@@ -83,9 +83,7 @@ end
 
 --Move in a single direction, attacking the first target in the way.
 function Charge(caster, direction, skill)
-	local amount = skill.level + 3
-
-	caster.Charge(direction, amount)
+	caster.Charge(direction, skill.level + 3)
 
 	if (caster.isPlayer) then
 		caster.body.TrainLimbOfType(ItemProperty.Slot_Leg)
@@ -192,10 +190,9 @@ function Gore(caster, direction, skill)
 	end
 
 	local target = TileMap.GetCellAt(caster.myPos + direction).entity
-	local amount = skill.totalDice.Roll()
 
 	target.stats.AddStatusEffect("Bleed", Random(2, 6))
-	target.stats.IndirectAttack(amount, DamageTypes.Pierce, caster, caster.Name, false)
+	target.stats.IndirectAttack(skill.totalDice.Roll(), DamageTypes.Pierce, caster, caster.Name, false)
 
 	ApplyChanges(caster, skill)
 end	
@@ -494,7 +491,7 @@ function Cast(caster, skill)
 		return
 	end
 
-	--Exceptions
+	--Instant
 	if (skill.HasTag(AbilityTags.Summon)) then
 		skill.CallScriptFunction(caster, skill, skill.luaAction.variable)
 	elseif (skill.HasTag(AbilityTags.Small_Square)) then

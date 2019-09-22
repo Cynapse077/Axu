@@ -11,7 +11,12 @@ public static class QuestList
 
     public static Quest GetByID(string id)
     {
-        return new Quest(GameData.Get<Quest>(id) as Quest);
+        Quest q = GameData.Get<Quest>(id) as Quest;
+
+        if (q != null)
+            return new Quest(q);
+
+        return null;
     }
 
     static Coord GetZone(string zone)

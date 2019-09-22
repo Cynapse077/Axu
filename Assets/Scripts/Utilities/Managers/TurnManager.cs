@@ -94,7 +94,7 @@ public class TurnManager : MonoBehaviour
                 {
                     if (World.tileMap.CurrentMap.mapInfo.position.y >= Manager.worldMapSize.y / 2 + 25)
                         weatherNum = 2;
-                    else if (World.tileMap.CurrentMap.mapInfo.biome == WorldMap.Biome.Desert)
+                    else if (World.tileMap.CurrentMap.mapInfo.biome == Biome.Desert)
                         weatherNum = 3;
                     else
                         weatherNum = 1;
@@ -184,6 +184,11 @@ public class TurnManager : MonoBehaviour
                 //TODO: NPCs radiate too.
             }
         }
+
+        for (int i = ObjectManager.playerJournal.quests.Count - 1; i >= 0; i--)
+        {
+            ObjectManager.playerJournal.quests[i].OnTurn();
+        }
     }
 
     public void ChangeWeather(Weather _weather)
@@ -225,7 +230,7 @@ public class TurnManager : MonoBehaviour
         bool canShow = CanShowWeather();
 
         snowEffect.SetActive(currentWeather == Weather.Snow && canShow);
-        sandstormEffect.SetActive(currentWeather == Weather.Sandstorm && canShow && World.tileMap.CurrentMap.mapInfo.biome == WorldMap.Biome.Desert);
+        sandstormEffect.SetActive(currentWeather == Weather.Sandstorm && canShow && World.tileMap.CurrentMap.mapInfo.biome == Biome.Desert);
         rainEffect.SetActive(currentWeather == Weather.Rain && canShow);
     }
 

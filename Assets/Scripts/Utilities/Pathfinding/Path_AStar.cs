@@ -140,7 +140,8 @@ namespace Pathfinding
                 {
                     Path_Node neighbor = edge_neighbor.node;
 
-                    if (ClosedSet.Contains(neighbor) || !neighbor.data.walkable)
+                    //Skip doors for NPCs.
+                    if (ClosedSet.Contains(neighbor) || !neighbor.data.walkable || !entity.isPlayer && neighbor.data.costToEnter >= 100)
                     {
                         continue;
                     }
@@ -152,9 +153,8 @@ namespace Pathfinding
                     {
                         tentative_g_score -= neighbor.data.costToEnter * costToEnterFactor;
                     }
-
-                    //Skip doors for NPCs.
-                    if (OpenSet.Contains(neighbor) && tentative_g_score > g_score[neighbor] || !entity.isPlayer  && neighbor.data.costToEnter >= 100)
+                    
+                    if (OpenSet.Contains(neighbor) && tentative_g_score > g_score[neighbor])
                     {
                         continue;
                     }

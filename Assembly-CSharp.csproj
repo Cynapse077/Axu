@@ -80,7 +80,7 @@
     <Compile Include="Assets\Scripts\Components\AI\BaseAI.cs" />
     <Compile Include="Assets\Scripts\Components\Body.cs" />
     <Compile Include="Assets\Scripts\Components\CComponent.cs" />
-    <Compile Include="Assets\Scripts\Components\ComoponentHolder.cs" />
+    <Compile Include="Assets\Scripts\Components\ComponentHolder.cs" />
     <Compile Include="Assets\Scripts\Components\DestroyAfterTurns.cs" />
     <Compile Include="Assets\Scripts\Components\DialogueController.cs" />
     <Compile Include="Assets\Scripts\Components\DynamicSpriteController.cs" />

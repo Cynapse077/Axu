@@ -50,6 +50,7 @@ public static class LuaManager
         UserData.RegisterType<CastType>();
         UserData.RegisterType<TraitEffects>();
         UserData.RegisterType<NPC_Flags>();
+        UserData.RegisterType<Biome>();
     }
 
     static void AddEnumsToGlobals(Script sc)
@@ -61,6 +62,7 @@ public static class LuaManager
         sc.Globals["AbilityTags"] = UserData.CreateStatic<AbilityTags>();
         sc.Globals["TraitEffects"] = UserData.CreateStatic<TraitEffects>();
         sc.Globals["NPC_Flags"] = UserData.CreateStatic<NPC_Flags>();
+        sc.Globals["Biome"] = UserData.CreateStatic<Biome>();
     }
 
     public static DynValue CallScriptFunction(string fileName, string functionName, params object[] parameters)
@@ -110,6 +112,8 @@ public static class LuaManager
 
             //Functions
             sc.Globals["Random"] = (Func<int, int, int>)SeedManager.combatRandom.Next;
+            sc.Globals["CoinFlip"] = (Func<bool>)SeedManager.combatRandom.CoinFlip;
+            sc.Globals["OneIn"] = (Func<int, bool>)SeedManager.combatRandom.OneIn;
             sc.Globals["LocalRandom"] = (Func<int, int, int>)SeedManager.localRandom.Next;
             sc.Globals["WorldRandom"] = (Func<int, int, int>)SeedManager.worldRandom.Next;
             sc.Globals["Log"] = (Action<string>)PrintMessage;
@@ -134,7 +138,6 @@ public static class LuaManager
     {
         sc.Globals["SpawnController"] = typeof(SpawnController);
         sc.Globals["World"] = typeof(World);
-        sc.Globals["BLine"] = typeof(LineHelper);
         sc.Globals["EntityList"] = typeof(EntityList);
         sc.Globals["ItemList"] = typeof(ItemList);
         sc.Globals["Alert"] = typeof(Alert);
@@ -144,11 +147,13 @@ public static class LuaManager
         sc.Globals["SpriteManager"] = typeof(SpriteManager);
 
         //Models
+        sc.Globals["BLine"] = typeof(LineHelper);
         sc.Globals["Coord"] = typeof(Coord);
         sc.Globals["NPC"] = typeof(NPC);
         sc.Globals["Damage"] = typeof(Damage);
         sc.Globals["DiceRoll"] = typeof(DiceRoll);
         sc.Globals["Item"] = typeof(Item);
+        sc.Globals["Tile_Data"] = typeof(Tile_Data);
     }
 
     static void PrintMessage(object message)

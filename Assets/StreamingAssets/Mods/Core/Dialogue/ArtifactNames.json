@@ -6,6 +6,9 @@
 		"Seep", "Bite", "Claw", "Illness", "Edge", 
 		"Weeping", "Ether", "Flying", "Mirror", "Fractal", 
 		"Facade", "Fey", "Bile", "Feast", "Arid", 
-		"Bitter", "Alm", "Damp", "Hornet", "Torrent"
+		"Bitter", "Alm", "Damp", "Hornet", "Torrent",
+		"Ethereal", "Figment", "Dust", "Beacon",
+		"Bright", "Waning", "Chill", "Grasp", "Broken",
+		"Blessing", "Xeno", "Forbid", "Pulse", "Pressure"
     ]
 }

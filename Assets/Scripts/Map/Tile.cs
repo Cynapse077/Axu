@@ -56,7 +56,7 @@ public static class Tile
             if (dat[i].ContainsKey("Biome"))
                 b = dat[i]["Biome"].ToString();
 
-            WorldMap.Biome biome = b == "None" ? WorldMap.Biome.Default : b.ToEnum<WorldMap.Biome>();
+            Biome biome = b == "None" ? Biome.Default : b.ToEnum<Biome>();
 
             tiles.Add(ID, new Tile_Data(tIndex, biome, tags, cost));
         }

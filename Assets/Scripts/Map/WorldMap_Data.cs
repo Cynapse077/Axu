@@ -115,26 +115,26 @@ public class WorldMap_Data
 
         if (biome <= 0.16f)
         { //Ocean
-            tiles[x, y] = new MapInfo(c, WorldMap.Biome.Ocean);
+            tiles[x, y] = new MapInfo(c, Biome.Ocean);
             ocean.Add(c);
 
         }
         else if (biome <= 0.19f)
         { //Shore
-            tiles[x, y] = new MapInfo(c, WorldMap.Biome.Shore);
+            tiles[x, y] = new MapInfo(c, Biome.Shore);
         }
         else if (biome <= 0.42f)
         { //Plains
-            tiles[x, y] = new MapInfo(c, (rng.Next(0, 101) < 95) ? WorldMap.Biome.Plains : WorldMap.Biome.Forest);
+            tiles[x, y] = new MapInfo(c, (rng.Next(0, 101) < 95) ? Biome.Plains : Biome.Forest);
 
         }
         else if (biome <= 0.63f)
         { //Forest
-            tiles[x, y] = new MapInfo(c, (rng.Next(0, 101) < 95) ? WorldMap.Biome.Forest : WorldMap.Biome.Plains);
+            tiles[x, y] = new MapInfo(c, (rng.Next(0, 101) < 95) ? Biome.Forest : Biome.Plains);
         }
         else
         { //Mountains
-            tiles[x, y] = new MapInfo(c, WorldMap.Biome.Mountain);
+            tiles[x, y] = new MapInfo(c, Biome.Mountain);
             mountains.Add(c);
         }
     }
@@ -147,7 +147,7 @@ public class WorldMap_Data
         {
             for (int y = 0; y < height; y++)
             {
-                if (tiles[x, y].biome == WorldMap.Biome.Mountain || tiles[x, y].biome == WorldMap.Biome.Ocean)
+                if (tiles[x, y].biome == Biome.Mountain || tiles[x, y].biome == Biome.Ocean)
                     continue;
 
                 float yOrg = rng.Next(-1000, 1000), yCoord = yOrg + y / height * (scale / 1.5f);
@@ -159,9 +159,9 @@ public class WorldMap_Data
                 if (Mathf.Abs(val) > 0.9f)
                 {
                     if (y > centerY + 15)
-                        tiles[x, y].biome = WorldMap.Biome.Tundra;
+                        tiles[x, y].biome = Biome.Tundra;
                     else if (y < centerY - 15)
-                        tiles[x, y].biome = WorldMap.Biome.Desert;
+                        tiles[x, y].biome = Biome.Desert;
                 }
             }
         }
@@ -172,10 +172,10 @@ public class WorldMap_Data
             {
                 for (int hy = 1; hy < height - 1; hy++)
                 {
-                    if (tiles[hx, hy].biome == WorldMap.Biome.Tundra)
-                        SmoothBiome(hx, hy, WorldMap.Biome.Tundra);
-                    else if (tiles[hx, hy].biome == WorldMap.Biome.Desert)
-                        SmoothBiome(hx, hy, WorldMap.Biome.Desert);
+                    if (tiles[hx, hy].biome == Biome.Tundra)
+                        SmoothBiome(hx, hy, Biome.Tundra);
+                    else if (tiles[hx, hy].biome == Biome.Desert)
+                        SmoothBiome(hx, hy, Biome.Desert);
                 }
             }
         }
@@ -206,7 +206,7 @@ public class WorldMap_Data
         FinalPass();
     }
 
-    void SmoothBiome(int x, int y, WorldMap.Biome b)
+    void SmoothBiome(int x, int y, Biome b)
     {
         int neighbors = 0;
 
@@ -217,21 +217,21 @@ public class WorldMap_Data
                 if (Mathf.Abs(ex) + Mathf.Abs(ey) > 1 || ex == 0 && ey == 0)
                     continue;
 
-                if (tiles[x, y].biome == b || tiles[x, y].biome == WorldMap.Biome.Ocean)
+                if (tiles[x, y].biome == b || tiles[x, y].biome == Biome.Ocean)
                     neighbors++;
             }
         }
 
         if (neighbors <= 2 && rng.Next(100) < 65 || neighbors == 0)
         {
-            tiles[x, y].biome = WorldMap.Biome.Plains;
+            tiles[x, y].biome = Biome.Plains;
         }
     }
 
     bool GrassTile(int x, int y)
     {
-        return tiles[x, y].biome == WorldMap.Biome.Plains || tiles[x, y].biome == WorldMap.Biome.Forest ||
-            (tiles[x, y].biome == WorldMap.Biome.Tundra && rng.Next(100) < 40) || (tiles[x, y].biome == WorldMap.Biome.Desert && rng.Next(100) < 40);
+        return tiles[x, y].biome == Biome.Plains || tiles[x, y].biome == Biome.Forest ||
+            (tiles[x, y].biome == Biome.Tundra && rng.Next(100) < 40) || (tiles[x, y].biome == Biome.Desert && rng.Next(100) < 40);
     }
 
     void SurroundWaterWithShore()
@@ -242,7 +242,7 @@ public class WorldMap_Data
             {
 
                 //Place down shore tiles along edges of grass.
-                if (GrassTile(x, y) && tiles[x, y].biome != WorldMap.Biome.Tundra && tiles[x, y].biome != WorldMap.Biome.Desert)
+                if (GrassTile(x, y) && tiles[x, y].biome != Biome.Tundra && tiles[x, y].biome != Biome.Desert)
                 {
                     for (int ex = -1; ex <= 1; ex++)
                     {
@@ -251,8 +251,8 @@ public class WorldMap_Data
                             if (x == 0 && y == 0 || x + ex >= Manager.worldMapSize.x || x + ex < 0 || y + ey >= Manager.worldMapSize.x || y + ey < 0)
                                 continue;
 
-                            if (tiles[x + ex, y + ey].biome == WorldMap.Biome.Ocean)
-                                tiles[x, y].biome = WorldMap.Biome.Shore;
+                            if (tiles[x + ex, y + ey].biome == Biome.Ocean)
+                                tiles[x, y].biome = Biome.Shore;
                         }
                     }
                 }
@@ -287,7 +287,7 @@ public class WorldMap_Data
         int ny = startTile.y;
         bool breakOut = false;
 
-        while (tiles[nx, ny].biome != WorldMap.Biome.Ocean)
+        while (tiles[nx, ny].biome != Biome.Ocean)
         {
             if (nx < 0 || ny < 0 || nx >= Manager.worldMapSize.x || ny >= Manager.worldMapSize.y)
                 return false;
@@ -304,7 +304,7 @@ public class WorldMap_Data
                     if (nx + x < 0 || ny + y < 0 || nx + x >= Manager.worldMapSize.x || ny + y >= Manager.worldMapSize.y)
                         continue;
 
-                    if (tiles[nx + x, ny + y].biome == WorldMap.Biome.Ocean)
+                    if (tiles[nx + x, ny + y].biome == Biome.Ocean)
                     {
                         breakOut = true;
                     }
@@ -335,7 +335,7 @@ public class WorldMap_Data
     {
         for (int i = 1; i < riverTiles.Count; i++)
         {
-            if (tiles[riverTiles[i].x, riverTiles[i].y].HasLandmark() || tiles[riverTiles[i].x, riverTiles[i].y].biome == WorldMap.Biome.Mountain)
+            if (tiles[riverTiles[i].x, riverTiles[i].y].HasLandmark() || tiles[riverTiles[i].x, riverTiles[i].y].biome == Biome.Mountain)
             {
                 return false;
             }
@@ -395,22 +395,26 @@ public class WorldMap_Data
         for (int i = 0; i < postGenLandmarks.Count; i++)
         {
             ZoneBlueprint zb = GetZone(postGenLandmarks[i].desc);
-            PlaceZone(zb, null, postGenLandmarks[i].pos);
+
+            if (zb != null)
+            {
+                PlaceZone(zb, null, postGenLandmarks[i].pos);
+            }
         }
     }
 
     public Coord PlaceZone(ZoneBlueprint zb, Coord parentPos = null, Coord forcePos = null)
     {
         Coord pos = null;
-        bool noParent = (parentPos == null && zb.placement.relativePosition == null);
+        bool hasParent = (parentPos != null && zb.placement.relativePosition != null);
 
         if (forcePos != null)
         {
             pos = forcePos;
         }
-        else if (noParent)
+        else if (!hasParent)
         {
-            if (!string.IsNullOrEmpty(zb.placement.landmark))
+            if (!zb.placement.landmark.NullOrEmpty())
             {
                 pos = GetRandomLandmark(zb.placement.landmark);
             }
@@ -422,7 +426,7 @@ public class WorldMap_Data
                 }
                 else
                 {
-                    pos = GetOpenPosition(zb.placement.zoneID.ToEnum<WorldMap.Biome>());
+                    pos = GetOpenPosition(zb.placement.zoneID.ToEnum<Biome>());
                 }
             }
         }
@@ -437,9 +441,9 @@ public class WorldMap_Data
             return null;
         }
 
-        if (tiles[pos.x, pos.y].biome == WorldMap.Biome.Mountain)
+        if (tiles[pos.x, pos.y].biome == Biome.Mountain)
         {
-            tiles[pos.x, pos.y].biome = WorldMap.Biome.Shore;
+            tiles[pos.x, pos.y].biome = Biome.Shore;
         }
 
         if (zb.radiation > 0)
@@ -490,7 +494,7 @@ public class WorldMap_Data
         {
             for (int y = 1; y < height - 1; y++)
             {
-                if (tiles[x, y].biome != WorldMap.Biome.Ocean && !tiles[x, y].HasLandmark())
+                if (tiles[x, y].biome != Biome.Ocean && !tiles[x, y].HasLandmark())
                 {
                     int waterNeighbours = 0;
 
@@ -503,7 +507,7 @@ public class WorldMap_Data
                                 continue;
                             }
 
-                            if (tiles[x + ex, y + ey].biome == WorldMap.Biome.Ocean)
+                            if (tiles[x + ex, y + ey].biome == Biome.Ocean)
                             {
                                 waterNeighbours++;
                             }
@@ -512,7 +516,7 @@ public class WorldMap_Data
 
                     if (waterNeighbours > 5)
                     {
-                        tiles[x, y].biome = WorldMap.Biome.Ocean;
+                        tiles[x, y].biome = Biome.Ocean;
                     }
                 }
             }
@@ -535,7 +539,7 @@ public class WorldMap_Data
 
                 int vx = vData.center.x + x, vy = vData.center.y + y;
 
-                if (tiles[vx, vy].biome != WorldMap.Biome.Ocean && tiles[vx, vy].biome != WorldMap.Biome.Mountain && !tiles[vx, vy].HasLandmark())
+                if (tiles[vx, vy].biome != Biome.Ocean && tiles[vx, vy].biome != Biome.Mountain && !tiles[vx, vy].HasLandmark())
                 {
                     possibleLocations.Add(new Coord(vx, vy));
                 }
@@ -698,7 +702,7 @@ public class WorldMap_Data
         return cs[rng.Next(0, cs.Count)];
     }
 
-    public Coord GetOpenPosition(WorldMap.Biome b)
+    public Coord GetOpenPosition(Biome b)
     {
         List<Coord> c = new List<Coord>();
 
@@ -716,7 +720,7 @@ public class WorldMap_Data
         return c.GetRandom(rng);
     }
 
-    public Coord GetClosestBiome(WorldMap.Biome b)
+    public Coord GetClosestBiome(Biome b)
     {
         Coord closest = new Coord(1000, 1000);
         float dist = Mathf.Infinity;
@@ -770,7 +774,7 @@ public class WorldMap_Data
         return closest;
     }
 
-    public Coord GetRandomFromBiome(WorldMap.Biome b)
+    public Coord GetRandomFromBiome(Biome b)
     {
         List<Coord> coords = new List<Coord>();
 
@@ -791,7 +795,7 @@ public class WorldMap_Data
     void Swamp()
     {
         Coord start = GetOpenPosition(new ZoneBlueprint[0]);
-        tiles[start.x, start.y].biome = WorldMap.Biome.Swamp;
+        tiles[start.x, start.y].biome = Biome.Swamp;
         tiles[start.x, start.y].radiation = 3;
         int width = rng.Next(3, 8), height = rng.Next(3, 8);
         int left = start.x, bottom = start.y;
@@ -808,11 +812,11 @@ public class WorldMap_Data
                     continue;
                 }
 
-                WorldMap.Biome b = tiles[x, y].biome;
+                Biome b = tiles[x, y].biome;
 
-                if (b != WorldMap.Biome.Ocean && b != WorldMap.Biome.Shore && b != WorldMap.Biome.Mountain)
+                if (b != Biome.Ocean && b != Biome.Shore && b != Biome.Mountain)
                 {
-                    tiles[x, y].biome = WorldMap.Biome.Swamp;
+                    tiles[x, y].biome = Biome.Swamp;
                     tiles[x, y].radiation = 3;
                 }
             }
@@ -823,7 +827,7 @@ public class WorldMap_Data
     {
         if (x < 0 || x >= width || y < 0 || y >= height)
         {
-            return new MapInfo(new Coord(x, y), WorldMap.Biome.Ocean);
+            return new MapInfo(new Coord(x, y), Biome.Ocean);
         }
 
         return tiles[x, y];
@@ -879,7 +883,7 @@ public class WorldMap_Data
             }
         }
 
-        Debug.LogError("No ZoneBlueprint with the ID \"" + search + "\".");
+        //Debug.LogError("No ZoneBlueprint with the ID \"" + search + "\".");
         return null;
     }
 
@@ -955,13 +959,13 @@ public class WorldMap_Data
 
 public struct MapInfo
 {
-    public WorldMap.Biome biome;
+    public Biome biome;
     public string landmark;
     public Coord position;
     public bool friendly;
     public int radiation;
 
-    public MapInfo(Coord pos, WorldMap.Biome b)
+    public MapInfo(Coord pos, Biome b)
     {
         position = pos;
         biome = b;
@@ -977,12 +981,12 @@ public struct MapInfo
 
     public bool Walkable()
     {
-        return biome != WorldMap.Biome.Mountain;
+        return biome != Biome.Mountain;
     }
 
-    public static bool BiomeHasEdge(WorldMap.Biome b)
+    public static bool BiomeHasEdge(Biome b)
     {
-        return b == WorldMap.Biome.Mountain || b == WorldMap.Biome.Tundra || b == WorldMap.Biome.Ocean || b == WorldMap.Biome.Desert;
+        return b == Biome.Mountain || b == Biome.Tundra || b == Biome.Ocean || b == Biome.Desert;
     }
 }
 

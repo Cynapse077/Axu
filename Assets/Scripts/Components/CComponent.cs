@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using LitJson;
 
@@ -14,6 +15,16 @@ public class CComponent
         return (CComponent)MemberwiseClone();
     }
 
+    public virtual void OnRemove()
+    {
+        
+    }
+
+    public virtual string ExtraInfo()
+    {
+        return string.Empty;
+    }
+
     public static CComponent FromJson(JsonData data)
     {
         string id = data["ID"].ToString();
@@ -22,6 +33,7 @@ public class CComponent
         switch (id)
         {
             case "Charges": return JsonMapper.ToObject<CCharges>(reader);
+            case "RechargeTurns": return JsonMapper.ToObject<CRechargeTurns>(reader);
             case "Rot": return JsonMapper.ToObject<CRot>(reader);
             case "Corpse": return JsonMapper.ToObject<CCorpse>(reader);
             case "Ability": return JsonMapper.ToObject<CAbility>(reader);
@@ -38,6 +50,7 @@ public class CComponent
             case "Requirement": return JsonMapper.ToObject<CRequirement>(reader);
             case "DNAHolder": return JsonMapper.ToObject<CDNAHolder>(reader);
             case "OnHitAddStatus": return JsonMapper.ToObject<COnHitAddStatus>(reader);
+            case "LocationMap": return JsonMapper.ToObject<CLocationMap>(reader);
 
             default: return null;
         }
@@ -48,6 +61,7 @@ public class CComponent
         switch (cc)
         {
             case "Charges": return typeof(CCharges);
+            case "RechargeTurns": return typeof(CRechargeTurns);
             case "Rot": return typeof(CRot);
             case "Corpse": return typeof(CCorpse);
             case "Ability": return typeof(CAbility);
@@ -64,6 +78,7 @@ public class CComponent
             case "Requirement": return typeof(CRequirement);
             case "DNAHolder": return typeof(CDNAHolder);
             case "OnHitAddStatus": return typeof(COnHitAddStatus);
+            case "LocationMap": return typeof(CLocationMap);
 
             default: return null;
         }
@@ -96,6 +111,61 @@ public class CCharges : CComponent
 }
 
 [Serializable]
+public class CRechargeTurns : CComponent
+{
+    public int current;
+    public int max;
+
+    public CRechargeTurns()
+    {
+        ID = "RechargeTurns";
+        World.turnManager.incrementTurnCounter += OnTurn;
+    }
+
+    public CRechargeTurns(int current, int max)
+    {
+        ID = "RechargeTurns";
+        this.current = current;
+        this.max = max;
+
+        if (current > max)
+        {
+            current = max;
+        }
+
+        World.turnManager.incrementTurnCounter += OnTurn;
+    }
+
+    void OnTurn()
+    {
+        if (current < max)
+        {
+            current++;
+        }
+
+        if (current > max)
+        {
+            current = max;
+        }
+    }
+
+    public override void OnRemove()
+    {
+        World.turnManager.incrementTurnCounter -= OnTurn;
+    }
+
+    public override string ExtraInfo()
+    {
+        if (max <= 0)
+            return "Charge: 0%";
+
+        int percent = (int)(current / (float)max * 100f);
+
+        return "Charge: " + UserInterface.ColorByPercent(percent.ToString() + "%", percent);
+    }
+}
+
+[Serializable]
 public class CRot : CComponent
 {
     public int current;
@@ -108,6 +178,11 @@ public class CRot : CComponent
     {
         ID = "Rot";
         current = _cur;
+    }
+
+    public override string ExtraInfo()
+    {
+        return string.Format(LocalizationManager.GetContent("IT_Spoils"), current);
     }
 }
 
@@ -164,6 +239,17 @@ public class CEquipped : CComponent
         ID = "Equipped";
         itemID = _itemID;
         baseItemID = _baseID;
+    }
+
+    public override string ExtraInfo()
+    {
+        string eq = baseItemID;
+        if (!string.IsNullOrEmpty(eq))
+        {
+            return "Equipped: " + ItemList.GetItemByID(eq).DisplayName();
+        }
+
+        return base.ExtraInfo();
     }
 }
 
@@ -226,6 +312,18 @@ public class CAbility : CComponent
         abID = _abID;
         abLvl = _abLvl;
     }
+
+    public override string ExtraInfo()
+    {
+        Ability skill = GameData.Get<Ability>(abID) as Ability;
+
+        if (skill != null)
+        {
+            return string.Format("<color=magenta>Ability: {0}</color>", skill.Name);
+        }
+
+        return base.ExtraInfo();
+    }
 }
 
 [Serializable]
@@ -248,7 +346,7 @@ public class CCoordinate : CComponent
         isSet = _isSet;
     }
 
-    public string GetInfo()
+    public override string ExtraInfo()
     {
         return isSet ? (aNa + " - \n@ " + lPos.ToString()) : LocalizationManager.GetContent("IT_NotSet");
     }
@@ -356,6 +454,16 @@ public class CBlock : CComponent
         ID = "Block";
         level = lvl;
     }
+
+    public override string ExtraInfo()
+    {
+        string s = LocalizationManager.GetContent("IT_Block");
+
+        if (s.Contains("[INPUT]"))
+            s = s.Replace("[INPUT]", (level * 5).ToString());
+
+        return s;
+    }
 }
 
 [Serializable]
@@ -379,6 +487,11 @@ public class CCoat : CComponent
             liquid.Splash(stats);
             strikes--;
         }
+    }
+
+    public override string ExtraInfo()
+    {
+        return string.Format(LocalizationManager.GetContent("IT_Coat"), liquid.Name, strikes);
     }
 }
 
@@ -515,7 +628,7 @@ public class CLiquidContainer : CComponent
         return liquid == null || liquid.units <= 0;
     }
 
-    public string GetInfo()
+    public override string ExtraInfo()
     {
         string s = (isEmpty()) ? LocalizationManager.GetContent("IT_LiquidUnits_Empty") : LocalizationManager.GetContent("IT_LiquidUnits") + "\n(" + liquid.Description + ")";
 
@@ -565,6 +678,18 @@ public class CModKit : CComponent
         }
 
         return newList;
+    }
+
+    public override string ExtraInfo()
+    {
+        ItemModifier m = ItemList.GetModByID(modID);
+
+        if (m != null)
+        {
+            return m.name + ": " + m.description;
+        }
+
+        return base.ExtraInfo();
     }
 }
 
@@ -622,7 +747,7 @@ public class CItemLevel : CComponent
         return level - 1;
     }
 
-    public string Display()
+    public override string ExtraInfo()
     {      
         if (level < maxLevel)
         {
@@ -681,7 +806,7 @@ public class CRequirement : CComponent
             {
                 List<WeaponProficiency> profs = stats.proficiencies.GetProfs();
 
-                if (profs.Find(x => x.name == req[i].String) != null)
+                if (profs.Any(x => x.name == req[i].String))
                 {
                     if (profs.Find(x => x.name == req[i].String).level < req[i].Int)
                     {
@@ -740,7 +865,7 @@ public class CDNAHolder : CComponent
         return GameData.Get<NPC_Blueprint>(npc) as NPC_Blueprint;
     }
 
-    public string Display()
+    public override string ExtraInfo()
     {
         if (IsEmpty)
         {
@@ -774,13 +899,77 @@ public class COnHitAddStatus : CComponent
         chance = _chance;
     }
 
-    public void AddToEntity(Entity target)
+    public void TryAddToEntity(Entity target)
     {
         if (!statusID.NullOrEmpty() && target != null)
         {
             if (SeedManager.combatRandom.Next(100) < chance)
             {
                 target.stats.AddStatusEffect(statusID, turns.GetRandom());
+            }
+        }
+    }
+
+    public override string ExtraInfo()
+    {
+        return ((int)chance).ToString() + "% chance to add the status effect \"" + statusID + "\" on hit";
+    }
+}
+
+[Serializable]
+public class CLocationMap : CComponent
+{
+    readonly string zoneID;
+    readonly string questID;
+
+    public CLocationMap()
+    {
+        ID = "LocationMap";
+    }
+
+    public CLocationMap(string zID, string qID)
+    {
+        zoneID = zID;
+        questID = qID;
+    }
+
+    public void OnUse()
+    {
+        if (zoneID.NullOrEmpty())
+        {
+            CombatLog.SimpleMessage("Map_Fail");
+            return;
+        }
+
+        ZoneBlueprint zb = World.worldMap.worldMapData.GetZone(zoneID);
+
+        if (zb == null)
+        {
+            CombatLog.SimpleMessage("Map_Fail");
+            return;
+        }
+
+        Coord pos = World.worldMap.worldMapData.PlaceZone(zb);
+
+        if (pos != null)
+        {
+            World.tileMap.DeleteScreen(pos.x, pos.y);
+            World.worldMap.worldMapData.NewPostGenLandmark(pos, zoneID);
+
+            if (!questID.NullOrEmpty())
+            {
+                Quest q = QuestList.GetByID(questID);
+
+                if (q != null)
+                {
+                    q.goals = new Goal[1] { new GoToGoal_Specific(q, pos, 0) };
+                    q.AddEvent(QuestEvent.EventType.OnFail, new RemoveLocation_Specific(pos));
+                    ObjectManager.playerJournal.StartQuest(q);
+                }
+                else
+                {
+                    CombatLog.SimpleMessage("Map_Fail");
+                }
             }
         }
     }

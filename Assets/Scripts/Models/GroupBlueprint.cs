@@ -7,8 +7,7 @@ public class GroupBlueprint : IAsset
     public string ID { get; set; }
     public string ModID { get; set; }
     public int level;
-    public int depth;
-    public WorldMap.Biome[] biomes;
+    public Biome[] biomes;
     public string[] vaultTypes;
     public string[] landmarks;
     public List<SpawnBlueprint> npcs { get; set; }
@@ -33,7 +32,7 @@ public class GroupBlueprint : IAsset
 
             for (int i = 0; i < vaultTypes.Length; i++)
             {
-                if (tileMapData.vault.blueprint.ID == vaultTypes[i] && depth <= Mathf.Abs(tileMapData.elevation))
+                if (tileMapData.vault.blueprint.ID == vaultTypes[i])
                 {
                     return true;
                 }
@@ -45,7 +44,7 @@ public class GroupBlueprint : IAsset
             if (level > ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
                 return false;
 
-            if (!tileMapData.mapInfo.friendly && tileMapData.mapInfo.biome != WorldMap.Biome.Default && biomes != null)
+            if (!tileMapData.mapInfo.friendly && tileMapData.mapInfo.biome != Biome.Default && biomes != null)
             {
                 for (int i = 0; i < biomes.Length; i++)
                 {
@@ -76,16 +75,15 @@ public class GroupBlueprint : IAsset
         npcs = new List<SpawnBlueprint>();
         ID = dat["Name"].ToString();
         level = (dat.ContainsKey("Level")) ? (int)dat["Level"] : 1;
-        depth = (dat.ContainsKey("depth")) ? (int)dat["Depth"] : 0;
 
         if (dat.ContainsKey("Biomes"))
         {
-            biomes = new WorldMap.Biome[dat["Biomes"].Count];
+            biomes = new Biome[dat["Biomes"].Count];
 
             for (int i = 0; i < dat["Biomes"].Count; i++)
             {
                 string b = dat["Biomes"][i].ToString();
-                biomes[i] = b.ToEnum<WorldMap.Biome>();
+                biomes[i] = b.ToEnum<Biome>();
             }
         }
 
@@ -147,7 +145,7 @@ public struct SpawnBlueprint : IWeighted
         int max = Mathf.Min(10, maxAmount + World.DangerLevel() / 2);
         int a = (max > minAmount) ? SeedManager.combatRandom.Next(minAmount, max) : minAmount;
 
-        a = Mathf.Clamp(a, 0, 7);
+        a = Mathf.Clamp(a, 1, 7);
         return a;
     }
 }

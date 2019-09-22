@@ -334,7 +334,6 @@
             "Name" : "Start Cave 1",
             "Vaults" : [ "Cave_Start" ],
             "Level" : 0,
-            "Depth" : 1,
             "Possibilities" : [
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "neant0" },
                 { "Weight" : 8, "Amount" : "1d2", "Blueprint" : "bat" },
@@ -348,7 +347,6 @@
             "Name" : "Vault Caves 1",
             "Vaults" : [ "Cave_Norm", "Default" ],
             "Level" : 0,
-            "Depth" : 1,
             "Possibilities" : [
                 { "Weight" : 8, "Amount" : "1d1", "Blueprint" : "neant0" },
                 { "Weight" : 10, "Amount" : "2d1", "Blueprint" : "bat" },
@@ -365,7 +363,6 @@
             "Name" : "Vault Caves 2",
             "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 2,
-            "Depth" : 3,
             "Possibilities" : [
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "spectre" },
                 { "Weight" : 5, "Amount" : "2d1", "Blueprint" : "scrag1" },
@@ -383,7 +380,6 @@
             "Name" : "Vault Caves 3",
             "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 5,
-            "Depth" : 4,
             "Possibilities" : [
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "spectre" },
                 { "Weight" : 20, "Amount" : "2d1", "Blueprint" : "scrag2" },
@@ -401,7 +397,6 @@
             "Name" : "Vault Caves 4",
             "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 10,
-            "Depth" : 5,
             "Possibilities" : [
                 { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "spectre" },
                 { "Weight" : 10, "Amount" : "1d2", "Blueprint" : "snake" },
@@ -417,7 +412,6 @@
             "Name" : "Vampire Nest 1",
             "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 13,
-            "Depth" : 5,
             "Possibilities" : [
                 { "Weight" : 10, "Amount" : "2d3", "Blueprint" : "vamp" }
 
@@ -427,7 +421,6 @@
             "Name" : "Neant Nest 1",
             "Vaults" : [ "Spider" ],
             "Level" : 1,
-            "Depth" : 1,
             "Landmarks" : [ "Spider Den" ],
             "Possibilities" : [
                 { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "neant0" },
@@ -438,7 +431,6 @@
             "Name" : "Power Plant 1",
             "Vaults" : [ "PowerPlant" ],
             "Level" : 1,
-            "Depth" : 1,
             "Possibilities" : [
                 { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "plant0" },
                 { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "plant1" },
@@ -457,7 +449,6 @@
             "Name" : "Volcano 1",
             "Vaults" : [ "Cave_Volcano" ],
             "Level" : 1,
-            "Depth" : 1,
             "Landmarks" : [ "Volcano" ],
             "Possibilities" : [
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "phoenix0" },

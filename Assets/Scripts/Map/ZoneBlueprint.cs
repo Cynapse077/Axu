@@ -8,8 +8,8 @@ public class ZoneBlueprint : IAsset
     public int tileID, amount, radiation;
     public bool walkable, expand, isStart, friendly;
     public Placement placement;
-    public ZoneBlueprint[] neighbors;
     public ZoneBlueprint parent;
+    public ZoneBlueprint[] neighbors;
 
     public ZoneBlueprint(JsonData dat)
     {
@@ -19,8 +19,7 @@ public class ZoneBlueprint : IAsset
 
     public void FromJson(JsonData dat)
     {
-        if (dat.ContainsKey("ID"))
-            ID = dat["ID"].ToString();
+        ID = dat["ID"].ToString();
 
         dat.TryGetString("Display", out name, name);
         dat.TryGetInt("Tile Index", out tileID, tileID);
@@ -34,19 +33,10 @@ public class ZoneBlueprint : IAsset
 
         if (dat.ContainsKey("Place At"))
         {
-            if (dat["Place At"].ContainsKey("Biome"))
-                placement.zoneID = dat["Place At"]["Biome"].ToString();
-            if (dat["Place At"].ContainsKey("Location"))
-                placement.landmark = dat["Place At"]["Location"].ToString();
-            if (dat["Place At"].ContainsKey("Relative"))
-                placement.relativePosition = new Coord((int)dat["Place At"]["Relative"][0], (int)dat["Place At"]["Relative"][1]);
-            if (dat["Place At"].ContainsKey("Location"))
-                placement.landmark = dat["Place At"]["Location"].ToString();
-
-            if (dat["Place At"].ContainsKey("Mainland"))
-            {
-                placement.onMain = (bool)dat["Place At"]["Mainland"];
-            }
+            dat["Place At"].TryGetString("Biome", out placement.zoneID, placement.zoneID);
+            dat["Place At"].TryGetString("Location", out placement.landmark, placement.landmark);
+            dat["Place At"].TryGetCoord("Relative", out placement.relativePosition, placement.relativePosition);
+            dat["Place At"].TryGetBool("Mainland", out placement.onMain, placement.onMain);
         }
 
         if (dat.ContainsKey("Neighbors"))
@@ -91,19 +81,15 @@ public class ZoneBlueprint_Underground :IAsset
     {
         if (dat.ContainsKey("ID"))
             ID = dat["ID"].ToString();
-        if (dat.ContainsKey("Display"))
-            name = dat["Display"].ToString();
-        if (dat.ContainsKey("Depth"))
-            depth = (int)dat["Depth"];
-        if (dat.ContainsKey("Light"))
-            light = (int)dat["Light"];
+
+        dat.TryGetString("Display", out name, name);
+        dat.TryGetInt("Depth", out depth, depth);
+        dat.TryGetInt("Light", out light, light);
 
         if (dat.ContainsKey("Rules"))
         {
             rules = Rules.Empty();
-
-            if (dat["Rules"].ContainsKey("Load"))
-                rules.loadFromData = (bool)dat["Rules"]["Load"];
+            dat["Rules"].TryGetBool("Load", out rules.loadFromData, rules.loadFromData);
 
             if (dat["Rules"].ContainsKey("Algorithms"))
             {
@@ -117,16 +103,18 @@ public class ZoneBlueprint_Underground :IAsset
 
             if (dat["Rules"].ContainsKey("Feature"))
             {
-                string layerID = (dat["Rules"]["Feature"].ContainsKey("ID")) ? dat["Rules"]["Feature"]["ID"].ToString() : "";
-                int chance = (dat["Rules"]["Feature"].ContainsKey("Chance")) ? (int)dat["Rules"]["Feature"]["Chance"] : 0;
+                string layerID;
+                int chance;
+                dat["Rules"]["Feature"].TryGetString("ID", out layerID, string.Empty);
+                dat["Rules"]["Feature"].TryGetInt("Chance", out chance, 0);
+
                 rules.layer2 = new StringInt(layerID, chance);
             }
         }
 
-        string wallTile = "";
 
-        if (dat.ContainsKey("Wall Tile"))
-            wallTile = dat["Wall Tile"].ToString();
+        string wallTile;
+        dat.TryGetString("Wall Tile", out wallTile, string.Empty);
 
         WeightedTile[] wt = new WeightedTile[0];
 

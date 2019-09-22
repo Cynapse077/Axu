@@ -37,18 +37,21 @@
             "Damage Type" : "Bleed",
             "Cost" : 15,
             "Description" : "It is likely to cause bleeding.",
-            "Mod Type" : "Weapon"
+            "Mod Type" : "Weapon",
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Bleed", "Turns" : "2~7", "Chance" : 5 }
+            ]
         },
         {
             "Name" : "<color=magenta>Runed</color>",
             "ID" : "runed",
             "Damage" : "1d0",
-            "Properties" : [
-                "Confusion"
-            ],
             "Cost" : 36,
             "Description" : "Its surface is covered in mesmerizing runes.",
-            "Mod Type" : "Weapon"
+            "Mod Type" : "Weapon",
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Confuse", "Turns" : "3~8", "Chance" : 5 }
+            ]
         },
         {
             "Name" : "<color=orange>Scalding</color>",
@@ -74,7 +77,10 @@
             "Damage Type" : "Venom",
             "Cost" : 35,
             "Description" : "It is coated in venom.",
-            "Mod Type" : "Weapon"
+            "Mod Type" : "Weapon",
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Poison", "Turns" : "2~7", "Chance" : 5 }
+            ]
         },
         {
             "Name" : "<color=yellow>Voltaic</color>",

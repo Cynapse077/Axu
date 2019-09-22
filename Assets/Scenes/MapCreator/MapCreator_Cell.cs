@@ -113,15 +113,15 @@ namespace MapCreator
             }
         }
 
-        public void SetObject(string name)
+        public void SetObject(string objectID)
         {
-            MapObjectBlueprint mob = ItemList.GetMOB(name);
+            MapObjectBlueprint mob = ItemList.GetMOB(objectID);
 
-            for (int i = 0; i < GameData.GetAll<MapObjectBlueprint>().Count; i++)
+            for (int i = 0; i < mct.ViewableObjects.Count; i++)
             {
-                if (GameData.GetAll<MapObjectBlueprint>()[i].objectType == name)
+                if (mct.ViewableObjects[i].objectType == objectID)
                 {
-                    objectID = i;
+                    this.objectID = i;
                     break;
                 }
             }
@@ -174,7 +174,7 @@ namespace MapCreator
         string GetTootip()
         {
             string tt = Tile.GetKey(tileID);
-            string ot = (objectID > -1) ? GameData.GetAll<MapObjectBlueprint>()[objectID].Name : "No Object";
+            string ot = (objectID > -1) ? mct.ViewableObjects[objectID].Name : "No Object";
             string nt = (npcID > -1) ? EntityList.npcs[npcID].name : "No NPC";
 
             return string.Format("{0}\n{1}\n{2}", tt, ot, nt);

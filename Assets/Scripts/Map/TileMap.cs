@@ -564,7 +564,7 @@ public class TileMap : MonoBehaviour
 
     public bool IsOceanWorldTile(int x, int y)
     {
-        return worldMap.GetTileAt(x, y).biome == WorldMap.Biome.Ocean;
+        return worldMap.GetTileAt(x, y).biome == Biome.Ocean;
     }
 
     public List<Coord> InSightCoords()
@@ -731,17 +731,17 @@ public class TileMap : MonoBehaviour
 
         if (tsIndex == 0)
         {
-            if (currentMap.mapInfo.biome == WorldMap.Biome.Forest)
+            if (currentMap.mapInfo.biome == Biome.Forest)
                 tsIndex = 1;
-            else if (currentMap.mapInfo.biome == WorldMap.Biome.Shore || currentMap.IsMagna())
+            else if (currentMap.mapInfo.biome == Biome.Shore || currentMap.IsMagna())
                 tsIndex = 3;
-            else if (currentMap.mapInfo.biome == WorldMap.Biome.Swamp)
+            else if (currentMap.mapInfo.biome == Biome.Swamp)
                 tsIndex = 4;
-            else if (currentMap.mapInfo.biome == WorldMap.Biome.Desert)
+            else if (currentMap.mapInfo.biome == Biome.Desert)
                 tsIndex = 6;
-            else if (currentMap.mapInfo.biome == WorldMap.Biome.Tundra)
+            else if (currentMap.mapInfo.biome == Biome.Tundra)
                 tsIndex = 17;
-            else if (currentMap.mapInfo.biome == WorldMap.Biome.Mountain)
+            else if (currentMap.mapInfo.biome == Biome.Mountain)
                 tsIndex = 8;
         }
         else if (tsIndex == 21)

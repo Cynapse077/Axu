@@ -34,8 +34,12 @@ public class MiniMap : MonoBehaviour
         miniMap.aspect = (fullMap) ? Camera.main.aspect : 1f;
 
         if (World.tileMap != null)
+        {
             miniMap.farClipPlane = (World.tileMap.currentElevation == 0) ? 100 : 0.02f;
+        }
         else
+        {
             Camera.main.farClipPlane = (fullMap) ? 0.02f : 100f;
+        }
     }
 }

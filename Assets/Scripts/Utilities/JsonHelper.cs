@@ -165,10 +165,14 @@ public static class JsonHelper {
 
     public static bool TryGetCoord(this JsonData dat, string key, out Coord o, Coord defaultValue = null)
     {
+        if (defaultValue == null)
+        {
+            defaultValue = new Coord(0);
+        }
+
         if (dat.ContainsKey(key) && dat[key].Count == 2)
         {
-            int x = 0;
-            int y = 0;
+            int x = 0, y = 0;
 
             if (dat.TryGetInt("x", out x) && dat.TryGetInt("y", out y))
             {
@@ -181,12 +185,29 @@ public static class JsonHelper {
         return false;
     }
 
+    public static bool TryGetDamage(this JsonData dat, string key, out Damage damage, Damage defaultValue = null)
+    {
+        if (defaultValue == null)
+        {
+            defaultValue = new Damage(1, 2, 0, DamageTypes.Blunt);
+        }
+
+        if (dat.ContainsKey(key))
+        {
+            damage = Damage.GetByString(dat[key].ToString());
+            return true;
+        }
+
+        damage = defaultValue;
+        return false;
+    }
+
     //For enums
     public static bool TryGetEnum<T>(this JsonData dat, string key, out T o, T defaultValue) where T : struct, IConvertible
     {
         if (!typeof(T).IsEnum)
         {
-            throw new ArgumentException("<T> must be an enumerated type");
+            throw new ArgumentException("TryGetEnum<T> must be an enumerated type");
         }
 
         if (dat.ContainsKey(key))

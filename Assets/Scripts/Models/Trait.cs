@@ -304,7 +304,14 @@ public class Trait : IAsset
     {
         name = dat["Name"].ToString();
         ID = dat["ID"].ToString();
-        description = dat["Description"].ToString();
+
+        dat.TryGetString("Description", out description);
+        dat.TryGetString("Cancels", out slot, null);
+        dat.TryGetInt("Tier", out tier, 0);
+        dat.TryGetString("Prerequisite", out prerequisite, null);
+        dat.TryGetString("Next Tier", out nextTier, null);
+        dat.TryGetBool("Stackable", out stackable, false);
+        dat.TryGetInt("Max Stacks", out maxStacks, 1);
 
         //Stat changes
         if (dat.ContainsKey("Stats"))
@@ -358,9 +365,6 @@ public class Trait : IAsset
             }
         }
 
-        //Cancellations
-        slot = dat.ContainsKey("Cancels") ? dat["Cancels"].ToString() : "";
-
         //Abilities
         if (dat.ContainsKey("Abilities"))
         {
@@ -382,18 +386,6 @@ public class Trait : IAsset
                 }
             }
         }
-
-        //Prerequisites and Next Tiers
-        tier = (dat.ContainsKey("Tier")) ? (int)dat["Tier"] : 0;
-        if (dat.ContainsKey("Prerequisite"))
-            prerequisite = dat["Prerequisite"].ToString();
-        if (dat.ContainsKey("Next Tier"))
-            nextTier = dat["Next Tier"].ToString();
-
-        if (dat.ContainsKey("Stackable"))
-            stackable = (bool)dat["Stackable"];
-
-        maxStacks = (dat.ContainsKey("Max Stacks")) ? (int)dat["Max Stacks"] : 1;
     }
 
     public bool ContainsEffect(TraitEffects te)

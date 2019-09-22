@@ -1,70 +1,127 @@
 {
     "Items" : [
         {
-            "ID" : "none",
+            "ID" : "BaseItem",
+            "Rarity" : 100,
+            "Type" : "Misc_Object",
+            "Cost" : 0
+        },
+
+        {
+            "ID" : "Item_Ammo", "Base" : "BaseItem",
+            "Stackable" : true,
+            "Properties" : [ "Ammunition" ]
+        },
+        {
+            "ID" : "Item_Weapon", "Base" : "BaseItem",
+            "Damage" : "1d4",
+            "Attack Type" : "Bash",
+            "Properties" : [ "Weapon" ]
+        },
+        {
+            "ID" : "Item_Thrown", "Base" : "Item_Weapon",
+            "Properties" : [ "Throwing_Wep" ],
+            "Stackable" : true
+        },
+        {
+            "ID" : "Item_Ranged", "Base" : "BaseItem",
+            "Type" : "Firearm",
+            "Damage" : "1d3",
+            "Properties" : [ "Ranged" ],
+            "Components" : [
+                { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "Item_Ammo" }
+            ]
+        },
+        {
+            "ID" : "Item_Armor", "Base" : "BaseItem",
+            "Type" : "Armor",
+            "Damage" : "1d2",
+            "Properties" : [ "Armor" ],
+            "Armor" : 1
+        },
+        {
+            "ID" : "Item_Corpse", "Base" : "BaseItem",
+            "Components" : [
+                { "ID" : "Rot", "Max" : 2500 }
+            ],
+            "Properties" : [ "Edible", "Severed_BodyPart" ],
+            "Display" : {
+                "On Ground" : "item-body.png"
+            }
+        },
+        {
+            "ID" : "Item_BodyPart", "Base" : "Item_Corpse",
+            "Properties" : [ "Replacement_Limb" ],
+            "Display" : {
+                "On Ground" : "item-limb.png"
+            }
+        },
+        {
+            "ID" : "none", "Base" : "BaseItem",
             "Name" : "<color=grey>None</color>",
             "Lootable" : false,
             "Type" : "Unarmed",
-            "Rarity" : 100,
             "FlavorText" : "There's nothing here.",
             "Display" : {
                 "On Ground" : "item-none.png"
             }
         },
+
+
         {
+            "Base" : "Item_Ammo",
             "ID" : "arrow",
             "Name" : "Arrow",
-            "Type" : "Misc_Object",
             "Rarity" : 1,
-            "Stackable" : true,
             "FlavorText" : "Ammunition for a bow.",
             "Cost" : 1,
-            "Properties" : [ "Ammunition" ],
             "Display" : {
             	"On Ground" : "item-arrow.png"
             }
         },
         {
+            "Base" : "Item_Ammo",
             "ID" : "bolt",
             "Name" : "Bolt",
-            "Type" : "Misc_Object",
             "Rarity" : 1,
-            "Stackable" : true,
             "FlavorText" : "Ammunition for a crossbow.",
             "Cost" : 2,
-            "Properties" : [ "Ammunition" ],
             "Display" : {
             	"On Ground" : "item-bolt.png"
             }
         },
         {
+            "Base" : "Item_Ammo",
         	"ID" : "bullet",
             "Name" : "Bullet",
-            "Type" : "Misc_Object",
             "Rarity" : 2,
-            "Stackable" : true,
             "FlavorText" : "Ammunition for a firearm.",
             "Cost" : 3,
-            "Properties" : [ "Ammunition" ],
             "Display" : {
             	"On Ground" : "item-bullet.png"
             }
         },
 		{
+            "Base" : "Item_Ammo",
         	"ID" : "plasmacell",
             "Name" : "Plasma Cell",
-            "Type" : "Misc_Object",
             "Rarity" : 3,
-            "Stackable" : true,
             "FlavorText" : "Ammunition for a plasma firearm.",
             "Cost" : 5,
-            "Properties" : [ "Ammunition" ],
             "Display" : {
             	"On Ground" : "item-bullet.png"
             }
         },
-        
         {
+            "Base" : "Item_Ammo",
+            "ID" : "seed",
+            "Name" : "Seed",
+            "FlavorText" : "A natural projectile.",
+            "Lootable" : false
+        },
+
+        {
+            "Base" : "Item_Weapon",
         	"ID" : "knuckles",
             "Name" : "Brass Knuckles",
             "Type" : "Unarmed",
@@ -72,8 +129,7 @@
             "Rarity" : 1,
             "FlavorText" : "Add a little punch to your punch with this back-alley weapon.",
             "Cost" : 18,
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-fist.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-fist.png",
@@ -81,6 +137,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "fistfillers",
             "Name" : "Fist Fillers",
             "Type" : "Unarmed",
@@ -88,8 +145,7 @@
             "Rarity" : 1,
             "FlavorText" : "Weights that, when held, add substatial impact to punches.",
             "Cost" : 8,
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-fist.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-fist.png",
@@ -97,6 +153,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "caestus",
             "Name" : "Caestus",
             "Type" : "Unarmed",
@@ -104,8 +161,7 @@
             "Rarity" : 2,
             "FlavorText" : "Weighted leather wrappings fixed with iron studs. These gloves can cause considerable damage in the right hands.",
             "Cost" : 47,
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-fist.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-fist.png",
@@ -113,6 +169,7 @@
             }
         },
         {
+            "ID" : "Item_Weapon",
         	"ID" : "shockglove",
             "Name" : "Shock Glove",
             "Type" : "Unarmed",
@@ -123,8 +180,8 @@
             "Components" : [
                 { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
             ],
-            "Properties" : [ "Weapon", "Stun", "Shock_Nearby" ],
-            "DmgTypes" : [ "Blunt", "Energy" ],
+            "Properties" : [ "Weapon", "Shock_Nearby" ],
+            "Damage Types" : [ "Blunt", "Energy" ],
             "Display" : {
                 "On Ground" : "item-shockglove.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-fist.png",
@@ -132,6 +189,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "drillfist",
             "Name" : "Drill Fist",
             "Type" : "Unarmed",
@@ -140,10 +198,11 @@
             "FlavorText" : "A large segmented arm piece with a large drill at the end. Often used in industrial mining work.",
             "Cost" : 104,
             "Components" : [
-                { "ID" : "Charges", "Max" : 2000  }
+                { "ID" : "Charges", "Max" : 2000  },
+                { "ID" : "OnHitAddStatus", "Status" : "Poison", "Turns" : "2~6", "Chance" : 5 }
             ],
             "Properties" : [ "Weapon", "Dig" ],
-            "DmgTypes" : [ "Pierce", "Bleed" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-drillfist.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-drillfist.png",
@@ -151,6 +210,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "woodplank",
             "Name" : "Wood Plank",
             "Type" : "Blunt",
@@ -158,8 +218,8 @@
             "Rarity" : 1,
             "FlavorText" : "A crude blunt weapon, made of a rotting 2x4 plank.",
             "Cost" : 6,
-            "Properties" : [ "Weapon", "Slow" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Properties" : [ "Slow" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
@@ -167,6 +227,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "femur",
             "Name" : "Femur",
             "Type" : "Blunt",
@@ -174,8 +235,8 @@
             "Rarity" : 2,
             "FlavorText" : "The femur of some creature, repurposed into a crude club.",
             "Cost" : 6,
-            "Properties" : [ "Weapon", "NoMods" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Properties" : [ "NoMods" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-femur.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-bone.png",
@@ -183,15 +244,14 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "club",
             "Name" : "Club",
             "Type" : "Blunt",
-            "Damage" : "1d4",
             "Rarity" : 1,
             "FlavorText" : "Nothing but a thick branch, but it will crush skulls nonetheless.",
             "Cost" : 8,
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-club.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
@@ -199,6 +259,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "spikedbranch",
             "Name" : "Spiked Branch",
             "Type" : "Blunt",
@@ -206,15 +267,19 @@
             "Rarity" : 2,
             "FlavorText" : "A weak branch with several nails protruding through its surface.",
             "Cost" : 10,
-            "Properties" : [ "Weapon", "NoMods" ],
-            "DmgTypes" : [ "Blunt", "Bleed" ],
+            "Properties" : [ "NoMods" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-spiked.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
                 "Layer" : "Weapon"
-            }
+            },
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Bleed", "Turns" : "2~6", "Chance" : 5 }
+            ]
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "hammer",
             "Name" : "Hammer",
             "Type" : "Blunt",
@@ -222,8 +287,7 @@
             "Rarity" : 1,
             "FlavorText" : "A tool often used to bludgeon nails into wood.",
             "Cost" : 16,
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-hammer.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
@@ -231,6 +295,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "chains",
             "Name" : "Chains",
             "Type" : "Blunt",
@@ -238,8 +303,8 @@
             "Rarity" : 1,
             "FlavorText" : "A strand of chains that can be repurposed as a whip of sorts.",
             "Cost" : 25,
-            "Properties" : [ "Weapon", "Quick" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Properties" : [ "Quick" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-chains.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-chains.png",
@@ -247,6 +312,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "barbedbat",
         	"Name" : "Barbed Bat",
         	"Type" : "Blunt",
@@ -254,15 +320,18 @@
         	"Rarity" : 2,
         	"FlavorText" : "A makeshift baseball bat with barbed wire wrapped around its length.",
         	"Cost" : 44,
-        	"Properties" : [ "Weapon" ],
-        	"DmgTypes" : [ "Blunt", "Bleed" ],
+            "Damage Types" : [ "Blunt" ],
         	"Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
                 "Layer" : "Weapon"
-            }
+            },
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Bleed", "Turns" : "2~6", "Chance" : 5 }
+            ]
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "crowbar",
             "Name" : "Crowbar",
             "Type" : "Blunt",
@@ -270,8 +339,7 @@
             "Rarity" : 2,
             "FlavorText" : "Not made to be a weapon, but this rod of steel can deal devastating blows in the right hands.",
             "Cost" : 26,
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-crowbar.png",
@@ -279,6 +347,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "nightstick",
             "Name" : "Night Stick",
             "Type" : "Blunt",
@@ -286,8 +355,7 @@
             "Rarity" : 2,
             "FlavorText" : "A smuggled policing weapon. It is retractable and portable.",
             "Cost" : 38,
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-stunbaton.png",
@@ -295,6 +363,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "stunbaton",
             "Name" : "Stun Baton",
             "Type" : "Blunt",
@@ -303,10 +372,11 @@
             "FlavorText" : "An Ensis-designed baton. It has electricity coursing down its length, allowing the user to stun opponents.",
             "Cost" : 103,
             "Components" : [
-                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" },
+                { "ID" : "OnHitAddStatus", "Status" : "Stun", "Turns" : "1~5", "Chance" : 5 }
             ],
-            "Properties" : [ "Weapon", "Stun", "Shock_Nearby" ],
-            "DmgTypes" : [ "Blunt", "Energy" ],
+            "Properties" : [ "Shock_Nearby" ],
+            "Damage Types" : [ "Blunt", "Energy" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-stunbaton.png",
@@ -314,6 +384,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "steelmace",
             "Name" : "Steel Mace",
             "Type" : "Blunt",
@@ -321,8 +392,7 @@
             "Rarity" : 3,
             "FlavorText" : "A bludgeoning weapon made of steel.",
             "Cost" : 62,
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-mace.png",
@@ -330,6 +400,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "pneumatichammer",
         	"Name" : "Pneumatic Hammer",
         	"Type" : "Blunt",
@@ -337,8 +408,7 @@
         	"Rarity" : 3,
         	"FlavorText" : "A large hammer with a pneumatic head. It is often used in heavy industrial work.",
         	"Cost" : 120,
-        	"Properties" : [ "Weapon" ],
-        	"DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
         	"Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-sledge.png",
@@ -346,6 +416,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "sledgehammer",
             "Name" : "Sledgehammer",
             "Type" : "Blunt",
@@ -353,8 +424,8 @@
             "Rarity" : 3,
             "FlavorText" : "A large two-handed hammer. Leave nothing recognizable of your foes behind.",
             "Cost" : 103,
-            "Properties" : [ "Weapon", "Two_Handed", "Slow", "Knockback" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Properties" : [ "Two_Handed", "Slow", "Knockback" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-sledge.png",
@@ -362,16 +433,15 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "dagger",
             "Name" : "Dagger",
             "Type" : "Blade",
-            "Damage" : "1d4",
             "Rarity" : 1,
             "FlavorText" : "A simple blade. The choice for assassins and jealous lovers alike.",
             "Cost" : 14,
             "Attack Type" : "Knife",
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Slash" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
@@ -379,6 +449,7 @@
             }
         },        
         {
+            "Base" : "Item_Weapon",
         	"ID" : "bonesaw",
             "Name" : "Bone Saw",
             "Type" : "Blade",
@@ -387,15 +458,18 @@
             "FlavorText" : "A steel serrated saw, used during surgery to cut through bones.",
             "Cost" : 35,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Slash", "Bleed" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
-            }
+            },
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Bleed", "Turns" : "2~6", "Chance" : 5 }
+            ]
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "scalpel",
             "Name" : "Scalpel",
             "Type" : "Blade",
@@ -404,8 +478,8 @@
             "FlavorText" : "A tool used by surgeons to cut into flesh.",
             "Cost" : 14,
             "Attack Type" : "Knife",
-            "Properties" : [ "Weapon", "Quick" ],
-            "DmgTypes" : [ "Slash" ],
+            "Properties" : [ "Quick" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
@@ -413,6 +487,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "stiletto",
             "Name" : "Stiletto",
             "Type" : "Blade",
@@ -421,8 +496,8 @@
             "FlavorText" : "Quick and silent, like a shadow. It is capable of striking multiple times in sucession.",
             "Cost" : 34,
             "Attack Type" : "Knife",
-            "Properties" : [ "Weapon", "Very_Quick" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Very_Quick" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
@@ -430,6 +505,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "rustyspike",
             "Name" : "Rusty Spike",
             "Type" : "Blade",
@@ -438,15 +514,19 @@
             "FlavorText" : "What appears to be an old railroad spike. Its surface doesn't look sanitary at all.",
             "Cost" : 34,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon", "Quick" ],
-            "DmgTypes" : [ "Pierce", "Venom" ],
+            "Properties" : [ "Quick" ],
+            "Damage Types" : [ "Pierce", "Venom" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
-            }
+            },
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Poison", "Turns" : "2~6", "Chance" : 5 }
+            ]
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "rapier",
             "Name" : "Rapier",
             "Type" : "Blade",
@@ -455,8 +535,8 @@
             "FlavorText" : "Most commonly used by nobles, and for dueling purposes. A fast but flimsy weapon.",
             "Cost" : 48,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon", "Quick" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Quick" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-sword.png",
@@ -464,6 +544,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "kopesh",
             "Name" : "Kopesh",
             "Type" : "Blade",
@@ -472,8 +553,8 @@
             "FlavorText" : "A small, curved sickle-sword based on an ancient Egyptian design.",
             "Cost" : 30,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon", "Quick" ],
-            "DmgTypes" : [ "Slash" ],
+            "Properties" : [ "Quick" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-sword.png",
@@ -481,6 +562,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "shortsword",
             "Name" : "Short Sword",
             "Type" : "Blade",
@@ -489,8 +571,7 @@
             "FlavorText" : "A deadly and easy to use blade of steel. Tried and true.",
             "Cost" : 29,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Slash" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-sword.png",
@@ -498,6 +579,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "bastardsword",
             "Name" : "Bastard Sword",
             "Type" : "Blade",
@@ -506,8 +588,7 @@
             "FlavorText" : "A hand-and-a-half sword, sporting a wicked edge. A must-have for blade aficionados.",
             "Cost" : 55,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Slash" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-sword.png",
@@ -515,6 +596,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "katana",
             "Name" : "Katana",
             "Type" : "Blade",
@@ -523,8 +605,7 @@
             "FlavorText" : "A curved, single-bladed sword based on an ancient design. It has a wicked edge, but is also fragile.",
             "Cost" : 110,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Slash", "Cleave" ],
+            "Damage Types" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-katana.png",
@@ -532,6 +613,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "greatsword",
             "Name" : "Greatsword",
             "Type" : "Blade",
@@ -541,8 +623,8 @@
             "FlavorText" : "A gigantic blade. It requires two hands, and even then is still difficult to use.",
             "Cost" : 150,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon", "Two_Handed" ],
-            "DmgTypes" : [ "Slash", "Cleave" ],
+            "Properties" : [ "Two_Handed" ],
+            "Damage Types" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-greatsword.png",
@@ -550,6 +632,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "staff",
             "Name" : "Staff",
             "Type" : "Polearm",
@@ -558,8 +641,8 @@
             "FlavorText" : "A long pole used for bashing foes from a distance.",
             "Cost" : 21,
             "Attack Type" : "Spear",
-            "Properties" : [ "Weapon", "Two_Handed", "Knockback" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Properties" : [ "Two_Handed", "Knockback" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-pole.png",
@@ -567,6 +650,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "pitchfork",
             "Name" : "Pitchfork",
             "Type" : "Polearm",
@@ -575,8 +659,8 @@
             "FlavorText" : "Often used to move hay. Can be repurposed into a weapon if the need arises. The ancestor of the Trident.",
             "Cost" : 25,
             "Attack Type" : "Spear",
-            "Properties" : [ "Weapon", "Two_Handed" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Two_Handed" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-pitchfork.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-pitchfork.png",
@@ -584,6 +668,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "spear",
             "Name" : "Spear",
             "Type" : "Polearm",
@@ -592,8 +677,8 @@
             "FlavorText" : "Its reach alone offers you great boons during battle.",
             "Cost" : 25,
             "Attack Type" : "Spear",
-            "Properties" : [ "Weapon", "Two_Handed", "Quick" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Two_Handed", "Quick" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-spear.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-spear.png",
@@ -601,6 +686,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "trident",
             "Name" : "Trident",
             "Type" : "Polearm",
@@ -609,8 +695,8 @@
             "FlavorText" : "Originating as a fishing tool, this three-pronged spear can be deadly in the right hands.",
             "Cost" : 45,
             "Attack Type" : "Spear",
-            "Properties" : [ "Weapon", "Two_Handed" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Two_Handed" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-trident.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-pitchfork.png",
@@ -618,6 +704,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "halberd",
             "Name" : "Halberd",
             "Type" : "Polearm",
@@ -626,8 +713,8 @@
             "FlavorText" : "A long polearm with a large axe head on the end.",
             "Cost" : 111,
             "Attack Type" : "Spear",
-            "Properties" : [ "Weapon", "Two_Handed" ],
-            "DmgTypes" : [ "Pierce", "Cleave" ],
+            "Properties" : [ "Two_Handed" ],
+            "Damage Types" : [ "Pierce", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-glaive.png",
@@ -635,6 +722,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "lance",
             "Name" : "Lance",
             "Type" : "Polearm",
@@ -644,8 +732,8 @@
             "FlavorText" : "Lances were made as mounted weapons. Few have made use of lances in on-foot combat.",
             "Cost" : 120,
             "Attack Type" : "Spear",
-            "Properties" : [ "Weapon", "Very_Slow", "Two_Handed", "Knockback" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Very_Slow", "Two_Handed", "Knockback" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-lance.png",
@@ -653,16 +741,15 @@
             }
         },
 		{
+            "Base" : "Item_Weapon",
         	"ID" : "hatchet",
             "Name" : "Hatchet",
             "Type" : "Axe",
-            "Damage" : "1d4",
             "Rarity" : 1,
             "FlavorText" : "A small axe, better suited to cutting kindling than flesh.",
             "Cost" : 14,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Slash" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-axe-small.png",
@@ -670,6 +757,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "axe",
             "Name" : "Axe",
             "Type" : "Axe",
@@ -678,8 +766,7 @@
             "FlavorText" : "A woodcutter's axe. Burying this in your enemies is sure to leave a lasting mark.",
             "Cost" : 55,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Slash" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-axe-small.png",
@@ -687,6 +774,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "battleaxe",
             "Name" : "Battle Axe",
             "Type" : "Axe",
@@ -695,8 +783,8 @@
             "FlavorText" : "A double-bladed axe, able to cleave bodies in two.",
             "Cost" : 125,
             "Attack Type" : "Sweep",
-            "Properties" : [ "Weapon", "Two_Handed", "Slow" ],
-            "DmgTypes" : [ "Slash", "Cleave" ],
+            "Properties" : [ "Two_Handed", "Slow" ],
+            "Damage Types" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-axe.png",
@@ -704,6 +792,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "scythe",
             "Name" : "Scythe",
             "Type" : "Axe",
@@ -712,8 +801,8 @@
             "FlavorText" : "In the right hands, this tool can be used as a wicked death-dealer. Reap the crop of heads.",
             "Cost" : 110,
             "Attack Type" : "Sweep",
-            "Properties" : [ "Weapon", "Two_Handed" ],
-            "DmgTypes" : [ "Slash", "Cleave" ],
+            "Properties" : [ "Two_Handed" ],
+            "Damage Types" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-scythe.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-scythe.png",
@@ -721,6 +810,7 @@
             }
         },
 		{
+            "Base" : "Item_Weapon",
         	"ID" : "eversightaxe",
             "Name" : "Eversight Axe",
             "Type" : "Axe",
@@ -729,8 +819,8 @@
             "FlavorText" : "An axe wielded by the assassin group, The Eversight.",
             "Cost" : 200,
             "Attack Type" : "Slash",
-            "Properties" : [ "Weapon", "Two_Handed", "Slow" ],
-            "DmgTypes" : [ "Slash", "Cleave" ],
+            "Properties" : [ "Two_Handed", "Slow" ],
+            "Damage Types" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-axe.png",
@@ -738,22 +828,20 @@
             }
         },
         {
+            "Base" : "Item_Ranged",
             "ID" : "bow",
             "Name" : "Short Bow",
             "Type" : "Firearm",
-            "Damage" : "1d3",
             "Rarity" : 1,
             "FlavorText" : "A small bow made of wood. It has straps of leather to add some comfort to the wielder.",
             "Cost" : 15,
-            "Components" : [
-                { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "arrow" }
-            ],
-            "Properties" : [ "Ranged", "Bow", "Slow" ],
+            "Properties" : [ "Bow", "Slow" ],
             "Display" : {
                 "On Ground" : "item-bow.png"
             }
         },
         {
+            "Base" : "Item_Ranged",
             "ID" : "crossbow",
             "Name" : "Crossbow",
             "Type" : "Firearm",
@@ -764,32 +852,31 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "bolt" }
             ],
-            "Properties" : [ "Ranged", "Bow", "Slow" ],
+            "Properties" : [ "Bow", "Slow" ],
             "Display" : {
                 "On Ground" : "item-crossbow.png"
             }
         },
         {
+            "Base" : "Item_Ranged",
         	"ID" : "pistol",
             "Name" : "Pistol",
             "Type" : "Firearm",
-            "Damage" : "1d3",
             "Rarity" : 2,
             "FlavorText" : "A small, handheld firearm.",
             "Cost" : 53,
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 6, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged" ],
             "Display" : {
                 "On Ground" : "item-pistol.png"
             }
         },
         {
+            "Base" : "Item_Ranged",
         	"ID" : "smartpistol",
             "Name" : "Smart Pistol",
             "Type" : "Firearm",
-            "Damage" : "1d3",
             "Accuracy" : 2,
             "Rarity" : 3,
             "FlavorText" : "An auto-targeting pistol.",
@@ -797,12 +884,12 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 6, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged" ],
             "Display" : {
                 "On Ground" : "item-pistol.png"
             }
         },
         {
+            "Base" : "Item_Ranged",
         	"ID" : "huntingrifle",
             "Name" : "Hunting Rifle",
             "Type" : "Firearm",
@@ -814,12 +901,13 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Slow" ],
+            "Properties" : [ "Slow" ],
 			"Display" : {
                 "On Ground" : "item-rifle.png"
             }
         },
         {
+            "Base" : "Item_Ranged",
         	"ID" : "sniperrifle",
             "Name" : "Sniper Rifle",
             "Type" : "Firearm",
@@ -830,12 +918,13 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Very_Slow" ],
+            "Properties" : [ "Very_Slow" ],
 			"Display" : {
                 "On Ground" : "item-rifle.png"
             }
         },
         {
+            "Base" : "Item_Ranged",
         	"ID" : "assaultrifle",
             "Name" : "Assault Rifle",
             "Type" : "Firearm",
@@ -847,12 +936,13 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 3, "Max" : 12, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Burst" ],
+            "Properties" : [ "Burst" ],
 			"Display" : {
                 "On Ground" : "item-rifle.png"
             }
         },
         {
+            "Base" : "Item_Ranged",
         	"ID" : "shotgun",
             "Name" : "Shotgun",
             "Type" : "Firearm",
@@ -864,12 +954,13 @@
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 4, "Max" : 1, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Slow" ],
+            "Properties" : [ "Slow" ],
 			"Display" : {
                 "On Ground" : "item-rifle.png"
             }
         },
 		{
+            "Base" : "Item_Ranged",
 			"ID" : "plasmarifle",
 			"Name" : "Plasma Rifle",
 			"Type" : "Firearm",
@@ -880,24 +971,23 @@
 			"Components" : [
 				{ "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 10, "AmmoID" : "plasmacell" }
 			],
-			"Properties" : [ "Ranged", "Slow" ],
+			"Properties" : [ "Slow" ],
 			"Display" : {
                 "On Ground" : "item-rifle.png"
             }
 		},
 
         {
+            "Base" : "Item_Thrown",
         	"ID" : "throwingknife",
             "Name" : "Throwing Knife",
-            "Type" : "Misc_Object",
             "Damage" : "1d3",
             "Rarity" : 1,
             "FlavorText" : "A light, balanced dagger with no hilt. It is used for launching at foes from a distance.",
             "Cost" : 11,
             "Attack Type" : "Knife",
-            "Stackable" : true,
-            "Properties" : [ "Throwing_Wep", "Weapon", "Quick" ],
-            "DmgTypes" : [ "Slash" ],
+            "Properties" : [ "Quick" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
@@ -905,17 +995,14 @@
             }
         },
         {
+            "Base" : "Item_Thrown",
         	"ID" : "throwingaxe",
             "Name" : "Throwing Axe",
-            "Type" : "Misc_Object",
-            "Damage" : "1d4",
             "Rarity" : 2,
             "FlavorText" : "A small projectile axe.",
             "Cost" : 20,
             "Attack Type" : "Slash",
-            "Stackable" : true,
-            "Properties" : [ "Throwing_Wep", "Weapon" ],
-            "DmgTypes" : [ "Slash" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-axe-small.png",
@@ -923,17 +1010,15 @@
             }
         },
         {
+            "Base" : "Item_Thrown",
         	"ID" : "javelin",
             "Name" : "Javelin",
-            "Type" : "Misc_Object",
             "Damage" : "1d5",
             "Rarity" : 2,
             "FlavorText" : "A light spear that is made to be thrown. It is very aerodynamic, and can pierce armor effectively.",
             "Cost" : 45,
             "Attack Type" : "Spear",
-            "Stackable" : true,
-            "Properties" : [ "Throwing_Wep", "Weapon" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-spear.png",
@@ -941,10 +1026,10 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "pickaxe",
             "Name" : "Pickaxe",
-            "Type" : "Misc_Object",
-            "Damage" : "1d5",
+            "Damage" : "1d6",
             "Rarity" : 3,
             "FlavorText" : "This tool can puncture through stone and flesh alike.",
             "Cost" : 132,
@@ -952,8 +1037,8 @@
             "Components" : [
                 { "ID" : "Charges", "Max" : 200  }
             ],
-            "Properties" : [ "Dig", "Weapon", "Slow", "DestroyOnZeroCharges" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Dig", "Slow", "DestroyOnZeroCharges" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-pickaxe.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-pickaxe.png",
@@ -961,10 +1046,9 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "shovel",
             "Name" : "Shovel",
-            "Type" : "Misc_Object",
-            "Damage" : "1d4",
             "Rarity" : 2,
             "FlavorText" : "A slow digging tool that can be brandished as a weapon in dire times",
             "Cost" : 87,
@@ -972,8 +1056,8 @@
             "Components" : [
                 { "ID" : "Charges", "Max" : 100  }
             ],
-            "Properties" : [ "Dig", "Weapon", "Slow", "DestroyOnZeroCharges" ],
-            "DmgTypes" : [ "Slash" ],
+            "Properties" : [ "Dig", "Slow", "DestroyOnZeroCharges" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-shovel.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-pickaxe.png",
@@ -981,6 +1065,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "plywoodshield",
             "Name" : "Plywood Shield",
             "Type" : "Shield",
@@ -993,7 +1078,6 @@
                 { "ID" : "Ability", "Ability" : "bash", "Level" : 1 },
                 { "ID" : "Block", "Level" : 1 }
             ],
-            "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-shield.png",
                 "On Player" : "Mods/Core/Art/Player/Offhands/char-plywood-shield.png",
@@ -1001,6 +1085,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "buckler",
             "Name" : "Buckler",
             "Type" : "Shield",
@@ -1012,7 +1097,6 @@
             "Components" : [
                 { "ID" : "Block", "Level" : 1 }
             ],
-            "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-shield.png",
                 "On Player" : "Mods/Core/Art/Player/Offhands/char-shield.png",
@@ -1020,10 +1104,10 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "lanternshield",
             "Name" : "Lantern Shield",
             "Type" : "Shield",
-            "Damage" : "1d4",
             "Armor" : 2,
             "Rarity" : 2,
             "FlavorText" : "A shield  worn like a glove, with a protective metal plate along the wrist. A light is placed in the center.",
@@ -1035,7 +1119,6 @@
             "Stat Mods" : [
                 { "Stat" : "Light", "Amount" : 2 }
             ],
-            "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-lanternshield.png",
                 "On Player" : "Mods/Core/Art/Player/Offhands/char-lantern-shield.png",
@@ -1043,11 +1126,12 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "frostborneshield",
             "Name" : "Frostborne Shield",
             "Type" : "Shield",
             "Damage" : "1d4",
-            "DmgTypes" : [ "Cold" ],
+            "Damage Types" : [ "Cold" ],
             "Armor" : 2,
             "Rarity" : 4,
             "FlavorText" : "A cold-repelling shield often held by Frostborne who are not yet used to the Northern environment.",
@@ -1059,7 +1143,6 @@
             "Stat Mods" : [
                 { "Stat" : "Cold Resist", "Amount" : 30 }
             ],
-           "Properties" : [ "Weapon" ],
            "Display" : {
                 "On Ground" : "item-shield.png",
                 "On Player" : "Mods/Core/Art/Player/Offhands/char-lantern-shield.png",
@@ -1067,6 +1150,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "riotshield",
             "Name" : "Riot Shield",
             "Type" : "Shield",
@@ -1083,7 +1167,6 @@
                 { "ID" : "Ability", "Ability" : "bash", "Level" : 1 },
                 { "ID" : "Block", "Level" : 3 }
             ],
-            "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-riotshield.png",
                 "On Player" : "Mods/Core/Art/Player/Offhands/char-riot-shield.png",
@@ -1091,6 +1174,7 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "energyshield",
             "Name" : "Energy Shield",
             "Type" : "Shield",
@@ -1103,7 +1187,6 @@
                 { "ID" : "Ability", "Ability" : "bash", "Level" : 1 },
                 { "ID" : "Block", "Level" : 3 }
             ],
-            "Properties" : [ "Weapon" ],
             "Display" : {
                 "On Ground" : "item-energyshield.png",
                 "On Player" : "Mods/Core/Art/Player/Offhands/char-energy-shield.png",
@@ -1111,16 +1194,15 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "maingauche",
             "Name" : "Main Gauche",
-            "Type" : "Misc_Object",
-            "Damage" : "1d4",
-            "DmgBonus" : 1,
             "Rarity" : 2,
             "Attack Type" : "Knife",
             "FlavorText" : "A small parrying dagger. Often used to disarm opponents.",
             "Cost" : 45,
-            "Properties" : [ "Weapon", "Disarm" ],
+            "Properties" : [ "Disarm" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
@@ -1128,15 +1210,16 @@
             }
         },
         {
-        	"ID" : "tridentdagger",
+            "Base" : "Item_Weapon",
+        	"ID" : "sai",
             "Name" : "Sai",
-            "Type" : "Misc_Object",
             "Damage" : "1d3+1",
             "Rarity" : 1,
             "Attack Type" : "Knife",
             "FlavorText" : "A three-pronged parrying dagger designed to tear blades from opponents' hands.",
             "Cost" : 50,
-            "Properties" : [ "Weapon", "Disarm" ],
+            "Properties" : [ "Disarm" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-sai.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
@@ -1144,22 +1227,22 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "torch",
             "Name" : "Torch",
-            "Type" : "Misc_Object",
             "Damage" : "1d3",
             "Rarity" : 1,
             "Stackable" : true,
             "FlavorText" : "A necessity for traveling into the depths of Axu. Torches grant you more visibility in darkness.",
             "Cost" : 35,
-            "DmgTypes" : [ "Heat" ],
+            "Damage Types" : [ "Heat" ],
             "Stat Mods" : [
                 { "Stat" : "Light", "Amount" : 3 }
             ],
             "Components" : [
                 { "ID" : "Charges", "Max" : 2000  }
             ],
-            "Properties" : [ "Weapon", "Degrade", "DestroyOnZeroCharges", "NoMods" ],
+            "Properties" : [ "Degrade", "DestroyOnZeroCharges", "NoMods" ],
             "Display" : {
 				"On Ground" : "item-torch.png",
                 "On Player" : "Mods/Core/Art/Player/Offhands/char-torch.png",
@@ -1167,59 +1250,59 @@
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "lucentprism",
             "Name" : "<color=silver>Lucent</color> Prism",
-            "Type" : "Misc_Object",
             "Rarity" : 3,
             "FlavorText" : "A translucent prism, made of an unknown material. It exumes light in a wide radius.",
             "Cost" : 205,
             "Stat Mods" : [
                 { "Stat" : "Light", "Amount" : 5 }
             ],
-            "Properties" : [ "Weapon", "NoMods" ],
+            "Properties" : [ "NoMods" ],
             "Display" : {
                 "On Ground" : "item-prism.png"
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "orbofthought",
             "Name" : "Orb of <color=magenta>Thought</color>",
-            "Type" : "Misc_Object",
             "Rarity" : 3,
             "FlavorText" : "A shimmering orb that allows the wielder's mind to think with more clarity.",
             "Cost" : 155,
             "Stat Mods" : [
                 { "Stat" : "Intelligence", "Amount" : 1 }
             ],
-            "Properties" : [ "Weapon", "NoMods" ],
+            "Properties" : [ "NoMods" ],
             "Display" : {
                 "On Ground" : "item-orb2.png"
             }
         },
         {
+            "Base" : "Item_Weapon",
         	"ID" : "orbofcooling",
             "Name" : "Orb of <color=cyan>Cooling</color>",
-            "Type" : "Misc_Object",
             "Rarity" : 2,
             "FlavorText" : "A shimmering orb that expells a cooling aura, negating a large potion of <color=orange>heat</color> damage taken by the wielder.",
             "Cost" : 135,
             "Stat Mods" : [
                 { "Stat" : "Heat Resist", "Amount" : 50 }
             ],
-            "Properties" : [ "Weapon", "NoMods" ],
+            "Properties" : [ "NoMods" ],
             "Display" : {
                 "On Ground" : "item-orb.png"
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "skullmask",
             "Name" : "Skull Mask",
-            "Type" : "Armor",
             "Armor" : 2,
             "Rarity" : 2,
             "FlavorText" : "These masks are worn by the Skull Bandit tribe of Axu. A symbol of ferocity.",
             "Cost" : 28,
-            "Properties" : [ "Armor", "Slot_Head" ],
+            "Properties" : [ "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-skull.png",
@@ -1227,14 +1310,13 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "leatherhood",
             "Name" : "Leather Hood",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 1,
             "FlavorText" : "Protects the wearer from hard dust storms and rainy days.",
             "Cost" : 25,
-            "Properties" : [ "Armor", "Slot_Head" ],
+            "Properties" : [ "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-hood.png",
@@ -1242,17 +1324,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "minershelmet",
             "Name" : "Miner's Helmet",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 2,
             "FlavorText" : "A simple helmet with a fixed light.",
             "Cost" : 68,
             "Stat Mods" : [
                 { "Stat" : "Light", "Amount" : 2 }
             ],
-            "Properties" : [ "Armor", "Slot_Head" ],
+            "Properties" : [ "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-miner-helm.png",
@@ -1260,14 +1341,14 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "infantryhelmet",
             "Name" : "Infantry Helmet",
-            "Type" : "Armor",
             "Armor" : 3,
             "Rarity" : 3,
             "FlavorText" : "A repurposed military helmet. It is dented but servicable.",
             "Cost" : 65,
-            "Properties" : [ "Armor", "Slot_Head" ],
+            "Properties" : [ "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-infantry-helm.png",
@@ -1275,9 +1356,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "steelhelmet",
             "Name" : "Steel Helmet",
-            "Type" : "Armor",
             "Armor" : 3,
             "Rarity" : 3,
             "FlavorText" : "A replica dark-age helmet made of steel. Heavy and encumbering, but it protects very well.",
@@ -1285,7 +1366,7 @@
             "Stat Mods" : [
                 { "Stat" : "Accuracy", "Amount" : -1 }
             ],
-            "Properties" : [ "Armor", "Slot_Head" ],
+            "Properties" : [ "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-steel-helm.png",
@@ -1293,15 +1374,15 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "hornedhelmet",
             "Name" : "Horned Helmet",
-            "Type" : "Armor",
             "DmgBonus" : 2,
             "Armor" : 2,
             "Rarity" : 2,
             "FlavorText" : "A steel helmet with long horns on top.",
             "Cost" : 135,
-            "Properties" : [ "Armor", "Slot_Head" ],
+            "Properties" : [ "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-horn-helm.png",
@@ -1309,9 +1390,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "spotter",
             "Name" : "Spotter",
-            "Type" : "Armor",
             "Armor" : 0,
             "Rarity" : 2,
             "FlavorText" : "A headband with a screen covering one eye. It increases accuracy with melee and ranged weapons.",
@@ -1319,7 +1400,7 @@
             "Stat Mods" : [
                 { "Stat" : "Accuracy", "Amount" : 1 }
             ],
-            "Properties" : [ "Armor", "Slot_Head" ],
+            "Properties" : [ "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-spotter.png",
@@ -1327,9 +1408,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "shiningcirclet",
             "Name" : "Shining Circlet",
-            "Type" : "Armor",
             "Armor" : 0,
             "Rarity" : 2,
             "FlavorText" : "A circlet adorned with various gems. Wearing it seems to cause your brain to function more effectively.",
@@ -1338,7 +1419,7 @@
                 { "Stat" : "Intelligence", "Amount" : 1 },
                 { "Stat" : "Light", "Amount" : 1 }
             ],
-            "Properties" : [ "Armor", "Slot_Head" ],
+            "Properties" : [ "Slot_Head" ],
             "Display" : {
 				"On Ground" : "item-circlet.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-circlet.png",
@@ -1346,14 +1427,14 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "wovenbracelet",
             "Name" : "Woven Bracelet",
-            "Type" : "Armor",
             "Armor" : 0,
             "Rarity" : 1,
             "FlavorText" : "A cloth bracelet, sporting a colourful pattern.",
             "Cost" : 38,
-            "Properties" : [ "Armor", "Slot_Arm" ],
+            "Properties" : [ "Slot_Arm" ],
             "Display" : {
 				"On Ground" : "item-bracelet.png",
                 "On Player" : "Mods/Core/Art/Player/Arms/char-bracelet.png",
@@ -1361,17 +1442,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "woolglove",
             "Name" : "Wool Glove",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 1,
             "FlavorText" : "A glove made of wool. Offers little protection.",
             "Cost" : 10,
 			"Stat Mods" : [
                 { "Stat" : "Cold Resist", "Amount" : 10 }
             ],
-            "Properties" : [ "Armor", "Slot_Arm" ],
+            "Properties" : [ "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
                 "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
@@ -1379,17 +1459,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "ovenmitt",
             "Name" : "Oven Mitt",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 1,
             "FlavorText" : "Offers little protection and will encumber your hands, but will stave off heat.",
             "Cost" : 20,
             "Stat Mods" : [
                 { "Stat" : "Heat Resist", "Amount" : 15 }
             ],
-            "Properties" : [ "Armor", "Slot_Arm" ],
+            "Properties" : [ "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
                 "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
@@ -1397,14 +1476,14 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "falconerglove",
             "Name" : "Falconer Glove",
-            "Type" : "Armor",
             "Armor" : 2,
             "Rarity" : 2,
             "FlavorText" : "A falconer glove, used to protecting against sharp falcon talons.",
             "Cost" : 44,
-            "Properties" : [ "Armor", "Slot_Arm" ],
+            "Properties" : [ "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
                 "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
@@ -1412,14 +1491,14 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "gauntlet",
             "Name" : "Gauntlet",
-            "Type" : "Armor",
             "Armor" : 3,
             "Rarity" : 3,
             "FlavorText" : "A steel gauntlet that can deflect blows. It is heavy.",
             "Cost" : 75,
-            "Properties" : [ "Armor", "Slot_Arm" ],
+            "Properties" : [ "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
                 "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
@@ -1427,15 +1506,15 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "spikedglove",
             "Name" : "Spiked Glove",
-            "Type" : "Armor",
             "DmgBonus" : 1,
             "Armor" : 2,
             "Rarity" : 3,
             "FlavorText" : "A leather glove with spikes along the knuckles.",
             "Cost" : 85,
-            "Properties" : [ "Armor", "Slot_Arm" ],
+            "Properties" : [ "Slot_Arm" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
                 "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
@@ -1443,10 +1522,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "shimmeringgauntlet",
             "Name" : "Shimmering Gauntlet",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 3,
             "FlavorText" : "A gauntlet made of a material similar to silk. Your hand feels more nimble. A low light emenates from them.",
             "Cost" : 385,
@@ -1454,7 +1532,7 @@
             	{ "Stat" : "Dexterity", "Amount" : 1 },
                 { "Stat" : "Light", "Amount" : 1 }
             ],
-            "Properties" : [ "Armor", "Slot_Arm" ],
+            "Properties" : [ "Slot_Arm", "NoMods" ],
             "Display" : {
                 "On Ground" : "item-arm.png",
                 "On Player" : "Mods/Core/Art/Player/Arms/char-gloves.png",
@@ -1462,29 +1540,29 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "sandal",
             "Name" : "Sandal",
-            "Type" : "Armor",
+            "Armor" : 0,
             "Rarity" : 1,
             "FlavorText" : "A flimsy piece of footwear providing little to no protection. Don't put on socks while wearing these.",
             "Cost" : 5,
-            "Properties" : [ "Armor", "Slot_Leg", "NoMods" ],
+            "Properties" : [ "Slot_Leg", "NoMods" ],
             "Display" : {
                 "On Ground" : "item-sandal.png"
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "hikingshoe",
             "Name" : "Hiking Shoe",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 2,
             "FlavorText" : "Typical gear worn for long hikes.",
             "Cost" : 16,
             "Stat Mods" : [
                 { "Stat" : "Speed", "Amount" : 1 }
             ],
-            "Properties" : [ "Armor", "Slot_Leg" ],
+            "Properties" : [ "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
                 "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
@@ -1492,9 +1570,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "softshoe",
             "Name" : "Durafoam Shoe",
-            "Type" : "Armor",
             "Armor" : 0,
             "Rarity" : 2,
             "FlavorText" : "A shoe with a special sole that inhibits sounds made by the wearer.",
@@ -1502,7 +1580,7 @@
             "Stat Mods" : [
                 { "Stat" : "Stealth", "Amount" : 2 }
             ],
-            "Properties" : [ "Armor", "Slot_Leg" ],
+            "Properties" : [ "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
                 "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
@@ -1510,14 +1588,13 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "leatherboot",
             "Name" : "Leather Boot",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 1,
             "FlavorText" : "A sturdy, though worn, boot.",
             "Cost" : 14,
-            "Properties" : [ "Armor", "Slot_Leg" ],
+            "Properties" : [ "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
                 "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
@@ -1525,17 +1602,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "snowboot",
             "Name" : "Snow Boot",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 2,
             "FlavorText" : "A sturdy, though worn, boot. It provides protection against the cold.",
             "Cost" : 14,
             "Stat Mods" : [
                 { "Stat" : "Cold Resist", "Amount" : 15 }
             ],
-            "Properties" : [ "Armor", "Slot_Leg" ],
+            "Properties" : [ "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
                 "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
@@ -1543,17 +1619,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "rubberboot",
             "Name" : "Rubber Boot",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 2,
             "FlavorText" : "A rubber-soled boot.",
             "Cost" : 14,
             "Stat Mods" : [
                 { "Stat" : "Energy Resist", "Amount" : 15 }
             ],
-            "Properties" : [ "Armor", "Slot_Leg" ],
+            "Properties" : [ "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
                 "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
@@ -1561,9 +1636,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "sabaton",
             "Name" : "Sabaton",
-            "Type" : "Armor",
             "Armor" : 3,
             "Rarity" : 3,
             "FlavorText" : "An armored shoe. Very encumbering and inflexible.",
@@ -1571,7 +1646,7 @@
             "Stat Mods" : [
                 { "Stat" : "Speed", "Amount" : -1 }
             ],
-            "Properties" : [ "Armor", "Slot_Leg" ],
+            "Properties" : [ "Slot_Leg" ],
             "Display" : {
                 "On Ground" : "item-leg.png",
                 "On Player" : "Mods/Core/Art/Player/Legs/char-boots.png",
@@ -1579,13 +1654,14 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "plainshirt",
             "Name" : "Plain Shirt",
-            "Type" : "Armor",
+            "Armor" : 0,
             "Rarity" : 1,
             "FlavorText" : "A basic white t-shirt. Provides no protection.",
             "Cost" : 5,
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-shirt.png",
@@ -1593,9 +1669,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "envirosuit",
             "Name" : "Enviro Suit",
-            "Type" : "Armor",
             "Armor" : 0,
             "Rarity" : 3,
             "FlavorText" : "A bulky and uncomfortable suit that protects the wearer from excessive heat, but little else.",
@@ -1604,7 +1680,7 @@
                 { "Stat" : "Heat Resist", "Amount" : 40 },
                 { "Stat" : "Speed", "Amount" : -1 }
             ],
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-envirosuit.png",
@@ -1612,17 +1688,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "duster",
             "Name" : "Duster",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 1,
             "FlavorText" : "A long, fashionable jacket made of leather.",
             "Cost" : 25,
             "Stat Mods" : [
                 { "Stat" : "Stealth", "Amount" : 1 }
             ],
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-jacketleather.png",
@@ -1630,17 +1705,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "winterjacket",
             "Name" : "Winter Jacket",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 2,
             "FlavorText" : "A jacket made for harsh winters. Will keep you insulated against the cold.",
             "Cost" : 64,
             "Stat Mods" : [
                 { "Stat" : "Cold Resist", "Amount" : 25 }
             ],
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-winterjacket.png",
@@ -1648,17 +1722,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "paddedvest",
             "Name" : "Padded Vest",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 1,
             "FlavorText" : "A thick vest, providing protection to the torso. Protects against the heat.",
             "Cost" : 28,
             "Stat Mods" : [
                 { "Stat" : "Heat Resist", "Amount" : 15 }
             ],
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-leather.png",
@@ -1666,14 +1739,14 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "boiledleather",
             "Name" : "Boiled Leather",
-            "Type" : "Armor",
             "Armor" : 2,
             "Rarity" : 2,
             "FlavorText" : "A leather chest piece, boiled with oil and wax to harden it.",
             "Cost" : 55,
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-leather.png",
@@ -1681,14 +1754,14 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "steelbreastplate",
             "Name" : "Steel Breastplate",
-            "Type" : "Armor",
             "Armor" : 4,
             "Rarity" : 3,
             "FlavorText" : "An extremely archaic and cumbersome piece of armor with lots of protection.",
             "Cost" : 250,
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-leadplate.png",
@@ -1696,15 +1769,15 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "spikedplate",
             "Name" : "Spiked Plate",
-            "Type" : "Armor",
             "DmgBonus" : 1,
             "Armor" : 3,
             "Rarity" : 3,
             "FlavorText" : "A steel breastplate covered in vicious spikes.",
             "Cost" : 300,
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-leadplate.png",
@@ -1712,9 +1785,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "leadplate",
             "Name" : "Lead Plate",
-            "Type" : "Armor",
             "Armor" : 6,
             "Rarity" : 4,
             "Stat Mods" : [
@@ -1722,7 +1795,7 @@
             ],
             "FlavorText" : "A breastplate made of thick lead slabs. It will slow down one who wears it.",
             "Cost" : 550,
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Torsos/char-leadplate.png",
@@ -1730,14 +1803,13 @@
             }
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "cloak1",
             "Name" : "Makeshift Cloak",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 100,
             "FlavorText" : "A makeshift cloak made from scraps of a parachute.",
             "Cost" : 25,
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Cloaks/char-cloak.png",
@@ -1745,9 +1817,9 @@
             }
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "cloak2",
             "Name" : "Red Cloak",
-            "Type" : "Armor",
             "Armor" : 2,
             "Rarity" : 2,
             "FlavorText" : "A sturdy cloak that will keep the weather at bay. It has many pockets.",
@@ -1755,7 +1827,7 @@
             "Stat Mods" : [
                 { "Stat" : "Storage Capacity", "Amount" : 3 }
             ],
-            "Properties" : [ "Armor", "Slot_Chest" ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Cloaks/char-cloak-red.png",
@@ -1763,20 +1835,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "rubbertarp",
             "Name" : "Rubber Tarp",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 3,
             "FlavorText" : "A tarp made completely of rubber. It can be worn for minor protection, but also to resist electrical attacks.",
             "Cost" : 200,
             "Stat Mods" : [
                 { "Stat" : "Energy Resist", "Amount" : 50 }
             ],
-            "Properties" : [
-                "Armor",
-                "Slot_Chest"
-            ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Cloaks/char-rubbertarp.png",
@@ -1784,20 +1852,16 @@
             }
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "cloak3",
             "Name" : "Stealth Cloak",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 4,
             "FlavorText" : "This cloak allows the wearer to become practically invisible to unfriendly eyes.",
             "Cost" : 500,
             "Stat Mods" : [
                 { "Stat" : "Stealth", "Amount" : 5 }
             ],
-            "Properties" : [
-                "Armor",
-                "Slot_Chest"
-            ],
+            "Properties" : [ "Slot_Chest" ],
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Cloaks/char-stealthcloak.png",
@@ -1805,16 +1869,17 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "leatherpack",
             "Name" : "Leather Pack",
-            "Type" : "Armor",
+            "Armor" : 0,
             "Rarity" : 2,
             "FlavorText" : "A backpack made of worn leather. It'll help with the load of loot you'll surely pick up on your travels.",
             "Cost" : 65,
             "Stat Mods" : [
                 { "Stat" : "Storage Capacity", "Amount" : 5 }
             ],
-            "Properties" : [ "Armor", "Slot_Back" ],
+            "Properties" : [ "Slot_Back" ],
             "Display" : {
 				"On Ground" : "item-pack.png",
                 "On Player" : "Mods/Core/Art/Player/Backs/char-backpack.png",
@@ -1822,9 +1887,10 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "largepack",
             "Name" : "Large Pack",
-            "Type" : "Armor",
+            "Armor" : 0,
             "Rarity" : 3,
             "FlavorText" : "A large, encumbering backpack. It'll help with the load of loot you'll surely pick up on your travels.",
             "Cost" : 88,
@@ -1832,7 +1898,7 @@
                 { "Stat" : "Storage Capacity", "Amount" : 8 },
                 { "Stat" : "Speed", "Amount" : -2 }
             ],
-            "Properties" : [ "Armor", "Slot_Back" ],
+            "Properties" : [ "Slot_Back" ],
             "Display" : {
 				"On Ground" : "item-pack.png",
                 "On Player" : "Mods/Core/Art/Player/Backs/char-backpack.png",
@@ -1840,16 +1906,17 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "woolscarf",
             "Name" : "Wool Scarf",
-            "Type" : "Armor",
+            "Armor" : 0,
             "Rarity" : 1,
             "FlavorText" : "This scarf might keep the chill at bay, but the pattern on it sure is ugly...",
             "Cost" : 10,
             "Stat Mods" : [
                 { "Stat" : "Cold Resist", "Amount" : 15 }
             ],
-            "Properties" : [ "Armor", "Slot_Back" ],
+            "Properties" : [ "Slot_Back" ],
             "Display" : {
 				"On Ground" : "item-back.png",
                 "On Player" : "Mods/Core/Art/Player/Backs/char-scarf.png",
@@ -1857,14 +1924,13 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "worncape",
             "Name" : "Worn Cape",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 1,
             "FlavorText" : "A thin cape riddled with various holes.",
             "Cost" : 10,
-            "Properties" : [ "Armor", "Slot_Back" ],
+            "Properties" : [ "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png",
                 "On Player" : "Mods/Core/Art/Player/Backs/char-cape.png",
@@ -1872,14 +1938,14 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "thickcape",
             "Name" : "Thick Cape",
-            "Type" : "Armor",
             "Armor" : 2,
             "Rarity" : 2,
             "FlavorText" : "A thick, warm cape. This will keep you dry in the rain, while also providing some defense.",
             "Cost" : 45,
-            "Properties" : [ "Armor", "Slot_Back" ],
+            "Properties" : [ "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png",
                 "On Player" : "Mods/Core/Art/Player/Backs/char-cape.png",
@@ -1887,22 +1953,22 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "spineprotector",
             "Name" : "Spine Protector",
-            "Type" : "Armor",
             "Armor" : 3,
             "Rarity" : 2,
             "FlavorText" : "Influenced by motor cycle protection. It surrounds the spine while allowing free movement via elastic segments.",
             "Cost" : 155,
-            "Properties" : [ "Armor", "Slot_Back" ],
+            "Properties" : [ "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png"
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "syntheticshell",
             "Name" : "Synthetic Shell",
-            "Type" : "Armor",
             "Armor" : 5,
             "Rarity" : 3,
             "FlavorText" : "A large dome-shaped piece of armor, designed to be strapped to your back. Very cumbersome.",
@@ -1912,13 +1978,9 @@
                 { "Stat" : "Speed", "Amount" : -2 }
             ],
 			"Components" : [
-				{ "ID" : "Requirement", 
-					"Requirements" : [
-						{ "Stat" : "Strength", "Amount" : 7 }
-					]
-				}
+				{ "ID" : "Requirement", "Requirements" : [ { "Stat" : "Strength", "Amount" : 7 } ] }
             ],
-            "Properties" : [ "Armor", "Slot_Back" ],
+            "Properties" : [ "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png",
                 "On Player" : "Mods/Core/Art/Player/Backs/char-shell.png",
@@ -1926,16 +1988,17 @@
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "blanket",
             "Name" : "Fireproof Blanket",
-            "Type" : "Armor",
+            "Armor" : 0,
             "Rarity" : 2,
             "FlavorText" : "A fireproof blanet, offering resistance to heat when worn on the back like a cape.",
             "Cost" : 55,
             "Stat Mods" : [
                 { "Stat" : "Heat Resist", "Amount" : 20 }
             ],
-            "Properties" : [ "Armor", "Slot_Back" ],
+            "Properties" : [ "Slot_Back" ],
             "Display" : {
                 "On Ground" : "item-back.png",
                 "On Player" : "Mods/Core/Art/Player/Backs/char-cape.png",
@@ -1943,49 +2006,48 @@
             }
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "quiver",
             "Name" : "Quiver",
-            "Type" : "Armor",
             "Armor" : 0,
             "Rarity" : 2,
             "FlavorText" : "A hide quiver used to quickly reload bow-type weapons.",
             "Cost" : 45,
-            "Properties" : [ "Armor", "Slot_Back", "Quick_Reload" ],
+            "Properties" : [ "Slot_Back", "Quick_Reload" ],
             "Display" : {
                 "On Player" : "Mods/Core/Art/Player/Backs/char-quiver.png",
                 "Layer" : "Back"
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "snakearmor",
             "Name" : "Serpentine Armor",
-            "Type" : "Armor",
             "Armor" : 2,
             "Rarity" : 2,
             "FlavorText" : "Plates of metal designed to fit over a large tail. Mutants might require one of these.",
             "Cost" : 50,
-            "Properties" : [ "Armor", "Slot_Tail" ],
+            "Properties" : [ "Slot_Tail" ],
             "Display" : {
                 "On Ground" : "item-tail.png"
             }
         },
         {
+            "Base" : "Item_Armor",
         	"ID" : "wingarmor",
             "Name" : "Wing Covers",
-            "Type" : "Armor",
-            "Armor" : 1,
             "Rarity" : 2,
             "FlavorText" : "Plastic and rubber plates set at the base of wings to protect them, while also maintaining menuverability.",
             "Cost" : 50,
-            "Properties" : [ "Armor", "Slot_Wing" ],
+            "Properties" : [ "Slot_Wing" ],
             "Display" : {
                 "On Ground" : "item-mechwings.png"
             }
         },
         {
+            "Base" : "BaseItem",
         	"ID" : "iodine",
             "Name" : "Iodine Tablet",
-            "Type" : "Misc_Object",
             "Rarity" : 2,
             "FlavorText" : "A small pill that can cure radiation sickness.",
             "Cost" : 120,
@@ -1993,9 +2055,9 @@
             "Properties" : [ "Edible", "Cure_Radiation" ]
         },
         {
+            "Base" : "BaseItem",
         	"ID" : "caffeinepill",
             "Name" : "Caffeine Pill",
-            "Type" : "Misc_Object",
             "Rarity" : 2,
             "FlavorText" : "For a quick pick-me-up. Causes haste and restores a little stamina.",
             "Cost" : 56,
@@ -2007,9 +2069,9 @@
             "Properties" : [ "Edible", "Addictive" ]
         },
         {
+            "Base" : "BaseItem",
         	"ID" : "explosive",
             "Name" : "Explosive",
-            "Type" : "Misc_Object",
             "Rarity" : 3,
             "FlavorText" : "Throw this item at enemies to turn them into a fine mist.",
             "Cost" : 35,
@@ -2020,9 +2082,9 @@
             }
         },
         {
+            "Base" : "BaseItem",
         	"ID" : "bandage",
             "Name" : "Bandage",
-            "Type" : "Misc_Object",
             "Rarity" : 1,
             "FlavorText" : "Strands of cloth, that when applied, can be ued to stop bleeding.",
             "Cost" : 11,
@@ -2033,9 +2095,9 @@
             }
         },
         {
+            "Base" : "BaseItem",
         	"ID" : "surgeonskit",
             "Name" : "Surgeon's Kit",
-            "Type" : "Misc_Object",
             "Rarity" : 3,
             "FlavorText" : "Standard tools used by surgeons to amputate and replace limbs.",
             "Components" : [
@@ -2324,7 +2386,7 @@
             "Cost" : 100,
             "Attack Type" : "Slash",
             "Properties" : [ "Weapon" ],
-            "DmgTypes" : [ "Cold" ],
+            "Damage Types" : [ "Cold" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
@@ -2341,7 +2403,7 @@
             "Cost" : 90,
             "Attack Type" : "Knife",
             "Properties" : [ "Weapon", "Quick" ],
-            "DmgTypes" : [ "Cold" ],
+            "Damage Types" : [ "Cold" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-sword-frostborne.png",
@@ -2366,7 +2428,7 @@
                 "Two_Handed",
                 "Shock_Nearby"
             ],
-            "DmgTypes" : [
+            "Damage Types" : [
                 "Pierce",
                 "Energy"
             ],
@@ -2393,7 +2455,7 @@
                 "Weapon",
                 "Shock_Nearby"
             ],
-            "DmgTypes" : [
+            "Damage Types" : [
                 "Slash",
                 "Cleave",
                 "Energy"
@@ -2416,7 +2478,7 @@
             "Properties" : [
                 "Weapon"
             ],
-            "DmgTypes" : [
+            "Damage Types" : [
                 "Energy",
                 "Cleave"
             ],
@@ -3125,12 +3187,15 @@
                 { "Stat" : "Strength", "Amount" : 1 }
             ],
             "Properties" : [ "Weapon", "Two_Handed" ],
-            "DmgTypes" : [ "Pierce", "Venom", "Cleave" ],
+            "Damage Types" : [ "Pierce", "Venom", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-blackfang.png",
                 "Layer" : "Weapon"
-            }
+            },
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Poison", "Turns" : "2~6", "Chance" : 5 }
+            ]
         },
         {
             "ID" : "sagaciouscirclet",
@@ -3164,7 +3229,7 @@
             "Stat Mods" : [
                 { "Stat" : "Attack Delay", "Amount" : -2 }
             ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-blunt.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-stunbaton.png",
@@ -3182,7 +3247,7 @@
             "FlavorText" : "An enormous mace, dwarfing any reasonable weapon. It is incredibly slow to swing, but can hit harder than anything else.",
             "Cost" : 103,
             "Properties" : [ "Weapon", "Two_Handed", "Very_Slow", "Knockback" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Components" : [
                 { "ID" : "Requirement", 
                     "Requirements" : [
@@ -3211,7 +3276,7 @@
                 { "ID" : "ItemLevel" }
             ],
             "Properties" : [ "Weapon", "Two_Handed", "Unique" ],
-            "DmgTypes" : [ "Slash", "Cleave" ],
+            "Damage Types" : [ "Slash", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-mancleaver.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-scythe.png",
@@ -3231,7 +3296,7 @@
                 { "Stat" : "Dexterity", "Amount" : 1 }
             ],
             "Properties" : [ "Weapon", "Quick" ],
-            "DmgTypes" : [ "Slash" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-ritualdagger.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
@@ -3251,7 +3316,7 @@
                 { "Stat" : "Butchery", "Amount" : 2 }
             ],
             "Properties" : [ "Weapon", "Quick" ],
-            "DmgTypes" : [ "Slash" ],
+            "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
@@ -3272,10 +3337,11 @@
                 { "Stat" : "Intelligence", "Amount" : 1 }
             ],
             "Components" : [
-                { "ID" : "Ability", "Ability" : "firestream", "Level" : 2 }
+                { "ID" : "Ability", "Ability" : "firestream", "Level" : 2 },
+                { "ID" : "OnHitAddStatus", "Status" : "Stun", "Turns" : "2~8", "Chance" : 10 }
             ],
-            "Properties" : [ "Weapon", "Stun", "Unique" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Properties" : [ "Weapon", "Unique" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-staff.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-staffxzol.png",
@@ -3296,7 +3362,7 @@
                 { "Stat" : "Intelligence", "Amount" : 2 }
             ],
             "Properties" : [ "Weapon", "Unique" ],
-            "DmgTypes" : [ "Pierce", "Cleave" ],
+            "Damage Types" : [ "Pierce", "Cleave" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-swordoffate.png",
@@ -3317,7 +3383,7 @@
                 { "Stat" : "Strength", "Amount" : 1 }
             ],
             "Properties" : [ "Weapon", "Two_Handed", "Unique" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-spear.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-arthomasspear.png",
@@ -3367,7 +3433,7 @@
             "FlavorText" : "A club belonging to a wild man. It is crude but sturdy, just like him. Big Smash.",
             "Cost" : 430,
             "Properties" : [ "Weapon", "Two_Handed", "Slow", "Unique" ],
-            "DmgTypes" : [ "Blunt" ],
+            "Damage Types" : [ "Blunt" ],
             "Display" : {
                 "On Ground" : "item-club.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-club.png",
@@ -3476,21 +3542,21 @@
             }
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "plating",
             "Name" : "Metal Plating",
-            "Type" : "Armor",
             "Armor" : 2,
             "FlavorText" : "Thick metal plates.",
-            "Properties" : [ "Armor", "Slot_Misc", "Cannot_Remove" ],
+            "Properties" : [ "Slot_Misc", "Cannot_Remove" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "chasis",
             "Name" : "Chasis",
-            "Type" : "Armor",
             "Armor" : 2,
             "FlavorText" : "Thick metal plates.",
-            "Properties" : [ "Armor", "Cannot_Remove", "Slot_Chest" ],
+            "Properties" : [ "Cannot_Remove", "Slot_Chest" ],
             "Lootable" : false,
             "Display" : {
                 "On Ground" : "item-chest.png",
@@ -3499,265 +3565,189 @@
             }
         },
         {
+            "Base" : "BaseItem",
             "ID" : "scrap",
             "Name" : "Scrap Metal",
-            "Type" : "Misc_Object",
             "Cost" : 10,
-            "FlavorText" : "This used to be a working machine. What did you do? It might be worth something.",
-            "Properties" : []
+            "FlavorText" : "This used to be a working machine. What did you do? It might be worth something."
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "fangs",
             "Name" : "Fangs",
             "Type" : "Unarmed",
-            "Damage" : "1d4",
             "FlavorText" : "Wicked, curved teeth.",
             "Attack Type" : "Bite",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Proc_Attack"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove", "Proc_Attack" ],
+            "Damage Types" : [ "Claw" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "fangs_quick",
             "Name" : "Fangs",
             "Type" : "Unarmed",
             "Damage" : "1d3",
             "FlavorText" : "Wicked, curved teeth.",
             "Attack Type" : "Bite",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Quick",
-                "Proc_Attack"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove", "Quick", "Proc_Attack" ],
+            "Damage Types" : [ "Claw" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "mandibles",
             "Name" : "Mandibles",
             "Type" : "Unarmed",
             "Damage" : "1d2+1",
             "FlavorText" : "",
             "Attack Type" : "Bite",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Slow",
-                "Proc_Attack"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove", "Slow", "Proc_Attack" ],
+            "Damage Types" : [ "Claw" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "fangs2",
             "Name" : "Sharp Fangs",
             "Type" : "Unarmed",
             "Damage" : "1d5",
             "FlavorText" : "Wicked, curved teeth.",
             "Attack Type" : "Bite",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Proc_Attack"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove", "Proc_Attack" ],
+            "Damage Types" : [ "Claw" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "conc_fists",
             "Name" : "Concrete Fists",
             "Type" : "Unarmed",
             "Damage" : "1d6+2",
-            "FlavorText" : "",
+            "FlavorText" : "Fists of hardened concrete.",
             "Attack Type" : "Bash",
-            "Properties" : [
-                "Weapon", "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Blunt"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "claws",
             "Name" : "Claws",
             "Type" : "Unarmed",
-            "Damage" : "1d4",
             "FlavorText" : "Protrusions capable of tearing flesh.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
+            "Damage Types" : [ "Claw" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "blight",
             "Name" : "Blight",
             "Type" : "Unarmed",
             "Damage" : "2d3",
             "FlavorText" : "A writhing mass of pitch blackness.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Claw",
-                "Venom"
-            ],
-            "Lootable" : false
+            "Properties" : [ "Cannot_Remove" ],
+            "Damage Types" : [ "Claw", "Venom" ],
+            "Lootable" : false,
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Poison", "Turns" : "2~6", "Chance" : 5 }
+            ]
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "talons",
             "Name" : "Talons",
             "Type" : "Unarmed",
             "Damage" : "1d4+1",
             "FlavorText" : "Protrusions capable of tearing flesh.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
+            "Damage Types" : [ "Claw" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "beak",
             "Name" : "Beak",
             "Type" : "Unarmed",
             "Damage" : "1d3+1",
             "FlavorText" : "Your mouth is a bird-like beak.",
             "Attack Type" : "Bite",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Proc_Attack"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove", "Proc_Attack" ],
+            "Damage Types" : [ "Claw" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "sharpclaws",
             "Name" : "Sharp Claws",
             "Type" : "Unarmed",
             "Damage" : "1d5",
             "FlavorText" : "Extremely sharp and deadly claws.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Claw",
-                "Cleave"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
+            "Damage Types" : [ "Claw", "Cleave" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "hooves",
             "Name" : "Hooves",
             "Type" : "Unarmed",
             "Damage" : "1d6",
             "FlavorText" : "Hooves",
             "Attack Type" : "Bash",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Proc_Attack"
-            ],
-            "DmgTypes" : [
-                "Blunt"
-            ],
+            "Properties" : [ "Cannot_Remove", "Proc_Attack" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "wings",
             "Name" : "Wings",
-            "Type" : "Unarmed",
-            "Rarity" : 100,
+            "Armor" : 0,
             "FlavorText" : "Wings sprouting from your back.",
-            "Properties" : [
-                "Armor",
-                "Slot_Back",
-                "Cannot_Remove"
-            ],
+            "Properties" : [ "Slot_Back", "Cannot_Remove" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "dorsalfin",
+            "Armor" : 0,
             "Name" : "Dorsal Fin",
-            "Type" : "Unarmed",
-            "Rarity" : 100,
             "FlavorText" : "A large shark-like fin sprouts from your back.",
-            "Properties" : [
-                "Armor",
-                "Slot_Back",
-                "Cannot_Remove"
-            ],
+            "Properties" : [ "Slot_Back", "Cannot_Remove" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "shell",
             "Name" : "Shell",
-            "Type" : "Unarmed",
             "Armor" : 3,
             "FlavorText" : "A thick turtle-like shell.",
-            "Properties" : [
-                "Armor",
-                "Slot_Back",
-                "Cannot_Remove",
-                "Slow"
-            ],
+            "Properties" : [ "Slot_Back", "Cannot_Remove", "Slow" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "hide",
             "Name" : "Hide",
-            "Type" : "Unarmed",
             "Armor" : 2,
             "FlavorText" : "Thick skin.",
-            "Properties" : [
-                "Armor",
-                "Slot_Chest",
-                "Cannot_Remove"
-            ],
+            "Properties" : [ "Slot_Chest", "Cannot_Remove" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "tendrils",
             "Name" : "Tendrils",
             "Type" : "Unarmed",
             "Damage" : "1d5",
             "FlavorText" : "Thin translucent tendrils that protrude from your arms.",
             "Attack Type" : "Spear",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Pierce"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-tentacle.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-tentacle.png",
@@ -3766,19 +3756,15 @@
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "tentacle",
             "Name" : "Tentacle",
             "Type" : "Unarmed",
             "Damage" : "1d8",
-            "FlavorText" : "A long, slimey tentacle in the place of your arm.",
+            "FlavorText" : "A long, slime-covered tentacle sits in the place of your arm.",
             "Attack Type" : "Spear",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Pierce"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
+            "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-tentacle.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-tentacle.png",
@@ -3787,77 +3773,55 @@
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "istunner",
             "Name" : "I-Stunner",
             "Type" : "Unarmed",
             "Damage" : "1d5",
             "FlavorText" : "",
             "Attack Type" : "Bash",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Stun",
-                "Slow"
-            ],
-            "DmgTypes" : [
-                "Energy"
-            ],
-            "Lootable" : false
+            "Properties" : [ "Cannot_Remove", "Slow" ],
+            "Damage Types" : [ "Energy" ],
+            "Lootable" : false,
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Stun", "Turns" : "2~6", "Chance" : 5 }
+            ]
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "corruptedclaw",
             "Name" : "Corrupted Claw",
             "Type" : "Unarmed",
             "Damage" : "2d3",
             "FlavorText" : "Corruption manifested in physical form. Your arm is a twisted mass of darkness.",
             "Attack Type" : "Psy",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Very_Slow"
-            ],
-            "DmgTypes" : [
-                "Pierce",
-                "Corruption"
-            ],
+            "Properties" : [ "Cannot_Remove", "Very_Slow" ],
+            "Damage Types" : [ "Pierce", "Corruption" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "constrictingtail",
             "Name" : "Constricting Tail",
             "Type" : "Unarmed",
-            "Damage" : "1d4",
             "FlavorText" : "A long, strong tail built for squeezing the life out of foes.",
             "Attack Type" : "Bash",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Slow",
-                "Proc_Attack"
-            ],
-            "DmgTypes" : [
-                "Blunt"
-            ],
+            "Properties" : [ "Cannot_Remove", "Slow", "Proc_Attack" ],
             "Display" : {
                 "On Ground" : "item-tailbio.png"
             },
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "horns",
             "Name" : "Horns",
             "Type" : "Unarmed",
             "Damage" : "1d4+1",
             "FlavorText" : "You do not want to be on the bad end of these things.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Proc_Attack"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove", "Proc_Attack" ],
+            "Damage Types" : [ "Claw" ],
             "Display" : {
                 "On Ground" : "item-horns.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-horns.png",
@@ -3866,14 +3830,15 @@
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "horns2",
             "Name" : "Large Horns",
             "Type" : "Unarmed",
             "Damage" : "1d6+1",
             "FlavorText" : "You do not want to be on the bad end of these things.",
             "Attack Type" : "Claw",
-            "Properties" : [ "Weapon", "Cannot_Remove", "Proc_Attack" ],
-            "DmgTypes" : [ "Claw" ],
+            "Properties" : [ "Cannot_Remove", "Proc_Attack" ],
+            "Damage Types" : [ "Claw" ],
             "Display" : {
                 "On Ground" : "item-horns.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-horns.png",
@@ -3882,595 +3847,347 @@
             "Lootable" : false
         },
         {
+            "Base" : "Item_Armor",
             "ID" : "antennae",
             "Name" : "Antennae",
-            "Type" : "Unarmed",
-            "Rarity" : 100,
+            "Armor" : 0,
             "FlavorText" : "Ugly bulbous entennae jutt out from the top of your skull.",
-            "Properties" : [
-                "Armor",
-                "Slot_Head",
-                "Cannot_Remove"
-            ],
+            "Properties" : [ "Slot_Head", "Cannot_Remove" ],
             "Display" : {
                 "On Ground" : "item-antennae.png"
             },
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "vines",
             "Name" : "Vines",
             "Type" : "Unarmed",
-            "Damage" : "1d4",
             "FlavorText" : "Whip-like vines used for ensaring and slicing foes.",
             "Attack Type" : "Slash",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Quick"
-            ],
-            "DmgTypes" : [
-                "Slash"
-            ],
+            "Properties" : [ "Cannot_Remove", "Quick" ],
+            "Damage Types" : [ "Slash" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Ranged",
             "ID" : "seedpod",
             "Name" : "Seed Pod",
-            "Type" : "Firearm",
             "Damage" : "2d1",
-            "FlavorText" : "",
+            "FlavorText" : "A pod that is able to shoot seeds at high velocity.",
             "Attack Type" : "Slash",
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 10, "AmmoID" : "seed" }
             ],
-            "Properties" : [ "Cannot_Remove", "Ranged", "Very_Slow" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Cannot_Remove", "Very_Slow" ],
+            "Damage Types" : [ "Pierce" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Ranged",
             "ID" : "turret",
             "Name" : "Turret",
-            "Type" : "Firearm",
             "Damage" : "2d2",
-            "FlavorText" : "",
+            "FlavorText" : "An automatic turret.",
             "Attack Type" : "Slash",
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 3, "Max" : 10, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Cannot_Remove", "Ranged", "Very_Slow" ],
-            "DmgTypes" : [ "Pierce" ],
+            "Properties" : [ "Cannot_Remove", "Very_Slow" ],
+            "Damage Types" : [ "Pierce" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "bramble",
             "Name" : "Bramble",
             "Type" : "Unarmed",
             "Damage" : "1d6",
-            "FlavorText" : "",
+            "FlavorText" : "Thorny branches.",
             "Attack Type" : "Slash",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Claw"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
+            "Damage Types" : [ "Slash" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "flamingpalms",
-            "Name" : "Flaming Palms",
+            "Name" : "Flaming Palm",
             "Type" : "Unarmed",
             "Damage" : "1d6+1",
-            "FlavorText" : "",
+            "FlavorText" : "A hand imbued with flame.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Heat"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
+            "Damage Types" : [ "Heat" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "ooze_venom",
             "Name" : "Venomous Ooze",
             "Type" : "Unarmed",
-            "Damage" : "1d4",
             "FlavorText" : "Thick slime.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Slow"
-            ],
-            "DmgTypes" : [
-                "Blunt",
-                "Venom"
-            ],
-            "Lootable" : false
+            "Properties" : [ "Cannot_Remove", "Slow" ],
+            "Damage Types" : [ "Blunt", "Venom" ],
+            "Lootable" : false,
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Poison", "Turns" : "2~6", "Chance" : 5 }
+            ]
         },
         {
-            "ID" : "seed",
-            "Name" : "Seed",
-            "Type" : "Misc_Object",
-            "FlavorText" : "A natural projectile.",
-            "Properties" : [
-                "Ammunition"
-            ],
-            "Stackable" : true,
-            "Lootable" : false
-        },
-        {
+            "Base" : "Item_Weapon",
             "ID" : "ooze_heat",
             "Name" : "Volcanic Ooze",
             "Type" : "Unarmed",
-            "Damage" : "1d4",
             "FlavorText" : "Thick slime.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Slow"
-            ],
-            "DmgTypes" : [
-                "Blunt",
-                "Heat"
-            ],
+            "Properties" : [ "Cannot_Remove", "Slow" ],
+            "Damage Types" : [ "Blunt", "Heat" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "ooze_caustic",
             "Name" : "Caustic Ooze",
             "Type" : "Unarmed",
             "Damage" : "1d5",
             "FlavorText" : "Extremely corrosive liquid.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Slow"
-            ],
-            "DmgTypes" : [
-                "Blunt"
-            ],
+            "Properties" : [ "Cannot_Remove", "Slow" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "ooze_cold",
             "Name" : "Frigid Ooze",
             "Type" : "Unarmed",
             "Damage" : "1d5",
             "FlavorText" : "A thick, mucous-like liquid that chills to the bone.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove",
-                "Slow"
-            ],
-            "DmgTypes" : [
-                "Blunt",
-                "Cold"
-            ],
+            "Properties" : [ "Cannot_Remove", "Slow" ],
+            "Damage Types" : [ "Blunt", "Cold" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "fists",
             "Name" : "Fist",
             "Type" : "Unarmed",
             "Damage" : "1d2",
             "FlavorText" : "Nothing like bare knuckles to do the job cleanly.",
-            "Attack Type" : "Bash",
-            "Properties" : [
-                "Weapon"
-            ],
-            "DmgTypes" : [
-                "Blunt"
-            ],
             "Display" : {
                 "On Ground" : "item-fistbio.png"
             },
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "ghostwhip",
             "Name" : "Ghostly Tendrils",
             "Type" : "Blunt",
             "Damage" : "2d3",
             "FlavorText" : "A weapon wielded by a spectral spirit.",
             "Attack Type" : "Psy",
-            "Properties" : [
-                "Weapon",
-                "Stun"
-            ],
-            "DmgTypes" : [
-                "Pierce"
-            ],
+            "Damage Types" : [ "Pierce" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "spiny_legs",
             "Name" : "Spiny Legs",
             "Type" : "Unarmed",
             "Damage" : "1d6+1",
             "FlavorText" : "Long legs made of some chitin-like material.",
             "Attack Type" : "Claw",
-            "Properties" : [
-                "Weapon",
-                "Quick"
-            ],
-            "DmgTypes" : [
-                "Pierce"
-            ],
+            "Properties" : [ "Quick" ],
+            "Damage Types" : [ "Pierce" ],
             "Lootable" : false
         },
         {
+            "Base" : "Item_Weapon",
             "ID" : "fists_hard",
             "Name" : "Hard Fist",
             "Type" : "Unarmed",
-            "Damage" : "1d4",
             "FlavorText" : "A clenched fist, tough as steel.",
-            "Attack Type" : "Bash",
-            "Properties" : [
-                "Weapon",
-                "Slow"
-            ],
-            "DmgTypes" : [
-                "Blunt"
-            ],
             "Display" : {
                 "On Ground" : "item-fistbio.png"
             },
             "Lootable" : false
         },
         {
+            "Base" : "Item_Ranged",
             "ID" : "armcannon",
             "Name" : "Arm Cannon",
-            "Type" : "Firearm",
             "Damage" : "1d5",
             "FlavorText" : "A small firearm set above the wrist.",
-            "Cost" : 53,
             "Components" : [
                 { "ID" : "Firearm", "ShotsPerTurn" : 2, "Max" : 10, "AmmoID" : "bullet" }
             ],
-            "Properties" : [ "Ranged", "Cannot_Remove" ],
+            "Properties" : [ "Cannot_Remove" ],
             "Display" : {
                 "On Ground" : "item-pistol.png"
             },
             "Lootable" : false
         },
-
-
-
-
-
-
-        
         {
+            "Base" : "Item_Weapon",
             "ID" : "stump",
             "Name" : "Stump",
             "Type" : "Unarmed",
             "Damage" : "1d1",
             "FlavorText" : "Without a limb, all that is left is a sensitive stump.",
-            "Attack Type" : "Bash",
-            "Properties" : [
-                "Weapon",
-                "Cannot_Remove"
-            ],
-            "DmgTypes" : [
-                "Blunt"
-            ],
+            "Properties" : [ "Cannot_Remove" ],
             "Lootable" : false
         },
         {
+            "Base" : "BaseItem",
             "ID" : "frond",
             "Name" : "Spiny Frond",
-            "Type" : "Misc_Object",
-            "Weight" : 1,
             "Stackable" : true,
             "FlavorText" : "A frond from local fauna, covered in small, sharp spines. After removing the spines, the taste almost resembles celery from back home.",
             "Display" : {
                 "On Ground" : "item-frond.png"
             }
         },
+
         {
+            "Base" : "Item_Corpse",
             "ID" : "corpse_poison",
             "Name" : "Poisonous Corpse",
-            "Type" : "Misc_Object",
-            "Weight" : 3,
             "FlavorText" : "The corpse of a creature. It doesn't look appetizing at all.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 2000  }
-            ],
-            "Properties" : [
-                "Edible",
-                "Severed_BodyPart",
-                "Poison"
-            ],
-            "Display" : {
-                "On Ground" : "item-body.png"
-            }
+            "Properties" : [ "Poison" ]
         },
         {
+            "Base" : "Item_Corpse",
             "ID" : "corpse_rad",
             "Name" : "Irradiated Corpse",
-            "Type" : "Misc_Object",
-            "Weight" : 4,
-            "FlavorText" : "The radioactive corpse of a fallen creature. Be cautious when eating this.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 3000  }
-            ],            
-            "Properties" : [
-                "Edible",
-                "Radiate",
-                "Severed_BodyPart"
-            ],
-            "Display" : {
-                "On Ground" : "item-body.png"
-            }
+            "FlavorText" : "The radioactive corpse of a fallen creature. Be cautious when eating this.",        
+            "Properties" : [ "Radiate" ]
         },
         {
+            "Base" : "Item_Corpse",
             "ID" : "corpse_lep",
             "Name" : "Sickly Corpse",
-            "Type" : "Misc_Object",
-            "Weight" : 4,
-            "FlavorText" : "The corpse of a sick creature.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 1500  }
-            ],            
-            "Properties" : [
-                "Edible",
-                "Poison",
-                "Severed_BodyPart",
-                "OnAttach_Leprosy"
-            ],
-            "Display" : {
-                "On Ground" : "item-body.png"
-            }
+            "FlavorText" : "The corpse of a sick creature.",          
+            "Properties" : [ "Poison", "OnAttach_Leprosy" ]
         },
         {
+            "Base" : "Item_Corpse",
             "ID" : "corpse_vamp",
             "Name" : "Vampiric Corpse",
-            "Type" : "Misc_Object",
-            "Weight" : 4,
-            "FlavorText" : "The corpse of a vampiric creature.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 4000  }
-            ],            
-            "Properties" : [
-                "Edible",
-                "Poison",
-                "Severed_BodyPart",
-                "OnAttach_Vampirism"
-            ],
-            "Display" : {
-                "On Ground" : "item-body.png"
-            }
+            "FlavorText" : "The corpse of a vampiric creature.",       
+            "Properties" : [ "OnAttach_Vampirism" ]
         },
         {
+            "Base" : "Item_Corpse",
             "ID" : "corpse_human",
             "Name" : "Human Corpse",
-            "Type" : "Misc_Object",
-            "Weight" : 3,
             "FlavorText" : "The corpse of a fellow human. You wouldn't eat this, would you..?",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 2500  }
-            ],
-            "Properties" : [
-                "Edible",
-                "Severed_BodyPart",
-                "Cannibalism"
-            ],
-            "Display" : {
-                "On Ground" : "item-body.png"
-            }
+            "Properties" : [ "Cannibalism" ]
         },
         {
+            "Base" : "Item_Corpse",
             "ID" : "corpse_norm",
             "Name" : "Corpse",
-            "Type" : "Misc_Object",
-            "Weight" : 3,
-            "FlavorText" : "The corpse of some creature.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 2500  }
-            ],
-            "Properties" : [
-                "Edible",
-                "Severed_BodyPart"
-            ],
-            "Display" : {
-                "On Ground" : "item-body.png"
-            }
+            "FlavorText" : "The corpse of some creature."
         },
         {
+            "Base" : "Item_Corpse",
             "ID" : "corpse_slime",
             "Name" : "Slime Heart",
-            "Type" : "Misc_Object",
-            "Weight" : 2,
             "FlavorText" : "The single internal organ in a slime. It looks poisonous.",
-            "Properties" : [
-                "Edible",
-                "Poison",
-                "Severed_BodyPart"
-            ],
-            "Display" : {
-                "On Ground" : "item-body.png"
-            }
+            "Properties" : [ "Poison" ]
         },
         {
+            "Base" : "Item_Corpse",
             "ID" : "corpse_slime2",
             "Name" : "Slime Jelly",
-            "Type" : "Misc_Object",
-            "Weight" : 2,
-            "FlavorText" : "The excretion left by a rare species of slime. Highly nutritious, but not recommended for those used to fine dining.",
-            "Properties" : [
-                "Edible"
-            ],
-            "Display" : {
-                "On Ground" : "item-body.png"
-            }
+            "FlavorText" : "The excretion left by a rare species of slime. Highly nutritious, but not recommended for those used to fine dining."
         },
         {
+            "Base" : "Item_BodyPart",
             "ID" : "severed_head",
             "Name" : "Head",
-            "Type" : "Misc_Object",
-            "Weight" : 1,
             "FlavorText" : "A severed head, hopefully not yours. It could make a gruesome meal.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 1500  }
-            ],
             "Stat Mods" : [
                 { "Stat" : "Intelligence", "Amount" : 2 }
             ],
-            "Properties" : [
-                "Edible",
-                "Severed_BodyPart",
-                "Replacement_Limb",
-                "Slot_Head"
-            ],
-            "Display" : {
-                "On Ground" : "item-limb.png"
-            }
+            "Properties" : [ "Slot_Head" ]
         },
         {
+            "Base" : "Item_BodyPart",
             "ID" : "severed_arm",
             "Name" : "Arm",
-            "Type" : "Misc_Object",
-            "Weight" : 1,
             "Damage" : "1d4",
-            "FlavorText" : "Someone - or something's - severed arm. It could make a gruesome meal.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 1500  }
-            ],   
-            "Cost" : 0,
+            "FlavorText" : "Someone - or something's - severed arm. It could make a gruesome meal or an unnerving weapon.", 
             "Stat Mods" : [
                 { "Stat" : "Strength", "Amount" : 1 }
             ],
-            "Properties" : [
-                "Edible",
-                "Severed_BodyPart",
-                "Replacement_Limb",
-                "Slot_Arm"
-            ],
-            "Display" : {
-                "On Ground" : "item-limb.png"
-            }
+            "Properties" : [ "Weapon", "Slot_Arm" ]
         },
         {
+            "Base" : "Item_BodyPart",
             "ID" : "severed_leg",
             "Name" : "Leg",
-            "Type" : "Misc_Object",
-            "Weight" : 1,
             "Damage" : "1d4",
-            "Rarity" : 100,
-            "FlavorText" : "Someone - or something's - severed leg. It could make a gruesome meal.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 1500  }
-            ],   
-            "Cost" : 0,
+            "FlavorText" : "Someone - or something's - severed leg. It could make a gruesome meal or an unnerving weapon.",
             "Stat Mods" : [
                 { "Stat" : "Speed", "Amount" : 2 }
             ],
-            "Properties" : [
-                "Edible",
-                "Severed_BodyPart",
-                "Replacement_Limb",
-                "Slot_Leg"
-            ],
-            "Display" : {
-                "On Ground" : "item-limb.png"
-            }
+            "Properties" : [ "Weapon", "Slot_Leg" ]
         },
         {
+            "Base" : "Item_BodyPart",
             "ID" : "severed_tail",
             "Name" : "Tail",
             "Type" : "Misc_Object",
-            "Weight" : 1,
             "Damage" : "1d4",
-            "Rarity" : 100,
-            "FlavorText" : "A severed tail of some beast. It could make a gruesome meal.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 1500  }
-            ],   
-            "Cost" : 0,
+            "FlavorText" : "A severed tail of some beast. It could make a gruesome meal or an unnerving weapon.",
             "Stat Mods" : [
                 { "Stat" : "Speed", "Amount" : 1 }
             ],
-            "Properties" : [
-                "Edible",
-                "Severed_BodyPart",
-                "Replacement_Limb",
-                "Slot_Tail"
-            ],
-            "Display" : {
-                "On Ground" : "item-limb.png"
-            }
+            "Properties" : [ "Weapon", "Slot_Tail" ]
         },
         {
+            "Base" : "Item_BodyPart",
             "ID" : "severed_wing",
             "Name" : "Wing",
-            "Type" : "Misc_Object",
-            "Weight" : 1,
-            "Damage" : "1d4",
-            "Rarity" : 100,
             "FlavorText" : "A severed wing of some beast. It could make a gruesome meal.",
-            "Components" : [
-                { "ID" : "Rot", "Max" : 1500  }
-            ],   
-            "Cost" : 0,
             "Stat Mods" : [
                 { "Stat" : "Speed", "Amount" : 2 }
             ],
-            "Properties" : [
-                "Edible",
-                "Severed_BodyPart",
-                "Replacement_Limb",
-                "Slot_Wing"
-            ],
-            "Display" : {
-                "On Ground" : "item-limb.png"
-            }
+            "Properties" : [ "Slot_Wing" ]
         },
+
         {
+            "Base" : "BaseItem",
             "ID" : "pool",
             "Name" : "Pool",
-            "Type" : "Misc_Object",
-            "Rarity" : 100,
-            "FlavorText" : "",
             "Components" : [
                 { "ID" : "LiquidContainer", "Capacity" : 100 }
             ],
-            "Cost" : 0,
             "Properties" : [ "Pool" ],
             "Display" : {
                 "On Ground" : "item-pool.png"
             }
         },
+
         {
+            "Base" : "Item_Weapon",
             "ID" : "foldingblade",
             "Name" : "Folding Blade",
             "Type" : "Blade",
             "Damage" : "1d8",
-            "Rarity" : 100,
             "FlavorText" : "Made of a strong yet flexible metal. This blade is grafted to your arm.",
-            "Cost" : 0,
-            "Properties" : [
-                "Weapon",
-                "Quick",
-                "Cannot_Remove"
-            ],
+            "Properties" : [ "Quick", "Cannot_Remove" ],
             "Lootable" : false
         },
 
-
-
         {
+            "Base" : "BaseItem",
             "ID" : "journal_hunter",
             "Name" : "Hunter's Journal",
-            "Type" : "Misc_Object",
-            "Rarity" : 101,
             "FlavorText" : "A dyed leather journal. Its cover is signed only \"The Hunter\".",
             "Cost" : 25,
             "Components" : [
@@ -4480,6 +4197,21 @@
                 "On Ground" : "item-journal.png"
             },
             "Properties" : [ "Artifact", "Legible", "Unique" ]
+        },
+        {
+            "Base" : "BaseItem",
+            "ID" : "map_location",
+            "Name" : "Map",
+            "FlavorText" : "A map with an interesting landmark marked with an '<color=red>X</color>'. Use it to reveal the location.",
+            "Rarity" : 5,
+            "Cost" : 200,
+            "Components" : [
+                { "ID" : "LocationMap", "ZoneID" : "Cave_Entrance_Random", "QuestID" : "location_map" }
+            ],
+            "Display" : {
+                "On Ground" : "item-map.png"
+            },
+            "Properties" : []
         }
     ]
 }

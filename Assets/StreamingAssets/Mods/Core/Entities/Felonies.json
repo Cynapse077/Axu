@@ -114,6 +114,28 @@
             "Money" : 0      
         },
         {
+        	"Name" : "Smuggler",
+        	"ID" : "smuggler",
+        	"Description" : "You smuggled bionics and heretical literature into Empire-controlled planets. Eventually, you were caught and sent to Axu.\n<color=yellow><i>(Starts with extra money)</i></color>",
+        	"Body Structure" : "Humanoid",
+        	"Stats" : {
+        		"HP Bonus" : 0,
+        		"ST Bonus" : 0,
+
+        		"Strength" : 5,
+        		"Dexterity" : 5,
+        		"Intelligence" : 5,
+        		"Endurance" : 5
+        	},
+        	"Traits" : [
+        		"puggishrogue"
+        	],
+        	"Proficiencies" : {},
+        	"Skills" : [],
+        	"Items" : [],
+        	"Money" : 300
+        },
+        {
             "Name" : "Fool",
             "ID" : "fool",
             "Description" : "I have a feeling people just grew tired of having you around...",

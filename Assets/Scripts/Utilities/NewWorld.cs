@@ -133,7 +133,7 @@ public class OldWorld
 
     public void LoadWorldData()
     {
-        loadJson = File.ReadAllText(Manager.SaveDirectory + "/" + Manager.playerName + ".axu");
+        loadJson = File.ReadAllText(Path.Combine(Manager.SaveDirectory, Manager.playerName + ".axu"));
         wData = JsonMapper.ToObject(loadJson)["World"];
         World.objectManager.GetComponent<TurnManager>().turn = (int)wData["Turn_Num"];
 

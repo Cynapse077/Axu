@@ -262,7 +262,7 @@
         },
         {
             "ID" : "IT_Coat",
-            "Display" : " - [COATED] with [INPUT1] ([INPUT2])"
+            "Display" : " - [COATED] with {0} ({1})"
         },
         {
             "ID" : "IT_Damage",
@@ -362,7 +362,7 @@
         },
         {
             "ID" : "IT_Spoils",
-            "Display" : "Spoils in [INPUT1] turns."
+            "Display" : "Spoils in {0} turns."
         },
         {
             "ID" : "IT_Satiates",
@@ -1297,6 +1297,14 @@
         {
             "ID" : "Dialogue_Follow",
             "Display" : "Gotcha, I'll follow you."
+        },
+        {
+            "ID" : "Quest_SimpleGoToDescription",
+            "Display" : "Go to the marked location."
+        },
+        {
+            "ID" : "Map_Fail",
+            "Display" : "The map was too worn to read. You threw it out."
         }
     ],
     "YesNo" : [

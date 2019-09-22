@@ -149,7 +149,7 @@ public class UserInterface : MonoBehaviour
                 ObjectManager.playerEntity.stats.health = ObjectManager.playerEntity.stats.maxHealth;
                 ObjectManager.playerEntity.stats.stamina = ObjectManager.playerEntity.stats.maxStamina;
                 ObjectManager.playerEntity.stats.statusEffects.Clear();
-                World.tileMap.GoToArea("Home");
+                World.tileMap.GoToArea("Home_Base");
                 World.tileMap.HardRebuild();
                 ObjectManager.playerEntity.UnDie();
                 dead = false;

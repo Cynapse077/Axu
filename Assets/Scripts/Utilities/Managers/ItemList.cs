@@ -74,7 +74,7 @@ public static class ItemList
             if (SeedManager.combatRandom.Next(100) <= threshold)
             {
                 ItemProperty[] props = new ItemProperty[] {
-                    ItemProperty.Knockback, ItemProperty.Confusion, ItemProperty.Radiate,
+                    ItemProperty.Knockback, ItemProperty.Radiate,
                     ItemProperty.Quick, ItemProperty.Shock_Nearby, ItemProperty.Slow,
                     ItemProperty.Stun, ItemProperty.Explosive, ItemProperty.DrainHealth
                 };
@@ -374,6 +374,19 @@ public static class ItemUtility
                 comps.Add(cc);
 
             }
+            else if (ID == "RechargeTurns")
+            {
+                int max = (int)dat["Max"];
+                int charges = (max > 0) ? UnityEngine.Random.Range(0, max + 1) : 0;
+                
+                if (dat.ContainsKey("Start"))
+                {
+                    charges = (int)dat["Start"];
+                }
+
+                CRechargeTurns rch = new CRechargeTurns(charges, max);
+                comps.Add(rch);
+            }
             else if (ID == "Firearm")
             {
                 int shots = (int)dat["ShotsPerTurn"];
@@ -453,10 +466,27 @@ public static class ItemUtility
             {
                 string status = dat["Status"].ToString();
                 IntRange turnRange = new IntRange(dat["Turns"]);
-                float chance = (float)(double)dat["Chance"];
+
+                float chance = 0f;
+                if (dat["Chance"].IsDouble)
+                {
+                    chance = (float)(double)dat["Chance"];
+                }
+                else if (dat["Chance"].IsInt)
+                {
+                    chance = (int)dat["Chance"];
+                }
 
                 COnHitAddStatus onhit = new COnHitAddStatus(status, turnRange, chance);
                 comps.Add(onhit);
+            }
+            else if (ID == "LocationMap")
+            {
+                string zoneID = dat["ZoneID"].ToString();
+                string questID = (dat.ContainsKey("QuestID")) ? dat["QuestID"].ToString() : "";
+
+                CLocationMap map = new CLocationMap(zoneID, questID);
+                comps.Add(map);
             }
             else if (UnityEngine.Application.isEditor)
             {

@@ -814,7 +814,7 @@ public class PlayerInput : MonoBehaviour
             World.turnManager.IncrementTime(timePass);
             World.tileMap.UpdateMapFeatures();
 
-            if (World.tileMap.CurrentMap.mapInfo.biome == WorldMap.Biome.Ocean || World.tileMap.CurrentMap.mapInfo.friendly)
+            if (World.tileMap.CurrentMap.mapInfo.biome == Biome.Ocean || World.tileMap.CurrentMap.mapInfo.friendly)
             {
                 return;
             }

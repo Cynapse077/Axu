@@ -519,7 +519,7 @@
 			"Steps" : [
 				{ "Goal" : "Talk To", "NPC" : "oromir" }
 			],
-			"End Dialogue" : "I see you've managed to convince Arthomas. He and Ka-Nil arrived moments before you. I give you my thanks and a great power. This device will restrict Xzol from leaving his construct body. If you weaken him sufficiently, I believe its power will be enough to permanently trap him on this plane. Xzol will need to use a large amount of power to have it work, however. I just hope you are able to survive long enough to get the deed done. If you are lucky enough, please bring the trapped god back to me. He will be quite the study partner... Of course, you will get your ship home finally. Talk to Ka-Nil about locating your target.",
+			"End Dialogue" : "I see you've managed to convince Arthomas. He and Ka-Nil arrived moments before you. I give you my thanks and a great power. This device will restrict Xzol from leaving his construct body. If you weaken him sufficiently, I believe its power will be enough to permanently trap him on this plane. Xzol will need to lose a large amount of power to have it work, however. I just hope you are able to survive long enough to get the deed done. If you are lucky enough, please bring the trapped god back to me. He will be quite the study partner... Of course, you will get your ship home finally. Talk to Ka-Nil about locating your target.",
 
 			"Chained Quest" : "ensis28"
 		},
@@ -544,12 +544,17 @@
 			"Rewards" : {
 				"XP" : 200
 			},
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Create Location" : { "Zone ID" : "Tunnel Entrance" }
+                }
+            ],
 			"Steps" : [
 				{ "Goal" : "Go", "To" : [ "Tunnel Entrance", 0 ] },
-				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Tunnel Entrance", "Elevation" : -0,  "Amount" : 1, "Description" : "Turn on the sonar." },
-				{ "Goal" : "Talk To", "NPC" : "kanil" }
+				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Tunnel Entrance", "Elevation" : 0,  "Amount" : 1, "Description" : "Turn on the sonar." }
 			],
-			"End Dialogue" : "Excellent! I can see everything below! There appears to be something in the Tunnels, though I can't be sure of what it is exactly. It looks like a mass of... I don't even know. My best guess would be something to do with The Deep. [TO BE CONTINUED...]"
+			"End Dialogue" : "<i>[Ka-Nil's voice resonates from the terminal]</i>\nExcellent! I can see everything below! There appears to be something in the Tunnels, though I can't be sure of what it is exactly. It looks like a mass of... I don't even know. My best guess would be something to do with The Deep. [TO BE CONTINUED...]"
 		},
 
 
@@ -1320,7 +1325,6 @@
 			"Start Dialogue" : "There's some coin on a Bandit Leader's head. If you'd like, I can tell you where to find him.",
 			"Description" : "Kill the marked target.",
 			"Rewards" : {
-				"XP" : 0,
 				"Money" : 200
 			},
 			"Steps" : [
@@ -1340,6 +1344,14 @@
 				}
 			],
 			"End Dialogue" : "Very good! You've earned this coin! Come back later once I've some more work for you."
-		}
+		},
+
+        {
+            "Name" : "Revealed Location",
+            "ID" : "location_map",
+            "Start Dialogue" : "Your map has revealed a location!",
+            "Description" : "Travel to the marked location.",
+            "End Dialogue" : "You've found the location marked on your map."
+        }
 	]
 }

@@ -59,7 +59,7 @@ public class LocalPosChangeEvent : QuestEvent
 
     public override void RunEvent()
     {
-        ObjectManager.playerEntity.ForcePosition(new Coord(localPos.x, localPos.y));
+        ObjectManager.playerEntity.ForcePosition(new Coord(localPos));
         ObjectManager.playerEntity.BeamDown();
         World.tileMap.SoftRebuild();
     }
@@ -401,15 +401,31 @@ public class RemoveBlockersEvent : QuestEvent
 public class BecomeFollowerEvent : QuestEvent
 {
     readonly string npcID;
+    public int npcUIDOverride = -1;
 
     public BecomeFollowerEvent(string npc)
     {
         npcID = npc;
     }
 
+    public BecomeFollowerEvent(NPC npc)
+    {
+        npcID = string.Empty;
+        npcUIDOverride = npc.UID;
+    }
+
     public override void RunEvent()
     {
-        NPC n = World.objectManager.npcClasses.Find(x => x.ID == npcID);
+        NPC n;
+
+        if (npcUIDOverride < 0)
+        {
+            n = World.objectManager.GetNPCByUID(npcUIDOverride);
+        }
+        else
+        {
+           n = World.objectManager.npcClasses.Find(x => x.ID == npcID);
+        }
 
         if (n != null)
         {
@@ -551,6 +567,28 @@ public class RemoveLocation : QuestEvent
     public override void RunEvent()
     {
         Coord c = World.worldMap.worldMapData.GetLandmark(zoneID);
+
+        if (c != null)
+        {
+            World.worldMap.worldMapData.RemoveLandmark(c);
+            World.tileMap.DeleteScreen(c.x, c.y);
+            World.worldMap.RemoveLandmark(c.x, c.y);
+        }
+    }
+}
+
+public class RemoveLocation_Specific : QuestEvent
+{
+    readonly Coord zone;
+
+    public RemoveLocation_Specific(Coord zone)
+    {
+        this.zone = zone;
+    }
+
+    public override void RunEvent()
+    {
+        Coord c = zone;
 
         if (c != null)
         {

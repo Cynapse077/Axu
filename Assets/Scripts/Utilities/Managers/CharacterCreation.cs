@@ -297,7 +297,7 @@ public class CharacterCreation : MonoBehaviour
         if (p.traits.Length <= 0)
         {
             GameObject g = Instantiate(textPrefab, traitAnchor);
-            g.GetComponent<Text>().text = "---";
+            g.GetComponent<Text>().text = "";
         }
         for (int x = 0; x < p.traits.Length; x++)
         {
@@ -313,7 +313,7 @@ public class CharacterCreation : MonoBehaviour
         if (p.proficiencies.Length <= 0)
         {
             GameObject g = SimplePool.Spawn(textPrefab, profAnchor);
-            g.GetComponent<Text>().text = "---";
+            g.GetComponent<Text>().text = "";
         }
 
         for (int y = 0; y < p.proficiencies.Length; y++)
@@ -330,7 +330,7 @@ public class CharacterCreation : MonoBehaviour
         if (p.skills.Count <= 0)
         {
             GameObject g = SimplePool.Spawn(textPrefab, abilAnchor);
-            g.GetComponent<Text>().text = "---";
+            g.GetComponent<Text>().text = "";
         }
 
         for (int z = 0; z < p.skills.Count; z++)

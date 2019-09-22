@@ -47,7 +47,7 @@ namespace MapCreator
                     mct.EnableTooltip(Tile.GetKey(tileID));
                     break;
                 case MC_ButtonType.Object:
-                    mct.EnableTooltip(GameData.GetAll<MapObjectBlueprint>()[tileID].Name);
+                    mct.EnableTooltip(mct.ViewableObjects[tileID].Name);
                     break;
                 case MC_ButtonType.NPC:
                     mct.EnableTooltip(EntityList.npcs[tileID].name);

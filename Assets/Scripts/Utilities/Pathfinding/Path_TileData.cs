@@ -16,6 +16,7 @@ namespace Pathfinding
             costToEnter = _cost;
         }
 
+        //Local map
         public List<Path_TileData> GetNeighbours(bool diagOkay, TileMap_Data data)
         {
             List<Path_TileData> ns = new List<Path_TileData>();
@@ -31,7 +32,11 @@ namespace Pathfinding
 
                     if (!World.OutOfLocalBounds(position.x + x, position.y + y))
                     {
-                        ns.Add(data.GetTileData(position.x + x, position.y + y));
+                        Path_TileData dat = data.GetTileData(position.x + x, position.y + y);
+                        if (dat.walkable)
+                        {
+                            ns.Add(dat);
+                        }
                     }
                 }
             }
@@ -39,6 +44,7 @@ namespace Pathfinding
             return ns;
         }
 
+        //World map
         public List<Path_TileData> GetNeighbours(bool diagOkay, WorldMap_Data data)
         {
             List<Path_TileData> ns = new List<Path_TileData>();
@@ -47,12 +53,19 @@ namespace Pathfinding
             {
                 for (int y = -1; y <= 1; y++)
                 {
-                    if ((x == 0 && y == 0) || (!diagOkay && Mathf.Abs(x) + Mathf.Abs(y) > 1) || World.OutOfWorldBounds(position.x + x, position.y + y))
+                    if ((x == 0 && y == 0) || (!diagOkay && Mathf.Abs(x) + Mathf.Abs(y) > 1))
                     {
                         continue;
                     }
 
-                    ns.Add(data.GetPathDataAt(position.x + x, position.y + y));
+                    if (!World.OutOfWorldBounds(position.x + x, position.y + y))
+                    {
+                        Path_TileData dat = data.GetPathDataAt(position.x + x, position.y + y);
+                        if (dat.walkable)
+                        {
+                            ns.Add(dat);
+                        }
+                    }                    
                 }
             }
 

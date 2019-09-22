@@ -639,14 +639,14 @@ public class Console : MonoBehaviour
             case "grant":
                 if (parsedText.Length < 2)
                 {
-                    MyConsole.Error("Need to provide an item name.");
+                    MyConsole.Error("Need to provide an item name/ID.");
                     return;
                 }
 
                 string itemID = parsedText[1];
                 Item item = null;
 
-                if (parsedText.Length == 2 && ItemList.GetItemByID(itemID) != null)
+                if (parsedText.Length == 2 && ItemList.GetItemByID(itemID) != ItemList.GetNone())
                 {
                     item = ItemList.GetItemByID(itemID);
                 }
@@ -662,7 +662,7 @@ public class Console : MonoBehaviour
                     item = ItemList.GetItemByName(itemID);
                 }
 
-                if (item != null && playerInventory != null)
+                if (item != ItemList.GetNone() && playerInventory != null)
                 {
                     playerInventory.PickupItem(item);
                     MyConsole.NewMessage("    Gave 1x " + item.Name);

@@ -64,7 +64,9 @@ public static class ItemTooltip
         if (item.HasProp(ItemProperty.Weapon))
         {
             if (item.HasProp(ItemProperty.Two_Handed))
+            {
                 displayItems.Add(GetContent("IT_Weapon2", true));
+            }
             else if (item.itemType == Proficiencies.Misc_Object)
             {
                 displayItems.Add(GetContent("IT_Wieldable", true));
@@ -78,7 +80,7 @@ public static class ItemTooltip
             }
 
             if (item.HasCComponent<CItemLevel>())
-                displayItems.Add(item.GetCComponent<CItemLevel>().Display());
+                displayItems.Add(item.GetCComponent<CItemLevel>().ExtraInfo());
 
             displayItems.Add(GetContent_Input("IT_Type", WeaponType(item)));
 
@@ -102,103 +104,48 @@ public static class ItemTooltip
             //Effects
             if (item.ContainsDamageType(DamageTypes.Cleave))
                 displayItems.Add(GetContent("IT_Cleave"));
-            if (item.ContainsDamageType(DamageTypes.Bleed))
-                displayItems.Add(GetContent("IT_Bleed"));
-            if (item.ContainsDamageType(DamageTypes.Venom))
-                displayItems.Add(GetContent("IT_Poison"));
             if (item.HasProp(ItemProperty.Shock_Nearby))
                 displayItems.Add(GetContent("IT_Shock"));
             if (item.HasProp(ItemProperty.DrainHealth))
                 displayItems.Add(GetContent("IT_Drain"));
             if (item.HasProp(ItemProperty.Knockback))
                 displayItems.Add(GetContent("IT_Knockback"));
-            if (item.HasProp(ItemProperty.Confusion))
-                displayItems.Add(GetContent("IT_Confuse"));
         }
 
         //Armor
         if (item.HasProp(ItemProperty.Armor))
         {
             displayItems.Add(GetContent("IT_Wearable", true));
+
+            if (item.itemType == Proficiencies.Armor)
+            {
+                displayItems.Add(GetContent_Input("IT_Type", LocalizationManager.GetContent("Armor")));
+            }
+
             displayItems.Add(GetContent_Input("IT_Armor", (item.armor + item.modifier.armor).ToString()));
             string slot = item.GetSlot().ToString();
             slot = slot.Replace("Slot_", "");
             displayItems.Add(GetContent_Input("IT_Slot", slot));
-
-            if (item.itemType == Proficiencies.Armor)
-                displayItems.Add(GetContent_Input("IT_Type", LocalizationManager.GetContent("Armor")));
         }
-
-        //Custom Components
-        if (item.HasCComponent<CCoordinate>())
-        {
-            CCoordinate cc = item.GetCComponent<CCoordinate>();
-            displayItems.Add(cc.GetInfo());
-        }
-
-        if (item.HasCComponent<CLiquidContainer>())
-        {
-            CLiquidContainer cl = item.GetCComponent<CLiquidContainer>();
-            displayItems.Add(cl.GetInfo());
-        }
-
-        if (item.HasCComponent<CBlock>())
-        {
-            string s = LocalizationManager.GetContent("IT_Block");
-
-            if (s.Contains("[INPUT]"))
-                s = s.Replace("[INPUT]", (item.GetCComponent<CBlock>().level * 5).ToString());
-
-            displayItems.Add(s);
-        }
-
-        if (item.HasCComponent<CModKit>())
-        {
-            ItemModifier m = ItemList.GetModByID(item.GetCComponent<CModKit>().modID);
-
-            if (m != null)
-            {
-                displayItems.Add(m.name + ": " + m.description);
-            }
-        }
-
-        if (item.HasCComponent<CEquipped>())
-        {
-            string eq = item.GetCComponent<CEquipped>().baseItemID;
-            if (!string.IsNullOrEmpty(eq))
-            {
-                displayItems.Add("Equipped: " + ItemList.GetItemByID(eq).DisplayName());
-            }
-        }
-
-        //Disarm - not working.
-        /*if (item.HasProp(ItemProperty.Disarm))
-			displayItems.Add(GetContent("IT_Disarm"));*/
 
         //ACC
         if (item.Accuracy != 0)
-            displayItems.Add(GetContent_Input("IT_Acc", item.Accuracy.ToString()));
-
-        //Ability
-        if (item.HasCComponent<CAbility>())
         {
-            CAbility cab = item.GetCComponent<CAbility>();
-            Ability skill = new Ability(GameData.Get<Ability>(cab.abID) as Ability);
+            displayItems.Add(GetContent_Input("IT_Acc", item.Accuracy.ToString()));
+        }
 
-            if (skill != null)
+        //Custom Components
+        foreach (CComponent comp in item.MyComponents())
+        {
+            string extra = comp.ExtraInfo();
+
+            if (!extra.NullOrEmpty())
             {
-                string abName = skill.Name;
-                displayItems.Add(GetContent_Input("IT_Ability", abName));
+                displayItems.Add("- " + extra);
             }
         }
 
-        if (item.HasCComponent<CCoat>())
-        {
-            CCoat cc = item.GetCComponent<CCoat>();
-            displayItems.Add(GetContent_Input("IT_Coat", cc.liquid.Name, cc.strikes.ToString()));
-        }
-
-        if (item.HasProp(ItemProperty.Poison))
+        if (item.HasProp(ItemProperty.Edible) && item.HasProp(ItemProperty.Poison))
             displayItems.Add(GetContent("IT_OnConsume_Poison"));
         if (item.HasProp(ItemProperty.Cure_Radiation))
             displayItems.Add(GetContent("IT_OnConsume_CureRad"));
@@ -214,9 +161,7 @@ public static class ItemTooltip
         {
             foreach (Stat_Modifier mod in item.statMods)
             {
-                if (mod.Stat == "Hunger" && mod.Amount > 0)
-                    displayItems.Add(GetContent("IT_Satiates"));
-                else if (mod.Stat == "Stamina")
+                if (mod.Stat == "Stamina")
                     displayItems.Add(GetContent("IT_Restore"));
                 else if (mod.Stat == "Health")
                     continue;
@@ -253,13 +198,8 @@ public static class ItemTooltip
             }
         }
 
-        //Charges
-        if (item.HasCComponent<CRot>())
-        {
-            CRot cr = item.GetCComponent<CRot>();
-            displayItems.Add(GetContent_Input("IT_Spoils", cr.current.ToString()));
-        }
-        else if (!item.HasProp(ItemProperty.Ranged) && item.HasCComponent<CCharges>())
+        //Charges - Works slightly differently than ExtraInfo()
+        if (!item.HasProp(ItemProperty.Ranged) && item.HasCComponent<CCharges>())
         {
             CCharges cc = item.GetCComponent<CCharges>();
             displayItems.Add(GetContent_Input("IT_Uses", cc.current.ToString(), cc.max.ToString()));

@@ -260,17 +260,17 @@ public class WorldMap : MonoBehaviour
             heatScale = _heatScale;
         }
     }
+}
 
-    public enum Biome
-    {
-        Default,
-        Ocean,
-        Shore,
-        Plains,
-        Forest,
-        Mountain,
-        Tundra,
-        Desert,
-        Swamp
-    }
+public enum Biome
+{
+    Default,
+    Ocean,
+    Shore,
+    Plains,
+    Forest,
+    Mountain,
+    Tundra,
+    Desert,
+    Swamp
 }
