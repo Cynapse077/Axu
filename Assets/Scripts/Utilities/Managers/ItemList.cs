@@ -10,7 +10,7 @@ public static class ItemList
 
     public static Item GetNone()
     {
-        return new Item(GameData.Get<Item>("none") as Item);
+        return new Item(GameData.Get<Item>("none"));
     }
 
     public static Item GetRandart(Item i)
@@ -153,7 +153,7 @@ public static class ItemList
             return newItem;
         }
 
-        Item i = GameData.Get<Item>(id) as Item;
+        Item i = GameData.Get<Item>(id);
 
         if (i == null)
         {
@@ -183,7 +183,7 @@ public static class ItemList
             return false;
         };
 
-        List<IAsset> ass = GameData.Get<Item>(p);
+        List<Item> ass = GameData.Get<Item>(p);
 
         if (ass.Count > 0)
         {
@@ -233,7 +233,7 @@ public static class ItemList
             return ItemModifier.Empty();
         }
 
-        return new ItemModifier(GameData.Get<ItemModifier>(search) as ItemModifier);
+        return new ItemModifier(GameData.Get<ItemModifier>(search));
     }
 
     public static int TimedDropRarity(int maxRarity)
@@ -312,11 +312,11 @@ public static class ItemList
 
                 return false;
             };
-            List<IAsset> ms = GameData.Get<ItemModifier>(p);
+            List<ItemModifier> ms = GameData.Get<ItemModifier>(p);
 
             if (ms.Count > 0)
             {
-                ItemModifier m = new ItemModifier(ms.GetRandom(SeedManager.combatRandom) as ItemModifier);
+                ItemModifier m = new ItemModifier(ms.GetRandom(SeedManager.combatRandom));
                 i.AddModifier(m);
             }
         }
@@ -338,12 +338,12 @@ public static class ItemList
 
     public static MapObjectBlueprint GetMOB(string objType)
     {
-        return GameData.Get<MapObjectBlueprint>(objType) as MapObjectBlueprint;
+        return GameData.Get<MapObjectBlueprint>(objType);
     }
 
     public static Liquid GetLiquidByID(string search, int amount = -1)
     {
-        return new Liquid(GameData.Get<Liquid>(search) as Liquid, amount < 0 ? 1 : amount);
+        return new Liquid(GameData.Get<Liquid>(search), amount < 0 ? 1 : amount);
     }
 
     public static Liquid GetRandomLiquid(int amount = -1)

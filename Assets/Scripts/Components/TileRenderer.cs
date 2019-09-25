@@ -9,7 +9,6 @@ public class TileRenderer : MonoBehaviour
     SpriteRenderer spriteRenderer;
     bool inSight, hasSeen;
     Color outOfSightColor;
-    static Color litColor = new Color(1.0f, 1.0f, 0.9f);
     int posX, posY;
 
     void Awake()
@@ -54,9 +53,9 @@ public class TileRenderer : MonoBehaviour
 
     public void SetSpriteColor()
     {
-        maskRenderer.sprite = maskTextures[inSight ? BitwiseAutotile() : 16];
-        maskRenderer.color = (hasSeen ? outOfSightColor : Color.white);
-        spriteRenderer.color = (inSight && lit ? litColor : Color.white);
+        maskRenderer.sprite = maskTextures[inSight ? BitwiseAutotile() : Manager.TileResolution];
+        maskRenderer.color = hasSeen ? outOfSightColor : Color.white;
+        spriteRenderer.color = Color.white;
     }
 
     int BitwiseAutotile()

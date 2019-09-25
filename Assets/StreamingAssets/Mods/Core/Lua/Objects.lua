@@ -14,26 +14,6 @@ function Interact_HomeDoor(obj)
 	end
 end
 
---From pulses received
-function Interact_Door(obj)
-	if (obj.cell.entity == nil) then
-		if (obj.objectType == "Ensis_Door_Open") then
-			obj.SetTypeAndSwapSprite("Ensis_Door_Closed")
-		elseif (obj.objectType == "Prison_Door_Open") then
-			obj.SetTypeAndSwapSprite("Prison_Door_Closed")
-		elseif (obj.objectType == "Magna_Door_Open") then
-			obj.SetTypeAndSwapSprite("Magna_Door_Closed")
-		elseif (obj.objectType == "Kin_Door_Open") then
-			obj.SetTypeAndSwapSprite("Kin_Door_Closed")
-		else
-			return
-		end
-
-		TileMap.SoftRebuild()
-		SoundManager.CloseDoor()
-	end
-end
-
 function Interact_Cryopod(obj)
 	obj.SetTypeAndSwapSprite("Cryopod_Open")
 	local ranNum = Random(0, 100)
@@ -86,8 +66,21 @@ function Light_PulseReceived(on, obj)
 end
 
 function Door_OnPulseReceived(on, obj)
-	if (not on) then
-		Interact_Door(obj)
+	if (not on and obj.cell.entity == nil) then
+		if (obj.objectType == "Ensis_Door_Open") then
+			obj.SetTypeAndSwapSprite("Ensis_Door_Closed")
+		elseif (obj.objectType == "Prison_Door_Open") then
+			obj.SetTypeAndSwapSprite("Prison_Door_Closed")
+		elseif (obj.objectType == "Magna_Door_Open") then
+			obj.SetTypeAndSwapSprite("Magna_Door_Closed")
+		elseif (obj.objectType == "Kin_Door_Open") then
+			obj.SetTypeAndSwapSprite("Kin_Door_Closed")
+		else
+			return
+		end
+
+		TileMap.SoftRebuild()
+		SoundManager.CloseDoor()
 	end
 end
 

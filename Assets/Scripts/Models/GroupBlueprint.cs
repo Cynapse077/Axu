@@ -10,7 +10,7 @@ public class GroupBlueprint : IAsset
     public Biome[] biomes;
     public string[] vaultTypes;
     public string[] landmarks;
-    public List<SpawnBlueprint> npcs { get; set; }
+    public SpawnBlueprint[] npcs;
 
     public GroupBlueprint(JsonData dat)
     {
@@ -72,9 +72,8 @@ public class GroupBlueprint : IAsset
 
     public void FromJson(JsonData dat)
     {
-        npcs = new List<SpawnBlueprint>();
         ID = dat["Name"].ToString();
-        level = (dat.ContainsKey("Level")) ? (int)dat["Level"] : 1;
+        level = dat.ContainsKey("Level") ? (int)dat["Level"] : 1;
 
         if (dat.ContainsKey("Biomes"))
         {
@@ -107,45 +106,58 @@ public class GroupBlueprint : IAsset
             }
         }
 
-        for (int j = 0; j < dat["Possibilities"].Count; j++)
+        if (dat.ContainsKey("Possibilities"))
         {
-            string amountString = dat["Possibilities"][j]["Amount"].ToString();
-            string[] segString = amountString.Split('d');
-            int numDice = int.Parse(segString[0]), diceSides = int.Parse(segString[1]);
+            npcs = new SpawnBlueprint[dat["Possibilities"].Count];
 
-            SpawnBlueprint esf = new SpawnBlueprint
+            for (int i = 0; i < dat["Possibilities"].Count; i++)
             {
-                npcID = dat["Possibilities"][j]["Blueprint"].ToString(),
-                Weight = (int)dat["Possibilities"][j]["Weight"],
-                minAmount = numDice,
-                maxAmount = numDice * diceSides
-            };
-            npcs.Add(esf);
+                string amountString = dat["Possibilities"][i]["Amount"].ToString();
+                string[] segString = amountString.Split('d');
+                int numDice = int.Parse(segString[0]), diceSides = int.Parse(segString[1]);
+
+                SpawnBlueprint esf = new SpawnBlueprint
+                {
+                    npcID = dat["Possibilities"][i]["Blueprint"].ToString(),
+                    Weight = (int)dat["Possibilities"][i]["Weight"],
+                    range = new IntRange(numDice, numDice * diceSides)
+                };
+
+                npcs[i] = esf;
+            }
+        }        
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (npcs == null)
+        {
+            yield return "No NPCs added to encounter.";
         }
     }
 }
 
 public struct SpawnBlueprint : IWeighted
 {
+    const int AbsMax = 7;
+
     public string npcID { get; set; }
     public int Weight { get; set; }
-    public int minAmount { get; set; }
-    public int maxAmount { get; set; }
+    public IntRange range;
 
     public SpawnBlueprint(string _npcID, int _spawnChance, int _minAmount, int _maxAmount)
     {
         npcID = _npcID;
         Weight = _spawnChance;
-        minAmount = _minAmount;
-        maxAmount = _maxAmount;
+        range = new IntRange(_minAmount, _maxAmount);
     }
 
     public int AmountToSpawn()
     {
-        int max = Mathf.Min(10, maxAmount + World.DangerLevel() / 2);
-        int a = (max > minAmount) ? SeedManager.combatRandom.Next(minAmount, max) : minAmount;
+        int max = Mathf.Min(AbsMax, range.max + World.DangerLevel() / 2);
+        int a = (max > range.min) ? range.GetRandom() : range.min;
 
-        a = Mathf.Clamp(a, 1, 7);
+        a = Mathf.Clamp(a, 1, AbsMax);
         return a;
     }
 }

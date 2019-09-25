@@ -16,6 +16,8 @@
 	- Trip alarms by player cause spawns
 - Check if important npc is dead if take a quest to kill them. autocomplete if so.
 - Dodging by moving to an adjacent tile.
-- Patrolling Yoabi soldiers.
+- Patrolling Empire soldiers.
+- Graverobbing radiant quest.
+
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------

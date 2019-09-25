@@ -185,10 +185,7 @@ public class TurnManager : MonoBehaviour
             }
         }
 
-        for (int i = ObjectManager.playerJournal.quests.Count - 1; i >= 0; i--)
-        {
-            ObjectManager.playerJournal.quests[i].OnTurn();
-        }
+        ObjectManager.playerJournal.quests.IterateAction_Reverse((x) => x.OnTurn());
     }
 
     public void ChangeWeather(Weather _weather)

@@ -872,10 +872,10 @@ public class TileMap_Data
                 {
                     int x = (int)data["npcs"][i]["Pos"][0], y = (int)data["npcs"][i]["Pos"][1];
                     string nType = data["npcs"][i]["Name"].ToString(); //Actually the ID of the NPC.
-                    NPC_Blueprint bp = EntityList.GetBlueprintByID(nType);
+                    NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(nType);
 
                     //If this NPC is static and has died, do not spawn it.
-                    if (bp.flags.Contains(NPC_Flags.Static) && ObjectManager.playerJournal != null && ObjectManager.playerJournal.staticNPCKills.Contains(bp.ID))
+                    if (bp != null && bp.flags.Contains(NPC_Flags.Static) && ObjectManager.playerJournal != null && ObjectManager.playerJournal.staticNPCKills.Contains(bp.ID))
                     {
                         continue;
                     }

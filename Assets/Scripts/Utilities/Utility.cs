@@ -47,7 +47,7 @@ public static class Utility
             {
                 Coord newPos = new Coord(x, y);
 
-                if (Vector2.Distance(pos.toVector2(), newPos.toVector2()) < length + 1)
+                if (newPos != ent.myPos && pos.DistanceTo(newPos) < length + 1f)
                 {
                     float b = Bearing(pos, newPos);
 
@@ -57,14 +57,56 @@ public static class Utility
                     {
                         Cell c = World.tileMap.GetCellAt(x, y);
 
-                        if (newPos != ent.myPos && c != null && c.Walkable_IgnoreEntity && ent.inSight(newPos))
+                        if (c != null && c.Walkable_IgnoreEntity && ent.inSight(newPos))
+                        {
                             coords.Add(newPos);
+                        }
                     }
                 }
             }
         }
 
         return coords;
+    }
+
+    /// <summary>
+    /// Iterate over a list, performing an action on each item within.
+    /// </summary>
+    /// <param name="action"></param>
+    public static void IterateAction<T>(this List<T> list, Action<T> action)
+    {
+        if (list == null || action == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i] != null)
+            {
+                action(list[i]);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Iterate over a list in reverse, performing an action on each item within. Great for when you need to delete elements as you go.
+    /// </summary>
+    /// <param name="action"></param>
+    public static void IterateAction_Reverse<T>(this List<T> list, Action<T> action)
+    {
+        if (list == null || action == null)
+        {
+            return;
+        }
+
+        for (int i = list.Count - 1; i >= 0; i--)
+        {
+            if (list[i] != null)
+            {
+                action(list[i]);
+            }
+        }
     }
 
     static int GetOctant(Coord direction)
@@ -427,6 +469,11 @@ public static class Utility
     public static bool NullOrEmpty(this string s)
     {
         return string.IsNullOrEmpty(s);
+    }
+
+    public static bool IsNullOrDefault(this Item item)
+    {
+        return item == null || item.ID == ItemList.GetNone().ID;
     }
 }
 

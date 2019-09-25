@@ -5,7 +5,7 @@ public static class TraitList
 {
     public static Trait GetTraitByID(string id)
     {
-        return new Trait(GameData.Get<Trait>(id) as Trait);
+        return new Trait(GameData.Get<Trait>(id));
     }
 
     public static List<Trait> GetAvailableMutations(Stats stats)

@@ -6,7 +6,7 @@ using System;
 [MoonSharpUserData]
 public class Cell
 {
-    public static readonly int EntityInCellCost = 2;
+    public static readonly int EntityInCellCost = 4;
 
     public Coord position;
     public Entity entity;
@@ -52,7 +52,7 @@ public class Cell
     {
         for (int i = 0; i < mapObjects.Count; i++)
         {
-            if (mapObjects[i].isDoor_Closed || mapObjects[i].objectBase.solid)
+            if (mapObjects[i].isDoor_Closed || mapObjects[i].objectBase.Solid)
             {
                 return true;
             }
@@ -63,20 +63,17 @@ public class Cell
 
     public bool Walkable
     {
-        get { return (entity == null && !mapObjects.Any(x => x.objectBase.solid)); }
+        get { return entity == null && !mapObjects.Any(x => x.objectBase.Solid); }
     }
 
     public bool Walkable_IgnoreEntity
     {
-        get { return (!mapObjects.Any(x => x.objectBase.solid || x.isDoor_Closed)); }
+        get { return !mapObjects.Any(x => x.objectBase.Solid || x.isDoor_Closed); }
     }
 
     public void RecievePulse(Coord previous, int moveCount, bool on)
     {
-        for (int i = mapObjects.Count - 1; i >= 0; i--)
-        {
-            mapObjects[i].ReceivePulse(previous, moveCount, on);
-        }
+        mapObjects.IterateAction_Reverse((x) => x.ReceivePulse(previous, moveCount, on));
     }
 
     public void SetUnwalkable()
@@ -105,10 +102,7 @@ public class Cell
                 onEntityEnter(entity);
             }
 
-            for (int i = mapObjects.Count - 1; i >= 0; i--)
-            {
-                mapObjects[i].OnEntityEnter(e);
-            }
+            mapObjects.IterateAction_Reverse((x) => x.OnEntityEnter(e));
         }
     }
 
@@ -118,10 +112,7 @@ public class Cell
 
         if (entity == e)
         {
-            for (int i = mapObjects.Count - 1; i >= 0; i--)
-            {
-                mapObjects[i].OnEntityExit(e);
-            }
+            mapObjects.IterateAction_Reverse((x) => x.OnEntityExit(e));
 
             entity = null;
 
@@ -141,7 +132,7 @@ public class Cell
 
         if (World.tileMap.CurrentMap != null)
         {
-            World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, mos.objectBase.pathfindingCost);
+            World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, mos.PathCost);
         }
     }
 
@@ -149,7 +140,7 @@ public class Cell
     {
         if (World.tileMap.CurrentMap != null)
         {
-            World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, -mos.objectBase.pathfindingCost);
+            World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, -mos.PathCost);
         }
 
         mapObjects.Remove(mos);
@@ -166,13 +157,9 @@ public class Cell
 
     public bool Reset(TileMap_Data oldMap, TileMap_Data newMap)
     {
+        mapObjects.IterateAction_Reverse((x) => RemoveObject(x));
+
         entity = null;
-
-        for (int i = 0; i < mapObjects.Count; i++)
-        {
-            RemoveObject(mapObjects[i]);
-        }
-
         InSight = false;
         hasSeen = false;
 

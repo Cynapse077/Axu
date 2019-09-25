@@ -308,7 +308,7 @@ public static class SpawnController
     //Summon a random minion from a particular group
     public static void SummonFromGroup(string groupName, Coord localPosition)
     {
-        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(groupName) as GroupBlueprint;
+        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(groupName);
         SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
 
         NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, World.tileMap.CurrentMap.mapInfo.position, localPosition);
@@ -444,13 +444,13 @@ public static class SpawnController
 
     public static void SpawnFromGroupName(string name, int amount = 1)
     {
-        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(name) as GroupBlueprint;
+        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(name);
         SpawnSingleGroup(gbp, amount);
     }
 
     public static List<NPC> SpawnFromGroupNameAt(string name, int amount, Coord position, int elevation)
     {
-        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(name) as GroupBlueprint;
+        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(name);
         SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
         List<NPC> spawned = new List<NPC>();
 

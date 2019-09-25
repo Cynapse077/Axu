@@ -16,10 +16,16 @@ public class MapObjectBlueprint : IAsset
     public Container container;
     public Dictionary<string, LuaCall> luaEvents;
     public ObjectPulseInfo pulseInfo;
-    public ProgressFlags[] permissions;
+    public string[] permissions;
     public bool saved = true;
-    public ObjectRenderLayer renderLayer;
     public bool displayInEditor = true;
+    public ObjectRenderLayer renderLayer;
+
+    //For storedObject in Quests
+    public Coord localPosition;
+    public string zone;
+    public int elevation;
+    public List<string> inventory;
 
     public MapObjectBlueprint()
     {
@@ -43,6 +49,24 @@ public class MapObjectBlueprint : IAsset
         tint = color;
     }
 
+    public bool PermissionsMatch()
+    {
+        if (ObjectManager.playerJournal == null)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < permissions.Length; i++)
+        {
+            if (!ObjectManager.playerJournal.HasFlag(permissions[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     void Defaults()
     {
         Name = "";
@@ -59,7 +83,7 @@ public class MapObjectBlueprint : IAsset
         light = 0;
         solid = MapOb_Interactability.No;
         luaEvents = new Dictionary<string, LuaCall>();
-        permissions = new ProgressFlags[0];
+        permissions = new string[0];
         saved = true;
         displayInEditor = true;
     }
@@ -90,14 +114,9 @@ public class MapObjectBlueprint : IAsset
 
     public void FromJson(JsonData dat)
     {
-        if (dat.ContainsKey("Base"))
+        if (dat.ContainsKey("Base") && GameData.TryGet(dat["Base"].ToString(), out MapObjectBlueprint baseBP))
         {
-            MapObjectBlueprint other = GameData.Get<MapObjectBlueprint>(dat["Base"].ToString()) as MapObjectBlueprint;
-
-            if (other != null)
-            {
-                CopyFrom(other);
-            }
+            CopyFrom(baseBP);
         }
 
         if (dat.ContainsKey("Name"))
@@ -152,7 +171,7 @@ public class MapObjectBlueprint : IAsset
 
         if (dat.ContainsKey("Permissions"))
         {
-            List<ProgressFlags> flags = new List<ProgressFlags>();
+            List<string> flags = new List<string>();
 
             if (permissions != null)
             {
@@ -164,8 +183,7 @@ public class MapObjectBlueprint : IAsset
 
             for (int j = 0; j < dat["Permissions"].Count; j++)
             {
-                string perm = dat["Permissions"][j].ToString();
-                flags.Add(perm.ToEnum<ProgressFlags>());
+                flags.Add(dat["Permissions"][j].ToString());
             }
 
             permissions = flags.ToArray();
@@ -187,6 +205,11 @@ public class MapObjectBlueprint : IAsset
                 luaEvents.Add(key, lc);
             }
         }
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        yield break;
     }
 
     public enum MapOb_Interactability

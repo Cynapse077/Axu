@@ -21,11 +21,6 @@ public static class EntityList
         humanoidStructure = GetBodyStructure("Humanoid");
     }
 
-    public static NPC_Blueprint GetBlueprintByID(string search)
-    {
-        return GameData.Get<NPC_Blueprint>(search) as NPC_Blueprint;
-    }
-
     public static NPC GetNPCByID(string id, Coord worldPos, Coord localPos, int elevation = 0)
     {
         if (elevation == 0)

@@ -33,7 +33,7 @@ public class TooltipPanel : MonoBehaviour
         Color c = image.color;
         c.a = 1.0f;
 
-        if (!display || item == null || item.Name == ItemList.GetNone().Name)
+        if (!display || item.IsNullOrDefault())
         {
             c.a = 0.0f;
             image.color = c;

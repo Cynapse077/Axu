@@ -18,6 +18,12 @@ public class Quest : EventContainer, IAsset
     public bool failOnDeath;
     public bool sequential;
 
+    //Stored objects
+    public int storedNPCUID { get; private set; } = -1;
+    public int storedObjectUID { get; private set; } = -1;
+    NPC_Blueprint storedNPCBlueprint;
+    MapObjectBlueprint storedObjectBlueprint;
+
     public bool isComplete
     {
         get
@@ -50,6 +56,22 @@ public class Quest : EventContainer, IAsset
             }
 
             return null;
+        }
+    }
+
+    public NPC StoredNPC
+    {
+        get
+        {
+            return World.objectManager.npcClasses.Find(x => x.UID == storedNPCUID) ?? null;
+        }
+    }
+
+    public MapObject StoredObject
+    {
+        get
+        {
+            return World.objectManager.mapObjects.Find(x => x.UID == storedObjectUID) ?? null;
         }
     }
 
@@ -106,6 +128,8 @@ public class Quest : EventContainer, IAsset
         }
 
         turnsToFail = s.turnsToFail;
+        storedNPCUID = s.storedNPCUID;
+        storedObjectUID = s.storedObjectUID;
     }
 
     void CopyFrom(Quest other)
@@ -124,6 +148,10 @@ public class Quest : EventContainer, IAsset
         failOnDeath = other.failOnDeath;
         sequential = other.sequential;
         turnsToFail = other.turnsToFail;
+        storedNPCUID = other.storedNPCUID;
+        storedObjectUID = other.storedObjectUID;
+        storedNPCBlueprint = other.storedNPCBlueprint;
+        storedObjectBlueprint = other.storedObjectBlueprint;
 
         if (other.goals != null)
         {
@@ -143,6 +171,16 @@ public class Quest : EventContainer, IAsset
         Name = q["Name"].ToString();
         ID = q["ID"].ToString();
         Description = q["Description"].ToString();
+
+        if (q.ContainsKey("Stored NPC"))
+        {
+            NewUniqueNPC(q["Stored NPC"]);
+        }
+
+        if (q.ContainsKey("Stored Object"))
+        {
+            NewUniqueObject(q["Stored Object"]);
+        }
 
         if (q.ContainsKey("Steps"))
         {
@@ -195,11 +233,10 @@ public class Quest : EventContainer, IAsset
 
         if (q.ContainsKey("Rewards"))
         {
-            int xp, money = 0;
             string[] items = new string[0];
 
-            q["Rewards"].TryGetInt("XP", out xp);
-            q["Rewards"].TryGetInt("Money", out money);
+            q["Rewards"].TryGetInt("XP", out int xp);
+            q["Rewards"].TryGetInt("Money", out int money);
 
             if (q["Rewards"].ContainsKey("Items"))
             {
@@ -213,6 +250,100 @@ public class Quest : EventContainer, IAsset
 
             rewards = new QuestReward(xp, money, items);
         }
+    }
+
+    //Set storedObjectUID
+    public void NewUniqueObject(JsonData dat)
+    {
+        string id = string.Empty;
+
+        if (dat.ContainsKey("ID"))
+        {
+            id = dat["ID"].ToString();
+        }
+        else if (dat.ContainsKey("Random From"))
+        {
+            int ran = SeedManager.combatRandom.Next(0, dat["Random From"].Count);
+            id = dat["Random From"][ran].ToString();
+        }
+
+        MapObjectBlueprint bp = new MapObjectBlueprint(GameData.Get<MapObjectBlueprint>(id));
+
+        if (bp == null)
+        {
+            Log.Error("Quest \"" + ID + "\" - could not spawn object with ID \"" + id + "\"");
+            return;
+        }
+
+        bp.zone = dat["Zone"].ToString();
+        dat.TryGetInt("Elevation", out bp.elevation, 0);
+
+        Coord position = new Coord(SeedManager.combatRandom.Next(0, Manager.localMapSize.x), SeedManager.combatRandom.Next(0, Manager.localMapSize.y));
+        dat.TryGetCoord("Position", out position, position);
+        bp.localPosition = position;
+
+        List<string> inventory = new List<string>();
+
+        if (dat.ContainsKey("Inventory"))
+        {
+            for (int i = 0; i < dat["Inventory"].Count; i++)
+            {
+                Item item = ItemList.GetItemByID(dat["Inventory"][i].ToString());
+
+                if (!item.IsNullOrDefault())
+                {
+                    inventory.Add(dat["Inventory"][i].ToString());
+                }
+            }
+        }
+
+        bp.inventory = inventory;
+        storedObjectBlueprint = bp;
+    }
+
+    //Set storedNPCUID
+    public void NewUniqueNPC(JsonData dat)
+    {
+        string id = string.Empty;
+
+        if (dat.ContainsKey("ID"))
+        {
+            id = dat["ID"].ToString();
+        }
+        else if (dat.ContainsKey("Random From"))
+        {
+            int ran = SeedManager.combatRandom.Next(0, dat["Random From"].Count);
+            id = dat["Random From"][ran].ToString();
+        }
+
+        NPC_Blueprint bp = new NPC_Blueprint(GameData.Get<NPC_Blueprint>(id));
+
+        if (bp == null)
+        {
+            Log.Error("Quest \"" + ID + "\" - could not spawn NPC with ID \"" + id + "\"");
+            return;
+        }
+
+        if (dat.ContainsKey("Name"))
+        {
+            if (dat["Name"].ToString() == "Random")
+            {
+                bp.flags.Add(NPC_Flags.Named_NPC);
+            }
+            else
+            {
+                bp.name = dat["Name"].ToString();
+            }
+        }
+
+        dat.TryGetString("Zone", out bp.zone, bp.zone);
+        dat.TryGetInt("Elevation", out bp.elevation, 0);
+
+        Coord position = new Coord(SeedManager.combatRandom.Next(1, Manager.localMapSize.x), SeedManager.combatRandom.Next(1, Manager.localMapSize.y));
+        dat.TryGetCoord("Position", out position, position);
+        bp.localPosition = position;
+
+        storedNPCBlueprint = bp;
     }
 
     Goal GetQuestGoalFromJson(JsonData q)
@@ -245,6 +376,11 @@ public class Quest : EventContainer, IAsset
             case "Talk To":
                 string npcToTalkTo = q["NPC"].ToString();
 
+                if (npcToTalkTo == "Stored NPC")
+                {
+                    return new TalkToStoredNPCGoal(this, desc);
+                }
+
                 return new TalkToGoal(this, npcToTalkTo, desc);
 
             case "Kill Spawned":
@@ -268,6 +404,9 @@ public class Quest : EventContainer, IAsset
                 int interactAmount = (int)q["Amount"];
 
                 return new InteractGoal(this, objType, q["Coordinate"].ToString(), interactEle, interactAmount, desc);
+
+            case "Interact With Stored Object":
+                return new InteractUIDGoal(this, desc);
 
             case "Choice":
                 List<Goal> goals = new List<Goal>();
@@ -319,6 +458,24 @@ public class Quest : EventContainer, IAsset
         {
             if (!skipEvent)
             {
+                //Spawn stored NPC.
+                if (storedNPCBlueprint != null)
+                {
+                    Coord wPos = World.tileMap.worldMap.GetRandomLandmark(storedNPCBlueprint.zone);
+                    NPC n = new NPC(storedNPCBlueprint, wPos, storedNPCBlueprint.localPosition, storedNPCBlueprint.elevation);
+                    storedNPCUID = n.UID;
+                    World.objectManager.SpawnNPC(n);
+                }
+
+                //Spawn stored Object
+                if (storedObjectBlueprint != null)
+                {
+                    Coord wPos = World.tileMap.worldMap.GetRandomLandmark(storedObjectBlueprint.zone);
+                    MapObject m = new MapObject(storedObjectBlueprint, storedObjectBlueprint.localPosition, wPos, storedObjectBlueprint.elevation);
+                    storedObjectUID = m.UID;
+                    World.objectManager.SpawnObject(m);
+                }
+
                 RunEvent(this, QuestEvent.EventType.OnStart);
             }
 
@@ -379,12 +536,18 @@ public class Quest : EventContainer, IAsset
 
         if (!string.IsNullOrEmpty(chainedQuest))
         {
-            ObjectManager.playerJournal.StartQuest(QuestList.GetByID(chainedQuest), true);
+            ObjectManager.playerJournal.StartQuest(QuestList.GetByID(chainedQuest));
         }
 
         if (!string.IsNullOrEmpty(endDialogue))
         {
             Alert.CustomAlert_WithTitle("Quest Complete", endDialogue);
+        }
+
+        if (StoredNPC != null)
+        {
+            Entity ent = World.objectManager.GetEntityFromNPC(StoredNPC);
+            World.objectManager.DemolishNPC(ent, StoredNPC);
         }
     }
 
@@ -400,6 +563,32 @@ public class Quest : EventContainer, IAsset
 
         RunEvent(this, QuestEvent.EventType.OnFail);
         ObjectManager.playerJournal.FailQuest(this);
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (Name.NullOrEmpty())
+        {
+            yield return "Name not set.";
+        }
+
+        if (Description.NullOrEmpty())
+        {
+            yield return "Description not set.";
+        }
+
+        //Goals can be null, in instances where we want to fill in the goal list at runtime.
+        if (goals != null)
+        {
+            foreach (Goal g in goals)
+            {
+                IEnumerable<string> errors = g.LoadErrors();
+                foreach (string error in errors)
+                {
+                    yield return error;
+                }
+            }
+        }        
     }
 
     public SQuest ToSQuest()
@@ -430,6 +619,8 @@ public class SQuest
     public SQuestStep[] comp; //Completeness of steps
     public int[] sp; //Spawned npcs
     public int turnsToFail = -999;
+    public int storedNPCUID = -1;
+    public int storedObjectUID = -1;
 
     public SQuest() { }
 
@@ -441,9 +632,7 @@ public class SQuest
 
         for (int i = 0; i < q.goals.Length; i++)
         {
-            GoToGoal_Specific sp = q.goals[i] as GoToGoal_Specific;
-
-            if (sp != null)
+            if (q.goals[i] is GoToGoal_Specific sp)
             {
                 storedGoal = sp.Destination();
             }
@@ -459,6 +648,8 @@ public class SQuest
         }
 
         turnsToFail = q.turnsToFail;
+        storedNPCUID = q.storedNPCUID;
+        storedObjectUID = q.storedObjectUID;
     }
 
     public struct SQuestStep

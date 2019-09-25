@@ -22,7 +22,7 @@ public class PlayerBuilder
     public List<Quest> quests;
     public List<string> completedQuests;
     public List<string> killedStaticNPCs;
-    public List<ProgressFlags> progressFlags;
+    public List<string> progressFlags;
     public PlayerCharacter playerClone;
      
     public PlayerBuilder()
@@ -47,7 +47,7 @@ public class PlayerBuilder
         handItems = new List<Item>();
         quests = new List<Quest>();
         completedQuests = new List<string>();
-        progressFlags = new List<ProgressFlags>();
+        progressFlags = new List<string>();
         playerClone = null;
     }
 

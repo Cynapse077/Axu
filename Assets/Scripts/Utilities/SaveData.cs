@@ -216,93 +216,97 @@ public class SaveData : MonoBehaviour
         Manager.playerBuilder.firearm = GetItemFromJsonData(playerJson["F"]);
     }
 
-    public static List<BodyPart> GetBodyPartsFromJson(JsonData bpJson)
+    public static List<BodyPart> GetBodyPartsFromJson(JsonData dat)
     {
         List<BodyPart> parts = new List<BodyPart>();
 
-        for (int i = 0; i < bpJson.Count; i++)
+        for (int i = 0; i < dat.Count; i++)
         {
-            if (!bpJson[i].ContainsKey("Name") || !bpJson[i].ContainsKey("Att"))
+            if (!dat[i].ContainsKey("Name") || !dat[i].ContainsKey("Att"))
             {
                 continue;
             }
 
-            BodyPart bp = new BodyPart(bpJson[i]["Name"].ToString(), (bool)bpJson[i]["Att"])
+            BodyPart bp = new BodyPart(dat[i]["Name"].ToString(), (bool)dat[i]["Att"])
             {
-                armor = (int)bpJson[i]["Ar"],
+                armor = (int)dat[i]["Ar"],
                 Attributes = new List<Stat_Modifier>()
             };
 
-            int slot = (int)bpJson[i]["Slot"];
+            int slot = (int)dat[i]["Slot"];
             bp.slot = (ItemProperty)slot;
 
-            if (bpJson[i].ContainsKey("Hnd"))
+            if (dat[i].ContainsKey("Hnd"))
             {
-                string baseItem = bpJson[i]["Hnd"]["bItem"].ToString();
+                string baseItem = dat[i]["Hnd"]["bItem"].ToString();
                 bp.hand = new BodyPart.Hand(bp, ItemList.GetItemByID(baseItem), baseItem);
             }
 
-            if (bpJson[i].ContainsKey("Stats") && bpJson[i]["Stats"].Count > 0)
+            if (dat[i].ContainsKey("Stats") && dat[i]["Stats"].Count > 0)
             {
-                for (int j = 0; j < bpJson[i]["Stats"].Count; j++)
+                for (int j = 0; j < dat[i]["Stats"].Count; j++)
                 {
-                    bp.Attributes.Add(new Stat_Modifier(bpJson[i]["Stats"][j]["Stat"].ToString(), (int)bpJson[i]["Stats"][j]["Amount"]));
+                    bp.Attributes.Add(new Stat_Modifier(dat[i]["Stats"][j]["Stat"].ToString(), (int)dat[i]["Stats"][j]["Amount"]));
                 }
             }
 
             //Cybernetic
-            if (bpJson[i].ContainsKey("Cyb"))
+            if (dat[i].ContainsKey("Cyb"))
             {
-                if (bpJson[i]["Cyb"].ToString() != "")
+                string cybName = dat[i]["Cyb"].ToString();
+
+                if (!cybName.NullOrEmpty())
                 {
-                    Cybernetic cyb = Cybernetic.GetCybernetic(bpJson[i]["Cyb"].ToString());
-                    bp.cybernetic = cyb;
-                    cyb.bodyPart = bp;
+                    Cybernetic cyb = Cybernetic.GetCybernetic(cybName);
+
+                    if (cyb != null)
+                    {
+                        bp.cybernetic = cyb;
+                        cyb.bodyPart = bp;
+                    }
                 }
             }
 
             //body part levels/xp
-            if (bpJson[i].ContainsKey("Lvl"))
+            if (dat[i].ContainsKey("Lvl"))
             {
-                bp.level = (int)bpJson[i]["Lvl"];
+                bp.level = (int)dat[i]["Lvl"];
             }
 
-            if (bpJson[i].ContainsKey("XP"))
+            if (dat[i].ContainsKey("XP"))
             {
-                bp.SetXP((double)bpJson[i]["XP"][0], (double)bpJson[i]["XP"][1]);
+                bp.SetXP((double)dat[i]["XP"][0], (double)dat[i]["XP"][1]);
             }
 
-            bp.flags = bpJson[i].ContainsKey("Flgs") ? (BodyPart.BPTags)(int)bpJson[i]["Flgs"] : BodyPart.BPTags.None;
+            bp.flags = dat[i].ContainsKey("Flgs") ? (BodyPart.BPTags)(int)dat[i]["Flgs"] : BodyPart.BPTags.None;
 
             //Wounds
             bp.wounds = new List<Wound>();
-            if (bpJson[i].ContainsKey("Wounds"))
+            if (dat[i].ContainsKey("Wounds"))
             {
-                for (int j = 0; j < bpJson[i]["Wounds"].Count; j++)
+                for (int j = 0; j < dat[i]["Wounds"].Count; j++)
                 {
-                    ItemProperty ip = (bpJson[i]["Wounds"][j]["slot"].ToString()).ToEnum<ItemProperty>();
+                    JsonData wound = dat[i]["Wounds"][j];
+                    ItemProperty woundSlot = wound["slot"].ToString().ToEnum<ItemProperty>();
                     List<DamageTypes> dts = new List<DamageTypes>();
 
-                    for (int k = 0; k < bpJson[i]["Wounds"][j]["damTypes"].Count; k++)
+                    for (int k = 0; k < wound["damTypes"].Count; k++)
                     {
-                        dts.Add((bpJson[i]["Wounds"][j]["damTypes"][k].ToString()).ToEnum<DamageTypes>());
+                        dts.Add(wound["damTypes"][k].ToString().ToEnum<DamageTypes>());
                     }
 
-                    Wound w = new Wound(bpJson[i]["Wounds"][j]["Name"].ToString(), bpJson[i]["Wounds"][j]["ID"].ToString(), ip, dts)
-                    {
-                        Desc = bpJson[i]["Wounds"][j]["Desc"].ToString()
-                    };
+                    Wound w = new Wound(wound["Name"].ToString(), wound["ID"].ToString(), woundSlot, dts);
 
-                    for (int k = 0; k < bpJson[i]["Wounds"][j]["statMods"].Count; k++)
+                    for (int k = 0; k < wound["statMods"].Count; k++)
                     {
-                        w.statMods.Add(new Stat_Modifier(bpJson[i]["Wounds"][j]["statMods"][k]["Stat"].ToString(), (int)bpJson[i]["Wounds"][j]["statMods"][k]["Amount"]));
+                        w.statMods.Add(new Stat_Modifier(wound["statMods"][k]["Stat"].ToString(), (int)wound["statMods"][k]["Amount"]));
                     }
 
                     bp.wounds.Add(w);
                 }
             }
 
-            bp.equippedItem = GetItemFromJsonData(bpJson[i]["item"]);
+            bp.equippedItem = GetItemFromJsonData(dat[i]["item"]);
             parts.Add(bp);
         }
 
@@ -316,14 +320,12 @@ public class SaveData : MonoBehaviour
             Manager.playerBuilder.quests.Add(GetQuest(playerJson["Quests"][i]));
         }
 
-        Manager.playerBuilder.progressFlags = new List<ProgressFlags>();
+        Manager.playerBuilder.progressFlags = new List<string>();
         if (playerJson.ContainsKey("Flags"))
         {
             for (int i = 0; i < playerJson["Flags"].Count; i++)
             {
-                int s = (int)playerJson["Flags"][i];
-                ProgressFlags p = (ProgressFlags)s;
-                Manager.playerBuilder.progressFlags.Add(p);
+                Manager.playerBuilder.progressFlags.Add(playerJson["Flags"][i].ToString());
             }
         }
 
@@ -359,7 +361,7 @@ public class SaveData : MonoBehaviour
         for (int i = 0; i < playerJson["Skills"].Count; i++)
         {
             string sID = playerJson["Skills"][i]["Name"].ToString();
-            Ability s = new Ability(GameData.Get<Ability>(sID) as Ability);
+            Ability s = new Ability(GameData.Get<Ability>(sID));
 
             playerJson["Skills"][i].TryGetInt("Lvl", out s.level);
             s.XP = (double)playerJson["Skills"][i]["XP"];

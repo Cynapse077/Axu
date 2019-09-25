@@ -335,7 +335,7 @@ public class CharacterCreation : MonoBehaviour
 
         for (int z = 0; z < p.skills.Count; z++)
         {
-            Ability s = new Ability(GameData.Get<Ability>(p.skills[z].Name) as Ability);
+            Ability s = new Ability(GameData.Get<Ability>(p.skills[z].Name));
             GameObject g = SimplePool.Spawn(textPrefab, abilAnchor);
             g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", s.Name, s.Description);
         }
@@ -588,7 +588,7 @@ public class CharacterCreation : MonoBehaviour
 
         for (int i = 0; i < currentProf.skills.Count; i++)
         {
-            Ability s = new Ability(GameData.Get<Ability>(currentProf.skills[i].Name) as Ability);
+            Ability s = new Ability(GameData.Get<Ability>(currentProf.skills[i].Name));
             FlagsHelper.Set(ref s.origin, Ability.AbilityOrigin.Book);
 
             Manager.playerBuilder.abilities.Add(s);

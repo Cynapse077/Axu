@@ -29,7 +29,11 @@ public class MapObjectSprite : MonoBehaviour
 
     public string objectType
     {
-        get { return objectBase.objectType; }
+        get { return objectBase.blueprint.objectType; }
+    }
+    public int PathCost
+    {
+        get { return objectBase.blueprint.pathCost; }
     }
 
     void Start()
@@ -103,7 +107,7 @@ public class MapObjectSprite : MonoBehaviour
                 break;
         }
 
-        if (objectBase.solid)
+        if (objectBase.Solid)
         {
             cell.SetUnwalkable();
         }
@@ -115,13 +119,14 @@ public class MapObjectSprite : MonoBehaviour
 
         if (bp.light != 0)
         {
+            SetLit(false);
             lightSource = new LightSource(bp.light);
             SetLit(true);
         }
 
         if (bp.autotile) 
         {
-            Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID).texture;
+            Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectType).spriteID).texture;
             spriteRenderer.sprite = Sprite.Create(t, new Rect(SpriteRect), Pivot, AutotileSpriteSize);
             Autotile(true);
         }
@@ -191,7 +196,7 @@ public class MapObjectSprite : MonoBehaviour
 
     public void ReceivePulse(Coord previous, int moveCount, bool pulseOn)
     {
-        if (objectBase.pulseInfo.receive)
+        if (objectBase.blueprint.pulseInfo.receive)
         {
             if (isDoor_Closed && pulseOn)
             {
@@ -205,9 +210,9 @@ public class MapObjectSprite : MonoBehaviour
 
             on = pulseOn;
 
-            if (objectBase.pulseInfo.send)
+            if (objectBase.blueprint.pulseInfo.send)
             {
-                if (objectBase.pulseInfo.reverse)
+                if (objectBase.blueprint.pulseInfo.reverse)
                 {
                     on = !on;
                 }
@@ -247,7 +252,7 @@ public class MapObjectSprite : MonoBehaviour
             AutotileAdjacent();
         }
 
-        Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.objectType).spriteID).texture;
+        Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.blueprint.objectType).spriteID).texture;
         spriteRenderer.sprite = Sprite.Create(t, new Rect(xOffset, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
     }
 
@@ -271,7 +276,7 @@ public class MapObjectSprite : MonoBehaviour
 
     bool CanAutotile(MapObject other)
     {
-        return (other.objectType == objectType);
+        return (other.blueprint.objectType == objectType);
     }
 
     int BitwiseNeighbors()
@@ -298,8 +303,7 @@ public class MapObjectSprite : MonoBehaviour
 
     public void SetTypeAndSwapSprite(string t)
     {
-        objectBase.objectType = t;
-        MapObjectBlueprint bp = ItemList.GetMOB(objectBase.objectType);
+        MapObjectBlueprint bp = ItemList.GetMOB(t);
 
         if (bp != null)
         {
@@ -308,17 +312,17 @@ public class MapObjectSprite : MonoBehaviour
                 World.turnManager.incrementTurnCounter -= OnTurn;
             }
 
-            if (objectBase.pathfindingCost != 0)
+            if (objectBase.blueprint.pathCost != 0)
             {
-                World.tileMap.GetCellAt(localPos.x, localPos.y).EditPathCost(-objectBase.pathfindingCost);
+                World.tileMap.GetCellAt(localPos.x, localPos.y).EditPathCost(-objectBase.blueprint.pathCost);
             }
 
-            objectBase.ReInitialize(bp);
+            objectBase.SetBlueprint(bp);
             GrabFromBlueprint(bp);
 
-            if (objectBase.pathfindingCost != 0)
+            if (objectBase.blueprint.pathCost != 0)
             {
-                World.tileMap.GetCellAt(localPos.x, localPos.y).EditPathCost(objectBase.pathfindingCost);
+                World.tileMap.GetCellAt(localPos.x, localPos.y).EditPathCost(objectBase.blueprint.pathCost);
             }
         }
     }
@@ -336,25 +340,28 @@ public class MapObjectSprite : MonoBehaviour
 
     void SetLit(bool lit)
     {
-        if (lightSource != null)
+        if (lightSource == null)
         {
-            int rad = lightSource.radius;
+            return;
+        }
 
-            for (int x = objectBase.localPosition.x - rad; x <= objectBase.localPosition.x + rad; x++)
+        int rad = lightSource.radius;
+        Coord lPos = objectBase.localPosition;
+
+        for (int x = lPos.x - rad; x <= lPos.x + rad; x++)
+        {
+            for (int y = lPos.y - rad; y <= lPos.y + rad; y++)
             {
-                for (int y = objectBase.localPosition.y - rad; y <= objectBase.localPosition.y + rad; y++)
+                if (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y)
                 {
-                    if (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    float dist = objectBase.localPosition.DistanceTo(new Coord(x, y));
+                float dist = lPos.DistanceTo(new Coord(x, y));
 
-                    if (dist <= rad && Line.inSight(objectBase.localPosition, x, y))
-                    {
-                        World.tileMap.tileRenderers[x, y].lit = lit;
-                    }
+                if (dist <= rad && Line.inSight(lPos, x, y))
+                {
+                    World.tileMap.tileRenderers[x, y].lit = lit;
                 }
             }
         }
@@ -389,7 +396,7 @@ public class MapObjectSprite : MonoBehaviour
 
     public void UpdateVisuals()
     {
-        if ((objectBase.objectType == "Campfire" || objectType == "Brazier") && fi != null)
+        if ((objectType == "Campfire" || objectType == "Brazier") && fi != null)
         {
             fi.enabled = inSight;
         }
@@ -437,7 +444,7 @@ public class MapObjectSprite : MonoBehaviour
 
     Sprite SwitchSprite(Item item)
     {
-        string id = (string.IsNullOrEmpty(item.renderer.onGround)) ? ItemList.GetMOB(objectBase.objectType).spriteID : item.renderer.onGround;
+        string id = (string.IsNullOrEmpty(item.renderer.onGround)) ? ItemList.GetMOB(objectType).spriteID : item.renderer.onGround;
         return SpriteManager.GetObjectSprite(id);
     }
 
@@ -470,7 +477,7 @@ public class MapObjectSprite : MonoBehaviour
                     World.objectManager.RemoveObject(objectBase, gameObject);
                     Destroy(gameObject);
                 }
-                else if (objectBase.objectType == "Pool" && inv.items.Count == 1 && inv.items[0].HasCComponent<CLiquidContainer>())
+                else if (objectBase.blueprint.objectType == "Pool" && inv.items.Count == 1 && inv.items[0].HasCComponent<CLiquidContainer>())
                 {
                     CLiquidContainer cl = inv.items[0].GetCComponent<CLiquidContainer>();
 
@@ -505,104 +512,48 @@ public class MapObjectSprite : MonoBehaviour
         }
     }
 
-    public void OpenDoor(bool isPlayer)
-    {
-        //Regular
-        if (objectType == "Door_Closed")
-        {
-            SetTypeAndSwapSprite("Door_Open");
-        }
-
-        if (!isPlayer)
-        {
-            return;
-        }
-
-        //ensis
-        if (objectType == "Ensis_Door_Closed")
-        {
-            if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Can_Enter_Ensis))
-                SetTypeAndSwapSprite("Ensis_Door_Open");
-            else
-            {
-                Alert.NewAlert("Locked");
-                ObjectManager.playerEntity.CancelWalk();
-                return;
-            }
-        }
-
-        //Prison
-        if (objectType == "Prison_Door_Closed")
-        {
-            if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Can_Open_Prison_Cells))
-                SetTypeAndSwapSprite("Prison_Door_Open");
-            else
-            {
-                Alert.NewAlert("Locked");
-                ObjectManager.playerEntity.CancelWalk();
-                return;
-            }
-        }
-
-        //Magna
-        else if (objectType == "Magna_Door_Closed")
-        {
-            if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Can_Enter_Magna))
-                SetTypeAndSwapSprite("Magna_Door_Open");
-            else
-            {
-                Alert.NewAlert("Locked");
-                ObjectManager.playerEntity.CancelWalk();
-                return;
-            }
-        }
-
-        //Fabrication Plant 
-        else if (objectType == "Kin_Door_Closed")
-        {
-            if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Can_Enter_Fab))
-                SetTypeAndSwapSprite("Kin_Door_Open");
-            else
-            {
-                Alert.NewAlert("Locked");
-                ObjectManager.playerEntity.CancelWalk();
-                return;
-            }
-        }
-
-        //Doors only open-able by switches and wires.
-        else if (objectType == "Elec_Door_Closed")
-        {
-            Alert.NewAlert("Locked");
-            ObjectManager.playerEntity.CancelWalk();
-            return;
-        }
-        
-        World.soundManager.OpenDoor();
-        World.tileMap.SoftRebuild();
-    }
-
     public bool isDoor_Open
     {
-        get { return (objectType.ToString().Contains("Door_Open")); }
+        get { return objectType.ToString().Contains("Door_Open"); }
     }
 
     public bool isDoor_Closed
     {
-        get { return (objectType.ToString().Contains("Door_Closed")); }
+        get { return objectType.ToString().Contains("Door_Closed"); }
     }
 
     public void Interact()
     {
-        EventHandler.instance.OnInteract(objectBase);
-
-        /*for (int i = 0; i < objectBase.permissions.Length; i++)
+        if (isDoor_Closed)
         {
-            if (!ObjectManager.playerJournal.HasFlag(objectBase.permissions[i]))
+            bool opened = objectBase.blueprint.PermissionsMatch();
+
+            if (opened)
             {
-                return;
+                string newObjectType = objectType.Replace("Closed", "Open");
+                SetTypeAndSwapSprite(newObjectType);
+                World.soundManager.OpenDoor();
+                World.tileMap.SoftRebuild();
             }
-        }*/
+            else
+            {
+                Alert.NewAlert("Locked");
+                ObjectManager.playerEntity.CancelWalk();
+            }
+        }
+        else
+        {
+            for (int i = 0; i < objectBase.blueprint.permissions.Length; i++)
+            {
+                if (!ObjectManager.playerJournal.HasFlag(objectBase.blueprint.permissions[i]))
+                {
+                    CombatLog.NewMessage("You don't know what to do with it.");
+                    return;
+                }
+            }
+        }
+
+        EventHandler.instance.OnInteract(objectBase);
 
         if (objectBase.HasEvent("OnInteract"))
         {
@@ -642,8 +593,8 @@ public class MapObjectSprite : MonoBehaviour
                     () => {
                         World.userInterface.CloseWindows();
                         SetTypeAndSwapSprite("Bookshelf_Empty");
-                        Book book = GameData.GetRandom<Book>() as Book;
-                        if (book != null)
+
+                        if (GameData.GetRandom<Book>() is Book book)
                         {
                             book.Read();
                         }
@@ -677,7 +628,7 @@ public class MapObjectSprite : MonoBehaviour
                         break;
                     }
 
-                    NPC_Blueprint bp = EntityList.GetBlueprintByID("hauler");
+                    NPC_Blueprint bp = GameData.Get<NPC_Blueprint>("hauler");
 
                     if (bp == null)
                     {
@@ -700,6 +651,11 @@ public class MapObjectSprite : MonoBehaviour
                 {
                     CombatLog.NewMessage("This Hauler is currently offline. It seems to be missing something.");
                 }
+
+                break;
+
+            case "Headstone":
+                Alert.CustomAlert_WithTitle("Obituary", ObituaryCreator.GetNewObituary(World.tileMap.WorldPosition, localPos));
 
                 break;
         }
@@ -732,7 +688,7 @@ public class MapObjectSprite : MonoBehaviour
 
     public string Description
     {
-        get { return objectBase.description; }
+        get { return objectBase.blueprint.description; }
     }
 
     public void SetParams(bool insight, bool hasseen)

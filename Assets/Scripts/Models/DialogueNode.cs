@@ -27,6 +27,14 @@ public class DialogueSingle : IAsset
             }
         } 
     }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (dialogues == null)
+        {
+            yield return "No dialogues added.";
+        }
+    }
 }
 
 public class DialogueNode : IAsset
@@ -34,14 +42,14 @@ public class DialogueNode : IAsset
     public string ID { get; set; }
     public string ModID { get; set; }
     public string display;
-    public List<DialogueResponse> options;
+    public DialogueResponse[] options;
     public LuaCall onSelect;
 
     public DialogueNode()
     {
         ID = "null";
         display = "ERROR";
-        options = new List<DialogueResponse>()
+        options = new DialogueResponse[]
             {
                 new DialogueResponse("End", "End")
             };
@@ -49,7 +57,6 @@ public class DialogueNode : IAsset
 
     public DialogueNode(JsonData dat)
     {
-        options = new List<DialogueResponse>();
         FromJson(dat);
     }
 
@@ -60,12 +67,17 @@ public class DialogueNode : IAsset
         if (dat.ContainsKey("Display"))
             display = dat["Display"].ToString();
         
-        for (int i = 0; i < dat["Responses"].Count; i++)
+        if (dat.ContainsKey("Responses"))
         {
-            string disp = dat["Responses"][i]["Display"].ToString();
-            string nextID = dat["Responses"][i]["GoTo"].ToString();
+            options = new DialogueResponse[dat["Responses"].Count];
 
-            options.Add(new DialogueResponse(disp, nextID));
+            for (int i = 0; i < dat["Responses"].Count; i++)
+            {
+                string disp = dat["Responses"][i]["Display"].ToString();
+                string nextID = dat["Responses"][i]["GoTo"].ToString();
+
+                options[i] = new DialogueResponse(disp, nextID);
+            }
         }
 
         onSelect = null;
@@ -73,6 +85,19 @@ public class DialogueNode : IAsset
         if (dat.ContainsKey("OnSelect"))
         {
             onSelect = new LuaCall(dat["OnSelect"].ToString());
+        }
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (display.NullOrEmpty())
+        {
+            yield return "Displayed text not set.";
+        }
+
+        if (options == null)
+        {
+            yield return "Dialogue options not set.";
         }
     }
 

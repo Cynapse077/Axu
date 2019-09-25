@@ -56,7 +56,6 @@ namespace Augments
                 }
             }
 
-            Debug.LogError("Could not find cybernetic with ID \"" + id + "\".");
             return null;
         }
 

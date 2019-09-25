@@ -1347,11 +1347,40 @@
 		},
 
         {
+            "Name" : "Messenger",
+            "ID" : "messenger",
+            "Start Dialogue" : "You! I need your help. I have an urgent message that needs to be delivered to someone. Could you do it for me? I'll pay you for your time.",
+            "Description" : "Speak to the marked person.",
+            "Sequential" : true,
+            "Stored NPC" : {
+                "ID" : "scholar",
+                "Zone" : "Village",
+                "Name" : "Random"
+            },
+            "Rewards" : {
+                "Money" : 150
+            },
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "Stored NPC", 
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Open Dialogue" : { "Speaker" : "Stored NPC", "Dialogue" : "You have a message for me?\n\n<i>[You relay the message]</i>\n\nThank you for bringing this to my attention. Let him know I'll get on it right away." }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "headscholar" }
+            ],
+            "End Dialogue" : "They got the message? Excellent. Thank you for your time. Here's some money for your trouble."
+        },
+
+        {
             "Name" : "Revealed Location",
             "ID" : "location_map",
-            "Start Dialogue" : "Your map has revealed a location!",
-            "Description" : "Travel to the marked location.",
-            "End Dialogue" : "You've found the location marked on your map."
+            "Start Dialogue" : "Your map has revealed a secret area!",
+            "Description" : "Your map has revealed a secret area.",
+            "End Dialogue" : "You've found the location marked on your map.",
+            "Turns To Fail" : 10000
         }
 	]
 }

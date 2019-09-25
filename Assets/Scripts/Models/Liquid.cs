@@ -103,6 +103,11 @@ public class Liquid : IWeighted, IAsset
         }
     }
 
+    public IEnumerable<string> LoadErrors()
+    {
+        yield break;
+    }
+
     public SLiquid ToSLiquid()
     {
         return new SLiquid(ID, units);

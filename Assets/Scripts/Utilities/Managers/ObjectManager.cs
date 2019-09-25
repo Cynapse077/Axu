@@ -437,15 +437,23 @@ public class ObjectManager : MonoBehaviour
     //Spawn an object at a specific screen
     public MapObject NewObjectAtOtherScreen(string type, Coord locPos, Coord worPos, int elevation = 0)
     {
-        MapObject mapOb = new MapObject(type, new Coord(locPos.x, locPos.y), worPos, elevation);
-        mapObjects.Add(mapOb);
+        MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>(type);
 
-        if (!mapOb.onScreen)
+        if (bp != null)
         {
-            SpawnObject(mapOb);
+            MapObject mapOb = new MapObject(bp, new Coord(locPos.x, locPos.y), worPos, elevation);
+            mapObjects.Add(mapOb);
+
+            if (!mapOb.onScreen)
+            {
+                SpawnObject(mapOb);
+            }
+
+            return mapOb;
         }
         
-        return mapOb;
+        
+        return null;
     }
 
     public void CreatePoolOfLiquid(Coord localPos, Coord worldPos, int elev, string liquidID, int amount)
@@ -484,20 +492,22 @@ public class ObjectManager : MonoBehaviour
             }
         }
 
-        if (type == "Tall_Grass" && World.tileMap.IsWaterTile(locPos.x, locPos.y))
+        MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>(type);
+
+        if (bp != null)
         {
-            return null;
+            MapObject mapOb = new MapObject(bp, locPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
+            mapObjects.Add(mapOb);
+
+            if (!mapOb.onScreen)
+            {
+                SpawnObject(mapOb);
+            }
+
+            return mapOb;
         }
 
-        MapObject mapOb = new MapObject(type, locPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
-        mapObjects.Add(mapOb);
-
-        if (!mapOb.onScreen)
-        {
-            SpawnObject(mapOb);
-        }
-        
-        return mapOb;
+        return null;
     }
 
     //Create a new object with an inventory. Return its inventory component.
@@ -517,23 +527,30 @@ public class ObjectManager : MonoBehaviour
             return null;
         }
 
-        MapObject mapOb = new MapObject(type, new Coord(locPos.x, locPos.y), worPos, World.tileMap.currentElevation);
+        MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>(type);
 
-        if (items != null)
+        if (bp != null)
         {
-            mapOb.inv = items;
+            MapObject mapOb = new MapObject(bp, new Coord(locPos.x, locPos.y), worPos, World.tileMap.currentElevation);
+
+            if (items != null)
+            {
+                mapOb.inv = items;
+            }
+
+            mapObjects.Add(mapOb);
+
+            mapOb.onScreen = true;
+            GameObject newObject = Instantiate(objectPrefab, new Vector3(locPos.x, locPos.y, 0), Quaternion.identity);
+            MapObjectSprite mos = newObject.GetComponent<MapObjectSprite>();
+            mos.objectBase = mapOb;
+            onScreenMapObjects.Add(newObject);
+
+            Inventory myInv = newObject.GetComponent<Inventory>();
+            return myInv;
         }
 
-        mapObjects.Add(mapOb);
-
-        mapOb.onScreen = true;
-        GameObject newObject = Instantiate(objectPrefab, new Vector3(locPos.x, locPos.y, 0), Quaternion.identity);
-        MapObjectSprite mos = newObject.GetComponent<MapObjectSprite>();
-        mos.objectBase = mapOb;
-        onScreenMapObjects.Add(newObject);
-
-        Inventory myInv = newObject.GetComponent<Inventory>();
-        return myInv;
+        return null;
     }
 
     public void AddMapObject(MapObject obj)
@@ -551,7 +568,7 @@ public class ObjectManager : MonoBehaviour
 
                     CheckMapObjectInventories();
                 }
-                if (obj.objectType == mapObjects[i].objectType && !mapObjects[i].objectType.Contains("Bloodstain"))
+                if (obj.blueprint.objectType == mapObjects[i].blueprint.objectType && !mapObjects[i].blueprint.objectType.Contains("Bloodstain"))
                 {
                     mapObjects.Remove(obj);
                     return;
@@ -750,7 +767,7 @@ public class ObjectManager : MonoBehaviour
                     if (dist > 2.5f)
                     {
                         Item firearm = bAI.GetComponent<Inventory>().firearm;
-                        if (firearm == null || firearm.Name == ItemList.GetNone().Name)
+                        if (firearm.IsNullOrDefault())
                         {
                             continue;
                         }

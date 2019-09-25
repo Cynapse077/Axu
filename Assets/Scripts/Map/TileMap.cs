@@ -123,7 +123,7 @@ public class TileMap : MonoBehaviour
     public static Sprite[] LoadImageFromStreamingAssets()
     {
         byte[] imageBytes = File.ReadAllBytes(Application.streamingAssetsPath + imagePath);
-        Texture2D tex = new Texture2D(169, 186, TextureFormat.ARGB32, false)
+        Texture2D tex = new Texture2D(0, 0, TextureFormat.ARGB32, false)
         {
             filterMode = FilterMode.Point,
             wrapMode = TextureWrapMode.Clamp
@@ -131,20 +131,20 @@ public class TileMap : MonoBehaviour
 
         tex.LoadImage(imageBytes);
 
-        int width = tex.width / Manager.tileResolution;
-        int height = tex.height / Manager.tileResolution;
+        int width = tex.width / Manager.TileResolution;
+        int height = tex.height / Manager.TileResolution;
         Sprite[] ss = new Sprite[width * height];
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                Rect r = new Rect(x * Manager.tileResolution, y * Manager.tileResolution, Manager.tileResolution, Manager.tileResolution);
+                Rect r = new Rect(x * Manager.TileResolution, y * Manager.TileResolution, Manager.TileResolution, Manager.TileResolution);
 
                 r.x += (x != 0) ? x : 0;
                 r.y += (y != 0) ? y : 0;
 
-                Sprite s = Sprite.Create(tex, r, new Vector2(0.5f, 0.5f), Manager.tileResolution);
+                Sprite s = Sprite.Create(tex, r, new Vector2(0.5f, 0.5f), Manager.TileResolution);
                 ss[width * y + x] = s;
             }
         }
@@ -403,10 +403,12 @@ public class TileMap : MonoBehaviour
         ObjectManager.playerEntity.ForcePosition();
 
         if (name == "Home")
+        {
             c = worldMap.GetLandmark("Home");
+        }
         else if (name == "Home_Base")
         {
-            if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Found_Base))
+            if (ObjectManager.playerJournal.HasFlag("Found_Base"))
                 c = worldMap.GetLandmark("Home");
             else
                 c = worldMap.GetLandmark("Abandoned Building");
@@ -595,14 +597,16 @@ public class TileMap : MonoBehaviour
 
         if (CurrentMap.WalkableTile(x, y))
         {
+            //HACK: Special logic for doors.
             if (tData.ID == Tile.tiles["Door"].ID)
             {
                 Cell c = GetCellAt(new Coord(x, y));
 
-                if (c.mapObjects.Count <= 0)
+                //If there isn't a door there, assume it hasn't spawned yet.
+                if (c == null || c.mapObjects.Empty())
                     return false;
 
-                return (c.mapObjects.FindAll(m => m.isDoor_Closed).Count == 0);
+                return c.mapObjects.FindAll(m => m.isDoor_Closed).Empty();
             }
             else
                 return true;

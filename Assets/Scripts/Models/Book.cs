@@ -1,4 +1,5 @@
 ﻿using LitJson;
+using System.Collections.Generic;
 
 public class Book : IAsset
 {
@@ -23,5 +24,18 @@ public class Book : IAsset
     public void Read()
     {
         Alert.CustomAlert_WithTitle(title, contents);
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (title.NullOrEmpty())
+        {
+            yield return "Title not set.";
+        }
+
+        if (contents.NullOrEmpty())
+        {
+            yield return "No contents text set.";
+        }
     }
 }

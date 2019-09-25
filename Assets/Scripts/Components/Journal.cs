@@ -9,14 +9,14 @@ public class Journal : MonoBehaviour
     public List<string> completedQuests { get; protected set; }
     public List<string> staticNPCKills { get; set; }
 
-    List<ProgressFlags> progressFlags;
+    List<string> progressFlags;
 
     void Start()
     {
         ObjectManager.playerJournal = this;
         quests = new List<Quest>();
         completedQuests = new List<string>();
-        progressFlags = new List<ProgressFlags>();
+        progressFlags = new List<string>();
         staticNPCKills = new List<string>();
 
         World.tileMap.OnScreenChange += UpdateLocation;
@@ -57,31 +57,34 @@ public class Journal : MonoBehaviour
         return quests.Find(x => x.ID == id) != null;
     }
 
-    public List<ProgressFlags> AllFlags()
+    public List<string> AllFlags()
     {
-        return new List<ProgressFlags>(progressFlags);
+        return new List<string>(progressFlags);
     }
 
-    public bool HasFlag(ProgressFlags fl)
+    public bool HasFlag(string fl)
     {
         return progressFlags.Contains(fl);
     }
 
-    public void AddFlag(ProgressFlags fl)
+    public void AddFlag(string fl)
     {
-        progressFlags.Add(fl);
+        if (!progressFlags.Contains(fl))
+        {
+            progressFlags.Add(fl);
+        }
 
-        if (fl == ProgressFlags.Hostile_To_Ensis)
+        if (fl == "Hostile_To_Ensis")
             MakeHostile("ensis");
-        else if (fl == ProgressFlags.Hostile_To_Kin)
+        else if (fl == "Hostile_To_Kin")
             MakeHostile("kin");
-        else if (fl == ProgressFlags.Hostile_To_Oromir)
+        else if (fl == "Hostile_To_Oromir")
             MakeHostile("magna");
     }
 
     void MakeHostile(string facID)
     {
-        Faction f = GameData.Get<Faction>(facID) as Faction;
+        Faction f = GameData.Get<Faction>(facID);
 
         if (f != null)
         {
@@ -105,7 +108,7 @@ public class Journal : MonoBehaviour
         {
             if (n.HasFlag(NPC_Flags.Follower) || n.faction.ID == "follower")
             {
-                string factionID = EntityList.GetBlueprintByID(n.ID).faction.ID;
+                string factionID = (GameData.Get<NPC_Blueprint>(n.ID)).faction.ID;
 
                 if (factionID == facID)
                 {
@@ -173,25 +176,30 @@ public class Journal : MonoBehaviour
         if (newMap.elevation == 0 && newMap.mapInfo.landmark == "Home")
         {
             //Found home base
-            if (!progressFlags.Contains(ProgressFlags.Found_Base))
+            if (!progressFlags.Contains("Found_Base"))
             {
                 Alert.NewAlert("Found_Base");
-                progressFlags.Add(ProgressFlags.Found_Base);
+                AddFlag("Found_Base");
 
                 //Spawn chest with return tome in it.
                 //Hard-coded. No like.
                 List<Item> chestContents = new List<Item>();
                 Item item1 = ItemList.GetItemByID("tome_return");
-                if (item1 != ItemList.GetNone()) chestContents.Add(item1);
+                if (!item1.IsNullOrDefault()) chestContents.Add(item1);
                 Item item2 = ItemList.GetItemByID("journal_hunter");
-                if (item2 != ItemList.GetNone()) chestContents.Add(item2);
+                if (!item2.IsNullOrDefault()) chestContents.Add(item2);
 
-                MapObject moj = new MapObject("Chest", new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y - 8), newMap.mapInfo.position, newMap.elevation)
+                MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>("Chest");
+
+                if (bp != null)
                 {
-                    inv = chestContents
-                };
+                    MapObject moj = new MapObject(bp, new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y - 8), newMap.mapInfo.position, newMap.elevation)
+                    {
+                        inv = chestContents
+                    };
 
-                World.objectManager.SpawnObject(moj);
+                    World.objectManager.SpawnObject(moj);
+                }
             }
         }
 
@@ -200,11 +208,11 @@ public class Journal : MonoBehaviour
     }
 }
 
-public enum ProgressFlags
+/*public enum ProgressFlags
 {
     None,
     Can_Enter_Power_Plant, Can_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Can_Enter_Fab,
     Hostile_To_Kin, Hostile_To_Ensis, Hostile_To_Oromir,
     Hunts_Available, Arena_Available,
     Found_Base, Learned_Butcher
-}
+}*/

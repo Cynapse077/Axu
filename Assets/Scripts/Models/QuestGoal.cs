@@ -59,6 +59,11 @@ public class Goal : EventContainer
         RunEvent(myQuest, QuestEvent.EventType.OnFail);
     }
 
+    public virtual IEnumerable<string> LoadErrors()
+    {
+        yield break;
+    }
+
     public virtual Coord Destination()
     {
         return null;
@@ -73,7 +78,7 @@ public class Goal : EventContainer
     {
         if (World.objectManager.npcClasses.Find(x => x.ID == npcID) == null)
         {
-            NPC_Blueprint bp = EntityList.GetBlueprintByID(npcID);
+            NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npcID);
 
             if (bp == null)
             {
@@ -175,6 +180,14 @@ public class ChoiceGoal : Goal
         }
 
         base.Fail();
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (goals == null)
+        {
+            yield return "ChoiceGoal - Goals not set.";
+        }
     }
 
     public override Coord Destination()
@@ -282,8 +295,8 @@ public class SpecificKillGoal : Goal
             }
         }
 
-        Debug.LogError(myQuest.ID + " - Quest step is either complete, or NPC UID is zero.");
-        return null;
+        //Fallback
+        return World.tileMap.WorldPosition;
     }
 
     public override string ToString()
@@ -374,8 +387,8 @@ public class NPCKillGoal : Goal
             return description;
         }
 
-        string npcName = EntityList.GetBlueprintByID(npcID).name;
-        return string.Format("Kill {0}. ({1} / {2})", npcName, amount.ToString(), max.ToString());
+        NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npcID);
+        return string.Format("Kill {0}. ({1} / {2})", bp.name, amount.ToString(), max.ToString());
     }
 }
 
@@ -438,7 +451,7 @@ public class FactionKillGoal : Goal
             return description;
         }
 
-        Faction fac = GameData.Get<Faction>(faction) as Faction;
+        Faction fac = GameData.Get<Faction>(faction);
 
         return string.Format("Kill {0}x members of the {1} faction. ({2}/{1})", max.ToString(), fac.Name, amount.ToString());
     }
@@ -626,7 +639,7 @@ public class InteractGoal : Goal
 
     void InteractedWithObject(MapObject m)
     {
-        if (Destination() == m.worldPosition && elevation == m.elevation && m.objectType == objectType)
+        if (Destination() == m.worldPosition && elevation == m.elevation && m.blueprint.objectType == objectType)
         {
             amount++;
 
@@ -672,6 +685,85 @@ public class InteractGoal : Goal
         string amt = (max > 1) ? (max + "x" + objName) : "the " + objName;
         string ele = elevation == 0 ? "." : " on floor " + elevation + ".";
         return string.Format("Use {0}{1}", amt, ele);
+    }
+}
+
+public class InteractUIDGoal : Goal
+{
+    public InteractUIDGoal(Quest q, string desc)
+    {
+        goalType = "InteractUIDGoal";
+        myQuest = q;
+        description = desc;
+        amount = 0;
+    }
+
+    public override void Init(bool skipEvent)
+    {
+        base.Init(skipEvent);
+        EventHandler.instance.InteractedWithObject += InteractedWithObject;
+        World.objectManager.NewMapIcon(0, Destination());
+    }
+
+    void InteractedWithObject(MapObject m)
+    {
+        if (m.UID == myQuest.storedObjectUID)
+        {
+            amount++;
+
+            if (CanComplete())
+            {
+                Complete();
+            }
+        }
+    }
+
+    public override bool CanComplete()
+    {
+        return amount >= 1;
+    }
+
+    public override Coord Destination()
+    {
+        MapObject m = myQuest.StoredObject;
+
+        if (m == null)
+        {
+            return World.tileMap.WorldPosition;
+        }
+
+        return m.worldPosition;
+    }
+
+    public override void Complete()
+    {
+        World.objectManager.RemoveMapIconAt(Destination());
+        EventHandler.instance.InteractedWithObject -= InteractedWithObject;
+        base.Complete();
+    }
+
+    public override void Fail()
+    {
+        World.objectManager.RemoveMapIconAt(Destination());
+        EventHandler.instance.InteractedWithObject -= InteractedWithObject;
+        base.Fail();
+    }
+
+    public override string ToString()
+    {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
+        MapObject m = myQuest.StoredObject;
+
+        if (m == null)
+        {
+            return "Error loading quest data. Could not find object with Unique ID: " + myQuest.storedObjectUID;
+        }
+
+        return string.Format("Interact with the {0}", m.Name);
     }
 }
 
@@ -748,7 +840,89 @@ public class TalkToGoal : Goal
             return description;
         }
 
-        return string.Format("Talk to {0}.", EntityList.GetBlueprintByID(npcTarget).name);
+        NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npcTarget);
+        return string.Format("Talk to {0}.", bp.name);
+    }
+}
+
+public class TalkToStoredNPCGoal : Goal
+{
+    public TalkToStoredNPCGoal(Quest q, string desc)
+    {
+        goalType = "TalkToStoredNPCGoal";
+        myQuest = q;
+        description = desc;
+        isComplete = false;
+    }
+
+    public override void Init(bool skipEvent)
+    {
+        base.Init(skipEvent);
+
+        EventHandler.instance.TalkedToNPC += TalkToNPC;
+        EventHandler.instance.NPCDied += NPCDied;
+        World.objectManager.NewMapIcon(0, Destination());
+    }
+
+    void TalkToNPC(NPC n)
+    {
+        if (myQuest.storedNPCUID == n.UID)
+        {
+            Complete();
+        }
+    }
+
+    void NPCDied(NPC n)
+    {
+        if (n.UID == myQuest.storedNPCUID)
+        {
+            Fail();
+        }
+    }
+
+    public override void Complete()
+    {
+        World.objectManager.RemoveMapIconAt(Destination());
+        EventHandler.instance.TalkedToNPC -= TalkToNPC;
+        EventHandler.instance.NPCDied -= NPCDied;
+        base.Complete();
+    }
+
+    public override void Fail()
+    {
+        EventHandler.instance.TalkedToNPC -= TalkToNPC;
+        EventHandler.instance.NPCDied -= NPCDied;
+        base.Fail();
+    }
+
+    public override Coord Destination()
+    {
+        NPC n = myQuest.StoredNPC;
+
+        if (n == null)
+        {
+            Debug.LogError("TalkToStoredNPCGoal: NPC Target is null. Cannot get destination position.");
+            return null;
+        }
+
+        return n.worldPosition;
+    }
+
+    public override string ToString()
+    {
+        if (!string.IsNullOrEmpty(description))
+        {
+            return description;
+        }
+
+        NPC n = myQuest.StoredNPC;
+        
+        if (n == null)
+        {
+            return "ERROR: Target cannot be found.";
+        }
+
+        return string.Format("Talk to {0}.", n.name);
     }
 }
 
@@ -839,9 +1013,9 @@ public class FetchPropertyGoal : Goal
             return description;
         }
 
-        string npcName = EntityList.GetBlueprintByID(npcTarget).name;
+        NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npcTarget);
 
-        return string.Format("Give {0} items of type \"{1}\" x{2}.", npcName, itemProperty.ToString(), (max - amount).ToString());
+        return string.Format("Give {0} items of type \"{1}\" x{2}.", bp.name, itemProperty.ToString(), (max - amount).ToString());
     }
 }
 
@@ -998,9 +1172,9 @@ public class Fetch_Homonculus : Goal
             return description;
         }
 
-        string npcName = EntityList.GetBlueprintByID(npcTarget).name;
+        NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npcTarget);
 
-        return string.Format("Give {0} items of type \"{1}\" x{2}.", npcName, itemProperty.ToString(), (max - amount).ToString());
+        return string.Format("Give {0} items of type \"{1}\" x{2}.", bp.name, itemProperty.ToString(), (max - amount).ToString());
     }
 }
 
@@ -1008,6 +1182,7 @@ public class FetchGoal : Goal
 {
     public readonly string itemID;
     public readonly string npcTarget;
+    public readonly int npcTargetOverrideUID;
     readonly int max;
 
     public FetchGoal(Quest q, string nid, string id, int amt, string desc)
@@ -1083,9 +1258,6 @@ public class FetchGoal : Goal
             return description;
         }
 
-        string npcName = EntityList.GetBlueprintByID(npcTarget).name;
-        string itemName = ItemList.GetItemByID(itemID).Name;
-
-        return string.Format("Give {0} {1} x{2}.", npcName, itemName, max.ToString());
+        return string.Format("Give {0} {1} x{2}.", GameData.Get<NPC_Blueprint>(npcTarget).name, GameData.Get<Item>(itemID).Name, max.ToString());
     }
 }

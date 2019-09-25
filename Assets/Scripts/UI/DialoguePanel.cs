@@ -54,7 +54,7 @@ public class DialoguePanel : MonoBehaviour
     public void Display(DialogueNode node)
     {
         transform.DestroyChildren();
-        cMax = node.options.Count - 1;
+        cMax = node.options.Length - 1;
         nodeDialogue = true;
 
         GameObject t = Instantiate(title, transform);
@@ -65,7 +65,7 @@ public class DialoguePanel : MonoBehaviour
         dialogueText = txt.GetComponentInChildren<Text>();
         dialogueText.text = node.display;
 
-        for (int i = 0; i < node.options.Count; i++)
+        for (int i = 0; i < node.options.Length; i++)
         {
             GameObject g = Instantiate(button, transform);
             g.GetComponentInChildren<Text>().text = node.options[i].display;

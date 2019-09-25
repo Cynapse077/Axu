@@ -29,6 +29,7 @@ public class ItemModifier : IAsset
         damage = new Damage(0, 0, 0, DamageTypes.Blunt);
         damageType = DamageTypes.Blunt;
         description = "";
+        modType = ModType.All;
     }
 
     public ItemModifier(ItemModifier other)
@@ -110,6 +111,19 @@ public class ItemModifier : IAsset
         if (dat.ContainsKey("Components"))
         {
             components = ItemUtility.GetComponentsFromData(dat["Components"]);
+        }
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (name.NullOrEmpty())
+        {
+            yield return "Name not set.";
+        }
+
+        if (description.NullOrEmpty())
+        {
+            yield return "Description not set.";
         }
     }
 

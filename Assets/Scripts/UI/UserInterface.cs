@@ -629,7 +629,7 @@ public class UserInterface : MonoBehaviour
             return;
         }
 
-        DialogueNode node = GameData.Get<DialogueNode>(nodeID) as DialogueNode;
+        DialogueNode node = GameData.Get<DialogueNode>(nodeID);
         DPanel.Display(node);
 
         if (node.onSelect != null)

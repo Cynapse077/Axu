@@ -84,6 +84,11 @@ public class JournalPanel : UIPanel
                 }
             }
 
+            if (q.turnsToFail > 0)
+            {
+                goal += "\n\n<color=orange>Fails in " + q.turnsToFail.ToString() + " turns</color>";
+            }
+
             tooltip.text = desc + "\n\n" + goal;
         }
         else

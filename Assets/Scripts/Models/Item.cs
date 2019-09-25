@@ -120,7 +120,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
         if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
         {
-            Ability sk = new Ability(GameData.Get<Ability>(GetCComponent<CAbility>().abID) as Ability);
+            Ability sk = new Ability(GameData.Get<Ability>(GetCComponent<CAbility>().abID));
 
             if (sk != null)
             {
@@ -739,7 +739,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (modifier == null)
             modifier = new ItemModifier();
 
-        if (ID == ItemList.GetNone().ID || ID == natWep)
+        if (ID == natWep)
             return "<color=grey>" + Name + "</color>";
 
         if (ID == "stump")
@@ -804,10 +804,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         string s = "<color=silver>[";
 
         return s + armor.ToString() + "]</color>";
-
     }
 
-    //used only to check differences in names between items. items with mods cannot stack
+    //used only to check differences in names between items. items with modifiers cannot stack.
     public string ItemName()
     {
         return modifier.name + " " + Name;
@@ -932,9 +931,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         {
             string baseID = dat["Base"].ToString();
 
-            Item baseItem = GameData.Get<Item>(baseID) as Item;
+            Item baseItem = GameData.Get<Item>(baseID);
 
-            if (baseItem != null && baseItem != ItemList.GetNone())
+            if (!baseItem.IsNullOrDefault())
             {
                 CopyFrom(baseItem);
             }
@@ -1033,6 +1032,11 @@ public class Item : ComponentHolder<CComponent>, IAsset
             string slot = (dat["Display"].ContainsKey("Layer")) ? dat["Display"]["Layer"].ToString() : "";
             renderer = new ItemRenderer(ItemUtility.GetRenderLayer(slot), ground, player);
         }
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        yield break;
     }
 
 

@@ -33,7 +33,7 @@ c4a2a18f67589f590c4093327b7fb2b1 Assembly-CSharp.dll:.UseItemOnOtherPanel
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.DisplayHelpMessages
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:MapCreator.MapCreator_SideButton
 633808724b258a27e39c1e315f0541d0 Assembly-CSharp.dll:.MainMenuPanel
-1d78012cd84962e17e38d9e99968cd03 Assembly-CSharp.dll:.EntitySkills
+54ba9cb00a071b4a0840bec130a00d18 Assembly-CSharp.dll:.EntitySkills
 53ac72aa8530479c3d9940f914e25a9b Assembly-CSharp.dll:.LocalizedText
 4ed161af4ae3cd637d4911f16ef19146 Assembly-CSharp.dll:MapCreator.MapCreator_LoadButton
 b924bd93f373109e15bb6a52b9f1e395 Assembly-CSharp.dll:.MouseController
@@ -140,7 +140,7 @@ ad9173d3a69d99153f38ed4b62226129 UnityEngine.Networking.dll:UnityEngine.Networki
 91338e8650f1321693c284f8a6090145 Assembly-CSharp.dll:.StatusEffectPanel
 01734698f5b84134fb0229af43879922 Assembly-CSharp.dll:.PoolManager
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
-57e7b47e55b0cd775e9d3c06d4ee78ed Assembly-CSharp.dll:.AbilityTooltip
+e63169cf27eb37383746f9f60da467f7 Assembly-CSharp.dll:.AbilityTooltip
 af84efdf8f31d84471a05fb207e6916a Assembly-CSharp.dll:.MusicManager
 3e1a1d8f588a51b953ae6ba8ddd07856 Assembly-CSharp.dll:.AbilityPanel
 762266e91b957315c6dd9db610931ebc Assembly-CSharp.dll:.WrapSprite
@@ -157,6 +157,7 @@ af84efdf8f31d84471a05fb207e6916a Assembly-CSharp.dll:.MusicManager
 3a45cf00770dc39ba19a1b4600ad06ed Assembly-CSharp.dll:.CameraControl
 eb455c5958c5c00c91a8cf79891778a6 Assembly-CSharp.dll:.StatusEffectObject
 f9c349eb9dfd73a4bb1395c3d618263f Assembly-CSharp.dll:.TilesetManager
+2b53b8dbbfbb1ebdc71f837898cfb752 Assembly-CSharp.dll:.HotkeyButton
 8e2a21da95998dbea3c8c0f01d8f9cbf Assembly-CSharp.dll:.SR_EnabledBasedOnOther
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.Analytics.Editor.dll:UnityEditor.Analytics.AnalyticsEventTrackerEditor
 79f1e4d923cfc803b34c05ae2cb73dac Assembly-CSharp.dll:.LerpPos
@@ -169,11 +170,11 @@ f9c349eb9dfd73a4bb1395c3d618263f Assembly-CSharp.dll:.TilesetManager
 a6a6ce8cd74fa0137cd3e04b4acdff97 Assembly-CSharp.dll:.GrapplePanel
 e0c746ffab4202b33e93c27e2b5a9739 Assembly-CSharp.dll:.Options_GamePanel
 b59863cb4c374e2eaa4ad2ed4fc12006 Assembly-CSharp.dll:.EquipmentPanel
-91dae9062300bc9b4ce8b81cbbb57c4f Assembly-CSharp.dll:.PlayerInput
+ea36caf8a3288101374bb7455af4babb Assembly-CSharp.dll:.PlayerInput
 ad2c8e879e3220c79aff9dc94c013e8d Assembly-CSharp.dll:.MapFeatureObject
 b4b51652e5bb2b60925b3aa05cb6df98 Assembly-CSharp.dll:.ReplaceLimb_Panel
 32a36e5489d0d0853469a753fd00df6d Assembly-CSharp.dll:.SlotSelectPanel
-f8b9aa9f320e404f3d4361bd69d622cf Assembly-CSharp.dll:.AbilityButton
+4804ba5dd903b262e3b06f680f9441af Assembly-CSharp.dll:.AbilityButton
 92459c990d6cf9b64a3b3d1d9429c053 Assembly-CSharp.dll:.InventoryPanel
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.SaveData
 0957d219e6116ac9e27cf42148e31c7c Assembly-CSharp.dll:.JournalPanel
@@ -227,6 +228,7 @@ fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
+bebd32f65f58db64cbc962fe4f5178b5 Assembly-CSharp.dll:.HotkeyManager
 991eee7487e00f291e885c9cc155ed96 Assembly-CSharp.dll:.BaseAI
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Journal
 0e71e42a045d01fcfb93ccf7c3e00db2 Assembly-CSharp.dll:.MiniMap

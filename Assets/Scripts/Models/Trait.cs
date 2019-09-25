@@ -392,6 +392,19 @@ public class Trait : IAsset
     {
         return (effects != null && effects.Contains(te));
     }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (name.NullOrEmpty())
+        {
+            yield return "Name not set.";
+        }
+
+        if (description.NullOrEmpty())
+        {
+            yield return "Description not set.";
+        }
+    }
 }
 [System.Serializable]
 public enum TraitEffects

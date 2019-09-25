@@ -583,6 +583,7 @@
                 "Stationary_While_Passive"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 18, "y" : 24, "z" : 0 },
+            "Quest" : "messenger",
             "Stats" : {
                 "Health" : 65,
                 "Stamina" : 55,

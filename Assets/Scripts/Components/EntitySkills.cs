@@ -20,15 +20,20 @@ public class EntitySkills : MonoBehaviour
 
         if (!entity.isPlayer)
         {
-            KeyValuePair<string, int>[] sks = EntityList.GetBlueprintByID(entity.AI.npcBase.ID).skills;
+            NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(entity.AI.npcBase.ID);
 
-            for (int i = 0; i < sks.Length; i++)
+            if (bp != null)
             {
-                Ability s = new Ability(GameData.Get<Ability>(sks[i].Key) as Ability)
+                KeyValuePair<string, int>[] sks = bp.skills;
+
+                for (int i = 0; i < sks.Length; i++)
                 {
-                    level = sks[i].Value
-                };
-                AddSkill(s, Ability.AbilityOrigin.Book);
+                    Ability s = new Ability(GameData.Get<Ability>(sks[i].Key))
+                    {
+                        level = sks[i].Value
+                    };
+                    AddSkill(s, Ability.AbilityOrigin.Book);
+                }
             }
         }
         else

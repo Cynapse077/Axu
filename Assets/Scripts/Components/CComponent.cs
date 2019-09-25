@@ -315,7 +315,7 @@ public class CAbility : CComponent
 
     public override string ExtraInfo()
     {
-        Ability skill = GameData.Get<Ability>(abID) as Ability;
+        Ability skill = GameData.Get<Ability>(abID);
 
         if (skill != null)
         {
@@ -862,7 +862,7 @@ public class CDNAHolder : CComponent
             return null;
         }
 
-        return GameData.Get<NPC_Blueprint>(npc) as NPC_Blueprint;
+        return GameData.Get<NPC_Blueprint>(npc);
     }
 
     public override string ExtraInfo()
@@ -872,7 +872,7 @@ public class CDNAHolder : CComponent
             return "DNA: <color=grey>(Empty)</color>";
         }
 
-        NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npc) as NPC_Blueprint;
+        NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npc);
         return "DNA: " + bp.name;
     }
 }

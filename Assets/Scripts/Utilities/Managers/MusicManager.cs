@@ -57,6 +57,7 @@ public class MusicManager : MonoBehaviour
     {
         bool changeInElevation = (oldMap.elevation != 0 && newMap.elevation == 0 || oldMap.elevation == 0 && newMap.elevation != 0);
 
+        //Same landmark area and no change in elevation info.
         if (oldMap.mapInfo.landmark == newMap.mapInfo.landmark && !changeInElevation)
         {
             return false;
@@ -74,6 +75,7 @@ public class MusicManager : MonoBehaviour
             }
         }
 
+        //Fallback to generic music.
         for (int i = 0; i < musicZones.Length; i++)
         {
             if (musicZones[i].ZoneID == oldMap.mapInfo.landmark)

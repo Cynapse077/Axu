@@ -32,7 +32,7 @@ public class NPC
     public NPC(string _npcID, Coord wPos, Coord lPos, int ele)
     {
         Attributes = NPC_Blueprint.DefaultAttributes();
-        FromBlueprint(EntityList.GetBlueprintByID(_npcID));
+        FromBlueprint(GameData.Get<NPC_Blueprint>(_npcID));
 
         worldPosition = wPos;
         localPosition = lPos;
@@ -171,16 +171,18 @@ public class NPC
         {
             if (RNG.Next(1000) <= (1.25f * blueprint.maxItemRarity))
             {
-                //Get random artifact
-                Predicate<IAsset> p = (IAsset asset) => {
-                    Item i = asset as Item;
-
-                    if (i != null)
+                //Get random non-unique artifact
+                bool p(IAsset asset)
+                {
+                    if (asset is Item i)
+                    {
                         return i.HasProp(ItemProperty.Artifact) && !i.HasProp(ItemProperty.Unique) && !i.HasProp(ItemProperty.Quest_Item);
+                    }
 
                     return false;
-                };
-                Item item = GameData.Get<Item>(p).GetRandom() as Item;
+                }
+
+                Item item = GameData.GetRandom<Item>(p);
 
                 if (item != null)
                 {
@@ -234,8 +236,7 @@ public class NPC
                     {
                         for (int t = 1; t < amount; t++)
                         {
-                            Item i2 = ItemList.GetItemByID(kvp.Key);
-                            inventory.Add(new Item(i2));
+                            inventory.Add(ItemList.GetItemByID(kvp.Key));
                         }
                     }
 
@@ -246,27 +247,28 @@ public class NPC
 
         if (HasFlag(NPC_Flags.Doctor))
         {
-            Predicate<IAsset> p = (IAsset asset) => {
-                Item i = asset as Item;
-
-                if (i != null)
+            bool p(IAsset asset)
+            {
+                if (asset is Item i)
+                {
                     return i.HasProp(ItemProperty.ReplaceLimb) && !i.HasCComponent<CRot>();
+                }
 
                 return false;
-            };
+            }
 
-            List<IAsset> items = GameData.Get<Item>(p);
+            List<Item> items = GameData.Get<Item>(p);
 
             for (int i = 0; i < RNG.Next(0, 2); i++)
             {
-                inventory.Add(items.GetRandom(RNG) as Item);
+                inventory.Add(new Item(items.GetRandom(RNG)));
             }
         }
     }
 
     public void MakeFollower()
     {
-        faction = GameData.Get<Faction>("followers") as Faction;
+        faction = GameData.Get<Faction>("followers");
         flags.Add(NPC_Flags.Follower);
 
         if (flags.Contains(NPC_Flags.Stationary_While_Passive))
@@ -282,7 +284,7 @@ public class NPC
 
     public void ReshuffleInventory()
     {
-        ShuffleInventory(EntityList.GetBlueprintByID(ID));
+        ShuffleInventory(GameData.Get<NPC_Blueprint>(ID));
     }
 
     public bool CanDiscard()

@@ -145,7 +145,7 @@ public class DialogueController : MonoBehaviour
 
     void CheckBase()
     {
-        if (journal.HasFlag(ProgressFlags.Found_Base))
+        if (journal.HasFlag("Found_Base"))
         {
             if (myNPC.HasFlag(NPC_Flags.At_Home))
             {

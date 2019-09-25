@@ -17,12 +17,12 @@ public class PlayerCharacter : Character
     public List<SQuest> Quests;
     public List<string> CQuests;
     public List<string> StaticNKills;
-    public List<ProgressFlags> Flags;
+    public List<string> Flags;
     public Weather CWeather;
 
     public PlayerCharacter(int worldSeed, string playerName, string profName, XPLevel _xpLevel, SStats _stats, Coord worldPos, Coord localPos, int elevation, List<STrait> traits,
         List<WeaponProficiency> profs, List<SBodyPart> bodyParts, int gold, List<SItem> items, List<SItem> handItems, SItem firearm, List<SSkill> skills, int charisma, List<SQuest> qs,
-        Weather weather, List<ProgressFlags> proflags)
+        Weather weather, List<string> proflags)
     {
         WorldSeed = worldSeed;
         Name = playerName;

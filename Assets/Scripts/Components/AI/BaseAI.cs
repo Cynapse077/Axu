@@ -72,6 +72,8 @@ public class BaseAI : MonoBehaviour
             entity.ForcePosition(World.tileMap.CurrentMap.GetRandomFloorTile());
         }
 
+        InSightOfPlayer();
+
         turnsLeftToPath = SeedManager.combatRandom.Next(3, 10);
 
         doneInit = true;
@@ -624,9 +626,9 @@ public class BaseAI : MonoBehaviour
 
     public void BecomeHostile()
     {
-        if (!isHostile && npcBase.ID == "oromir" && !ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Oromir))
+        if (!isHostile && npcBase.ID == "oromir" && !ObjectManager.playerJournal.HasFlag("Hostile_To_Oromir"))
         {
-            ObjectManager.playerJournal.AddFlag(ProgressFlags.Hostile_To_Oromir);
+            ObjectManager.playerJournal.AddFlag("Hostile_To_Oromir");
             npcBase.questID = "";
             dialogueController.SetupDialogueOptions();
         }

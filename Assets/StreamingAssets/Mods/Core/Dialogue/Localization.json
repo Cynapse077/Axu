@@ -254,15 +254,15 @@
         },
         {
             "ID" : "IT_Block",
-            "Display" : " - [BLOCK]: <color=orange>[INPUT]%</color> chance to block incoming attacks."
+            "Display" : "[BLOCK]: <color=orange>[INPUT]%</color> chance to block incoming attacks."
         },
         {
             "ID" : "IT_Disarm",
-            "Display" : " - [DISARM] : Small chance to disarm attackers upon being struck."
+            "Display" : "[DISARM] : Small chance to disarm attackers upon being struck."
         },
         {
             "ID" : "IT_Coat",
-            "Display" : " - [COATED] with {0} ({1})"
+            "Display" : "[COATED] with {0} ({1})"
         },
         {
             "ID" : "IT_Damage",

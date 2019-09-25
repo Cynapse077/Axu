@@ -4,7 +4,7 @@ public static class LocalizationManager
 {
     public static TranslatedText GetLocalizedContent(string key)
     {
-        return GameData.Get<TranslatedText>(key) as TranslatedText;
+        return GameData.Get<TranslatedText>(key);
     }
 
     public static string GetContent(string key)

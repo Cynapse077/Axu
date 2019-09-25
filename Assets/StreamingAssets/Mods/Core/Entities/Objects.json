@@ -133,7 +133,8 @@
 			"Pulse" : {
 				"Receive" : true
 			},
-            "Path Cost" : 100
+            "Path Cost" : 100,
+            "Permissions" : [ "Can_Open_Prison_Cells" ]
         },
         {
             "Name" : "Prison Door",
@@ -169,8 +170,7 @@
             "Description" : "A door only the Ensis can open.",
 			"Pulse" : {
 				"Receive" : true
-			},
-			"Permissions" : [ "Can_Enter_Ensis" ]
+			}
         },
         {
             "Name" : "Strange Door",
@@ -194,8 +194,7 @@
             "Description" : "A strange door. Open.",
 			"Pulse" : {
 				"Receive" : true
-			},
-			"Permissions" : [ "Can_Enter_Magna" ]
+			}
         },
 		{
 			"Name" : "Magnetic Door",
@@ -219,8 +218,7 @@
 			"Description" : "A steel door. Open.",
 			"Pulse" : {
 				"Receive" : true
-			},
-			"Permissions" : [ "Can_Enter_Fab" ]
+			}
 		},
 		{
 			"Name" : "Barred Door",
@@ -231,6 +229,7 @@
 			"Pulse" : {
 				"Receive" : true
 			},
+            "Permissions" : [ "Nope" ],
             "Path Cost" : 100
 		},
 		{
@@ -252,7 +251,8 @@
             ],
             "Opaque" : true,
             "Path Cost" : 100,
-            "Display In Editor" : false
+            "Display In Editor" : false,
+            "Permissions" : [ "Nope" ]
         },
         {
             "Name" : "Open Door",

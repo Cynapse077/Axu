@@ -4,117 +4,141 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class MapObject
 {
+    static int CurrentUID = 0;
+
+    public int UID = -1;
     public int elevation;
-    public int pathfindingCost;
-    public bool onScreen, seen, solid, opaque;
+    public bool onScreen, seen;
     public float rotation;
-    public string description;
     public List<Item> inv;
-    public string objectType;
     public Coord localPosition, worldPosition;
-    public ObjectPulseInfo pulseInfo;
-    public ProgressFlags[] permissions;
-    public bool saved = true;
+    public MapObjectBlueprint blueprint { get; private set; }
 
-    Dictionary<string, LuaCall> luaEvents;
-
-    public MapObject(string objType, Coord localPos, Coord worldPos, int elev)
+    public string Name
     {
-        localPosition = localPos;
-        worldPosition = worldPos;
-        elevation = elev;
-
-        Init(ItemList.GetMOB(objType));
+        get { return blueprint.Name; }
+    }
+    public bool Solid
+    {
+        get { return blueprint.solid == MapObjectBlueprint.MapOb_Interactability.Solid; }
     }
 
-    public MapObject(MapObjectBlueprint bp, Coord lp, Coord wp, int ele)
+    public MapObject(MapObjectBlueprint bp, Coord lp, Coord wp, int ele, int uid = -1)
     {
         localPosition = lp;
         worldPosition = wp;
         elevation = ele;
+        UID = uid;
 
         Init(bp);
     }
 
     void Init(MapObjectBlueprint bp)
     {
-        ReInitialize(bp);
+        if (UID > -1)
+        {
+            if (UID > CurrentUID)
+            {
+                CurrentUID = UID + 1;
+            }
+        }
+        else
+        {
+            UID = CurrentUID;
+            CurrentUID++;
+        }
+
+        SetBlueprint(bp);
 
         if (bp.randomRotation)
         {
             SetRotation();
         }
 
-        if (objectType == "Chest")
-        {
-            inv = Inventory.GetDrops(SeedManager.combatRandom.Next(1, 4));
-        }
-        else if (objectType == "Barrel" && SeedManager.combatRandom.Next(100) < 5)
-        {
-            inv = Inventory.GetDrops(1);
-        }
-        else if (objectType == "Loot" || objectType == "Body")
-        {
-            inv = new List<Item>();
-        }
+        SetupInventory();
     }
 
-    public void ReInitialize(MapObjectBlueprint bp)
+    public void SetBlueprint(MapObjectBlueprint bp)
     {
-        objectType = bp.objectType;
-        description = bp.description;
-        solid = (bp.solid == MapObjectBlueprint.MapOb_Interactability.Solid);
-        opaque = bp.opaque;
-        pathfindingCost = bp.pathCost;
-        luaEvents = bp.luaEvents;
-        pulseInfo = bp.pulseInfo;
-        permissions = bp.permissions;
-        saved = bp.saved;
+        blueprint = bp;
     }
 
     void SetRotation()
     {
-        if (SeedManager.combatRandom.Next(100) < 10 || objectType == "Bloodstain_Permanent")
+        if (SeedManager.combatRandom.Next(100) < 10 || blueprint.objectType == "Bloodstain_Permanent")
         {
             rotation = Random.Range(0, 360);
-            return;
         }
-
-        if (!objectType.Contains("Bloodstain"))
+        //Bloodstain wall smears
+        else if (blueprint.objectType.Contains("Bloodstain"))
         {
-            return;
-        }
+            List<Coord> possPos = new List<Coord>();
 
-        List<Coord> possPos = new List<Coord>();
-
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = -1; y <= 1; y++)
+            for (int x = -1; x <= 1; x++)
             {
-                int cx = localPosition.x + x, cy = localPosition.y + y;
-
-                if (cx <= 0 || cx >= Manager.localMapSize.x - 1 || cy <= 0 || cy >= Manager.localMapSize.y - 1 || Mathf.Abs(x) + Mathf.Abs(y) > 1 || x == 0 && y == 0)
-                    continue;
-
-                if (!World.tileMap.WalkableTile(cx, cy))
+                for (int y = -1; y <= 1; y++)
                 {
-                    possPos.Add(new Coord(x, y));
+                    int cx = localPosition.x + x, cy = localPosition.y + y;
+
+                    if (cx <= 0 || cx >= Manager.localMapSize.x - 1 || cy <= 0 || cy >= Manager.localMapSize.y - 1 || Mathf.Abs(x) + Mathf.Abs(y) > 1 || x == 0 && y == 0)
+                        continue;
+
+                    if (!World.tileMap.WalkableTile(cx, cy))
+                    {
+                        possPos.Add(new Coord(x, y));
+                    }
                 }
             }
+
+            if (possPos.Count > 0)
+            {
+                if (GameData.Get<MapObjectBlueprint>("Bloodstain_Wall") is MapObjectBlueprint bp)
+                {
+                    SetBlueprint(bp);
+                    Coord offset = possPos.GetRandom(SeedManager.combatRandom);
+                    localPosition += offset;
+                    RotationFromOrientation(offset);
+                }
+            }
+            else
+            {
+                rotation = Random.Range(0, 360);
+                return;
+            }
+        }
+    }
+
+    void SetupInventory()
+    {
+        //Setup inventory
+        switch (blueprint.objectType)
+        {
+            case "Chest":
+                inv = Inventory.GetDrops(SeedManager.combatRandom.Next(1, 4));
+                break;
+            case "Barrel":
+                if (SeedManager.combatRandom.OneIn(20))
+                {
+                    inv = Inventory.GetDrops(SeedManager.combatRandom.Next(1, 3));
+                }
+                break;
+            case "Loot":
+            case "Body":
+                inv = new List<Item>();
+                break;
         }
 
-        if (possPos.Count > 0)
+        if (blueprint.inventory != null)
         {
-            Coord offset = possPos.GetRandom(SeedManager.combatRandom);
-            objectType = "Bloodstain_Wall";
-            localPosition.x += offset.x;
-            localPosition.y += offset.y;
-            RotationFromOrientation(offset);
-        }
-        else
-        {
-            rotation = Random.Range(0, 360);
-            return;
+            for (int i = 0; i < blueprint.inventory.Count; i++)
+            {
+                Item item = ItemList.GetItemByID(blueprint.inventory[i]);
+
+                if (!item.IsNullOrDefault())
+                {
+                    inv.Add(item);
+                }
+            }
         }
     }
 
@@ -133,17 +157,17 @@ public class MapObject
 
     public bool HasEvent(string eventName)
     {
-        return (luaEvents != null && luaEvents.ContainsKey(eventName)) ;
+        return (blueprint.luaEvents != null && blueprint.luaEvents.ContainsKey(eventName)) ;
     }
 
     public LuaCall GetEvent(string eventName)
     {
-        if (luaEvents == null)
+        if (blueprint.luaEvents == null)
         {
             return null;
         }
 
-        return luaEvents[eventName];
+        return blueprint.luaEvents[eventName];
     }
 
     public bool CanDiscard()

@@ -148,12 +148,20 @@ public class OldWorld
         for (int i = 0; i < wData["Objects"].Count; i++)
         {
             JsonData obj = wData["Objects"][i];
+            MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>(obj["Type"].ToString());
+
+            if (bp == null)
+            {
+                continue;
+            }
+
             Coord lp = new Coord((int)obj["LP"][0], (int)wData["Objects"][i]["LP"][1]);
             Coord wp = new Coord((int)obj["WP"][0], (int)wData["Objects"][i]["WP"][1]);
             int elevation = (int)obj["WP"][2];
-            string type = obj["Type"].ToString();
+            
+            MapObject m = new MapObject(bp, lp, wp, elevation);
 
-            MapObject m = new MapObject(type, lp, wp, elevation);
+            obj.TryGetInt("UID", out m.UID, -1);
 
             //Inventory
             if (obj["Items"] != null)
@@ -220,7 +228,7 @@ public class OldWorld
 
             n.name = npcData["Name"].ToString();
             n.UID = (int)npcData["UID"];
-            n.faction = GameData.Get<Faction>(npcData["Fac"].ToString()) as Faction;
+            n.faction = GameData.Get<Faction>(npcData["Fac"].ToString());
             n.isHostile = (bool)npcData["Host"];
             n.inventory = SetUpInventory(i);
             n.spriteID = npcData["Spr"].ToString();
@@ -393,9 +401,9 @@ public class WorldToJson
 
         for (int i = 0; i < objects.Count; i++)
         {
-            if (objects[i].saved)
+            if (objects[i].blueprint.saved)
             {
-                Objects.Add(new WorldObject(objects[i].worldPosition, objects[i].localPosition, objects[i].elevation, objects[i].objectType, objects[i].inv));
+                Objects.Add(new WorldObject(objects[i].UID, objects[i].worldPosition, objects[i].localPosition, objects[i].elevation, objects[i].blueprint.objectType, objects[i].inv));
             }
         }
     }
@@ -456,13 +464,15 @@ public struct GameSave
 [System.Serializable]
 public struct WorldObject
 {
+    public int UID;
     public int[] WP;
     public int[] LP;
     public List<SItem> Items;
     public string Type;
 
-    public WorldObject(Coord worldPos, Coord localPos, int elev, string type, List<Item> items)
+    public WorldObject(int uid, Coord worldPos, Coord localPos, int elev, string type, List<Item> items)
     {
+        UID = uid;
         WP = new int[3] { worldPos.x, worldPos.y, elev };
         LP = new int[2] { localPos.x, localPos.y };
         Type = type;

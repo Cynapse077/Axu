@@ -53,7 +53,7 @@ namespace MapCreator
         Coord mapSize;
         List<MapObjectBlueprint> cachedObjects;
 
-        List<IAsset> AssetsForReading
+        List<MapObjectBlueprint> AssetsForReading
         {
             get
             {
@@ -78,18 +78,7 @@ namespace MapCreator
             {
                 if (cachedObjects == null)
                 {
-                    cachedObjects = new List<MapObjectBlueprint>();
-                    List<IAsset> assets = AssetsForReading;
-
-                    foreach (IAsset asset in assets)
-                    {
-                        MapObjectBlueprint bp = asset as MapObjectBlueprint;
-
-                        if (bp != null)
-                        {
-                            cachedObjects.Add(bp);
-                        }
-                    }
+                    cachedObjects = AssetsForReading;
                 }
 
                 return cachedObjects;

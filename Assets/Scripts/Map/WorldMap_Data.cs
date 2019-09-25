@@ -893,7 +893,7 @@ public class WorldMap_Data
 
         if (zb != null && !string.IsNullOrEmpty(zb.underground))
         {
-            return GameData.Get<ZoneBlueprint_Underground>(zb.underground) as ZoneBlueprint_Underground;
+            return GameData.Get<ZoneBlueprint_Underground>(zb.underground);
         }
 
         Debug.LogError("Underground area \"" + search + "\" does not exist.");
@@ -903,7 +903,7 @@ public class WorldMap_Data
 
     public ZoneBlueprint_Underground GetUnderground(string search)
     {
-        return GameData.Get<ZoneBlueprint_Underground>(search) as ZoneBlueprint_Underground;
+        return GameData.Get<ZoneBlueprint_Underground>(search);
     }
 
     public string GetZoneNameAt(int x, int y, int ele)

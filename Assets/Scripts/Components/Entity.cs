@@ -416,7 +416,7 @@ public class Entity : MonoBehaviour
                             OpenDoor(m);
                             return true;
                         }
-                        else if (m.objectBase.solid)
+                        else if (m.objectBase.Solid)
                         {
                             CancelWalk();
                             return true;
@@ -824,8 +824,7 @@ public class Entity : MonoBehaviour
             return;
         }
 
-        door.OpenDoor(isPlayer);
-        World.tileMap.SoftRebuild();
+        door.Interact();
     }
 
     public void Interact(int x, int y)
@@ -857,7 +856,7 @@ public class Entity : MonoBehaviour
                 {
                     MapObjectSprite obj = targetCell.mapObjects[i];
 
-                    if (obj.isDoor_Closed)
+                    if (isPlayer && obj.isDoor_Closed)
                         OpenDoor(obj);
                     else
                         obj.Interact();
@@ -1389,7 +1388,7 @@ public class Entity : MonoBehaviour
 
             if (!includeInventory && body.Hands[i].baseItem != handItem.ID)
             {
-                handItem = (GameData.Get<Item>(body.Hands[i].baseItem) as Item).ToSerializedItem();
+                handItem = (GameData.Get<Item>(body.Hands[i].baseItem)).ToSerializedItem();
             }
 
             handItems.Add(handItem);

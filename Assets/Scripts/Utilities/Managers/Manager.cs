@@ -17,7 +17,7 @@ public static class Manager
     public static int startElevation = 0;
     public static Weather startWeather = Weather.Clear;
     public static PlayerBuilder playerBuilder;
-    public static int tileResolution = 16;
+    public const int TileResolution = 16;
 
     public static void ClearFiles()
     {

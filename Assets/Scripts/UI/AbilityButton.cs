@@ -16,7 +16,7 @@ public class AbilityButton : MonoBehaviour
 
         if (s.cooldown > 0)
         {
-            nameText.text = "<color=grey>" + nameText.text + " (" + s.cooldown + ")</color>";
+            nameText.text = string.Format("<color=grey>{0} ({1})</color>", s.Name, s.cooldown);
         }
     }
 

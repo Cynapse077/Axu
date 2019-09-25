@@ -1,4 +1,5 @@
-﻿using LitJson;
+﻿using System.Collections.Generic;
+using LitJson;
 
 public class ZoneBlueprint : IAsset
 {
@@ -19,7 +20,8 @@ public class ZoneBlueprint : IAsset
 
     public void FromJson(JsonData dat)
     {
-        ID = dat["ID"].ToString();
+        if (dat.ContainsKey("ID"))
+            ID = dat["ID"].ToString();
 
         dat.TryGetString("Display", out name, name);
         dat.TryGetInt("Tile Index", out tileID, tileID);
@@ -33,10 +35,19 @@ public class ZoneBlueprint : IAsset
 
         if (dat.ContainsKey("Place At"))
         {
-            dat["Place At"].TryGetString("Biome", out placement.zoneID, placement.zoneID);
-            dat["Place At"].TryGetString("Location", out placement.landmark, placement.landmark);
-            dat["Place At"].TryGetCoord("Relative", out placement.relativePosition, placement.relativePosition);
-            dat["Place At"].TryGetBool("Mainland", out placement.onMain, placement.onMain);
+            if (dat["Place At"].ContainsKey("Biome"))
+                placement.zoneID = dat["Place At"]["Biome"].ToString();
+            if (dat["Place At"].ContainsKey("Location"))
+                placement.landmark = dat["Place At"]["Location"].ToString();
+            if (dat["Place At"].ContainsKey("Relative"))
+                placement.relativePosition = new Coord((int)dat["Place At"]["Relative"][0], (int)dat["Place At"]["Relative"][1]);
+            if (dat["Place At"].ContainsKey("Location"))
+                placement.landmark = dat["Place At"]["Location"].ToString();
+
+            if (dat["Place At"].ContainsKey("Mainland"))
+            {
+                placement.onMain = (bool)dat["Place At"]["Mainland"];
+            }
         }
 
         if (dat.ContainsKey("Neighbors"))
@@ -51,6 +62,11 @@ public class ZoneBlueprint : IAsset
                 };
             }
         }
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        yield break;
     }
 
     public class Placement
@@ -81,15 +97,19 @@ public class ZoneBlueprint_Underground :IAsset
     {
         if (dat.ContainsKey("ID"))
             ID = dat["ID"].ToString();
-
-        dat.TryGetString("Display", out name, name);
-        dat.TryGetInt("Depth", out depth, depth);
-        dat.TryGetInt("Light", out light, light);
+        if (dat.ContainsKey("Display"))
+            name = dat["Display"].ToString();
+        if (dat.ContainsKey("Depth"))
+            depth = (int)dat["Depth"];
+        if (dat.ContainsKey("Light"))
+            light = (int)dat["Light"];
 
         if (dat.ContainsKey("Rules"))
         {
             rules = Rules.Empty();
-            dat["Rules"].TryGetBool("Load", out rules.loadFromData, rules.loadFromData);
+
+            if (dat["Rules"].ContainsKey("Load"))
+                rules.loadFromData = (bool)dat["Rules"]["Load"];
 
             if (dat["Rules"].ContainsKey("Algorithms"))
             {
@@ -103,18 +123,16 @@ public class ZoneBlueprint_Underground :IAsset
 
             if (dat["Rules"].ContainsKey("Feature"))
             {
-                string layerID;
-                int chance;
-                dat["Rules"]["Feature"].TryGetString("ID", out layerID, string.Empty);
-                dat["Rules"]["Feature"].TryGetInt("Chance", out chance, 0);
-
+                string layerID = (dat["Rules"]["Feature"].ContainsKey("ID")) ? dat["Rules"]["Feature"]["ID"].ToString() : "";
+                int chance = (dat["Rules"]["Feature"].ContainsKey("Chance")) ? (int)dat["Rules"]["Feature"]["Chance"] : 0;
                 rules.layer2 = new StringInt(layerID, chance);
             }
         }
 
+        string wallTile = "";
 
-        string wallTile;
-        dat.TryGetString("Wall Tile", out wallTile, string.Empty);
+        if (dat.ContainsKey("Wall Tile"))
+            wallTile = dat["Wall Tile"].ToString();
 
         WeightedTile[] wt = new WeightedTile[0];
 
@@ -130,6 +148,11 @@ public class ZoneBlueprint_Underground :IAsset
         }
 
         tileInfo = new TileInfo(wallTile, wt);
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        yield break;
     }
 
     public struct Rules

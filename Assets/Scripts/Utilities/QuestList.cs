@@ -11,10 +11,12 @@ public static class QuestList
 
     public static Quest GetByID(string id)
     {
-        Quest q = GameData.Get<Quest>(id) as Quest;
+        Quest q = GameData.Get<Quest>(id);
 
         if (q != null)
+        {
             return new Quest(q);
+        }
 
         return null;
     }

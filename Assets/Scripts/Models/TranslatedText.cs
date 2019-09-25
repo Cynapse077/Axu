@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using LitJson;
 
 public class TranslatedText : IAsset
@@ -24,5 +24,13 @@ public class TranslatedText : IAsset
             dat.TryGetString("Tooltip", out display2, defaultText);
         else if (dat.ContainsKey("Message"))
             dat.TryGetString("Message", out display2, defaultText);
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (display.NullOrEmpty())
+        {
+            yield return "Display text is null or empty.";
+        }
     }
 }

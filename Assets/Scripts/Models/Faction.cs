@@ -68,14 +68,22 @@ public class Faction : IAsset
             switch (ID)
             {
                 case "ensis":
-                    return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Ensis));
+                    return ObjectManager.playerJournal.HasFlag("Hostile_To_Ensis");
                 case "kin":
-                    return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Kin));
+                    return ObjectManager.playerJournal.HasFlag("Hostile_To_Kin");
                 case "magna":
-                    return (ObjectManager.playerJournal.HasFlag(ProgressFlags.Hostile_To_Oromir));
+                    return ObjectManager.playerJournal.HasFlag("Hostile_To_Oromir");
             }
         }
 
         return false;
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (Name.NullOrEmpty())
+        {
+            yield return "Name not set.";
+        }
     }
 }

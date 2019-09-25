@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
 using LitJson;
 
 public class NPC_Blueprint : IAsset
@@ -32,6 +34,51 @@ public class NPC_Blueprint : IAsset
         FromJson(dat);    
     }
 
+    public NPC_Blueprint(NPC_Blueprint other)
+    {
+        CopyFrom(other);
+    }
+
+    public void CopyFrom(NPC_Blueprint other)
+    {
+        name = other.name;
+        ID = other.ID;
+        ModID = other.ModID;
+        faction = other.faction;
+        health = other.health;
+        stamina = other.stamina;
+        heatResist = other.heatResist;
+        coldResist = other.coldResist;
+        quest = other.quest;
+        dialogue = other.dialogue;
+        maxItemRarity = other.maxItemRarity;
+        maxItems = other.maxItems;
+        firearm = other.firearm;
+        Corpse_Item = other.Corpse_Item;
+        localPosition = other.localPosition;
+        elevation = other.elevation;
+        zone = other.zone;
+        weaponSkill = other.weaponSkill;
+        spriteIDs = other.spriteIDs;
+
+        inventory = new KeyValuePair<string, Coord>[other.inventory.Length];
+        for (int i = 0; i < other.inventory.Length; i++)
+        {
+            inventory[i] = new KeyValuePair<string, Coord>(other.inventory[i].Key, other.inventory[i].Value);
+        }
+
+        skills = new KeyValuePair<string, int>[other.skills.Length];
+        for (int i = 0; i < other.skills.Length; i++)
+        {
+            skills[i] = new KeyValuePair<string, int>(other.skills[i].Key, other.skills[i].Value);
+        }
+
+        bodyParts = new List<BodyPart>(other.bodyParts);
+        flags = new List<NPC_Flags>(other.flags);
+        weaponPossibilities = new List<string>(other.weaponPossibilities);
+        attributes = new Dictionary<string, int>(other.attributes);
+    }
+
     public void FromJson(JsonData dat)
     {
         attributes = DefaultAttributes();
@@ -42,7 +89,7 @@ public class NPC_Blueprint : IAsset
         name = dat["Name"].ToString();
         ID = dat["ID"].ToString();
         
-        faction = GameData.Get<Faction>(dat["Faction"].ToString()) as Faction;
+        faction = GameData.Get<Faction>(dat["Faction"].ToString());
         health = (int)dat["Stats"]["Health"];
         stamina = (int)dat["Stats"]["Stamina"];
         maxItems = (dat.ContainsKey("MaxItems")) ? (int)dat["MaxItems"] : 0;
@@ -144,6 +191,11 @@ public class NPC_Blueprint : IAsset
         }
     }
 
+    public IEnumerable<string> LoadErrors()
+    {
+        yield break;
+    }
+
     public static Dictionary<string, int> DefaultAttributes()
     {
         return new Dictionary<string, int>()
@@ -155,11 +207,11 @@ public class NPC_Blueprint : IAsset
         };
     }
 
-    float Difficulty
+    double Difficulty
     {
         get
         {
-            float difficulty = health / 5;
+            double difficulty = health / 2.0;
             difficulty += attributes["Strength"] * 4;
             difficulty += attributes["Dexterity"];
             difficulty += attributes["Defense"] * 2;
@@ -168,16 +220,16 @@ public class NPC_Blueprint : IAsset
             difficulty += skills.Length;
             difficulty += weaponSkill * 2;
 
-            return (float)System.Math.Round(difficulty, 3);
+            return Math.Round(difficulty, 3);
         }
     }
 
     class DifficultyLevel
     {
-        public float difficulty;
-        public readonly string npcName;
+        public double difficulty;
+        readonly string npcName;
 
-        public DifficultyLevel(float diff, string npc)
+        public DifficultyLevel(double diff, string npc)
         {
             difficulty = diff;
             npcName = npc;
@@ -191,19 +243,20 @@ public class NPC_Blueprint : IAsset
 
     public static void PrintNPCDifficultyLevels()
     {
-        Felony fel = GameData.Get<Felony>(0) as Felony;
-        float playerStart = 2;
-        playerStart += fel.HP / 10;
+        Felony fel = GameData.Get<Felony>(0);
+        double playerStart = 2.0;
+
+        playerStart += fel.HP / 2.0;
         playerStart += fel.STR * 4;
         playerStart += fel.DEX;
         playerStart += fel.INT;
 
         List<DifficultyLevel> dvals = new List<DifficultyLevel>();
-        float lowest = 1000;
+        double lowest = 1000;
 
         foreach (NPC_Blueprint bp in GameData.GetAll<NPC_Blueprint>())
         {
-            float diff = bp.Difficulty / playerStart * 10f;
+            double diff = bp.Difficulty / playerStart * 10f;
 
             if (diff < lowest)
             {
@@ -215,12 +268,12 @@ public class NPC_Blueprint : IAsset
 
         dvals.Sort((x, y) => { return x.difficulty.CompareTo(y.difficulty); });
 
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.AppendLine("Difficulty Rankings of NPCs:\n");
 
         foreach (DifficultyLevel d in dvals)
         {
-            d.difficulty = (float)System.Math.Round(d.difficulty - lowest, 1);
+            d.difficulty = Math.Round(d.difficulty - lowest, 1);
             sb.AppendLine(d.ToString());
         }
 

@@ -103,7 +103,12 @@ public class SpawnNPCEvent : QuestEvent
     public override void RunEvent()
     {
         Coord wPos = World.worldMap.worldMapData.GetLandmark(zone);
-        NPC n = new NPC(EntityList.GetBlueprintByID(npcID), wPos, localPos, elevation);
+        NPC n = new NPC(GameData.Get<NPC_Blueprint>(npcID), wPos, localPos, elevation);
+
+        if (n == null)
+        {
+            return;
+        }
 
         if (!giveItem.NullOrEmpty())
         {
@@ -284,7 +289,7 @@ public class MoveNPCEvent : QuestEvent
         else
         {
             //Create NPC
-            NPC_Blueprint bp = EntityList.GetBlueprintByID(npcID);
+            NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npcID);
 
             if (bp == null)
             {
@@ -383,7 +388,7 @@ public class RemoveBlockersEvent : QuestEvent
     public override void RunEvent()
     {
         List<MapObject> mos = World.objectManager.ObjectsAt(worldPos, elevation);
-        List<MapObject> toDelete = mos.FindAll(x => x.objectType == "Stair_Lock");
+        List<MapObject> toDelete = mos.FindAll(x => x.blueprint.objectType == "Stair_Lock");
 
         while (toDelete.Count > 0)
         {
@@ -529,7 +534,20 @@ public class OpenDialogue : QuestEvent
 
     public override void RunEvent()
     {
-        Alert.CustomAlert_WithTitle(speaker, dialogue);
+        string name = "";
+        if (speaker == "Stored NPC")
+        {
+            if (myQuest.StoredNPC != null)
+            {
+                name = myQuest.StoredNPC.name;
+            }
+        }
+        else
+        {
+            name = speaker;
+        }
+
+        Alert.CustomAlert_WithTitle(name, dialogue);
     }
 }
 

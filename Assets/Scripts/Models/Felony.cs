@@ -98,4 +98,22 @@ public class Felony : IAsset
             proficiencies[id] = (int)dat["Proficiencies"][name];
         }
     }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (name.NullOrEmpty())
+        {
+            yield return "Name is null or empty.";
+        }
+
+        if (description.NullOrEmpty())
+        {
+            yield return "Description is not set.";
+        }
+
+        if (bodyStructure.NullOrEmpty())
+        {
+            yield return "No body structure set.";
+        }
+    }
 }

@@ -157,7 +157,10 @@ public class Inventory : MonoBehaviour
 
         if (i.HasCComponent<CLiquidContainer>() && World.tileMap.GetCellAt(destination) != null && World.tileMap.GetCellAt(destination).entity != null)
         {
-            i.GetCComponent<CLiquidContainer>().Pour(World.tileMap.GetCellAt(destination).entity);
+            if (i.GetCComponent<CLiquidContainer>().sLiquid != null)
+            {
+                i.GetCComponent<CLiquidContainer>().Pour(World.tileMap.GetCellAt(destination).entity);
+            }
 
             if (!i.HasProp(ItemProperty.Quest_Item) && !i.HasProp(ItemProperty.Artifact))
             {
@@ -502,7 +505,7 @@ public class Inventory : MonoBehaviour
 
         if (i.HasProp(ItemProperty.Blink))
         {
-            Ability s = new Ability(GameData.Get<Ability>("blink") as Ability)
+            Ability s = new Ability(GameData.Get<Ability>("blink"))
             {
                 staminaCost = 0,
                 timeCost = 10
@@ -539,11 +542,11 @@ public class Inventory : MonoBehaviour
                 string abName = i.GetCComponent<CAbility>().abID;
 
                 EntitySkills eSkills = GetComponent<EntitySkills>();
-                Ability skill = new Ability(GameData.Get<Ability>(abName) as Ability);
+                Ability skill = new Ability(GameData.Get<Ability>(abName));
 
                 if (eSkills.abilities.Find(x => x.ID == skill.ID) == null)
                 {
-                    Ability s = new Ability(GameData.Get<Ability>(abName) as Ability);
+                    Ability s = new Ability(GameData.Get<Ability>(abName));
 
                     if (s != null)
                     {
@@ -582,7 +585,7 @@ public class Inventory : MonoBehaviour
 
         for (int i = 0; i < items.Count; i++)
         {
-            if (items[i].HasProp(ItemProperty.Throwing_Wep) || items[i].HasCComponent<CLiquidContainer>())
+            if (items[i].HasProp(ItemProperty.Throwing_Wep) || items[i].HasCComponent<CLiquidContainer>() && items[i].GetCComponent<CLiquidContainer>().sLiquid != null)
                 tItems.Add(items[i]);
             else
                 ntItems.Add(items[i]);

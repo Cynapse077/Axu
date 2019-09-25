@@ -2,53 +2,119 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Container class
+public struct StatusManager
+{
+    List<StatusEffect> statusEffects;
+    readonly Stats stats;
+
+    public Stats MyStats { get { return stats; } }
+
+    public StatusManager(Stats stats)
+    {
+        this.stats = stats;
+        statusEffects = new List<StatusEffect>();
+    }
+
+    public void ClearAllStatuses()
+    {
+        statusEffects.IterateAction_Reverse((x) => x.OnRemove());
+    }
+
+    public void AddStatusEffect(StatusEffect se)
+    {
+        if (se != null)
+        {
+            //Combine together if we can.
+            foreach (StatusEffect status in statusEffects)
+            {
+                if (status.GetTooltip() == se.GetTooltip())
+                {
+                    status.turns += se.turns;
+                    return;
+                }
+            }
+
+            //Otherwise, add a new one.
+            statusEffects.Add(se);
+        }
+    }
+
+    public void RemoveStatusEffect(StatusEffect se)
+    {
+        if (se != null)
+        {
+            statusEffects.Remove(se);
+        }
+    }
+
+    public void OnTurn()
+    {
+        statusEffects.IterateAction_Reverse((x) => x.OnTurn());
+    }
+}
+
+//Base
 public class StatusEffect
 {
     public int turns;
-    protected Stats stats;
+    public bool perpetual;
+    protected StatusManager seManager;
 
-    public StatusEffect(int turns, Stats stats)
+    protected Stats stats { get { return seManager.MyStats; } }
+
+    public StatusEffect(int turns, StatusManager seManager, bool perpetual = false)
     {
         this.turns = turns;
-        this.stats = stats;
+        this.seManager = seManager;
+        this.perpetual = perpetual;
+
         OnAdd();
     }
 
     public virtual void OnTurn()
     {
-        turns--;
-
-        if (turns <= 0)
+        if (!perpetual)
         {
-            OnRemove();
+            turns--;
+
+            if (turns <= 0)
+            {
+                OnRemove();
+            }
         }
     }
 
     public virtual void OnAdd()
     {
-        //stats.AddStatusEffect(this);
+        seManager.AddStatusEffect(this);
     }
 
     public virtual void OnRemove()
     {
-        //stats.RemoveStatusEffect(this);
+        seManager.RemoveStatusEffect(this);
+    }
+
+    public virtual string GetTooltip()
+    {
+        return "";
     }
 }
 
 public class Status_Regen : StatusEffect
 {
-    public Status_Regen(int turns, Stats stats) : base(turns, stats) { }
+    public Status_Regen(int turns, StatusManager seManager) : base(turns, seManager) { }
 
     public override void OnTurn()
     {
-        stats.Heal(stats.Endurance + 1);
+        seManager.MyStats.Heal(seManager.MyStats.Endurance + 1);
         base.OnTurn();
     }
 }
 
 public class Status_Poison : StatusEffect
 {
-    public Status_Poison(int turns, Stats stats) : base(turns, stats) { }
+    public Status_Poison(int turns, StatusManager seManager) : base(turns, seManager) { }
 
     public override void OnAdd()
     {
@@ -86,7 +152,7 @@ public class Status_Poison : StatusEffect
 
 public class Status_Bleed : StatusEffect
 {
-    public Status_Bleed(int turns, Stats stats) : base(turns, stats) { }
+    public Status_Bleed(int turns, StatusManager seManager) : base(turns, seManager) { }
 
     public override void OnAdd()
     {
@@ -124,7 +190,7 @@ public class Status_Bleed : StatusEffect
 
 public class Status_Aflame : StatusEffect
 {
-    public Status_Aflame(int turns, Stats stats) : base(turns, stats) { }
+    public Status_Aflame(int turns, StatusManager seManager) : base(turns, seManager) { }
 
     public override void OnAdd()
     {
@@ -155,7 +221,7 @@ public class Status_Aflame : StatusEffect
 
 public class Status_Sick : StatusEffect
 {
-    public Status_Sick(int turns, Stats stats) : base(turns, stats) { }
+    public Status_Sick(int turns, StatusManager seManager) : base(turns, seManager) { }
 
     public override void OnAdd()
     {
@@ -181,6 +247,26 @@ public class Status_Sick : StatusEffect
             World.objectManager.CreatePoolOfLiquid(stats.entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, "liquid_vomit", amount);
         }
 
+        base.OnTurn();
+    }
+}
+
+public class Status_Float : StatusEffect
+{
+    public Status_Float(int turns, StatusManager seManager) : base(turns, seManager) { }
+
+    public override void OnAdd()
+    {
+        base.OnAdd();
+    }
+
+    public override void OnRemove()
+    {
+        base.OnRemove();
+    }
+
+    public override void OnTurn()
+    {
         base.OnTurn();
     }
 }

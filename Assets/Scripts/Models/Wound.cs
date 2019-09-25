@@ -3,7 +3,7 @@ using LitJson;
 
 public class Wound : IAsset
 {
-    public string Name, Desc;
+    public string Name;
     public string ID { get; set; }
     public string ModID { get; set; }
     public ItemProperty slot;
@@ -25,7 +25,6 @@ public class Wound : IAsset
     {
         Name = other.Name;
         ID = other.ID;
-        Desc = other.Desc;
         slot = other.slot;
         damTypes = other.damTypes;
         statMods = new List<Stat_Modifier>();
@@ -97,7 +96,6 @@ public class Wound : IAsset
     {
         Name = dat["Name"].ToString();
         ID = dat["ID"].ToString();
-        Desc = dat["Description"].ToString();
         slot = dat["Slot"].ToString().ToEnum<ItemProperty>();
         damTypes = new List<DamageTypes>();
 
@@ -121,6 +119,14 @@ public class Wound : IAsset
             }
 
             statMods = sm;
+        }
+    }
+
+    public IEnumerable<string> LoadErrors()
+    {
+        if (Name.NullOrEmpty())
+        {
+            yield return "Name not set.";
         }
     }
 }

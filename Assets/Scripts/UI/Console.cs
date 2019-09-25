@@ -170,7 +170,7 @@ public class Console : MonoBehaviour
                 break;
 
             case "removeblockers":
-                List<MapObject> toDelete = World.objectManager.ObjectsAt(World.tileMap.WorldPosition, World.tileMap.currentElevation).FindAll(x => x.objectType == "Stair_Lock");
+                List<MapObject> toDelete = World.objectManager.ObjectsAt(World.tileMap.WorldPosition, World.tileMap.currentElevation).FindAll(x => x.blueprint.objectType == "Stair_Lock");
 
                 while (toDelete.Count > 0)
                 {
@@ -352,10 +352,12 @@ public class Console : MonoBehaviour
 
                 if (parsedText[1] == "npc")
                 {
-                    NPC_Blueprint bp = EntityList.GetBlueprintByID(spawnName);
+                    NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(spawnName);
 
                     if (bp == null)
+                    {
                         MyConsole.Error("No NPC with ID \"" + spawnName + "\".");
+                    }
                     else
                     {
                         NPC npc = new NPC(bp, wp, lp, World.tileMap.currentElevation);
@@ -611,7 +613,7 @@ public class Console : MonoBehaviour
                 }
 
                 string skillID = parsedText[1];
-                Ability s = new Ability(GameData.Get<Ability>(skillID) as Ability);
+                Ability s = new Ability(GameData.Get<Ability>(skillID));
 
                 if (s != null)
                 {
@@ -646,7 +648,7 @@ public class Console : MonoBehaviour
                 string itemID = parsedText[1];
                 Item item = null;
 
-                if (parsedText.Length == 2 && ItemList.GetItemByID(itemID) != ItemList.GetNone())
+                if (parsedText.Length == 2 && ItemList.GetItemByID(itemID).ID != ItemList.GetNone().ID)
                 {
                     item = ItemList.GetItemByID(itemID);
                 }
@@ -662,7 +664,7 @@ public class Console : MonoBehaviour
                     item = ItemList.GetItemByName(itemID);
                 }
 
-                if (item != ItemList.GetNone() && playerInventory != null)
+                if (item.ID != ItemList.GetNone().ID && playerInventory != null)
                 {
                     playerInventory.PickupItem(item);
                     MyConsole.NewMessage("    Gave 1x " + item.Name);
@@ -835,8 +837,7 @@ public class Console : MonoBehaviour
                     return;
                 }
 
-                ProgressFlags flag = parsedText[1].ToEnum<ProgressFlags>();
-                ObjectManager.playerJournal.AddFlag(flag);
+                ObjectManager.playerJournal.AddFlag(parsedText[1]);
                 MyConsole.NewMessage("Gave the flag \"" + parsedText[1] + "\" to the journal.");
                 break;
 

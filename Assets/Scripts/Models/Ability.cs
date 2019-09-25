@@ -265,6 +265,11 @@ public class Ability : IAsset
         }
     }
 
+    public IEnumerable<string> LoadErrors()
+    {
+        yield break;
+    }
+
     public SSkill ToSerializedSkill()
     {
         return new SSkill(ID, level, XP, cooldown, origin);

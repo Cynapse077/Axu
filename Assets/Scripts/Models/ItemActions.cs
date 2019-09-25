@@ -39,7 +39,7 @@ public struct ItemActions
             Actions.Add(new ItemAction("Reload", "Action_Reload"));
         }
 
-        if (ObjectManager.playerJournal.HasFlag(ProgressFlags.Learned_Butcher) && item.HasProp(ItemProperty.Corpse) || CanAdd(item, "OnButcher"))
+        if (ObjectManager.playerJournal.HasFlag("Learned_Butcher") && item.HasProp(ItemProperty.Corpse) || CanAdd(item, "OnButcher"))
         {
             Actions.Add(new ItemAction("Butcher", "Action_Butcher"));
         }
