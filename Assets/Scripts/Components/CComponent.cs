@@ -51,6 +51,7 @@ public class CComponent
             case "DNAHolder": return JsonMapper.ToObject<CDNAHolder>(reader);
             case "OnHitAddStatus": return JsonMapper.ToObject<COnHitAddStatus>(reader);
             case "LocationMap": return JsonMapper.ToObject<CLocationMap>(reader);
+            case "Ammo": return JsonMapper.ToObject<CAmmo>(reader);
 
             default: return null;
         }
@@ -79,6 +80,7 @@ public class CComponent
             case "DNAHolder": return typeof(CDNAHolder);
             case "OnHitAddStatus": return typeof(COnHitAddStatus);
             case "LocationMap": return typeof(CLocationMap);
+            case "Ammo": return typeof(CAmmo);
 
             default: return null;
         }
@@ -256,8 +258,11 @@ public class CEquipped : CComponent
 [Serializable]
 public class CFirearm : CComponent
 {
-    public int curr, max, shots;
-    public string ammoID;
+    public readonly int max;
+    public readonly int shots;
+    public readonly string ammoID;
+    public int curr;
+    public string currentAmmo;
 
     public CFirearm()
     {
@@ -271,13 +276,35 @@ public class CFirearm : CComponent
         max = _max;
         shots = _shots;
         ammoID = _ammoID;
+        currentAmmo = _ammoID;
     }
 
-    public int Reload(int amount)
+    public void Shoot(int amt)
+    {
+        curr -= amt;
+
+        if (curr <= 0)
+        {
+            currentAmmo = null;
+        }
+    }
+
+    public void Unload()
+    {
+        curr = 0;
+        currentAmmo = null;
+    }
+
+    public int Reload(int amount, Item ammo)
     {
         int maxAmmo = max;
         int amountInMag = curr;
         int amountUsed = 0;
+
+        if (amount > 0)
+        {
+            currentAmmo = ammo.ID;
+        }
 
         while (amountInMag < maxAmmo)
         {
@@ -296,6 +323,16 @@ public class CFirearm : CComponent
 
         curr = amountInMag;
         return amountUsed;
+    }
+
+    public override string ExtraInfo()
+    {
+        if (currentAmmo.NullOrEmpty())
+        {
+            return "Loaded: <color=grey>None</color>";
+        }
+
+        return "Loaded: " + ItemList.GetItemByID(currentAmmo).DisplayName();
     }
 }
 
@@ -958,12 +995,10 @@ public class CLocationMap : CComponent
 
             if (!questID.NullOrEmpty())
             {
-                Quest q = QuestList.GetByID(questID);
-
-                if (q != null)
+                if (GameData.TryGet(questID, out Quest q))
                 {
                     q.goals = new Goal[1] { new GoToGoal_Specific(q, pos, 0) };
-                    q.AddEvent(QuestEvent.EventType.OnFail, new RemoveLocation_Specific(pos));
+                    q.AddEvent(QuestEvent.EventType.OnFail, new RemoveSpecificLocationEvent(pos));
                     ObjectManager.playerJournal.StartQuest(q);
                 }
                 else
@@ -972,5 +1007,59 @@ public class CLocationMap : CComponent
                 }
             }
         }
+    }
+}
+
+[Serializable]
+public class CAmmo : CComponent
+{
+    public readonly string ammoType;
+    public readonly Damage extraDamage;
+    readonly LuaCall onHit;
+
+    public string AmmoType
+    {
+        get { return ammoType; }
+    }
+
+    public CAmmo()
+    {
+        ID = "Ammo";
+    }
+
+    public CAmmo(string ammoType, LuaCall onHit, Damage extraDamage)
+    {
+        ID = "Ammo";
+        this.ammoType = ammoType;
+        this.onHit = onHit;
+        this.extraDamage = extraDamage;
+    }
+
+    public bool CanUseOn(Item item)
+    {
+        if (!item.HasCComponent<CFirearm>())
+        {
+            return false;
+        }
+
+        return item.GetCComponent<CFirearm>().ammoID == ammoType;
+    }
+
+    public void OnHit(Entity source, Coord c)
+    {
+        if (onHit != null)
+        {
+            LuaManager.CallScriptFunction(onHit, source, c);
+        }
+    }
+
+    public override string ExtraInfo()
+    {
+        if (extraDamage != null && !extraDamage.IsEmpty)
+        {
+            return "Shot Damage + " + extraDamage.ToString();
+        }
+
+        return string.Empty;
     }
 }

@@ -13,7 +13,6 @@ public class MapObjectSprite : MonoBehaviour
 
     public MapObject objectBase;
     public Transform childObject;
-    public Coord localPos;
     public GameObject fire;
     public SpriteRenderer moreIconRenderer;
     public Cell cell;
@@ -34,6 +33,11 @@ public class MapObjectSprite : MonoBehaviour
     public int PathCost
     {
         get { return objectBase.blueprint.pathCost; }
+    }
+    public Coord localPos
+    {
+        get { return objectBase.localPosition; }
+        set { objectBase.localPosition = value; }
     }
 
     void Start()
@@ -607,7 +611,7 @@ public class MapObjectSprite : MonoBehaviour
                 {
                     List<Item> newInv = new List<Item> { ItemList.GetItemByID("artifact4") };
 
-                    World.objectManager.NewInventory("Loot", new Coord(localPos.x, localPos.y), World.tileMap.WorldPosition, World.tileMap.currentElevation, newInv);
+                    World.objectManager.NewInventory("Loot", new Coord(localPos), World.tileMap.WorldPosition, World.tileMap.currentElevation, newInv);
                     World.soundManager.BreakArea();
                     DestroyMe();
                     return;
@@ -636,7 +640,7 @@ public class MapObjectSprite : MonoBehaviour
                     }
 
                     ObjectManager.playerEntity.inventory.RemoveInstance(ObjectManager.playerEntity.inventory.items.Find(x => x.ID == "ai_core"));
-                    NPC n = new NPC(bp, World.tileMap.WorldPosition, localPos, World.tileMap.currentElevation);
+                    NPC n = new NPC(bp, World.tileMap.WorldPosition, new Coord(localPos), World.tileMap.currentElevation);
 
                     n.MakeFollower();
                     CombatLog.NewMessage("<color=green>You insert the AI Core into the Robotic Frame. After a short bootup, the Hauler begins to follow you!</color>");
@@ -725,11 +729,7 @@ public class MapObjectSprite : MonoBehaviour
         }
         else
         {
-
-            if (World.tileMap.IsTileLit(localPos.x, localPos.y))
-                spriteRenderer.color = (inSight) ? myColor * new Color(1.0f, 1.0f, 0.9f) : myColor * Color.grey;
-            else
-                spriteRenderer.color = (inSight) ? myColor : myColor * Color.grey;
+            spriteRenderer.color = inSight ? myColor : myColor * Color.grey;
         }
     }
 

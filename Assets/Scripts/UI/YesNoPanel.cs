@@ -16,7 +16,9 @@ public class YesNoPanel : MonoBehaviour
 
 	public void Display(string text, Action ycb, Action ncb, string input)
     {
-		if (text != TranslatedText.defaultText)
+        EventSystem.current.SetSelectedGameObject(null);
+
+        if (text != TranslatedText.defaultText)
         {
             if (text.Contains("[INPUT]") && !string.IsNullOrEmpty(input))
             {
@@ -27,6 +29,9 @@ public class YesNoPanel : MonoBehaviour
         question.text = text;
 		YesCallback = ycb;
 		NoCallback = ncb;
+
+        yesButton.GetComponentInChildren<Text>().text = LocalizationManager.GetContent("Button_Yes");
+        noButton.GetComponentInChildren<Text>().text = LocalizationManager.GetContent("Button_No");
 
 		Setup();
 	}

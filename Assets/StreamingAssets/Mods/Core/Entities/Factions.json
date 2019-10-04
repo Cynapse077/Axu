@@ -3,27 +3,32 @@
         {
             "Name" : "None",
             "ID" : "none",
-            "Hostile To" : [ "none" ]
+            "Hostile To" : [ "none" ],
+            "Hidden" : true
         },
         {
             "Name" : "Player",
             "ID" : "player",
-            "Hostile To" : [ "none" ]
+            "Hostile To" : [ "none" ],
+            "Hidden" : true
         },
         {
             "Name" : "Followers",
             "ID" : "followers",
-            "Hostile To" : [ "none" ]
+            "Hostile To" : [ "none" ],
+            "Hidden" : true
         },
         {
             "Name" : "Spirits",
             "ID" : "spirits",
-            "Hostile To" : [ "none" ]
+            "Hostile To" : [ "none" ],
+            "Hidden" : true
         },
         {
             "Name" : "Peaceful Wildlife",
             "ID" : "wildlifepeace",
-            "Hostile To" : [ "none" ]
+            "Hostile To" : [ "none" ],
+            "Hidden" : true
         },
         {
             "Name" : "...",
@@ -38,7 +43,8 @@
                 "xul",
                 "ensis",
                 "frostborne"
-            ]
+            ],
+            "Hidden" : true
         },
         {
             "Name" : "Cycle of Flesh",
@@ -85,7 +91,8 @@
                 "frostborne",
                 "bandits",
                 "xul"
-            ]
+            ],
+            "Hidden" : true
         },
         {
             "Name" : "Ensis",
@@ -101,7 +108,7 @@
             ]
         },
         {
-            "Name" : "Kin of the Deep",
+            "Name" : "Kindred of the Deep",
             "ID" : "kin",
             "Hostile To" : [
                 "bandits",
@@ -146,7 +153,8 @@
                 "puggles",
                 "krish",
                 "deepones"
-            ]
+            ],
+            "Hidden" : true
         },
         {
             "Name" : "Puggles",
@@ -161,7 +169,8 @@
                 "xul",
                 "mutants",
                 "krish"
-            ]
+            ],
+            "Hidden" : true
         },
 		{
 			"Name" : "Friendly Puggles",
@@ -171,7 +180,8 @@
                 "krish",
                 "deepones",
 				"eversight"
-			]
+			],
+            "Hidden" : true
 		},
         {
             "Name" : "Skull Bandits",
@@ -187,7 +197,8 @@
                 "kin",
                 "xul",
                 "krish"
-            ]
+            ],
+            "Hidden" : true
         },
 		{
             "Name" : "The Eversight",
@@ -197,7 +208,8 @@
                 "followers",
                 "mutants",
                 "krish"
-            ]
+            ],
+            "Hidden" : true
         },
         {
             "Name" : "Wildlife",
@@ -212,7 +224,8 @@
                 "frostborne",
                 "xul",
                 "krish"
-            ]
+            ],
+            "Hidden" : true
         },
         {
             "Name" : "Mutants",
@@ -222,7 +235,8 @@
                 "wildlife",
                 "kin",
                 "krish"
-            ]
+            ],
+            "Hidden" : true
         }
     ]
 }

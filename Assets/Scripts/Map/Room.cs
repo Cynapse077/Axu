@@ -156,8 +156,10 @@ public class House
                     {
                         Coord c = new Coord(x, y);
 
-                        if (!poss.Contains(c))
+                        if (!poss.Contains(c) && World.tileMap.CurrentMap.map_data[c.x, c.y] != TileManager.tiles["Stairs_Down"])
+                        {
                             poss.Add(c);
+                        }
                     }
                 }
             }
@@ -181,7 +183,9 @@ public class House
                         Coord c = new Coord(x, y);
 
                         if (!floors.Contains(c))
+                        {
                             floors.Add(c);
+                        }
                     }
                 }
             }

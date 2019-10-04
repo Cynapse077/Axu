@@ -41,13 +41,13 @@ public static class ContextualMenu
             int tileID = World.tileMap.GetTileID(c.position.x, c.position.y);
             PlayerInput inp = ObjectManager.playerEntity.GetComponent<PlayerInput>();
 
-            if (tileID == Tile.tiles["Stairs_Up"].ID)
+            if (tileID == TileManager.tiles["Stairs_Up"].ID)
             {
                 actions.Add(new ContextualAction("Ascend Stairs", () => 
                     World.userInterface.YesNoAction("YN_GoUp".Translate(), inp.GoUp, World.userInterface.CloseWindows, "") 
                 ));
             }
-            else if (tileID == Tile.tiles["Stairs_Down"].ID)
+            else if (tileID == TileManager.tiles["Stairs_Down"].ID)
             {
                 actions.Add(new ContextualAction("Ascend Stairs", () => 
                     World.userInterface.YesNoAction("YN_GoDown".Translate(), inp.GoDown, World.userInterface.CloseWindows, "") 
@@ -83,9 +83,7 @@ public static class ContextualMenu
             }
             else if (mos.objectBase.HasEvent("OnInteract"))
             {
-                actions.Add(new ContextualAction(string.Format("Interact with {0} {1}", mos.name, dir), 
-                    () => mos.Interact() 
-                ));
+                actions.Add(new ContextualAction(string.Format("Interact with {0} {1}", mos.name, dir), () => mos.Interact() ));
             }
             else if (mos.isDoor_Closed)
             {
@@ -108,20 +106,24 @@ public static class ContextualMenu
                         break;
                     case "Grave":
                         if (ObjectManager.playerEntity.inventory.DiggingEquipped())
+                        {
                             actions.Add(new ContextualAction(string.Format("Dig {0} {1}", mos.name, dir), () => mos.Interact() ));
+                        }
                         break;
                     case "Statue":
                         actions.Add(new ContextualAction(string.Format("Break {0} {1}", mos.name, dir), () => mos.Interact() ));
                         break;
                     case "Ore":
                         if (ObjectManager.playerEntity.inventory.DiggingEquipped())
+                        {
                             actions.Add(new ContextualAction(string.Format("Mine {0} {1}", mos.name, dir), () => mos.Interact() ));
+                        }
                         break;
                     case "Headstone":
                         actions.Add(new ContextualAction(string.Format("Read {0} {1}", mos.name, dir), () => mos.Interact() ));
                         break;
                     case "Bookshelf":
-                        actions.Add(new ContextualAction(string.Format("Read from the {0} {1}", mos.name, dir), () => mos.Interact() ));
+                        actions.Add(new ContextualAction(string.Format("Check the {0} {1}", mos.name, dir), () => mos.Interact() ));
                         break;
                 }
             }

@@ -362,6 +362,7 @@
             "Sprite" : "npc-lomis.png",
             "Flags" : [
                 "Human",
+                "Faction_Leader",
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
@@ -616,6 +617,7 @@
 			"Dialogue" : "isazna_init",
             "Flags" : [
                 "Human",
+                "Faction_Leader",
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
@@ -725,6 +727,7 @@
 			"Dialogue" : "oromir_init",
             "Flags" : [
                 "Can_Speak",
+                "Faction_Leader",
                 "Static",
                 "RPois",
                 "Boss",
@@ -1004,7 +1007,7 @@
                 "Stamina" : 5,
 
                 "Defense" : 3,
-                "Strength" : 5,
+                "Strength" : 3,
                 "Dexterity" : 4,
                 "Intelligence" : 3,
                 "Endurance" : 4,
@@ -1465,7 +1468,7 @@
             "Corpse_Item" : "corpse_human"
         },
         {
-            "Name" : "Bandit Scout",
+            "Name" : "Bandit Archer",
             "ID" : "bandit1",
             "Faction" : "bandits",
             "Body Structure" : "Humanoid",
@@ -1478,23 +1481,95 @@
                 "Health" : 17,
                 "Stamina" : 3,
 
-                "Defense" : 3,
+                "Defense" : 5,
                 "Strength" : 3,
                 "Dexterity" : 5,
                 "Intelligence" : 3,
                 "Endurance" : 5,
 
-                "Speed" : 7,
+                "Speed" : 8,
                 "Perception" : 10,
                 "Accuracy" : 1,
 
                 "Heat Resist" : 10,
                 "Cold Resist" : 5
             },
-            "Weapon_Choices" : [ "club" ],
+            "Weapon_Choices" : [ "Random_Weapon_R2" ],
+            "Firearm" : "bow",
+            "Inventory" : [
+                { "Item" : "arrow", "Min" : 8, "Max" : 20 }
+            ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 2,
+            "Corpse_Item" : "corpse_human"
+        },
+        {
+            "Name" : "Bandit Ranger",
+            "ID" : "bandit1-2",
+            "Faction" : "bandits",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-bandit1.png",
+            "Flags" : [
+                "Human",
+                "Can_Speak"
+            ],
+            "Stats" : {
+                "Health" : 17,
+                "Stamina" : 3,
+
+                "Defense" : 5,
+                "Strength" : 3,
+                "Dexterity" : 5,
+                "Intelligence" : 3,
+                "Endurance" : 5,
+
+                "Speed" : 8,
+                "Perception" : 10,
+                "Accuracy" : 1,
+
+                "Heat Resist" : 10,
+                "Cold Resist" : 5
+            },
+            "Weapon_Choices" : [ "Random_Weapon_R2" ],
+            "Firearm" : "crossbow",
+            "Inventory" : [
+                { "Item" : "bolt", "Min" : 8, "Max" : 20 }
+            ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 2,
+            "Corpse_Item" : "corpse_human"
+        },
+        {
+            "Name" : "Bandit Scout",
+            "ID" : "bandit1-3",
+            "Faction" : "bandits",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-bandit1.png",
+            "Flags" : [
+                "Human",
+                "Can_Speak"
+            ],
+            "Stats" : {
+                "Health" : 37,
+                "Stamina" : 3,
+
+                "Defense" : 5,
+                "Strength" : 4,
+                "Dexterity" : 5,
+                "Intelligence" : 3,
+                "Endurance" : 5,
+
+                "Speed" : 13,
+                "Perception" : 15,
+                "Accuracy" : 1,
+
+                "Heat Resist" : 10,
+                "Cold Resist" : 5
+            },
+            "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "Firearm" : "pistol",
             "Inventory" : [
-                { "Item" : "bullet", "Min" : 8, "Max" : 20 }
+                { "Item" : "bullet", "Min" : 10, "Max" : 25 }
             ],
             "MaxItems" : 2,
             "MaxItemRarity" : 2,

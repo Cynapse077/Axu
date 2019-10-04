@@ -29,7 +29,7 @@ public class LoadSaveMenu : MonoBehaviour
 
         if (savedGames.Count > 0)
         {
-            savedGames = savedGames.OrderByDescending(o => System.DateTime.Parse(o.time)).ToList();
+            savedGames = savedGames.OrderByDescending(o => System.DateTime.ParseExact(o.time, "yyyy-MM-dd h:mm:ss tt", null)).ToList();
 
             foreach (SaveGameObject sg in savedGames)
             {

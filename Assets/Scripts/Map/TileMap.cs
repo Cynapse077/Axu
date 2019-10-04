@@ -51,6 +51,7 @@ public class TileMap : MonoBehaviour
                 if (OnScreenChange != null)
                 {
                     OnScreenChange(old, currentMap);
+                    Path_AStar.ClearCache();
                 }
             }
 
@@ -374,9 +375,9 @@ public class TileMap : MonoBehaviour
         //For mountains, current position set to walkable.
         if (ObjectManager.playerEntity != null)
         {
-            if (screens[mx, my].GetTileNumAt(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == Tile.tiles["Mountain"].ID)
+            if (screens[mx, my].GetTileNumAt(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == TileManager.tiles["Mountain"].ID)
             {
-                screens[mx, my].ChangeTile(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY, Tile.tiles["Mountain_Floor"]);
+                screens[mx, my].ChangeTile(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY, TileManager.tiles["Mountain_Floor"]);
             }
         }
 
@@ -386,7 +387,7 @@ public class TileMap : MonoBehaviour
 
             for (int i = 0; i < changes.Count; i++)
             {
-                CurrentMap.ChangeTile(changes[i].x, changes[i].y, Tile.GetByID(changes[i].tType));
+                CurrentMap.ChangeTile(changes[i].x, changes[i].y, TileManager.GetByID(changes[i].tType));
             }
         }
     }
@@ -480,7 +481,7 @@ public class TileMap : MonoBehaviour
         {
             for (int y = 0; y < size_y; y++)
             {
-                if (CurrentMap.map_data[x, y] == Tile.tiles["Stairs_Down"])
+                if (CurrentMap.map_data[x, y] == TileManager.tiles["Stairs_Down"])
                     return new Coord(x, y);
             }
         }
@@ -494,7 +495,7 @@ public class TileMap : MonoBehaviour
         {
             for (int y = 0; y < size_y; y++)
             {
-                if (CurrentMap.map_data[x, y] == Tile.tiles["Stairs_Up"])
+                if (CurrentMap.map_data[x, y] == TileManager.tiles["Stairs_Up"])
                     return new Coord(x, y);
             }
         }
@@ -598,7 +599,7 @@ public class TileMap : MonoBehaviour
         if (CurrentMap.WalkableTile(x, y))
         {
             //HACK: Special logic for doors.
-            if (tData.ID == Tile.tiles["Door"].ID)
+            if (tData.ID == TileManager.tiles["Door"].ID)
             {
                 Cell c = GetCellAt(new Coord(x, y));
 
@@ -676,18 +677,18 @@ public class TileMap : MonoBehaviour
         if (World.OutOfLocalBounds(x, y) || CurrentMap.WalkableTile(x, y) || !CurrentMap.map_data[x, y].CanDig(canDestroyBuiltWalls))
             return false;
 
-        SetTile(Tile.tiles["Mountain_Floor"], x, y);
+        SetTile(TileManager.tiles["Mountain_Floor"], x, y);
         HardRebuild();
         return true;
     }
 
     public void FreezeTile(int x, int y)
     {
-        if (World.OutOfLocalBounds(x, y) || !Tile.isWaterTile(CurrentMap.GetTileNumAt(x, y), true) && CurrentMap.GetTileNumAt(x, y) != Tile.tiles["Lava"].ID)
+        if (World.OutOfLocalBounds(x, y) || !TileManager.isWaterTile(CurrentMap.GetTileNumAt(x, y), true) && CurrentMap.GetTileNumAt(x, y) != TileManager.tiles["Lava"].ID)
             return;
 
         int tileNum = CurrentMap.GetTileNumAt(x, y);
-        Tile_Data newTile = (tileNum == Tile.tiles["Lava"].ID) ? Tile.tiles["Mountain_Floor"] : Tile.tiles["Ice"];
+        Tile_Data newTile = (tileNum == TileManager.tiles["Lava"].ID) ? TileManager.tiles["Mountain_Floor"] : TileManager.tiles["Ice"];
 
         SetTile(newTile, x, y);
         SoftRebuild();

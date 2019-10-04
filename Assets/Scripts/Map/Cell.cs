@@ -38,6 +38,12 @@ public class Cell
         set { inSight = value; }
     }
 
+    public bool HasSeen
+    {
+        get { return hasSeen; }
+        set { hasSeen = value; }
+    }
+
     public void AddOnEnterCallback(Action<Entity> act)
     {
         onEntityEnter += act;

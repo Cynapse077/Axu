@@ -222,7 +222,7 @@
         {
             "Name" : "Book Worm",
             "ID" : "bookworm",
-            "Description" : "You are more intelligent, but your strength suffers. <color=green>Intelligence ▲</color>, <color=red>Steangth ▼</color>",
+            "Description" : "You are more intelligent, but your strength suffers. <color=green>Intelligence ▲</color>, <color=red>Strength ▼</color>",
             "Stats" : [
                 { "Stat" : "Intelligence", "Amount" : 1 },
                 { "Stat" : "Strength", "Amount" : -1 }
@@ -715,7 +715,7 @@
         	"Stackable" : false
         },
         {
-            "Name" : "Rubbery Skin II",
+            "Name" : "Thick Rubbery Skin",
             "ID" : "rubberskin2",
             "Prerequisite" : "rubberskin",
             "Tier" : 2,
@@ -979,7 +979,17 @@
             "Stackable" : false
         },
 
-
+        {
+            "Name" : "Radiation Poisoning",
+            "ID" : "RadPoison",
+            "Description" : "You've been poisoned by radiation. Your health and stamina regenerate slower. It can be cured with Iodine Tablets, or by visiting a doctor.",
+            "Stats" : [
+                { "Stat" : "HP Regen", "Amount" : -5 },
+                { "Stat" : "ST Regen", "Amount" : -5 }
+            ],
+            "Tags" : [ "Disease" ],
+            "Stackable" : false
+        },
         {
             "Name" : "Leprosy",
             "ID" : "leprosy",

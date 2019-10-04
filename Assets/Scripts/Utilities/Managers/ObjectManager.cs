@@ -649,16 +649,27 @@ public class ObjectManager : MonoBehaviour
     public void BuildingObjects(House h, Coord worldPos, string npcID)
     {
         Coord localPos = h.GetRandomPosition();
+        if (SeedManager.combatRandom.Next(100) < 20 && npcID == "villager")
+        {
+            localPos = World.tileMap.GetRandomPosition();
+        }
+
         NPC newNPC = EntityList.GetNPCByID(npcID, worldPos, localPos);
 
         SpawnNPC(newNPC);
 
         if (newNPC.HasFlag(NPC_Flags.Merchant))
+        {
             ShopObjects(h, worldPos);
+        }
         else if (newNPC.HasFlag(NPC_Flags.Doctor))
+        {
             HospitalObjects(h, worldPos);
+        }
         else
+        {
             HouseObjects(h, worldPos);
+        }
     }
 
     void HouseObjects(House h, Coord worldPos)
@@ -666,18 +677,26 @@ public class ObjectManager : MonoBehaviour
         Coord c = h.GetRandomPosition();
         NewObjectAtOtherScreen("Bed", c, worldPos);
         Coord c2 = h.GetRandomPosition();
+        int numTries = 0;
 
-        if (c == c2)
+        while (c == c2 && numTries < 10)
+        {
             c2 = h.GetRandomPosition();
+            numTries++;
+        }
 
         NewObjectAtOtherScreen("Table", c2, worldPos);
 
         Coord c3 = h.GetRandomPosition();
+        numTries = 0;
 
-        if (c3 == c || c3 == c2)
+        while ((c3 == c2 || c3 == c) && numTries < 10)
+        {
             c3 = h.GetRandomPosition();
+            numTries++;
+        }
 
-        NewObjectAtOtherScreen((SeedManager.localRandom.CoinFlip() ? "Chair_Left" : "Chair_Right"), c3, worldPos);
+        NewObjectAtOtherScreen(SeedManager.localRandom.CoinFlip() ? "Chair_Left" : "Chair_Right", c3, worldPos);
     }
 
     void ShopObjects(House h, Coord worldPos)

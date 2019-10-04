@@ -20,17 +20,17 @@ public class Dungeon
         get
         {
             if (blueprint.ID == "Cave_Volcano")
-                return Tile.tiles["Lava"].ID;
+                return TileManager.tiles["Lava"].ID;
             else if (blueprint.ID == "Cave_Ice")
-                return Tile.tiles["Ice"].ID;
+                return TileManager.tiles["Ice"].ID;
 
-            return Tile.tiles["Water"].ID;
+            return TileManager.tiles["Water"].ID;
         }
     }
 
     int Unwalkable
     {
-        get { return Tile.GetByName(blueprint.tileInfo.wallTile).ID; }
+        get { return TileManager.GetByName(blueprint.tileInfo.wallTile).ID; }
     }
 
     System.Random RNG

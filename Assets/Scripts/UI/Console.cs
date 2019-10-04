@@ -291,11 +291,11 @@ public class Console : MonoBehaviour
                     return;
                 }
 
-                if (QuestList.GetByID(parsedText[1]) != null)
+                if (GameData.TryGet(parsedText[1], out Quest q))
                 {
-                    Quest q = QuestList.GetByID(parsedText[1]);
-                    ObjectManager.playerJournal.StartQuest(q);
-                    MyConsole.NewMessage("Added the quest \"" + q.Name + "\" to the journal.");
+                    Quest quest = new Quest(q);
+                    ObjectManager.playerJournal.StartQuest(quest);
+                    MyConsole.NewMessage("Added the quest \"" + quest.Name + "\" to the journal.");
                 }
                 else
                 {
@@ -332,23 +332,13 @@ public class Console : MonoBehaviour
                 {
                     int x = int.Parse(parsedText[parsedText.Length - 2]), y = int.Parse(parsedText[parsedText.Length - 1]);
                     lp = new Coord(playerEntity.posX + x, playerEntity.posY + y);
-                }
 
-
-                if (lp.x < 0 || lp.x >= Manager.localMapSize.x)
-                {
-                    MyConsole.Error("X coordinate out of bounds.");
-
-                    if (lp.y < 0 || lp.y >= Manager.localMapSize.y)
-                        MyConsole.Error("Y coordinate out of bounds.");
-
-                    return;
-                }
-                if (lp.y < 0 || lp.y >= Manager.localMapSize.y)
-                {
-                    MyConsole.Error("Y coordinate out of bounds.");
-                    return;
-                }
+                    if (World.OutOfLocalBounds(lp.x, lp.y))
+                    {
+                        MyConsole.Error("Coordinate out of bounds.");
+                        return;
+                    }
+                } 
 
                 if (parsedText[1] == "npc")
                 {
@@ -362,7 +352,7 @@ public class Console : MonoBehaviour
                     {
                         NPC npc = new NPC(bp, wp, lp, World.tileMap.currentElevation);
                         World.objectManager.SpawnNPC(npc);
-                        MyConsole.NewMessage("    " + spawnName + " spawned at (" + lp.x + "," + lp.y + ") relative to player.");
+                        MyConsole.NewMessage("    " + npc.name + " spawned at (" + lp.ToString());
                     }
                 }
                 else if (parsedText[1] == "object")
@@ -370,12 +360,14 @@ public class Console : MonoBehaviour
                     MapObjectBlueprint bp = ItemList.GetMOB(spawnName);
 
                     if (bp == null)
+                    {
                         MyConsole.Error("No Object with ID \"" + spawnName + "\".");
+                    }
                     else
                     {
                         MapObject m = new MapObject(bp, lp, wp, World.tileMap.currentElevation);
                         World.objectManager.SpawnObject(m);
-                        MyConsole.NewMessage("    " + spawnName + " spawned at (" + lp.x + "," + lp.y + ") relative to player.");
+                        MyConsole.NewMessage("    " + m.Name + " spawned at " + lp.ToString());
                     }
                 }
 
@@ -389,7 +381,8 @@ public class Console : MonoBehaviour
                     MyConsole.Error("Invalid. 0 for off, 1 for on.");
                     return;
                 }
-                playerStats.invincible = (parsedText[1] != "0");
+
+                playerStats.invincible = parsedText[1] == "on" || parsedText[1] != "0";
                 MyConsole.NewMessage("    God mode " + ((parsedText[1] == "0") ? "disabled" : "enabled"));
                 break;
 
@@ -400,7 +393,7 @@ public class Console : MonoBehaviour
                     return;
                 }
 
-                bool toggleOn = parsedText[1] == "1";
+                bool toggleOn = parsedText[1] == "on" || parsedText[1] != "0";
                 Manager.noEncounters = toggleOn;
                 MyConsole.NewMessage("    Encounters " + (toggleOn ? "disabled" : "enabled"));
                 break;
@@ -412,7 +405,7 @@ public class Console : MonoBehaviour
                     MyConsole.Error("Invalid. 0 for off, 1 for on.");
                     return;
                 }
-                Manager.lightingOn = (parsedText[1] != "0");
+                Manager.lightingOn = parsedText[1] != "0";
                 MyConsole.NewMessage("    FOV/Lighting " + ((parsedText[1] == "0") ? "disabled" : "enabled") + " Act to reset.");
                 break;
 
@@ -436,7 +429,8 @@ public class Console : MonoBehaviour
                     MyConsole.Error("Give a destination.");
                     return;
                 }
-                else if (parsedText[1] == "surface")
+
+                if (parsedText[1] == "surface")
                 {
                     ObjectManager.playerEntity.TeleportToSurface();
                     return;
@@ -471,7 +465,7 @@ public class Console : MonoBehaviour
                     World.tileMap.worldCoordX--;
                     MyConsole.NewMessage("    Going West.");
                 }
-                else if (parsedText[1] == "ele")
+                else if (parsedText[1] == "elevation")
                 {
                     if (parsedText.Length < 3)
                     {
@@ -525,14 +519,14 @@ public class Console : MonoBehaviour
             case "modwep":
                 if (parsedText.Length < 2)
                 {
-                    MyConsole.Error("Specify an ID for the mod. Use the \"mods\" command to see them all.");
+                    MyConsole.Error("Specify an ID for the modifier.");
                     return;
                 }
 
                 ItemModifier im = ItemList.GetModByID(parsedText[1]);
                 if (im == null)
                 {
-                    MyConsole.Error("No mod with the id of \"" + parsedText[1] + "\".");
+                    MyConsole.Error("No modifier with the id \"" + parsedText[1] + "\".");
                     return;
                 }
 
@@ -664,7 +658,7 @@ public class Console : MonoBehaviour
                     item = ItemList.GetItemByName(itemID);
                 }
 
-                if (item.ID != ItemList.GetNone().ID && playerInventory != null)
+                if (item != null && item.ID != ItemList.GetNone().ID && playerInventory != null)
                 {
                     playerInventory.PickupItem(item);
                     MyConsole.NewMessage("    Gave 1x " + item.Name);
@@ -679,7 +673,7 @@ public class Console : MonoBehaviour
             case "multigrant":
                 if (parsedText.Length < 2)
                 {
-                    MyConsole.Error("Need to provide an item name.");
+                    MyConsole.Error("Need to provide an item id.");
                     return;
                 }
                 int ou = 1;
@@ -772,13 +766,7 @@ public class Console : MonoBehaviour
                 break;
 
             case "sever":
-                if (parsedText.Length < 2)
-                {
-                    MyConsole.Error("Select a body part integer to sever, or type random.");
-                    return;
-                }
-
-                if (parsedText[1] == "random")
+                if (parsedText.Length < 2 || parsedText[1] == "random")
                 {
                     int limbIndex = Random.Range(0, playerEntity.body.bodyParts.Count);
 
@@ -797,12 +785,7 @@ public class Console : MonoBehaviour
                 break;
 
             case "reattach":
-                if (parsedText.Length < 2)
-                {
-                    MyConsole.Error("No body part specified. Use an index or \"all\".");
-                    return;
-                }
-                if (parsedText[1] == "all")
+                if (parsedText.Length < 2 || parsedText[1] == "all")
                 {
                     playerEntity.body.RegrowLimbs();
                     MyConsole.NewMessage("    All limbs re-attached.");
@@ -881,7 +864,7 @@ public class Console : MonoBehaviour
                     }
                 }
 
-                CreateLocation cl = new CreateLocation(zoneID);
+                CreateLocationEvent cl = new CreateLocationEvent(zoneID);
                 cl.RunEvent();
                 break;
 
@@ -904,7 +887,7 @@ public class Console : MonoBehaviour
                     }
                 }
 
-                RemoveLocation rl = new RemoveLocation(zID);
+                RemoveLocationEvent rl = new RemoveLocationEvent(zID);
                 rl.RunEvent();
                 break;
 
@@ -914,14 +897,14 @@ public class Console : MonoBehaviour
                 MyConsole.DoubleLine();
                 MyConsole.NewMessage("");
 
-                MyConsole.NewMessageColor("<b><i>INFO:</i></b>", Color.red);
+                MyConsole.NewMessageColor("<b>INFO:</b>", Color.red);
                 MyConsole.NewMessage(" Note: Spaces are used to parse the string.");
                 MyConsole.NewMessageColor("  <b>Commands:</b>", Color.red);
 
                 MyConsole.NewMessage("  - <b>unstuck/unstick</b>\n    Teleports you to a random floor tile if stuck.");
                 MyConsole.NewHelpLine("location", "Displays the current world coordinate.");
                 MyConsole.NewHelpLine("go [area/direction]", "Travel one screen in a direction. [direction] = \"up\", \"down\", \"north\", \"south\", \"east\", \"west\", \"surface\".\n" +
-                    "You can also travel to any landmark by typing its ID.");
+                    "You can also travel to any landmark by typing its ID, or any elevation by typing \"go elevation [e]\" where \"e\" is an integer.");
                 MyConsole.NewHelpLine("  - <b>setpos [x] [y]</b>", "Travel to a specific world position. Constraints: 0-199 on each axis.");
                 MyConsole.NewMessage("  - <b>godmode</b> <i>[0-1]</i>\n      [0] = off\n      [1] = on");
                 MyConsole.NewMessage("  - <b>fov</b> <i>[0-1]</i>\n      Whether to show fog of war or not. \n0 = off  1 = on");
@@ -969,7 +952,7 @@ public class Console : MonoBehaviour
                 MyConsole.NewMessage("  - <b>completequest</b>\n    Completes the current tracked quest.");
                 MyConsole.NewMessage("  - <b>startquest</b> <i>[ID]</i>\n    Starts the quest with the input ID.");
                 MyConsole.NewMessage("  - <b>questflag <i>[flag]</i></b>\n    Gives the player the input quest flag. Possibilities: " +
-                    "\n\tCan_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Break_Prisoner_Inhibitor, Hostile_To_Kin, Hostile_To_Ensis, Hunts_Available, Arena_Available");
+                    "\n\tCan_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Can_Enter_Fab, HostileTo_[factionID]");
                 MyConsole.NewMessage("  - <b>weather <i>[amount (0-3)]</i></b>\n    Sets the world weather to the appropriate number.");
                 MyConsole.NewMessage("  - <b>5k</b>\n    Increases the turn counter by 5000.");
                 MyConsole.NewMessage("  - <b>10k</b>\n    Increases the turn counter by 10000.");

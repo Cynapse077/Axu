@@ -5,10 +5,11 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class Faction : IAsset
 {
-    public string Name { get; protected set; }
     public string ID { get; set; }
     public string ModID { get; set; }
-    public List<string> hostileTo = new List<string>();
+    public string name;
+    public bool hidden;
+    public List<string> hostileTo;
 
     public Faction(JsonData dat)
     {
@@ -17,14 +18,16 @@ public class Faction : IAsset
 
     public void FromJson(JsonData dat)
     {
-        if (dat.ContainsKey("Name"))
-            Name = dat["Name"].ToString();
         if (dat.ContainsKey("ID"))
             ID = dat["ID"].ToString();
 
+        dat.TryGetString("Name", out name);
+        dat.TryGetBool("Hidden", out hidden, false);
+
+        hostileTo = new List<string>();
+
         if (dat.ContainsKey("Hostile To"))
         {
-            hostileTo = new List<string>();
             for (int j = 0; j < dat["Hostile To"].Count; j++)
             {
                 hostileTo.Add(dat["Hostile To"][j].ToString());
@@ -34,7 +37,7 @@ public class Faction : IAsset
 
     public bool HostileToPlayer()
     {
-        return (isHostileTo("player"));
+        return isHostileTo("player");
     }
 
     public bool isHostileTo(Faction otherFaction)
@@ -48,12 +51,12 @@ public class Faction : IAsset
         {
             return true;
         }
-        else if (hostileTo.Contains("none"))
+        if (hostileTo.Contains("none"))
         {
             return false;
         }
 
-        return (hostileTo.Contains(otherFaction) || DynamicHostility(otherFaction));
+        return hostileTo.Contains(otherFaction) || DynamicHostility(otherFaction);
     }
 
     bool DynamicHostility(string otherFaction)
@@ -65,15 +68,7 @@ public class Faction : IAsset
 
         if (otherFaction == "player" || otherFaction == "followers")
         {
-            switch (ID)
-            {
-                case "ensis":
-                    return ObjectManager.playerJournal.HasFlag("Hostile_To_Ensis");
-                case "kin":
-                    return ObjectManager.playerJournal.HasFlag("Hostile_To_Kin");
-                case "magna":
-                    return ObjectManager.playerJournal.HasFlag("Hostile_To_Oromir");
-            }
+            return ObjectManager.playerJournal.HasFlag("HostileTo_" + ID);
         }
 
         return false;
@@ -81,7 +76,7 @@ public class Faction : IAsset
 
     public IEnumerable<string> LoadErrors()
     {
-        if (Name.NullOrEmpty())
+        if (name.NullOrEmpty())
         {
             yield return "Name not set.";
         }

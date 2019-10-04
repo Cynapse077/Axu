@@ -64,21 +64,16 @@ public class TileRenderer : MonoBehaviour
         int width = Manager.localMapSize.x;
         int height = Manager.localMapSize.y;
 
-        bool N = (posY < height - 1 && TileNotInSight(posX, posY + 1));
-        bool E = (posX < width - 1 && TileNotInSight(posX + 1, posY));
-        bool S = (posY > 0 && TileNotInSight(posX, posY - 1));
-        bool W = (posX > 0 && TileNotInSight(posX - 1, posY));
-
-        if (N) sum |= 1;
-        if (W) sum |= 2;
-        if (E) sum |= 4;
-        if (S) sum |= 8;
+        if (posY < height - 1 && TileInSight(posX, posY + 1)) sum |= 1 << 0;  //N
+        if (posX > 0 && TileInSight(posX - 1, posY)) sum |= 1 << 1;           //W
+        if (posX < width - 1 && TileInSight(posX + 1, posY)) sum |= 1 << 2;   //E
+        if (posY > 0 && TileInSight(posX, posY - 1)) sum |= 1 << 3;           //S
 
         return sum;
     }
 
-    bool TileNotInSight(int x, int y)
+    bool TileInSight(int x, int y)
     {
-        return !World.tileMap.GetCellAt(x, y).InSight;
+        return World.tileMap.GetCellAt(x, y).InSight;
     }
 }

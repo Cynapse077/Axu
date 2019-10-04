@@ -58,6 +58,37 @@ function ShockAdjacent(defender, attacker)
 	end
 end
 
+--From ammunition types.
+function Explosion(source, pos)
+	for x = pos.x - 1, pos.x + 1 do
+		for y = pos.y - 1, pos.y + 1 do
+			ObjectManager.SpawnEffect(6, "explosion", source, x, y, Random(6, 12), nil, 0)
+		end
+	end
+
+	SoundManager.Explosion()
+end
+function OnHit_Poison(source, pos)
+	if (Random(0, 100) < 50 and TargetAvailableAt(pos)) then
+		TileMap.GetCellAt(position).entity.stats.AddStatusEffect("Poison", Random(2, 8))
+	end
+end
+function OnHit_Burn(source, pos)
+	if (Random(0, 100) < 50 and TargetAvailableAt(pos)) then
+		TileMap.GetCellAt(position).entity.stats.AddStatusEffect("Aflame", Random(4, 7))
+	end
+end
+function OnHit_Confuse(source, pos)
+	if (Random(0, 100) < 50 and TargetAvailableAt(pos)) then
+		TileMap.GetCellAt(position).entity.stats.AddStatusEffect("Confuse", Random(6, 10))
+	end
+end
+function OnHit_Daze(source, pos)
+	if (Random(0, 100) < 50 and TargetAvailableAt(pos)) then
+		TileMap.GetCellAt(position).entity.stats.AddStatusEffect("Stun", Random(2, 6))
+	end
+end
+
 --Pushes a creature away from the attacker
 function PushEntity(defender, attacker)
 	if (Random(0, 100) < 50) then
@@ -75,6 +106,11 @@ function DrainHealth(defender, attacker)
 	if (Random(0, 100) >= 10) then
 		attacker.stats.Heal(Random(1, 5))
 	end
+end
+
+--Helper function
+function TargetAvailableAt(position)
+	return (TileMap.WalkableTile(position.x, position.y) and TileMap.GetCellAt(position).entity ~= nil)
 end
 
 --Opens the alert panel with the journal text

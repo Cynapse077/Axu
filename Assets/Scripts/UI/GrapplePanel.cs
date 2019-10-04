@@ -43,7 +43,7 @@ public class GrapplePanel : MonoBehaviour
                 //PUSH
                 GameObject pushGO = Instantiate(abilityIcon, anchor);
                 n = LocalizationManager.GetContent("Grapple_Push");
-                n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.gameObject.name);
+                n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.entity.MyName);
                 pushGO.GetComponentInChildren<Text>().text = n;
                 pushGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
                 actions.Add(new KeyValuePair<string, int>("Push", i));
@@ -55,7 +55,7 @@ public class GrapplePanel : MonoBehaviour
                     //TAKE DOWN
                     GameObject takeDownGO = Instantiate(abilityIcon, anchor);
                     n = LocalizationManager.GetContent("Grapple_TakeDown");
-                    n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.gameObject.name);
+                    n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.entity.MyName);
                     takeDownGO.GetComponentInChildren<Text>().text = n;
                     takeDownGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
                     actions.Add(new KeyValuePair<string, int>("Take Down", i));
@@ -117,7 +117,7 @@ public class GrapplePanel : MonoBehaviour
                 //RELEASE GRIP
                 GameObject releaseGO = Instantiate(abilityIcon, anchor);
                 n = LocalizationManager.GetContent("Grapple_Release");
-                n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.gameObject.name);
+                n = n.Replace("[NAME]", body.bodyParts[i].grip.heldPart.myBody.entity.MyName);
                 releaseGO.GetComponentInChildren<Text>().text = n;
                 releaseGO.GetComponent<Button>().onClick.AddListener(() => SelectPressed());
                 actions.Add(new KeyValuePair<string, int>("Release", i));
@@ -179,7 +179,7 @@ public class GrapplePanel : MonoBehaviour
                 break;
 
             case "Release":
-                CombatLog.CombatMessage("Gr_ReleaseGrip", ObjectManager.player.name, targetLimb.myBody.gameObject.name, false);
+                CombatLog.CombatMessage("Gr_ReleaseGrip", ObjectManager.player.name, targetLimb.myBody.entity.MyName, false);
                 selectedGrip.Release();
                 break;
         }

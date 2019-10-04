@@ -44,7 +44,7 @@ namespace MapCreator
             switch (buttonType)
             {
                 case MC_ButtonType.Tile:
-                    mct.EnableTooltip(Tile.GetKey(tileID));
+                    mct.EnableTooltip(TileManager.GetKey(tileID));
                     break;
                 case MC_ButtonType.Object:
                     mct.EnableTooltip(mct.ViewableObjects[tileID].Name);

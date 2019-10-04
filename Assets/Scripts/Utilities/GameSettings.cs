@@ -85,6 +85,11 @@ public static class GameSettings
         prettyData = JsonHelper.PrettyPrint(prettyData);
         File.WriteAllText(Manager.SettingsDirectory, prettyData);
 
+        if (ScreenSize == null)
+        {
+            ScreenSize = new Coord(1280, 720);
+        }
+
         Screen.SetResolution(ScreenSize.x, ScreenSize.y, Fullscreen);
     }
 

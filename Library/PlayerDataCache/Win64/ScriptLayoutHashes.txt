@@ -153,7 +153,7 @@ af84efdf8f31d84471a05fb207e6916a Assembly-CSharp.dll:.MusicManager
 414181af1db701d46e31e32d519382a2 Assembly-CSharp.dll:.DialoguePanel
 95b4e1d2b8965ff3bcff4dfde5bd3dc4 Assembly-CSharp.dll:.WeaponHitEffect
 0187dd73f0a164e92fc706484c727b71 Assembly-CSharp.dll:.PauseMenuPanel
-086bebf4b8b3f8bfc5607e8cc75d646e Assembly-CSharp.dll:.MapObjectSprite
+9c52499604865ca2aad029dde75034e5 Assembly-CSharp.dll:.MapObjectSprite
 3a45cf00770dc39ba19a1b4600ad06ed Assembly-CSharp.dll:.CameraControl
 eb455c5958c5c00c91a8cf79891778a6 Assembly-CSharp.dll:.StatusEffectObject
 f9c349eb9dfd73a4bb1395c3d618263f Assembly-CSharp.dll:.TilesetManager
@@ -229,7 +229,7 @@ fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 bebd32f65f58db64cbc962fe4f5178b5 Assembly-CSharp.dll:.HotkeyManager
-991eee7487e00f291e885c9cc155ed96 Assembly-CSharp.dll:.BaseAI
+82d5105788805790a24ffc3ba7b25952 Assembly-CSharp.dll:.BaseAI
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Journal
 0e71e42a045d01fcfb93ccf7c3e00db2 Assembly-CSharp.dll:.MiniMap
 5fc094978ce3e3591a7500ed380d854a Unity.Analytics.DataPrivacy.dll:UnityEngine.Analytics.DataPrivacyButton
@@ -248,7 +248,7 @@ cf8588ec567b5829fe679615fa8f84d4 Assembly-CSharp.dll:.BodyDisplayPanel
 b7d578a3934ba990a792eccad68d1752 Assembly-CSharp.dll:.LevelUpPanel
 25c391c825ebcd0d3d9622edd606cb84 Assembly-CSharp.dll:.SpriteOutline
 48b3f7e1e3d291fdbca87a600acb747c Assembly-CSharp.dll:.TooltipPanel
-9d9163fb3c75f46d9a307119292c2a4b Assembly-CSharp.dll:.ObjectManager
+8b8a7f7de0aac2d9ac2598dcd6458eba Assembly-CSharp.dll:.ObjectManager
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.SimpleUI_Lvl
 467c3679c17e88bfb97f5bad67780816 Assembly-CSharp.dll:.TurnManager
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:UnityStandardAssets.ImageEffects.PostEffectsBase

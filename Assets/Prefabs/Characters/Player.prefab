@@ -573,7 +573,6 @@ GameObject:
   m_Component:
   - component: {fileID: 415476}
   - component: {fileID: 11417096}
-  - component: {fileID: 114057595597460656}
   - component: {fileID: 11449158}
   - component: {fileID: 11447438}
   - component: {fileID: 11487934}
@@ -581,6 +580,7 @@ GameObject:
   - component: {fileID: 114000013717847370}
   - component: {fileID: 11441988}
   - component: {fileID: 114000013728184754}
+  - component: {fileID: 8628434199811234164}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -625,21 +625,6 @@ MonoBehaviour:
   walkDirection:
     _x: 0
     _y: 0
---- !u!114 &114057595597460656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 186980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 997e3449ff7800c459738f8045cc8a3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bodyParts: []
-  entity: {fileID: 11417096}
-  currentStance: 0
 --- !u!114 &11449158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -713,8 +698,8 @@ MonoBehaviour:
   childSprite: {fileID: 21235060}
   activeSkill:
     Name: 
-    ID: 
     Description: 
+    iconPath: 
     staminaCost: 0
     cooldown: 0
     maxCooldown: 0
@@ -723,6 +708,16 @@ MonoBehaviour:
     castType: 0
     damageType: 0
     CanLevelUp: 1
+    luaAction:
+      modID: 
+      scriptName: 
+      functionName: 
+      variable: 
+    aiAction:
+      modID: 
+      scriptName: 
+      functionName: 
+      variable: 
     timeCost: 10
     dice:
       Num: 0
@@ -779,6 +774,20 @@ MonoBehaviour:
   stBack: {fileID: 1000014125522136}
   stBar: {fileID: 4000010301083572}
   spriteRenderer: {fileID: 21235060}
+--- !u!114 &8628434199811234164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 997e3449ff7800c459738f8045cc8a3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyParts: []
+  entity: {fileID: 11417096}
 --- !u!1 &197914
 GameObject:
   m_ObjectHideFlags: 0

@@ -74,12 +74,11 @@ public class Journal : MonoBehaviour
             progressFlags.Add(fl);
         }
 
-        if (fl == "Hostile_To_Ensis")
-            MakeHostile("ensis");
-        else if (fl == "Hostile_To_Kin")
-            MakeHostile("kin");
-        else if (fl == "Hostile_To_Oromir")
-            MakeHostile("magna");
+        if (fl.Contains("HostileTo_"))
+        {
+            string[] ss = fl.Split('_');
+            MakeHostile(ss[1]);
+        }
     }
 
     void MakeHostile(string facID)
@@ -207,12 +206,3 @@ public class Journal : MonoBehaviour
         return true;
     }
 }
-
-/*public enum ProgressFlags
-{
-    None,
-    Can_Enter_Power_Plant, Can_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Can_Enter_Fab,
-    Hostile_To_Kin, Hostile_To_Ensis, Hostile_To_Oromir,
-    Hunts_Available, Arena_Available,
-    Found_Base, Learned_Butcher
-}*/

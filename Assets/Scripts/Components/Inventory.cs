@@ -719,15 +719,22 @@ public class Inventory : MonoBehaviour
     public bool Reload(Item i)
     {
         if (!i.HasCComponent<CFirearm>())
+        {
             return false;
+        }
 
-        Item ammo = items.Find(x => x.HasProp(ItemProperty.Ammunition) && x.ID == i.GetCComponent<CFirearm>().ammoID);
+        //TODO: Select ammo type to reload with if there is more than one.
+        Item ammo = items.Find(
+            x => x.HasCComponent<CAmmo>()
+            && x.GetCComponent<CAmmo>().AmmoType == i.GetCComponent<CFirearm>().ammoID);
 
         if (ammo == null)
+        {
             return false;
+        }
 
         int ammoAmount = ammo.amount;
-        ammo.amount -= i.Reload(ammoAmount);
+        ammo.amount -= i.Reload(ammoAmount, ammo);
 
         if (ammo.amount <= 0)
         {

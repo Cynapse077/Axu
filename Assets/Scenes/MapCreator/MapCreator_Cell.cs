@@ -173,7 +173,7 @@ namespace MapCreator
 
         string GetTootip()
         {
-            string tt = Tile.GetKey(tileID);
+            string tt = TileManager.GetKey(tileID);
             string ot = (objectID > -1) ? mct.ViewableObjects[objectID].Name : "No Object";
             string nt = (npcID > -1) ? EntityList.npcs[npcID].name : "No NPC";
 

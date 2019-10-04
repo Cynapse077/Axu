@@ -122,7 +122,7 @@ public static class LuaManager
             sc.Globals["SetTile"] = (Action<int, int, string>)ChangeTileInCurrentMap;
             sc.Globals["LocalPath"] = (Func<Coord, Coord, bool, Entity, List<Coord>>)Pathfinding.Path_AStar.GetPath;
             sc.Globals["PositionsInCone"] = (Func<Entity, Coord, Coord, int, List<Coord>>)Utility.Cone;
-            sc.Globals["GetTile"] = (Func<string, Tile_Data>)Tile.GetByName;
+            sc.Globals["GetTile"] = (Func<string, Tile_Data>)TileManager.GetByName;
             sc.Globals["Error"] = (Action<object>)Error;
 
             //Constants
@@ -136,6 +136,7 @@ public static class LuaManager
 
     static void AddStaticsToGlobals(Script sc)
     {
+        //Singletons
         sc.Globals["SpawnController"] = typeof(SpawnController);
         sc.Globals["World"] = typeof(World);
         sc.Globals["EntityList"] = typeof(EntityList);
@@ -143,7 +144,7 @@ public static class LuaManager
         sc.Globals["Alert"] = typeof(Alert);
         sc.Globals["LuaManager"] = typeof(LuaManager);
         sc.Globals["TraitList"] = typeof(TraitList);
-        sc.Globals["Tile"] = typeof(Tile);
+        sc.Globals["TileManager"] = typeof(TileManager);
         sc.Globals["SpriteManager"] = typeof(SpriteManager);
 
         //Models
@@ -178,6 +179,6 @@ public static class LuaManager
 
     static void ChangeTileInCurrentMap(int x, int y, string key)
     {
-        World.tileMap.SetTile(Tile.tiles[key], x, y);
+        World.tileMap.SetTile(TileManager.tiles[key], x, y);
     }
 }

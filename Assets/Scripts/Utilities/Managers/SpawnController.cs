@@ -140,6 +140,41 @@ public static class SpawnController
                 Encounter();
             }
 
+            //Bandit ambush in village
+            if (!mapData.mapInfo.landmark.NullOrEmpty() && mapData.mapInfo.landmark.Contains("Village"))
+            {
+                if (rng.OneIn(300))
+                {
+                    CombatLog.NewMessage("You hear commition...");
+                    GroupBlueprint gb = GameData.GetRandom<GroupBlueprint>((a) => {
+                        if (!(a is GroupBlueprint asset))
+                            return false;
+
+                        return asset.ID.Contains("Bandit") && asset.CanSpawn(2);
+                    });
+
+                    if (gb != null)
+                    {
+                        for (int i = 0; i < rng.Next(2, 6); i++)
+                        {
+                            SpawnBlueprint s = Utility.WeightedChoice(gb.npcs);
+                            int amount = s.AmountToSpawn();
+
+                            for (int j = 0; j < amount; j++)
+                            {
+                                Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
+
+                                if (c != null)
+                                {
+                                    NPC n = new NPC(s.npcID, mapData.mapInfo.position, c, mapData.elevation);
+                                    World.objectManager.SpawnNPC(n);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             if (numSpawns > 0)
             {
                 List<GroupBlueprint> gbs = GroupsThatCanSpawnHere(mapData);
@@ -280,7 +315,9 @@ public static class SpawnController
     static void HouseObjects()
     {
         if (World.tileMap.CurrentMap.loadedFromData)
+        {
             return;
+        }
 
         int numHouses = World.tileMap.CurrentMap.houses.Count;
 

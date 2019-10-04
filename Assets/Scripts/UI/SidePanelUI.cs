@@ -22,7 +22,9 @@ public class SidePanelUI : MonoBehaviour {
 
 	void Update() {
 		if (initialized)
+        {
 			DisplayHPST();
+        }
 	}
 
 	void DisplayHPST() {

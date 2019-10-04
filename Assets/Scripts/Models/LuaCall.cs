@@ -24,7 +24,7 @@ public class LuaCall
         if (indexOfVar >= 0 && indexOfVar < script.Length - 1)
         {
             variable = script.Substring(indexOfVar + 1);
-            script.Remove(indexOfVar);
+            script = script.Remove(indexOfVar);
         }
 
         string[] s = script.Split('.');

@@ -286,12 +286,12 @@ public class MouseController : MonoBehaviour
         //if you are clicking on the character's tile.
         if (targetPos == playerEntity.myPos)
         {
-            if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == Tile.tiles["Stairs_Up"].ID)
+            if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == TileManager.tiles["Stairs_Up"].ID)
             {
                 userInterface.YesNoAction("YN_GoUp".Translate(), () => { playerInput.GoUp(); }, null, "");
                 return;
             }
-            else if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == Tile.tiles["Stairs_Down"].ID)
+            else if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == TileManager.tiles["Stairs_Down"].ID)
             {
                 userInterface.YesNoAction("YN_GoDown".Translate(), () => { playerInput.GoDown(); }, null, "");
                 return;

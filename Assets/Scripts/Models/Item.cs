@@ -183,9 +183,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         //Status effects
         foreach (CComponent c in CComponentsOfType<COnHitAddStatus>())
         {
-            COnHitAddStatus cOnHit = c as COnHitAddStatus;
-
-            if (cOnHit != null)
+            if (c is COnHitAddStatus cOnHit)
             {
                 cOnHit.TryAddToEntity(attackedEntity);
             }
@@ -423,6 +421,10 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (HasProp(ItemProperty.Cure_Radiation))
         {
             stats.radiation = 0;
+            if (stats.hasTrait("RadPoison"))
+            {
+                stats.RemoveTrait("RadPoison");
+            }
             CombatLog.SimpleMessage("Reduce_Rad");
         }
 
@@ -607,7 +609,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
         if (cf != null)
         {
-            cf.curr = 0;
+            cf.Unload();
         }
     }
 
@@ -669,11 +671,11 @@ public class Item : ComponentHolder<CComponent>, IAsset
             return false;
         }
 
-        fi.curr--;
+        fi.Shoot(1);
         return true;
     }
 
-    public int Reload(int amount)
+    public int Reload(int amount, Item ammoID)
     {
         CFirearm fi = GetCComponent<CFirearm>();
 
@@ -682,7 +684,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             return 0;
         }
 
-        return fi.Reload(amount);
+        return fi.Reload(amount, ammoID);
     }
 
     public ItemProperty GetSlot()

@@ -601,7 +601,13 @@ public class CharacterCreation : MonoBehaviour
             Manager.playerBuilder.items.Add(it);
         }
 
-        Item wep = ItemList.GetItemByID(GetWepFromProfs());
+        Item wep = currentProf.weapon.NullOrEmpty() ? ItemList.GetItemByID(GetWepFromProfs()) : ItemList.GetItemByID(currentProf.weapon);
+
+        if (!currentProf.firearm.NullOrEmpty())
+        {
+            Manager.playerBuilder.firearm = ItemList.GetItemByID(currentProf.firearm);
+        }
+
         Manager.playerBuilder.handItems = new List<Item>() { wep };
 
         StartCoroutine("StartGame");

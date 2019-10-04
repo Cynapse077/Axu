@@ -194,7 +194,7 @@ public class Status_Aflame : StatusEffect
 
     public override void OnAdd()
     {
-        if (!Tile.isWaterTile(World.tileMap.GetTileID(stats.entity.posX, stats.entity.posY), true))
+        if (!TileManager.isWaterTile(World.tileMap.GetTileID(stats.entity.posX, stats.entity.posY), true))
         {
             base.OnAdd();
         }
@@ -202,7 +202,7 @@ public class Status_Aflame : StatusEffect
 
     public override void OnTurn()
     {
-        if (Tile.isWaterTile(World.tileMap.GetTileID(stats.entity.posX, stats.entity.posY), true))
+        if (TileManager.isWaterTile(World.tileMap.GetTileID(stats.entity.posX, stats.entity.posY), true))
         {
             turns = 0;
         }

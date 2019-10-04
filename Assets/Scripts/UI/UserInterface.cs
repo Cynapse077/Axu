@@ -824,9 +824,9 @@ public class UserInterface : MonoBehaviour
         }
         else if (NoWindowsOpen)
         {
-            if (World.tileMap.GetTileID(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == Tile.tiles["Stairs_Up"].ID)
+            if (World.tileMap.GetTileID(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == TileManager.tiles["Stairs_Up"].ID)
                 playerInput.GoUp();
-            else if (World.tileMap.GetTileID(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == Tile.tiles["Stairs_Down"].ID)
+            else if (World.tileMap.GetTileID(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == TileManager.tiles["Stairs_Down"].ID)
                 playerInput.GoDown();
         }
     }
@@ -1159,18 +1159,21 @@ public class UserInterface : MonoBehaviour
     void FillLevelTraits()
     {
         levelUpTraits = new List<Trait>();
-        List<Trait> availableTraits = GameData.GetAll<Trait>().FindAll(x => x.ContainsEffect(TraitEffects.Random_Trait) && !playerStats.traits.Contains(x));
+        List<Trait> availableTraits = GameData.GetAll<Trait>().FindAll(x => x.ContainsEffect(TraitEffects.Random_Trait) && !playerStats.hasTrait(x.ID));
         int tr = availableTraits.Count;
 
         if (tr == 0)
+        {
             return;
+        }
 
         tr = (availableTraits.Count < 3) ? availableTraits.Count : 3;
 
         for (int i = 0; i < tr; i++)
         {
-            Trait t = new Trait(availableTraits.GetRandom(SeedManager.combatRandom));
-            availableTraits.Remove(t);
+            int index = SeedManager.combatRandom.Next(0, availableTraits.Count);
+            Trait t = new Trait(availableTraits[index]);
+            availableTraits.Remove(availableTraits[index]);
             levelUpTraits.Add(t);
         }
     }

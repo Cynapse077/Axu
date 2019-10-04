@@ -97,7 +97,7 @@ public class TileMap_Data
                 if (mapInfo.landmark == "Ruins")
                 {
                     if (RNG.Next(100) < 35 && WalkableTile(x, y))
-                        map_data[x, y] = Tile.tiles["Floor_Brick"];
+                        map_data[x, y] = TileManager.tiles["Floor_Brick"];
                 }
             }
         }
@@ -123,7 +123,7 @@ public class TileMap_Data
                 case "Ruins":
                     Ruins();
                     Coord stairs = GetRandomFloorTile();
-                    map_data[stairs.x, stairs.y] = Tile.tiles["Stairs_Down"];
+                    map_data[stairs.x, stairs.y] = TileManager.tiles["Stairs_Down"];
                     break;
                 case "River":
                     CreateRiver(mapInfo.position.x, mapInfo.position.y);
@@ -146,7 +146,7 @@ public class TileMap_Data
                     {
                         House r = houses.GetRandom(RNG);
                         Coord c = r.GetRandomPosition();
-                        map_data[c.x, c.y] = Tile.tiles["Stairs_Down"];
+                        map_data[c.x, c.y] = TileManager.tiles["Stairs_Down"];
                     }
                     break;
                 default:
@@ -191,9 +191,9 @@ public class TileMap_Data
                 {
                     float dist = Vector2.Distance(points[i].toVector2(), new Vector2(x, y));
 
-                    if (!Tile.isWaterTile(map_data[x, y].ID, true) && dist < 5 && (1.0f / dist) * 250 > ranNum)
+                    if (!TileManager.isWaterTile(map_data[x, y].ID, true) && dist < 5 && (1.0f / dist) * 250 > ranNum)
                     {
-                        map_data[x, y] = Tile.tiles["Mountain"];
+                        map_data[x, y] = TileManager.tiles["Mountain"];
                         break;
                     }
                 }
@@ -222,7 +222,7 @@ public class TileMap_Data
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    if (map_data[x, y] == Tile.tiles["Door"])
+                    if (map_data[x, y] == TileManager.tiles["Door"])
                     {
                         PlaceDoor(x, y);
                     }
@@ -340,13 +340,13 @@ public class TileMap_Data
                 Tile_Data tile = map_data[x, y];
 
                 //TODO: Move pews to map objects
-                if (tile == Tile.tiles["Door"] || tile == Tile.tiles["Stairs_Up"] || tile == Tile.tiles["Stairs_Down"])
+                if (tile == TileManager.tiles["Door"] || tile == TileManager.tiles["Stairs_Up"] || tile == TileManager.tiles["Stairs_Down"])
                     continue;
 
-                if (Tile.isWaterTile(tile.ID, true))
+                if (TileManager.isWaterTile(tile.ID, true))
                 {
                     int tIndex = (elevation == 0 && mapInfo.biome != Biome.Mountain) ? 0 : 8;
-                    BitwiseAutotile(x, y, tIndex, (z => Tile.isWaterTile(z, true)), true);
+                    BitwiseAutotile(x, y, tIndex, (z => TileManager.isWaterTile(z, true)), true);
                 }
                 else if (tile.HasTag("Wall"))
                 {
@@ -392,9 +392,9 @@ public class TileMap_Data
                         eightWay = true;
                     }
 
-                    BitwiseAutotile(x, y, tIndex, (z => Tile.GetByID(z).HasTag("Wall") && !Tile.isMountain(z)), eightWay);
+                    BitwiseAutotile(x, y, tIndex, (z => TileManager.GetByID(z).HasTag("Wall") && !TileManager.isMountain(z)), eightWay);
                 }
-                else if (Tile.isMountain(tile.ID))
+                else if (TileManager.isMountain(tile.ID))
                 {
                     int tIndex = 9;
 
@@ -411,23 +411,23 @@ public class TileMap_Data
                             tIndex = 19;
 
                     }
-                    else if (tile == Tile.tiles["Volcano_Wall"])
+                    else if (tile == TileManager.tiles["Volcano_Wall"])
                         tIndex = 13;
 
-                    BitwiseAutotile(x, y, tIndex, (z => Tile.isMountain(z)), true);
+                    BitwiseAutotile(x, y, tIndex, (z => TileManager.isMountain(z)), true);
 
                 }
-                else if (tile == Tile.tiles["Lava"])
+                else if (tile == TileManager.tiles["Lava"])
                 {
                     int tIndex = 10;
                     BitwiseAutotile(x, y, tIndex, (z => z == tile.ID), true);
                 }
-                else if (tile == Tile.tiles["Ice"])
+                else if (tile == TileManager.tiles["Ice"])
                 {
                     int tIndex = 16;
                     BitwiseAutotile(x, y, tIndex, (z => z == tile.ID), true);
                 }
-                else if (tile == Tile.tiles["Dream_Floor"])
+                else if (tile == TileManager.tiles["Dream_Floor"])
                 {
                     int tIndex = 23;
                     BitwiseAutotile(x, y, tIndex, (z => z == tile.ID), true);
@@ -436,16 +436,16 @@ public class TileMap_Data
                 {
                     BitwiseAutotile(x, y, 21,
                         (
-                            z => Tile.GetByID(z).biome == Biome.Default && !Tile.isWaterTile(z, true) ||
-                            Tile.GetByID(z).biome == tile.biome
+                            z => TileManager.GetByID(z).biome == Biome.Default && !TileManager.isWaterTile(z, true) ||
+                            TileManager.GetByID(z).biome == tile.biome
                         ), true, TileMap_Generator.TileFromBiome(mapInfo.biome, false).ID);
                 }
                 else if (elevation != 0 && tile.HasTag("Walkable") && !tile.HasTag("Underground"))
                 {
                     BitwiseAutotile(x, y, 21,
                         (
-                            z => !Tile.GetByID(z).HasTag("Walkable") || !Tile.GetByID(z).HasTag("Underground")
-                        ), true, Tile.tiles["UG_Dirt_1"].ID);
+                            z => !TileManager.GetByID(z).HasTag("Walkable") || !TileManager.GetByID(z).HasTag("Underground")
+                        ), true, TileManager.tiles["UG_Dirt_1"].ID);
                 }
             }
         }
@@ -556,7 +556,7 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                if (map_data[x, y].HasTag("Walkable") && map_data[x, y] != Tile.tiles["Lava"])
+                if (map_data[x, y].HasTag("Walkable") && map_data[x, y] != TileManager.tiles["Lava"])
                 {
                     floorTiles.Add(new Coord(x, y));
                 }
@@ -569,7 +569,7 @@ public class TileMap_Data
     public int GetTileNumAt(int x, int y)
     {
         if (World.OutOfLocalBounds(x, y))
-            return Tile.tiles["Default"].ID;
+            return TileManager.tiles["Default"].ID;
 
         return map_data[x, y].ID;
     }
@@ -630,7 +630,7 @@ public class TileMap_Data
             {
                 for (int y = h.rooms[i].bottom - 1; y < h.rooms[i].top + 1; y++)
                 {
-                    if (map_data[x, y] == Tile.tiles[roadTile])
+                    if (map_data[x, y] == TileManager.tiles[roadTile])
                         return false;
                 }
             }
@@ -645,7 +645,7 @@ public class TileMap_Data
             {
                 for (int y = h.rooms[i].bottom; y < h.rooms[i].top; y++)
                 {
-                    map_data[x, y] = Tile.tiles[floorTile];
+                    map_data[x, y] = TileManager.tiles[floorTile];
                 }
             }
         }
@@ -654,7 +654,7 @@ public class TileMap_Data
         {
             for (int y = h.Bottom() - 1; y <= h.Top(); y++)
             {
-                if (World.OutOfLocalBounds(x, y) || map_data[x, y] == Tile.tiles[floorTile] || map_data[x, y] == Tile.tiles[wallType])
+                if (World.OutOfLocalBounds(x, y) || map_data[x, y] == TileManager.tiles[floorTile] || map_data[x, y] == TileManager.tiles[wallType])
                     continue;
 
                 bool visited = false;
@@ -668,9 +668,9 @@ public class TileMap_Data
                         if (x + ex <= 0 || x + ex >= Manager.localMapSize.x - 1 || y + ey <= 0 || y + ey >= Manager.localMapSize.y - 1)
                             continue;
 
-                        if (map_data[x + ex, y + ey] == Tile.tiles[floorTile])
+                        if (map_data[x + ex, y + ey] == TileManager.tiles[floorTile])
                         {
-                            map_data[x, y] = Tile.tiles[wallType];
+                            map_data[x, y] = TileManager.tiles[wallType];
                             Coord newWall = new Coord(x, y);
 
                             if (x == h.Left() - 1 || x == h.Right() || y == h.Bottom() - 1 || y == h.Top())
@@ -699,8 +699,8 @@ public class TileMap_Data
         {
             int dx = possibleDoorPos[i].x, dy = possibleDoorPos[i].y;
 
-            if (map_data[dx + 1, dy] == Tile.tiles[wallType] && map_data[dx - 1, dy] == Tile.tiles[wallType] ||
-                map_data[dx, dy + 1] == Tile.tiles[wallType] && map_data[dx, dy - 1] == Tile.tiles[wallType])
+            if (map_data[dx + 1, dy] == TileManager.tiles[wallType] && map_data[dx - 1, dy] == TileManager.tiles[wallType] ||
+                map_data[dx, dy + 1] == TileManager.tiles[wallType] && map_data[dx, dy - 1] == TileManager.tiles[wallType])
             {
                 finalDoors.Add(possibleDoorPos[i]);
             }
@@ -721,7 +721,7 @@ public class TileMap_Data
 
         if (door != null)
         {
-            map_data[door.x, door.y] = Tile.tiles["Door"];
+            map_data[door.x, door.y] = TileManager.tiles["Door"];
             RemoveTreesAroundDoor(door.x, door.y, wallType);
         }
     }
@@ -739,7 +739,7 @@ public class TileMap_Data
 
                 Tile_Data t = map_data[x + ex, y + ey];
 
-                if (t != Tile.tiles[wallType] && !t.HasTag("Walkable"))
+                if (t != TileManager.tiles[wallType] && !t.HasTag("Walkable"))
                 {
                     map_data[x + ex, y + ey] = TileMap_Generator.TileFromBiome(mapInfo.biome);
                 }
@@ -842,12 +842,12 @@ public class TileMap_Data
 
                 int id = (int)data["IDs"][x * maxY + y];
 
-                if (id != Tile.tiles["Default"].ID)
+                if (id != TileManager.tiles["Default"].ID)
                 {
-                    map_data[x, y] = Tile.GetByID(id);
+                    map_data[x, y] = TileManager.GetByID(id);
                 }
 
-                if (id == Tile.tiles["Default_NoBlock"].ID)
+                if (id == TileManager.tiles["Default_NoBlock"].ID)
                 {
                     map_data[x, y] = TileMap_Generator.TileFromBiome(mapInfo.biome, false);
                 }
@@ -918,26 +918,26 @@ public class TileMap_Data
                 float distToCenter = Vector2.Distance(center, new Vector2(x, y));
 
                 if (distToCenter < RNG.Next(4, 6))
-                    map_data[x, y] = Tile.tiles["Lava"];
+                    map_data[x, y] = TileManager.tiles["Lava"];
                 else if (distToCenter < RNG.Next(11, 13))
-                    map_data[x, y] = Tile.tiles["Volcano_Wall"];
+                    map_data[x, y] = TileManager.tiles["Volcano_Wall"];
                 else
                 {
                     if (RNG.Next(1000) < 10)
-                        map_data[x, y] = Tile.tiles["Volcano_Wall"];
+                        map_data[x, y] = TileManager.tiles["Volcano_Wall"];
                     else
-                        map_data[x, y] = (RNG.Next(100) < 25) ? Tile.tiles["Mountain_Floor"] : Tile.tiles["UG_Dirt_1"];
+                        map_data[x, y] = (RNG.Next(100) < 25) ? TileManager.tiles["Mountain_Floor"] : TileManager.tiles["UG_Dirt_1"];
                 }
             }
         }
 
         Coord c = GetRandomFloorTile();
 
-        if (map_data[c.x, c.y] == Tile.tiles["Lava"])
+        if (map_data[c.x, c.y] == TileManager.tiles["Lava"])
         {
             int numTries = 0;
 
-            while (map_data[c.x, c.y] == Tile.tiles["Lava"] && numTries < 1000)
+            while (map_data[c.x, c.y] == TileManager.tiles["Lava"] && numTries < 1000)
             {
                 c = GetRandomFloorTile();
                 numTries++;
@@ -945,7 +945,7 @@ public class TileMap_Data
         }
 
         if (c != null)
-            map_data[c.x, c.y] = Tile.tiles["Stairs_Down"];
+            map_data[c.x, c.y] = TileManager.tiles["Stairs_Down"];
     }
 
     void CreateVaultLevel(Vault v)
@@ -961,9 +961,9 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                map_data[x, y] = Tile.GetByID(d.GetTileAt(x, y));
+                map_data[x, y] = TileManager.GetByID(d.GetTileAt(x, y));
 
-                if (WalkableTile(x, y) && map_data[x, y] != Tile.tiles["Stairs_Up"] && map_data[x, y] != Tile.tiles["Stairs_Down"])
+                if (WalkableTile(x, y) && map_data[x, y] != TileManager.tiles["Stairs_Up"] && map_data[x, y] != TileManager.tiles["Stairs_Down"])
                 {
                     if (v.blueprint.ID == "Cave_Start" && RNG.Next(1000) < 12 || v.blueprint.ID == "Spider" && RNG.Next(1000) < 40)
                         World.objectManager.NewObjectAtOtherScreen("Web", new Coord(x, y), mapInfo.position, -elevation);
@@ -977,7 +977,7 @@ public class TileMap_Data
         Coord stairsUp = GetRandomFloorTile();
         Coord stairsDown = GetRandomFloorTile();
 
-        map_data[stairsUp.x, stairsUp.y] = Tile.tiles["Stairs_Up"];
+        map_data[stairsUp.x, stairsUp.y] = TileManager.tiles["Stairs_Up"];
 
         if (spawnDownStairs)
         {
@@ -989,7 +989,7 @@ public class TileMap_Data
                 numFails++;
             }
 
-            map_data[stairsDown.x, stairsDown.y] = Tile.tiles["Stairs_Down"];
+            map_data[stairsDown.x, stairsDown.y] = TileManager.tiles["Stairs_Down"];
         }
 
         if (v.blueprint.ID == "Cellar" && !visited)
@@ -1007,7 +1007,7 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                if (WalkableTile(x, y) && RNG.Next(100) < 10 && map_data[x, y] != Tile.tiles["Stairs_Up"] && map_data[x, y] != Tile.tiles["Stairs_Down"])
+                if (WalkableTile(x, y) && RNG.Next(100) < 10 && map_data[x, y] != TileManager.tiles["Stairs_Up"] && map_data[x, y] != TileManager.tiles["Stairs_Down"])
                 {
                     string t = (RNG.Next(100) < 85) ? "Barrel" : "Chest";
                     World.objectManager.NewObjectAtOtherScreen(t, new Coord(x, y), mapInfo.position, World.tileMap.currentElevation);
@@ -1042,10 +1042,10 @@ public class TileMap_Data
                         if ((x == left || x == house.right || y == bottom + 1 || y == house.top))
                         {
                             if (RNG.Next(100) < 80)
-                                map_data[x, y] = Tile.tiles["Wall_Brick"];
+                                map_data[x, y] = TileManager.tiles["Wall_Brick"];
                         }
                         else if (RNG.Next(0, 101) < 75)
-                            map_data[x, y] = Tile.tiles["Floor_House"];
+                            map_data[x, y] = TileManager.tiles["Floor_House"];
                     }
                 }
 
@@ -1062,14 +1062,14 @@ public class TileMap_Data
                 //Place openings 
                 int dPos = RNG.Next(0, 4);
 
-                if (dPos == 0 && map_data[house.centerX, house.top] == Tile.tiles["Wall_Brick"]) //N
-                    map_data[house.centerX, house.top] = Tile.tiles["Floor_House"];
-                else if (dPos == 1 && map_data[house.centerX, bottom] == Tile.tiles["Wall_Brick"]) //S
-                    map_data[house.centerX, bottom] = Tile.tiles["Floor_House"];
-                else if (dPos == 2 && map_data[house.right, house.centerY] == Tile.tiles["Wall_Brick"]) //E
-                    map_data[house.right, house.centerY] = Tile.tiles["Floor_House"];
-                else if (dPos == 3 && map_data[house.left, house.centerY] == Tile.tiles["Wall_Brick"]) //W
-                    map_data[house.left, house.centerY] = Tile.tiles["Floor_House"];
+                if (dPos == 0 && map_data[house.centerX, house.top] == TileManager.tiles["Wall_Brick"]) //N
+                    map_data[house.centerX, house.top] = TileManager.tiles["Floor_House"];
+                else if (dPos == 1 && map_data[house.centerX, bottom] == TileManager.tiles["Wall_Brick"]) //S
+                    map_data[house.centerX, bottom] = TileManager.tiles["Floor_House"];
+                else if (dPos == 2 && map_data[house.right, house.centerY] == TileManager.tiles["Wall_Brick"]) //E
+                    map_data[house.right, house.centerY] = TileManager.tiles["Floor_House"];
+                else if (dPos == 3 && map_data[house.left, house.centerY] == TileManager.tiles["Wall_Brick"]) //W
+                    map_data[house.left, house.centerY] = TileManager.tiles["Floor_House"];
 
                 ruins.Add(house);
             }
@@ -1121,13 +1121,13 @@ public class TileMap_Data
                 int ranNumY = (int)(Mathf.Sin(rx / 3) * sinYAmount * offset);
 
                 if (N && rx > centerX - w + ranNumX && rx < centerX + w + ranNumX && ry > centerY - h + ranNumY)
-                    map_data[rx, ry] = Tile.tiles["Water"];
+                    map_data[rx, ry] = TileManager.tiles["Water"];
                 if (S && rx > centerX - w + ranNumX && rx < centerX + w + ranNumX && ry < centerY + h + ranNumY)
-                    map_data[rx, ry] = Tile.tiles["Water"];
+                    map_data[rx, ry] = TileManager.tiles["Water"];
                 if (E && ry > centerY - h + ranNumY && ry < centerY + h + ranNumY && rx > centerX - w + ranNumX)
-                    map_data[rx, ry] = Tile.tiles["Water"];
+                    map_data[rx, ry] = TileManager.tiles["Water"];
                 if (W && ry > centerY - h + ranNumY && ry < centerY + h + ranNumY && rx < centerX + w + ranNumX)
-                    map_data[rx, ry] = Tile.tiles["Water"];
+                    map_data[rx, ry] = TileManager.tiles["Water"];
 
                 offset += RNG.ZeroToOne() * 0.15f;
                 amplitude += RNG.ZeroToOne() * 0.01f * RNG.Next(-1, 2);
@@ -1142,8 +1142,8 @@ public class TileMap_Data
             {
                 for (int ey = 0; ey < Height; ey++)
                 {
-                    if (Tile.isWaterTile(map_data[ex, ey].ID, false))
-                        map_data[ex, ey] = Tile.tiles["Ice"];
+                    if (TileManager.isWaterTile(map_data[ex, ey].ID, false))
+                        map_data[ex, ey] = TileManager.tiles["Ice"];
                 }
             }
         }
@@ -1172,13 +1172,13 @@ public class TileMap_Data
                 int ranNumY = (int)(Mathf.Sin(rx / amplitude) * sinYAmount * offset);
 
                 if (N && rx > centerX - w + ranNumX && rx < centerX + w + ranNumX && ry > centerY - h + ranNumY)
-                    map_data[rx, ry] = Tile.tiles["Floor_Brick_2"];
+                    map_data[rx, ry] = TileManager.tiles["Floor_Brick_2"];
                 if (S && rx > centerX - w + ranNumX && rx < centerX + w + ranNumX && ry < centerY + h + ranNumY)
-                    map_data[rx, ry] = Tile.tiles["Floor_Brick_2"];
+                    map_data[rx, ry] = TileManager.tiles["Floor_Brick_2"];
                 if (E && ry > centerY - h + ranNumY && ry < centerY + h + ranNumY && rx > centerX - w + ranNumX)
-                    map_data[rx, ry] = Tile.tiles["Floor_Brick_2"];
+                    map_data[rx, ry] = TileManager.tiles["Floor_Brick_2"];
                 if (W && ry > centerY - h + ranNumY && ry < centerY + h + ranNumY && rx < centerX + w + ranNumX)
-                    map_data[rx, ry] = Tile.tiles["Floor_Brick_2"];
+                    map_data[rx, ry] = TileManager.tiles["Floor_Brick_2"];
 
                 offset += RNG.ZeroToOne() * 0.15f;
                 amplitude += RNG.ZeroToOne() * 0.01f * RNG.Next(-1, 2);
@@ -1192,7 +1192,7 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                if (map_data[x, y] == Tile.tiles["Stairs_Down"])
+                if (map_data[x, y] == TileManager.tiles["Stairs_Down"])
                     return new Coord(x, y);
             }
         }
@@ -1206,7 +1206,7 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                if (map_data[x, y] == Tile.tiles["Stairs_Up"])
+                if (map_data[x, y] == TileManager.tiles["Stairs_Up"])
                     return new Coord(x, y);
             }
         }
@@ -1227,7 +1227,7 @@ public class TileMap_Data
         if (x < 0 || x > Width || y < 0 || y > Height)
             return false;
 
-        return Tile.isWaterTile(map_data[x, y].ID, true);
+        return TileManager.isWaterTile(map_data[x, y].ID, true);
     }
 
     void Init()

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class DialogueController : MonoBehaviour
 {
@@ -32,10 +33,12 @@ public class DialogueController : MonoBehaviour
             return;
         }
 
-        if (!string.IsNullOrEmpty(myNPC.questID) && !ObjectManager.playerJournal.HasCompletedQuest(myNPC.questID) 
-            && ObjectManager.playerJournal.quests.Find(x => x.ID == myNPC.questID) == null)
+        if (!myNPC.questID.NullOrEmpty() && !ObjectManager.playerJournal.HasCompletedQuest(myNPC.questID) && !ObjectManager.playerJournal.HasQuest(myNPC.questID))
         {
-            myQuest = QuestList.GetByID(myNPC.questID);
+            if (GameData.TryGet(myNPC.questID, out Quest q))
+            {
+                myQuest = new Quest(q);
+            }            
         }
 
         if (dialogueChoices == null)

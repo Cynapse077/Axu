@@ -12,12 +12,46 @@ namespace Pathfinding
         Fail
     }
 
+    public struct CoordPair
+    {
+        public readonly Coord first;
+        public readonly Coord second;
+
+        public CoordPair(Coord c1, Coord c2)
+        {
+            this.first = c1;
+            this.second = c2;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is CoordPair;
+        }
+
+        public static bool operator ==(CoordPair c1, CoordPair c2)
+        {
+            return c1 == c2;
+        }
+
+        public static bool operator !=(CoordPair c1, CoordPair c2)
+        {
+            return c1 != c2;
+        }
+
+        public override int GetHashCode()
+        {
+            return first.GetHashCode() ^ second.GetHashCode();
+        }
+    }
+
     public class Path_AStar
     {
+        static Dictionary<CoordPair, Queue<Path_Node>> cachedPaths = new Dictionary<CoordPair, Queue<Path_Node>>();
+
         Queue<Path_Node> steps;
         public readonly PathResult result;
-        public readonly Coord Start;
-        public readonly Coord End;
+        public readonly Coord start;
+        public readonly Coord end;
 
         Dictionary<Path_Node, Path_Node> Came_From = new Dictionary<Path_Node, Path_Node>();
         Dictionary<Path_Node, float> g_score = new Dictionary<Path_Node, float>();
@@ -43,33 +77,48 @@ namespace Pathfinding
 
         public Path_AStar(Coord startCoord, Coord endCoord, bool ignoreCosts, Entity entity)
         {
-            Start = startCoord;
-            End = endCoord;
-            if (World.tileMap.tileGraph == null)
-            {
-                World.tileMap.tileGraph = new Path_TileGraph(World.tileMap.CurrentMap);
-            }
-
             if (startCoord == null || endCoord == null)
             {
                 return;
             }
 
-            Path_TileData start = World.tileMap.CurrentMap.GetTileData(startCoord.x, startCoord.y);
-            Path_TileData end = World.tileMap.CurrentMap.GetTileData(endCoord.x, endCoord.y);
+            this.start = startCoord;
+            this.end = endCoord;
 
-            if (start == null || end == null)
+            if (World.tileMap.tileGraph == null)
+            {
+                World.tileMap.tileGraph = new Path_TileGraph(World.tileMap.CurrentMap);
+            }
+
+            CoordPair cp = new CoordPair(start, end);
+            if (cachedPaths.ContainsKey(cp))
+            {
+                steps = cachedPaths[cp];
+                result = PathResult.Success;
+                return;
+            }
+
+            Path_TileData startTileData = World.tileMap.CurrentMap.GetTileData(startCoord.x, startCoord.y);
+            Path_TileData endTileData = World.tileMap.CurrentMap.GetTileData(endCoord.x, endCoord.y);
+
+            if (startTileData == null || endTileData == null)
             {
                 return;
             }
 
-            if (!Calculate(World.tileMap.tileGraph.nodes, start, end, ignoreCosts, entity))
+            if (!Calculate(World.tileMap.tileGraph.nodes, startTileData, endTileData, ignoreCosts, entity))
             {
                 steps = null;
                 result = PathResult.Fail;
             }
-
-            result = PathResult.Success;
+            else
+            {
+                result = PathResult.Success;
+                if (cachedPaths.ContainsKey(cp))
+                {
+                    cachedPaths.Add(new CoordPair(start, end), steps);
+                }
+            }
         }
 
         public Path_AStar(Coord startCoord, Coord endCoord, WorldMap_Data gr)
@@ -90,6 +139,11 @@ namespace Pathfinding
             {
                 steps = null;
             }
+        }
+
+        public static void ClearCache()
+        {
+            cachedPaths.Clear();
         }
 
         public static List<Coord> GetPath(Coord start, Coord end, bool ignoreCosts, Entity entity)

@@ -58,9 +58,10 @@ public class SoundManager : MonoBehaviour
     public void TeleportSound() { PlaySoundNoRandom(12, 1.7f); }
     public void Explosion() { PlaySoundNoRandom(13, 1.2f); }
     public void Growl() { PlaySound(14, 1.2f); }
-    public void Miss() { PlaySound(15, 0.6f); }
+    public void Miss() { PlaySound(15, 0.25f); }
     public void Eat() { PlaySoundNoRandom(17, 0.5f); }
     public void Drink() { PlaySoundNoRandom(18, 1.2f); }
+    public void Block() { PlaySoundNoRandom(20, 0.25f); }
 
     public void PlayAttackSound(Item i)
     {

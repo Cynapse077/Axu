@@ -93,8 +93,7 @@ public class EntitySkills : MonoBehaviour
             for (int i = 0; i < abilities.Count; i++)
             {
                 int index = i;
-                System.Action doAction = () => { abilities[index].Cast(ObjectManager.playerEntity); };
-                hkm.AssignAction(abilities[i], i, doAction);
+                hkm.AssignAction(abilities[i], i, () => { abilities[index].Cast(ObjectManager.playerEntity); });
             }
         }
     }
@@ -125,7 +124,7 @@ public class EntitySkills : MonoBehaviour
 
             if (entity.isPlayer)
             {
-                entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
+                entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence / 2);
             }
         }
         else
@@ -185,7 +184,7 @@ public class EntitySkills : MonoBehaviour
             target.entity.AI.BecomeHostile();
             entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
 
-            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence / 2.0);
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence / 2);
         }
 
         entity.EndTurn(0.02f, 10);
@@ -258,7 +257,7 @@ public class EntitySkills : MonoBehaviour
             target.AI.BecomeHostile();
             entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
 
-            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence / 2);
         }
 
         entity.EndTurn(0.02f, 10);
@@ -308,7 +307,7 @@ public class EntitySkills : MonoBehaviour
             target.entity.AI.BecomeHostile();
             entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
 
-            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence / 2);
         }
 
         entity.EndTurn(0.02f, 10);
@@ -319,7 +318,7 @@ public class EntitySkills : MonoBehaviour
         Body otherBody = grip.HeldBody;
         BodyPart targetLimb = grip.heldPart;
         string message = "";
-        int pullStrength = entity.stats.Strength + grappleLevel;
+        int pullStrength = entity.stats.Strength + (grappleLevel * 2);
         bool success = SeedManager.combatRandom.Next(grip.heldPart.myBody.entity.stats.Strength + 90) <= pullStrength;
 
         if (success)
@@ -364,7 +363,7 @@ public class EntitySkills : MonoBehaviour
             otherBody.entity.AI.BecomeHostile();
             entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
 
-            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence / 2);
         }
 
         entity.EndTurn(0.02f, 10);
@@ -381,11 +380,8 @@ public class EntitySkills : MonoBehaviour
         else
         {
             CombatLog.NewMessage(entity.MyName + " fails to apply pressure to " + grip.HeldBody.entity.MyName + "'s " + grip.heldPart.displayName + ".");
-        }
-
-        if (!grip.HeldBody.entity.isPlayer)
-        {
-            grip.HeldBody.entity.AI.SetTarget(entity);
+            entity.EndTurn(0.02f, 10);
+            return;
         }
 
         if (entity.isPlayer)
@@ -393,9 +389,13 @@ public class EntitySkills : MonoBehaviour
             grip.HeldBody.entity.AI.BecomeHostile();
             entity.body.TrainLimbOfType(ItemProperty.Slot_Arm);
 
-            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence + 1);
+            entity.stats.proficiencies.MartialArts.AddXP(entity.stats.Intelligence / 2);
         }
-        
+        if (!grip.HeldBody.entity.isPlayer)
+        {
+            grip.HeldBody.entity.AI.SetTarget(entity);
+        }
+
         entity.EndTurn(0.02f, 10);
     }
 

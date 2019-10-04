@@ -12,6 +12,8 @@ public class Felony : IAsset
 	public int HP, ST;
 	public int STR, DEX, INT, END;
 
+    public string weapon;
+    public string firearm;
 	public string[] traits;
 	public int[] proficiencies;
 	public List<SSkill> skills;
@@ -56,6 +58,16 @@ public class Felony : IAsset
                     traits[t] = trait;
                 }
             }
+        }
+
+        if (dat.ContainsKey("Weapon"))
+        {
+            weapon = dat["Weapon"].ToString();
+        }
+
+        if (dat.ContainsKey("Firearm"))
+        {
+            firearm = dat["Firearm"].ToString();
         }
 
         if (dat.ContainsKey("Items"))

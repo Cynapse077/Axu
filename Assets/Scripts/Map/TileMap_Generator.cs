@@ -27,17 +27,17 @@ public static class TileMap_Generator
         }
 
         if (b == Biome.Plains && SeedManager.localRandom.Next(100) < 5)
-            AdditionalLayer(ref td, b, Tile.tiles["Shore_Sand"], 30, 6);
+            AdditionalLayer(ref td, b, TileManager.tiles["Shore_Sand"], 30, 6);
 
         if (b == Biome.Forest && SeedManager.localRandom.Next(100) < 5)
-            AdditionalLayer(ref td, b, Tile.tiles["Plains_Grass_2"], 25, 6);
+            AdditionalLayer(ref td, b, TileManager.tiles["Plains_Grass_2"], 25, 6);
 
         if (b == Biome.Swamp || (b == Biome.Forest || b == Biome.Plains) && SeedManager.localRandom.Next(100) < 4)
         {
             if (!hasLandmark)
             {
                 string waterType = (b == Biome.Swamp) ? "Water_Swamp" : "Water";
-                AdditionalLayer(ref td, b, Tile.tiles[waterType], 45, 7);
+                AdditionalLayer(ref td, b, TileManager.tiles[waterType], 45, 7);
             }
         }
 
@@ -75,44 +75,44 @@ public static class TileMap_Generator
         switch (t)
         {
             case Biome.Default:
-                return Tile.tiles["Default"];
+                return TileManager.tiles["Default"];
 
             case Biome.Ocean:
-                return Tile.tiles["Water"];
+                return TileManager.tiles["Water"];
 
             case Biome.Mountain:
-                return Tile.tiles["Mountain"];
+                return TileManager.tiles["Mountain"];
 
             case Biome.Desert:
                 ranNum = RNG.Next(100);
 
                 if (ranNum == 99 && includeTrees)
-                    return Tile.tiles["Desert_Cactus"];
+                    return TileManager.tiles["Desert_Cactus"];
 
                 if (ranNum < 3)
-                    return Tile.tiles["Desert_Vines"];
+                    return TileManager.tiles["Desert_Vines"];
                 else if (ranNum < 5)
-                    return RNG.CoinFlip() ? Tile.tiles["Desert_Sand_3"] : Tile.tiles["Desert_Sand_4"];
+                    return RNG.CoinFlip() ? TileManager.tiles["Desert_Sand_3"] : TileManager.tiles["Desert_Sand_4"];
                 else if (ranNum < 6)
-                    return Tile.tiles["Desert_Sand_5"];
+                    return TileManager.tiles["Desert_Sand_5"];
 
-                return RNG.CoinFlip() ? Tile.tiles["Desert_Sand_1"] : Tile.tiles["Desert_Sand_2"];
+                return RNG.CoinFlip() ? TileManager.tiles["Desert_Sand_1"] : TileManager.tiles["Desert_Sand_2"];
 
             case Biome.Swamp:
                 ranNum = RNG.Next(55);
 
                 if (ranNum < 1)
-                    return Tile.tiles["Swamp_Frond"];
+                    return TileManager.tiles["Swamp_Frond"];
                 else if (ranNum < 10)
-                    return Tile.tiles["Swamp_Grass_2"];
+                    return TileManager.tiles["Swamp_Grass_2"];
                 else if (ranNum < 20)
-                    return Tile.tiles["Swamp_Grass_3"];
+                    return TileManager.tiles["Swamp_Grass_3"];
                 else if (ranNum < 21)
-                    return Tile.tiles["Swamp_Frond_2"];
+                    return TileManager.tiles["Swamp_Frond_2"];
                 else if (ranNum < 24)
-                    return Tile.tiles["Swamp_Flower"];
+                    return TileManager.tiles["Swamp_Flower"];
                 else
-                    return Tile.tiles["Swamp_Grass_1"];
+                    return TileManager.tiles["Swamp_Grass_1"];
 
             case Biome.Tundra:
                 ranNum = RNG.Next(100);
@@ -120,72 +120,72 @@ public static class TileMap_Generator
                 if (ranNum > 1 || !includeTrees)
                 {
                     if (ranNum == 2)
-                        return Tile.tiles["Snow_2"];
+                        return TileManager.tiles["Snow_2"];
 
-                    return (RNG.Next(100) < 96) ? Tile.tiles["Snow_1"] : Tile.tiles["Snow_3"];
+                    return (RNG.Next(100) < 96) ? TileManager.tiles["Snow_1"] : TileManager.tiles["Snow_3"];
                 }
                 else
-                    return RNG.CoinFlip() ? Tile.tiles["Snow_Tree"] : Tile.tiles["Snow_Grass"];
+                    return RNG.CoinFlip() ? TileManager.tiles["Snow_Tree"] : TileManager.tiles["Snow_Grass"];
 
             case Biome.Plains:
                 float r = RNG.Next(100);
 
                 if (SeedManager.localRandom.Next(100) < 2 && includeTrees)
                 {
-                    return (SeedManager.localRandom.Next(100) < 90) ? Tile.tiles["Plains_Tree_1"] : Tile.tiles["Plains_Tree_2"];
+                    return (SeedManager.localRandom.Next(100) < 90) ? TileManager.tiles["Plains_Tree_1"] : TileManager.tiles["Plains_Tree_2"];
                 }
                 else
                 {
                     if (SeedManager.localRandom.Next(200) < 1)
-                        return Tile.tiles["Plains_Vine"];
+                        return TileManager.tiles["Plains_Vine"];
 
                     if (r < 5)
-                        return Tile.tiles["Plains_Flower"];
+                        return TileManager.tiles["Plains_Flower"];
                     else if (r < 95)
-                        return (RNG.Next(100) < 50) ? Tile.tiles["Plains_Grass_2"] : Tile.tiles["Plains_Grass_3"];
+                        return (RNG.Next(100) < 50) ? TileManager.tiles["Plains_Grass_2"] : TileManager.tiles["Plains_Grass_3"];
                     else
-                        return Tile.tiles["Plains_Grass_1"];
+                        return TileManager.tiles["Plains_Grass_1"];
                 }
 
             case Biome.Forest:
                 bool isTree = (RNG.Next(100) < 2 && includeTrees);
 
                 if (isTree)
-                    return (SeedManager.localRandom.Next(100) < 90) ? Tile.tiles["Forest_Tree"] : Tile.tiles["Forest_Tree_Dead"];
+                    return (SeedManager.localRandom.Next(100) < 90) ? TileManager.tiles["Forest_Tree"] : TileManager.tiles["Forest_Tree_Dead"];
 
                 if (SeedManager.localRandom.Next(200) < 1)
-                    return Tile.tiles["Forest_Vine"];
+                    return TileManager.tiles["Forest_Vine"];
 
                 ranNum = RNG.Next(100);
 
                 if (ranNum < 32)
-                    return Tile.tiles["Forest_Grass_1"];
+                    return TileManager.tiles["Forest_Grass_1"];
                 else if (ranNum < 48)
-                    return Tile.tiles["Forest_Grass_2"];
+                    return TileManager.tiles["Forest_Grass_2"];
                 else if (ranNum < 53)
-                    return Tile.tiles["Forest_Grass_3"];
+                    return TileManager.tiles["Forest_Grass_3"];
                 else if (ranNum < 70)
-                    return Tile.tiles["Forest_Grass_4"];
+                    return TileManager.tiles["Forest_Grass_4"];
                 else if (ranNum < 83)
-                    return Tile.tiles["Forest_Grass_5"];
+                    return TileManager.tiles["Forest_Grass_5"];
                 else
-                    return Tile.tiles["Forest_Grass_6"];
+                    return TileManager.tiles["Forest_Grass_6"];
 
             case Biome.Shore:
                 if (RNG.Next(100) < 8)
                 {
                     if (RNG.OneIn(1000))
-                        return Tile.tiles["Shore_Star"];
+                        return TileManager.tiles["Shore_Star"];
                     else
-                        return (RNG.CoinFlip()) ? Tile.tiles["Shore_Rock_2"] : Tile.tiles["Shore_Rock"];
+                        return (RNG.CoinFlip()) ? TileManager.tiles["Shore_Rock_2"] : TileManager.tiles["Shore_Rock"];
                 }
                 else
                 {
-                    return Tile.tiles["Shore_Sand"];
+                    return TileManager.tiles["Shore_Sand"];
                 }
 
             default:
-                return Tile.tiles["Plains_Grass_1"];
+                return TileManager.tiles["Plains_Grass_1"];
         }
     }
 
@@ -197,7 +197,7 @@ public static class TileMap_Generator
         {
             for (int y = 0; y < Manager.localMapSize.y; y++)
             {
-                map_data[x, y] = Tile.tiles["Dream_Wall"];
+                map_data[x, y] = TileManager.tiles["Dream_Wall"];
             }
         }
 
@@ -245,7 +245,7 @@ public static class TileMap_Generator
 
         for (int i = 0; i < visited.Count; i++)
         {
-            map_data[visited[i].x, visited[i].y] = Tile.tiles["Dream_Floor"];
+            map_data[visited[i].x, visited[i].y] = TileManager.tiles["Dream_Floor"];
         }
 
         return map_data;

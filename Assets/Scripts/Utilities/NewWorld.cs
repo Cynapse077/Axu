@@ -342,8 +342,8 @@ public class OldScreens
 
     public Coord GetStartPos()
     {
-        int startX = (int)(sData["P"][0]);
-        int startY = (int)(sData["P"][1]);
+        int startX = (int)sData["P"][0];
+        int startY = (int)sData["P"][1];
 
         return new Coord(startX, startY);
     }
@@ -392,7 +392,7 @@ public class WorldToJson
         Danger_Level = dl;
         Spawned_NPCs = spwned;
         Diff = diff;
-        Time = System.DateTime.Now.ToString();
+        Time = System.DateTime.Now.ToString("yyyy-MM-dd h:mm:ss tt");
         Features = feats;
 
         Objects = new List<WorldObject>();

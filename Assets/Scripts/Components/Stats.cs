@@ -168,7 +168,10 @@ public class Stats : MonoBehaviour
 
     public void ChangeAttribute(string attribute, int amount)
     {
-        Attributes[attribute] += amount;
+        if (Attributes.ContainsKey(attribute))
+        {
+            Attributes[attribute] += amount;
+        }
     }
 
     public void ConsumedAddictiveSubstance(string id, bool liquid)
@@ -706,11 +709,7 @@ public class Stats : MonoBehaviour
 
     public void Die()
     {
-        if (onDeath != null)
-        {
-            onDeath(entity);
-        }
-
+        onDeath?.Invoke(entity);
         entity.fighter.Die();
     }
 
@@ -834,9 +833,20 @@ public class Stats : MonoBehaviour
         radiation += amount;
         radiation = Mathf.Clamp(radiation, 0, 100);
 
-        if (radiation >= 100 && SeedManager.combatRandom.Next(100) > Mutations.Count * 2)
+        if (radiation >= 100 && SeedManager.combatRandom.Next(50) > Mutations.Count * 2)
         {
             Mutate();
+        }
+        else
+        {
+            Trait radPois = GameData.Get<Trait>("RadPoison");
+
+            if (radPois != null && !hasTrait("RadPoison"))
+            {
+                AddTrait(radPois);
+                CombatLog.NewMessage("<color=red>You've been poisoned by radiation!</color>");
+                radiation = 0;
+            }
         }
     }
 
@@ -1186,7 +1196,7 @@ public class Stats : MonoBehaviour
             }
             else if (kvp.Key == "Aflame")
             {
-                if (Tile.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
+                if (TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
                 {
                     statusEffects[kvp.Key] = 0;
                 }
@@ -1202,7 +1212,7 @@ public class Stats : MonoBehaviour
             }
             else if (kvp.Key == "Underwater")
             {
-                if (!Tile.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
+                if (!TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
                 {
                     statusEffects[kvp.Key] = 0;
                 }
@@ -1259,7 +1269,7 @@ public class Stats : MonoBehaviour
     {
         int tileNum = World.tileMap.GetTileID(entity.posX, entity.posY);
 
-        if (Attributes.ContainsKey("Heat Resist") && HeatResist < 80 && tileNum == Tile.tiles["Lava"].ID && !MyInventory.CanFly())
+        if (Attributes.ContainsKey("Heat Resist") && HeatResist < 80 && tileNum == TileManager.tiles["Lava"].ID && !MyInventory.CanFly())
             IndirectAttack(RNG.Next(5), DamageTypes.Heat, null, "<color=orange>lava</color>", true, false, false);
     }
 
@@ -1451,12 +1461,7 @@ public class Stats : MonoBehaviour
         set
         {
             _health = value;
-
-            if (hpChanged != null)
-            {
-                hpChanged();
-            }
-
+            hpChanged?.Invoke();
             _health = Mathf.Clamp(_health, 0, maxHealth);
         }
     }
@@ -1467,12 +1472,7 @@ public class Stats : MonoBehaviour
         set
         {
             _stamina = value;
-
-            if (stChanged != null)
-            {
-                stChanged();
-            }
-
+            stChanged?.Invoke();
             _stamina = Mathf.Clamp(_stamina, 0, maxStamina);
         }
     }
@@ -1523,14 +1523,6 @@ public class Stats : MonoBehaviour
     public int CostToCureWounds()
     {
         int cost = 0;
-
-        for (int i = 0; i < traits.Count; i++)
-        {
-            if (traits[i].ContainsEffect(TraitEffects.Disease) && !traits[i].ContainsEffect(TraitEffects.No_Cure))
-            {
-                cost += 500 - (Attributes["Charisma"] * 2);
-            }
-        }
 
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {

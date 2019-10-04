@@ -26,11 +26,8 @@
         {
             "ID" : "Item_Ranged", "Base" : "BaseItem",
             "Type" : "Firearm",
-            "Damage" : "1d3",
-            "Properties" : [ "Ranged" ],
-            "Components" : [
-                { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "Item_Ammo" }
-            ]
+            "Damage" : "1d4",
+            "Properties" : [ "Ranged" ]
         },
         {
             "ID" : "Item_Armor", "Base" : "BaseItem",
@@ -74,10 +71,84 @@
             "Name" : "Arrow",
             "Rarity" : 1,
             "FlavorText" : "Ammunition for a bow.",
-            "Cost" : 1,
+            "Cost" : 2,
             "Display" : {
             	"On Ground" : "item-arrow.png"
-            }
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "arrow" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "arrow_flaming",
+            "Name" : "<color=red>Incendiary</color> Arrow",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a bow. Deals extra fire damage and can <color=red>burn</color> targets.",
+            "Cost" : 10,
+            "Display" : {
+                "On Ground" : "item-arrow.png"
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "arrow", "Damage" : "2d1", "OnHit" : "Core.ItemActions.OnHit_Burn" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "arrow_poison",
+            "Name" : "<color=green>Poisonous</color> Arrow",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a bow. Can <color=green>poison</color> targets.",
+            "Cost" : 10,
+            "Display" : {
+                "On Ground" : "item-arrow.png"
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "arrow", "OnHit" : "Core.ItemActions.OnHit_Poison" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "arrow_daze",
+            "Name" : "<color=cyan>Dazing</color> Arrow",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a bow. Can <color=cyan>stun</color> targets.",
+            "Cost" : 10,
+            "Display" : {
+                "On Ground" : "item-arrow.png"
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "arrow", "OnHit" : "Core.ItemActions.OnHit_Stun" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "arrow_confuse",
+            "Name" : "<color=magenta>Runic</color> Arrow",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a bow. Can <color=magenta>confuse</color> targets.",
+            "Cost" : 10,
+            "Display" : {
+                "On Ground" : "item-arrow.png"
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "arrow", "OnHit" : "Core.ItemActions.OnHit_Confuse" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "arrow_explosive",
+            "Name" : "<color=orange>Exposive</color> Arrow",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a bow. Causes an explosion on impact.",
+            "Cost" : 20,
+            "Display" : {
+                "On Ground" : "item-arrow.png"
+            },
+            "Properties" : [ "Explosive" ],
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "arrow", "OnHit" : "Core.ItemActions.Explosion" }
+            ]
         },
         {
             "Base" : "Item_Ammo",
@@ -88,7 +159,81 @@
             "Cost" : 2,
             "Display" : {
             	"On Ground" : "item-bolt.png"
-            }
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "bolt" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "bolt_flaming",
+            "Name" : "<color=red>Incendiary</color> Bolt",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a crossbow. Deals extra fire damage and can <color=red>burn</color> targets.",
+            "Cost" : 10,
+            "Display" : {
+                "On Ground" : "item-bolt.png"
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "bolt", "Damage" : "2d1", "OnHit" : "Core.ItemActions.OnHit_Burn" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "bolt_poison",
+            "Name" : "<color=green>Poisonous</color> Bolt",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a crossbow. Can <color=green>poison</color> targets.",
+            "Cost" : 10,
+            "Display" : {
+                "On Ground" : "item-bolt.png"
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "bolt", "OnHit" : "Core.ItemActions.OnHit_Poison" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "bolt_daze",
+            "Name" : "<color=cyan>Dazing</color> Bolt",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a crossbow. Can <color=cyan>stun</color> targets.",
+            "Cost" : 10,
+            "Display" : {
+                "On Ground" : "item-bolt.png"
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "bolt", "OnHit" : "Core.ItemActions.OnHit_Stun" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "bolt_confuse",
+            "Name" : "<color=magenta>Runic</color> Bolt",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a crossbow. Can <color=magenta>confuse</color> targets.",
+            "Cost" : 10,
+            "Display" : {
+                "On Ground" : "item-bolt.png"
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "bolt", "OnHit" : "Core.ItemActions.OnHit_Confuse" }
+            ]
+        },
+        {
+            "Base" : "Item_Ammo",
+            "ID" : "bolt_explosive",
+            "Name" : "<color=orange>Explosive</color> Bolt",
+            "Rarity" : 2,
+            "FlavorText" : "Ammunition for a crossbow. Causes an explosion on impact.",
+            "Cost" : 20,
+            "Display" : {
+                "On Ground" : "item-bolt.png"
+            },
+            "Properties" : [ "Explosive" ],
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "bolt", "OnHit" : "Core.ItemActions.Explosion" }
+            ]
         },
         {
             "Base" : "Item_Ammo",
@@ -99,7 +244,10 @@
             "Cost" : 3,
             "Display" : {
             	"On Ground" : "item-bullet.png"
-            }
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "bullet" }
+            ]
         },
 		{
             "Base" : "Item_Ammo",
@@ -110,14 +258,20 @@
             "Cost" : 5,
             "Display" : {
             	"On Ground" : "item-bullet.png"
-            }
+            },
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "plasmacell" }
+            ]
         },
         {
             "Base" : "Item_Ammo",
             "ID" : "seed",
             "Name" : "Seed",
             "FlavorText" : "A natural projectile.",
-            "Lootable" : false
+            "Lootable" : false,
+            "Components" : [
+                { "ID" : "Ammo", "Type" : "seed" }
+            ]
         },
 
         {
@@ -831,11 +985,15 @@
             "Base" : "Item_Ranged",
             "ID" : "bow",
             "Name" : "Short Bow",
+            "Damage" : "1d5",
             "Type" : "Firearm",
             "Rarity" : 1,
             "FlavorText" : "A small bow made of wood. It has straps of leather to add some comfort to the wielder.",
             "Cost" : 15,
             "Properties" : [ "Bow", "Slow" ],
+            "Components" : [
+                { "ID" : "Firearm", "ShotsPerTurn" : 1, "Max" : 1, "AmmoID" : "arrow" }
+            ],
             "Display" : {
                 "On Ground" : "item-bow.png"
             }
@@ -845,7 +1003,7 @@
             "ID" : "crossbow",
             "Name" : "Crossbow",
             "Type" : "Firearm",
-            "Damage" : "1d4",
+            "Damage" : "1d5",
             "Rarity" : 1,
             "FlavorText" : "A horizontal bow mounted on a firearm-like frame. It fires bolts at high speed.",
             "Cost" : 35,
@@ -862,7 +1020,8 @@
         	"ID" : "pistol",
             "Name" : "Pistol",
             "Type" : "Firearm",
-            "Rarity" : 2,
+            "Damage" : "1d8",
+            "Rarity" : 3,
             "FlavorText" : "A small, handheld firearm.",
             "Cost" : 53,
             "Components" : [
@@ -877,6 +1036,7 @@
         	"ID" : "smartpistol",
             "Name" : "Smart Pistol",
             "Type" : "Firearm",
+            "Damage" : "1d8",
             "Accuracy" : 2,
             "Rarity" : 3,
             "FlavorText" : "An auto-targeting pistol.",
@@ -893,9 +1053,9 @@
         	"ID" : "huntingrifle",
             "Name" : "Hunting Rifle",
             "Type" : "Firearm",
-            "Damage" : "1d5",
+            "Damage" : "1d10",
             "Accuracy" : 1,
-            "Rarity" : 2,
+            "Rarity" : 3,
             "FlavorText" : "A sleek bolt-action rifle, suitable for long-ranged kills.",
             "Cost" : 143,
             "Components" : [
@@ -911,7 +1071,7 @@
         	"ID" : "sniperrifle",
             "Name" : "Sniper Rifle",
             "Type" : "Firearm",
-            "Damage" : "1d5+2",
+            "Damage" : "2d5+2",
             "Rarity" : 3,
             "FlavorText" : "A rife with a long barrel and scope, designed to pick off targets from afar.",
             "Cost" : 154,
@@ -928,7 +1088,7 @@
         	"ID" : "assaultrifle",
             "Name" : "Assault Rifle",
             "Type" : "Firearm",
-            "Damage" : "1d2+1",
+            "Damage" : "1d8+1",
             "Accuracy" : -2,
             "Rarity" : 3,
             "FlavorText" : "A rifle commonly used in warfare. It fires a three-round burst.",
@@ -946,7 +1106,7 @@
         	"ID" : "shotgun",
             "Name" : "Shotgun",
             "Type" : "Firearm",
-            "Damage" : "2d1-1",
+            "Damage" : "3d3",
             "Accuracy" : -1,
             "Rarity" : 3,
             "FlavorText" : "A pump action shotgun. Fires buckshot rounds in a spread.",
@@ -964,7 +1124,7 @@
 			"ID" : "plasmarifle",
 			"Name" : "Plasma Rifle",
 			"Type" : "Firearm",
-			"Damage" : "3d3",
+			"Damage" : "3d5",
 			"Rarity" : 4,
 			"FlavorText" : "A semi-automatic rifle that shoots plasma rounds.",
 			"Cost" : 200,
@@ -2049,7 +2209,7 @@
         	"ID" : "iodine",
             "Name" : "Iodine Tablet",
             "Rarity" : 2,
-            "FlavorText" : "A small pill that can cure radiation sickness.",
+            "FlavorText" : "A small pill that can cure radiation poisoning.",
             "Cost" : 120,
             "Stackable" : true,
             "Properties" : [ "Edible", "Cure_Radiation" ]

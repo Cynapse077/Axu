@@ -152,7 +152,7 @@ namespace MapCreator
 
             List<string> tileIDs = new List<string>();
 
-            foreach (KeyValuePair<string, Tile_Data> entry in Tile.tiles)
+            foreach (KeyValuePair<string, Tile_Data> entry in TileManager.tiles)
             {
                 if (entry.Key.Contains("_Empty"))
                     continue;
@@ -166,7 +166,7 @@ namespace MapCreator
             foreach (string s in tileIDs)
             {
                 GameObject g = Instantiate(buttonPrefab, tileAnchor);
-                g.GetComponent<MapCreator_SideButton>().Init(this, Tile.tiles[s].ID, MapCreator_SideButton.MC_ButtonType.Tile);
+                g.GetComponent<MapCreator_SideButton>().Init(this, TileManager.tiles[s].ID, MapCreator_SideButton.MC_ButtonType.Tile);
             }
 
             GridLayoutGroup glg = mapAnchor.GetComponent<GridLayoutGroup>();
@@ -392,7 +392,7 @@ namespace MapCreator
 
         Tile_Data MapData(int x, int y)
         {
-            return Tile.GetByID(cells[x, y].tileID);
+            return TileManager.GetByID(cells[x, y].tileID);
         }
 
         public void AutotileObjects(int px, int py, bool initial)
@@ -458,31 +458,31 @@ namespace MapCreator
 
                     Tile_Data tile = MapData(x, y);
 
-                    if (Tile.isWaterTile(tile.ID, false))
+                    if (TileManager.isWaterTile(tile.ID, false))
                     {
                         int tIndex = (Elevation == 0) ? 0 : 8;
-                        BitwiseAutotile(x, y, tIndex, (z => Tile.isWaterTile(z, true)), true);
+                        BitwiseAutotile(x, y, tIndex, (z => TileManager.isWaterTile(z, true)), true);
                     }
                     else if (tile.HasTag("Liquid") && tile.HasTag("Swamp"))
                     {
-                        BitwiseAutotile(x, y, 4, (z => Tile.isWaterTile(z, true)), true);
+                        BitwiseAutotile(x, y, 4, (z => TileManager.isWaterTile(z, true)), true);
                     }
-                    else if (Tile.isMountain(tile.ID))
+                    else if (TileManager.isMountain(tile.ID))
                     {
                         int tIndex = 9;
 
-                        if (tile == Tile.tiles["Volcano_Wall"])
+                        if (tile == TileManager.tiles["Volcano_Wall"])
                             tIndex = 13;
-                        if (tile == Tile.tiles["Ice_Wall"])
+                        if (tile == TileManager.tiles["Ice_Wall"])
                             tIndex = 15;
 
-                        BitwiseAutotile(x, y, tIndex, (z => Tile.isMountain(z)), true);
+                        BitwiseAutotile(x, y, tIndex, (z => TileManager.isMountain(z)), true);
 
                     }
-                    else if (tile == Tile.tiles["Lava"])
+                    else if (tile == TileManager.tiles["Lava"])
                     {
                         int tIndex = 10;
-                        BitwiseAutotile(x, y, tIndex, (z => z == Tile.tiles["Lava"].ID), true);
+                        BitwiseAutotile(x, y, tIndex, (z => z == TileManager.tiles["Lava"].ID), true);
 
                     }
                     else if (tile.HasTag("Wall"))
@@ -529,14 +529,14 @@ namespace MapCreator
                             eightWay = true;
                         }
 
-                        BitwiseAutotile(x, y, tIndex, (z => Tile.GetByID(z).HasTag("Wall") && !Tile.isMountain(z)), eightWay);
+                        BitwiseAutotile(x, y, tIndex, (z => TileManager.GetByID(z).HasTag("Wall") && !TileManager.isMountain(z)), eightWay);
                     }
-                    else if (tile == Tile.tiles["Dream_Floor"])
+                    else if (tile == TileManager.tiles["Dream_Floor"])
                     {
                         int tIndex = 23;
                         bool eightWay = true;
 
-                        BitwiseAutotile(x, y, tIndex, (z => z == Tile.tiles["Dream_Floor"].ID), eightWay);
+                        BitwiseAutotile(x, y, tIndex, (z => z == TileManager.tiles["Dream_Floor"].ID), eightWay);
                     }
                 }
             }

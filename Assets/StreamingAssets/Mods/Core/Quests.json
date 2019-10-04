@@ -14,7 +14,8 @@
 			"Events" : [
                 {
                     "Event" : "OnStart",
-                    "Console Command" : "give cloak1|give flask/liquid_regenitrol|log You were given some items by Akk-Lune."
+                    "Console Command" : "give cloak1|give flask/liquid_regenitrol",
+                    "Log Message" : "You were given some items by Akk-Lune."
                 }
             ],
 
@@ -40,7 +41,6 @@
             "Rewards" : {
                 "XP" : 100
             },
-            "Flag" : "Can_Enter_Power_Plant",
 			"Events" : [
                 {
                     "Event" : "OnStart",
@@ -107,7 +107,7 @@
 			"Events" : [
 				{
                     "Event" : "OnComplete",
-                    "Console Command" : "questflag Can_Enter_Ensis"
+                    "Progress Flag" : "Can_Enter_Ensis"
                 }
 			],
             "End Dialogue" : "A pleasure to meet you! My name is Arthomas. Please head inside. Our leader <color=yellow>Lomis</color> is waiting to speak with you. You've been granted permission to enter the facility. Don't cause trouble, now...",
@@ -127,7 +127,7 @@
 			"Events" : [
 				{
                     "Event" : "OnComplete",
-                    "Console Command" : "questflag Can_Open_Prison_Cells"
+                    "Progress Flag" : "Can_Open_Prison_Cells"
                 }
 			],
             "End Dialogue" : "Thank you for coming. My name is Lomis, and this is my city. I am the leader of the Ensis. Listen, I think we can make a deal. You do some work for us, and I can get you a seat on a space craft. You do want to go home right? Good. Now, I've granted you access to the <color=cyan>lower levels of the facility</color>. Beneath the <color=yellow>Prison</color> is the <color=yellow>Workshop</color>. You will meet our head engineer, Ka-Nil there. He is overseeing construction on the ship. Be wary, he is a very peculiar individual.",
@@ -294,7 +294,7 @@
 			"Events" : [
 				{
                     "Event" : "OnComplete",
-                    "Console Command" : "questflag Hostile_To_Kin",
+                    "Progress Flag" : "HostileTo_kin",
 					"Move NPC" : { "NPC" : "isazna", "Coordinate" : "Kin Hideout", "Local Position" : { "x" : 23, "y" : 2 }, "Elevation" : 0 }
                 }
 			],
@@ -312,7 +312,7 @@
 			"Events" : [
 				{
 					"Event" : "OnStart",
-					"Console Command" : "questflag Can_Enter_Fab"
+                    "Progress Flag" : "Can_Enter_Fab"
 				}
 			],
 			"Steps" : [
@@ -427,7 +427,7 @@
 			"Events" : [
 				{
 					"Event" : "OnStart",
-					"Console Command" : "questflag Can_Enter_Magna"
+                    "Progress Flag" : "Can_Enter_Magna"
 				}
 			],
 			"Steps" : [
@@ -655,7 +655,7 @@
                 },
 				{
 					"Event" : "OnComplete",
-					"Console Command" : "questflag Hostile_To_Ensis"
+                    "Progress Flag" : "HostileTo_ensis"
 				}
             ],
             "Steps" : [
@@ -692,7 +692,7 @@
             "Events" : [
                 {
                     "Event" : "OnStart",
-                    "Console Command" : "questflag Can_Enter_Magna"
+                    "Progress Flag" : "Can_Enter_Magna"
                 }
             ],
             "Steps" : [
@@ -792,7 +792,8 @@
                 },
 				{
 					"Event" : "OnComplete",
-					"Console Command" : "questflag Learned_Butcher|log Saira has taught you the basics of Butchery."
+                    "Progress Flag" : "Learned_Butcher",
+                    "Log Message" : "Saira has taught you the basics of Butchery."
 				}
             ],
             "End Dialogue" : "Great! As promised, I'll show you how to butcher the corpses of your catches. \nLet's move onto something tougher. There's a big beastie I like to call <color=yellow>\"Noggins\"</color> roaming around these parts. I call it that because well... It has two heads.",

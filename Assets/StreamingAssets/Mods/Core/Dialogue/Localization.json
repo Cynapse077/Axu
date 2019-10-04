@@ -1842,7 +1842,7 @@
         },
         {
             "ID" : "Message_Reload",
-            "Display" : "<color=grey>You reload your firearm.</color>"
+            "Display" : "<color=grey>You reload your {0} with the {1}.</color>"
         },
         {
             "ID" : "Message_Sprint",
@@ -1935,6 +1935,10 @@
         {
         	"ID" : "Message_SE_Regen",
         	"Display" : "[NAME] feels healthy."
+        },
+        {
+            "ID" : "Message_SE_Slow",
+            "Display" : "[NAME]'s movement is slowed."
         },
         {
             "ID" : "Lose_Hold",

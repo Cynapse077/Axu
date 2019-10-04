@@ -17,18 +17,12 @@ public class EventHandler
 
     public void OnNPCDeath(NPC n)
     {
-        if (NPCDied != null)
-        {
-            NPCDied(n);
-        }
+        NPCDied?.Invoke(n);
     }
 
     public void OnEnterScreen(TileMap_Data map)
     {
-        if (EnteredScreen != null)
-        {
-            EnteredScreen(map.mapInfo.position, map.elevation);
-        }
+        EnteredScreen?.Invoke(map.mapInfo.position, map.elevation);
     }
 
     public bool OnTalkTo(NPC n)
@@ -44,10 +38,7 @@ public class EventHandler
 
     public void OnInteract(MapObject m)
     {
-        if (InteractedWithObject != null)
-        {
-            InteractedWithObject(m);
-        }
+        InteractedWithObject?.Invoke(m);
     }
 }
 
@@ -132,6 +123,42 @@ public class EventContainer
                 }
 
                 break;
+        }
+    }
+
+    public IEnumerable<string> LoadingEventErrors()
+    {
+        if (onStart != null)
+        {
+            foreach (QuestEvent ev in onStart)
+            {
+                foreach (string s in ev.LoadErrors())
+                {
+                    yield return s;
+                }
+            }
+        }
+
+        if (onFail != null)
+        {
+            foreach (QuestEvent ev in onFail)
+            {
+                foreach (string s in ev.LoadErrors())
+                {
+                    yield return s;
+                }
+            }
+        }
+
+        if (onComplete != null)
+        {
+            foreach (QuestEvent ev in onComplete)
+            {
+                foreach (string s in ev.LoadErrors())
+                {
+                    yield return s;
+                }
+            }
         }
     }
 }

@@ -855,7 +855,7 @@ public class PlayerInput : MonoBehaviour
         if (num > 0)
         {
             //Up
-            if (World.tileMap.GetTileID(entity.posX, entity.posY) != Tile.tiles["Stairs_Up"].ID)
+            if (World.tileMap.GetTileID(entity.posX, entity.posY) != TileManager.tiles["Stairs_Up"].ID)
             {
                 Coord targetPos = World.tileMap.FindStairsUp();
 
@@ -870,7 +870,7 @@ public class PlayerInput : MonoBehaviour
         else
         {
             //Down
-            if (World.tileMap.GetTileID(entity.posX, entity.posY) != Tile.tiles["Stairs_Down"].ID)
+            if (World.tileMap.GetTileID(entity.posX, entity.posY) != TileManager.tiles["Stairs_Down"].ID)
             {
                 Coord targetPos = World.tileMap.FindStairsDown();
 

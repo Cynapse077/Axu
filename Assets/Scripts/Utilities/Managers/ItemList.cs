@@ -172,18 +172,15 @@ public static class ItemList
         if (nam.Contains("Random"))
             return GetRarityByName(nam);
 
-        Predicate<IAsset> p = (IAsset asset) => {
-            Item i = asset as Item;
 
-            if (i != null)
+        List<Item> ass = GameData.Get<Item>((IAsset asset) => {
+            if (asset is Item i)
             {
                 return i.Name == nam;
             }
 
             return false;
-        };
-
-        List<Item> ass = GameData.Get<Item>(p);
+        });
 
         if (ass.Count > 0)
         {
@@ -209,18 +206,15 @@ public static class ItemList
         }
         else if (rar.Contains("Random_Book"))
         {
-            Predicate<IAsset> p = (IAsset asset) => {
-                Item i = asset as Item;
+            return GameData.Get<Item>((IAsset asset) => {
 
-                if (i != null)
+                if (asset is Item i)
                 {
                     return i.HasProp(ItemProperty.Tome);
                 }
 
                 return false;
-            };
-
-            return GameData.Get<Item>(p).Cast<Item>().ToList().GetRandom();
+            }).Cast<Item>().ToList().GetRandom();
         }
 
         return null;
@@ -255,18 +249,14 @@ public static class ItemList
     //These functions get items by matching params
     public static Item GetItemByRarity(int rar)
     {
-        Predicate<IAsset> p = (IAsset asset) => {
-            Item it = (asset as Item);
-
-            if (it != null)
+        return GetRandomPredicatedItem((IAsset asset) => {
+            if (asset is Item it)
             {
                 return it.rarity == rar;
             }
 
             return false;
-        };
-
-        return GetRandomPredicatedItem(p);
+        });
     }
 
     static Item GetRandomPredicatedItem(Predicate<IAsset> p, bool addMod = true)
@@ -283,18 +273,15 @@ public static class ItemList
 
     public static Item GetWeaponByRarity(int rar)
     {
-        Predicate<IAsset> p = (IAsset asset) => {
-            Item it = asset as Item;
+        return GetRandomPredicatedItem((IAsset asset) => {
 
-            if (it != null)
+            if (asset is Item it)
             {
                 return it.HasProp(ItemProperty.Weapon) && it.rarity == rar;
             }
 
             return false;
-        };
-
-        return GetRandomPredicatedItem(p);
+        });
     }
 
     public static void TryAddMod(ref Item i, int chance)
@@ -302,17 +289,14 @@ public static class ItemList
         if (SeedManager.combatRandom.Next(100) <= chance)
         {
             Item newItem = new Item(i);
-            Predicate<IAsset> p = (IAsset asset) => {
-                ItemModifier mod = asset as ItemModifier;
-
-                if (mod != null)
+            List<ItemModifier> ms = GameData.Get<ItemModifier>((IAsset asset) => {
+                if (asset is ItemModifier mod)
                 {
                     return !mod.unique && mod.CanAddToItem(newItem);
                 }
 
                 return false;
-            };
-            List<ItemModifier> ms = GameData.Get<ItemModifier>(p);
+            });
 
             if (ms.Count > 0)
             {
@@ -396,12 +380,26 @@ public static class ItemUtility
                 comps.Add(cc);
 
             }
+            else if (ID == "Ammo")
+            {
+                string ammoType = dat["Type"].ToString();
+                LuaCall onHit = null;
+                Damage extraDamage = new Damage(0,0,0, DamageTypes.Pierce);
+
+                if (dat.ContainsKey("OnHit"))
+                {
+                    onHit = new LuaCall(dat["OnHit"].ToString());
+                }
+
+                dat.TryGetDamage("Damage", out extraDamage, extraDamage);
+                CAmmo ammo = new CAmmo(ammoType, onHit, extraDamage);
+                comps.Add(ammo);
+            }
             else if (ID == "Rot")
             {
                 int charges = (int)dat["Max"];
                 CRot cc = new CRot(charges);
                 comps.Add(cc);
-
             }
             else if (ID == "Ability")
             {

@@ -7,6 +7,11 @@ public class QuestEvent
 
     public virtual void RunEvent() { }
 
+    public virtual IEnumerable<string> LoadErrors()
+    {
+        yield break;
+    }
+
     public enum EventType
     {
         OnStart, OnComplete, OnFail
@@ -25,6 +30,14 @@ public class LuaQuestEvent : QuestEvent
     public override void RunEvent()
     {
         LuaManager.CallScriptFunction(luaCall);
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (luaCall == null)
+        {
+            yield return "LuaQuestEvent - luaCall is null.";
+        }
     }
 }
 
@@ -46,6 +59,19 @@ public class WorldPosChangeEvent : QuestEvent
         World.tileMap.currentElevation = elevation;
         World.tileMap.HardRebuild();
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (worldPos == null)
+        {
+            yield return "WorldPosChangeEvent - worldPos is null.";
+        }
+
+        if (elevation > 0)
+        {
+            yield return "WorldPosChangeEvent - elevation is > 0.";
+        }
+    }
 }
 
 public class LocalPosChangeEvent : QuestEvent
@@ -63,6 +89,14 @@ public class LocalPosChangeEvent : QuestEvent
         ObjectManager.playerEntity.BeamDown();
         World.tileMap.SoftRebuild();
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (localPos == null)
+        {
+            yield return "WorldPosChangeEvent - localPos is null.";
+        }
+    }
 }
 
 public class ElevationChangeEvent : QuestEvent
@@ -78,6 +112,14 @@ public class ElevationChangeEvent : QuestEvent
     {
         World.tileMap.currentElevation = elevation;
         World.tileMap.HardRebuild();
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (elevation > 0)
+        {
+            yield return "ElevationChangeEvent - elevation is > 0.";
+        }
     }
 }
 
@@ -105,25 +147,41 @@ public class SpawnNPCEvent : QuestEvent
         Coord wPos = World.worldMap.worldMapData.GetLandmark(zone);
         NPC n = new NPC(GameData.Get<NPC_Blueprint>(npcID), wPos, localPos, elevation);
 
-        if (n == null)
+        if (n != null)
         {
-            return;
-        }
-
-        if (!giveItem.NullOrEmpty())
-        {
-            n.inventory.Add(ItemList.GetItemByID(giveItem));
-        }
-
-        if (giveItems != null)
-        {
-            foreach (string s in giveItems)
+            if (!giveItem.NullOrEmpty())
             {
-                n.inventory.Add(ItemList.GetItemByID(s));
+                n.inventory.Add(ItemList.GetItemByID(giveItem));
             }
+
+            if (giveItems != null)
+            {
+                foreach (string s in giveItems)
+                {
+                    n.inventory.Add(ItemList.GetItemByID(s));
+                }
+            }
+
+            myQuest.SpawnNPC(n);
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (npcID.NullOrEmpty())
+        {
+            yield return "SpawnNPCEvent - npcID is null.";
         }
 
-        myQuest.SpawnNPC(n);
+        if (zone.NullOrEmpty())
+        {
+            yield return "SpawnNPCEvent - zone is null.";
+        }
+
+        if (localPos == null)
+        {
+            yield return "SpawnNPCEvent - localPos is null.";
+        }
     }
 }
 
@@ -150,6 +208,19 @@ public class SpawnNPCGroupEvent : QuestEvent
         foreach (NPC n in ns)
         {
             myQuest.spawnedNPCs.Add(n.UID);
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (groupID.NullOrEmpty())
+        {
+            yield return "SpawnNPCGroupEvent - groupID is null.";
+        }
+
+        if (zone == null)
+        {
+            yield return "SpawnNPCGroupEvent - zone is null.";
         }
     }
 }
@@ -205,6 +276,14 @@ public class SpawnObjectEvent : QuestEvent
             }
         }        
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (objectID.NullOrEmpty())
+        {
+            yield return "SpawnObjectEvent - objectID is null.";
+        }
+    }
 }
 
 public class ConsoleCommandEvent : QuestEvent
@@ -224,6 +303,66 @@ public class ConsoleCommandEvent : QuestEvent
         for (int i = 0; i < cons.Length; i++)
         {
             console.ParseTextField(cons[i]);
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (command.NullOrEmpty())
+        {
+            yield return "ConsoleCommandEvent - command is null.";
+        }
+    }
+}
+
+public class GiveProgressFlagEvent : QuestEvent
+{
+    readonly string flag;
+
+    public GiveProgressFlagEvent(string flg)
+    {
+        flag = flg;
+    }
+
+    public override void RunEvent()
+    {
+        if (ObjectManager.playerJournal != null)
+        {
+            ObjectManager.playerJournal.AddFlag(flag);
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (flag.NullOrEmpty())
+        {
+            yield return "GiveProgressFlagEvent - flag is null.";
+        }
+    }
+}
+
+public class LogMessageEvent : QuestEvent
+{
+    readonly string message;
+
+    public LogMessageEvent(string msg)
+    {
+        message = msg;
+    }
+
+    public override void RunEvent()
+    {
+        if (!message.NullOrEmpty())
+        {
+            CombatLog.NewMessage(message);
+        }        
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (message.NullOrEmpty())
+        {
+            yield return "LogMessageEvent - message is null.";
         }
     }
 }
@@ -246,6 +385,19 @@ public class GiveNPCQuestEvent : QuestEvent
         if (n != null)
         {
             n.questID = questID;
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (npcID.NullOrEmpty())
+        {
+            yield return "GiveNPCQuestEvent - npcID is null.";
+        }
+
+        if (questID.NullOrEmpty())
+        {
+            yield return "GiveNPCQuestEvent - questID is null.";
         }
     }
 }
@@ -307,6 +459,19 @@ public class MoveNPCEvent : QuestEvent
             World.objectManager.CreateNPC(npc);
         }
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (npcID.NullOrEmpty())
+        {
+            yield return "MoveNPCEvent - npcID is null.";
+        }
+
+        if (zone.NullOrEmpty())
+        {
+            yield return "MoveNPCEvent - zone is null.";
+        }
+    }
 }
 
 public class ReplaceItemOnNPCEvent : QuestEvent
@@ -353,6 +518,19 @@ public class ReplaceItemOnNPCEvent : QuestEvent
             }
         }
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (npcID.NullOrEmpty())
+        {
+            yield return "ReplaceItemOnNPCEvent - npcID is null.";
+        }
+
+        if (itemID.NullOrEmpty())
+        {
+            yield return "ReplaceItemOnNPCEvent - itemID is null.";
+        }
+    }
 }
 
 public class PlaceBlockerEvent : QuestEvent
@@ -390,10 +568,9 @@ public class RemoveBlockersEvent : QuestEvent
         List<MapObject> mos = World.objectManager.ObjectsAt(worldPos, elevation);
         List<MapObject> toDelete = mos.FindAll(x => x.blueprint.objectType == "Stair_Lock");
 
-        while (toDelete.Count > 0)
+        for (int i = toDelete.Count - 1; i >= 0; i--)
         {
-            World.objectManager.mapObjects.Remove(toDelete[0]);
-            toDelete.RemoveAt(0);
+            World.objectManager.mapObjects.Remove(toDelete[i]);
         }
 
         if (World.tileMap.WorldPosition == worldPos && World.tileMap.currentElevation == elevation)
@@ -421,21 +598,20 @@ public class BecomeFollowerEvent : QuestEvent
 
     public override void RunEvent()
     {
-        NPC n;
-
-        if (npcUIDOverride < 0)
-        {
-            n = World.objectManager.GetNPCByUID(npcUIDOverride);
-        }
-        else
-        {
-           n = World.objectManager.npcClasses.Find(x => x.ID == npcID);
-        }
+        NPC n = npcUIDOverride < 0 ? World.objectManager.GetNPCByUID(npcUIDOverride) : World.objectManager.npcClasses.Find(x => x.ID == npcID);
 
         if (n != null)
         {
             n.MakeFollower();
             World.tileMap.HardRebuild();
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (npcID.NullOrEmpty() && npcUIDOverride < 0)
+        {
+            yield return "BecomeFollowerEvent - npcID is null and npcUIDOverride is < 0.";
         }
     }
 }
@@ -452,6 +628,14 @@ public class CompleteStepEvent : QuestEvent
     public override void RunEvent()
     {
         goal.Complete();
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (goal == null)
+        {
+            yield return "CompleteStepEvent - goal is null.";
+        }
     }
 }
 
@@ -472,6 +656,14 @@ public class RemoveNPCEvent : QuestEvent
         {
             ObjectManager.playerJournal.staticNPCKills.Add(n.ID);
             World.objectManager.npcClasses.Remove(n);
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (npcID.NullOrEmpty())
+        {
+            yield return "RemoveNPCEvent - npcID is null.";
         }
     }
 }
@@ -497,14 +689,27 @@ public class RemoveNPCsAtEvent : QuestEvent
             npcsAt.RemoveAt(0);
         }
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (worldPos == null)
+        {
+            yield return "RemoveNPCsAtEvent - worldPos is null.";
+        }
+
+        if (elevation > 0)
+        {
+            yield return "RemoveNPCsAtEvent - elevation > 0";
+        }
+    }
 }
 
-public class SetNPCDialogueTree : QuestEvent
+public class SetNPCDialogueTreeEvent : QuestEvent
 {
     readonly string npcID;
     readonly string dialogueID;
 
-    public SetNPCDialogueTree(string nID, string dID)
+    public SetNPCDialogueTreeEvent(string nID, string dID)
     {
         npcID = nID;
         dialogueID = dID;
@@ -519,14 +724,27 @@ public class SetNPCDialogueTree : QuestEvent
             n.dialogueID = dialogueID;
         }
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (npcID.NullOrEmpty())
+        {
+            yield return "SetNPCDialogueTreeEvent - npcID is null.";
+        }
+
+        if (dialogueID.NullOrEmpty())
+        {
+            yield return "SetNPCDialogueTreeEvent - dialogueID is null.";
+        }
+    }
 }
 
-public class OpenDialogue : QuestEvent
+public class OpenDialogueEvent : QuestEvent
 {
     readonly string speaker;
     readonly string dialogue;
 
-    public OpenDialogue(string spkr, string dia)
+    public OpenDialogueEvent(string spkr, string dia)
     {
         speaker = spkr;
         dialogue = dia;
@@ -549,13 +767,21 @@ public class OpenDialogue : QuestEvent
 
         Alert.CustomAlert_WithTitle(name, dialogue);
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (dialogue.NullOrEmpty())
+        {
+            yield return "OpenDialogueEvent - dialogue is null.";
+        }
+    }
 }
 
-public class CreateLocation : QuestEvent
+public class CreateLocationEvent : QuestEvent
 {
     readonly string zoneID;
 
-    public CreateLocation(string zone)
+    public CreateLocationEvent(string zone)
     {
         zoneID = zone;
     }
@@ -571,13 +797,21 @@ public class CreateLocation : QuestEvent
             World.worldMap.worldMapData.NewPostGenLandmark(pos, zoneID);
         }
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (zoneID.NullOrEmpty())
+        {
+            yield return "CreateLocationEvent - zoneID is null.";
+        }
+    }
 }
 
-public class RemoveLocation : QuestEvent
+public class RemoveLocationEvent : QuestEvent
 {
     readonly string zoneID;
 
-    public RemoveLocation(string zone)
+    public RemoveLocationEvent(string zone)
     {
         zoneID = zone;
     }
@@ -593,13 +827,21 @@ public class RemoveLocation : QuestEvent
             World.worldMap.RemoveLandmark(c.x, c.y);
         }
     }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (zoneID.NullOrEmpty())
+        {
+            yield return "CreateLocationEvent - zoneID is null.";
+        }
+    }
 }
 
-public class RemoveLocation_Specific : QuestEvent
+public class RemoveSpecificLocationEvent : QuestEvent
 {
     readonly Coord zone;
 
-    public RemoveLocation_Specific(Coord zone)
+    public RemoveSpecificLocationEvent(Coord zone)
     {
         this.zone = zone;
     }
@@ -613,6 +855,95 @@ public class RemoveLocation_Specific : QuestEvent
             World.worldMap.worldMapData.RemoveLandmark(c);
             World.tileMap.DeleteScreen(c.x, c.y);
             World.worldMap.RemoveLandmark(c.x, c.y);
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (zone == null)
+        {
+            yield return "RemoveLocation_SpecificEvent - zone is null.";
+        }
+    }
+}
+
+public class SetItemModifierEvent : QuestEvent
+{
+    readonly string[] availableEntries = new string[] { "Weapon", "Firearm" }; //For logging purposes
+    readonly string itemSlot;
+    readonly ItemModifier modifier;
+
+    public SetItemModifierEvent(string itSlot, string modID)
+    {
+        itemSlot = itSlot;
+        modifier = new ItemModifier(GameData.Get<ItemModifier>(modID));
+    }
+
+    public override void RunEvent()
+    {
+        Item item = null;
+        Entity entity = ObjectManager.playerEntity;
+
+        switch (itemSlot)
+        {
+            case "Weapon": //Selects the first available weapon.
+                if (!entity.body.MainHand.EquippedItem.HasProp(ItemProperty.Cannot_Remove))
+                {
+                    item = entity.body.MainHand.EquippedItem;
+                }
+                else
+                {
+                    foreach (BodyPart.Hand hand in entity.body.Hands)
+                    {
+                        if (hand.arm.isAttached && !hand.EquippedItem.HasProp(ItemProperty.Cannot_Remove))
+                        {
+                            item = hand.EquippedItem;
+                            break;
+                        }
+                    }
+                }
+                
+                break;
+
+            case "Firearm":
+                item = entity.inventory.firearm;
+                break;
+        }
+
+        if (item != null && !item.HasProp(ItemProperty.Cannot_Remove) && modifier != null)
+        {
+            item.AddModifier(modifier);
+        }
+    }
+
+    public override IEnumerable<string> LoadErrors()
+    {
+        if (modifier == null)
+        {
+            yield return "SetItemModifierEvent - modifier is null.";
+        }
+
+        if (itemSlot.NullOrEmpty())
+        {
+            yield return "SetItemModifierEvent - itemEntry is null.";
+        }
+        else
+        {
+            bool validEntry = false;
+
+            for (int i = 0; i < availableEntries.Length; i++)
+            {
+                if (itemSlot == availableEntries[i])
+                {
+                    validEntry = true;
+                    break;
+                }
+            }
+
+            if (!validEntry)
+            {
+                yield return string.Format("SetItemModifierEvent - \"{0}\" is not a valid entry.", itemSlot);
+            }
         }
     }
 }

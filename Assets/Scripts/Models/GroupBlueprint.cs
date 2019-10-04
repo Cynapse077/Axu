@@ -17,9 +17,17 @@ public class GroupBlueprint : IAsset
         FromJson(dat);
     }
 
+    public bool CanSpawn(int levelInc = 0)
+    {
+        return ObjectManager.playerEntity != null && level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel + levelInc;
+    }
+
     public bool CanSpawnHere(TileMap_Data tileMapData)
     {
         if (ObjectManager.playerEntity == null)
+            return false;
+
+        if (!CanSpawn())
             return false;
 
         //Underground
@@ -41,9 +49,6 @@ public class GroupBlueprint : IAsset
         else
         {
             //Above Ground
-            if (level > ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
-                return false;
-
             if (!tileMapData.mapInfo.friendly && tileMapData.mapInfo.biome != Biome.Default && biomes != null)
             {
                 for (int i = 0; i < biomes.Length; i++)
@@ -73,7 +78,7 @@ public class GroupBlueprint : IAsset
     public void FromJson(JsonData dat)
     {
         ID = dat["Name"].ToString();
-        level = dat.ContainsKey("Level") ? (int)dat["Level"] : 1;
+        dat.TryGetInt("Level", out level, 1);
 
         if (dat.ContainsKey("Biomes"))
         {
@@ -155,7 +160,7 @@ public struct SpawnBlueprint : IWeighted
     public int AmountToSpawn()
     {
         int max = Mathf.Min(AbsMax, range.max + World.DangerLevel() / 2);
-        int a = (max > range.min) ? range.GetRandom() : range.min;
+        int a = (max > range.min) ? Random.Range(range.min, max) : range.min;
 
         a = Mathf.Clamp(a, 1, AbsMax);
         return a;

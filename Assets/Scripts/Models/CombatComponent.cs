@@ -39,7 +39,6 @@ public class CombatComponent
             return;
         }
 
-        bool playSound = false;
         bool attacked = false;
         Item soundItem = null;
 
@@ -58,7 +57,6 @@ public class CombatComponent
                 attacked = true;
             }
 
-            playSound = true;
             soundItem = MyBody.MainHand.EquippedItem;
         }
 
@@ -87,7 +85,6 @@ public class CombatComponent
                         attacked = true;
                     }
 
-                    playSound = true;
                     soundItem = hands[i].EquippedItem;
                 }
             }
@@ -105,13 +102,12 @@ public class CombatComponent
             {
                 if (AttackTarget(target, MyBody.bodyParts[i].equippedItem))
                 {
-                    playSound = true;
                     soundItem = MyBody.bodyParts[i].equippedItem;
                 }
             }
         }
 
-        if (entity.isPlayer && playSound && soundItem != null)
+        if (entity.isPlayer && soundItem != null)
         {
             World.soundManager.PlayAttackSound(soundItem);
         }
@@ -179,6 +175,12 @@ public class CombatComponent
         if (SeedManager.combatRandom.Next(100) < missChance)
         {
             target.Miss(entity, wep);
+
+            if (entity.isPlayer)
+            {
+                World.soundManager.Miss();
+            }
+
             return false;
         }
 
@@ -209,6 +211,10 @@ public class CombatComponent
                     MyBody.TrainLimb(hand.arm);
                 }
             }
+        }
+        else if (entity.isPlayer)
+        {
+            World.soundManager.Block();
         }
 
         return true;
@@ -313,6 +319,7 @@ public class CombatComponent
             }
         }
 
+        Item ammo = entity.inventory.firearm.HasCComponent<CFirearm>() ? ItemList.GetItemByID(entity.inventory.firearm.GetCComponent<CFirearm>().currentAmmo) : null;
         TileDamage td = new TileDamage(entity, targetPos, entity.inventory.firearm.damageTypes);
 
         if (FirearmMiss(targetPos, iteration))
@@ -324,9 +331,22 @@ public class CombatComponent
         entity.InstatiateThrowingEffect(td.pos, 2.0f);
 
         td.damage = entity.inventory.firearm.CalculateDamage(entity.stats.Dexterity - 4, entity.stats.CheckProficiencies(entity.inventory.firearm).level);
+
+        if (ammo != null && ammo.HasCComponent<CAmmo>())
+        {
+            //Add extra damage from ammunition
+            td.damage += ammo.GetCComponent<CAmmo>().extraDamage.Roll();
+        }
+
         td.crit = entity.inventory.firearm.AttackCrits(entity.stats.proficiencies.Firearm.level + 1);
-        td.myName = LocalizationManager.GetContent("Bullet");
+        td.myName = ammo == null ? LocalizationManager.GetContent("Bullet") : ammo.DisplayName();
         td.ApplyDamage();
+
+        if (ammo != null && ammo.HasCComponent<CAmmo>())
+        {
+            //Apply ammunition effects
+            ammo.GetCComponent<CAmmo>().OnHit(entity, td.pos);
+        }
 
         entity.stats.AddProficiencyXP(entity.inventory.firearm, entity.stats.Dexterity);
     }

@@ -95,14 +95,8 @@ public class BaseAI : MonoBehaviour
 
     bool CanDoAnAction()
     {
-        if (entity == null)
+        if (entity == null || !doneInit || ObjectManager.playerEntity == null || entity.stats.HasEffect("Blind"))
         {
-            return false;
-        }
-
-        if (!doneInit || ObjectManager.playerEntity == null || entity.stats.HasEffect("Blind"))
-        {
-            Wander();
             return false;
         }
 
@@ -449,7 +443,7 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        if (RNG.Next(100) > 30 || (!isHostile && npcBase.HasFlag(NPC_Flags.Stationary_While_Passive)) || npcBase.HasFlag(NPC_Flags.Aquatic))
+        if (RNG.Next(100) > 35 || (!isHostile && npcBase.HasFlag(NPC_Flags.Stationary_While_Passive)) || npcBase.HasFlag(NPC_Flags.Aquatic))
         {
             entity.Wait();
             return;
@@ -470,6 +464,7 @@ public class BaseAI : MonoBehaviour
             else
             {
                 turnsLeftToPath--;
+                ConfirmAction(RNG.Next(-1, 2), RNG.Next(-1, 2));
             }
         }
     }
@@ -609,7 +604,7 @@ public class BaseAI : MonoBehaviour
             perceptionRoll--;
         }
 
-        return (dist < newSightRange && stealthRoll < perceptionRoll);
+        return dist < newSightRange && stealthRoll < perceptionRoll;
     }
 
     public void AnswerCallForHelp(BaseAI bai, Entity targ)
@@ -626,9 +621,9 @@ public class BaseAI : MonoBehaviour
 
     public void BecomeHostile()
     {
-        if (!isHostile && npcBase.ID == "oromir" && !ObjectManager.playerJournal.HasFlag("Hostile_To_Oromir"))
+        if (!isHostile && npcBase.HasFlag(NPC_Flags.Faction_Leader) && !ObjectManager.playerJournal.HasFlag("HostileTo_" + npcBase.faction.ID))
         {
-            ObjectManager.playerJournal.AddFlag("Hostile_To_Oromir");
+            ObjectManager.playerJournal.AddFlag("HostileTo_" + npcBase.faction.ID);
             npcBase.questID = "";
             dialogueController.SetupDialogueOptions();
         }
@@ -787,7 +782,6 @@ public class BaseAI : MonoBehaviour
 
     void CacheVars()
     {
-        spriteRenderer.enabled = false;
         spriteComponent = GetComponent<NPCSprite>();
         gameObject.name = npcBase.name;
         perception = npcBase.Attributes["Perception"];
@@ -888,7 +882,7 @@ public class BaseAI : MonoBehaviour
 
         bool sight = entity.cell.InSight;
 
-        spriteRenderer.enabled = sight;
+        spriteRenderer.color = sight ? Color.white : Color.clear;
 
         return sight;
     }
@@ -1084,7 +1078,7 @@ public class BaseAI : MonoBehaviour
         }
 
         //Dive
-        if (SeedManager.combatRandom.Next(100) < 10 && npcBase.HasFlag(NPC_Flags.Aquatic) && Tile.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
+        if (SeedManager.combatRandom.Next(100) < 10 && npcBase.HasFlag(NPC_Flags.Aquatic) && TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
         {
             if (entity.body.AllGripsAgainst().Count <= 0 && !entity.stats.HasEffect("Underwater"))
             {

@@ -39,6 +39,13 @@ public class TurnManager : MonoBehaviour
         get { return timeOfDay; }
         protected set { timeOfDay = value; }
     }
+    public float DayProgress
+    {
+        get
+        {
+            return Mathf.PingPong(turn, FullDayLength) / FullDayLength;
+        }
+    }
 
     void OnEnable()
     {
@@ -63,13 +70,6 @@ public class TurnManager : MonoBehaviour
         timers.Add(timer);
     }
 
-    public float DayProgress
-    {
-        get
-        {
-            return Mathf.PingPong(turn, FullDayLength) / FullDayLength;
-        }
-    }
     public float VisionInhibit()
     {
         return Mathf.Lerp(0f, 40f, DayProgress);
@@ -139,12 +139,7 @@ public class TurnManager : MonoBehaviour
         turn++;
         TimeOfDay++;
         turnsSinceWeatherChange++;
-
-        if (incrementTurnCounter != null)
-        {
-            incrementTurnCounter();
-        }
-
+        incrementTurnCounter?.Invoke();
 
         List<BodyPart.Hand> hands = ObjectManager.playerEntity.body.Hands;
 

@@ -3,6 +3,8 @@ using LitJson;
 
 public class ZoneBlueprint : IAsset
 {
+    public const string DefaultPlacementBiome = "Any Land";
+
     public string ID { get; set; }
     public string ModID { get; set; }
     public string name, underground;
@@ -35,8 +37,8 @@ public class ZoneBlueprint : IAsset
 
         if (dat.ContainsKey("Place At"))
         {
-            if (dat["Place At"].ContainsKey("Biome"))
-                placement.zoneID = dat["Place At"]["Biome"].ToString();
+            dat["Place At"].TryGetString("Biome", out placement.zoneID, DefaultPlacementBiome);
+
             if (dat["Place At"].ContainsKey("Location"))
                 placement.landmark = dat["Place At"]["Location"].ToString();
             if (dat["Place At"].ContainsKey("Relative"))
@@ -187,7 +189,7 @@ public class ZoneBlueprint_Underground :IAsset
 
         public Tile_Data GetRandomTile()
         {
-            return Tile.GetByName(Utility.WeightedChoice(floorTiles).tileID);
+            return TileManager.GetByName(Utility.WeightedChoice(floorTiles).tileID);
         }
     }
 

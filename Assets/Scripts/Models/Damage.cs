@@ -10,6 +10,14 @@ public class Damage
     public int Inc;
     public DamageTypes Type;
 
+    public bool IsEmpty
+    {
+        get
+        {
+            return Num == 0 && Sides == 0 && Inc == 0;
+        }
+    }
+
     public Damage() { }
 
     public Damage(int numDice, int diceSides, int increase, DamageTypes type = DamageTypes.Blunt)
@@ -26,9 +34,9 @@ public class Damage
             return Simplified();
 
         if (Inc > 0)
-            return string.Format("{0}d{1} +{2}", Num, Sides, Inc);
+            return string.Format("{0}d{1}+{2}", Num, Sides, Inc);
         if (Inc < 0)
-            return string.Format("{0}d{1} {2}", Num, Sides, Inc);
+            return string.Format("{0}d{1}{2}", Num, Sides, Inc);
 
         return string.Format("{0}d{1}", Num, Sides);
     }
@@ -81,7 +89,7 @@ public class Damage
     public static Damage GetByString(string dmgString)
     {
         int dice = 0, sides = 0, inc = 0;
-        string[] ss = dmgString.Split("d"[0]);
+        string[] ss = dmgString.Split('d');
 
         if (ss.Length < 2)
         {

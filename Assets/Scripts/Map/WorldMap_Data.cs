@@ -240,8 +240,7 @@ public class WorldMap_Data
         {
             for (int y = 0; y < height; y++)
             {
-
-                //Place down shore tiles along edges of grass.
+                //Place down shore tiles along edges.
                 if (GrassTile(x, y) && tiles[x, y].biome != Biome.Tundra && tiles[x, y].biome != Biome.Desert)
                 {
                     for (int ex = -1; ex <= 1; ex++)
@@ -416,13 +415,17 @@ public class WorldMap_Data
         {
             if (!zb.placement.landmark.NullOrEmpty())
             {
-                pos = GetRandomLandmark(zb.placement.landmark);
+                if (zb.placement.zoneID == ZoneBlueprint.DefaultPlacementBiome ||
+                    !TryGetLandmark(zb.placement.landmark, zb.placement.zoneID.ToEnum<Biome>(), out pos))
+                {
+                    pos = GetRandomLandmark(zb.placement.landmark);
+                }
             }
             else
             {
-                if (zb.placement.zoneID == "Any Land")
+                if (zb.placement.zoneID == ZoneBlueprint.DefaultPlacementBiome)
                 {
-                    pos = (zb.placement.onMain) ? GetOpenFromMainIsland(zb.neighbors) : GetOpenPosition(zb.neighbors);
+                    pos = zb.placement.onMain ? GetOpenFromMainIsland(zb.neighbors) : GetOpenPosition(zb.neighbors);
                 }
                 else
                 {
@@ -700,6 +703,31 @@ public class WorldMap_Data
         }
 
         return cs[rng.Next(0, cs.Count)];
+    }
+
+    public bool TryGetLandmark(string search, Biome biome, out Coord c)
+    {
+        List<Coord> cs = new List<Coord>();
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (tiles[x, y].landmark == search && tiles[x, y].biome == biome)
+                {
+                    cs.Add(new Coord(x, y));
+                }
+            }
+        }
+
+        if (!cs.Empty())
+        {
+            c = cs[rng.Next(0, cs.Count)];
+            return true;
+        }
+
+        c = new Coord();
+        return false;
     }
 
     public Coord GetOpenPosition(Biome b)

@@ -607,7 +607,7 @@ public class Entity : MonoBehaviour
             if (World.tileMap.GetCellAt(posX + x, posY + y).InSight)
             {
                 GameObject s = SimplePool.Spawn(World.poolManager.slashEffects[wepNum], targetPosition + new Vector3(offsetX, offsetY, 0));
-                int playerDir = ((isPlayer) ? playerInput.childSprite.flipX : AI.spriteRenderer.flipX) ? -1 : 1;
+                int playerDir = ((isPlayer) ? playerInput.childSprite.flipX : spriteRenderer.flipX) ? -1 : 1;
                 s.GetComponent<WeaponHitEffect>().FaceChildOtherDirection(playerDir, x, y, body.MainHand.EquippedItem);
             }
 
@@ -875,7 +875,10 @@ public class Entity : MonoBehaviour
         if (inventory.Reload(inventory.firearm))
         {
             if (isPlayer)
-                CombatLog.SimpleMessage("Message_Reload");
+            {
+                CombatLog.NewMessage(string.Format(LocalizationManager.GetContent("Message_Reload"), inventory.firearm.DisplayName(), 
+                    ItemList.GetItemByID(inventory.firearm.GetCComponent<CFirearm>().currentAmmo).DisplayName()));
+            }
 
             int time = inventory.firearm.HasProp(ItemProperty.Quick_Reload) ? 8 : 14;
 
@@ -1147,7 +1150,7 @@ public class Entity : MonoBehaviour
 
         int tNum = World.tileMap.GetTileID(posX, posY);
 
-        if (World.tileMap.IsWaterTile(posX, posY) || tNum == Tile.tiles["Stairs_Up"].ID || tNum == Tile.tiles["Stairs_Down"].ID)
+        if (World.tileMap.IsWaterTile(posX, posY) || tNum == TileManager.tiles["Stairs_Up"].ID || tNum == TileManager.tiles["Stairs_Down"].ID)
         {
             return;
         }
@@ -1270,7 +1273,7 @@ public class Entity : MonoBehaviour
         if (isPlayer)
             return isPlayer && playerInput.childSprite.flipX;
         else
-            return AI.spriteRenderer.flipX;
+            return spriteRenderer.flipX;
     }
 
     //TODO: Cache this.

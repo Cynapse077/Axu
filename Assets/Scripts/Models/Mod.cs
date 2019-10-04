@@ -148,7 +148,7 @@ public class Mod
             string tilesPath = Path.Combine(curPath, "LocalTiles.json");
             if (File.Exists(tilesPath))
             {
-                Tile.LoadTiles(tilesPath);
+                TileManager.LoadTiles(tilesPath);
             }
         }
 

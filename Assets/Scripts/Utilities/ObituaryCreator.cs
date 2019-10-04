@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Collections.Generic;
 
 public static class ObituaryCreator
 {
@@ -8,18 +7,20 @@ public static class ObituaryCreator
         "Torn to pieces by Scrags.",
         "Assaulted by Puggles.",
         "Dug too deep and too greedily.",
-        "Made a dangerous bet.",
-        "Sold their organs for pocket change. The heart as not the best choice.",
+        "Made a dangerous bet. They lost.",
+        "Sold their organs for pocket change.",
         "Thought they could fly.\nThey could not.",
-        "Are you truly certain its me buried here?",
-        "He didn't die, but his cryopod won't open up.",
         "Ate a piece of unidentified meat from the ground.",
-        "Tried to wrestle a alpha scrag.",
+        "Tried to wrestle an alpha scrag.",
         "Ate a whole mutant. The whole thing. With a fork.",
-        "Wrote the Ensis Safety Standards in the human labs. Obviously that didn't go well.",
-        "Somehow believed bathing in radiation would give them super powers.",
+        "Wrote the Ensis Labs Safety Standards. Hundreds died in the resulting fire, including them.",
+        "Believed bathing in radiation would give them super powers.",
         "Starved after being told hunger had been removed.",
-        "Decapitated themselves to swap heads."
+        "Decapitated themselves to swap heads.",
+        "Drank their own vomit. Vomited it up. Rinse and repeat.",
+        "Shot in the head.",
+        "Death by natural causes. The rarest death there is on Axu.",
+        ""
     };
 
     static readonly string[] finalWords = new string[]
@@ -27,15 +28,17 @@ public static class ObituaryCreator
         "They will be dearly missed.",
         "Good riddance.",
         "Sunscreen saves lives.",
-        "Good job, dumnbass.",
+        "Good job, dumnbass. I mean... \"dumbass\".",
         "Alas, we hardly new ye.",
-        "Will not be missed."
+        "Will not be missed.",
+        "\"Are you truly certain its me buried here?\"",
+        "We took all the valuables. Please don't dig them up."
     };
 
     static readonly string[] alternateNames = new string[]
     {
         "<i><color=grey>[The stone is worn. You could not make out a name.]>/color></i>",
-        "a man who sold his world.",
+        "A man who sold his world.",
         "Sin",
         "John",
         "Icarus",
@@ -45,8 +48,7 @@ public static class ObituaryCreator
 
     public static string GetNewObituary(Coord wPos, Coord lPos)
     {
-        int seed = (wPos + lPos).GetHashCode();
-        System.Random ran = new System.Random(seed);
+        System.Random ran = new System.Random((wPos + lPos).GetHashCode());
         StringBuilder sb = new StringBuilder();
 
         sb.AppendLine("<color=grey>---------------</color>");

@@ -15,14 +15,16 @@ public class LookTooltipPanel : MonoBehaviour
 
         DisplayName.text = npc.npcBase.name;
 
-        string hostility = (npc.isHostile) ? "TT_Hostile" : "TT_Passive", awareness = (npc.HasSeenPlayer()) ? "TT_Aware" : "TT_Unaware";
+        string hostility = npc.isHostile ? "TT_Hostile" : "TT_Passive";
+        string awareness = npc.HasSeenPlayer() ? "TT_Aware" : "TT_Unaware";
+
         if (npc.isFollower())
             hostility = "TT_Follower";
 
         string localizedHos = LocalizationManager.GetContent(hostility);
         string localizedAwa = LocalizationManager.GetContent(awareness);
 
-        Content1.text = "<color=silver>[" + npc.npcBase.faction.Name + "]</color>";
+        Content1.text = npc.npcBase.faction.hidden ? "" : "<color=silver>[" + npc.npcBase.faction.name + "]</color>";
         Content2.text = "(" + localizedHos + " / " + localizedAwa + ")";
 
         Inventory npcInv = npc.GetComponent<Inventory>();
@@ -46,7 +48,7 @@ public class LookTooltipPanel : MonoBehaviour
             wepName = npcInv.entity.body.defaultHand.EquippedItem.DisplayName();
         }
 
-        if (npc.entity.inventory.firearm != null && npc.entity.inventory.firearm.ID != "none")
+        if (!npc.entity.inventory.firearm.IsNullOrDefault())
         {
             wepName += ", " + npc.entity.inventory.firearm.DisplayName();
         }
