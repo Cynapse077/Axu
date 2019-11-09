@@ -1574,7 +1574,7 @@
         {
             "ID" : "Dis_Cry_Attach",
             "Display" : "Diseased!",
-            "Message" : "You have contracted Leprosy from attaching an infected limb!"
+            "Message" : "You have contracted Crystallization from attaching an infected limb!"
         },
         {
             "ID" : "Dis_Cry_Eat",

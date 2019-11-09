@@ -9,7 +9,7 @@ public static class LuaManager
     static bool assemblyRegistered = false;
     static Dictionary<string, Script> scripts;
 
-    public static void AddFile(string s)
+    public static void AddFile(string modID, string s)
     {
         if (!assemblyRegistered)
         {
@@ -30,7 +30,7 @@ public static class LuaManager
         }
         else
         {
-            scripts.Add(path, sc);
+            scripts.Add(modID + path, sc);
         }
     }
 
@@ -44,35 +44,39 @@ public static class LuaManager
         UserData.RegisterAssembly();
 
         //Remember to CREATE A STATIC for the type below too!!
+        UserData.RegisterType<AbilityTags>();
+        UserData.RegisterType<Biome>();
+        UserData.RegisterType<CastType>();
         UserData.RegisterType<DamageTypes>();
         UserData.RegisterType<ItemProperty>();
-        UserData.RegisterType<AbilityTags>();
-        UserData.RegisterType<CastType>();
-        UserData.RegisterType<TraitEffects>();
         UserData.RegisterType<NPC_Flags>();
-        UserData.RegisterType<Biome>();
+        UserData.RegisterType<TraitEffects>();
     }
 
     static void AddEnumsToGlobals(Script sc)
     {
         //Remember to REGISTER the type above too!!
+        sc.Globals["AbilityTags"] = UserData.CreateStatic<AbilityTags>();
+        sc.Globals["Biome"] = UserData.CreateStatic<Biome>();
+        sc.Globals["CastType"] = UserData.CreateStatic<CastType>();
         sc.Globals["DamageTypes"] = UserData.CreateStatic<DamageTypes>();
         sc.Globals["ItemProperty"] = UserData.CreateStatic<ItemProperty>();
-        sc.Globals["CastType"] = UserData.CreateStatic<CastType>();
-        sc.Globals["AbilityTags"] = UserData.CreateStatic<AbilityTags>();
-        sc.Globals["TraitEffects"] = UserData.CreateStatic<TraitEffects>();
         sc.Globals["NPC_Flags"] = UserData.CreateStatic<NPC_Flags>();
-        sc.Globals["Biome"] = UserData.CreateStatic<Biome>();
+        sc.Globals["TraitEffects"] = UserData.CreateStatic<TraitEffects>();
     }
 
-    public static DynValue CallScriptFunction(string fileName, string functionName, params object[] parameters)
+    private static DynValue CallScriptFunction(string modID, string fileName, string functionName, params object[] parameters)
     {
-        if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(functionName))
-            return null;
-
-        if (scripts[fileName] != null)
+        if (modID.NullOrEmpty() || fileName.NullOrEmpty() || functionName.NullOrEmpty())
         {
-            Script script = scripts[fileName];
+            return null;
+        }
+
+        string id = modID + fileName;
+
+        if (scripts[id] != null)
+        {
+            Script script = scripts[id];
 
             if (script.Globals[functionName] != null)
             {
@@ -86,7 +90,7 @@ public static class LuaManager
 
     public static DynValue CallScriptFunction(LuaCall luaCall, params object[] parameters)
     {
-        return CallScriptFunction(luaCall.scriptName, luaCall.functionName, parameters);
+        return CallScriptFunction(luaCall.modID, luaCall.scriptName, luaCall.functionName, parameters);
     }
 
     public static void SetGlobals()
@@ -124,6 +128,8 @@ public static class LuaManager
             sc.Globals["PositionsInCone"] = (Func<Entity, Coord, Coord, int, List<Coord>>)Utility.Cone;
             sc.Globals["GetTile"] = (Func<string, Tile_Data>)TileManager.GetByName;
             sc.Globals["Error"] = (Action<object>)Error;
+            sc.Globals["ApplyChanges"] = (Action<Entity, Ability>)Ability.ApplyChanges;
+            sc.Globals["SpawnEffect"] = (Action<Entity, int, int, Ability, float>)Ability.SpawnEffect;
 
             //Constants
             sc.Globals["LocalMapSize"] = Manager.localMapSize;

@@ -174,7 +174,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lit: 0
   maskRenderer: {fileID: 1905157612}
-  upperMaskRenderer: {fileID: 0}
   maskTextures:
   - {fileID: 21300030, guid: 98e33cc73d81d334082fb73f4912829b, type: 3}
   - {fileID: 21300000, guid: 98e33cc73d81d334082fb73f4912829b, type: 3}

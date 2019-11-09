@@ -8,6 +8,8 @@ namespace MapCreator
 {
     public class MapCreatorTool : MonoBehaviour
     {
+        private static string filePath;
+
         public int CurrentTile = 32;
         public GameObject tilePrefab;
         public GameObject buttonPrefab;
@@ -57,18 +59,14 @@ namespace MapCreator
         {
             get
             {
-                System.Predicate<IAsset> predicate = (IAsset asset) => {
-                    MapObjectBlueprint bp = asset as MapObjectBlueprint;
-
-                    if (bp != null)
+                return GameData.Get<MapObjectBlueprint>((IAsset asset) => {
+                    if (asset is MapObjectBlueprint bp)
                     {
-                        return (bp.displayInEditor);
+                        return bp.displayInEditor;
                     }
 
                     return false;
-                };
-
-                return GameData.Get<MapObjectBlueprint>(predicate);
+                });
             }
         }
 
@@ -92,6 +90,8 @@ namespace MapCreator
                 UnityEngine.SceneManagement.SceneManager.LoadScene(0);
                 return;
             }
+
+            filePath = Application.streamingAssetsPath + "/Mods/Core/Maps/MapFiles" ;
 
             mapNameTitle.text = "";
             mapSize = new Coord(Manager.localMapSize.x, Manager.localMapSize.y);
@@ -122,7 +122,9 @@ namespace MapCreator
 
                 //Clip image to bottom left
                 if (objectSprites[i].texture.width > 20)
+                {
                     objectSprites[i] = Sprite.Create(objectSprites[i].texture, new Rect(96, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+                }
 
                 GameObject g = Instantiate(buttonPrefab, objectAnchor);
                 g.GetComponent<MapCreator_SideButton>().Init(this, i, MapCreator_SideButton.MC_ButtonType.Object);
@@ -154,10 +156,10 @@ namespace MapCreator
 
             foreach (KeyValuePair<string, Tile_Data> entry in TileManager.tiles)
             {
-                if (entry.Key.Contains("_Empty"))
-                    continue;
-
-                tileIDs.Add(entry.Key);
+                if (!entry.Key.Contains("_Empty"))
+                {
+                    tileIDs.Add(entry.Key);
+                }
             }
 
             tileIDs.Sort();
@@ -171,7 +173,8 @@ namespace MapCreator
 
             GridLayoutGroup glg = mapAnchor.GetComponent<GridLayoutGroup>();
             glg.constraintCount = mapSize.y;
-            glg.cellSize = new Vector2(mapAnchor.GetComponent<RectTransform>().sizeDelta.x / mapSize.x - 1, mapAnchor.GetComponent<RectTransform>().sizeDelta.x / mapSize.x - 1);
+            glg.cellSize = new Vector2(mapAnchor.GetComponent<RectTransform>().sizeDelta.x / mapSize.x - 1, 
+                mapAnchor.GetComponent<RectTransform>().sizeDelta.x / mapSize.x - 1);
 
             for (int x = 0; x < mapSize.x; x++)
             {
@@ -203,7 +206,9 @@ namespace MapCreator
         public void Undo()
         {
             if (changes.Count <= 0)
+            {
                 return;
+            }
 
             ChangeHolder holder = changes[changes.Count - 1];
 
@@ -228,17 +233,20 @@ namespace MapCreator
             }
 
             if (holder.previousPos != null)
+            {
                 lastSelected = holder.previousPos;
+            }
 
             changes.RemoveAt(changes.Count - 1);
-
             Autotile(0, 0, mapSize.x - 1, mapSize.y - 1);
         }
 
         public void FloodFill(MapCreator_Cell start, int tileToReplace)
         {
             if (start.tileID == CurrentTile)
+            {
                 return;
+            }
 
             Stack<MapCreator_Cell> stack = new Stack<MapCreator_Cell>();
             ChangeHolder holder = new ChangeHolder();
@@ -330,7 +338,9 @@ namespace MapCreator
                 cells[x, y].SetTile(GetSprite(), GetID());
 
                 if (!skipAutoTile)
+                {
                     Autotile(x, y, 2, 2);
+                }
             }
         }
 
@@ -411,7 +421,9 @@ namespace MapCreator
                     for (int y = -1; y <= 1; y++)
                     {
                         if (x == 0 && y == 0 || Mathf.Abs(x) + Mathf.Abs(y) > 1)
+                        {
                             continue;
+                        }
 
                         ObjectAutotile(px + x, py + y);
                     }
@@ -421,10 +433,10 @@ namespace MapCreator
 
         void ObjectAutotile(int x, int y)
         {
-            if (World.OutOfLocalBounds(x, y))
-                return;
-
-            AutotileObjects(x, y, false);
+            if (!World.OutOfLocalBounds(x, y))
+            {
+                AutotileObjects(x, y, false);
+            }
         }
 
         int BitwiseNeighbors(int x, int y, int objID)
@@ -442,7 +454,9 @@ namespace MapCreator
         bool NeighborAt(int x, int y, int objID)
         {
             if (World.OutOfLocalBounds(x, y))
+            {
                 return false;
+            }
 
             return cells[x, y].objectID == objID;
         }
@@ -454,7 +468,9 @@ namespace MapCreator
                 for (int y = cy - width; y <= cy + width; y++)
                 {
                     if (x < 0 || y < 0 || x >= mapSize.x || y >= mapSize.y || MapData(x, y) == null)
+                    {
                         continue;
+                    }
 
                     Tile_Data tile = MapData(x, y);
 
@@ -533,10 +549,7 @@ namespace MapCreator
                     }
                     else if (tile == TileManager.tiles["Dream_Floor"])
                     {
-                        int tIndex = 23;
-                        bool eightWay = true;
-
-                        BitwiseAutotile(x, y, tIndex, (z => z == TileManager.tiles["Dream_Floor"].ID), eightWay);
+                        BitwiseAutotile(x, y, 23, (z => z == TileManager.tiles["Dream_Floor"].ID), true);
                     }
                 }
             }
@@ -633,7 +646,9 @@ namespace MapCreator
             Elevation = -elevationSelector.value;
 
             if (MapName == "")
+            {
                 return;
+            }
 
             MapCreator_Screen sc = new MapCreator_Screen(MapName, Elevation, mapSize, CurrentLocationID);
             int[] ids = new int[mapSize.x * mapSize.y];
@@ -660,9 +675,7 @@ namespace MapCreator
             sc.IDs = ids;
 
             JsonData mapJson = JsonMapper.ToJson(sc);
-            string path = TileMap_Data.defaultMapPath + "/" + MapName + ".map";
-
-            File.WriteAllText(path, mapJson.ToString());
+            File.WriteAllText(filePath + "/" + MapName + ".map", mapJson.ToString());
             mapNameTitle.text = mapNameInput.text + ".map";
             CancelSaveMenu();
         }
@@ -689,8 +702,7 @@ namespace MapCreator
             savedMaps = new List<MapCreator_Screen>();
             loadButtonAnchor.DespawnChildren();
 
-            string modPath = TileMap_Data.defaultMapPath;
-            string[] ss = Directory.GetFiles(modPath, "*.map", SearchOption.AllDirectories);
+            string[] ss = Directory.GetFiles(Application.streamingAssetsPath, "*.map", SearchOption.AllDirectories);
 
             GetDataFromDirectory(ss);
 
@@ -786,7 +798,7 @@ namespace MapCreator
 
         public void DeleteMap()
         {
-            string mapToDeletePath = TileMap_Data.defaultMapPath + "/" + savedMaps[mapToDeleteIndex].Name + ".map";
+            string mapToDeletePath = filePath + "/" + savedMaps[mapToDeleteIndex].Name + ".map";
 
             if (File.Exists(mapToDeletePath))
             {

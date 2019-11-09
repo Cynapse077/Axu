@@ -17,7 +17,7 @@ public class ModPrefab : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         if (!myMod.IsCore() && pointerOver && Input.GetMouseButtonDown(0))
         {
-            modsPanel.SetActive(ModManager.mods.IndexOf(myMod), !myMod.IsActive);
+            modsPanel.SetActive(ModManager.Mods.IndexOf(myMod), !myMod.IsActive);
         }
     }
 
@@ -35,8 +35,7 @@ public class ModPrefab : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         if (myMod != null && descriptionText != null)
         {
-            string extra = (!myMod.IsActive) ? "<color=red>(Inactive)</color>" : "";
-            descriptionText.text = GetDescriptionText(extra);
+            descriptionText.text = GetDescriptionText(myMod.IsActive ? string.Empty : "<color=red>(Inactive)</color>");
         }
 
         pointerOver = true;

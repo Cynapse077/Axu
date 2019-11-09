@@ -1,5 +1,6 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Console : MonoBehaviour
@@ -473,9 +474,7 @@ public class Console : MonoBehaviour
                         return;
                     }
 
-                    int oo;
-
-                    if (int.TryParse(parsedText[2], out oo))
+                    if (int.TryParse(parsedText[2], out int oo))
                     {
                         World.tileMap.currentElevation = oo;
                         World.tileMap.HardRebuild();
@@ -768,7 +767,7 @@ public class Console : MonoBehaviour
             case "sever":
                 if (parsedText.Length < 2 || parsedText[1] == "random")
                 {
-                    int limbIndex = Random.Range(0, playerEntity.body.bodyParts.Count);
+                    int limbIndex = UnityEngine.Random.Range(0, playerEntity.body.bodyParts.Count);
 
                     if (playerEntity.body.bodyParts[limbIndex].severable)
                     {
@@ -904,11 +903,11 @@ public class Console : MonoBehaviour
                 MyConsole.NewMessage("  - <b>unstuck/unstick</b>\n    Teleports you to a random floor tile if stuck.");
                 MyConsole.NewHelpLine("location", "Displays the current world coordinate.");
                 MyConsole.NewHelpLine("go [area/direction]", "Travel one screen in a direction. [direction] = \"up\", \"down\", \"north\", \"south\", \"east\", \"west\", \"surface\".\n" +
-                    "You can also travel to any landmark by typing its ID, or any elevation by typing \"go elevation [e]\" where \"e\" is an integer.");
+                    "You can also travel to any landmark by typing its ID, or any elevation by typing \"go elevation [e]\" where \"[e]\" is an integer.");
                 MyConsole.NewHelpLine("  - <b>setpos [x] [y]</b>", "Travel to a specific world position. Constraints: 0-199 on each axis.");
-                MyConsole.NewMessage("  - <b>godmode</b> <i>[0-1]</i>\n      [0] = off\n      [1] = on");
-                MyConsole.NewMessage("  - <b>fov</b> <i>[0-1]</i>\n      Whether to show fog of war or not. \n0 = off  1 = on");
-                MyConsole.NewMessage("  - <b>explore</b> <i>[0-1]</i>\n      [0] = off\n      [1] = on\n      Enables or disables map encounters.");
+                MyConsole.NewMessage("  - <b>godmode</b> <i>[0-1]</i>\n      0 = off  1 = on");
+                MyConsole.NewMessage("  - <b>fov</b> <i>[0-1]</i>\n      Whether to show fog of war or not. \n      0 = off  1 = on");
+                MyConsole.NewMessage("  - <b>explore</b> <i>[0-1]</i>\n      0 = off  1 = on\n      Enables or disables map encounters.");
                 MyConsole.NewMessage("  - <b>gold</b> <i>[amount]</i>\n      Gives [amount] gold to the player.");
                 MyConsole.NewMessage("  - <b>spawn npc</b> <i>[ID] [x] [y]</i>\n      Spawns an NPC at a position relative to the player.");
                 MyConsole.NewMessage("  - <b>spawn object</b> <i>[ID] [x] [y]</i>\n      Spawns an object at a position relative to the player.");
@@ -918,8 +917,8 @@ public class Console : MonoBehaviour
                 MyConsole.NewMessage("  - <b>sever</b> <i>[limb index] or \"random\"</i>\n      Severs numbered limb, or random.");
                 MyConsole.NewMessage("  - <b>reattach</b> <i>[limb index] or \"all\"</i>\n      Re-attaches limb at index, or all.");
 
-                MyConsole.NewMessage("  - <b>give/grant</b> <i>[item name]</i>\n      Give a specified item to the player.");
-                MyConsole.NewMessage("  - <b>multigive/multigrant</b> <i>[amount] [item name]</i>\n      Give a specific number of a specified item to the player.");
+                MyConsole.NewMessage("  - <b>give/grant</b> <i>[item name/ID]</i>\n      Give a specified item to the player.");
+                MyConsole.NewMessage("  - <b>multigive/multigrant</b> <i>[amount] [item name/ID]</i>\n      Give a specific number of a specified item to the player.");
                 MyConsole.NewMessage("  - <b>mods</b>\n    Lists all the item modifiers.");
                 MyConsole.NewMessage("  - <b>modwep</b> <i>[mod ID]</i>\n    Modifies the first non-severed hand's equipped weapon with the selected modifier ID.");
 
@@ -943,12 +942,12 @@ public class Console : MonoBehaviour
                 MyConsole.NewMessage("  - <b>opendoors</b>\n    Opens all doors on the current screen, regardless of permissions.");
                 MyConsole.NewMessage("  - <b>closedoors</b>\n    Closes all doors on the current screen, regardless of permissions.");
 
-                MyConsole.NewMessage("  - <b>load <i>[map name]</i></b>\n    Loads a map by its name.");
+                MyConsole.NewMessage("  - <b>load <i>[map ID]</i></b>\n    Loads a map by its id.");
                 MyConsole.NewMessage("  - <b>addlocation <i>[zone ID]</i></b>\n    Adds the specified zone to the world map.");
                 MyConsole.NewMessage("  - <b>removelocation <i>[zone ID]</i></b>\n    Removes the specified zone from the world map.");
                 MyConsole.NewMessage("  - <b>detonate</b>\n      Kills all NPCs on the screen.");
                 MyConsole.NewMessage("  - <b>reveal</b>\n      Reveals all tiles on the map");
-                MyConsole.NewMessage("  - <b>wizard</b>\n      Combines the previous two commands. Kills all NPCs on screen, and reveals the map. Cuz... Cynapse is lazy.");
+                MyConsole.NewMessage("  - <b>wizard</b>\n      Combines the previous two commands. Kills all NPCs on screen, and reveals the map. Cynapse is too lazy to type two commands.");
                 MyConsole.NewMessage("  - <b>completequest</b>\n    Completes the current tracked quest.");
                 MyConsole.NewMessage("  - <b>startquest</b> <i>[ID]</i>\n    Starts the quest with the input ID.");
                 MyConsole.NewMessage("  - <b>questflag <i>[flag]</i></b>\n    Gives the player the input quest flag. Possibilities: " +
@@ -973,5 +972,221 @@ public class Console : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+}
+
+//CONSOLE COMMANDS
+public class ConsoleCommand
+{
+    protected static readonly char splitChar = ' ';
+    public string command;
+    public string alternateCommand;
+    public string description;
+    readonly Action runAction;
+
+    public ConsoleCommand(string cmd, string desc, Action action = null)
+    {
+        command = cmd;
+        description = desc;
+        runAction = action;
+    }
+
+    public virtual bool RunIfMatch(string cmd)
+    {
+        if (CommandMatches(cmd))
+        {
+            RunAction();
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CommandMatches(string cmd)
+    {
+        return cmd == command || (cmd == alternateCommand && !alternateCommand.NullOrEmpty());
+    }
+
+    protected virtual void RunAction()
+    {
+        runAction?.Invoke();
+    }
+
+    public override string ToString()
+    {
+        if (alternateCommand.NullOrEmpty())
+            return string.Format("  - <b>{0}</b>\n    {1}", command, description);
+        return string.Format("  - <b>{0}/{2}</b>\n    {1}", command, description, alternateCommand);
+    }
+}
+
+public class ConsoleCommand_Toggle : ConsoleCommand
+{
+    bool tmpOn;
+    readonly Action<bool> runAction;
+
+    public ConsoleCommand_Toggle(string cmd, string desc, Action<bool> action) 
+        : base(cmd, desc)
+    {
+        runAction = action;
+    }
+
+    public override bool RunIfMatch(string cmd)
+    {
+        string[] inputs = cmd.Split(splitChar);
+
+        if (inputs.Length < 2 || !CommandMatches(inputs[0]))
+        {
+            return false;
+        }
+
+        if (inputs[1] == "0" || inputs[1] == "off" || inputs[1] == "false")
+        {
+            tmpOn = false;
+            RunAction();
+            return true;
+
+        }
+        else if (inputs[1] == "1" || inputs[1] == "on" || inputs[1] == "true")
+        {
+            tmpOn = true;
+            RunAction();
+            return true;
+        }
+
+        return false;
+    }
+
+    protected override void RunAction()
+    {
+        runAction?.Invoke(tmpOn);
+    }
+
+    public override string ToString()
+    {
+        if (alternateCommand.NullOrEmpty())
+            return string.Format("  - <b>{0} <i>[0/1]</i></b>\n    {1}", command, description);
+        return string.Format("  - <b>{0}/{2} <i>[0/1]</i></b>\n    {1}", command, description, alternateCommand);
+    }
+}
+
+public class ConsoleCommand_Offset : ConsoleCommand
+{
+    int tmpX, tmpY;
+    readonly Action<int, int> runAction;
+
+    public ConsoleCommand_Offset(string cmd, string desc, Action<int, int> action) 
+        : base(cmd, desc)
+    {
+        runAction = action;
+    }
+
+    public override bool RunIfMatch(string cmd)
+    {
+        string[] inputs = cmd.Split(splitChar);
+
+        if (inputs.Length < 3 || !CommandMatches(inputs[0]))
+        {
+            return false;
+        }
+
+        if (int.TryParse(inputs[1], out tmpX) && int.TryParse(inputs[2], out tmpY))
+        {
+            RunAction();
+            return true;
+        }
+
+        return false;
+    }
+
+    protected override void RunAction()
+    {
+        runAction?.Invoke(tmpX, tmpY);
+    }
+
+    public override string ToString()
+    {
+        if (alternateCommand.NullOrEmpty())
+            return string.Format("  - <b>{0} <i>[x] [y]</i></b>\n    {1}", command, description);
+        return string.Format("  - <b>{0}/{2} <i>[x] [y]</i></b>\n    {1}", command, description, alternateCommand);
+    }
+}
+
+public class ConsoleCommand_Int : ConsoleCommand
+{
+    int tmpInt;
+    readonly Action<int> runAction;
+    readonly string inputDescription;
+
+    public ConsoleCommand_Int(string cmd, string desc, Action<int> action, string inputDesc)
+        : base(cmd, desc)
+    {
+        runAction = action;
+        inputDescription = inputDesc;
+    }
+
+    public override bool RunIfMatch(string cmd)
+    {
+        string[] inputs = cmd.Split(splitChar);
+
+        if (inputs.Length < 2 || !CommandMatches(inputs[0]) || !int.TryParse(inputs[1], out tmpInt))
+        {
+            return false;
+        }
+
+        RunAction();
+        return true;
+    }
+
+    protected override void RunAction()
+    {
+        runAction?.Invoke(tmpInt);
+    }
+
+    public override string ToString()
+    {
+        if (alternateCommand.NullOrEmpty())
+            return string.Format("  - <b>{0} <i>[{1}]</i></b>\n    {2}", command, inputDescription, description);
+        return string.Format("  - <b>{0}/{1} <i>[{2}]</i></b>\n    {3}", command, alternateCommand, inputDescription, description);
+    }
+}
+
+public class ConsoleCommand_String : ConsoleCommand
+{
+    string tmpString;
+    readonly Action<string> runAction;
+    readonly string inputDescription;
+
+    public ConsoleCommand_String(string cmd, string desc, Action<string> action, string inputDesc) 
+        : base(cmd, desc)
+    {
+        runAction = action;
+        inputDescription = inputDesc;
+    }
+
+    public override bool RunIfMatch(string cmd)
+    {
+        string[] inputs = cmd.Split(splitChar);
+
+        if (inputs.Length < 2 || CommandMatches(inputs[0]))
+        {
+            return false;
+        }
+
+        tmpString = inputs[1];
+        RunAction();
+        return true;
+    }
+
+    protected override void RunAction()
+    {
+        runAction?.Invoke(tmpString);
+    }
+
+    public override string ToString()
+    {
+        if (alternateCommand.NullOrEmpty())
+            return string.Format("  - <b>{0} <i>[{1}]</i></b>\n    {2}", command, inputDescription, description);
+        return string.Format("  - <b>{0}/{1} <i>[{2}]</i></b>\n    {3}", command, alternateCommand, inputDescription, description);
     }
 }

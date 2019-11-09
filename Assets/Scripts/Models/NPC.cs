@@ -135,8 +135,8 @@ public class NPC
             questID = blueprint.quest;
         }
 
-        if (blueprint.Corpse_Item != null)
-            corpseItem = blueprint.Corpse_Item;
+        if (blueprint.corpseItem != null)
+            corpseItem = blueprint.corpseItem;
 
         if (HasFlag(NPC_Flags.Named_NPC))
         {

@@ -29,6 +29,7 @@ public class CharacterCreation : MonoBehaviour
     public GameObject loadingGO;
     public GameObject DiffPanel;
     public GameObject CharPanel;
+    public Scrollbar felonyScrollbar;
 
     bool canSelectProf = true;
     List<WeaponProficiency> profs;
@@ -54,7 +55,6 @@ public class CharacterCreation : MonoBehaviour
 
         DiffPanel.SetActive(false);
         CharPanel.SetActive(true);
-
         loadingGO.SetActive(true);
     }
 
@@ -128,6 +128,12 @@ public class CharacterCreation : MonoBehaviour
             });
         }
 
+        if (classAnchor.childCount > 0)
+        {
+            felonyScrollbar.value = 1f;
+        }
+
+        EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(classAnchor.GetChild(0).gameObject);
     }
 
@@ -226,6 +232,14 @@ public class CharacterCreation : MonoBehaviour
             int newNum = selectedNum - 1;
             World.soundManager.MenuTick();
             SetSelectedNumber(newNum);
+            
+            if (classAnchor.childCount > 0)
+            {
+                float cur = 1f - ((float)(newNum) / (float)(classAnchor.childCount - 1));
+                if (cur > 1f) cur = 0f;
+                if (cur < 0f) cur = 1f;
+                felonyScrollbar.value = Mathf.Lerp(0f, 1f, cur);
+            }
 
         }
         else if (DownPressed())
@@ -233,6 +247,14 @@ public class CharacterCreation : MonoBehaviour
             int newNum = selectedNum + 1;
             World.soundManager.MenuTick();
             SetSelectedNumber(newNum);
+
+            if (classAnchor.childCount > 0)
+            {
+                float cur = 1f - ((float)(newNum) / (float)(classAnchor.childCount - 1));
+                if (cur > 1f) cur = 0f;
+                if (cur < 0f) cur = 1f;
+                felonyScrollbar.value = Mathf.Lerp(0f, 1f, cur);
+            }
         }
     }
 
@@ -337,7 +359,8 @@ public class CharacterCreation : MonoBehaviour
         {
             Ability s = new Ability(GameData.Get<Ability>(p.skills[z].Name));
             GameObject g = SimplePool.Spawn(textPrefab, abilAnchor);
-            g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", s.Name, s.Description);
+            string desc = s.Description.Contains("[ROLL]") ? s.Description.Replace("[ROLL]", s.totalDice.ToString()) : s.Description;
+            g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", s.Name, desc);
         }
 
         currentProf = p;

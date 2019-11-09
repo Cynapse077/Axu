@@ -411,51 +411,6 @@ function DrainBlood(caster, direction, skill)
 	ApplyChanges(caster, skill)
 end	
 
-function SpawnEffect(caster, x, y, skill, rotation)
-	local effectName = ""
-	local id = 0
-	local damage = skill.totalDice.Roll()
-
-	if (damage > 0) then
-		damage = damage + caster.stats.Intelligence
-	end
-
-	if (skill.damageType == DamageTypes.Heat) then
-		id = 0
-		effectName = "heat"
-	elseif (skill.damageType == DamageTypes.Energy) then
-		id = 1
-		effectName = "shock"
-	elseif (skill.damageType == DamageTypes.Venom) then
-		id = 2
-		effectName = "poison"
-		damage = Random(1, 4)
-	elseif (skill.damageType == DamageTypes.NonLethal) then
-		damage = 0
-
-		if (skill.HasTag(AbilityTags.Blind)) then
-			id = 5
-			effectName = "ink"
-		else
-			id = 3
-			effectName = "gas"
-		end
-	elseif (skill.damageType == DamageTypes.Cold) then
-		id = 4
-		effectName = "chill"
-	elseif (skill.damageType == DamageTypes.Blunt) then
-		id = 7
-		effectName = "earth"
-	elseif (skill.damageType == DamageTypes.Radiation) then
-		id = 8
-		effectName = "radiation"
-	else
-		return
-	end
-
-	ObjectManager.SpawnEffect(id, effectName, caster, x, y, damage, skill, rotation)
-end
-
 function TargetAvailableInDirection(position, direction)
 	return (TileMap.WalkableTile(position.x + direction.x, position.y + direction.y) and TileMap.GetCellAt(position + direction).entity ~= nil)
 end
@@ -531,23 +486,4 @@ function CanUseSkill(caster, skill)
 	end
 
 	return true
-end
-
-function ApplyChanges(caster, skill)
-	if (skill.HasTag(AbilityTags.OpensNewWindow)) then
-		return
-	end
-
-	caster.stats.UseStamina(skill.staminaCost)
-	skill.InitializeCooldown()
-
-	if (caster.isPlayer) then
-		skill.AddXP(caster.stats.Intelligence)
-
-		if (skill.HasTag(AbilityTags.Radiate_Self) and Random(0, 100) <= 20) then
-			caster.stats.Radiate(Random(0, 6))
-		end
-	end
-
-	caster.EndTurn(0.3, skill.timeCost)
 end

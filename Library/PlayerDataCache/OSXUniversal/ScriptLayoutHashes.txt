@@ -37,7 +37,7 @@ c4a2a18f67589f590c4093327b7fb2b1 Assembly-CSharp.dll:.UseItemOnOtherPanel
 53ac72aa8530479c3d9940f914e25a9b Assembly-CSharp.dll:.LocalizedText
 4ed161af4ae3cd637d4911f16ef19146 Assembly-CSharp.dll:MapCreator.MapCreator_LoadButton
 b924bd93f373109e15bb6a52b9f1e395 Assembly-CSharp.dll:.MouseController
-fcb8533555a15ebf6e79aeb16886392a Assembly-CSharp.dll:.CharacterCreation
+df3852ec34fec844c4b023a2aa4d4ad9 Assembly-CSharp.dll:.CharacterCreation
 15875016c88945bbe3c30ad34ea9c837 Assembly-CSharp.dll:.UIButton
 cf9f5cf2c3145a37ac07f00e50e460f9 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
@@ -73,7 +73,7 @@ abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.Tou
 64e54c0cbb0177c5ea26f340efb9ff85 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 e6377bf73594344c26be0ec9fe6a8e22 Assembly-CSharp.dll:.ItemButton
 7e9389bb7708095bc94b1c005d37ba5e Assembly-CSharp.dll:.DynamicSpriteController
-5cc52e095f943ba636dace173ef6fc24 Assembly-CSharp.dll:.UserInterface
+f07d2e9a597b41c0d94932ee75331631 Assembly-CSharp.dll:.UserInterface
 cf9f5cf2c3145a37ac07f00e50e460f9 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 5fc094978ce3e3591a7500ed380d854a UnityEngine.UI.dll:UnityEngine.UI.Button

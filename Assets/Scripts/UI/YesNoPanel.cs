@@ -18,7 +18,7 @@ public class YesNoPanel : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null);
 
-        if (text != TranslatedText.defaultText)
+        if (text != TranslatedText.defaultText && !input.NullOrEmpty())
         {
             if (text.Contains("[INPUT]") && !string.IsNullOrEmpty(input))
             {

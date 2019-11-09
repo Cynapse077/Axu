@@ -7,7 +7,12 @@ public static class ModManager
 {
     public static bool PreInitialized;
     public static bool PostInitialized;
-    public static List<Mod> mods = new List<Mod>();
+    private static List<Mod> mods = new List<Mod>();
+
+    public static List<Mod> Mods
+    {
+        get { return mods; }
+    }
 
     /// <summary>
     /// Initializes all pre-game content (everything excluding quests for now)
@@ -27,12 +32,15 @@ public static class ModManager
             {
                 Mod newMod = new Mod(m);
 
-                if (mods.Find(x => x.id == newMod.id) != null)
+                if (!newMod.failedToLoad)
                 {
-                    newMod.ChangeID(string.Format("{0}_{1}", newMod.id, ModUtility.GetNextFreeID()));
-                }
+                    if (mods.Find(x => x.id == newMod.id) != null)
+                    {
+                        newMod.ChangeID(string.Format("{0}_{1}", newMod.id, ModUtility.GetNextFreeID()));
+                    }
 
-                mods.Add(newMod);
+                    mods.Add(newMod);
+                }
             }
 
             mods.Sort((x, y) => x.loadOrder.CompareTo(y.loadOrder));

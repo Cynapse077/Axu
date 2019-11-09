@@ -10,6 +10,8 @@ public class Ability : IAsset
 {
     public const int maxLvl = 10;
     public const int XPToNext = 1000;
+    public static readonly LuaCall castCall = new LuaCall("Core.Abilities.Cast");
+    public static readonly LuaCall castCoordCall = new LuaCall("Core.Abilities.Cast_Coordinate");
 
     public string ID { get; set; }
     public string ModID { get; set; }
@@ -197,17 +199,17 @@ public class Ability : IAsset
 
     public void Cast(Entity caster)
     {
-        LuaManager.CallScriptFunction("Abilities", "Cast", caster, this);
+        LuaManager.CallScriptFunction(castCall, caster, this);
     }
 
     public void ActivateCoordinateSkill(EntitySkills skills, Coord pos)
     {
-        LuaManager.CallScriptFunction("Abilities", "Cast_Coordinate", skills.entity, pos, this);
+        LuaManager.CallScriptFunction(castCoordCall, skills.entity, pos, this);
     }
 
     public void CallScriptFunction(params object[] p)
     {
-        LuaManager.CallScriptFunction(luaAction.scriptName, luaAction.functionName, p);
+        LuaManager.CallScriptFunction(luaAction, p);
     }
 
     public void InitializeCooldown()
@@ -293,6 +295,89 @@ public class Ability : IAsset
         Trait = 1 << 1,
         Item = 1 << 2, 
         Cybernetic = 1 << 3
+    }
+
+    //Called from LuaManager
+    public static void ApplyChanges(Entity caster, Ability skill)
+    {
+        if (skill.HasTag(AbilityTags.OpensNewWindow))
+        {
+            return;
+        }
+
+        caster.stats.UseStamina(skill.staminaCost);
+        skill.InitializeCooldown();
+
+        if (caster.isPlayer)
+        {
+            skill.AddXP(caster.stats.Intelligence);
+
+            if (skill.HasTag(AbilityTags.Radiate_Self) && SeedManager.combatRandom.Next(5) == 0)
+            {
+                caster.stats.Radiate(SeedManager.combatRandom.Next(0, 6));
+            }
+        }
+
+        caster.EndTurn(0.3f, skill.timeCost);
+    }
+
+    //Called from LuaManager
+    public static void SpawnEffect(Entity caster, int x, int y, Ability skill, float rotation)
+    {
+        string effectName = "";
+        int id = 0;
+        int damage = skill.totalDice.Roll();
+
+        if (damage > 0)
+        {
+            damage += caster.stats.Intelligence;
+        }
+
+        switch (skill.damageType)
+        {
+            case DamageTypes.Heat:
+                id = 0;
+                effectName = "heat";
+                break;
+            case DamageTypes.Energy:
+                id = 1;
+                effectName = "shock";
+                break;
+            case DamageTypes.Venom:
+                id = 2;
+                effectName = "poison";
+                damage = SeedManager.combatRandom.Next(1, 4);
+                break;
+            case DamageTypes.NonLethal:
+                damage = 0;
+                if (skill.HasTag(AbilityTags.Blind))
+                {
+                    id = 5;
+                    effectName = "ink";
+                }
+                else
+                {
+                    id = 3;
+                    effectName = "gas";
+                }
+                break;
+            case DamageTypes.Cold:
+                id = 4;
+                effectName = "chill";
+                break;
+            case DamageTypes.Blunt:
+                id = 7;
+                effectName = "earth";
+                break;
+            case DamageTypes.Radiation:
+                id = 8;
+                effectName = "radiation";
+                break;
+            default:
+                return;
+        }
+
+        World.objectManager.SpawnEffect(id, effectName, caster, x, y, damage, skill, rotation);
     }
 }
 

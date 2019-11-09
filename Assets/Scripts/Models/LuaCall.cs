@@ -31,7 +31,7 @@ public class LuaCall
 
         if (s.Length < 2)
         {
-            Debug.Log("Script " + script + " cannot be parsed.");
+            Log.Error("Script " + script + " cannot be parsed.");
             return;
         }
 

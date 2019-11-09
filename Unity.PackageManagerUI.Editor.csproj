@@ -784,6 +784,8 @@
     <None Include="Assets\StreamingAssets\Mods\Core\Maps\Locations.json" />
     <None Include="Assets\StreamingAssets\Mods\Core\ModSettings.json" />
     <None Include="Assets\StreamingAssets\Mods\Core\Quests.json" />
+    <None Include="Assets\StreamingAssets\Mods\Test\Maps\Locations.json" />
+    <None Include="Assets\StreamingAssets\Mods\Test\ModSettings.json" />
     <None Include="Packages\com.unity.ads\package.json" />
     <None Include="Packages\com.unity.analytics\package.json" />
     <None Include="Packages\com.unity.collab-proxy\Editor\Resources\Styles\CollabHistoryCommon.uss" />

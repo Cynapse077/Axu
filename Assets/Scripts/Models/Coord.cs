@@ -165,4 +165,9 @@ public class Coord
     {
         return new Coord(c0.x - c1.x, c0.y - c1.y);
     }
+
+    public static Coord RandomInLocalBounds()
+    {
+        return new Coord(UnityEngine.Random.Range(1, Manager.localMapSize.x), UnityEngine.Random.Range(1, Manager.localMapSize.y));
+    }
 }

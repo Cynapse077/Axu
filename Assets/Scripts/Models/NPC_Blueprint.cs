@@ -14,7 +14,7 @@ public class NPC_Blueprint : IAsset
     public string quest = "", dialogue = "";
     public int maxItems, maxItemRarity;
     public string firearm;
-    public string Corpse_Item;
+    public string corpseItem;
     public Coord localPosition;
     public int elevation;
     public string zone;
@@ -54,7 +54,7 @@ public class NPC_Blueprint : IAsset
         maxItemRarity = other.maxItemRarity;
         maxItems = other.maxItems;
         firearm = other.firearm;
-        Corpse_Item = other.Corpse_Item;
+        corpseItem = other.corpseItem;
         localPosition = other.localPosition;
         elevation = other.elevation;
         zone = other.zone;
@@ -111,7 +111,7 @@ public class NPC_Blueprint : IAsset
             }
             else
             {
-                spriteIDs = new string[1] { s };
+                spriteIDs = new string[] { s };
             }
         }
         else
@@ -175,7 +175,7 @@ public class NPC_Blueprint : IAsset
 
         dat.TryGetInt("Weapon Skill", out weaponSkill);
         dat.TryGetString("Firearm", out firearm);
-        dat.TryGetString("Corpse_Item", out Corpse_Item);
+        dat.TryGetString("Corpse_Item", out corpseItem);
         dat.TryGetString("Quest", out quest);
         dat.TryGetString("Dialogue", out dialogue);
 
@@ -216,6 +216,7 @@ public class NPC_Blueprint : IAsset
             difficulty += attributes["Dexterity"];
             difficulty += attributes["Defense"] * 2;
             difficulty += attributes["Intelligence"];
+            difficulty += attributes["Endurance"];
 
             difficulty += skills.Length;
             difficulty += weaponSkill * 2;
@@ -250,9 +251,10 @@ public class NPC_Blueprint : IAsset
         playerStart += fel.STR * 4;
         playerStart += fel.DEX;
         playerStart += fel.INT;
+        playerStart += fel.END;
 
         List<DifficultyLevel> dvals = new List<DifficultyLevel>();
-        double lowest = 1000;
+        double lowest = 9999;
 
         foreach (NPC_Blueprint bp in GameData.GetAll<NPC_Blueprint>())
         {

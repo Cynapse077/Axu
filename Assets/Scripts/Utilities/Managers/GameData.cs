@@ -244,7 +244,7 @@ public static class GameData
         {
             if (list.Any(x => x.ID == t.ID))
             {
-                Debug.Log("Overwriting element \"" + t.ID + "\" in list of \"" + dataType);
+                Debug.Log(string.Format("Overwriting element \"{0}\" in list of \"{1}\"", t.ID, dataType));
                 Remove(list.Find(x => x.ID == t.ID));
             }
 

@@ -379,6 +379,11 @@ public class ObjectManager : MonoBehaviour
         td.ApplyDamage();
     }
 
+    public void SpawnEffect(int index, string effectName, Entity spawner, int x, int y, int dmg, Ability skill)
+    {
+        SpawnEffect(index, effectName, spawner, new Coord(x, y), dmg, skill, 0f);
+    }
+
     public void SpawnEffect(int index, string effectName, Entity spawner, int x, int y, int dmg, Ability skill, float rotation)
     {
         SpawnEffect(index, effectName, spawner, new Coord(x, y), dmg, skill, rotation);

@@ -272,6 +272,7 @@ public class Quest : EventContainer, IAsset
             id = dat["Random From"][ran].ToString();
         }
 
+        //Must be new, as we are setting local position and elevation.
         MapObjectBlueprint bp = new MapObjectBlueprint(GameData.Get<MapObjectBlueprint>(id));
 
         if (bp == null)
@@ -321,6 +322,7 @@ public class Quest : EventContainer, IAsset
             id = dat["Random From"][ran].ToString();
         }
 
+        //Must be new, because we are setting local position and elevation
         NPC_Blueprint bp = new NPC_Blueprint(GameData.Get<NPC_Blueprint>(id));
 
         if (bp == null)
@@ -344,7 +346,7 @@ public class Quest : EventContainer, IAsset
         dat.TryGetString("Zone", out bp.zone, bp.zone);
         dat.TryGetInt("Elevation", out bp.elevation, 0);
 
-        Coord position = new Coord(SeedManager.combatRandom.Next(1, Manager.localMapSize.x), SeedManager.combatRandom.Next(1, Manager.localMapSize.y));
+        Coord position = Coord.RandomInLocalBounds();
         dat.TryGetCoord("Position", out position, position);
         bp.localPosition = position;
 

@@ -203,7 +203,5 @@ public class MainMenu : MonoBehaviour
             dat["Local Map"].TryGetCoord("Size", out Manager.localMapSize, new Coord(45, 30));
             TileMap.imagePath = dat["Local Map"]["Texture"].ToString();
         }
-
-        TileMap_Data.defaultMapPath = Application.streamingAssetsPath + "/Mods/Core/Maps/MapFiles";
     }
 }

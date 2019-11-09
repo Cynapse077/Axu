@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 public class TileMap_Data
 {
-    public static string defaultMapPath;
-
     public Tile_Data[,] map_data;
     public bool[,] has_seen;
     public MapInfo mapInfo;
@@ -744,36 +742,27 @@ public class TileMap_Data
                     map_data[x + ex, y + ey] = TileMap_Generator.TileFromBiome(mapInfo.biome);
                 }
             }
-        }
-            
+        }            
     }
 
-    List<JsonData> GetDataFromPath(string path, string mapName = "")
+    bool LoadCustomMap()
     {
-        string[] ss = Directory.GetFiles(path, "*.map", SearchOption.AllDirectories);
-        List<JsonData> datas = new List<JsonData>();
+        System.Predicate<IAsset> p = (IAsset asset) => {
+            var m = asset as Map;
 
-        foreach (string s in ss)
+            if (m == null)
+                return false;
+
+            return CanLoadMap(m.elevation, m.locationID);
+        };
+        List<Map> maps = GameData.Get<Map>(p);
+
+        if (maps.NullOrEmpty())
         {
-            string jstring = File.ReadAllText(s);
-            JsonData d = JsonMapper.ToObject(jstring);
-            int ele = (d.ContainsKey("elev")) ? (int)d["elev"] : 0;
-            string locID = (d.ContainsKey("locationID")) ? d["locationID"].ToString() : "";
-
-            if (mapName != "")
-            {
-                if (d["Name"].ToString() == mapName)
-                {
-                    datas.Add(d);
-                    return datas;
-                }
-            }
-
-            if (CanLoadMap(ele, locID))
-                datas.Add(d);
+            return false;
         }
 
-        return datas;
+        return LoadMap(maps.GetRandom(SeedManager.localRandom));
     }
 
     bool CanLoadMap(int ele, string locID)
@@ -793,54 +782,28 @@ public class TileMap_Data
 
     bool LoadSpecificMap(string mapName)
     {
-        List<JsonData> datas = GetDataFromPath(defaultMapPath, mapName);
+        Map map = GameData.Get<Map>(mapName);
 
-        if (datas.Count == 0)
-            return false;
-
-        loadedFromData = true;
-        JsonData data = datas.GetRandom(RNG);
-
-        if (data == null)
-            return false;
-
-        return LoadMap(data);
-    }
-
-    bool LoadCustomMap()
-    {
-        List<JsonData> datas = GetDataFromPath(defaultMapPath);
-
-        if (datas.Count == 0)
+        if (map == null)
         {
             return false;
         }
 
-        loadedFromData = true;
-        JsonData data = datas.GetRandom(RNG);
-
-        if (data == null)
-        {
-            return false;
-        }
-
-        return LoadMap(data);
+        return LoadMap(map);
     }
 
-    bool LoadMap(JsonData data)
+    bool LoadMap(Map map)
     {
-        int maxX = (int)data["width"], maxY = (int)data["height"];
-
-        for (int x = 0; x < maxX; x++)
+        for (int x = 0; x < map.size.x; x++)
         {
-            for (int y = 0; y < maxY; y++)
+            for (int y = 0; y < map.size.y; y++)
             {
                 if (x >= Width || y >= Height)
                 {
                     continue;
                 }
 
-                int id = (int)data["IDs"][x * maxY + y];
+                int id = map.tiles[x * map.size.y + y];
 
                 if (id != TileManager.tiles["Default"].ID)
                 {
@@ -856,48 +819,38 @@ public class TileMap_Data
 
         if (!visited)
         {
-            if (data.ContainsKey("objects"))
+            for (int i = 0; i < map.objects.Count; i++)
             {
-                for (int i = 0; i < data["objects"].Count; i++)
-                {
-                    int x = (int)data["objects"][i]["Pos"][0], y = (int)data["objects"][i]["Pos"][1];
-                    string oType = data["objects"][i]["Name"].ToString();
-                    World.objectManager.NewObjectAtOtherScreen(oType, new Coord(x, y), mapInfo.position, -elevation);
-                }
+                World.objectManager.NewObjectAtOtherScreen(map.objects[i].Key, map.objects[i].Value, mapInfo.position, -elevation);
             }
 
-            if (data.ContainsKey("npcs"))
+            for (int i = 0; i < map.npcs.Count; i++)
             {
-                for (int i = 0; i < data["npcs"].Count; i++)
+                NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(map.npcs[i].Key);
+
+                if (bp == null)
                 {
-                    int x = (int)data["npcs"][i]["Pos"][0], y = (int)data["npcs"][i]["Pos"][1];
-                    string nType = data["npcs"][i]["Name"].ToString(); //Actually the ID of the NPC.
-                    NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(nType);
+                    continue;
+                }
 
-                    //If this NPC is static and has died, do not spawn it.
-                    if (bp != null && bp.flags.Contains(NPC_Flags.Static) && ObjectManager.playerJournal != null && ObjectManager.playerJournal.staticNPCKills.Contains(bp.ID))
-                    {
-                        continue;
-                    }
+                //If this NPC is static and has died, do not spawn it.
+                if (bp.flags.Contains(NPC_Flags.Static) && ObjectManager.playerJournal != null && ObjectManager.playerJournal.staticNPCKills.Contains(bp.ID))
+                {
+                    continue;
+                }
 
-                    //NPC already exists elsewhere. Should we really change its position?
-                    if (bp.flags.Contains(NPC_Flags.Static) && World.objectManager.NPCExists(nType))
+                if (bp.flags.Contains(NPC_Flags.Static) && World.objectManager.NPCExists(map.npcs[i].Key))
+                {
+                    NPC npc = World.objectManager.npcClasses.Find(o => o.ID == map.npcs[i].Key);
+                    if (npc.worldPosition == mapInfo.position)
                     {
-                        NPC npc = World.objectManager.npcClasses.Find(o => o.ID == nType);
-                        //No longer moves the NPC around.
-                        //npc.worldPosition = new Coord(mapInfo.position);
-                        //npc.elevation = -elevation;
-
-                        if (npc.worldPosition == mapInfo.position)
-                        {
-                            npc.localPosition = new Coord(x, y);
-                        }
+                        npc.localPosition = map.npcs[i].Value;
                     }
-                    else
-                    {
-                        NPC n = new NPC(bp, new Coord(mapInfo.position), new Coord(x, y), -elevation);
-                        World.objectManager.CreateNPC(n);
-                    }
+                }
+                else
+                {
+                    NPC n = new NPC(bp, new Coord(mapInfo.position), new Coord(map.npcs[i].Key), -elevation);
+                    World.objectManager.CreateNPC(n);
                 }
             }
         }

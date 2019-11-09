@@ -19,7 +19,7 @@ public class TileRenderer : MonoBehaviour
         outOfSightColor.a = 0.5f;
     }
 
-    public void GiveCoords(int x, int y)
+    public void SetPosition(int x, int y)
     {
         posX = x;
         posY = y;
@@ -64,10 +64,10 @@ public class TileRenderer : MonoBehaviour
         int width = Manager.localMapSize.x;
         int height = Manager.localMapSize.y;
 
-        if (posY < height - 1 && TileInSight(posX, posY + 1)) sum |= 1 << 0;  //N
-        if (posX > 0 && TileInSight(posX - 1, posY)) sum |= 1 << 1;           //W
-        if (posX < width - 1 && TileInSight(posX + 1, posY)) sum |= 1 << 2;   //E
-        if (posY > 0 && TileInSight(posX, posY - 1)) sum |= 1 << 3;           //S
+        if (posY < height - 1 && !TileInSight(posX, posY + 1)) sum |= 1 << 0;  //N
+        if (posX > 0 && !TileInSight(posX - 1, posY)) sum |= 1 << 1;           //W
+        if (posX < width - 1 && !TileInSight(posX + 1, posY)) sum |= 1 << 2;   //E
+        if (posY > 0 && !TileInSight(posX, posY - 1)) sum |= 1 << 3;           //S
 
         return sum;
     }

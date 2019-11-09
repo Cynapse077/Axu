@@ -143,9 +143,9 @@ public class Trait : IAsset
 
     public void OnTurn_Update(Entity entity)
     {
-        if (luaCall != null && !string.IsNullOrEmpty(luaCall.functionName) && !string.IsNullOrEmpty(luaCall.scriptName))
+        if (luaCall != null)
         {
-            LuaManager.CallScriptFunction(luaCall.scriptName, luaCall.functionName, entity, this);
+            LuaManager.CallScriptFunction(luaCall, entity, this);
         }
     }
 

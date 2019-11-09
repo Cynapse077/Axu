@@ -29,7 +29,7 @@ public class LoadSaveMenu : MonoBehaviour
 
         if (savedGames.Count > 0)
         {
-            savedGames = savedGames.OrderByDescending(o => System.DateTime.ParseExact(o.time, "yyyy-MM-dd h:mm:ss tt", null)).ToList();
+            savedGames = savedGames.OrderByDescending(o => o.time).ToList();
 
             foreach (SaveGameObject sg in savedGames)
             {
@@ -68,6 +68,13 @@ public class LoadSaveMenu : MonoBehaviour
         {
             string jsonString = File.ReadAllText(s);
             JsonData d = JsonMapper.ToObject(jsonString);
+
+            if (!d.ContainsKey("Player") || !d["Player"].ContainsKey("Name") 
+                || !d.ContainsKey("Version") || !d.ContainsKey("World") || !d["World"].ContainsKey("Time"))
+            {
+                return;
+            }
+
             SaveGameObject sgo = new SaveGameObject()
             {
                 charName = d["Player"]["Name"].ToString(),

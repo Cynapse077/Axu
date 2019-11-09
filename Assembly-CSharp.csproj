@@ -145,6 +145,7 @@
     <Compile Include="Assets\Scripts\Models\Line.cs" />
     <Compile Include="Assets\Scripts\Models\Liquid.cs" />
     <Compile Include="Assets\Scripts\Models\LuaCall.cs" />
+    <Compile Include="Assets\Scripts\Models\Map.cs" />
     <Compile Include="Assets\Scripts\Models\MapFeatures.cs" />
     <Compile Include="Assets\Scripts\Models\MapObject.cs" />
     <Compile Include="Assets\Scripts\Models\Mod.cs" />

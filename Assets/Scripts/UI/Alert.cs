@@ -62,9 +62,9 @@ public static class Alert
         userInterface.OpenRelevantWindow(previousWindow);
         previousWindow = UIWindow.None;
 
-        if (!World.userInterface.pickedTrait)
+        if (World.userInterface.pendingTraitsToPick > 0)
         {
-            World.userInterface.LevelUp();
+            World.userInterface.PickLevelUpTrait();
         }
     }
 }

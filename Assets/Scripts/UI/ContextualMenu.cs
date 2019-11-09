@@ -26,10 +26,10 @@ public static class ContextualMenu
             {
                 Coord c = new Coord(x, y);
 
-                if (!World.tileMap.WalkableTile(x, y) || World.tileMap.GetCellAt(c) == null)
-                    continue;
-
-                SearchCell(World.tileMap.GetCellAt(c), Direction(c - ent.myPos));
+                if (World.tileMap.GetCellAt(c) != null)
+                {
+                    SearchCell(World.tileMap.GetCellAt(c), Direction(c - ent.myPos));
+                }
             }
         }
     }

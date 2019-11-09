@@ -20,14 +20,14 @@ public class ModsPanel : MonoBehaviour
     {
         modDescriptionText.text = "";
         modAnchor.DestroyChildren();
-        modObjects = new GameObject[ModManager.mods.Count];
+        modObjects = new GameObject[ModManager.Mods.Count];
 
         if (ModManager.PreInitialized)
         {
-            for (int i = 0; i < ModManager.mods.Count; i++)
+            for (int i = 0; i < ModManager.Mods.Count; i++)
             {
                 GameObject g = Instantiate(modPrefab, modAnchor);
-                g.GetComponent<ModPrefab>().Setup(ModManager.mods[i], modDescriptionText, this);
+                g.GetComponent<ModPrefab>().Setup(ModManager.Mods[i], modDescriptionText, this);
                 modObjects[i] = g;
             }
         }
@@ -35,14 +35,14 @@ public class ModsPanel : MonoBehaviour
 
     public void SetActive(int id, bool active)
     {
-        if (ModManager.mods[id].IsCore() && !active)
+        if (ModManager.Mods[id].IsCore() && !active)
             return;
 
-        bool change = ModManager.mods[id].IsActive != active;
+        bool change = ModManager.Mods[id].IsActive != active;
 
         if (change)
         {
-            ModManager.mods[id].SetActive(active);
+            ModManager.Mods[id].SetActive(active);
             ModManager.ResetAllMods();
             Reload();
         }

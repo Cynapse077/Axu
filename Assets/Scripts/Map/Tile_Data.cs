@@ -30,21 +30,23 @@ public class Tile_Data
 
     public bool CanDig(bool explosion)
     {
-        return (!explosion) ? HasTag("Breakable") : HasTag("Breakable_Explosion");
+        return (explosion) ? HasTag("Breakable_Explosion") : HasTag("Breakable");
     }
 }
 
 public class TileAtlas
 {
-    const int textureSize = 16;
     static readonly Vector2 pivot = new Vector2(0.5f, 0.5f);
     Texture2D texture;
-    int columns;
+    readonly int textureSize;
+    readonly int columns;
 
     public TileAtlas(string path, int columns)
     {
         this.columns = columns;
-        texture = new Texture2D(textureSize, textureSize);
+        this.textureSize = Manager.TileResolution;
+        this.texture = new Texture2D(textureSize, textureSize);
+
         string fullPath = Path.Combine(Application.streamingAssetsPath, path);
         byte[] imageBytes = File.ReadAllBytes(fullPath);
         texture.LoadImage(imageBytes);

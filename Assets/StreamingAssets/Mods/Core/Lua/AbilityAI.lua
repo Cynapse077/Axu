@@ -10,7 +10,6 @@ function Healing(skill, entity, target)
 	return false
 end
 
-
 function Restoration(skill, entity, target)
 	if (target.stats.stamina <= target.stats.maxStamina / 2) then
 		return true

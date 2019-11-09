@@ -690,8 +690,8 @@
     <Compile Include="Assets\Scripts\Map\Dungeon.cs" />
     <Compile Include="Assets\Scripts\Map\Generate_WorldMap.cs" />
     <Compile Include="Assets\Scripts\Map\Room.cs" />
-    <Compile Include="Assets\Scripts\Map\Tile.cs" />
     <Compile Include="Assets\Scripts\Map\Tile_Data.cs" />
+    <Compile Include="Assets\Scripts\Map\TileManager.cs" />
     <Compile Include="Assets\Scripts\Map\TileMap.cs" />
     <Compile Include="Assets\Scripts\Map\TileMap_Data.cs" />
     <Compile Include="Assets\Scripts\Map\TileMap_Generator.cs" />
@@ -724,6 +724,7 @@
     <Compile Include="Assets\Scripts\Models\Line.cs" />
     <Compile Include="Assets\Scripts\Models\Liquid.cs" />
     <Compile Include="Assets\Scripts\Models\LuaCall.cs" />
+    <Compile Include="Assets\Scripts\Models\Map.cs" />
     <Compile Include="Assets\Scripts\Models\MapFeatures.cs" />
     <Compile Include="Assets\Scripts\Models\MapObject.cs" />
     <Compile Include="Assets\Scripts\Models\Mod.cs" />
@@ -915,6 +916,8 @@
     <None Include="Assets\StreamingAssets\Mods\Core\Maps\Locations.json" />
     <None Include="Assets\StreamingAssets\Mods\Core\ModSettings.json" />
     <None Include="Assets\StreamingAssets\Mods\Core\Quests.json" />
+    <None Include="Assets\StreamingAssets\Mods\Test\Maps\Locations.json" />
+    <None Include="Assets\StreamingAssets\Mods\Test\ModSettings.json" />
     <None Include="Packages\com.unity.ads\package.json" />
     <None Include="Packages\com.unity.analytics\package.json" />
     <None Include="Packages\com.unity.collab-proxy\Editor\Resources\Styles\CollabHistoryCommon.uss" />

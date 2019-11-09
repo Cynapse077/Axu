@@ -186,7 +186,7 @@ public class TileMap : MonoBehaviour
                 cells[x, y] = new Cell(new Coord(x, y));
                 GameObject t = Instantiate(tilePrefab, new Vector3(x + 0.5f, y - (Manager.localMapSize.y - 0.5f), 0), Quaternion.identity, transform);
                 tileRenderers[x, y] = t.GetComponent<TileRenderer>();
-                tileRenderers[x, y].GiveCoords(x, y);
+                tileRenderers[x, y].SetPosition(x, y);
             }
         }
     }
@@ -199,17 +199,15 @@ public class TileMap : MonoBehaviour
             Coord vPos = worldMap.vaultAreas[i];
 
             string landmark = worldMap.GetTileAt(worldMap.vaultAreas[i].x, worldMap.vaultAreas[i].y).landmark;
-            if (string.IsNullOrEmpty(landmark))
+            if (landmark.NullOrEmpty())
                 continue;
 
             ZoneBlueprint zb = worldMap.GetZone(worldMap.GetTileAt(worldMap.vaultAreas[i].x, worldMap.vaultAreas[i].y).landmark);
-            if (string.IsNullOrEmpty(zb.underground))
+            if (zb == null || zb.underground.NullOrEmpty())
                 continue;
 
             ZoneBlueprint_Underground vault = worldMap.GetUndergroundFromLandmark(zb.ID);
-            Vault v = new Vault(worldMap.vaultAreas[i], vault);
-
-            Vaults.Add(v);
+            Vaults.Add(new Vault(worldMap.vaultAreas[i], vault));
 
         }
     }
@@ -425,7 +423,9 @@ public class TileMap : MonoBehaviour
     public Cell GetCellAt(Coord c)
     {
         if (c.x < 0 || c.x > size_x || c.y < 0 || c.y > size_y)
+        {
             return null;
+        }
 
         return cells[c.x, c.y];
     }
@@ -433,7 +433,9 @@ public class TileMap : MonoBehaviour
     public Cell GetCellAt(int x, int y)
     {
         if (x < 0 || x >= size_x || y < 0 || y >= size_y)
+        {
             return null;
+        }
 
         return cells[x, y];
     }
@@ -441,7 +443,9 @@ public class TileMap : MonoBehaviour
     //empty tiles in current map
     public Coord GetRandomPosition()
     {
-        return CurrentMap.GetRandomFloorTile();
+        Coord c = CurrentMap.GetRandomFloorTile();
+
+        return c ?? new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y / 2);
     }
 
     public Coord EmptyAdjacent(Coord c)

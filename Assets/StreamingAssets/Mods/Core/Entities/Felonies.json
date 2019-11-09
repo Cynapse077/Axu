@@ -20,6 +20,7 @@
             ],
             "Proficiencies" : { "Blade" : 1 },
             "Skills" : [ "juke" ],
+            "Weapon" : "dagger",
             "Items" : [],
             "Money" : 0         
         },
@@ -43,6 +44,7 @@
             ],
             "Proficiencies" : { "Blunt" : 1 },
             "Skills" : [ "charge" ],
+            "Weapon" : "club",
             "Items" : [],
             "Money" : 0   
         },
@@ -66,6 +68,7 @@
             ],
             "Proficiencies" : { "Polearm" : 1 },
             "Skills" : [ "zapline" ],
+            "Weapon" : "staff",
             "Items" : [],
             "Money" : 0         
         },
@@ -88,6 +91,7 @@
             ],
             "Proficiencies" : { "Firearm" : 1 },
             "Skills" : [ "brace" ],
+            "Weapon" : "hatchet",
             "Items" : [],
             "Money" : 10
         },
@@ -110,6 +114,7 @@
             ],
             "Proficiencies" : { "Unarmed" : 1 },
             "Skills" : [ "sprint" ],
+            "Weapon" : "",
             "Items" : [],
             "Money" : 0      
         },

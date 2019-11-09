@@ -295,7 +295,8 @@ public class Stats : MonoBehaviour
 
             if (currentLevel % 3 == 0)
             {
-                World.userInterface.LevelUp();
+                World.userInterface.pendingTraitsToPick++;
+                World.userInterface.PickLevelUpTrait();
             }
         }
 

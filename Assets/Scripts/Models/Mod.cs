@@ -9,6 +9,7 @@ public class Mod
     public string description;
     public string creator;
     public int loadOrder = 0;
+    public readonly bool failedToLoad;
     string filePath;
     bool isActive = true;
 
@@ -16,9 +17,12 @@ public class Mod
 
     public bool IsActive { get { return isActive; } }
 
-    public Mod(string filPth)
+    public Mod(string filePath)
     {
-        Init(filPth);
+        if (!Init(filePath))
+        {
+            failedToLoad = true;
+        }
     }
     
     public void SetActive(bool active)
@@ -26,15 +30,15 @@ public class Mod
         isActive = active;
     }
 
-    void Init(string filPth)
+    bool Init(string filPth)
     {
         filePath = filPth;
         string modSettingsPath = Path.Combine(filePath, ModUtility.ModSettingsFileName);
 
         if (!File.Exists(modSettingsPath))
         {
-            Log.Message("<color=red>Mod is missing ModSettings.json file. Skipping.</color>");
-            return;
+            Log.Error(string.Format("Mod \"{0}\" is missing ModSettings.json file.", filePath));
+            return false;
         }
 
         string settingContents = File.ReadAllText(modSettingsPath);
@@ -45,6 +49,8 @@ public class Mod
         dat.TryGetInt("Load Order", out loadOrder, ModUtility.GetNextLoadOrder(this));
         dat.TryGetString("Description", out description, "No description.");
         dat.TryGetString("Creator", out creator, "Unknown");
+
+        return true;
     }
 
     bool AddData<T>(string folderPath, string fileName, string key)
@@ -64,13 +70,28 @@ public class Mod
                 IAsset t = (IAsset)Activator.CreateInstance(typeof(T), dat);
                 t.ModID = id;
 
-                Log.MessageConditional("    " + t.ID + " - <color=green>Success!</color>", LogAll);
+                Log.MessageConditional("    (" + typeof(T).ToString() + ") " + t.ID + " - <color=green>Success!</color>", LogAll);
 
                 GameData.Add<T>(t);
             }
 
             Log.MessageConditional("<color=grey>------- Finished Loading <" + typeof(T).ToString() + "> -------</color>", LogAll);
 
+            return true;
+        }
+
+        return false;
+    }
+
+    bool AddData<T>(string file)
+    {
+        if (File.Exists(file))
+        {
+            string contents = File.ReadAllText(file);
+            JsonData data = JsonMapper.ToObject(contents);
+            IAsset t = (IAsset)Activator.CreateInstance(typeof(T), data);
+            t.ModID = id;
+            GameData.Add<T>(t);
             return true;
         }
 
@@ -126,15 +147,21 @@ public class Mod
             AddData<GroupBlueprint>(curPath, "Encounters.json", "Encounters");
         }
 
-        //Lua folder
-        curPath = Path.Combine(filePath, "Lua");
-        if (Directory.Exists(curPath))
+        
+        if (Directory.Exists(filePath))
         {
-            string[] luaFiles = Directory.GetFiles(curPath, "*lua", SearchOption.AllDirectories);
-
+            //Lua files
+            string[] luaFiles = Directory.GetFiles(filePath, "*lua", SearchOption.AllDirectories);
             foreach (string luaFile in luaFiles)
             {
-                LuaManager.AddFile(luaFile);
+                LuaManager.AddFile(id, luaFile);
+            }
+
+            //Map files
+            string[] mapFiles = Directory.GetFiles(filePath, "*map", SearchOption.AllDirectories);
+            foreach (string mapFile in mapFiles)
+            {
+                AddData<Map>(mapFile);
             }
         }
 

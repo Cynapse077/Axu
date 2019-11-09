@@ -82,13 +82,13 @@ public class Goal : EventContainer
 
             if (bp == null)
             {
-                Debug.LogError("NPC with ID " + npcID + " does not exist.");
+                Log.Error("NPC with ID " + npcID + " does not exist.");
                 return null;
             }
 
             if (bp.zone == "")
             {
-                Debug.LogError("Blueprint zone for '" + bp.ID + "' is empty.");
+                Log.Error("Blueprint zone for '" + bp.ID + "' is empty.");
                 return null;
             }
 
@@ -571,7 +571,7 @@ public class GoToGoal_Specific : Goal
 
     public override bool CanComplete()
     {
-        return (World.tileMap.CurrentMap.mapInfo.position == destination && Mathf.Abs(World.tileMap.currentElevation) == Mathf.Abs(elevation));
+        return World.tileMap.CurrentMap.mapInfo.position == destination && Mathf.Abs(World.tileMap.currentElevation) == Mathf.Abs(elevation);
     }
 
     public override void Complete()
@@ -826,7 +826,7 @@ public class TalkToGoal : Goal
 
         if (n == null)
         {
-            Debug.LogError("TalkToGoal: NPC Target is null. Cannot get destination position.");
+            Log.Error("TalkToGoal: NPC Target is null. Cannot get destination position.");
             return null;
         }
 
@@ -901,7 +901,7 @@ public class TalkToStoredNPCGoal : Goal
 
         if (n == null)
         {
-            Debug.LogError("TalkToStoredNPCGoal: NPC Target is null. Cannot get destination position.");
+            Log.Error("TalkToStoredNPCGoal: NPC Target is null. Cannot get destination position.");
             return null;
         }
 
@@ -999,7 +999,7 @@ public class FetchPropertyGoal : Goal
 
         if (n == null)
         {
-            Debug.LogError("FetchPropertyGoal: NPC Target is null. Cannot get destination position.");
+            Log.Error("FetchPropertyGoal: NPC Target is null. Cannot get destination position.");
             return null;
         }
 
@@ -1158,7 +1158,7 @@ public class Fetch_Homonculus : Goal
 
         if (n == null)
         {
-            Debug.LogError("Fetch_KeepInMemGoal: NPC Target is null. Cannot get destination position.");
+            Log.Error("Fetch_KeepInMemGoal: NPC Target is null. Cannot get destination position.");
             return null;
         }
 
@@ -1244,7 +1244,7 @@ public class FetchGoal : Goal
 
         if (n == null)
         {
-            Debug.LogError("FetchGoal: NPC Target is null. Cannot get destination position.");
+            Log.Error("FetchGoal: NPC Target is null. Cannot get destination position.");
             return null;
         }
 

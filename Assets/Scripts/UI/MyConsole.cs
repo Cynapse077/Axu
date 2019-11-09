@@ -49,20 +49,18 @@ public static class MyConsole
     {
         string m = "<color=";
 
-        if (col == Color.red)
-            m += "red>";
-        if (col == Color.blue)
-            m += "blue>";
-        if (col == Color.cyan)
-            m += "cyan>";
-        if (col == Color.yellow)
-            m += "yellow>";
-        if (col == Color.black)
-            m += "black>";
-        if (col == Color.green)
-            m += "green>";
-        if (col == Color.grey)
-            m += "grey>";
+        if (col == Color.red) m += "red>";
+        else if (col == Color.blue) m += "blue>";
+        else if (col == Color.cyan) m += "cyan>";
+        else if (col == Color.yellow) m += "yellow>";
+        else if (col == Color.black) m += "black>";
+        else if (col == Color.green) m += "green>";
+        else if (col == Color.grey) m += "grey>";
+        else
+        {
+            messages.Add(message);
+            return;
+        }
 
         m += message;
         m += "</color>";

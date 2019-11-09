@@ -309,7 +309,7 @@ public static class Utility
     {
         if (list == null || list.Count <= 0)
         {
-            return default(T);
+            return default;
         }
 
         if (rng != null)
@@ -324,7 +324,7 @@ public static class Utility
     {
         if (array == null || array.Length <= 0)
         {
-            return default(T);
+            return default;
         }
 
         if (rng != null)
@@ -339,7 +339,7 @@ public static class Utility
     {
         if (dict == null || dict.Count <= 0)
         {
-            return default(T);
+            return default;
         }
 
         List<T> list = new List<T>();
@@ -356,7 +356,7 @@ public static class Utility
     {
         if (dict == null || dict.Count <= 0)
         {
-            return default(T);
+            return default;
         }
 
         List<T> list = new List<T>();
@@ -393,7 +393,7 @@ public static class Utility
     {
         if (list.Length == 0)
         {
-            return default(T);
+            return default;
         }
 
         int totalweight = list.Sum(c => c.Weight);

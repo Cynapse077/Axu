@@ -10,7 +10,7 @@ public class UserInterface : MonoBehaviour
     public static bool paused = false;
     public static bool loading = false;
     public static bool showConsole = false;
-    [HideInInspector] public bool pickedTrait = true;
+    [HideInInspector] public int pendingTraitsToPick;
     [HideInInspector] public int column = 1;
 
     [Header("UI Panels")]
@@ -701,11 +701,10 @@ public class UserInterface : MonoBehaviour
         YNPanel.Display(question, yAction, nAction, input);
     }
 
-    public void YNAction(string question, string fileName, string functionName)
+    public void YNAction(string question, string modID, string fileName, string functionName)
     {
-        Action yAction = () => LuaManager.CallScriptFunction(fileName, functionName, new object[] { });
-        Action nAction = () => CloseWindows();
-        YesNoAction(question, yAction, nAction);
+        LuaCall luaScript = new LuaCall(string.Format("{0}.{1}.{2}", modID, fileName, functionName));
+        YesNoAction(question, () => LuaManager.CallScriptFunction(luaScript), () => CloseWindows());
     }
 
     public void BanditYes(int goldAmount, Item item)
@@ -765,15 +764,13 @@ public class UserInterface : MonoBehaviour
         //Level Up
         if (uiState == UIWindow.LevelUp)
         {
-            if (selectedItemNum > 2)
+            pendingTraitsToPick--;
+            if (selectedItemNum < 3)
             {
-                pickedTrait = true;
-                CloseWindows();
-                return;
+                playerStats.InitializeNewTrait(levelUpTraits[selectedItemNum]);
             }
 
-            playerStats.InitializeNewTrait(levelUpTraits[selectedItemNum]);
-            pickedTrait = true;
+            uiState = UIWindow.None;
             CloseWindows();
         }
         else if (uiState == UIWindow.AmputateLimb)
@@ -1098,7 +1095,7 @@ public class UserInterface : MonoBehaviour
 
     public void CloseWindows()
     {
-        if (uiState == UIWindow.LevelUp && !pickedTrait)
+        if (uiState == UIWindow.LevelUp && pendingTraitsToPick > 0)
             return;
 
         if (uiState == UIWindow.Options)
@@ -1114,8 +1111,8 @@ public class UserInterface : MonoBehaviour
         calledShotTarget = null;
         uiState = UIWindow.None;
 
-        if (!pickedTrait)
-            LevelUp();
+        if (pendingTraitsToPick > 0)
+            PickLevelUpTrait();
     }
 
     void AssignPlayerValues()
@@ -1145,14 +1142,8 @@ public class UserInterface : MonoBehaviour
 
         if (miniMapObject.activeSelf)
         {
-            bool show = World.tileMap.currentElevation == 0;
-
-            if (!playerInput.showMinimap)
-            {
-                show = false;
-            }
-
-            miniMapObject.GetComponent<Animator>().SetBool("Hide", !show);
+            bool hideMinimap = World.tileMap.currentElevation != 0 || !playerInput.showMinimap;
+            miniMapObject.GetComponent<Animator>().SetBool("Hide", hideMinimap);
         }
     }
 
@@ -1160,16 +1151,8 @@ public class UserInterface : MonoBehaviour
     {
         levelUpTraits = new List<Trait>();
         List<Trait> availableTraits = GameData.GetAll<Trait>().FindAll(x => x.ContainsEffect(TraitEffects.Random_Trait) && !playerStats.hasTrait(x.ID));
-        int tr = availableTraits.Count;
 
-        if (tr == 0)
-        {
-            return;
-        }
-
-        tr = (availableTraits.Count < 3) ? availableTraits.Count : 3;
-
-        for (int i = 0; i < tr; i++)
+        for (int i = 0; i < Mathf.Min(availableTraits.Count, 3); i++)
         {
             int index = SeedManager.combatRandom.Next(0, availableTraits.Count);
             Trait t = new Trait(availableTraits[index]);
@@ -1178,10 +1161,8 @@ public class UserInterface : MonoBehaviour
         }
     }
 
-    public void LevelUp()
+    public void PickLevelUpTrait()
     {
-        pickedTrait = false;
-
         if (uiState == UIWindow.None)
         {
             FillLevelTraits();

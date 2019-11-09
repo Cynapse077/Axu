@@ -6,7 +6,7 @@ using LitJson;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class Liquid : IWeighted, IAsset
 {
-    static List<MixingOutput> mixingOutputs;
+    static List<MixingOutput> mixingOutputs = new List<MixingOutput>();
 
     public string ID { get; set; }
     public string ModID { get; set; }
@@ -128,8 +128,6 @@ public class Liquid : IWeighted, IAsset
 
     public static void SetupMixingTables(JsonData data)
     {
-        mixingOutputs = new List<MixingOutput>();
-
         for (int i = 0; i < data["Mixing Tables"].Count; i++)
         {
             MixingOutput mo = JsonMapper.ToObject<MixingOutput>(data["Mixing Tables"][i].ToJson());
