@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LitJson;
 
-public class GroupBlueprint : IAsset
+public class NPCGroup_Blueprint : IAsset
 {
     public string ID { get; set; }
     public string ModID { get; set; }
@@ -10,9 +10,9 @@ public class GroupBlueprint : IAsset
     public Biome[] biomes;
     public string[] vaultTypes;
     public string[] landmarks;
-    public SpawnBlueprint[] npcs;
+    public NPCSpawn_Blueprint[] npcs;
 
-    public GroupBlueprint(JsonData dat)
+    public NPCGroup_Blueprint(JsonData dat)
     {
         FromJson(dat);
     }
@@ -113,7 +113,7 @@ public class GroupBlueprint : IAsset
 
         if (dat.ContainsKey("Possibilities"))
         {
-            npcs = new SpawnBlueprint[dat["Possibilities"].Count];
+            npcs = new NPCSpawn_Blueprint[dat["Possibilities"].Count];
 
             for (int i = 0; i < dat["Possibilities"].Count; i++)
             {
@@ -121,7 +121,7 @@ public class GroupBlueprint : IAsset
                 string[] segString = amountString.Split('d');
                 int numDice = int.Parse(segString[0]), diceSides = int.Parse(segString[1]);
 
-                SpawnBlueprint esf = new SpawnBlueprint
+                NPCSpawn_Blueprint esf = new NPCSpawn_Blueprint
                 {
                     npcID = dat["Possibilities"][i]["Blueprint"].ToString(),
                     Weight = (int)dat["Possibilities"][i]["Weight"],
@@ -142,7 +142,7 @@ public class GroupBlueprint : IAsset
     }
 }
 
-public struct SpawnBlueprint : IWeighted
+public struct NPCSpawn_Blueprint : IWeighted
 {
     const int AbsMax = 7;
 
@@ -150,7 +150,7 @@ public struct SpawnBlueprint : IWeighted
     public int Weight { get; set; }
     public IntRange range;
 
-    public SpawnBlueprint(string _npcID, int _spawnChance, int _minAmount, int _maxAmount)
+    public NPCSpawn_Blueprint(string _npcID, int _spawnChance, int _minAmount, int _maxAmount)
     {
         npcID = _npcID;
         Weight = _spawnChance;

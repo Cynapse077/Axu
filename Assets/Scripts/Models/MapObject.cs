@@ -12,7 +12,7 @@ public class MapObject
     public float rotation;
     public List<Item> inv;
     public Coord localPosition, worldPosition;
-    public MapObjectBlueprint blueprint { get; private set; }
+    public MapObject_Blueprint blueprint { get; private set; }
 
     public string Name
     {
@@ -20,10 +20,10 @@ public class MapObject
     }
     public bool Solid
     {
-        get { return blueprint.solid == MapObjectBlueprint.MapOb_Interactability.Solid; }
+        get { return blueprint.solid == MapObject_Blueprint.MapOb_Interactability.Solid; }
     }
 
-    public MapObject(MapObjectBlueprint bp, Coord lp, Coord wp, int ele, int uid = -1)
+    public MapObject(MapObject_Blueprint bp, Coord lp, Coord wp, int ele, int uid = -1)
     {
         localPosition = lp;
         worldPosition = wp;
@@ -33,7 +33,7 @@ public class MapObject
         Init(bp);
     }
 
-    void Init(MapObjectBlueprint bp)
+    void Init(MapObject_Blueprint bp)
     {
         if (UID > -1)
         {
@@ -58,7 +58,7 @@ public class MapObject
         SetupInventory();
     }
 
-    public void SetBlueprint(MapObjectBlueprint bp)
+    public void SetBlueprint(MapObject_Blueprint bp)
     {
         blueprint = bp;
     }
@@ -92,7 +92,8 @@ public class MapObject
 
             if (possPos.Count > 0)
             {
-                if (GameData.Get<MapObjectBlueprint>("Bloodstain_Wall") is MapObjectBlueprint bp)
+                MapObject_Blueprint bp = GameData.Get<MapObject_Blueprint>("Bloodstain_Wall");
+                if (bp != null)
                 {
                     SetBlueprint(bp);
                     Coord offset = possPos.GetRandom(SeedManager.combatRandom);

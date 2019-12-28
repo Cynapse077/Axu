@@ -7,7 +7,7 @@ public class TileRenderer : MonoBehaviour
     public Sprite[] maskTextures;
 
     SpriteRenderer spriteRenderer;
-    bool inSight, hasSeen;
+    public bool inSight, hasSeen;
     Color outOfSightColor;
     int posX, posY;
 

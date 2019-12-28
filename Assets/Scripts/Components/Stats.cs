@@ -222,22 +222,22 @@ public class Stats : MonoBehaviour
         }
         else if (effectName == "Strangle")
         {
-            if (statusEffects["Strangle"] >= 20)
+            int strangleAmount = statusEffects["Strangle"];
+
+            if (strangleAmount >= 5)
             {
                 statusEffects["Strangle"] = 0;
                 AddStatusEffect("Unconscious", RNG.Next(8, 16));
             }
             else
             {
-                int str = statusEffects["Strangle"];
-
-                if (str <= 10)
+                if (strangleAmount <= 3)
                 {
-                    CombatLog.NewMessage(entity.MyName + " is looking pale.");
+                    CombatLog.NameMessage("SE_Strangle2", entity.MyName);
                 }
                 else
                 {
-                    CombatLog.NewMessage(entity.MyName + " is shaking.");
+                    CombatLog.NameMessage("SE_Strangle1", entity.MyName);
                 }
             }
         }
@@ -838,11 +838,11 @@ public class Stats : MonoBehaviour
         {
             Mutate();
         }
-        else
+        else if (!hasTrait("RadPoison"))
         {
             Trait radPois = GameData.Get<Trait>("RadPoison");
 
-            if (radPois != null && !hasTrait("RadPoison"))
+            if (radPois != null)
             {
                 AddTrait(radPois);
                 CombatLog.NewMessage("<color=red>You've been poisoned by radiation!</color>");
@@ -911,7 +911,8 @@ public class Stats : MonoBehaviour
 
         Trait mutation = TraitList.GetTraitByID(mutID);
 
-        if (mutation == null || !mutation.stackable && hasTrait(mutation.ID) && string.IsNullOrEmpty(mutation.nextTier) || mutation.stackable && TraitStacks(mutation.ID) >= mutation.maxStacks)
+        if (mutation == null || !mutation.stackable && hasTrait(mutation.ID) 
+            && string.IsNullOrEmpty(mutation.nextTier) || mutation.stackable && TraitStacks(mutation.ID) >= mutation.maxStacks)
         {
             radiation = 0;
             return;
@@ -928,7 +929,7 @@ public class Stats : MonoBehaviour
 
         CheckMutationIntegrity(mutation);
         InitializeNewTrait(mutation);
-        radiation = RNG.Next(2, 7);
+        radiation = RNG.Next(0, 5);
 
         if (entity.isPlayer)
         {
@@ -1197,7 +1198,7 @@ public class Stats : MonoBehaviour
             }
             else if (kvp.Key == "Aflame")
             {
-                if (TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
+                if (TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY)))
                 {
                     statusEffects[kvp.Key] = 0;
                 }
@@ -1213,7 +1214,7 @@ public class Stats : MonoBehaviour
             }
             else if (kvp.Key == "Underwater")
             {
-                if (!TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
+                if (!TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY)))
                 {
                     statusEffects[kvp.Key] = 0;
                 }
@@ -1270,7 +1271,9 @@ public class Stats : MonoBehaviour
     {
         int tileNum = World.tileMap.GetTileID(entity.posX, entity.posY);
 
-        if (Attributes.ContainsKey("Heat Resist") && HeatResist < 80 && tileNum == TileManager.tiles["Lava"].ID && !MyInventory.CanFly())
+        bool lavaExists = TileManager.GetByName("Lava") != null;
+
+        if (lavaExists && Attributes.ContainsKey("Heat Resist") && HeatResist < 80 && tileNum == TileManager.tiles["Lava"].ID && !MyInventory.CanFly())
             IndirectAttack(RNG.Next(5), DamageTypes.Heat, null, "<color=orange>lava</color>", true, false, false);
     }
 

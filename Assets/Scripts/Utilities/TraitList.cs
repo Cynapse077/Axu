@@ -16,15 +16,13 @@ public static class TraitList
         foreach (Trait mut in muts)
         {
             //Check if the character has this mutation, or if it can/will stack
-            if (stats.hasTrait(mut.ID) && !mut.stackable || stats.hasTrait(mut.nextTier) || stats.hasTrait(mut.prerequisite))
+            //Check overriding slots
+            if (stats.hasTrait(mut.ID) && !mut.stackable || stats.hasTrait(mut.nextTier) || stats.hasTrait(mut.prerequisite) 
+                || mut.slot != string.Empty && stats.traits.Find(x => x.slot == mut.slot) != null
+                || mut.stackable && stats.TraitStacks(mut.ID) >= mut.maxStacks)
+            {
                 continue;
-
-            //Check overriding slots.
-            if (mut.slot != string.Empty && stats.traits.Find(x => x.slot == mut.slot) != null)
-                continue;
-
-            if (mut.stackable && stats.TraitStacks(mut.ID) >= mut.maxStacks)
-                continue;
+            }
 
             possibilities.Add(new Trait(mut));
         }
@@ -36,18 +34,19 @@ public static class TraitList
     {
         List<Wound> ws = new List<Wound>();
 
-        foreach (Wound w in GameData.GetAll<Wound>())
+        foreach (Wound wound in GameData.GetAll<Wound>())
         {
-            if (w == null || w.slot != ItemProperty.None && w.slot != bp.slot || bp.wounds.Find(x => x.ID == w.ID) != null)
+            if (wound == null || wound.slot != ItemProperty.None && wound.slot != bp.slot 
+                || bp.wounds.Find(x => x.ID == wound.ID) != null)
             {
                 continue;
             }
 
             bool canAdd = false;
 
-            for (int j = 0; j < w.damTypes.Count; j++)
+            for (int j = 0; j < wound.damTypes.Count; j++)
             {
-                if (dts.Contains(w.damTypes[j]))
+                if (dts.Contains(wound.damTypes[j]))
                 {
                     canAdd = true;
                     break;
@@ -56,7 +55,7 @@ public static class TraitList
 
             if (canAdd)
             {
-                ws.Add(new Wound(w));
+                ws.Add(new Wound(wound));
             }
         }
 

@@ -15,10 +15,7 @@ public class CComponent
         return (CComponent)MemberwiseClone();
     }
 
-    public virtual void OnRemove()
-    {
-        
-    }
+    public virtual void OnRemove() {}
 
     public virtual string ExtraInfo()
     {
@@ -52,35 +49,8 @@ public class CComponent
             case "OnHitAddStatus": return JsonMapper.ToObject<COnHitAddStatus>(reader);
             case "LocationMap": return JsonMapper.ToObject<CLocationMap>(reader);
             case "Ammo": return JsonMapper.ToObject<CAmmo>(reader);
-
-            default: return null;
-        }
-    }
-
-    public static Type GetComponentType(string cc)
-    {
-        switch (cc)
-        {
-            case "Charges": return typeof(CCharges);
-            case "RechargeTurns": return typeof(CRechargeTurns);
-            case "Rot": return typeof(CRot);
-            case "Corpse": return typeof(CCorpse);
-            case "Ability": return typeof(CAbility);
-            case "Equipped": return typeof(CEquipped);
-            case "Firearm": return typeof(CFirearm);
-            case "Coordinate": return typeof(CCoordinate);
-            case "Console": return typeof(CConsole);
-            case "LuaEvent": return typeof(CLuaEvent);
-            case "LiquidContainer": return typeof(CLiquidContainer);
-            case "Block": return typeof(CBlock);
-            case "Coat": return typeof(CCoat);
-            case "ModKit": return typeof(CModKit);
-            case "ItemLevel": return typeof(CItemLevel);
-            case "Requirement": return typeof(CRequirement);
-            case "DNAHolder": return typeof(CDNAHolder);
-            case "OnHitAddStatus": return typeof(COnHitAddStatus);
-            case "LocationMap": return typeof(CLocationMap);
-            case "Ammo": return typeof(CAmmo);
+            case "Disguise": return JsonMapper.ToObject<CDisguise>(reader);
+            case "Tags": return JsonMapper.ToObject<CTags>(reader);
 
             default: return null;
         }
@@ -497,7 +467,9 @@ public class CBlock : CComponent
         string s = LocalizationManager.GetContent("IT_Block");
 
         if (s.Contains("[INPUT]"))
+        {
             s = s.Replace("[INPUT]", (level * 5).ToString());
+        }
 
         return s;
     }
@@ -617,7 +589,9 @@ public class CLiquidContainer : CComponent
         if (liquid != null)
         {
             liquid.Splash(ent.stats);
-            liquid = null;
+            liquid.units--;
+
+            CheckLiquid();
         }
     }
 
@@ -667,7 +641,9 @@ public class CLiquidContainer : CComponent
 
     public override string ExtraInfo()
     {
-        string s = (isEmpty()) ? LocalizationManager.GetContent("IT_LiquidUnits_Empty") : LocalizationManager.GetContent("IT_LiquidUnits") + "\n(" + liquid.Description + ")";
+        string s = isEmpty() 
+            ? LocalizationManager.GetContent("IT_LiquidUnits_Empty") 
+            : LocalizationManager.GetContent("IT_LiquidUnits") + "\n(" + liquid.Description + ")";
 
         if (s.Contains("[INPUT1]"))
         {
@@ -753,11 +729,11 @@ public class CItemLevel : CComponent
         xp = _xp;
     }
 
-    public void AddXP(double _amount)
+    public void AddXP(double amt)
     {
         if (level < maxLevel)
         {
-            double amount = (_amount / level) + 0.1;
+            double amount = (amt / level) + 0.1;
             xp += amount;
 
             while (xp >= xpToNext)
@@ -788,7 +764,8 @@ public class CItemLevel : CComponent
     {      
         if (level < maxLevel)
         {
-            return string.Format("<color=cyan>Level</color> <color=yellow>{0}</color> <color=grey>({1} %xp)</color>", level, Math.Round(xp / 10.0, 2));
+            double xpPercent = Math.Round(xp / 10.0, 2);
+            return string.Format("<color=cyan>Level</color> <color=yellow>{0}</color> <color=grey>({1} %xp)</color>", level, xpPercent);
         }
         else
         {
@@ -850,11 +827,10 @@ public class CRequirement : CComponent
                         return false;
                     }
                 }
-            }
-            else
-            {
-                //Something went wrong.
-                UnityEngine.Debug.Log("CRequirement::CanUse() cannot find " + req[i].String);
+                else
+                {
+                    return false;
+                }
             }
         }
 
@@ -978,7 +954,7 @@ public class CLocationMap : CComponent
             return;
         }
 
-        ZoneBlueprint zb = World.worldMap.worldMapData.GetZone(zoneID);
+        Zone_Blueprint zb = World.worldMap.worldMapData.GetZone(zoneID);
 
         if (zb == null)
         {
@@ -1007,6 +983,37 @@ public class CLocationMap : CComponent
                 }
             }
         }
+    }
+}
+
+[Serializable]
+public class CDisguise : CComponent
+{
+    public readonly string factionID;
+    public readonly int strength;
+
+    public CDisguise()
+    {
+        ID = "Disguise";
+    }
+
+    public CDisguise(string factionID, int strength)
+    {
+        ID = "Disguise";
+        this.factionID = factionID;
+        this.strength = strength;
+    }
+
+    public override string ExtraInfo()
+    {
+        Faction faction = GameData.Get<Faction>(factionID);
+
+        if (faction == null)
+        {
+            return string.Empty;
+        }
+
+        return LocalizationManager.GetContent("IT_Disguise").Format(faction.name);
     }
 }
 
@@ -1061,5 +1068,37 @@ public class CAmmo : CComponent
         }
 
         return string.Empty;
+    }
+}
+
+public class CTags : CComponent
+{
+    private List<string> tags;
+
+    public CTags()
+    {
+        ID = "Tags";
+        tags = new List<string>();
+    }
+
+    public CTags(List<string> tags)
+    {
+        ID = "Tags";
+        this.tags = tags;
+    }
+
+    public bool HasTag(string tag)
+    {
+        return tags.Contains(tag);
+    }
+
+    public void AddTag(string tag)
+    {
+        tags.Add(tag);
+    }
+
+    public void RemoveTag(string tag)
+    {
+        tags.Remove(tag);
     }
 }

@@ -383,7 +383,7 @@ public class WorldMap_Data
 
     void PlaceZones()
     {
-        foreach (ZoneBlueprint z in GameData.GetAll<ZoneBlueprint>())
+        foreach (Zone_Blueprint z in GameData.GetAll<Zone_Blueprint>())
         {
             for (int i = 0; i < z.amount; i++)
             {
@@ -393,7 +393,7 @@ public class WorldMap_Data
 
         for (int i = 0; i < postGenLandmarks.Count; i++)
         {
-            ZoneBlueprint zb = GetZone(postGenLandmarks[i].desc);
+            Zone_Blueprint zb = GetZone(postGenLandmarks[i].desc);
 
             if (zb != null)
             {
@@ -402,7 +402,7 @@ public class WorldMap_Data
         }
     }
 
-    public Coord PlaceZone(ZoneBlueprint zb, Coord parentPos = null, Coord forcePos = null)
+    public Coord PlaceZone(Zone_Blueprint zb, Coord parentPos = null, Coord forcePos = null)
     {
         Coord pos = null;
         bool hasParent = (parentPos != null && zb.placement.relativePosition != null);
@@ -415,7 +415,7 @@ public class WorldMap_Data
         {
             if (!zb.placement.landmark.NullOrEmpty())
             {
-                if (zb.placement.zoneID == ZoneBlueprint.DefaultPlacementBiome ||
+                if (zb.placement.zoneID == Zone_Blueprint.DefaultPlacementBiome ||
                     !TryGetLandmark(zb.placement.landmark, zb.placement.zoneID.ToEnum<Biome>(), out pos))
                 {
                     pos = GetRandomLandmark(zb.placement.landmark);
@@ -423,7 +423,7 @@ public class WorldMap_Data
             }
             else
             {
-                if (zb.placement.zoneID == ZoneBlueprint.DefaultPlacementBiome)
+                if (zb.placement.zoneID == Zone_Blueprint.DefaultPlacementBiome)
                 {
                     pos = zb.placement.onMain ? GetOpenFromMainIsland(zb.neighbors) : GetOpenPosition(zb.neighbors);
                 }
@@ -565,7 +565,7 @@ public class WorldMap_Data
         }
     }
 
-    public Coord GetOpenPosition(ZoneBlueprint[] neighbors)
+    public Coord GetOpenPosition(Zone_Blueprint[] neighbors)
     {
         List<Coord> openPositions = new List<Coord>();
 
@@ -606,7 +606,7 @@ public class WorldMap_Data
         return openPositions.GetRandom(rng);
     }
 
-    public Coord GetOpenFromMainIsland(ZoneBlueprint[] neighbors)
+    public Coord GetOpenFromMainIsland(Zone_Blueprint[] neighbors)
     {
         List<Coord> openPositions = new List<Coord>();
 
@@ -822,7 +822,7 @@ public class WorldMap_Data
 
     void Swamp()
     {
-        Coord start = GetOpenPosition(new ZoneBlueprint[0]);
+        Coord start = GetOpenPosition(new Zone_Blueprint[0]);
         tiles[start.x, start.y].biome = Biome.Swamp;
         tiles[start.x, start.y].radiation = 3;
         int width = rng.Next(3, 8), height = rng.Next(3, 8);
@@ -894,16 +894,16 @@ public class WorldMap_Data
         return tileData[x, y];
     }
 
-    public ZoneBlueprint GetZone(string search)
+    public Zone_Blueprint GetZone(string search)
     {
-        foreach (ZoneBlueprint bp in GameData.GetAll<ZoneBlueprint>())
+        foreach (Zone_Blueprint bp in GameData.GetAll<Zone_Blueprint>())
         {
             if (bp.ID == search)
                 return bp;
 
             if (bp.neighbors != null)
             {
-                foreach (ZoneBlueprint n in bp.neighbors)
+                foreach (Zone_Blueprint n in bp.neighbors)
                 {
                     if (n.ID == search)
                         return n;
@@ -915,13 +915,13 @@ public class WorldMap_Data
         return null;
     }
 
-    public ZoneBlueprint_Underground GetUndergroundFromLandmark(string search)
+    public Vault_Blueprint GetUndergroundFromLandmark(string search)
     {
-        ZoneBlueprint zb = GetZone(search);
+        Zone_Blueprint zb = GetZone(search);
 
         if (zb != null && !string.IsNullOrEmpty(zb.underground))
         {
-            return GameData.Get<ZoneBlueprint_Underground>(zb.underground);
+            return GameData.Get<Vault_Blueprint>(zb.underground);
         }
 
         Debug.LogError("Underground area \"" + search + "\" does not exist.");
@@ -929,9 +929,9 @@ public class WorldMap_Data
         return null;
     }
 
-    public ZoneBlueprint_Underground GetUnderground(string search)
+    public Vault_Blueprint GetUnderground(string search)
     {
-        return GameData.Get<ZoneBlueprint_Underground>(search);
+        return GameData.Get<Vault_Blueprint>(search);
     }
 
     public string GetZoneNameAt(int x, int y, int ele)

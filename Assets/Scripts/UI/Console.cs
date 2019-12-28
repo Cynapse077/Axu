@@ -358,7 +358,7 @@ public class Console : MonoBehaviour
                 }
                 else if (parsedText[1] == "object")
                 {
-                    MapObjectBlueprint bp = ItemList.GetMOB(spawnName);
+                    MapObject_Blueprint bp = ItemList.GetMOB(spawnName);
 
                     if (bp == null)
                     {
@@ -494,7 +494,7 @@ public class Console : MonoBehaviour
                 else
                 {
                     string newArea = textToParse.Replace("go ", "");
-                    ZoneBlueprint zb = World.tileMap.worldMap.GetZone(newArea);
+                    Zone_Blueprint zb = World.tileMap.worldMap.GetZone(newArea);
 
                     if (zb == null)
                     {

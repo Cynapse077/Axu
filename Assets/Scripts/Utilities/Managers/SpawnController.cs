@@ -37,11 +37,37 @@ public static class SpawnController
         }
     }
 
-    public static void SpawnBanditAmbush()
+    static void SpawnBanditAmbush()
     {
-        List<GroupBlueprint> bps = new List<GroupBlueprint>();
+        Item item = null;
+        Entity entity = ObjectManager.playerEntity;
+        int goldAmount = (entity.inventory.gold > 0) ? Random.Range(entity.inventory.gold / 2, entity.inventory.gold + 1) : 100;
 
-        foreach (GroupBlueprint gb in GameData.GetAll<GroupBlueprint>())
+        if (entity.inventory.items.Count > 0 && rng.CoinFlip())
+        {
+            item = entity.inventory.items.GetRandom();
+        }
+
+        if (item != null && SeedManager.combatRandom.CoinFlip())
+        {
+            World.userInterface.YesNoAction("YN_BanditAmbush_Item".Translate(), () =>
+            {
+                World.userInterface.BanditYes(goldAmount, item);
+                entity.inventory.RemoveInstance_All(item);
+            }, () => World.userInterface.BanditNo(), item.DisplayName());
+        }
+        else
+        {
+            World.userInterface.YesNoAction("YN_BanditAmbush".Translate(), () =>
+            {
+                World.userInterface.BanditYes(goldAmount, item);
+                entity.inventory.gold -= goldAmount;
+            }, () => World.userInterface.BanditNo(), goldAmount.ToString());
+        }
+
+        List<NPCGroup_Blueprint> bps = new List<NPCGroup_Blueprint>();
+
+        foreach (NPCGroup_Blueprint gb in GameData.GetAll<NPCGroup_Blueprint>())
         {
             if (gb.ID.Contains("Bandits") && gb.level <= World.DangerLevel())
             {
@@ -54,69 +80,10 @@ public static class SpawnController
             return;
         }
 
-        GroupBlueprint spawn = bps.GetRandom();
+        NPCGroup_Blueprint spawn = bps.GetRandom();
         int amount = rng.Next(2, 7);
 
         SpawnFromGroupName(spawn.ID, amount);
-
-        World.tileMap.CheckNPCTiles();
-    }
-
-    public static void SpawnMerchant()
-    {
-        Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
-
-        if (c != null)
-        {
-            SpawnNPCByID("merch", World.tileMap.CurrentMap.mapInfo.position, 0, c);
-            return;
-        }
-
-        int guards = 0;
-
-        for (int x = -3; x <= 3; x++)
-        {
-            for (int y = -3; y <= 3; y++)
-            {
-                if (World.OutOfLocalBounds(c.x + x, c.y + y) || guards > 5)
-                {
-                    continue;
-                }
-
-                if (World.tileMap.GetCellAt(c.x + x, c.y + y).Walkable && rng.Next(100) < 30)
-                {
-                    Coord guardPos = new Coord(c.x + x, c.y + y);
-
-                    SpawnNPCByID("guard", World.tileMap.CurrentMap.mapInfo.position, 0, guardPos);
-                    guards++;
-                }
-            }
-        }
-    }
-
-    public static void SpawnEversightAmbush()
-    {
-        List<GroupBlueprint> bps = new List<GroupBlueprint>();
-
-        foreach (GroupBlueprint gb in GameData.GetAll<GroupBlueprint>())
-        {
-            if (gb.ID.Contains("Eversight") && gb.level <= World.DangerLevel())
-            {
-                bps.Add(gb);
-            }
-        }
-
-        if (bps.Count <= 0)
-        {
-            return;
-        }
-
-        GroupBlueprint spawn = bps.GetRandom();
-        int amount = rng.Next(2, 5);
-
-        SpawnFromGroupName(spawn.ID, amount);
-
-        World.tileMap.CheckNPCTiles();
     }
 
     public static void BiomeSpawn(int mx, int my, TileMap_Data mapData)
@@ -145,9 +112,9 @@ public static class SpawnController
             {
                 if (rng.OneIn(300))
                 {
-                    CombatLog.NewMessage("You hear commition...");
-                    GroupBlueprint gb = GameData.GetRandom<GroupBlueprint>((a) => {
-                        if (!(a is GroupBlueprint asset))
+                    CombatLog.NewMessage("You hear a commition...");
+                    NPCGroup_Blueprint gb = GameData.GetRandom<NPCGroup_Blueprint>((a) => {
+                        if (!(a is NPCGroup_Blueprint asset))
                             return false;
 
                         return asset.ID.Contains("Bandit") && asset.CanSpawn(2);
@@ -157,7 +124,7 @@ public static class SpawnController
                     {
                         for (int i = 0; i < rng.Next(2, 6); i++)
                         {
-                            SpawnBlueprint s = Utility.WeightedChoice(gb.npcs);
+                            NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
                             int amount = s.AmountToSpawn();
 
                             for (int j = 0; j < amount; j++)
@@ -177,18 +144,18 @@ public static class SpawnController
 
             if (numSpawns > 0)
             {
-                List<GroupBlueprint> gbs = GroupsThatCanSpawnHere(mapData);
+                List<NPCGroup_Blueprint> gbs = GroupsThatCanSpawnHere(mapData);
 
                 if (gbs.Count <= 0)
                 {
                     return;
                 }
 
-                GroupBlueprint gb = gbs.GetRandom(rng);
+                NPCGroup_Blueprint gb = gbs.GetRandom(rng);
 
                 for (int i = 0; i < numSpawns; i++)
                 {
-                    SpawnBlueprint s = Utility.WeightedChoice(gb.npcs);
+                    NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
                     int amount = s.AmountToSpawn();
 
                     for (int j = 0; j < amount; j++)
@@ -212,9 +179,9 @@ public static class SpawnController
         World.tileMap.CheckNPCTiles();
     }
 
-    static List<GroupBlueprint> GroupsThatCanSpawnHere(TileMap_Data mapData)
+    static List<NPCGroup_Blueprint> GroupsThatCanSpawnHere(TileMap_Data mapData)
     {
-        return GameData.GetAll<GroupBlueprint>().FindAll(x => x.CanSpawnHere(mapData));
+        return GameData.GetAll<NPCGroup_Blueprint>().FindAll(x => x.CanSpawnHere(mapData));
     }
 
     static void Encounter()
@@ -226,24 +193,17 @@ public static class SpawnController
 
             if (c != null)
             {
-                World.objectManager.NewObjectAtOtherScreen("Crystal", c, World.tileMap.CurrentMap.mapInfo.position, 0);
+                World.objectManager.NewObjectAtSpecificScreen("Crystal", c, World.tileMap.CurrentMap.mapInfo.position, 0);
                 return;
             }
-        }
-
-        //Spawn a merchant and his guards.
-        if (rng.Next(1000) <= 2)
-        {
-            SpawnMerchant();
-            return;
         }
 
         //Random minibosses.
         if (World.DangerLevel() >= 6 && rng.Next(1000) < ObjectManager.playerEntity.stats.MyLevel.CurrentLevel + 1)
         {
-            List<GroupBlueprint> bps = new List<GroupBlueprint>();
+            List<NPCGroup_Blueprint> bps = new List<NPCGroup_Blueprint>();
 
-            foreach (GroupBlueprint gb in GameData.GetAll<GroupBlueprint>())
+            foreach (NPCGroup_Blueprint gb in GameData.GetAll<NPCGroup_Blueprint>())
             {
                 if (gb.ID.Contains("Minibosses") && gb.level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
                 {
@@ -258,58 +218,60 @@ public static class SpawnController
         }
     }
 
-    public static void SetupOverworldEncounter()
+    public static bool SetupOverworldEncounter()
     {
         Entity entity = ObjectManager.playerEntity;
 
-        if (World.difficulty.Level == Difficulty.DiffLevel.Hunted && rng.Next(500) < World.DangerLevel())
+        bool canSpawnBanditAmbush = GameData.Get<Faction>("bandits") != null && !ObjectManager.playerEntity.inventory.DisguisedAs(GameData.Get<Faction>("bandits"));
+
+        if (CanSpawnIncident() && rng.Next(100) < 50)
         {
-            //Spawn Eversight Assassins
-            SpawnEversightAmbush();
-            Alert.CustomAlert_WithTitle("Ambush!", "A group of Eversight Assassins have snuck up on you. Prepare to fight!");
+            bool p(IAsset asset)
+            {
+                if (asset is Incident inc)
+                {
+                    return inc.CanSpawn();
+                }
+
+                return false;
+            }
+
+            var incident = GameData.Get<Incident>(p).GetRandom();
+            incident.Spawn();
+        }
+        else if (canSpawnBanditAmbush)
+        {
+            SpawnBanditAmbush();
         }
         else
         {
-            //Merchant
-            if (rng.Next(100) < 10)
+            return false;
+        }
+
+        World.tileMap.CheckNPCTiles();
+        World.tileMap.HardRebuild();
+        World.objectManager.NoStickNPCs();
+        return true;
+    }
+
+    static bool CanSpawnIncident()
+    {
+        var incidents = GameData.GetAll<Incident>();
+
+        if (incidents.Count == 0)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < incidents.Count; i++)
+        {
+            if (incidents[i].CanSpawn())
             {
-                Alert.NewAlert("FoundMerchant");
-                SpawnMerchant();              
-            }
-            else
-            {
-                //Spawn Bandits
-                Item item = null;
-                int goldAmount = (entity.inventory.gold > 0) ? Random.Range(entity.inventory.gold / 2, entity.inventory.gold + 1) : 100;
-
-                if (entity.inventory.items.Count > 0 && rng.CoinFlip())
-                {
-                    item = entity.inventory.items.GetRandom();
-                }
-
-                if (item != null && SeedManager.combatRandom.CoinFlip())
-                {
-                    World.userInterface.YesNoAction("YN_BanditAmbush_Item".Translate(), () =>
-                    {
-                        World.userInterface.BanditYes(goldAmount, item);
-                        entity.inventory.RemoveInstance_All(item);
-                    }, () => World.userInterface.BanditNo(), item.DisplayName());
-                }
-                else
-                {
-                    World.userInterface.YesNoAction("YN_BanditAmbush".Translate(), () =>
-                    {
-                        World.userInterface.BanditYes(goldAmount, item);
-                        entity.inventory.gold -= goldAmount;
-                    }, () => World.userInterface.BanditNo(), goldAmount.ToString());
-                }
-
-                SpawnBanditAmbush();
+                return true;
             }
         }
 
-        World.tileMap.HardRebuild();
-        World.objectManager.NoStickNPCs();
+        return false;
     }
 
     static void HouseObjects()
@@ -345,8 +307,8 @@ public static class SpawnController
     //Summon a random minion from a particular group
     public static void SummonFromGroup(string groupName, Coord localPosition)
     {
-        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(groupName);
-        SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+        NPCGroup_Blueprint gbp = GameData.Get<NPCGroup_Blueprint>(groupName);
+        NPCSpawn_Blueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
 
         NPC n = EntityList.GetNPCByID(chosenSpawn.npcID, World.tileMap.CurrentMap.mapInfo.position, localPosition);
         n.elevation = World.tileMap.currentElevation;
@@ -382,11 +344,11 @@ public static class SpawnController
             }
         }
 
-        List<GroupBlueprint> gbs = GroupsThatCanSpawnHere(map);
+        List<NPCGroup_Blueprint> gbs = GroupsThatCanSpawnHere(map);
 
         if (gbs.Count > 0)
         {
-            GroupBlueprint gb = gbs.GetRandom(rng);
+            NPCGroup_Blueprint gb = gbs.GetRandom(rng);
             int amountSpawned = 0;
             int maxSpawns = 15;
 
@@ -397,7 +359,7 @@ public static class SpawnController
                     break;
                 }
 
-                SpawnBlueprint s = Utility.WeightedChoice(gb.npcs);
+                NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
                 int amount = Mathf.Clamp(s.AmountToSpawn(), 1, 7);
 
                 for (int j = 0; j < amount; j++)
@@ -438,7 +400,7 @@ public static class SpawnController
 
             if (pos != null)
             {
-                World.objectManager.NewObject(obT, pos);
+                World.objectManager.NewObjectOnCurrentScreen(obT, pos);
             }
         }
     }
@@ -481,14 +443,18 @@ public static class SpawnController
 
     public static void SpawnFromGroupName(string name, int amount = 1)
     {
-        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(name);
-        SpawnSingleGroup(gbp, amount);
+        NPCGroup_Blueprint gbp = GameData.Get<NPCGroup_Blueprint>(name);
+
+        if (gbp != null)
+        {
+            SpawnSingleGroup(gbp, amount);
+        }
     }
 
     public static List<NPC> SpawnFromGroupNameAt(string name, int amount, Coord position, int elevation)
     {
-        GroupBlueprint gbp = GameData.Get<GroupBlueprint>(name);
-        SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+        NPCGroup_Blueprint gbp = GameData.Get<NPCGroup_Blueprint>(name);
+        NPCSpawn_Blueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
         List<NPC> spawned = new List<NPC>();
 
         if (amount == 0)
@@ -517,9 +483,9 @@ public static class SpawnController
         return spawned;
     }
 
-    static void SpawnSingleGroup(GroupBlueprint gbp, int amount = 1)
+    static void SpawnSingleGroup(NPCGroup_Blueprint gbp, int amount = 1)
     {
-        SpawnBlueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
+        NPCSpawn_Blueprint chosenSpawn = Utility.WeightedChoice(gbp.npcs);
 
         if (amount == 0)
         {

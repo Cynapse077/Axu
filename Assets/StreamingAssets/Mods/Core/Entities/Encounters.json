@@ -113,9 +113,9 @@
 
 		{
             "Name" : "Eversight 1",
-            "Level" : 1,
+            "Level" : 5,
             "Possibilities" : [
-                { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "assassin0" }
+                { "Weight" : 5, "Amount" : "1d6", "Blueprint" : "assassin0" }
             ]
         },
 

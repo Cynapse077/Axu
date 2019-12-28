@@ -79,9 +79,6 @@ public static class ItemTooltip
                     displayItems.Add(GetContent("IT_Weapon", true));
             }
 
-            if (item.HasCComponent<CItemLevel>())
-                displayItems.Add(item.GetCComponent<CItemLevel>().ExtraInfo());
-
             displayItems.Add(GetContent_Input("IT_Type", WeaponType(item)));
 
             string damageString = GetContent_Input("IT_Damage", item.TotalDamage().ToString());

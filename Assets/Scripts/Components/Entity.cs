@@ -1150,12 +1150,12 @@ public class Entity : MonoBehaviour
 
         int tNum = World.tileMap.GetTileID(posX, posY);
 
-        if (World.tileMap.IsWaterTile(posX, posY) || tNum == TileManager.tiles["Stairs_Up"].ID || tNum == TileManager.tiles["Stairs_Down"].ID)
+        if (World.tileMap.IsWaterTile(posX, posY) || TileManager.IsTile(tNum, "Stairs_Up") || TileManager.IsTile(tNum, "Stairs_Down"))
         {
             return;
         }
 
-        World.objectManager.NewObject("Bloodstain", new Coord(posX, posY));
+        World.objectManager.NewObjectOnCurrentScreen("Bloodstain", new Coord(posX, posY));
     }
 
     public void UnDie()
@@ -1170,7 +1170,9 @@ public class Entity : MonoBehaviour
             inventory.gold -= (inventory.gold / 10);
 
             if (SeedManager.combatRandom.Next(100) < 10)
+            {
                 stats.MyLevel.XP = 0;
+            }
 
             if (SeedManager.combatRandom.Next(100) < 10)
             {

@@ -9,7 +9,11 @@ public class TranslatedText : IAsset
     public string display;
     public string display2;
 
-    public TranslatedText() { }
+    public TranslatedText()
+    {
+        display = defaultText;
+    }
+
     public TranslatedText(JsonData dat)
     {
         FromJson(dat);

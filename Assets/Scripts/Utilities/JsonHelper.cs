@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class JsonHelper {
 	public static string Indent = "    ";
@@ -237,5 +238,53 @@ public static class JsonHelper {
         }
 
         return false;
+    }
+
+    public static float ToFloat(this JsonData dat)
+    {
+        if (dat.IsDouble)
+        {
+            return (float)((double)dat);
+        }
+        else if (dat.IsInt)
+        {
+            return (float)((int)dat);
+        }
+
+        Log.Error("JsonData.ToFloat - Trying to get a value that is not a number.");
+
+        return 0f;
+    }
+
+    public static double ToDouble(this JsonData dat)
+    {
+        if (dat.IsDouble)
+        {
+            return (double)dat;
+        }
+        else if (dat.IsInt)
+        {
+            return (int)dat;
+        }
+
+        Log.Error("JsonData.ToDouble - Trying to get a value that is not a number.");
+
+        return 1.0;
+    }
+
+    public static int ToInt(this JsonData dat)
+    {
+        if (dat.IsInt)
+        {
+            return (int)dat;
+        }
+        else if (dat.IsDouble)
+        {
+            return Mathf.RoundToInt((float)((double)dat));
+        }
+
+        Log.Error("JsonData.ToInt - Trying to get a value that is not a number.");
+
+        return 0;
     }
 }

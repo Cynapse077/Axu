@@ -5,9 +5,9 @@ public class Vault
 {
     public Coord position;
     public TileMap_Data[] screens;
-    public ZoneBlueprint_Underground blueprint;
+    public Vault_Blueprint blueprint;
 
-    public Vault(Coord pos, ZoneBlueprint_Underground bp)
+    public Vault(Coord pos, Vault_Blueprint bp)
     {
         position = pos;
         blueprint = bp;

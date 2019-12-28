@@ -65,9 +65,8 @@
         },
 
 
-        {
-            "Base" : "Item_Ammo",
-            "ID" : "arrow",
+        {            
+            "ID" : "arrow", "Base" : "Item_Ammo",
             "Name" : "Arrow",
             "Rarity" : 1,
             "FlavorText" : "Ammunition for a bow.",
@@ -79,9 +78,8 @@
                 { "ID" : "Ammo", "Type" : "arrow" }
             ]
         },
-        {
-            "Base" : "Item_Ammo",
-            "ID" : "arrow_flaming",
+        {            
+            "ID" : "arrow_flaming", "Base" : "Item_Ammo",
             "Name" : "<color=red>Incendiary</color> Arrow",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a bow. Deals extra fire damage and can <color=red>burn</color> targets.",
@@ -93,9 +91,8 @@
                 { "ID" : "Ammo", "Type" : "arrow", "Damage" : "2d1", "OnHit" : "Core.ItemActions.OnHit_Burn" }
             ]
         },
-        {
-            "Base" : "Item_Ammo",
-            "ID" : "arrow_poison",
+        {            
+            "ID" : "arrow_poison", "Base" : "Item_Ammo",
             "Name" : "<color=green>Poisonous</color> Arrow",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a bow. Can <color=green>poison</color> targets.",
@@ -107,9 +104,8 @@
                 { "ID" : "Ammo", "Type" : "arrow", "OnHit" : "Core.ItemActions.OnHit_Poison" }
             ]
         },
-        {
-            "Base" : "Item_Ammo",
-            "ID" : "arrow_daze",
+        {            
+            "ID" : "arrow_daze", "Base" : "Item_Ammo",
             "Name" : "<color=cyan>Dazing</color> Arrow",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a bow. Can <color=cyan>stun</color> targets.",
@@ -121,9 +117,8 @@
                 { "ID" : "Ammo", "Type" : "arrow", "OnHit" : "Core.ItemActions.OnHit_Stun" }
             ]
         },
-        {
-            "Base" : "Item_Ammo",
-            "ID" : "arrow_confuse",
+        {            
+            "ID" : "arrow_confuse", "Base" : "Item_Ammo",
             "Name" : "<color=magenta>Runic</color> Arrow",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a bow. Can <color=magenta>confuse</color> targets.",
@@ -135,9 +130,8 @@
                 { "ID" : "Ammo", "Type" : "arrow", "OnHit" : "Core.ItemActions.OnHit_Confuse" }
             ]
         },
-        {
-            "Base" : "Item_Ammo",
-            "ID" : "arrow_explosive",
+        {            
+            "ID" : "arrow_explosive", "Base" : "Item_Ammo",
             "Name" : "<color=orange>Exposive</color> Arrow",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a bow. Causes an explosion on impact.",
@@ -150,9 +144,8 @@
                 { "ID" : "Ammo", "Type" : "arrow", "OnHit" : "Core.ItemActions.Explosion" }
             ]
         },
-        {
-            "Base" : "Item_Ammo",
-            "ID" : "bolt",
+        {            
+            "ID" : "bolt", "Base" : "Item_Ammo",
             "Name" : "Bolt",
             "Rarity" : 1,
             "FlavorText" : "Ammunition for a crossbow.",
@@ -165,8 +158,7 @@
             ]
         },
         {
-            "Base" : "Item_Ammo",
-            "ID" : "bolt_flaming",
+            "ID" : "bolt_flaming", "Base" : "Item_Ammo",
             "Name" : "<color=red>Incendiary</color> Bolt",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a crossbow. Deals extra fire damage and can <color=red>burn</color> targets.",
@@ -193,8 +185,7 @@
             ]
         },
         {
-            "Base" : "Item_Ammo",
-            "ID" : "bolt_daze",
+            "ID" : "bolt_daze", "Base" : "Item_Ammo",
             "Name" : "<color=cyan>Dazing</color> Bolt",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a crossbow. Can <color=cyan>stun</color> targets.",
@@ -221,8 +212,7 @@
             ]
         },
         {
-            "Base" : "Item_Ammo",
-            "ID" : "bolt_explosive",
+            "ID" : "bolt_explosive", "Base" : "Item_Ammo",
             "Name" : "<color=orange>Explosive</color> Bolt",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a crossbow. Causes an explosion on impact.",
@@ -236,8 +226,7 @@
             ]
         },
         {
-            "Base" : "Item_Ammo",
-        	"ID" : "bullet",
+        	"ID" : "bullet", "Base" : "Item_Ammo",
             "Name" : "Bullet",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a firearm.",
@@ -250,8 +239,7 @@
             ]
         },
 		{
-            "Base" : "Item_Ammo",
-        	"ID" : "plasmacell",
+        	"ID" : "plasmacell", "Base" : "Item_Ammo",
             "Name" : "Plasma Cell",
             "Rarity" : 3,
             "FlavorText" : "Ammunition for a plasma firearm.",
@@ -264,8 +252,7 @@
             ]
         },
         {
-            "Base" : "Item_Ammo",
-            "ID" : "seed",
+            "ID" : "seed", "Base" : "Item_Ammo",
             "Name" : "Seed",
             "FlavorText" : "A natural projectile.",
             "Lootable" : false,
@@ -1459,10 +1446,13 @@
         	"ID" : "skullmask",
             "Name" : "Skull Mask",
             "Armor" : 2,
-            "Rarity" : 2,
+            "Rarity" : 5,
             "FlavorText" : "These masks are worn by the Skull Bandit tribe of Axu. A symbol of ferocity.",
             "Cost" : 28,
             "Properties" : [ "Slot_Head" ],
+            "Components" : [
+            	{ "ID" : "Disguise", "Faction" : "bandits", "Strength" : 10 }
+            ],
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-skull.png",
@@ -1973,6 +1963,26 @@
             "Display" : {
                 "On Ground" : "item-chest.png",
                 "On Player" : "Mods/Core/Art/Player/Cloaks/char-cloak.png",
+                "Layer" : "Cloak"
+            }
+        },
+        {
+            "Base" : "Item_Armor",
+        	"ID" : "frostbornecloak",
+            "Name" : "Frostborne Cloak",
+            "Rarity" : 5,
+            "FlavorText" : "A cloak made by the Frostborne. It is extremely effective at fending off the harsh Northern weather.",
+            "Cost" : 128,
+            "Stat Mods" : [
+                { "Stat" : "Cold Resist", "Amount" : 50 }
+            ],
+            "Components" : [
+            	{ "ID" : "Disguise", "Faction" : "frostborne", "Strength" : 10 }
+            ],
+            "Properties" : [ "Slot_Back" ],
+            "Display" : {
+                "On Ground" : "item-chest.png",
+                "On Player" : "Mods/Core/Art/Player/Cloaks/char-cloak-frostborne.png",
                 "Layer" : "Cloak"
             }
         },

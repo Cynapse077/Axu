@@ -1,0 +1,21 @@
+{
+    "Incidents" : [
+        {
+            "ID" : "random-merchant",
+            "Enter Dialogue" : "A nearby merchant urges you to check out their wares.",
+            "NPCs" : [ "merch" ],
+            "Hostile" : false,
+            "Faction" : "villagers",
+            "Weight" : 1.0
+        },
+        {
+            "ID" : "eversight-ambush",
+            "Enter Dialogue" : "A group of Eversight Assassins have snuck up on you. Prepare to fight!",
+            "Groups" : [ "Eversight 1" ],
+            "Weight" : 0.1,
+            "Hostile" : true,
+            "Faction" : "eversight",
+            "Min Difficulty" : "Hunted"
+        }
+    ]
+}

@@ -74,26 +74,36 @@ public static class TileManager
 
     public static Tile_Data GetByID(int id)
     {
-        return tiles.SingleOrDefault(x => x.Value.ID == id).Value;
+        return tiles.FirstOrDefault(x => x.Value.ID == id).Value;
     }
 
     public static Tile_Data GetByName(string id)
     {
-        return tiles[id];
+        if (tiles.ContainsKey(id))
+        {
+            return tiles[id];
+        }
+
+        return null;
     }
 
     public static bool isMountain(int tileID)
     {
-        return (tileID == tiles["Mountain"].ID || tileID == tiles["Volcano_Wall"].ID || tileID == tiles["Ice_Wall"].ID);
+        return GetByID(tileID).HasTag("Mountain_Wall");
     }
 
-    public static bool isWaterTile(int tileNum, bool includeAllLiquids)
+    public static bool isWaterTile(int tileNum, bool includeAllLiquids = true)
     {
-        if (tileNum == tiles["Water"].ID)
+        if (IsTile(tileNum, "Water"))
         {
             return true;
         }
 
-        return (includeAllLiquids && tileNum == tiles["Water_Swamp"].ID);
+        return includeAllLiquids && GetByID(tileNum).HasTag("Liquid");
+    }
+
+    public static bool IsTile(int tileNum, string key)
+    {
+        return tiles.ContainsKey(key) && tileNum == tiles[key].ID;
     }
 }

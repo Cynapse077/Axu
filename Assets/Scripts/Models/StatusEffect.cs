@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Container class
-public struct StatusManager
+public class StatusManager
 {
-    List<StatusEffect> statusEffects;
+    List<StatusEffect> statusEffects = new List<StatusEffect>();
     readonly Stats stats;
 
     public Stats MyStats { get { return stats; } }
@@ -13,7 +13,6 @@ public struct StatusManager
     public StatusManager(Stats stats)
     {
         this.stats = stats;
-        statusEffects = new List<StatusEffect>();
     }
 
     public void ClearAllStatuses()
@@ -194,7 +193,7 @@ public class Status_Aflame : StatusEffect
 
     public override void OnAdd()
     {
-        if (!TileManager.isWaterTile(World.tileMap.GetTileID(stats.entity.posX, stats.entity.posY), true))
+        if (!TileManager.isWaterTile(World.tileMap.GetTileID(stats.entity.posX, stats.entity.posY)))
         {
             base.OnAdd();
         }
@@ -202,7 +201,7 @@ public class Status_Aflame : StatusEffect
 
     public override void OnTurn()
     {
-        if (TileManager.isWaterTile(World.tileMap.GetTileID(stats.entity.posX, stats.entity.posY), true))
+        if (TileManager.isWaterTile(World.tileMap.GetTileID(stats.entity.posX, stats.entity.posY)))
         {
             turns = 0;
         }

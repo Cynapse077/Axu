@@ -90,6 +90,11 @@ public static class LuaManager
 
     public static DynValue CallScriptFunction(LuaCall luaCall, params object[] parameters)
     {
+        if (luaCall == null)
+        {
+            return null;
+        }
+
         return CallScriptFunction(luaCall.modID, luaCall.scriptName, luaCall.functionName, parameters);
     }
 

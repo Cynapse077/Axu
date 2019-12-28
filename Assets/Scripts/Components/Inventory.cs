@@ -188,7 +188,7 @@ public class Inventory : MonoBehaviour
 
             if (otherInventory == null)
             {
-                MapObject m = World.objectManager.NewObjectAtOtherScreen("Loot", destination, World.tileMap.WorldPosition, World.tileMap.currentElevation);
+                MapObject m = World.objectManager.NewObjectAtSpecificScreen("Loot", destination, World.tileMap.WorldPosition, World.tileMap.currentElevation);
                 m.inv.Add(newItem);
             }
             else
@@ -705,6 +705,47 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public bool DisguisedAs(Faction faction)
+    {
+        var equipped = EquippedItems();
+
+        for (int i = 0; i < equipped.Count; i++)
+        {
+            if (equipped[i].HasCComponent<CDisguise>())
+            {
+                CDisguise dis = equipped[i].GetCComponent<CDisguise>();
+
+                if (dis.factionID == faction.ID)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public int DisguiseStrength(Faction faction)
+    {
+        var equipped = EquippedItems();
+        int total = 0;
+
+        for (int i = 0; i < equipped.Count; i++)
+        {
+            if (equipped[i].HasCComponent<CDisguise>())
+            {
+                CDisguise dis = equipped[i].GetCComponent<CDisguise>();
+
+                if (dis.factionID == faction.ID)
+                {
+                    total += dis.strength;
+                }
+            }
+        }
+
+        return total;
+    }
+
     public void Disarm()
     {
         if (body.MainHand.EquippedItem.lootable)
@@ -1069,7 +1110,7 @@ public class Inventory : MonoBehaviour
 
             if (otherInventory == null)
             {
-                MapObject m = World.objectManager.NewObjectAtOtherScreen("Loot", entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
+                MapObject m = World.objectManager.NewObjectAtSpecificScreen("Loot", entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
 
                 for (int i = 0; i < items.Count; i++)
                 {

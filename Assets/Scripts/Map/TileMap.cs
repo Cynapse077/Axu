@@ -10,6 +10,7 @@ public class TileMap : MonoBehaviour
 {
     public static string imagePath;
     public static bool doneSetup = false;
+    static List<Coord> tmpCoordList = new List<Coord>();
 
     public int worldCoordX, worldCoordY;
     public int currentElevation;
@@ -200,13 +201,17 @@ public class TileMap : MonoBehaviour
 
             string landmark = worldMap.GetTileAt(worldMap.vaultAreas[i].x, worldMap.vaultAreas[i].y).landmark;
             if (landmark.NullOrEmpty())
+            {
                 continue;
+            }
 
-            ZoneBlueprint zb = worldMap.GetZone(worldMap.GetTileAt(worldMap.vaultAreas[i].x, worldMap.vaultAreas[i].y).landmark);
+            Zone_Blueprint zb = worldMap.GetZone(worldMap.GetTileAt(worldMap.vaultAreas[i].x, worldMap.vaultAreas[i].y).landmark);
             if (zb == null || zb.underground.NullOrEmpty())
+            {
                 continue;
+            }
 
-            ZoneBlueprint_Underground vault = worldMap.GetUndergroundFromLandmark(zb.ID);
+            Vault_Blueprint vault = worldMap.GetUndergroundFromLandmark(zb.ID);
             Vaults.Add(new Vault(worldMap.vaultAreas[i], vault));
 
         }
@@ -450,7 +455,7 @@ public class TileMap : MonoBehaviour
 
     public Coord EmptyAdjacent(Coord c)
     {
-        List<Coord> empty = new List<Coord>();
+        tmpCoordList.Clear();
 
         for (int x = c.x - 1; x <= c.x + 1; x++)
         {
@@ -458,23 +463,25 @@ public class TileMap : MonoBehaviour
             {
                 if (cells[x, y].Walkable && cells[x, y].entity == null)
                 {
-                    empty.Add(new Coord(x, y));
+                    tmpCoordList.Add(new Coord(x, y));
                 }
             }
         }
 
-        if (empty.Count <= 0)
+        if (tmpCoordList.Empty())
         {
             return null;
         }
 
-        return empty.GetRandom();
+        return tmpCoordList.GetRandom();
     }
 
     public bool IsWaterTile(int x, int y)
     {
         if (y < size_y && x < size_x && x >= 0 && y >= 0)
+        {
             return CurrentMap.IsWaterTile(x, y);
+        }
 
         return false;
     }
@@ -486,7 +493,9 @@ public class TileMap : MonoBehaviour
             for (int y = 0; y < size_y; y++)
             {
                 if (CurrentMap.map_data[x, y] == TileManager.tiles["Stairs_Down"])
+                {
                     return new Coord(x, y);
+                }
             }
         }
 
@@ -500,7 +509,9 @@ public class TileMap : MonoBehaviour
             for (int y = 0; y < size_y; y++)
             {
                 if (CurrentMap.map_data[x, y] == TileManager.tiles["Stairs_Up"])
+                {
                     return new Coord(x, y);
+                }
             }
         }
 
@@ -517,6 +528,7 @@ public class TileMap : MonoBehaviour
             }
             else
             {
+                //Default vault type
                 Vaults.Add(new Vault(myPos, worldMap.GetUnderground("Default")));
             }
         }
@@ -539,7 +551,9 @@ public class TileMap : MonoBehaviour
     public bool IsTileLit(int x, int y)
     {
         if (x < 0 || x >= Manager.localMapSize.x || y < 0 || y >= Manager.localMapSize.y)
+        {
             return false;
+        }
 
         return tileRenderers[x, y].lit;
     }
@@ -550,11 +564,11 @@ public class TileMap : MonoBehaviour
     public bool PassThroughableTile(int x, int y)
     {
         if (x < 0 || y < 0 || x > size_x - 1 || y > size_y - 1)
+        {
             return false;
+        }
 
-        bool walkable = CurrentMap.WalkableTile(x, y);
-
-        return walkable;
+        return CurrentMap.WalkableTile(x, y);
     }
 
     /// <summary>
@@ -563,10 +577,11 @@ public class TileMap : MonoBehaviour
     public bool WalkableWorldTile(int x, int y)
     {
         if (x < 0 || x >= Manager.worldMapSize.x || y < 0 || y >= Manager.worldMapSize.y)
+        {
             return false;
+        }
 
-
-        return (worldMap.tileData[x, y].walkable);
+        return worldMap.tileData[x, y].walkable;
     }
 
     public bool IsOceanWorldTile(int x, int y)
@@ -576,18 +591,21 @@ public class TileMap : MonoBehaviour
 
     public List<Coord> InSightCoords()
     {
-        List<Coord> coordList = new List<Coord>();
+        tmpCoordList.Clear();
 
         for (int y = 0; y < size_y; y++)
         {
             for (int x = 0; x < size_x; x++)
             {
-                if (ObjectManager.playerEntity.inSight(new Coord(x, y)) && WalkableTile(x, y))
-                    coordList.Add(new Coord(x, y));
+                Coord c = new Coord(x, y);
+                if (ObjectManager.playerEntity.inSight(c) && WalkableTile(x, y))
+                {
+                    tmpCoordList.Add(c);
+                }
             }
         }
 
-        return coordList;
+        return tmpCoordList;
     }
 
     /// <summary>
@@ -609,7 +627,9 @@ public class TileMap : MonoBehaviour
 
                 //If there isn't a door there, assume it hasn't spawned yet.
                 if (c == null || c.mapObjects.Empty())
+                {
                     return false;
+                }
 
                 return c.mapObjects.FindAll(m => m.isDoor_Closed).Empty();
             }
@@ -688,8 +708,11 @@ public class TileMap : MonoBehaviour
 
     public void FreezeTile(int x, int y)
     {
-        if (World.OutOfLocalBounds(x, y) || !TileManager.isWaterTile(CurrentMap.GetTileNumAt(x, y), true) && CurrentMap.GetTileNumAt(x, y) != TileManager.tiles["Lava"].ID)
+        if (World.OutOfLocalBounds(x, y) || !TileManager.isWaterTile(CurrentMap.GetTileNumAt(x, y)) 
+            && CurrentMap.GetTileNumAt(x, y) != TileManager.tiles["Lava"].ID)
+        {
             return;
+        }
 
         int tileNum = CurrentMap.GetTileNumAt(x, y);
         Tile_Data newTile = (tileNum == TileManager.tiles["Lava"].ID) ? TileManager.tiles["Mountain_Floor"] : TileManager.tiles["Ice"];
@@ -702,7 +725,9 @@ public class TileMap : MonoBehaviour
     public bool SetTile(Tile_Data tile, int x, int y)
     {
         if (World.OutOfLocalBounds(x, y))
+        {
             return false;
+        }
 
         CurrentMap.ChangeTile(x, y, tile);
         tileRenderers[x, y].SetSprite(sprites[tile.ID]);
@@ -734,7 +759,9 @@ public class TileMap : MonoBehaviour
     public void SetTileGraphic(TileMap_Data tm, int x, int y, int tsIndex, int autoNum)
     {
         if (tm != currentMap)
+        {
             return;
+        }
 
         int tileIndex = autoNum;
 
@@ -824,6 +851,7 @@ public class TileMap : MonoBehaviour
             for (int y = 0; y < size_y; y++)
             {
                 CurrentMap.has_seen[x, y] = true;
+                tileRenderers[x, y].hasSeen = true;
             }
         }
 
@@ -862,7 +890,6 @@ public class TileMap : MonoBehaviour
     {
         if (x == worldCoordX && y == worldCoordY)
         {
-            Debug.LogError("Attempting to delete current loaded map. Aborting.");
             return;
         }
 

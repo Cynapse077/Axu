@@ -267,7 +267,8 @@ public class PlayerInput : MonoBehaviour
                     HeldKeys_Menu(1);
                 }
             }
-        } else
+        }
+        else
         {
             if (KeyDown("North"))
             {

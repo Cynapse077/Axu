@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LitJson;
 
-public class ZoneBlueprint : IAsset
+public class Zone_Blueprint : IAsset
 {
     public const string DefaultPlacementBiome = "Any Land";
 
@@ -11,10 +11,10 @@ public class ZoneBlueprint : IAsset
     public int tileID, amount, radiation;
     public bool walkable, expand, isStart, friendly;
     public Placement placement;
-    public ZoneBlueprint parent;
-    public ZoneBlueprint[] neighbors;
+    public Zone_Blueprint parent;
+    public Zone_Blueprint[] neighbors;
 
-    public ZoneBlueprint(JsonData dat)
+    public Zone_Blueprint(JsonData dat)
     {
         placement = new Placement();
         FromJson(dat);
@@ -54,11 +54,11 @@ public class ZoneBlueprint : IAsset
 
         if (dat.ContainsKey("Neighbors"))
         {
-            neighbors = new ZoneBlueprint[dat["Neighbors"].Count];
+            neighbors = new Zone_Blueprint[dat["Neighbors"].Count];
 
             for (int i = 0; i < dat["Neighbors"].Count; i++)
             {
-                neighbors[i] = new ZoneBlueprint(dat["Neighbors"][i])
+                neighbors[i] = new Zone_Blueprint(dat["Neighbors"][i])
                 {
                     parent = this
                 };
@@ -80,7 +80,7 @@ public class ZoneBlueprint : IAsset
     }
 }
 
-public class ZoneBlueprint_Underground :IAsset
+public class Vault_Blueprint :IAsset
 {
     public string ID { get; set; }
     public string ModID { get; set; }
@@ -89,7 +89,7 @@ public class ZoneBlueprint_Underground :IAsset
     public Rules rules;
     public TileInfo tileInfo;
 
-    public ZoneBlueprint_Underground(JsonData dat)
+    public Vault_Blueprint(JsonData dat)
     {
         rules = Rules.Empty();
         FromJson(dat);

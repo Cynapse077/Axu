@@ -531,6 +531,11 @@ public class BodyPart : IWeighted
             return (rollAgainst > rollFor);
         }
 
+        public bool CanStrangle()
+        {
+            return heldPart.slot == ItemProperty.Slot_Head && SeedManager.combatRandom.Next(100) < 20 && myPart.myBody.entity.stats.Strength > 6;
+        }
+
         public void Release()
         {
             if (heldPart != null)

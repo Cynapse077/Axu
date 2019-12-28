@@ -6,6 +6,7 @@ public class LocalizedText : MonoBehaviour
     public string key;
     public bool setBySelf = false;
     string _baseText;
+    Text myText;
 
     public string BaseText
     {
@@ -23,16 +24,20 @@ public class LocalizedText : MonoBehaviour
 
     void Start()
     {
-        if (setBySelf && GetComponent<Text>())
+        myText = GetComponent<Text>();
+
+        if (setBySelf && myText != null)
         {
-            GetComponent<Text>().text = BaseText;
+            myText.text = BaseText;
         }
     }
 
-    public void GetLocalizedText(string searchKey = "")
+    public void GetLocalizedText(string searchKey = null)
     {
-        if (searchKey == "")
+        if (searchKey.NullOrEmpty())
+        {
             searchKey = key;
+        }
 
         TranslatedText content = LocalizationManager.GetLocalizedContent(searchKey);
 
@@ -46,7 +51,12 @@ public class LocalizedText : MonoBehaviour
 
     public void SetText(string searchKey)
     {
+        if (myText == null)
+        {
+            myText = GetComponent<Text>();
+        }
+
         GetLocalizedText(searchKey);
-        GetComponent<Text>().text = BaseText;
+        myText.text = BaseText;
     }
 }

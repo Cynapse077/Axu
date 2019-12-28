@@ -320,9 +320,9 @@ public static class ItemList
         }
     }
 
-    public static MapObjectBlueprint GetMOB(string objType)
+    public static MapObject_Blueprint GetMOB(string objType)
     {
-        return GameData.Get<MapObjectBlueprint>(objType);
+        return GameData.Get<MapObject_Blueprint>(objType);
     }
 
     public static Liquid GetLiquidByID(string search, int amount = -1)
@@ -485,6 +485,25 @@ public static class ItemUtility
 
                 CLocationMap map = new CLocationMap(zoneID, questID);
                 comps.Add(map);
+            }
+            else if (ID == "Disguise")
+            {
+                string factionID = dat["Faction"].ToString();
+                int strength = (int)dat["Strength"];
+
+                CDisguise dis = new CDisguise(factionID, strength);
+                comps.Add(dis);
+            }
+            else if (ID == "Tags")
+            {
+                CTags tags = new CTags();
+
+                for (int j = 0; j < dat["Tags"].Count; j++)
+                {
+                    tags.AddTag(dat["Tags"][j].ToString());
+                }
+
+                comps.Add(tags);
             }
             else if (UnityEngine.Application.isEditor)
             {

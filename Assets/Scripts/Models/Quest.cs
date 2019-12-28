@@ -3,6 +3,7 @@ using LitJson;
 
 public class Quest : EventContainer, IAsset
 {
+    public const int NO_FAIL_ON_TURN_COUNTER = -999;
     public string ID { get; set; }
     public string ModID { get; set; }
     public string Name;
@@ -10,7 +11,7 @@ public class Quest : EventContainer, IAsset
     public Goal[] goals;
     public QuestReward rewards;
     public List<int> spawnedNPCs;
-    public int turnsToFail = -999; //If -999, does not fail on turn counter.
+    public int turnsToFail = NO_FAIL_ON_TURN_COUNTER; //If -999, does not fail on turn counter.
 
     public string chainedQuest;
     public string startDialogue;
@@ -22,7 +23,7 @@ public class Quest : EventContainer, IAsset
     public int storedNPCUID { get; private set; } = -1;
     public int storedObjectUID { get; private set; } = -1;
     NPC_Blueprint storedNPCBlueprint;
-    MapObjectBlueprint storedObjectBlueprint;
+    MapObject_Blueprint storedObjectBlueprint;
 
     public bool isComplete
     {
@@ -234,7 +235,7 @@ public class Quest : EventContainer, IAsset
         q.TryGetString("Chained Quest", out chainedQuest);
         q.TryGetBool("Fail On Death", out failOnDeath);
         q.TryGetBool("Sequential", out sequential);
-        q.TryGetInt("Turns To Fail", out turnsToFail, -999);
+        q.TryGetInt("Turns To Fail", out turnsToFail, NO_FAIL_ON_TURN_COUNTER);
 
         if (q.ContainsKey("Rewards"))
         {
@@ -273,7 +274,7 @@ public class Quest : EventContainer, IAsset
         }
 
         //Must be new, as we are setting local position and elevation.
-        MapObjectBlueprint bp = new MapObjectBlueprint(GameData.Get<MapObjectBlueprint>(id));
+        MapObject_Blueprint bp = new MapObject_Blueprint(GameData.Get<MapObject_Blueprint>(id));
 
         if (bp == null)
         {
@@ -322,7 +323,7 @@ public class Quest : EventContainer, IAsset
             id = dat["Random From"][ran].ToString();
         }
 
-        //Must be new, because we are setting local position and elevation
+        //Must be copy, because we are setting local position and elevation
         NPC_Blueprint bp = new NPC_Blueprint(GameData.Get<NPC_Blueprint>(id));
 
         if (bp == null)
@@ -598,7 +599,7 @@ public class Quest : EventContainer, IAsset
 
     public void OnTurn()
     {
-        if (turnsToFail > -999)
+        if (turnsToFail > NO_FAIL_ON_TURN_COUNTER)
         {
             turnsToFail--;
 
@@ -791,7 +792,7 @@ public class SQuest
     public Coord storedGoal;
     public SQuestStep[] comp; //Completeness of steps
     public int[] sp; //Spawned npcs
-    public int turnsToFail = -999;
+    public int turnsToFail = Quest.NO_FAIL_ON_TURN_COUNTER;
     public int storedNPCUID = -1;
     public int storedObjectUID = -1;
 

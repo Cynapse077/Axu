@@ -1,6 +1,7 @@
 using UnityEngine;
 using Pathfinding;
 using System.Collections.Generic;
+using System.Linq;
 using MoonSharp.Interpreter;
 
 [MoonSharpUserData]
@@ -424,7 +425,7 @@ public class BaseAI : MonoBehaviour
             }
         }
 
-        target = (possibleTargets.Count == 0) ? null : GetClosestTarget(possibleTargets);
+        target = (possibleTargets.Empty()) ? null : GetClosestTarget(possibleTargets);
 
         return target != null;
     }
@@ -583,7 +584,7 @@ public class BaseAI : MonoBehaviour
         }
 
         float dist = GetDistance(target);
-        int playerStealth = ObjectManager.playerEntity.stats.StealthCheck();
+        int playerStealth = ObjectManager.playerEntity.stats.StealthCheck() + ObjectManager.playerEntity.inventory.DisguiseStrength(npcBase.faction);
         int stealthRoll = RNG.Next(playerStealth);
         int perceptionRoll = RNG.Next(1, perception + 1);
 
@@ -1053,9 +1054,9 @@ public class BaseAI : MonoBehaviour
             }
             else
             {
-                BodyPart.Grip currentGrip = entity.body.AllGrips()[0];
+                BodyPart.Grip currentGrip = entity.body.AllGrips().FirstOrDefault();
 
-                if (currentGrip != null && currentGrip.heldPart.slot == ItemProperty.Slot_Head && RNG.Next(100) < 20 && entity.stats.Strength > 6)
+                if (currentGrip != null && currentGrip.CanStrangle())
                 {
                     entity.skills.Grapple_Strangle(target.stats); //Choke me, daddy.
                 }
@@ -1071,6 +1072,8 @@ public class BaseAI : MonoBehaviour
                         entity.skills.Grapple_Pull(currentGrip);
                     else if (ran <= 93 && entity.stats.Dexterity >= 6)
                         entity.skills.Grapple_Disarm(currentGrip);
+                    else
+                        return false;
                 }
             }
 
@@ -1078,11 +1081,12 @@ public class BaseAI : MonoBehaviour
         }
 
         //Dive
-        if (SeedManager.combatRandom.Next(100) < 10 && npcBase.HasFlag(NPC_Flags.Aquatic) && TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY), true))
+        if (SeedManager.combatRandom.Next(100) < 10 && npcBase.HasFlag(NPC_Flags.Aquatic) 
+            && TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY)))
         {
             if (entity.body.AllGripsAgainst().Count <= 0 && !entity.stats.HasEffect("Underwater"))
             {
-                entity.stats.AddStatusEffect("Underwater", 10);
+                entity.stats.AddStatusEffect("Underwater", RNG.Next(3, 11));
                 return true;
             }
         }

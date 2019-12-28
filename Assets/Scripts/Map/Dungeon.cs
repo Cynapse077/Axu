@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Dungeon
 {
-    ZoneBlueprint_Underground blueprint;
+    Vault_Blueprint blueprint;
     List<Room> rooms;
     readonly int[,] map_data;
 
@@ -38,7 +38,7 @@ public class Dungeon
         get { return SeedManager.localRandom; }
     }
 
-    public Dungeon(ZoneBlueprint_Underground zb)
+    public Dungeon(Vault_Blueprint zb)
     {
         map_data = new int[Manager.localMapSize.x, Manager.localMapSize.y];
         rooms = new List<Room>();
@@ -263,7 +263,7 @@ public class Dungeon
                     else
                         st.y -= move;
 
-                    if (RNG.Next(1000) < 1)
+                    if (RNG.Next(500) == 0)
                         st = new Coord(start.x, start.y);
                 }
 
@@ -305,7 +305,9 @@ public class Dungeon
             for (int y = 1; y < Manager.localMapSize.y - 1; y++)
             {
                 if (Vector2.Distance(new Vector2(x, y), center) < RNG.Next(4, 6) && RNG.Next(100) < 94)
+                {
                     map_data[x, y] = LiquidTile;
+                }
             }
         }
     }
@@ -329,7 +331,9 @@ public class Dungeon
             for (int x = seg.x - width; x <= seg.x + width; x++)
             {
                 if (x < 0 || x >= Manager.localMapSize.x)
+                {
                     continue;
+                }
 
                 map_data[x, seg.y] = LiquidTile;
             }
@@ -343,7 +347,9 @@ public class Dungeon
         for (int r = 0; r < rooms.Count; r++)
         {
             if (e.CollidesWith(rooms[r]))
+            {
                 return false;
+            }
         }
 
         bool roundCorners = (RNG.Next(100) <= 40);
@@ -353,12 +359,14 @@ public class Dungeon
             for (int ry = e.bottom; ry <= e.top; ry++)
             {
                 if (rx <= 0 || ry <= 0 || rx >= Manager.localMapSize.x - 1 || ry >= Manager.localMapSize.y - 1)
-                    continue;
-
-                if (roundCorners)
                 {
-                    if (rx == e.left && ry == e.top || rx == e.left && ry == e.bottom || rx == e.right && ry == e.top || rx == e.right && ry == e.bottom)
-                        continue;
+                    continue;
+                }
+
+                if (roundCorners && 
+                    (rx == e.left && ry == e.top || rx == e.left && ry == e.bottom || rx == e.right && ry == e.top || rx == e.right && ry == e.bottom))
+                {
+                    continue;
                 }
 
                 map_data[rx, ry] = FloorTile;
@@ -377,7 +385,9 @@ public class Dungeon
         for (int r = 0; r < rooms.Count; r++)
         {
             if (e.OverlapsWith(rooms[r]))
+            {
                 return false;
+            }
         }
 
         for (int x = center.x - radius - 1; x <= center.x + radius + 1; x++)
@@ -385,10 +395,14 @@ public class Dungeon
             for (int y = center.y - radius - 1; y <= center.y + radius + 1; y++)
             {
                 if (x <= 0 || y <= 0 || x >= Manager.localMapSize.x - 1 || y >= Manager.localMapSize.y - 1)
+                {
                     continue;
+                }
 
                 if (Vector2.Distance(center.toVector2(), new Vector2(x, y)) <= radius)
+                {
                     map_data[x, y] = FloorTile;
+                }
             }
         }
         rooms.Add(e);
@@ -424,7 +438,9 @@ public class Dungeon
                 while (x != x1)
                 {
                     if (OutOfBounds(x, y))
+                    {
                         break;
+                    }
 
                     map_data[x, y] = FloorTile;
                     x += xOffset;
@@ -432,7 +448,9 @@ public class Dungeon
                 while (y != y1)
                 {
                     if (OutOfBounds(x, y))
+                    {
                         break;
+                    }
 
                     map_data[x, y] = FloorTile;
                     y += yOffset;
@@ -443,7 +461,9 @@ public class Dungeon
                 while (y != y1)
                 {
                     if (OutOfBounds(x, y))
+                    {
                         break;
+                    }
 
                     map_data[x, y] = FloorTile;
                     y += yOffset;
@@ -451,7 +471,9 @@ public class Dungeon
                 while (x != x1)
                 {
                     if (OutOfBounds(x, y))
+                    {
                         break;
+                    }
 
                     map_data[x, y] = FloorTile;
                     x += xOffset;

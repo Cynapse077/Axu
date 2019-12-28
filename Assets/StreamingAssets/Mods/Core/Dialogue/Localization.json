@@ -423,6 +423,10 @@
         {
             "ID" : "IT_LiquidUnits_Empty",
             "Display" : "<color=grey>Empty</color>"
+        },
+        {
+            "ID" : "IT_Disguise",
+            "Display" : "Disguises you as a member of the {0}."
         }
     ],
     "Item Actions" : [
@@ -954,6 +958,11 @@
             "ID" : "SE_Frozen",
             "Display" : "Frozen",
             "Tooltip" : "You are frozen solid and cannot act until you warm up."
+        },
+        {
+            "ID" : "SE_Underwater",
+            "Display" : "Submerged",
+            "Tooltip" : "You are submerged under water."
         }
     ],
     "Difficulties" : [
@@ -1608,6 +1617,14 @@
         }
     ],
     "Log" : [
+        {
+            "ID" : "Message_Strangle1",
+            "Display" : "[NAME] is shaking."
+        },
+        {
+            "ID" : "Message_Strangle2",
+            "Display" : "[NAME] is looking pale."
+        },
 		{
 			"ID" : "Message_ThrowItem",
 			"Display" : "[NAME] throws a [ITEM]."
@@ -2127,6 +2144,18 @@
         {
             "ID" : "Gr_Pull_Fail",
             "Display" : "[ATTACKER] tugs on [DEFENDER]'s [DEFENDER_LIMB], but nothing happens."
+        },
+        {
+            "ID" : "TooManyFollowers",
+            "Display" : "You have too many followers and cannot accept another."
+        },
+        {
+            "ID" : "ActivateRoboFrame",
+            "Display" : "<color=green>You insert the AI Core into the Robotic Frame. After a short bootup, the Hauler begins to follow you!</color>"
+        },
+        {
+            "ID" : "RoboFrameOffline",
+            "Display" : "This Hauler is currently offline. It seems to be missing something."
         }
     ],
     "Locations" : [

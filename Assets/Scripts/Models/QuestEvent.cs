@@ -268,7 +268,7 @@ public class SpawnObjectEvent : QuestEvent
 
         if (c != null)
         {
-            MapObject m = World.objectManager.NewObjectAtOtherScreen(objectID, localPos, c, elevation);
+            MapObject m = World.objectManager.NewObjectAtSpecificScreen(objectID, localPos, c, elevation);
 
             if (giveItem != "")
             {
@@ -548,7 +548,7 @@ public class PlaceBlockerEvent : QuestEvent
 
     public override void RunEvent()
     {
-        World.objectManager.NewObjectAtOtherScreen("Stair_Lock", localPos, worldPos, elevation);
+        World.objectManager.NewObjectAtSpecificScreen("Stair_Lock", localPos, worldPos, elevation);
     }
 }
 
@@ -788,7 +788,7 @@ public class CreateLocationEvent : QuestEvent
 
     public override void RunEvent()
     {
-        ZoneBlueprint zb = World.worldMap.worldMapData.GetZone(zoneID);
+        Zone_Blueprint zb = World.worldMap.worldMapData.GetZone(zoneID);
         Coord pos = World.worldMap.worldMapData.PlaceZone(zb);
 
         if (pos != null)

@@ -439,28 +439,6 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    //Spawn an object at a specific screen
-    public MapObject NewObjectAtOtherScreen(string type, Coord locPos, Coord worPos, int elevation = 0)
-    {
-        MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>(type);
-
-        if (bp != null)
-        {
-            MapObject mapOb = new MapObject(bp, new Coord(locPos.x, locPos.y), worPos, elevation);
-            mapObjects.Add(mapOb);
-
-            if (!mapOb.onScreen)
-            {
-                SpawnObject(mapOb);
-            }
-
-            return mapOb;
-        }
-        
-        
-        return null;
-    }
-
     public void CreatePoolOfLiquid(Coord localPos, Coord worldPos, int elev, string liquidID, int amount)
     {
         Cell c = World.tileMap.GetCellAt(localPos);
@@ -473,7 +451,7 @@ public class ObjectManager : MonoBehaviour
 
         if (c.GetPool() == null && !World.tileMap.IsWaterTile(localPos.x, localPos.y + Manager.localMapSize.y))
         {
-            MapObject m = NewObjectAtOtherScreen("Loot", localPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
+            MapObject m = NewObjectAtSpecificScreen("Loot", localPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
             Item i = ItemList.GetItemByID("pool");
             i.GetCComponent<CLiquidContainer>().SetLiquid(newLiq);
             m.inv.Insert(0, i);
@@ -485,7 +463,7 @@ public class ObjectManager : MonoBehaviour
     }
 
     //Spawn an object on the current screen.
-    public MapObject NewObject(string type, Coord locPos)
+    public MapObject NewObjectOnCurrentScreen(string type, Coord locPos)
     {
         for (int i = 0; i < onScreenMapObjects.Count; i++)
         {
@@ -497,17 +475,32 @@ public class ObjectManager : MonoBehaviour
             }
         }
 
-        MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>(type);
+        MapObject_Blueprint bp = GameData.Get<MapObject_Blueprint>(type);
 
         if (bp != null)
         {
             MapObject mapOb = new MapObject(bp, locPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
             mapObjects.Add(mapOb);
 
-            if (!mapOb.onScreen)
-            {
-                SpawnObject(mapOb);
-            }
+            SpawnObject(mapOb);
+
+            return mapOb;
+        }
+
+        return null;
+    }
+
+    //Spawn an object at a specific screen
+    public MapObject NewObjectAtSpecificScreen(string type, Coord locPos, Coord worPos, int elevation = 0)
+    {
+        MapObject_Blueprint bp = GameData.Get<MapObject_Blueprint>(type);
+
+        if (bp != null)
+        {
+            MapObject mapOb = new MapObject(bp, new Coord(locPos.x, locPos.y), worPos, elevation);
+            mapObjects.Add(mapOb);
+
+            SpawnObject(mapOb);
 
             return mapOb;
         }
@@ -532,7 +525,7 @@ public class ObjectManager : MonoBehaviour
             return null;
         }
 
-        MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>(type);
+        MapObject_Blueprint bp = GameData.Get<MapObject_Blueprint>(type);
 
         if (bp != null)
         {
@@ -595,7 +588,9 @@ public class ObjectManager : MonoBehaviour
         }
 
         if (obj.onScreen)
+        {
             return;
+        }
 
         if (obj.worldPosition != World.tileMap.WorldPosition || obj.elevation != World.tileMap.currentElevation)
         {
@@ -680,7 +675,7 @@ public class ObjectManager : MonoBehaviour
     void HouseObjects(House h, Coord worldPos)
     {
         Coord c = h.GetRandomPosition();
-        NewObjectAtOtherScreen("Bed", c, worldPos);
+        NewObjectAtSpecificScreen("Bed", c, worldPos);
         Coord c2 = h.GetRandomPosition();
         int numTries = 0;
 
@@ -690,7 +685,7 @@ public class ObjectManager : MonoBehaviour
             numTries++;
         }
 
-        NewObjectAtOtherScreen("Table", c2, worldPos);
+        NewObjectAtSpecificScreen("Table", c2, worldPos);
 
         Coord c3 = h.GetRandomPosition();
         numTries = 0;
@@ -701,7 +696,7 @@ public class ObjectManager : MonoBehaviour
             numTries++;
         }
 
-        NewObjectAtOtherScreen(SeedManager.localRandom.CoinFlip() ? "Chair_Left" : "Chair_Right", c3, worldPos);
+        NewObjectAtSpecificScreen(SeedManager.localRandom.CoinFlip() ? "Chair_Left" : "Chair_Right", c3, worldPos);
     }
 
     void ShopObjects(House h, Coord worldPos)
@@ -717,7 +712,7 @@ public class ObjectManager : MonoBehaviour
 
             takenPositions.Add(c);
 
-            NewObjectAtOtherScreen("Barrel", c, worldPos);
+            NewObjectAtSpecificScreen("Barrel", c, worldPos);
         }
     }
 
@@ -729,7 +724,7 @@ public class ObjectManager : MonoBehaviour
         {
             if (poses[i].x % 2 == 0 && poses[i].y % 2 == 0)
             {
-                NewObjectAtOtherScreen("Bed", poses[i], worldPos);
+                NewObjectAtSpecificScreen("Bed", poses[i], worldPos);
             }
         }
     }

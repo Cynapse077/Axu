@@ -188,7 +188,7 @@ public class Journal : MonoBehaviour
                 Item item2 = ItemList.GetItemByID("journal_hunter");
                 if (!item2.IsNullOrDefault()) chestContents.Add(item2);
 
-                MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>("Chest");
+                MapObject_Blueprint bp = GameData.Get<MapObject_Blueprint>("Chest");
 
                 if (bp != null)
                 {

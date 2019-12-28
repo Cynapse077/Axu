@@ -83,7 +83,7 @@ public class MapObjectSprite : MonoBehaviour
         }
     }
 
-    void GrabFromBlueprint(MapObjectBlueprint bp) 
+    void GrabFromBlueprint(MapObject_Blueprint bp) 
     {
         if (gameObject)
         {
@@ -244,7 +244,10 @@ public class MapObjectSprite : MonoBehaviour
 
     void OnTurn()
     {
-        LuaManager.CallScriptFunction(objectBase.GetEvent("OnTurn"), this);
+        if (objectBase.HasEvent("OnTurn"))
+        {
+            LuaManager.CallScriptFunction(objectBase.GetEvent("OnTurn"), this);
+        }        
     }
 
     public void Autotile(bool initial)
@@ -307,7 +310,7 @@ public class MapObjectSprite : MonoBehaviour
 
     public void SetTypeAndSwapSprite(string t)
     {
-        MapObjectBlueprint bp = ItemList.GetMOB(t);
+        MapObject_Blueprint bp = ItemList.GetMOB(t);
 
         if (bp != null)
         {
@@ -448,7 +451,7 @@ public class MapObjectSprite : MonoBehaviour
 
     Sprite SwitchSprite(Item item)
     {
-        string id = (string.IsNullOrEmpty(item.renderer.onGround)) ? ItemList.GetMOB(objectType).spriteID : item.renderer.onGround;
+        string id = item.renderer.onGround.NullOrEmpty() ? objectBase.blueprint.spriteID : item.renderer.onGround;
         return SpriteManager.GetObjectSprite(id);
     }
 
@@ -628,7 +631,7 @@ public class MapObjectSprite : MonoBehaviour
                 {
                     if (World.objectManager.NumFollowers() >= 3)
                     {
-                        CombatLog.NewMessage("You have too many followers to accept another.");
+                        CombatLog.SimpleMessage("TooManyFollowers");
                         break;
                     }
 
@@ -643,7 +646,7 @@ public class MapObjectSprite : MonoBehaviour
                     NPC n = new NPC(bp, World.tileMap.WorldPosition, new Coord(localPos), World.tileMap.currentElevation);
 
                     n.MakeFollower();
-                    CombatLog.NewMessage("<color=green>You insert the AI Core into the Robotic Frame. After a short bootup, the Hauler begins to follow you!</color>");
+                    CombatLog.SimpleMessage("ActivateRoboFrame");
 
                     World.objectManager.SpawnNPC(n);
                     World.objectManager.RemoveObject(objectBase, gameObject);
@@ -653,7 +656,7 @@ public class MapObjectSprite : MonoBehaviour
                 }
                 else
                 {
-                    CombatLog.NewMessage("This Hauler is currently offline. It seems to be missing something.");
+                    CombatLog.SimpleMessage("RoboFrameOffline");
                 }
 
                 break;

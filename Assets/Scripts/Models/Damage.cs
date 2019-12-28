@@ -20,6 +20,14 @@ public class Damage
 
     public Damage() { }
 
+    public Damage(Damage other)
+    {
+        Num = other.Num;
+        Sides = other.Sides;
+        Inc = other.Inc;
+        Type = other.Type;
+    }
+
     public Damage(int numDice, int diceSides, int increase, DamageTypes type = DamageTypes.Blunt)
     {
         Num = numDice;

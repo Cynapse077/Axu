@@ -3,43 +3,36 @@ using System.Collections.Generic;
 
 public static class ShadowCasting
 {
-    static List<Coord> VisiblePoints;
+    static List<Coord> VisiblePoints = new List<Coord>();
+    static readonly List<Coord> EmptyCoordList = new List<Coord>(0);
     static int VisualRange = 5;
-    readonly static int[][] multipliers = new int[4][] {
+
+    static readonly int[][] Multipliers = new int[4][] {
         new int[8] { 1, 0, 0, -1, -1, 0, 0, 1 },
         new int[8] { 0, 1, -1, 0, 0, -1, 1, 0 },
         new int[8] { 0, 1, 1, 0, 0, -1, -1, 0 },
-        new int[8] { 1, 0, 0, 1, -1, 0, 0, -1 } };
+        new int[8] { 1, 0, 0, 1, -1, 0, 0, -1 }
+    };
 
     public static List<Coord> GetVisibleCells()
     {
         if (ObjectManager.playerEntity == null)
         {
-            return new List<Coord>();
+            return EmptyCoordList;
         }
 
-        Entity e = ObjectManager.playerEntity;
+        Entity player = ObjectManager.playerEntity;
+        VisiblePoints.Clear();
 
         if (Manager.lightingOn)
         {
-            if (VisiblePoints == null)
-            {
-                VisiblePoints = new List<Coord> { new Coord(e.posX, e.posY) };
-            }
-            else
-            {
-                VisiblePoints.Clear();
-                VisiblePoints.Add(new Coord(e.posX, e.posY));
-            }
+            VisiblePoints.Add(new Coord(player.myPos));
+            VisualRange = player.sightRange;
 
-            VisualRange = e.sightRange;
-
-            DoFOV(e.posX, e.posY, VisualRange);
+            DoFOV(player.posX, player.posY, VisualRange);
         }
         else
         {
-            VisiblePoints = new List<Coord>();
-
             for (int x = 0; x < Manager.localMapSize.x; x++)
             {
                 for (int y = 0; y < Manager.localMapSize.y; y++)
@@ -56,7 +49,7 @@ public static class ShadowCasting
     {
         for (int i = 0; i < 8; i++)
         {
-            CastLight(x, y, radius, 1, 1.0f, 0.0f, multipliers[0][i], multipliers[1][i], multipliers[2][i], multipliers[3][i]);
+            CastLight(x, y, radius, 1, 1.0f, 0.0f, Multipliers[0][i], Multipliers[1][i], Multipliers[2][i], Multipliers[3][i]);
         }
     }
 
@@ -99,16 +92,16 @@ public static class ShadowCasting
                     continue;
                 }
 
-                int radius2 = radius * radius;
+                int radiusSquared = radius * radius;
 
-                if ((dx * dx + dy * dy) < radius2 || World.tileMap.IsTileLit(ax, ay))
+                if ((dx * dx + dy * dy) < radiusSquared || World.tileMap.IsTileLit(ax, ay))
                 {
                     VisiblePoints.Add(new Coord(ax, ay));
                 }
 
                 if (blocked)
                 {
-                    if (!NoBlock(ax, ay))
+                    if (BlockedCellAt(ax, ay))
                     {
                         next_start_slope = r_slope;
                         continue;
@@ -119,7 +112,7 @@ public static class ShadowCasting
                         start_slope = next_start_slope;
                     }
                 }
-                else if (!NoBlock(ax, ay))
+                else if (BlockedCellAt(ax, ay))
                 {
                     blocked = true;
                     next_start_slope = r_slope;
@@ -134,8 +127,8 @@ public static class ShadowCasting
         }
     }
 
-    static bool NoBlock(int x, int y)
+    static bool BlockedCellAt(int x, int y)
     {
-        return World.tileMap.LightPassableTile(x, y);
+        return !World.tileMap.LightPassableTile(x, y);
     }
 }

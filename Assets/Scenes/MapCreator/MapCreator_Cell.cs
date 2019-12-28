@@ -115,7 +115,7 @@ namespace MapCreator
 
         public void SetObject(string objectID)
         {
-            MapObjectBlueprint mob = ItemList.GetMOB(objectID);
+            MapObject_Blueprint mob = ItemList.GetMOB(objectID);
 
             for (int i = 0; i < mct.ViewableObjects.Count; i++)
             {

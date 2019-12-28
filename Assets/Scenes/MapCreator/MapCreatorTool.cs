@@ -53,14 +53,14 @@ namespace MapCreator
         string CurrentLocationID = "";
         int Elevation = 0;
         Coord mapSize;
-        List<MapObjectBlueprint> cachedObjects;
+        List<MapObject_Blueprint> cachedObjects;
 
-        List<MapObjectBlueprint> AssetsForReading
+        List<MapObject_Blueprint> AssetsForReading
         {
             get
             {
-                return GameData.Get<MapObjectBlueprint>((IAsset asset) => {
-                    if (asset is MapObjectBlueprint bp)
+                return GameData.Get<MapObject_Blueprint>((IAsset asset) => {
+                    if (asset is MapObject_Blueprint bp)
                     {
                         return bp.displayInEditor;
                     }
@@ -70,7 +70,7 @@ namespace MapCreator
             }
         }
 
-        public List<MapObjectBlueprint> ViewableObjects
+        public List<MapObject_Blueprint> ViewableObjects
         {
             get
             {
@@ -461,7 +461,7 @@ namespace MapCreator
             return cells[x, y].objectID == objID;
         }
 
-        void Autotile(int cx, int cy, int width, int height)
+        void Autotile(int cx, int cy, int width = 1, int height = 1)
         {
             for (int x = cx - width; x <= cx + width; x++)
             {
@@ -477,11 +477,11 @@ namespace MapCreator
                     if (TileManager.isWaterTile(tile.ID, false))
                     {
                         int tIndex = (Elevation == 0) ? 0 : 8;
-                        BitwiseAutotile(x, y, tIndex, (z => TileManager.isWaterTile(z, true)), true);
+                        BitwiseAutotile(x, y, tIndex, (z => TileManager.isWaterTile(z)), true);
                     }
                     else if (tile.HasTag("Liquid") && tile.HasTag("Swamp"))
                     {
-                        BitwiseAutotile(x, y, 4, (z => TileManager.isWaterTile(z, true)), true);
+                        BitwiseAutotile(x, y, 4, (z => TileManager.isWaterTile(z)), true);
                     }
                     else if (TileManager.isMountain(tile.ID))
                     {
@@ -645,7 +645,7 @@ namespace MapCreator
             CurrentLocationID = mapTypeSelector.text;
             Elevation = -elevationSelector.value;
 
-            if (MapName == "")
+            if (MapName.NullOrEmpty())
             {
                 return;
             }
@@ -675,7 +675,7 @@ namespace MapCreator
             sc.IDs = ids;
 
             JsonData mapJson = JsonMapper.ToJson(sc);
-            File.WriteAllText(filePath + "/" + MapName + ".map", mapJson.ToString());
+            File.WriteAllText(Path.Combine(filePath, MapName + ".map"), mapJson.ToString());
             mapNameTitle.text = mapNameInput.text + ".map";
             CancelSaveMenu();
         }
@@ -728,8 +728,8 @@ namespace MapCreator
                 JsonData d = JsonMapper.ToObject(jstring);
 
                 string name = d["Name"].ToString();
-                int elevation = (d.ContainsKey("elev")) ? (int)d["elev"] : 0;
-                string landmark = (d.ContainsKey("locationID")) ? d["locationID"].ToString() : "";
+                int elevation = d.ContainsKey("elev") ? (int)d["elev"] : 0;
+                string landmark = d.ContainsKey("locationID") ? d["locationID"].ToString() : "";
 
                 MapCreator_Screen sc = new MapCreator_Screen(name, elevation, mapSize, landmark);
 
@@ -860,7 +860,7 @@ namespace MapCreator
             {
                 for (int y = 0; y < mapSize.y; y++)
                 {
-                    Autotile(x, y, 1, 1);
+                    Autotile(x, y);
                 }
             }
 
@@ -994,15 +994,10 @@ namespace MapCreator
             }
         }
 
-        class ChangeHolder
+        struct ChangeHolder
         {
             public List<Change> changes;
             public Coord previousPos;
-
-            public ChangeHolder()
-            {
-                changes = new List<Change>();
-            }
 
             public ChangeHolder(List<Change> c, Coord pp)
             {

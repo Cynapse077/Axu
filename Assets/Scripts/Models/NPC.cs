@@ -245,6 +245,17 @@ public class NPC
             }
         }
 
+        if (blueprint.itemChances.Length > 0)
+        {
+            foreach (var kvp in blueprint.itemChances)
+            {
+                if (RNG.Next(100) <= kvp.Value)
+                {
+                    inventory.Add(ItemList.GetItemByID(kvp.Key));
+                }
+            }
+        }
+
         if (HasFlag(NPC_Flags.Doctor))
         {
             bool p(IAsset asset)

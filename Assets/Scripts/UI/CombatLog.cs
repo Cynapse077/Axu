@@ -101,27 +101,23 @@ public static class CombatLog
         Append(sb.ToString());
     }
 
-    public static void NameMessage(string key, string miscName)
+    public static void NameMessage(string key, string name, string textToReplace = "[NAME]")
     {
-        StringBuilder sb = new StringBuilder(LocalizationManager.GetContent(key));
-
-        sb.Replace("[NAME]", miscName);
-
-        Append(sb.ToString());
+        Append(LocalizationManager.GetContent(key).Replace(textToReplace, name));
     }
 
     public static void DisplayItemsBelow(Inventory inv)
     {
         string message = "";
         bool addedLast = false;
-        int max = 3;
+        const int max = 3;
 
         for (int i = 0; i < inv.items.Count; i++)
         {
             if (i < max)
-                message += " " + inv.items[i].DisplayName() + (inv.items[i].stackable && inv.items[i].amount > 1 ? " x " + inv.items[i].amount : "") + ",";
+                message += " " + inv.items[i].DisplayName() + (inv.items[i].stackable && inv.items[i].amount > 1 ? " x" + inv.items[i].amount : "") + ",";
             else if (i == max)
-                message += " " + inv.items[i].DisplayName() + (inv.items[i].stackable && inv.items[i].amount > 1 ? " x " + inv.items[i].amount : "");
+                message += " " + inv.items[i].DisplayName() + (inv.items[i].stackable && inv.items[i].amount > 1 ? " x" + inv.items[i].amount : "");
             else if (i == max + 1 && !addedLast)
             {
                 message += " ...";

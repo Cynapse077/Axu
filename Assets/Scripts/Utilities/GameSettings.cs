@@ -26,7 +26,7 @@ public static class GameSettings
     {
         get
         {
-            return "0.7.6";
+            return "0.7.6b";
         }
     }
 
@@ -40,14 +40,14 @@ public static class GameSettings
             JsonData dat = JsonMapper.ToObject(jsonString);
 
             ScreenSize = dat.ContainsKey("ScreenSize") && dat["ScreenSize"].Count > 1 ? new Coord((int)dat["ScreenSize"][0], (int)dat["ScreenSize"][1]) : DefaultScreenSize;
-            Master_Volume = dat.ContainsKey("Master_Volume") ? (double)dat["Master_Volume"] : 1.0;
-            Mus_Volume = dat.ContainsKey("Music_Volume") ? (double)dat["Music_Volume"] : 1.0;
-            SE_Volume = dat.ContainsKey("SFX_Volume") ? (double)dat["SFX_Volume"] : 1.0;
+            Master_Volume = dat.ContainsKey("Master_Volume") ? dat["Master_Volume"].ToDouble() : 1.0;
+            Mus_Volume = dat.ContainsKey("Music_Volume") ? dat["Music_Volume"].ToDouble() : 1.0;
+            SE_Volume = dat.ContainsKey("SFX_Volume") ? dat["SFX_Volume"].ToDouble() : 1.0;
             MuteAll = dat.ContainsKey("Mute") ? (bool)dat["Mute"] : false;
             Fullscreen = dat.ContainsKey("Fullscreen") ? (bool)dat["Fullscreen"] : false;
             UseMouse = dat.ContainsKey("UseMouse") ? (bool)dat["UseMouse"] : false;
             Enable_Weather = dat.ContainsKey("Weather") ? (bool)dat["Weather"] : true;
-            Animation_Speed = (dat.ContainsKey("Animation_Speed")) ? (double)dat["Animation_Speed"] : 40.0;
+            Animation_Speed = (dat.ContainsKey("Animation_Speed")) ? dat["Animation_Speed"].ToDouble() : 40.0;
             Particle_Effects = dat.ContainsKey("Particle_Effects") ? (bool)dat["Particle_Effects"] : true;
             SimpleDamage = dat.ContainsKey("SimpleDmg") ? (bool)dat["SimpleDmg"] : false;
             ShowLog = dat.ContainsKey("Show_Log") ? (bool)dat["Show_Log"] : true;

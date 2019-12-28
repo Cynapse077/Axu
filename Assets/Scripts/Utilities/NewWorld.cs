@@ -148,7 +148,7 @@ public class OldWorld
         for (int i = 0; i < wData["Objects"].Count; i++)
         {
             JsonData obj = wData["Objects"][i];
-            MapObjectBlueprint bp = GameData.Get<MapObjectBlueprint>(obj["Type"].ToString());
+            MapObject_Blueprint bp = GameData.Get<MapObject_Blueprint>(obj["Type"].ToString());
 
             if (bp == null)
             {

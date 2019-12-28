@@ -60,23 +60,32 @@ public class Mod
         
         if (File.Exists(file))
         {
-            Log.MessageConditional("<color=grey>------- Loading <" + typeof(T).ToString() + "> -------</color>", LogAll);
-
-            string contents = File.ReadAllText(file);
-            JsonData data = JsonMapper.ToObject(contents)[key];
-
-            foreach (JsonData dat in data)
+            try
             {
-                IAsset t = (IAsset)Activator.CreateInstance(typeof(T), dat);
-                t.ModID = id;
+                Log.MessageConditional("<color=grey>------- Loading <" + typeof(T).ToString() + "> -------</color>", LogAll);
 
-                Log.MessageConditional("    (" + typeof(T).ToString() + ") " + t.ID + " - <color=green>Success!</color>", LogAll);
+                JsonData data = JsonMapper.ToObject(File.ReadAllText(file))[key];
+                int total = 0;
 
-                GameData.Add<T>(t);
+                foreach (JsonData dat in data)
+                {
+                    IAsset t = (IAsset)Activator.CreateInstance(typeof(T), dat);
+                    t.ModID = id;
+
+                    Log.MessageConditional("    (" + typeof(T).ToString() + ") " + t.ID + " - <color=green>Success!</color>", LogAll);
+
+                    GameData.Add<T>(t);
+                    total++;
+                }
+
+                Log.MessageConditional("<color=grey>------- Finished Loading <" + typeof(T).ToString() + "> - Total: " + total + " -------</color>", LogAll);
             }
-
-            Log.MessageConditional("<color=grey>------- Finished Loading <" + typeof(T).ToString() + "> -------</color>", LogAll);
-
+            catch (Exception e)
+            {
+                Log.Error("Could not load <" + typeof(T).ToString() + ">: " + e);
+                return false;
+            }
+            
             return true;
         }
 
@@ -141,10 +150,11 @@ public class Mod
             AddData<Trait>(curPath, "Traits.json", "Traits");
             AddData<Wound>(curPath, "Wounds.json", "Wounds");
             AddData<Felony>(curPath, "Felonies.json", "Felonies");
-            AddData<MapObjectBlueprint>(curPath, "Objects.json", "Objects");
+            AddData<MapObject_Blueprint>(curPath, "Objects.json", "Objects");
             AddData<Faction>(curPath, "Factions.json", "Factions");
             AddData<NPC_Blueprint>(curPath, "NPCs.json", "NPCs");
-            AddData<GroupBlueprint>(curPath, "Encounters.json", "Encounters");
+            AddData<NPCGroup_Blueprint>(curPath, "Encounters.json", "Encounters");
+            AddData<Incident>(curPath, "Incidents.json", "Incidents");
         }
 
         
@@ -169,8 +179,8 @@ public class Mod
         curPath = Path.Combine(filePath, ModUtility.MapsFolder);
         if (Directory.Exists(curPath))
         {
-            AddData<ZoneBlueprint>(curPath, "Locations.json", "Zones");
-            AddData<ZoneBlueprint_Underground>(curPath, "Locations.json", "Undergrounds");
+            AddData<Zone_Blueprint>(curPath, "Locations.json", "Zones");
+            AddData<Vault_Blueprint>(curPath, "Locations.json", "Undergrounds");
 
             string tilesPath = Path.Combine(curPath, "LocalTiles.json");
             if (File.Exists(tilesPath))
@@ -187,13 +197,17 @@ public class Mod
             AddData<DialogueNode>(curPath, "DialogueOptions.json", "Dialogue Options");
             AddData<DialogueSingle>(curPath, "Dialogue.json", "Dialogue");
 
-            string content = File.ReadAllText(Path.Combine(curPath, "Localization.json"));
-            JsonData dat = JsonMapper.ToObject(content);
-
-            foreach (string s in dat.Keys)
+            string localizationPath = Path.Combine(curPath, "Localization.json");
+            if (File.Exists(localizationPath))
             {
-                AddData<TranslatedText>(curPath, "Localization.json", s);
-            }
+                string content = File.ReadAllText(localizationPath);
+                JsonData dat = JsonMapper.ToObject(content);
+
+                foreach (string s in dat.Keys)
+                {
+                    AddData<TranslatedText>(curPath, "Localization.json", s);
+                }
+            }            
         }
     }
 

@@ -22,6 +22,7 @@ public class NPC_Blueprint : IAsset
 
     public string[] spriteIDs;
     public KeyValuePair<string, Coord>[] inventory;
+    public KeyValuePair<string, double>[] itemChances;
     public KeyValuePair<string, int>[] skills;
 
     public List<BodyPart> bodyParts;
@@ -65,6 +66,12 @@ public class NPC_Blueprint : IAsset
         for (int i = 0; i < other.inventory.Length; i++)
         {
             inventory[i] = new KeyValuePair<string, Coord>(other.inventory[i].Key, other.inventory[i].Value);
+        }
+
+        itemChances = new KeyValuePair<string, double>[other.itemChances.Length];
+        for (int i = 0; i < other.itemChances.Length; i++)
+        {
+            itemChances[i] = new KeyValuePair<string, double>(other.itemChances[i].Key, other.itemChances[i].Value);
         }
 
         skills = new KeyValuePair<string, int>[other.skills.Length];
@@ -166,6 +173,22 @@ public class NPC_Blueprint : IAsset
         else
         {
             inventory = new KeyValuePair<string, Coord>[0];
+        }
+
+        if (dat.ContainsKey("Possible Items"))
+        {
+            itemChances = new KeyValuePair<string, double>[dat["Possible Items"].Count];
+
+            for (int i = 0; i < dat["Possible Items"].Count; i++)
+            {
+                double chance = dat["Possible Items"][i]["Chance"].ToDouble();
+
+                itemChances[i] = new KeyValuePair<string, double>(dat["Possible Items"][i]["Item"].ToString(), chance);
+            }
+        }
+        else
+        {
+            itemChances = new KeyValuePair<string, double>[0];
         }
 
         for (int w = 0; w < dat["Weapon_Choices"].Count; w++)

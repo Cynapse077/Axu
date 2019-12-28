@@ -235,7 +235,7 @@
     {
         "ID" : "Mountain",
         "TileIndex" : 7,
-        "Tags" : [ "Mountain", "Breakable" ],
+        "Tags" : [ "Mountain", "Breakable", "Mountain_Wall" ],
         "Biome" : "None"
     },
 
@@ -285,7 +285,7 @@
     {
         "ID" : "Ice_Wall",
         "TileIndex" : 79,
-        "Tags" : [ "Tundra", "Mountain", "Breakable" ],
+        "Tags" : [ "Tundra", "Mountain", "Breakable", "Mountain_Wall" ],
         "Biome" : "None"
     },
     {
@@ -424,7 +424,7 @@
     {
         "ID" : "Volcano_Wall",
         "TileIndex" : 71,
-        "Tags" : [ "Mountain", "Breakable" ],
+        "Tags" : [ "Mountain", "Breakable", "Mountain_Wall" ],
         "Biome" : "None"
     },
     {

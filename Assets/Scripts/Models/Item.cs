@@ -25,7 +25,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public Damage TotalDamage()
     {
-        Damage dmg = damage + modifier.damage;
+        Damage dmg = new Damage(damage + modifier.damage);
 
         if (HasCComponent<CItemLevel>())
         {
@@ -85,12 +85,12 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public bool PhysicalDamage()
     {
-        return !ContainsDamageType(DamageTypes.Slash) || !ContainsDamageType(DamageTypes.Blunt) || !ContainsDamageType(DamageTypes.Pierce);
+        return ContainsDamageType(DamageTypes.Slash) || ContainsDamageType(DamageTypes.Blunt) || ContainsDamageType(DamageTypes.Pierce);
     }
 
     public void UpdateUserSprite(Stats stats, bool wieldMainHand, bool remove)
     {
-        if (stats.entity.isPlayer && !string.IsNullOrEmpty(renderer.onPlayer))
+        if (stats.entity.isPlayer && !renderer.onPlayer.NullOrEmpty())
         {
             DynamicSpriteController dsc = stats.GetComponent<DynamicSpriteController>();
 
@@ -306,7 +306,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public int CalculateDamage(int strength, int proficiency)
     {
-        Damage nDmg = damage + modifier.damage;
+        Damage nDmg = new Damage(damage + modifier.damage);
 
         if (HasCComponent<CItemLevel>())
         {
@@ -841,6 +841,18 @@ public class Item : ComponentHolder<CComponent>, IAsset
         return new SItem(ID, modifier.ID, amount, displayName, props, damage, armor, components, statMods);
     }
 
+    public bool HasTag(string tag)
+    {
+        CTags cTags = GetCComponent<CTags>();
+
+        if (cTags == null)
+        {
+            return false;
+        }
+
+        return cTags.HasTag(tag);
+    }
+
     public void AddComponent(CComponent comp)
     {
         components.Add(comp);
@@ -1033,6 +1045,17 @@ public class Item : ComponentHolder<CComponent>, IAsset
             string player = (dat["Display"].ContainsKey("On Player")) ? dat["Display"]["On Player"].ToString() : "";
             string slot = (dat["Display"].ContainsKey("Layer")) ? dat["Display"]["Layer"].ToString() : "";
             renderer = new ItemRenderer(ItemUtility.GetRenderLayer(slot), ground, player);
+        }
+
+        if (dat.ContainsKey("Tags"))
+        {
+            CTags tags = new CTags();
+            for (int i = 0; i < dat["Tags"].Count; i++)
+            {
+                tags.AddTag(dat["Tags"][i].ToString());
+            }
+
+            AddComponent(tags);
         }
     }
 
