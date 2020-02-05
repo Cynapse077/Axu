@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using LitJson;
 using MoonSharp.Interpreter;
 
@@ -156,7 +157,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public void OnHit(Entity myEntity, Entity attackedEntity)
     {
-        RunCommands_Params("OnHit", attackedEntity, myEntity);
+        RunCommands("OnHit", attackedEntity, myEntity);
 
         if (attackedEntity == null)
         {
@@ -206,7 +207,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public void OnBlock(Entity myEntity, Entity targetEntity)
     {
-        RunCommands_Params("OnBlock", targetEntity, myEntity);
+        RunCommands("OnBlock", targetEntity, myEntity);
     }
 
     public void OnConsume(Stats stats)
@@ -214,8 +215,10 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (HasProp(ItemProperty.Replacement_Limb)) 
         {
             //TODO: Add training for limbs here?
-            //List<ItemProperty> props = new List<ItemProperty>(properties);
-            //stats.entity.body.TrainLimbOfType(props.ToArray());
+            for (int i = 0; i < 10; i++)
+            {
+                stats.entity.body.TrainLimbOfType(properties.ToArray());
+            }
         }
         else
         {
@@ -245,7 +248,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
     }
     #endregion
 
-    public void RunCommands(string action, Entity ent)
+    public void RunCommands(string action, params object[] obj)
     {
         //Loop in case we have multiple of the same component type.
         foreach (CComponent comp in components)
@@ -253,33 +256,17 @@ public class Item : ComponentHolder<CComponent>, IAsset
             switch (comp.ID)
             {
                 case "Console":
-                    CConsole cc = (CConsole)comp;
-                    cc.RunCommand(action);
+                    if (comp is CConsole cc)
+                    {
+                        cc.RunCommand(action);
+                    }
                     break;
 
                 case "LuaEvent":
-                    CLuaEvent cl = (CLuaEvent)comp;
-                    cl.CallEvent(action, ent);
-                    break;
-            }
-        }
-    }
-
-    public void RunCommands_Params(string action, params object[] obj)
-    {
-        //Loop in case we have multiple of the same component type.
-        foreach (CComponent comp in components)
-        {
-            switch (comp.ID)
-            {
-                case "Console":
-                    CConsole cc = (CConsole)comp;
-                    cc.RunCommand(action);
-                    break;
-
-                case "LuaEvent":
-                    CLuaEvent cl = (CLuaEvent)comp;
-                    cl.CallEvent_Params(action, obj);
+                    if (comp is CLuaEvent cl)
+                    {
+                        cl.CallEvent(action, obj);
+                    }
                     break;
             }
         }
@@ -287,14 +274,10 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public int GetAttackAPCost()
     {
-        if (HasProp(ItemProperty.Very_Quick))
-            return 5;
-        if (HasProp(ItemProperty.Quick))
-            return 8;
-        if (HasProp(ItemProperty.Slow))
-            return 12;
-        if (HasProp(ItemProperty.Very_Slow))
-            return 15;
+        if (HasProp(ItemProperty.Very_Quick)) return 5;
+        if (HasProp(ItemProperty.Quick)) return 8;
+        if (HasProp(ItemProperty.Slow)) return 12;
+        if (HasProp(ItemProperty.Very_Slow)) return 15;
 
         return 10;
     }
@@ -313,22 +296,20 @@ public class Item : ComponentHolder<CComponent>, IAsset
             nDmg.Sides += GetCComponent<CItemLevel>().DamageBonus();
         }
 
-        int newDamage = nDmg.Roll() + (strength / 2 - 1) + proficiency + 1;
-
-        return newDamage;
+        return nDmg.Roll() + (strength / 2 - 1) + proficiency + 1;
     }
 
     public int ThrownDamage(int proficiency, int dex)
     {
         Damage nDmg = (HasProp(ItemProperty.Throwing_Wep)) ? damage : new Damage(1, 3, 0, DamageTypes.Blunt);
-        int newDamage = nDmg.Roll() + (dex / 2 - 1) + proficiency;
+        int totalDmg = nDmg.Roll() + (dex / 2 - 1) + proficiency;
 
         if (HasProp(ItemProperty.Throwing_Wep))
         {
-            newDamage += proficiency;
+            totalDmg += proficiency;
         }
 
-        return newDamage;
+        return totalDmg;
     }
 
     void ChangeStats(Stats stats, bool reverseEffect = false)
@@ -352,27 +333,31 @@ public class Item : ComponentHolder<CComponent>, IAsset
             {
                 case "Haste":
                     if (!reverseEffect)
+                    {
                         stats.AddStatusEffect("Haste", mod.Amount);
+                    }
                     break;
                 case "Health":
                     stats.health += am;
                     break;
                 case "Max Health":
-                    stats.maxHealth += am;
-                    stats.health += am;
+                    stats.ChangeAttribute("Health", am);
                     break;
                 case "Stamina":
                     stats.stamina += am;
                     break;
                 case "Max Stamina":
-                    stats.maxStamina += am;
-                    stats.stamina += am;
+                    stats.ChangeAttribute("Stamina", am);
                     break;
                 case "Storage Capacity":
                     if (stats.entity.inventory != null)
+                    {
                         stats.entity.inventory.AddRemoveStorage(am);
+                    }
                     else
+                    {
                         stats.GetComponent<Inventory>().AddRemoveStorage(am);
+                    }
                     break;
                 case "Light":
                     if (stats.entity.isPlayer && World.tileMap != null)
@@ -385,10 +370,6 @@ public class Item : ComponentHolder<CComponent>, IAsset
                     {
                         stats.Attributes["Accuracy"] += am;
                     }
-                    break;
-                case "Endurance":
-                    stats.maxHealth += (am * 3);
-                    stats.maxStamina += am;
                     break;
             }
         }
@@ -421,10 +402,12 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (HasProp(ItemProperty.Cure_Radiation))
         {
             stats.radiation = 0;
+
             if (stats.hasTrait("RadPoison"))
             {
                 stats.RemoveTrait("RadPoison");
             }
+
             CombatLog.SimpleMessage("Reduce_Rad");
         }
 
@@ -583,14 +566,10 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public int Charges()
     {
-        if (HasProp(ItemProperty.Ranged))
-            return (!HasCComponent<CFirearm>()) ? 1 : GetCComponent<CFirearm>().curr;
-        else if (HasCComponent<CRot>())
-            return GetCComponent<CRot>().current;
-        else if (HasCComponent<CCharges>())
-            return GetCComponent<CCharges>().current;
-        else
-            return 0;
+        if (HasProp(ItemProperty.Ranged)) return (!HasCComponent<CFirearm>()) ? 1 : GetCComponent<CFirearm>().curr;
+        else if (HasCComponent<CRot>()) return GetCComponent<CRot>().current;
+        else if (HasCComponent<CCharges>()) return GetCComponent<CCharges>().current;
+        else return 0;
     }
 
     public void Preserve()
@@ -689,20 +668,13 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public ItemProperty GetSlot()
     {
-        if (properties.Contains(ItemProperty.Slot_Head))
-            return ItemProperty.Slot_Head;
-        else if (properties.Contains(ItemProperty.Slot_Back))
-            return ItemProperty.Slot_Back;
-        else if (properties.Contains(ItemProperty.Slot_Chest))
-            return ItemProperty.Slot_Chest;
-        else if (properties.Contains(ItemProperty.Slot_Arm))
-            return ItemProperty.Slot_Arm;
-        else if (properties.Contains(ItemProperty.Slot_Leg))
-            return ItemProperty.Slot_Leg;
-        else if (properties.Contains(ItemProperty.Slot_Wing))
-            return ItemProperty.Slot_Wing;
-        else if (properties.Contains(ItemProperty.Slot_Tail))
-            return ItemProperty.Slot_Tail;
+        if (properties.Contains(ItemProperty.Slot_Head)) return ItemProperty.Slot_Head;
+        else if (properties.Contains(ItemProperty.Slot_Back)) return ItemProperty.Slot_Back;
+        else if (properties.Contains(ItemProperty.Slot_Chest)) return ItemProperty.Slot_Chest;
+        else if (properties.Contains(ItemProperty.Slot_Arm)) return ItemProperty.Slot_Arm;
+        else if (properties.Contains(ItemProperty.Slot_Leg)) return ItemProperty.Slot_Leg;
+        else if (properties.Contains(ItemProperty.Slot_Wing)) return ItemProperty.Slot_Wing;
+        else if (properties.Contains(ItemProperty.Slot_Tail)) return ItemProperty.Slot_Tail;
 
         return ItemProperty.None;
     }
@@ -739,19 +711,27 @@ public class Item : ComponentHolder<CComponent>, IAsset
     public string InvDisplay(string natWep, bool forceArmor = false, bool forceWeapon = false, bool ranged = false)
     {
         if (modifier == null)
+        {
             modifier = new ItemModifier();
+        }
 
         if (ID == natWep)
+        {
             return "<color=grey>" + Name + "</color>";
+        }
 
         if (ID == "stump")
         {
             string disp = "<color=red>" + Name + "</color>";
 
             if (forceWeapon)
+            {
                 disp += " " + DisplayDamage();
+            }
             else if (forceArmor)
+            {
                 disp += " " + DisplayArmor();
+            }
 
             return disp;
         }
@@ -761,7 +741,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (amount > 1)
         {
             if (ranged && HasProp(ItemProperty.Throwing_Wep))
+            {
                 return (baseName + " x" + amount);
+            }
 
             return (HasProp(ItemProperty.Weapon)) ? baseName + " x" + amount + DisplayDamage() : baseName + " x" + amount;
         }
@@ -771,11 +753,20 @@ public class Item : ComponentHolder<CComponent>, IAsset
         }
 
         if (forceWeapon)
+        {
             return baseName + " " + DisplayDamage();
+        }
+
         if (forceArmor)
+        {
             return baseName + " " + DisplayArmor();
+        }
+
         if (HasProp(ItemProperty.Weapon))
+        {
             return baseName + " " + ((armor == 0) ? DisplayDamage() : DisplayArmor());
+        }
+
         if (HasProp(ItemProperty.Ranged))
         {
             int sh = GetCComponent<CFirearm>().shots;
@@ -861,7 +852,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
     public void CopyFrom(Item other)
     {
         if (other == null)
+        {
             return;
+        }
 
         ID = other.ID;
         ModID = other.ModID;
@@ -902,6 +895,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         }
 
         properties.Clear();
+
         foreach (ItemProperty pr in other.properties)
         {
             AddProperty(pr);
@@ -923,7 +917,10 @@ public class Item : ComponentHolder<CComponent>, IAsset
     public bool CanReplaceBP()
     {
         if (HasProp(ItemProperty.Armor))
+        {
             return false;
+        }
+
         return (HasProp(ItemProperty.Severed_BodyPart) || HasProp(ItemProperty.Slot_Arm) || HasProp(ItemProperty.Slot_Back)
             || HasProp(ItemProperty.Slot_Chest) || HasProp(ItemProperty.Slot_Head) || HasProp(ItemProperty.Slot_Leg)
             || HasProp(ItemProperty.Slot_Tail) || HasProp(ItemProperty.Slot_Wing));
@@ -931,7 +928,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     bool OnUseReject()
     {
-        return (!HasProp(ItemProperty.Weapon) && !HasProp(ItemProperty.Armor) && !HasProp(ItemProperty.Ranged));
+        return !HasProp(ItemProperty.Weapon) && !HasProp(ItemProperty.Armor) && !HasProp(ItemProperty.Ranged);
     }
 
     public enum AttackType
@@ -1007,7 +1004,10 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (dat.ContainsKey("Damage Types"))
         {
             if (dat["Damage Types"].Count > 0)
+            {
                 damageTypes.Clear();
+            }
+
             for (int d = 0; d < dat["Damage Types"].Count; d++)
             {
                 string dmg = dat["Damage Types"][d].ToString();
@@ -1023,7 +1023,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         }
         else
         {
-            attackType = (ContainsDamageType(DamageTypes.Claw)) ? AttackType.Claw : AttackType.Bash;
+            attackType = ContainsDamageType(DamageTypes.Claw) ? AttackType.Claw : AttackType.Bash;
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections.Generic;
 using LitJson;
 
@@ -76,9 +77,10 @@ public class Liquid : IWeighted, IAsset
 
     public void Drink(Stats stats)
     {
-        if (events.Find(x => x.evName == "OnDrink") != null)
+        var ev = events.FirstOrDefault(x => x.evName == "OnDrink");
+        if (ev != null)
         {
-            events.Find(x => x.evName == "OnDrink").CallEvent_Params("OnDrink", stats);
+            ev.CallEvent("OnDrink", stats);
         }
 
         if (addictiveness > 0 && (World.difficulty.Level == Difficulty.DiffLevel.Rogue || World.difficulty.Level == Difficulty.DiffLevel.Hunted))
@@ -89,17 +91,19 @@ public class Liquid : IWeighted, IAsset
 
     public void Splash(Stats stats)
     {
-        if (events.Find(x => x.evName == "OnSplash") != null)
+        var ev = events.FirstOrDefault(x => x.evName == "OnSplash");
+        if (ev != null)
         {
-            events.Find(x => x.evName == "OnSplash").CallEvent_Params("OnSplash", stats);
+            ev.CallEvent("OnSplash", stats);
         }
     }
 
     public void Coat(Item item)
     {
-        if (events.Find(x => x.evName == "OnCoat") != null)
+        var ev = events.FirstOrDefault(x => x.evName == "OnCoat");
+        if (ev != null)
         {
-            events.Find(x => x.evName == "OnCoat").CallEvent_Params("OnCoat", item);
+            ev.CallEvent("OnCoat", item);
         }
     }
 

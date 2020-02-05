@@ -3,7 +3,6 @@
 [System.Serializable]
 public class Character
 {
-
     public string Name;
     public int[] WP;
     public int[] LP;

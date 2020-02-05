@@ -33,10 +33,10 @@ public class EquipmentPanel : UIPanel
         {
             GameObject wep = SimplePool.Spawn(equipmentButton, equipmentBase);
             wep.GetComponentInChildren<Text>().text = hands[i].EquippedItem.InvDisplay(hands[i].baseItem, false, true, false);
+            Color col = hands[i] == curInv.entity.body.MainHand ? Color.yellow : AxuColor.Orange;
 
-            string n = LocalizationManager.GetContent("Slot_Hand") + " " + ((i % 2 == 0) ? LocalizationManager.GetContent("Limb_Right") : LocalizationManager.GetContent("Limb_Left"));
-
-            n = ((hands[i] == curInv.entity.body.MainHand) ? "<color=yellow>" : "<color=orange>") + n + "</color>";
+            string n = (LocalizationManager.GetContent("Slot_Hand") + " " 
+                + ((i % 2 == 0) ? LocalizationManager.GetContent("Limb_Right") : LocalizationManager.GetContent("Limb_Left"))).Color(col);
 
             wep.transform.GetChild(1).GetComponent<Text>().text = n;
             wep.GetComponent<Button>().onClick.AddListener(() => OnSelect(wep.transform.GetSiblingIndex()));
@@ -46,8 +46,8 @@ public class EquipmentPanel : UIPanel
         }
 
         GameObject fire = SimplePool.Spawn(equipmentButton, equipmentBase);
-        fire.GetComponentInChildren<Text>().text = (curInv.firearm == null) ? ItemList.GetNone().Name : curInv.firearm.InvDisplay("none", false, true, true);
-        fire.transform.GetChild(1).GetComponent<Text>().text = "<color=orange>" + LocalizationManager.GetContent("TT_Ranged") + "</color>";
+        fire.GetComponentInChildren<Text>().text = (curInv.firearm == null) ? ItemList.NoneItem.Name : curInv.firearm.InvDisplay("none", false, true, true);
+        fire.transform.GetChild(1).GetComponent<Text>().text = LocalizationManager.GetContent("TT_Ranged").Color(AxuColor.Orange);
         fire.GetComponent<Button>().onClick.AddListener(() => OnSelect(fire.transform.GetSiblingIndex()));
         fire.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
         fire.GetComponent<ItemButton>().icon.sprite = SwitchSprite(curInv.firearm);
@@ -79,7 +79,7 @@ public class EquipmentPanel : UIPanel
             equipmentBase.GetChild(i).GetComponent<ItemButton>().selected = (i == SelectedNum && World.userInterface.column == 0);
         }
 
-        if (World.userInterface.column != 0 || World.userInterface.CurrentState() != UIWindow.Inventory || 
+        if (World.userInterface.column != 0 || World.userInterface.CurrentState != UIWindow.Inventory || 
             World.userInterface.SelectBodyPart || World.userInterface.SelectItemActions)
             return;
 

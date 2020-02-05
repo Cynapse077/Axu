@@ -307,10 +307,14 @@ public class CharacterCreation : MonoBehaviour
         Felony p = professions[profNum];
         InitializePanels();
 
-        AttTexts[0].text = AttTexts[0].GetComponent<LocalizedText>().BaseText + ": <color=orange>" + ((p.ID == "experiment") ? "??" : p.STR.ToString()) + "</color>";
-        AttTexts[1].text = AttTexts[1].GetComponent<LocalizedText>().BaseText + ": <color=orange>" + ((p.ID == "experiment") ? "??" : p.DEX.ToString()) + "</color>";
-        AttTexts[2].text = AttTexts[2].GetComponent<LocalizedText>().BaseText + ": <color=orange>" + ((p.ID == "experiment") ? "??" : p.INT.ToString()) + "</color>";
-        AttTexts[3].text = AttTexts[3].GetComponent<LocalizedText>().BaseText + ": <color=orange>" + ((p.ID == "experiment") ? "??" : p.END.ToString()) + "</color>";
+        AttTexts[0].text = AttTexts[0].GetComponent<LocalizedText>().BaseText + ": " 
+            + ((p.ID == "experiment") ? "??" : p.STR.ToString()).Color(AxuColor.Orange);
+        AttTexts[1].text = AttTexts[1].GetComponent<LocalizedText>().BaseText + ": " 
+            + ((p.ID == "experiment") ? "??" : p.DEX.ToString()).Color(AxuColor.Orange);
+        AttTexts[2].text = AttTexts[2].GetComponent<LocalizedText>().BaseText + ": "
+            + ((p.ID == "experiment") ? "??" : p.INT.ToString()).Color(AxuColor.Orange);
+        AttTexts[3].text = AttTexts[3].GetComponent<LocalizedText>().BaseText + ": " 
+            + ((p.ID == "experiment") ? "??" : p.END.ToString()).Color(AxuColor.Orange);
         pNameText.text = "The " + p.name;
         pDescText.text = p.description;
 
@@ -357,7 +361,7 @@ public class CharacterCreation : MonoBehaviour
 
         for (int z = 0; z < p.skills.Count; z++)
         {
-            Ability s = new Ability(GameData.Get<Ability>(p.skills[z].Name));
+            Ability s = GameData.Get<Ability>(p.skills[z].Name).Clone();
             GameObject g = SimplePool.Spawn(textPrefab, abilAnchor);
             string desc = s.Description.Contains("[ROLL]") ? s.Description.Replace("[ROLL]", s.totalDice.ToString()) : s.Description;
             g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", s.Name, desc);
@@ -602,8 +606,8 @@ public class CharacterCreation : MonoBehaviour
             Manager.playerBuilder.attributes["Charisma"] += appliedTraits[i].GetStatIncrease("Charisma");
         }
 
-        Manager.playerBuilder.hp = Manager.playerBuilder.maxHP;
-        Manager.playerBuilder.st = Manager.playerBuilder.maxST;
+        Manager.playerBuilder.hp = Manager.playerBuilder.maxHP + Manager.playerBuilder.attributes["Endurance"];
+        Manager.playerBuilder.st = Manager.playerBuilder.maxST + Manager.playerBuilder.attributes["Endurance"] / 2;
 
         SetupEquipment();
 
@@ -611,8 +615,8 @@ public class CharacterCreation : MonoBehaviour
 
         for (int i = 0; i < currentProf.skills.Count; i++)
         {
-            Ability s = new Ability(GameData.Get<Ability>(currentProf.skills[i].Name));
-            FlagsHelper.Set(ref s.origin, Ability.AbilityOrigin.Book);
+            Ability s = GameData.Get<Ability>(currentProf.skills[i].Name).Clone();
+            s.origin.Set(Ability.AbilityOrigin.Natrual);
 
             Manager.playerBuilder.abilities.Add(s);
         }
@@ -644,7 +648,7 @@ public class CharacterCreation : MonoBehaviour
 
     void SetupEquipment()
     {
-        Manager.playerBuilder.firearm = ItemList.GetNone();
+        Manager.playerBuilder.firearm = ItemList.NoneItem;
         Manager.playerBuilder.bodyParts = new List<BodyPart>();
         Manager.playerBuilder.items = new List<Item>();
         Manager.playerBuilder.bodyParts = EntityList.GetBodyStructure(currentProf.bodyStructure);

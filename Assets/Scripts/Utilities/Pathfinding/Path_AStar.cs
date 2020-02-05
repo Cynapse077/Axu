@@ -25,17 +25,24 @@ namespace Pathfinding
 
         public override bool Equals(object obj)
         {
-            return obj is CoordPair;
+            if (!(obj is CoordPair))
+            {
+                return false;
+            }
+
+            CoordPair pair = (CoordPair)obj;
+
+            return pair.first == first && pair.second == second;
         }
 
         public static bool operator ==(CoordPair c1, CoordPair c2)
         {
-            return c1 == c2;
+            return c1.Equals(c2);
         }
 
         public static bool operator !=(CoordPair c1, CoordPair c2)
         {
-            return c1 != c2;
+            return !c1.Equals(c2);
         }
 
         public override int GetHashCode()

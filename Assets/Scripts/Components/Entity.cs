@@ -267,7 +267,7 @@ public class Entity : MonoBehaviour
         {
             if (npc.AI.isFollower() && !npc.AI.npcBase.HasFlag(NPC_Flags.Deteriortate_HP))
             {
-                if (npc.stats.health < npc.stats.maxHealth || npc.stats.stamina < npc.stats.maxStamina)
+                if (npc.stats.health < npc.stats.MaxHealth || npc.stats.stamina < npc.stats.MaxStamina)
                 {
                     return true;
                 }
@@ -318,7 +318,7 @@ public class Entity : MonoBehaviour
                     resting = false;
                 }
 
-                if (stats.health < stats.maxHealth || stats.stamina < stats.maxStamina || FollowersNeedHealing())
+                if (stats.health < stats.MaxHealth || stats.stamina < stats.MaxStamina || FollowersNeedHealing())
                     Wait();
                 else
                     resting = false;
@@ -1145,8 +1145,11 @@ public class Entity : MonoBehaviour
 
     public void CreateBloodstain(bool overrideRandom = false, int chance = 6)
     {
-        if (!GameSettings.Particle_Effects || SeedManager.combatRandom.Next(100) < chance && !overrideRandom || !isPlayer && AI.npcBase.HasFlag(NPC_Flags.No_Blood))
+        if (!GameSettings.Particle_Effects || SeedManager.combatRandom.Next(100) < chance && !overrideRandom 
+            || !isPlayer && AI.npcBase.HasFlag(NPC_Flags.No_Blood))
+        {
             return;
+        }
 
         int tNum = World.tileMap.GetTileID(posX, posY);
 
@@ -1171,7 +1174,7 @@ public class Entity : MonoBehaviour
 
             if (SeedManager.combatRandom.Next(100) < 10)
             {
-                stats.MyLevel.XP = 0;
+                stats.level.XP = 0;
             }
 
             if (SeedManager.combatRandom.Next(100) < 10)
@@ -1399,7 +1402,7 @@ public class Entity : MonoBehaviour
             handItems.Add(handItem);
         }
 
-        PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, MyName, Manager.profName, stats.MyLevel, myStats,
+        PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, MyName, Manager.profName, stats.level, myStats,
             World.tileMap.WorldPosition, myPos, World.tileMap.currentElevation, traits, stats.proficiencies.GetProfs(),
             bodyParts, inventory.gold, items, handItems, inventory.firearm.ToSerializedItem(), sskills, stats.Attributes["Charisma"], 
             quests, World.turnManager.currentWeather, ObjectManager.playerJournal.AllFlags());

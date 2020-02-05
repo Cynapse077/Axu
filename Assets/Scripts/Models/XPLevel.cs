@@ -5,6 +5,7 @@ public class XPLevel
     public int CurrentLevel { get; set; }
     public int XP { get; set; }
     public int XPToNext { get; set; }
+    public const int MaxLevel = 50;
     const int Lvl_1_XP_Next = 100;
     private Stats myStats;
 
@@ -26,13 +27,13 @@ public class XPLevel
 
     public void AddXP(int amount)
     {
-        if (CurrentLevel < 30)
+        if (CurrentLevel < MaxLevel)
         {
             XP += amount;
 
             while (XP >= XPToNext)
             {
-                if (CurrentLevel >= 30)
+                if (CurrentLevel >= MaxLevel)
                 {
                     XP = 0;
                     break;

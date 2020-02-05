@@ -6,6 +6,7 @@ function AddMechBodyPart(entity, partID)
 	if (bp ~= nil) then
 		entity.body.AddBodyPart(bp)
 		bp.Attach(entity.stats, true)
+		Log("ASDF")
 	end
 end	
 --Removes it.

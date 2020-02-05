@@ -49,7 +49,7 @@ public struct ItemActions
             Actions.Add(new ItemAction("Eat", "Action_Eat"));
         }
 
-        if (item.HasCComponent<CLiquidContainer>() && item.GetCComponent<CLiquidContainer>().currentAmount() > 0)
+        if (item.HasCComponent<CLiquidContainer>() && item.GetCComponent<CLiquidContainer>().FilledUnits() > 0)
         {
             Actions.Add(new ItemAction("Drink", "Action_Drink"));
             Actions.Add(new ItemAction("Mix", "Action_Mix"));

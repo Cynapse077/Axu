@@ -614,27 +614,27 @@ public class TileMap : MonoBehaviour
     public bool LightPassableTile(int x, int y)
     {
         if (World.OutOfLocalBounds(x, y))
+        {
             return false;
+        }
 
         Tile_Data tData = CurrentMap.map_data[x, y];
+        Cell c = GetCellAt(new Coord(x, y));
+
+        if (c == null)
+        {
+            return false;
+        }
 
         if (CurrentMap.WalkableTile(x, y))
         {
             //HACK: Special logic for doors.
-            if (tData.ID == TileManager.tiles["Door"].ID)
+            if (TileManager.IsTile(tData.ID, "Door") && c.mapObjects.Empty())
             {
-                Cell c = GetCellAt(new Coord(x, y));
-
-                //If there isn't a door there, assume it hasn't spawned yet.
-                if (c == null || c.mapObjects.Empty())
-                {
-                    return false;
-                }
-
-                return c.mapObjects.FindAll(m => m.isDoor_Closed).Empty();
+                return false;
             }
-            else
-                return true;
+
+            return c.mapObjects.FindAll(m => m.objectBase.blueprint.opaque).Empty();
         }
 
         return tData.HasTag("See Through");

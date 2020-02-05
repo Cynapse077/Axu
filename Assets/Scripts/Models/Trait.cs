@@ -64,6 +64,7 @@ public class Trait : IAsset
 
         replaceBodyPart = other.replaceBodyPart;
         turnAcquired = other.turnAcquired;
+        luaCall = other.luaCall;
     }
 
     public Trait(JsonData dat)
@@ -88,6 +89,11 @@ public class Trait : IAsset
         {
             for (int i = 0; i < stats.Count; i++)
             {
+                if (stats[i].Stat == "Storage Capacity")
+                {
+                    continue;
+                }
+
                 if (remove)
                 {
                     int statAmount = stats[i].Amount * -1;
@@ -95,21 +101,13 @@ public class Trait : IAsset
                 }
 
                 if (playerStats.proficiencies.Profs.ContainsKey(stats[i].Stat))
+                {
                     playerStats.proficiencies.Profs[stats[i].Stat].level += stats[i].Amount;
-                else if (stats[i].Stat == "Health")
-                {
-                    playerStats.maxHealth += stats[i].Amount;
-                    playerStats.health += stats[i].Amount;
                 }
-                else if (stats[i].Stat == "Stamina")
+                else
                 {
-                    playerStats.maxStamina += stats[i].Amount;
-                    playerStats.stamina += stats[i].Amount;
+                    playerStats.ChangeAttribute(stats[i].Stat, stats[i].Amount);
                 }
-                else if (stats[i].Stat == "Storage Capacity")
-                    continue;
-                else if (playerStats.Attributes.ContainsKey(stats[i].Stat))
-                    playerStats.Attributes[stats[i].Stat] += stats[i].Amount;
             }
         }
 
@@ -184,13 +182,13 @@ public class Trait : IAsset
                 //Rename parts
                 if (replaceBodyPart.allOfType)
                 {
-                    FlagsHelper.Toggle(ref bps[i].flags, BodyPart.BPTags.CannotWearGear, !replaceBodyPart.canWearGear);
+                    bps[i].flags.Toggle(BodyPart.BPTags.CannotWearGear, !replaceBodyPart.canWearGear);
 
                     if (!replaceBodyPart.canWearGear)
                     {
                         entity.inventory.PickupItem(bps[i].equippedItem);
                         bps[i].equippedItem.OnUnequip(entity, false);
-                        bps[i].equippedItem = ItemList.GetNone();
+                        bps[i].equippedItem = ItemList.NoneItem;
                     }
 
                     if (replaceBodyPart.newEquippedItem != null)
@@ -202,7 +200,7 @@ public class Trait : IAsset
                 {
                     if (i == 0)
                     {
-                        FlagsHelper.Toggle(ref bps[i].flags, BodyPart.BPTags.CannotWearGear, !replaceBodyPart.canWearGear);
+                        bps[i].flags.Toggle(BodyPart.BPTags.CannotWearGear, !replaceBodyPart.canWearGear);
                     }
                 }
             }
@@ -288,14 +286,14 @@ public class Trait : IAsset
             //Set the Can Wear Gear flag back to default.
             if (!replaceBodyPart.canWearGear)
             {
-                FlagsHelper.UnSet(ref entity.body.bodyParts[i].flags, BodyPart.BPTags.CannotWearGear);
+                entity.body.bodyParts[i].flags.UnSet(BodyPart.BPTags.CannotWearGear);
             }
 
             //Reset equipment
             if (replaceBodyPart.newEquippedItem != null && part.slot == replaceBodyPart.slot && part.equippedItem.ID == replaceBodyPart.newEquippedItem)
             {
                 entity.body.bodyParts[i].equippedItem.OnUnequip(entity, false);
-                entity.body.bodyParts[i].equippedItem = ItemList.GetNone();
+                entity.body.bodyParts[i].equippedItem = ItemList.NoneItem;
             }
         }
     }

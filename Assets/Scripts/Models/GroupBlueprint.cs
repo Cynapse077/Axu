@@ -19,7 +19,7 @@ public class NPCGroup_Blueprint : IAsset
 
     public bool CanSpawn(int levelInc = 0)
     {
-        return ObjectManager.playerEntity != null && level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel + levelInc;
+        return ObjectManager.playerEntity != null && level <= ObjectManager.playerEntity.stats.level.CurrentLevel + levelInc;
     }
 
     public bool CanSpawnHere(TileMap_Data tileMapData)
@@ -33,7 +33,7 @@ public class NPCGroup_Blueprint : IAsset
         //Underground
         if (tileMapData.elevation != 0 && tileMapData.vault != null)
         {
-            if (vaultTypes == null || level > ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
+            if (vaultTypes == null || level > ObjectManager.playerEntity.stats.level.CurrentLevel)
             {
                 return false;
             }

@@ -95,7 +95,25 @@ public static class LuaManager
             return null;
         }
 
-        return CallScriptFunction(luaCall.modID, luaCall.scriptName, luaCall.functionName, parameters);
+        var parms = parameters;
+
+        if (!luaCall.variable.NullOrEmpty())
+        {
+            object[] ps = new object[parameters.Length + 1];
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                ps[i] = parameters[i];
+            }
+
+            ps[ps.Length - 1] = luaCall.variable;
+
+            return CallScriptFunction(luaCall.modID, luaCall.scriptName, luaCall.functionName, ps);
+        }
+        else
+        {
+            return CallScriptFunction(luaCall.modID, luaCall.scriptName, luaCall.functionName, parameters);
+        }
     }
 
     public static void SetGlobals()

@@ -18,7 +18,7 @@
                 "Health" : 22,
                 "Stamina" : 20,
 
-                "Defense" : 3,
+                "Defense" : 5,
                 "Strength" : 5,
                 "Dexterity" : 4,
                 "Intelligence" : 6,
@@ -29,7 +29,51 @@
                 "Accuracy" : 1
             },
             "Quest" : "neant_queen",
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "spear" ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 2,
+            "Corpse_Item" : "corpse_human"
+        },
+        {
+            "Name" : "Dr. Barrows",
+            "ID" : "barrows",
+            "Faction" : "villagers",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-doctor.png",
+            "Flags" : [
+                "Human",
+                "Doctor",
+                "Static",
+                "Can_Speak",
+                "Stationary_While_Passive"
+            ],
+            "Position" : { "Zone" : "Ensis Exterior", "x" : 5, "y" : 20, "z" : 0 },
+            "Stats" : {
+                "Health" : 65,
+                "Stamina" : 4,
+
+                "Defense" : 5,
+                "Strength" : 5,
+                "Dexterity" : 4,
+                "Intelligence" : 2,
+                "Endurance" : 4,
+
+                "Speed" : 8,
+                "Perception" : 13,
+                "Accuracy" : 1
+            },
+            "Inventory" : [
+                { "Item" : "bandage", "Max" : 5 },
+                { "Item" : "flask/liquid_regenitrol", "Max" : 2 },
+                { "Item" : "flask/liquid_antidote", "Max" : 2 },
+                { "Item" : "iodine", "Max" : 2 },
+                { "Item" : "leg_peg", "Min" : 0, "Max" : 2 },
+                { "Item" : "arm_hook", "Min" : 0, "Max" : 2 }
+            ],
+            "Quest" : "doctor",
+            "Equipment Set" : "set_villager",
+            "Weapon_Choices" : [ "scalpel" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 2,
             "Corpse_Item" : "corpse_human"
@@ -62,6 +106,7 @@
                 "Accuracy" : 1
             },
             "Quest" : "bounty0",
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "spear" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 2,
@@ -202,6 +247,7 @@
                 "Perception" : 10,
                 "Accuracy" : 2
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "mancleaver" ],
 			"Weapon Skill" : 3,
             "Corpse_Item" : "corpse_human"
@@ -236,6 +282,7 @@
             "Inventory" : [
                 { "Item" : "bullet", "Min" : 50, "Max" : 150 }
             ],
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "shortsword" ],
 			"Weapon Skill" : 2,
             "Firearm" : "sairasrifle",
@@ -280,6 +327,7 @@
             	{ "Item" : "throwingaxe", "Min" : 4, "Max" : 10 }
             ],
             "Quest" : "blacksmith0",
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "halberd" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4,
@@ -348,6 +396,7 @@
                 "Perception" : 11,
                 "Accuracy" : 2
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R3" ],
             "Quest" : "arena0",
             "MaxItems" : 3,
@@ -385,6 +434,7 @@
                 "Perception" : 11,
                 "Accuracy" : 2
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "swordoffate" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4,
@@ -418,6 +468,7 @@
                 "Perception" : 14,
                 "Accuracy" : 2
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4,
@@ -489,6 +540,7 @@
                 "Perception" : 14,
                 "Accuracy" : 2
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "scalpel" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4,
@@ -524,6 +576,7 @@
                 "Perception" : 11,
                 "Accuracy" : 2
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "bastardsword" ],
             "Inventory" : [
             	{ "Item" : "explosive", "Min" : 2, "Max" : 3 },
@@ -564,6 +617,7 @@
                 "Perception" : 10,
                 "Accuracy" : 0
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 1,
             "MaxItemRarity" : 4,
@@ -599,6 +653,7 @@
                 "Perception" : 10,
                 "Accuracy" : 0
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R1" ],
             "Inventory" : [
                 { "Item" : "Random_Book", "Min" : 3, "Max" : 5 }
@@ -643,6 +698,7 @@
                 { "ID" : "firestream", "Level" : 5 },
 				{ "ID" : "drainstamina", "Level" : 1 }
             ],
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "staffofxzol" ],
 			"Weapon Skill" : 3,
             "MaxItems" : 3,
@@ -676,6 +732,7 @@
                 "Perception" : 10,
                 "Accuracy" : 0
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 3,
@@ -713,6 +770,7 @@
             	{ "ID" : "icestream", "Level" : 4 }
             ],
 			"Weapon Skill" : 4,
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "kopesh" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4,
@@ -748,9 +806,8 @@
                 "Perception" : 15,
                 "Accuracy" : 2
             },
-            "Weapon_Choices" : [
-                "fists"
-            ],
+            "Equipment Set" : "set_villager",
+            "Weapon_Choices" : [ "fists" ],
 			"Weapon Skill" : 6,
             "Skills" : [
                 { "ID" : "confsquare", "Level" : 4 },
@@ -792,6 +849,7 @@
             "Skills" : [
                 { "ID" : "shove", "Level" : 5 }
             ],
+            "Equipment Set" : "set_villager",
 			"Weapon Skill" : 3,
             "Weapon_Choices" : [ "smiter" ],
             "MaxItems" : 2,
@@ -1019,6 +1077,7 @@
             "Skills" : [
             	{ "ID" : "help", "Level" : 1 }
             ],
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R1" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 2,
@@ -1052,6 +1111,7 @@
                 { "ID" : "help", "Level" : 1 },
                 { "ID" : "juke", "Level" : 3 }
             ],
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R1" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 2,
@@ -1083,6 +1143,7 @@
                 "Perception" : 15,
                 "Accuracy" : 1
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 1,
             "MaxItemRarity" : 2,
@@ -1148,6 +1209,7 @@
                 { "ID" : "shove", "Level" : 1 },
                 { "ID" : "grapple", "Level" : 4 }
             ],
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R3" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 3,
@@ -1181,6 +1243,7 @@
             "Skills" : [
             	{ "ID" : "help", "Level" : 1 }
             ],
+            "Equipment Set" : "set_farmer",
             "Weapon_Choices" : [ "pitchfork" ],
             "MaxItems" : 1,
             "MaxItemRarity" : 1,
@@ -1212,6 +1275,7 @@
                 "Perception" : 5,
                 "Accuracy" : 1
             },
+            "Equipment Set" : "set_merchant",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "Inventory" : [
                 { "Item" : "Random_R3", "Max" : 2 }
@@ -1260,6 +1324,7 @@
                 { "Item" : "leg_peg", "Min" : 0, "Max" : 2 },
                 { "Item" : "arm_hook", "Min" : 0, "Max" : 2 }
             ],
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [
                 "bonesaw",
                 "scalpel"
@@ -1292,6 +1357,7 @@
                 "Perception" : 15,
                 "Accuracy" : 1
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 2,
@@ -1321,6 +1387,7 @@
                 "Perception" : 16,
                 "Accuracy" : 1
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 3,
@@ -1353,6 +1420,7 @@
                 "Heat Resist" : 50,
                 "Cold Resist" : 50
             },
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 3,
@@ -1389,6 +1457,7 @@
             	{ "ID" : "firestream", "Level" : 3 },
 				{ "ID" : "zapline", "Level" : 3 }
             ],
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 2,
             "MaxItemRarity" : 3,
@@ -1424,6 +1493,7 @@
 			"Skills" : [
             	{ "ID" : "juke", "Level" : 4 }
             ],
+            "Equipment Set" : "set_villager",
             "Weapon_Choices" : [ "Random_Weapon_R4" ],
 			"Weapon Skill" : 5,
             "MaxItems" : 2,
@@ -1446,7 +1516,7 @@
                 "Health" : 32,
                 "Stamina" : 6,
 
-                "Defense" : 3,
+                "Defense" : 2,
                 "Strength" : 4,
                 "Dexterity" : 5,
                 "Intelligence" : 3,
@@ -1459,6 +1529,7 @@
                 "Heat Resist" : 5,
                 "Cold Resist" : 10
             },
+            "Equipment Set" : "set_bandit0",
             "Weapon_Choices" : [ "Random_Weapon_R1" ],
             "Inventory" : [
             	{ "Item" : "throwingknife", "Min" : 0, "Max" : 2 }
@@ -1481,10 +1552,10 @@
                 "Can_Speak"
             ],
             "Stats" : {
-                "Health" : 17,
+                "Health" : 20,
                 "Stamina" : 3,
 
-                "Defense" : 5,
+                "Defense" : 2,
                 "Strength" : 3,
                 "Dexterity" : 5,
                 "Intelligence" : 3,
@@ -1497,6 +1568,7 @@
                 "Heat Resist" : 10,
                 "Cold Resist" : 5
             },
+            "Equipment Set" : "set_bandit1",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "Firearm" : "bow",
             "Inventory" : [
@@ -1520,7 +1592,7 @@
                 "Can_Speak"
             ],
             "Stats" : {
-                "Health" : 17,
+                "Health" : 25,
                 "Stamina" : 3,
 
                 "Defense" : 5,
@@ -1536,6 +1608,7 @@
                 "Heat Resist" : 10,
                 "Cold Resist" : 5
             },
+            "Equipment Set" : "set_bandit0",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "Firearm" : "crossbow",
             "Inventory" : [
@@ -1575,6 +1648,7 @@
                 "Heat Resist" : 10,
                 "Cold Resist" : 5
             },
+            "Equipment Set" : "set_bandit0",
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "Firearm" : "pistol",
             "Inventory" : [
@@ -1601,7 +1675,7 @@
                 "Health" : 39,
                 "Stamina" : 14,
 
-                "Defense" : 6,
+                "Defense" : 5,
                 "Strength" : 8,
                 "Dexterity" : 4,
                 "Intelligence" : 2,
@@ -1614,6 +1688,7 @@
                 "Heat Resist" : 10,
                 "Cold Resist" : 10
             },
+            "Equipment Set" : "set_bandit2",
             "Weapon_Choices" : [
                 "sledgehammer",
                 "greatsword"
@@ -1660,9 +1735,8 @@
                 { "ID" : "firewall", "Level" : 2 },
 				{ "ID" : "drainstamina", "Level" : 1 }
             ],
-            "Weapon_Choices" : [
-                "staff"
-            ],
+            "Equipment Set" : "set_bandit0",
+            "Weapon_Choices" : [ "staff" ],
             "Possible Items" : [
                 { "Item" : "skullmask", "Chance" : 2.5 }
             ],
@@ -1697,6 +1771,7 @@
                 "Heat Resist" : 0,
                 "Cold Resist" : 0
             },
+            "Equipment Set" : "set_bandit0",
             "Weapon_Choices" : [ "stunbaton" ],
             "Firearm" : "huntingrifle",
 			"Weapon Skill" : 2,
@@ -1737,6 +1812,7 @@
                 "Heat Resist" : 20,
                 "Cold Resist" : 20
             },
+            "Equipment Set" : "set_bandit2",
             "Weapon_Choices" : [ "stunbaton" ],
             "Possible Items" : [
                 { "Item" : "skullmask", "Chance" : 5.0 }
@@ -1773,6 +1849,7 @@
                 "Heat Resist" : -50,
                 "Cold Resist" : 50
             },
+            "Equipment Set" : "set_frostborne",
             "Weapon_Choices" : [ "frostbornedagger" ],
             "Possible Items" : [
                 { "Item" : "frostbornecloak", "Chance" : 2.0 }
@@ -1810,6 +1887,7 @@
             "Skills" : [
             	{ "ID" : "icestream", "Level" : 3 }
             ],
+            "Equipment Set" : "set_frostborne",
             "Weapon_Choices" : [
                 "frostborneblade",
                 "frostbornedagger"
@@ -2875,9 +2953,8 @@
             "Skills" : [
                 { "ID" : "vampire", "Level" : 2 }
             ],
-            "Weapon_Choices" : [
-                "fangs"
-            ],
+            "Equipment Set" : "set_villager",
+            "Weapon_Choices" : [ "fangs" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4,
 			"Corpse_Item" : "corpse_vamp"
@@ -3484,9 +3561,7 @@
                 "Heat Resist" : 20,
                 "Cold Resist" : 20
             },
-            "Weapon_Choices" : [
-                "ghostwhip"
-            ],
+            "Weapon_Choices" : [ "ghostwhip" ],
 			"Weapon Skill" : 2,
             "MaxItems" : 3,
             "MaxItemRarity" : 5
@@ -3523,9 +3598,7 @@
             "Inventory" : [
                 { "Item" : "Random_Book", "Min" : 0, "Max" : 1 }
             ],
-            "Weapon_Choices" : [
-                "steelmace"
-            ],
+            "Weapon_Choices" : [ "steelmace" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4
         },
@@ -3560,9 +3633,7 @@
             "Inventory" : [
                 { "Item" : "Random_Book", "Min" : 0, "Max" : 1 }
             ],
-            "Weapon_Choices" : [
-                "flamingpalms"
-            ],
+            "Weapon_Choices" : [ "flamingpalms" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4
         },
@@ -3590,9 +3661,7 @@
                 "Perception" : 10,
                 "Accuracy" : 1
             },
-            "Weapon_Choices" : [
-                "scythe"
-            ],
+            "Weapon_Choices" : [ "scythe" ],
 			"Weapon Skill" : 2,
             "MaxItems" : 3,
             "MaxItemRarity" : 4
@@ -3620,9 +3689,7 @@
                 "Perception" : 10,
                 "Accuracy" : 3
             },
-            "Weapon_Choices" : [
-                "blight"
-            ],
+            "Weapon_Choices" : [ "blight" ],
 			"Weapon Skill" : 5,
             "MaxItems" : 2,
             "MaxItemRarity" : 5
@@ -3650,9 +3717,7 @@
                 "Perception" : 10,
                 "Accuracy" : 3
             },
-            "Weapon_Choices" : [
-                "tentacle"
-            ],
+            "Weapon_Choices" : [ "tentacle" ],
 			"Skills" : [
                 { "ID" : "drainstamina", "Level" : 1 }
             ],
@@ -3691,9 +3756,7 @@
                 { "ID" : "trip", "Level" : 2 },
                 { "ID" : "shove", "Level" : 4 }
             ],
-            "Weapon_Choices" : [
-                "spikedbranch"
-            ],
+            "Weapon_Choices" : [ "spikedbranch" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4
         },
@@ -3726,9 +3789,7 @@
                 { "ID" : "grapple", "Level" : 5 }
             ],
 			"Weapon Skill" : 3,
-            "Weapon_Choices" : [
-                "spikedbranch"
-            ],
+            "Weapon_Choices" : [ "spikedbranch" ],
             "MaxItems" : 3,
             "MaxItemRarity" : 4
         },
@@ -3872,9 +3933,8 @@
                 { "Item" : "Random_R4", "Max" : 1 },
                 { "Item" : "bullet", "Min" : 10, "Max" : 30 }
             ],
-            "Weapon_Choices" : [
-                "Random_Weapon_R3"
-            ],
+            "Equipment Set" : "set_villager",
+            "Weapon_Choices" : [ "Random_Weapon_R3" ],
             "Firearm" : "huntingrifle",
             "MaxItems" : 2,
             "MaxItemRarity" : 3,
@@ -3909,9 +3969,7 @@
                 "Perception" : 9,
                 "Accuracy" : 1
             },
-            "Weapon_Choices" : [
-                "tentacle"
-            ],
+            "Weapon_Choices" : [ "tentacle" ],
 			"Weapon Skill" : 3,
             "Skills" : [
 				{ "ID" : "grapple", "Level" : 4 }
@@ -3943,9 +4001,7 @@
                 "Perception" : 10,
                 "Accuracy" : 1
             },
-            "Weapon_Choices" : [
-                "spiny_legs"
-            ],
+            "Weapon_Choices" : [ "spiny_legs" ],
             "MaxItems" : 1,
             "MaxItemRarity" : 4,
             "Corpse_Item" : "corpse_rad"
@@ -3974,9 +4030,7 @@
                 "Perception" : 9,
                 "Accuracy" : 0
             },
-            "Weapon_Choices" : [
-                "tentacle"
-            ],
+            "Weapon_Choices" : [ "tentacle" ],
             "Skills" : [
 				{ "ID" : "drainstamina", "Level" : 1 }
 			],
@@ -4010,9 +4064,7 @@
                 "Perception" : 7,
                 "Accuracy" : 0
             },
-            "Weapon_Choices" : [
-                "conc_fists"
-            ],
+            "Weapon_Choices" : [ "conc_fists" ],
             "Skills" : [
                 { "ID" : "grapple", "Level" : 5 }
             ],
@@ -4039,9 +4091,8 @@
                 "Perception" : 15,
                 "Accuracy" : 1
             },
-            "Weapon_Choices" : [
-                "fists"
-            ],
+            "Equipment Set" : "set_villager",
+            "Weapon_Choices" : [ "fists" ],
 			"Weapon Skill" : 3,
             "MaxItems" : 2,
             "MaxItemRarity" : 5
@@ -4066,9 +4117,7 @@
                 "Perception" : 15,
                 "Accuracy" : 1
             },
-            "Weapon_Choices" : [
-                "eversightaxe"
-            ],
+            "Weapon_Choices" : [ "eversightaxe" ],
 			"Weapon Skill" : 4,
             "MaxItems" : 2,
             "MaxItemRarity" : 5

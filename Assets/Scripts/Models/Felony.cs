@@ -18,8 +18,11 @@ public class Felony : IAsset
 	public int[] proficiencies;
 	public List<SSkill> skills;
 	public List<StringInt> items;
+    public List<ProgressionLevel> progression;
 	public int startingMoney;
     public string bodyStructure;
+    public int healthPerLevel;
+    public int staminaPerLevel;
 
     public Felony(JsonData dat)
     {
@@ -40,12 +43,15 @@ public class Felony : IAsset
         DEX = (int)dat["Stats"]["Dexterity"];
         INT = (int)dat["Stats"]["Intelligence"];
         END = (int)dat["Stats"]["Endurance"];
-        startingMoney = (int)dat["Money"];
+
+        healthPerLevel = (int)dat["HealthPerLevel"];
+        staminaPerLevel = (int)dat["StaminaPerLevel"];
 
         traits = new string[dat["Traits"].Count];
         items = new List<StringInt>();
         proficiencies = new int[10];
         skills = new List<SSkill>();
+        progression = new List<ProgressionLevel>();
 
         if (dat["Traits"].Count > 0)
         {
@@ -58,6 +64,11 @@ public class Felony : IAsset
                     traits[t] = trait;
                 }
             }
+        }
+
+        if (dat.ContainsKey("Money"))
+        {
+            startingMoney = (int)dat["Money"];
         }
 
         if (dat.ContainsKey("Weapon"))
@@ -96,19 +107,48 @@ public class Felony : IAsset
         SetProf(dat, "Butchery", 10);
         SetProf(dat, "Martial Arts", 11);
 
-        for (int s = 0; s < dat["Skills"].Count; s++)
+        if (dat.ContainsKey("Skills"))
         {
-            string skillName = dat["Skills"][s].ToString();
-            skills.Add(new SSkill(skillName, 1, 0, 0, 0));
+            for (int s = 0; s < dat["Skills"].Count; s++)
+            {
+                string skillName = dat["Skills"][s].ToString();
+                skills.Add(new SSkill(skillName, 1, 0, 0, 0));
+            }
+        }
+
+        if (dat.ContainsKey("Progression"))
+        {
+            for (int i = 0; i < dat["Progression"].Count; i++)
+            {
+                progression.Add(new ProgressionLevel(dat["Progression"][i]));
+            }
         }
     }
 
     void SetProf(JsonData dat, string name, int id)
     {
-        if (dat["Proficiencies"].ContainsKey(name))
+        if (dat.ContainsKey("Proficiencies") && dat["Proficiencies"].ContainsKey(name))
         {
             proficiencies[id] = (int)dat["Proficiencies"][name];
         }
+    }
+
+    public ProgressionLevel GetLevelChanges(int level)
+    {
+        for (int i = 0; i < progression.Count; i++)
+        {
+            if (progression[i].level == level)
+            {
+                return progression[i];
+            }
+        }
+
+        return null;
+    }
+
+    public static Felony PlayerFelony()
+    {
+        return GameData.Get<Felony>(Manager.profName);
     }
 
     public IEnumerable<string> LoadErrors()
@@ -126,6 +166,43 @@ public class Felony : IAsset
         if (bodyStructure.NullOrEmpty())
         {
             yield return "No body structure set.";
+        }
+    }
+}
+
+public class ProgressionLevel
+{
+    public readonly int level;
+    public readonly List<string> abilities = new List<string>();
+    public readonly List<string> traits = new List<string>();
+    public readonly List<Stat_Modifier> stats = new List<Stat_Modifier>();
+
+    public ProgressionLevel(JsonData dat)
+    {
+        level = (int)dat["Level"];
+
+        if (dat.ContainsKey("Abilities"))
+        {
+            for (int i = 0; i < dat["Abilities"].Count; i++)
+            {
+                abilities.Add(dat["Abilities"][i].ToString());
+            }
+        }
+
+        if (dat.ContainsKey("Traits"))
+        {
+            for (int i = 0; i < dat["Traits"].Count; i++)
+            {
+                traits.Add(dat["Traits"][i].ToString());
+            }
+        }
+
+        if (dat.ContainsKey("Stats"))
+        {
+            for (int i = 0; i < dat["Stats"].Count; i++)
+            {
+                stats.Add(new Stat_Modifier(dat["Stats"][i]["Stat"].ToString(), (int)dat["Stats"][i]["Amount"]));
+            }
         }
     }
 }

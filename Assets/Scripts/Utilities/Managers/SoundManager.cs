@@ -166,6 +166,16 @@ public class SoundManager : MonoBehaviour
 
     public void OverrideMusic(AudioClip[] audioClips)
     {
+        //If we have a matching track, don't fade in and out
+        for (int i = 0; i < audioClips.Length; i++)
+        {
+            if (musicSource.clip == audioClips[i])
+            {
+                initialized = true;
+                return;
+            }
+        }
+
         zoneTracks = audioClips;
         StartCoroutine(FadeMusicIn());
         initialized = true;

@@ -107,6 +107,9 @@ public class Mod
         return false;
     }
 
+    /// <summary>
+    /// Occurs upon game startup.
+    /// </summary>
     public void PreLoadData()
     {
         //Sprites
@@ -123,9 +126,10 @@ public class Mod
         //Item folder
         curPath = Path.Combine(filePath, ModUtility.ItemsFoler);
         if (Directory.Exists(curPath))
-        {
+        { 
             AddData<Item>(curPath, "Items.json", "Items");
             AddData<ItemModifier>(curPath, "ItemModifiers.json", "ItemModifiers");
+            AddData<EquipmentSet>(curPath, "EquipmentSets.json", "EquipmentSets");
             AddData<Liquid>(curPath, "Liquids.json", "Liquids");
 
             //Mixing Tables
@@ -145,7 +149,7 @@ public class Mod
         //Entities folder
         curPath = Path.Combine(filePath, ModUtility.EntitiesFolder);
         if (Directory.Exists(curPath))
-        {
+        {            
             AddData<Ability>(curPath, "Abilities.json", "Abilities");
             AddData<Trait>(curPath, "Traits.json", "Traits");
             AddData<Wound>(curPath, "Wounds.json", "Wounds");
@@ -211,6 +215,9 @@ public class Mod
         }
     }
 
+    /// <summary>
+    /// Occurs when a new game is started.
+    /// </summary>
     public void PostLoadData()
     {
         AddData<Quest>(filePath, "Quests.json", "Quests");

@@ -31,15 +31,19 @@ public class SaveData : MonoBehaviour
                 }
             }
 
-            List<SBodyPart> bodyParts = (n.IsFollower()) ? new List<SBodyPart>() : null;
+            List<SBodyPart> bodyParts = new List<SBodyPart>();
 
-            if (n.IsFollower())
+            if (n.IsFollower() || GameData.Get<NPC_Blueprint>(n.ID).equipmentSet != null)
             {
                 for (int j = 0; j < n.bodyParts.Count; j++)
                 {
                     bodyParts.Add(n.bodyParts[j].ToSerializedBodyPart());
                 }
             }
+            else
+            {
+                bodyParts = null;
+            }            
 
             List<SItem> handItems = new List<SItem>();
             for (int j = 0; j < n.handItems.Count; j++)
@@ -49,7 +53,7 @@ public class SaveData : MonoBehaviour
 
             if (n.firearm == null)
             {
-                n.firearm = ItemList.GetNone();
+                n.firearm = ItemList.NoneItem;
             }
 
             List<object[]> atr = new List<object[]>();

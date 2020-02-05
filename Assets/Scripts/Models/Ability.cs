@@ -116,6 +116,11 @@ public class Ability : IAsset
         origin = AbilityOrigin.None;
     }
 
+    public Ability Clone()
+    {
+        return new Ability(this);
+    }
+
     void CopyFrom(Ability other)
     {
         Name = other.Name;
@@ -169,7 +174,7 @@ public class Ability : IAsset
 
     public void AddXP(int amount)
     {
-        if (level >= maxLvl || !CanLevelUp || !FlagsHelper.IsSet(origin, AbilityOrigin.Book))
+        if (level >= maxLvl || !CanLevelUp || !origin.IsSet(AbilityOrigin.Natrual))
         {
             XP = 0;
         }
@@ -279,19 +284,19 @@ public class Ability : IAsset
 
     public void RemoveFlag(AbilityOrigin ab)
     {
-        FlagsHelper.UnSet(ref origin, ab);
+        origin.UnSet(ab);
     }
 
     public void SetFlag(AbilityOrigin ab)
     {
-        FlagsHelper.Set(ref origin, ab);
+        origin.Set(ab);
     }
 
     [System.Flags]
     public enum AbilityOrigin
     {
         None = 0,
-        Book = 1 << 0,
+        Natrual = 1 << 0,
         Trait = 1 << 1,
         Item = 1 << 2, 
         Cybernetic = 1 << 3
@@ -367,7 +372,7 @@ public class Ability : IAsset
                 break;
             case DamageTypes.Blunt:
                 id = 7;
-                effectName = "earth";
+                effectName = "strike";
                 break;
             case DamageTypes.Radiation:
                 id = 8;

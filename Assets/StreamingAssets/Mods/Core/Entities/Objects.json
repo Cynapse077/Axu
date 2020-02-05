@@ -376,6 +376,7 @@
             "Sprite" : "object-bookshelf.png",
             "Physics" : "Solid",
             "Render Layer" : "Front",
+            "Opaque" : true,
             "Description" : "A shelf containing several pieces of literature."
         },
         {
@@ -392,6 +393,7 @@
 			"Sprite" : "object-bookshelf_empty.png",
 			"Physics" : "Solid",
 			"Render Layer" : "Front",
+            "Opaque" : true,
 			"Description" : "This shelf once contained pieces of literature."
 		},
         {
@@ -402,6 +404,7 @@
 			"LuaEvents" : [
                 { "Event" : "OnInteract", "Script" : "Core.Objects.Interact_Cryopod" }
 			],
+            "Opaque" : true,
             "Render Layer" : "Front",
             "Description" : "A pod made to house people in a deep sleep during space travel."
         },
@@ -410,6 +413,7 @@
             "ObjectType" : "Cryopod_Open",
             "Sprite" : "object-cryopod_open.png",
             "Physics" : "Solid",
+            "Opaque" : true,
             "Render Layer" : "Front",
             "Description" : "A pod made to house people in a deep sleep during space travel."
         },
@@ -418,6 +422,7 @@
             "ObjectType" : "CloningChamber_Empty",
             "Sprite" : "object-cloningchamber.png",
             "Physics" : "Solid",
+            "Opaque" : true,
             "Render Layer" : "Front",
             "Description" : "A large vat filled with a viscous green liquid. Its empty chamber is used to clone creatures."
         },
@@ -426,6 +431,7 @@
             "ObjectType" : "CloningChamber_Full",
             "Sprite" : "object-cloningchamber_full.png",
             "Physics" : "Solid",
+            "Opaque" : true,
             "Render Layer" : "Front",
             "Description" : "A large vat filled with a viscous green liquid. It contains some kind of being."
         },
@@ -583,6 +589,7 @@
 			"ObjectType" : "Battery",
 			"Sprite" : "object-battery.png",
 			"Physics" : "Solid",
+            "Opaque" : true,
 			"Render Layer" : "Front",
 			"Description" : "Storage for electrical power."
 		},
@@ -600,6 +607,7 @@
 			"Sprite" : "object-minecart.png",
 			"Render Layer" : "Front",
 			"Physics" : "Solid",
+            "Opaque" : true,
 			"Description" : ""
 		},
 		{
@@ -677,6 +685,7 @@
 			"ObjectType" : "Coffin",
 			"Sprite" : "object-coffin.png",
 			"Physics" : "Solid",
+            "Opaque" : true,
 			"Render Layer" : "Front",
 			"Description" : "Storage for the dead."
 		},
@@ -685,6 +694,7 @@
 			"ObjectType" : "Forge",
 			"Sprite" : "object-forge.png",
 			"Physics" : "Solid",
+            "Opaque" : true,
 			"Render Layer" : "Front",
 			"Description" : "A hearth used for heating metals for blacksmithing."
 		},

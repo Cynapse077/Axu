@@ -85,7 +85,7 @@ public class DialoguePanel : MonoBehaviour
 
     void Update()
     {
-        if (World.userInterface.CurrentState() == UIWindow.Dialogue && transform.childCount > 1)
+        if (World.userInterface.CurrentState == UIWindow.Dialogue && transform.childCount > 1)
         {
             EventSystem.current.SetSelectedGameObject(transform.GetChild(UserInterface.selectedItemNum + 2).gameObject);
         }

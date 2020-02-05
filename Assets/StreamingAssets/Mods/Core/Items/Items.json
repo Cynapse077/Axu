@@ -310,7 +310,7 @@
             }
         },
         {
-            "ID" : "Item_Weapon",
+            "Base" : "Item_Weapon",
         	"ID" : "shockglove",
             "Name" : "Shock Glove",
             "Type" : "Unarmed",
@@ -1456,6 +1456,20 @@
             "Display" : {
 				"On Ground" : "item-helm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-skull.png",
+                "Layer" : "Head"
+            }
+        },
+        {
+            "Base" : "Item_Armor",
+        	"ID" : "strawhat",
+            "Name" : "Straw Hat",
+            "Rarity" : 1,
+            "FlavorText" : "A hat made of straw. They are often worn by farmers and others with jobs putting the wearer in the sun.",
+            "Cost" : 10,
+            "Properties" : [ "Slot_Head" ],
+            "Display" : {
+				"On Ground" : "item-helm.png",
+                "On Player" : "Mods/Core/Art/Player/Heads/char-strawhat.png",
                 "Layer" : "Head"
             }
         },

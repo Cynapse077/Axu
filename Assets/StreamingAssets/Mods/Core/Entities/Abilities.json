@@ -334,6 +334,21 @@
             "Icon" : "Mods/Core/Art/Abilities/ability-spire.png"
         },
         {
+            "Name" : "Energy Storm",
+            "ID" : "energystorm",
+            "Description" : "A ball of lightning zaps a 3x3 square, damaging enemies for [ROLL] damage.",
+            "Dice" : "2d5",
+            "Dice Scale" : "0d1+1",
+            "Stamina Cost" : 6,
+            "Time Cost" : 8,
+            "Cooldown" : 13,
+            "Damage Type" : "Energy",
+            "Cast Type" : "Target",
+            "Script" : "Core.Abilities.Square",
+            "AI" : "Core.AbilityAI.AOE",
+            "Icon" : "Mods/Core/Art/Abilities/ability-lightning.png"
+        },
+        {
             "Name" : "Firestream",
             "ID" : "firestream",
             "Description" : "A stream of flames spray from your hands, dealing <i>[ROLL]</i> damage between you and the target position.",

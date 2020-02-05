@@ -47,22 +47,22 @@ public class BodyPart : IWeighted
 
     public bool external
     {
-        get { return FlagsHelper.IsSet(flags, BPTags.External); }
+        get { return flags.IsSet(BPTags.External); }
     }
 
     public bool organic
     {
-        get { return !FlagsHelper.IsSet(flags, BPTags.Synthetic);  }
+        get { return !flags.IsSet(BPTags.Synthetic);  }
     }
 
     public bool canWearGear
     {
-        get { return !FlagsHelper.IsSet(flags, BPTags.CannotWearGear); }
+        get { return !flags.IsSet(BPTags.CannotWearGear); }
     }
 
     public bool severable
     {
-        get { return !FlagsHelper.IsSet(flags, BPTags.NonSeverable); }
+        get { return !flags.IsSet(BPTags.NonSeverable); }
     }
 
     public void SetXP(double xp, double max)
@@ -76,7 +76,7 @@ public class BodyPart : IWeighted
         Attributes = new List<Stat_Modifier>();
         _baseName = name = na;
         _attached = true;
-        equippedItem = ItemList.GetNone();
+        equippedItem = ItemList.NoneItem;
         slot = itemSlot;
         armor = 1;
         displayName = name;
@@ -88,7 +88,7 @@ public class BodyPart : IWeighted
         Attributes = new List<Stat_Modifier>();
         name = na;
         _attached = att;
-        equippedItem = ItemList.GetNone();
+        equippedItem = ItemList.NoneItem;
         armor = 1;
         displayName = name;
         wounds = new List<Wound>();
@@ -129,9 +129,13 @@ public class BodyPart : IWeighted
     public void AddAttribute(string id, int amount)
     {
         if (Attributes.Find(x => x.Stat == id) != null)
+        {
             Attributes.Find(x => x.Stat == id).Amount += amount;
+        }
         else
+        {
             Attributes.Add(new Stat_Modifier(id, amount));
+        }
     }
 
     public void AddXP(Entity entity, double amount)
@@ -141,7 +145,7 @@ public class BodyPart : IWeighted
             myBody = entity.body;
         }
 
-        if (level >= 5 || FlagsHelper.IsSet(flags, BPTags.Synthetic) || !isAttached || FlagsHelper.IsSet(flags, BPTags.External))
+        if (level >= 5 || flags.IsSet(BPTags.Synthetic) || !isAttached || flags.IsSet(BPTags.External))
         {
             return;
         }
@@ -174,8 +178,8 @@ public class BodyPart : IWeighted
                 break;
             case ItemProperty.Slot_Chest:
             case ItemProperty.Slot_Back:
-                entity.stats.maxHealth += 3;
-                entity.stats.maxStamina += 2;
+                entity.stats.ChangeAttribute("Health", 3);
+                entity.stats.ChangeAttribute("Stamina", 2);
                 break;
             case ItemProperty.Slot_Head:
                 stat = "Intelligence";
@@ -189,7 +193,7 @@ public class BodyPart : IWeighted
                 break;
         }
 
-        if (!string.IsNullOrEmpty(stat))
+        if (!stat.NullOrEmpty())
         {
             GetStatMod(stat).Amount++;
             entity.stats.Attributes[stat]++;
@@ -216,7 +220,7 @@ public class BodyPart : IWeighted
             showMessage = false;
         }
 
-        if (FlagsHelper.IsSet(flags, BPTags.Leprosy) && !stats.hasTrait("leprosy"))
+        if (flags.IsSet(BPTags.Leprosy))
         {
             if (showMessage)
             {
@@ -225,7 +229,7 @@ public class BodyPart : IWeighted
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
         }
-        else if (FlagsHelper.IsSet(flags, BPTags.Crystal) && !stats.hasTrait("crystal"))
+        else if (flags.IsSet(BPTags.Crystal))
         {
             if (showMessage)
             {
@@ -234,7 +238,7 @@ public class BodyPart : IWeighted
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
         }
-        else if (FlagsHelper.IsSet(flags, BPTags.Vampire) && !stats.hasTrait("pre-vamp") && !stats.hasTrait("vmap"))
+        else if (flags.IsSet(BPTags.Vampire) && !stats.hasTrait("vampirism"))
         {
             if (showMessage)
             {
@@ -253,7 +257,7 @@ public class BodyPart : IWeighted
     public void Remove(Stats stats)
     {
         wounds.Clear();
-        FlagsHelper.UnSet(ref flags, BPTags.Synthetic);
+        flags.UnSet(BPTags.Synthetic);
 
         for (int i = 0; i < Attributes.Count; i++)
         {
@@ -273,7 +277,7 @@ public class BodyPart : IWeighted
     {
         if (equippedItem == null || equippedItem.ID == "none")
         {
-            equippedItem = ItemList.GetNone();
+            equippedItem = ItemList.NoneItem;
         }
 
         SHand hnd = null;
@@ -309,8 +313,7 @@ public class BodyPart : IWeighted
                 string message = LocalizationManager.GetContent("Gr_BreakGrip");
                 message = message.Replace("[ATTACKER]", g.myPart.myBody.entity.MyName);
                 message = message.Replace("[DEFENDER]", myBody.entity.MyName);
-                message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message;
-                CombatLog.NewMessage(message + "</color>");
+                CombatLog.NewMessage(message.Color(myBody.entity.isPlayer ? UnityEngine.Color.cyan : AxuColor.Orange));
                 gripsToBreak.Add(g);
             }
         }
@@ -344,8 +347,7 @@ public class BodyPart : IWeighted
         message = message.Replace("[DEFENDER]", part.myBody.entity.MyName);
         message = message.Replace("[ATTACKER_LIMB]", displayName);
         message = message.Replace("[DEFENDER_LIMB]", part.displayName);
-        message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message + "</color>";
-        CombatLog.NewMessage(message);
+        CombatLog.NewMessage(message.Color(myBody.entity.isPlayer ? UnityEngine.Color.cyan : AxuColor.Orange));
     }
 
     public void ReleaseGrip(bool forced)
@@ -361,8 +363,7 @@ public class BodyPart : IWeighted
             message = message.Replace("[ATTACKER]", myBody.entity.MyName);
             message = message.Replace("[DEFENDER]", grip.heldPart.myBody.entity.MyName);
             message = message.Replace("[DEFENDER_LIMB]", grip.heldPart.name);
-            message = (myBody.entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message + "</color>";
-            CombatLog.NewMessage(message);
+            CombatLog.NewMessage(message.Color(myBody.entity.isPlayer ? UnityEngine.Color.cyan : AxuColor.Orange));
         }
 
         grip.Release();
@@ -438,7 +439,7 @@ public class BodyPart : IWeighted
         {
             if (i == null)
             {
-                i = ItemList.GetNone();
+                i = ItemList.NoneItem;
             }
 
             if (arm.myBody == null)
@@ -528,7 +529,7 @@ public class BodyPart : IWeighted
                 rollAgainst -= 3;
             }
 
-            return (rollAgainst > rollFor);
+            return rollAgainst > rollFor;
         }
 
         public bool CanStrangle()

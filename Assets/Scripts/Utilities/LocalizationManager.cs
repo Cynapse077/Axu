@@ -5,8 +5,11 @@ public static class LocalizationManager
     public static TranslatedText GetLocalizedContent(string key)
     {
         var st = GameData.Get<TranslatedText>(key);
+
         if (st == default)
+        {
             return new TranslatedText();
+        }
 
         return st;
     }

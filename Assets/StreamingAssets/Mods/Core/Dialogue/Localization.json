@@ -1216,6 +1216,10 @@
             "Display" : "None"
         },
         {
+            "ID" : "NoneBrackets",
+            "Display" : "<color=grey>[NONE]</color>"
+        },
+        {
             "ID" : "Cannot_Level_Up",
             "Display" : "<color=grey>[Cannot Level Up]</color>"
         },
@@ -1314,6 +1318,94 @@
         {
             "ID" : "Map_Fail",
             "Display" : "The map was too worn to read. You threw it out."
+        },
+        {
+            "ID" : "CybDesc_SyntheticMuscle",
+            "Display" : "The muscles in your arms are interwoven with synthetic materials, increasing their strength. (+2 STR)"
+        },
+        {
+            "ID" : "CybDesc_SubdermalScales",
+            "Display" : "You have small plates under the skin of this body part. They offer increased protection. (+1 Armor)"
+        },
+        {
+            "ID" : "CybDesc_RadScrubber",
+            "Display" : "Your body slowly scrubs away radiation as your heart beats."
+        },
+        {
+            "ID" : "CybDesc_Shielding",
+            "Display" : "You have increased effective health. (+10 HP)"
+        },
+        {
+            "ID" : "CybDesc_FoldingBlade",
+            "Display" : "Your arm sports a curved blade that can be retracted into your flesh."
+        },
+        {
+            "ID" : "CybDesc_ArmCannon",
+            "Display" : "Your arm has a small firearm set above the wrist."
+        },
+        {
+            "ID" : "CybDesc_ImpactSole",
+            "Display" : "Your sole has an impact dampener, reducing sounds made by this leg. (+3 Stealth)"
+        },
+        {
+            "ID" : "CybDesc_NanoRegen",
+            "Display" : "Upon being injured, your body will release nanomachines to help close the wound. (+HP Regen)"
+        },
+        {
+            "ID" : "CybDesc_NanoAdrenal",
+            "Display" : "Your blood is filled with nanomachines that aid in removing fatigue from muscles. (+ST Regen)"
+        },
+        {
+            "ID" : "CybDesc_TargetSensor",
+            "Display" : "Your eyes are able to accurately predict a target's movement. (+2 ACC)"
+        },
+        {
+            "ID" : "CybDesc_SpringTendon",
+            "Display" : "Your achilles tendon is replaced by a stong, yet flexible material. (+SPD)"
+        },
+        {
+            "ID" : "SubstanceAddiction",
+            "Display" : "{0} Addiction"
+        },
+        {
+            "ID" : "Char_Wielded",
+            "Display" : "Wielded: "
+        },
+        {
+            "ID" : "Char_Equipped",
+            "Display" : "Equipped: "
+        },
+        {
+            "ID" : "Char_Cybernetic",
+            "Display" : "Cybernetic:"
+        },
+        {
+            "ID" : "Char_Wounds",
+            "Display" : "Wounds:"
+        },
+        {
+            "ID" : "Char_Status",
+            "Display" : "Status: "
+        },
+        {
+            "ID" : "Char_Stats",
+            "Display" : "Stats:"
+        },
+        {
+            "ID" : "Char_Armor",
+            "Display" : "Armor: "
+        },
+        {
+            "ID" : "Char_Healthy",
+            "Display" : "<color=green>Healthy</color>"
+        },
+        {
+            "ID" : "Char_Injured",
+            "Display" : "<color=yellow>Injured</color>"
+        },
+        {
+            "ID" : "Char_Severed",
+            "Display" : "<color=red>Severed</color>"
         }
     ],
     "YesNo" : [
@@ -2236,7 +2328,7 @@
 		},
 		{
 			"ID" : "Help1",
-			"Display" : "TIP: Mutations can be cured with a very rare liquid called Lunium."
+			"Display" : "TIP: Mutations can be cured with a very rare liquid called Lunium. The selection of which to cure is random."
 		},
 		{
 			"ID" : "Help2",
@@ -2272,11 +2364,11 @@
 		},
 		{
 			"ID" : "Help10",
-			"Display" : "TIP: Holding the Targeted Attack button (Default Left Ctrl) and pressing a movement key allows you to strike at a specific body part of an adjacent creature."
+			"Display" : "TIP: Holding the Targeted Attack button (Default: Left Ctrl/Left Cmd) and pressing a movement key allows you to strike at a specific body part of an adjacent creature."
 		},
 		{
 			"ID" : "Help11",
-			"Display" : "TIP: Holding The Grappling Attack button (Default Left Alt) and pressing a movment key allows you to perform grappling moves on an adjacent target."
+			"Display" : "TIP: Holding The Grappling Attack button (Default: Left Alt) and pressing a movment key allows you to perform grappling moves on an adjacent target."
 		},
 		{
 			"ID" : "Help12",
@@ -2284,7 +2376,7 @@
 		},
 		{
 			"ID" : "Help13",
-			"Display" : "TIP: Spending time in radioactive areas can cause you to mutate."
+			"Display" : "TIP: Spending time in radioactive areas can cause you to mutate or get Radiation Sickness."
 		},
 		{
 			"ID" : "Help14",
@@ -2296,7 +2388,23 @@
 		},
 		{
 			"ID" : "Help16",
-			"Display" : "You can store items in chests at your base by dropping them while standing on the same tile."
-		}
+			"Display" : "TIP: You can store items in chests at your base by dropping them while standing on the same tile."
+		},
+        {
+            "ID" : "Help17",
+            "Display" : "TIP: You can reorganize your abilities and items by pressing the Go Up/Down Stairs keys."
+        },
+        {
+            "ID" : "Help18",
+            "Display" : "TIP: Ranged weapons are very useful for wearing down foes from far away. Throwing an item is also a viable option."
+        },
+        {
+            "ID" : "Help19",
+            "Display" : "TIP: Walking through lava can be very dangerous. A high level of Heat Resistance is required to not take damage. Alternatively, you can fly over any pools of lava."
+        },
+        {
+            "ID" : "Help20",
+            "Display" : "TIP: Vampirism can make you very powerful, but also stunt your growth. You will not be able to level up as a Vampire."
+        }
 	]
 }

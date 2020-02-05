@@ -22,8 +22,8 @@ public class LoadSaveMenu : MonoBehaviour
         loadButtonAnchor.DestroyChildren();
         savedGames = new List<SaveGameObject>();
 
-        string modPath = (Manager.SaveDirectory);
-        string[] ss = Directory.GetFiles(modPath, "*.axu", SearchOption.AllDirectories);
+        string savePath = Manager.SaveDirectory;
+        string[] ss = Directory.GetFiles(savePath, "*.axu", SearchOption.AllDirectories);
 
         GetDataFromDirectory(ss);
 
@@ -66,27 +66,33 @@ public class LoadSaveMenu : MonoBehaviour
     {
         foreach (string s in ss)
         {
-            string jsonString = File.ReadAllText(s);
-            JsonData d = JsonMapper.ToObject(jsonString);
-
-            if (!d.ContainsKey("Player") || !d["Player"].ContainsKey("Name") 
-                || !d.ContainsKey("Version") || !d.ContainsKey("World") || !d["World"].ContainsKey("Time"))
+            try
             {
-                return;
+                string jsonString = File.ReadAllText(s);
+                JsonData d = JsonMapper.ToObject(jsonString);
+
+                if (!d.ContainsKey("Player") || !d["Player"].ContainsKey("Name")
+                    || !d.ContainsKey("Version") || !d.ContainsKey("World") || !d["World"].ContainsKey("Time"))
+                {
+                    return;
+                }
+
+                SaveGameObject sgo = new SaveGameObject()
+                {
+                    charName = d["Player"]["Name"].ToString(),
+                    charProf = d["Player"]["ProfName"].ToString(),
+                    level = (int)d["Player"]["xpLevel"]["CurrentLevel"],
+                    days = ((int)d["World"]["Turn_Num"] / (TurnManager.dayLength + TurnManager.nightLength)) + 1,
+                    version = d["Version"].ToString(),
+                    time = d["World"]["Time"].ToString(),
+                    diffName = ((Difficulty.DiffLevel)(int)d["World"]["Diff"]["Level"]).ToString()
+                };
+                savedGames.Add(sgo);
+            } 
+            catch (System.Exception e)
+            {
+                Log.Error(e);
             }
-
-            SaveGameObject sgo = new SaveGameObject()
-            {
-                charName = d["Player"]["Name"].ToString(),
-                charProf = d["Player"]["ProfName"].ToString(),
-                level = (int)d["Player"]["xpLevel"]["CurrentLevel"],
-                days = ((int)d["World"]["Turn_Num"] / (TurnManager.dayLength + TurnManager.nightLength)) + 1,
-                version = d["Version"].ToString(),
-                time = d["World"]["Time"].ToString(),
-                diffName = ((Difficulty.DiffLevel)((int)d["World"]["Diff"]["Level"])).ToString()
-            };
-
-            savedGames.Add(sgo);
         }
     }
 

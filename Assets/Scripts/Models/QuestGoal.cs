@@ -1088,7 +1088,7 @@ public class Fetch_Homonculus : Goal
             bool canAdd = true;
             BodyPart b = new BodyPart("", true);
             CEquipped ce = items[i].GetCComponent<CEquipped>();
-            b.equippedItem = (ce == null) ? ItemList.GetNone() : ItemList.GetItemByID(ce.itemID);
+            b.equippedItem = (ce == null) ? ItemList.NoneItem : ItemList.GetItemByID(ce.itemID);
 
             switch (items[i].GetSlot())
             {
@@ -1123,7 +1123,7 @@ public class Fetch_Homonculus : Goal
             {   
                 if (!items[i].HasCComponent<CRot>())
                 {
-                    FlagsHelper.Set(ref b.flags, BodyPart.BPTags.Synthetic);
+                    b.flags.Set(BodyPart.BPTags.Synthetic);
                 }
 
                 for (int j = 0; j < items[i].statMods.Count; j++)

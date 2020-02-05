@@ -19,19 +19,26 @@ public class OnHover_SetSelectedIndex : MonoBehaviour, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData ped)
     {
-        if (window != UIWindow.None && World.userInterface.CurrentState() != window)
+        if (window != UIWindow.None && World.userInterface.CurrentState != window 
+            || selectAction != World.userInterface.SelectItemActions || selectBodyPart != World.userInterface.SelectBodyPart)
+        {
             return;
-        if (selectAction != World.userInterface.SelectItemActions || selectBodyPart != World.userInterface.SelectBodyPart)
-            return;
+        }
 
         if (column > 1)
         {
             if (World.userInterface.SelectBodyPart)
+            {
                 World.userInterface.SSPanel.SetSelectedNum(transform.GetSiblingIndex() + offset);
+            }
             else if (World.userInterface.SelectItemActions)
+            {
                 World.userInterface.IAPanel.SetSelectedNum(transform.GetSiblingIndex() + offset);
+            }
             else if (World.userInterface.DPanel.gameObject.activeSelf || World.userInterface.pausePanel.gameObject.activeSelf)
+            {
                 World.userInterface.SetSelectedNumber(transform.GetSiblingIndex() + offset, false);
+            }
         }
         else
         {

@@ -508,6 +508,11 @@ public class ObjectManager : MonoBehaviour
         return null;
     }
 
+    public Inventory NewInventory(string type, Coord locPos, Coord worldPos, int elevation, Item item)
+    {
+        return NewInventory(type, locPos, worldPos, elevation, new List<Item>() { item });
+    }
+
     //Create a new object with an inventory. Return its inventory component.
     public Inventory NewInventory(string type, Coord locPos, Coord worPos, int elevation, List<Item> items = null)
     {

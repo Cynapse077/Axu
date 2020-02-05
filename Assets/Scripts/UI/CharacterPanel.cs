@@ -35,7 +35,7 @@ public class CharacterPanel : MonoBehaviour
         DestroyChildren();
 
         playerName.text = (stats.entity.isPlayer) ? Manager.playerName + " the " + Manager.profName : stats.entity.MyName;
-        level.text = (stats.entity.isPlayer) ? string.Format("Lvl: {0} <color=silver>({1} / {2})xp</color>", stats.MyLevel.CurrentLevel, stats.MyLevel.XP, stats.MyLevel.XPToNext) : "";
+        level.text = (stats.entity.isPlayer) ? string.Format("Lvl: {0} <color=silver>({1} / {2})xp</color>", stats.level.CurrentLevel, stats.level.XP, stats.level.XPToNext) : "";
 
         strength.text = stats.Strength.ToString();
         dexterity.text = stats.Dexterity.ToString();

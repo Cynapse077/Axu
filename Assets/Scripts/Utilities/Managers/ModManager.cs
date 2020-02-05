@@ -44,8 +44,8 @@ public static class ModManager
             }
 
             mods.Sort((x, y) => x.loadOrder.CompareTo(y.loadOrder));
-        }
-        
+        }        
+
         foreach (Mod m in mods)
         {
             if (m.IsActive)

@@ -25,12 +25,11 @@ public class StatusManager
         if (se != null)
         {
             //Combine together if we can.
-            foreach (StatusEffect status in statusEffects)
+            for (int i = 0; i < statusEffects.Count; i++)
             {
-                if (status.GetTooltip() == se.GetTooltip())
+                if (statusEffects[i].GetTooltip() == se.GetTooltip())
                 {
-                    status.turns += se.turns;
-                    return;
+                    statusEffects[i].turns += se.turns;
                 }
             }
 

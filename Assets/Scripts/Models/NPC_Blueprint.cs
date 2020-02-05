@@ -29,6 +29,7 @@ public class NPC_Blueprint : IAsset
     public List<NPC_Flags> flags;
     public List<string> weaponPossibilities;
     public Dictionary<string, int> attributes;
+    public EquipmentSet equipmentSet;
 
     public NPC_Blueprint(JsonData dat)
     {
@@ -61,6 +62,7 @@ public class NPC_Blueprint : IAsset
         zone = other.zone;
         weaponSkill = other.weaponSkill;
         spriteIDs = other.spriteIDs;
+        equipmentSet = other.equipmentSet;
 
         inventory = new KeyValuePair<string, Coord>[other.inventory.Length];
         for (int i = 0; i < other.inventory.Length; i++)
@@ -202,15 +204,23 @@ public class NPC_Blueprint : IAsset
         dat.TryGetString("Quest", out quest);
         dat.TryGetString("Dialogue", out dialogue);
 
+        zone = string.Empty;
+
         if (dat.ContainsKey("Position"))
         {
             localPosition = new Coord((int)dat["Position"]["x"], (int)dat["Position"]["y"]);
             elevation = (int)dat["Position"]["z"];
             zone = dat["Position"]["Zone"].ToString();
         }
-        else
+
+        if (dat.ContainsKey("Equipment Set"))
         {
-            zone = "";
+            equipmentSet = GameData.Get<EquipmentSet>(dat["Equipment Set"].ToString());
+
+            if (equipmentSet == null)
+            {
+                Log.Error(ID + " - equipment set is null.");
+            }
         }
     }
 

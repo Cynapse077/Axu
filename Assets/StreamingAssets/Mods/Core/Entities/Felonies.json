@@ -18,16 +18,41 @@
             	"stealthy",
             	"fastwalk"
             ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
             "Proficiencies" : { "Blade" : 1 },
             "Skills" : [ "juke" ],
             "Weapon" : "dagger",
-            "Items" : [],
-            "Money" : 0         
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "sprint" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Stealth", "Amount" : 2 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "blink" ],
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                }
+            ]
         },
         {
             "Name" : "Murderer",
             "ID" : "murderer",
-            "Description" : "An act of anger is what brought you to this new hell. Strength is your ally.",
+            "Description" : "An act of anger is what brought you to this new hell. Strength and ferocity are your allies.",
             "Body Structure" : "Humanoid",
             "Stats" : {
                 "HP Bonus" : -2,
@@ -42,11 +67,36 @@
                 "healthy",
                 "thickskin"
             ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
             "Proficiencies" : { "Blunt" : 1 },
             "Skills" : [ "charge" ],
             "Weapon" : "club",
-            "Items" : [],
-            "Money" : 0   
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "trip" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "radblast" ],
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                }
+            ]
         },
         {
             "Name" : "Heretic",
@@ -66,11 +116,36 @@
             	"energetic",
             	"vision"
             ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
             "Proficiencies" : { "Polearm" : 1 },
             "Skills" : [ "zapline" ],
             "Weapon" : "staff",
-            "Items" : [],
-            "Money" : 0         
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Stamina", "Amount" : 3 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "rockspire" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Intelligence", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "healing0" ],
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                }
+            ] 
         },
         {
             "Name" : "Technophile",
@@ -89,11 +164,37 @@
             "Traits" : [
                 "radresist"
             ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
             "Proficiencies" : { "Firearm" : 1 },
             "Skills" : [ "brace" ],
             "Weapon" : "hatchet",
-            "Items" : [],
-            "Money" : 10
+            "Money" : 10,
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "trip" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "blink" ],
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                }
+            ]
         },
         {
             "Name" : "Experiment",
@@ -112,11 +213,35 @@
             "Traits" : [
             	"experiment"
             ],
-            "Proficiencies" : { "Unarmed" : 1 },
-            "Skills" : [ "sprint" ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+            "Proficiencies" : { "Unarmed" : 1 },            
             "Weapon" : "",
-            "Items" : [],
-            "Money" : 0      
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "confsquare" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Intelligence", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "radblast" ],
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                }
+            ]
         },
         {
         	"Name" : "Smuggler",
@@ -132,13 +257,36 @@
         		"Intelligence" : 5,
         		"Endurance" : 5
         	},
-        	"Traits" : [
-        		"puggishrogue"
-        	],
-        	"Proficiencies" : {},
-        	"Skills" : [],
-        	"Items" : [],
-        	"Money" : 300
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+        	"Traits" : [ "puggishrogue" ],
+            "Skills" : [ "sprint" ],
+        	"Money" : 300,
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "echo" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "spirits" ],
+                    "Stats" : [
+                        { "Stat" : "Intelligence", "Amount" : 1 }
+                    ]
+                }
+            ]
         },
         {
             "Name" : "Fool",
@@ -157,12 +305,38 @@
             "Traits" : [
                 "irritating"
             ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
             "Proficiencies" : { "Misc" : 2 },
-            "Skills" : [],
             "Items" : [
                 { "Item" : "throwingknife", "Amount" : 4 }
             ],
-            "Money" : 50      
+            "Money" : 50,
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "sprint" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "firebreath" ],
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                }
+            ]
         }
     ]
 }

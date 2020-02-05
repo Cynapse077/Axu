@@ -98,7 +98,7 @@ public class Body : MonoBehaviour
         {
             if (bodyParts[i].equippedItem == null || bodyParts[i].equippedItem.Name == "")
             {
-                bodyParts[i].equippedItem = ItemList.GetNone();
+                bodyParts[i].equippedItem = ItemList.NoneItem;
             }
 
             bodyParts[i].myBody = this;
@@ -118,7 +118,7 @@ public class Body : MonoBehaviour
 
     public List<BodyPart> SeverableBodyParts()
     {
-        return bodyParts.FindAll(x => x.isAttached && !FlagsHelper.IsSet(x.flags, BodyPart.BPTags.NonSeverable));
+        return bodyParts.FindAll(x => x.isAttached && !x.flags.IsSet(BodyPart.BPTags.NonSeverable));
     }
 
     public List<BodyPart> TargetableBodyParts()
@@ -280,7 +280,7 @@ public class Body : MonoBehaviour
 
     public void RemoveLimb(int id)
     {
-        if (!bodyParts[id].isAttached || FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.NonSeverable))
+        if (!bodyParts[id].isAttached || bodyParts[id].flags.IsSet(BodyPart.BPTags.NonSeverable))
         {
             return;
         }
@@ -315,7 +315,7 @@ public class Body : MonoBehaviour
             }
         }
 
-        if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.External))
+        if (bodyParts[id].flags.IsSet(BodyPart.BPTags.External))
         {
             //Aizith external. Remove from list
             bodyParts.Remove(bodyParts[id]);
@@ -329,15 +329,15 @@ public class Body : MonoBehaviour
         {
             if (bodyParts[id].organic)
             {
-                if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Leprosy) || MyStats.hasTraitEffect(TraitEffects.Leprosy))
+                if (bodyParts[id].flags.IsSet(BodyPart.BPTags.Leprosy) || MyStats.hasTraitEffect(TraitEffects.Leprosy))
                 {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Leprosy);
                 }
-                else if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Crystal) || MyStats.hasTraitEffect(TraitEffects.Crystallization))
+                else if (bodyParts[id].flags.IsSet(BodyPart.BPTags.Crystal) || MyStats.hasTraitEffect(TraitEffects.Crystallization))
                 {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Crystallization);
                 }
-                else if (FlagsHelper.IsSet(bodyParts[id].flags, BodyPart.BPTags.Vampire) || MyStats.hasTraitEffect(TraitEffects.Vampirism))
+                else if (bodyParts[id].flags.IsSet(BodyPart.BPTags.Vampire) || MyStats.hasTraitEffect(TraitEffects.Vampirism))
                 {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Vampirism);
                 }
@@ -404,7 +404,7 @@ public class Body : MonoBehaviour
             }
         }
 
-        FlagsHelper.UnSet(ref bodyParts[id].flags, BodyPart.BPTags.Synthetic);
+        bodyParts[id].flags.UnSet(BodyPart.BPTags.Synthetic);
     }
 
     public List<BodyPart.Hand> Hands
@@ -475,7 +475,7 @@ public class Body : MonoBehaviour
                 bodyParts[id].hand.SetEquippedItem(ItemList.GetItemByID("fists"), entity);
             }
 
-            bodyParts[id].equippedItem = ItemList.GetNone();
+            bodyParts[id].equippedItem = ItemList.NoneItem;
             bodyParts[id].SetXP(0.0, 1000.0);
 
             if (entity.isPlayer)
@@ -523,7 +523,7 @@ public class Body : MonoBehaviour
 
                 if (bodyParts[i].equippedItem == null)
                 {
-                    bodyParts[i].equippedItem = ItemList.GetNone();
+                    bodyParts[i].equippedItem = ItemList.NoneItem;
                 }
 
                 bodyParts[i].myBody = this;

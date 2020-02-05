@@ -86,9 +86,14 @@ public class Quest : EventContainer, IAsset
         return World.worldMap.worldMapData.GetLandmark(zone);
     }
 
-    public Quest(Quest other)
+    private Quest(Quest other)
     {
         CopyFrom(other);
+    }
+
+    public Quest Clone()
+    {
+        return new Quest(this);
     }
 
     public Quest(JsonData dat)

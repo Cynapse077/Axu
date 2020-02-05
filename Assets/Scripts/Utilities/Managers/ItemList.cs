@@ -8,9 +8,12 @@ public static class ItemList
 {
     const int modChance = 5;
 
-    public static Item GetNone()
+    public static Item NoneItem
     {
-        return new Item(GameData.Get<Item>("none"));
+        get
+        {
+            return new Item(GameData.Get<Item>("none"));
+        }
     }
 
     public static Item GetRandart(Item i)
@@ -120,8 +123,10 @@ public static class ItemList
 
     public static Item GetItemByID(string id)
     {
-        if (string.IsNullOrEmpty(id) || id == GetNone().ID)
-            return GetNone();
+        if (string.IsNullOrEmpty(id) || id == NoneItem.ID)
+        {
+            return NoneItem;
+        }
         else if (id.Contains("Random"))
         {
             return GetRarityByName(id);
@@ -157,7 +162,7 @@ public static class ItemList
 
         if (i == null)
         {
-            return GetNone();
+            return NoneItem;
         }
 
         return new Item(i);
@@ -166,12 +171,15 @@ public static class ItemList
     //Really only used in console
     public static Item GetItemByName(string nam)
     {
-        if (nam == "None" || nam == GetNone().Name)
-            return GetNone();
+        if (nam == "None" || nam == NoneItem.Name)
+        {
+            return NoneItem;
+        }
 
         if (nam.Contains("Random"))
+        {
             return GetRarityByName(nam);
-
+        }
 
         List<Item> ass = GameData.Get<Item>((IAsset asset) => {
             if (asset is Item i)
@@ -206,8 +214,8 @@ public static class ItemList
         }
         else if (rar.Contains("Random_Book"))
         {
-            return GameData.Get<Item>((IAsset asset) => {
-
+            return GameData.Get<Item>((IAsset asset) => 
+            {
                 if (asset is Item i)
                 {
                     return i.HasProp(ItemProperty.Tome);

@@ -37,7 +37,7 @@ public class DialogueController : MonoBehaviour
         {
             if (GameData.TryGet(myNPC.questID, out Quest q))
             {
-                myQuest = new Quest(q);
+                myQuest = q.Clone();
             }            
         }
 

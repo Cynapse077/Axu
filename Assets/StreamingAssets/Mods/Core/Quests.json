@@ -966,6 +966,25 @@
 			],
 			"End Dialogue" : "They're dead? Amazing! I'll meet you at the Home Base, boss!"
 		},
+        {
+            "Name" : "Dr. Barrows' Plea",
+            "ID" : "doctor",
+            "Description" : "Find a <color=yellow>Bone Saw</color> for Dr. Barrows, and he will join you at your home base.",
+            "Start Dialogue" : "If you're looking for your very own physician, look no further. I can join you at your base on one condition: I need a new Bone Saw. Mine was broken in an unfortunate accident during surgery. Quite unfortunate for the fellow I was operating on.\n\nDo we have a deal?",
+            "Rewards" : {
+                "XP" : 120
+            },
+            "Events" : [
+                {
+                    "Event" : "OnComplete",
+                    "Move NPC" : { "NPC" : "barrows", "Coordinate" : "Home", "Local Position" : { "x" : 18, "y" : 11 }, "Elevation" : 0 }
+                }
+            ],
+            "Steps" : [
+                { "Goal" : "Fetch", "Item" : [ "bonesaw", 1 ], "Give To" : "barrows" }
+            ],
+            "End Dialogue" : "Excellent! I hope this one is more durable than the last. I shall meet you at the base. Let me know if you have any medical needs."
+        },
 
 		{
         	"Name" : "Long Pig",
@@ -973,7 +992,7 @@
         	"Description" : "The man known as \"Kilovir\" asked you to gather some human flesh for him to prepare for like-minded allies. 5 pieces would be perfect.",
         	"Start Dialogue" : "I've been watching you. You have a very... peculiar taste, don't you? Don't worry, I'm very much the same, and would like to make you a deal. I have a very nice weapon, perfect for segmenting flesh on humans. All you need to do is bring me some meat. How does that sound?",
 			"Rewards" : {
-				"XP" : 100,
+				"XP" : 300,
 				"Items" : [ "mancleaver" ]
 			},
         	"Events" : [
@@ -1006,14 +1025,14 @@
 				{ "Goal" : "Kill Spawned" },
 				{ "Goal" : "Talk To", "NPC" : "grum" }
 			],
-			"End Dialogue" : "It dead? Good! Grum still hurt though. Get Grum bandage?",
+			"End Dialogue" : "It dead? Good! Grum still hurt though. Get Grum <color=yellow>Bandage</color>?",
 
 			"Chained Quest" : "grum1"
 		},
 		{
 			"Name" : "Grim-Looking Grum",
 			"ID" : "grum1",
-			"Description" : "Grum is injured and requires a bandage.",
+			"Description" : "Grum is injured and requires a <color=yellow>Bandage</color>.",
 			"Rewards" : {
 				"XP" : 100
 			},

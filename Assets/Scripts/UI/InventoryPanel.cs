@@ -27,7 +27,7 @@ public class InventoryPanel : UIPanel
         inventoryBase.DespawnChildren();
 
         Currency.text = "<color=yellow>$</color> " + curInv.gold;
-        Capacity.text = string.Format("<color=olive>({0} / {1})</color>", curInv.items.Count.ToString(), curInv.maxItems.ToString());
+        Capacity.text = string.Format("<color=olive>({0} / {1})</color>", curInv.items.Count, curInv.maxItems);
         SelectedNum = 0;
         SelectedMax = 0;
 
@@ -122,7 +122,8 @@ public class InventoryPanel : UIPanel
             }
         }
 
-        if (!initialized || World.userInterface.CurrentState() != UIWindow.Inventory || World.userInterface.SelectItemActions || World.userInterface.SelectBodyPart)
+        if (!initialized || World.userInterface.CurrentState != UIWindow.Inventory 
+            || World.userInterface.SelectItemActions || World.userInterface.SelectBodyPart)
         {
             return;
         }
@@ -186,7 +187,10 @@ public class InventoryPanel : UIPanel
             if (SelectedMax > 0 && SelectedMax > SelectedNum)
             {
                 if (scroll)
+                {
                     scrollBar.value = 1f - (SelectedNum / (float)curInv.items.Count);
+                }
+
                 EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(SelectedNum).gameObject);
             }
 

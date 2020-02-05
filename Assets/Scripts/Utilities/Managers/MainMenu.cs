@@ -54,8 +54,8 @@ public class MainMenu : MonoBehaviour
         FillDataLists();
         soundManager.InitializeAndPlay();
         partSys.SetActive(true);
-        yield return ModManager.PreInitialized;
         mmp = Instantiate(menuScreen, canvas).GetComponent<MainMenuPanel>();
+        yield break;
     }
 
     void FillDataLists()

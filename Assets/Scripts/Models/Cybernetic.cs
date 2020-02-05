@@ -23,11 +23,16 @@ namespace Augments
             
             for (int i = 0; i < cyberArray.Length; i++)
             {
+                //Avoid duplicates
+                if (cyberArray[i].ID == c.ID)
+                {
+                    return;
+                }
+
                 cybs.Add(cyberArray[i]);
             }
 
             cybs.Add(c);
-
             cyberArray = cybs.ToArray();
         }
 
@@ -98,7 +103,7 @@ namespace Augments
         {
             Name = "Synthetic Muscle";
             ID = "SyntheticMuscle";
-            Desc = "The muscles in your arms are interwoven with synthetic materials, increasing their strength. (+2 STR)";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -129,7 +134,7 @@ namespace Augments
         {
             Name = "Subdermal Scales";
             ID = "SubdermalScales";
-            Desc = "You have small plates under the skin of this body part. They offer increased protection. (+1 Armor)";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -158,7 +163,7 @@ namespace Augments
         {
             Name = "Radiation Scrubber";
             ID = "RadScrubber";
-            Desc = "Your body scrubs away radiation as your heart beats.";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -195,19 +200,18 @@ namespace Augments
         {
             Name = "Shielding";
             ID = "Shielding";
-            Desc = "You have increased effective health. (+10 HP)";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
         {
             base.Attach(bp);
-            bodyPart.myBody.entity.stats.maxHealth += amount;
+            bodyPart.myBody.entity.stats.ChangeAttribute("Health", amount);
         }
 
         public override void Remove()
         {
-            bodyPart.myBody.entity.stats.maxHealth -= amount;
-            bodyPart.myBody.entity.stats.health.Clamp(0, bodyPart.myBody.entity.stats.maxHealth);
+            bodyPart.myBody.entity.stats.ChangeAttribute("Health", -amount);
             base.Remove();
         }
 
@@ -226,7 +230,7 @@ namespace Augments
         {
             Name = "Folding Blade";
             ID = "FoldingBlade";
-            Desc = "Your arm sports a curved blade that can be retracted into your flesh.";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -263,7 +267,7 @@ namespace Augments
         {
             Name = "Arm Cannon";
             ID = "ArmCannon";
-            Desc = "Your arm has a small firearm set above the wrist.";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -281,7 +285,7 @@ namespace Augments
 
         public override void Remove()
         {
-            bodyPart.myBody.entity.inventory.firearm = ItemList.GetNone();
+            bodyPart.myBody.entity.inventory.firearm = ItemList.NoneItem;
             base.Remove();
         }
 
@@ -300,7 +304,7 @@ namespace Augments
         {
             Name = "Impact Sole";
             ID = "ImpactSole";
-            Desc = "Your sole has an impact dampener, reducing sounds made by this leg. (+Stealth)";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -332,7 +336,7 @@ namespace Augments
         {
             Name = "Healing Nanomachines";
             ID = "NanoRegen";
-            Desc = "Upon being injured, your body will release nanomachines to help close the wound. (+HP Regen)";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -364,7 +368,7 @@ namespace Augments
         {
             Name = "Adrenal Nanomachines";
             ID = "NanoAdrenal";
-            Desc = "Your blood is filled with nanomachines that aid in removing fatigue from muscles. (+ST Regen)";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -396,7 +400,7 @@ namespace Augments
         {
             Name = "Target Sensor";
             ID = "TargetSensor";
-            Desc = "Your eyes are able to accurately predict a target's movement. (+ACC)";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)
@@ -428,7 +432,7 @@ namespace Augments
         {
             Name = "Spring Tendon";
             ID = "SpringTendon";
-            Desc = "Your achilles tendon is replaced by a stong, yet flexible material. (+SPD)";
+            Desc = LocalizationManager.GetContent("CybDesc_" + ID);
         }
 
         public override void Attach(BodyPart bp)

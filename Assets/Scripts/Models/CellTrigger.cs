@@ -3,11 +3,11 @@
 public class CellTrigger
 {
     readonly Action<Entity> actionToPerform;
-    readonly ARect rect;
+    readonly IntRect rect;
 
     public CellTrigger(int l, int b, int w, int h, Action<Entity> action)
     {
-        rect = new ARect(l, b, w, h);
+        rect = new IntRect(l, b, w, h);
         actionToPerform = action;
         Init();
     }
@@ -68,7 +68,7 @@ public class CellTrigger
     }
 }
 
-public struct ARect
+public struct IntRect
 {
     public int left, bottom, width, height;
 
@@ -92,7 +92,7 @@ public struct ARect
         get { return bottom + (height / 2); }
     }
 
-    public ARect(int l, int b, int w, int h)
+    public IntRect(int l, int b, int w, int h)
     {
         left = l;
         bottom = b;

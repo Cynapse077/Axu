@@ -73,7 +73,10 @@ public class UserInterface : MonoBehaviour
     {
         get { return SSPanel.gameObject.activeSelf; }
     }
-
+    public UIWindow CurrentState
+    {
+        get { return uiState; }
+    }
     public bool NoWindowsOpen
     {
         get { return uiState == UIWindow.None; }
@@ -146,8 +149,8 @@ public class UserInterface : MonoBehaviour
             else
             {
                 CloseWindows();
-                ObjectManager.playerEntity.stats.health = ObjectManager.playerEntity.stats.maxHealth;
-                ObjectManager.playerEntity.stats.stamina = ObjectManager.playerEntity.stats.maxStamina;
+                ObjectManager.playerEntity.stats.health = ObjectManager.playerEntity.stats.MaxHealth;
+                ObjectManager.playerEntity.stats.stamina = ObjectManager.playerEntity.stats.MaxStamina;
                 ObjectManager.playerEntity.stats.statusEffects.Clear();
                 World.tileMap.GoToArea("Home_Base");
                 World.tileMap.HardRebuild();
@@ -655,7 +658,9 @@ public class UserInterface : MonoBehaviour
     public void Dialogue_Heal()
     {
         if (playerStats.CostToCureWounds() <= 0)
+        {
             return;
+        }
 
         if (playerInventory.gold < playerStats.CostToCureWounds())
         {
@@ -751,15 +756,12 @@ public class UserInterface : MonoBehaviour
         }
     }
 
-    public UIWindow CurrentState()
-    {
-        return uiState;
-    }
-
     public void SelectPressed(int selectedNumOverride = -1)
     {
         if (selectedNumOverride > -1)
+        {
             selectedItemNum = selectedNumOverride;
+        }
 
         //Level Up
         if (uiState == UIWindow.LevelUp)

@@ -21,14 +21,10 @@ public class Addiction
     { 
         get
         {
-            if (ItemList.GetItemByID(addictedID) != null)
-            {
-                return ItemList.GetItemByID(addictedID).DisplayName() + " Addiction";            
-            }
-            else
-            {
-                return ItemList.GetLiquidByID(addictedID).Name + " Addiction";
-            }
+            Item it = ItemList.GetItemByID(addictedID);
+            string substance = it != null ? it.DisplayName() : ItemList.GetLiquidByID(addictedID).Name;
+
+            return string.Format(LocalizationManager.GetContent("SubstanceAddiction"), substance);
         }
     }
 
@@ -122,7 +118,7 @@ public class Addiction
     {
         if (addicted)
         {
-            //Fully Shrugged it off
+            //Fully shrugged it off
             if (timeBetweenDoses >= TimeToCure)
             {
                 Cure(ObjectManager.playerEntity.stats);

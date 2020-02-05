@@ -12,7 +12,7 @@ public class SimpleUI_Lvl : MonoBehaviour {
 	}
 
 	void Update() {
-		if (ObjectManager.playerEntity != null && ObjectManager.playerEntity.stats.MyLevel != null)
-			lvlText.text = ObjectManager.playerEntity.stats.MyLevel.CurrentLevel.ToString();
+		if (ObjectManager.playerEntity != null && ObjectManager.playerEntity.stats.level != null)
+			lvlText.text = ObjectManager.playerEntity.stats.level.CurrentLevel.ToString();
 	}
 }

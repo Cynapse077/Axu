@@ -71,16 +71,6 @@ public class Wound : IAsset
         {
             switch (sm.Stat)
             {
-                case "Health":
-                    bp.myBody.entity.stats.maxHealth += (sm.Amount * am);
-                    bp.myBody.entity.stats.health += (sm.Amount * am);
-                    break;
-
-                case "Stamina":
-                    bp.myBody.entity.stats.maxStamina += (sm.Amount * am);
-                    bp.myBody.entity.stats.stamina += (sm.Amount * am);
-                    break;
-
                 case "Armor":
                     bp.armor += sm.Amount * am;
                     break;

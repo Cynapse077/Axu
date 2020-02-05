@@ -199,13 +199,13 @@ public static class SpawnController
         }
 
         //Random minibosses.
-        if (World.DangerLevel() >= 6 && rng.Next(1000) < ObjectManager.playerEntity.stats.MyLevel.CurrentLevel + 1)
+        if (World.DangerLevel() >= 6 && rng.Next(1000) < ObjectManager.playerEntity.stats.level.CurrentLevel + 1)
         {
             List<NPCGroup_Blueprint> bps = new List<NPCGroup_Blueprint>();
 
             foreach (NPCGroup_Blueprint gb in GameData.GetAll<NPCGroup_Blueprint>())
             {
-                if (gb.ID.Contains("Minibosses") && gb.level <= ObjectManager.playerEntity.stats.MyLevel.CurrentLevel)
+                if (gb.ID.Contains("Minibosses") && gb.level <= ObjectManager.playerEntity.stats.level.CurrentLevel)
                 {
                     bps.Add(gb);
                 }

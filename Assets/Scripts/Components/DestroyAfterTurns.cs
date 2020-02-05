@@ -11,7 +11,7 @@ public class DestroyAfterTurns : MonoBehaviour
         World.turnManager.incrementTurnCounter += IncrementTurnCounter;
     }
 
-    void OnDisAble()
+    void OnDisable()
     {
         World.turnManager.incrementTurnCounter -= IncrementTurnCounter;
     }
@@ -22,12 +22,7 @@ public class DestroyAfterTurns : MonoBehaviour
 
         if (lifeTime <= 0)
         {
-            UnregisterAndDestroy();
+            Destroy(gameObject);
         }
-    }
-
-    void UnregisterAndDestroy()
-    {
-        Destroy(gameObject);
     }
 }

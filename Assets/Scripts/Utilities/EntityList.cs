@@ -116,7 +116,7 @@ public static class EntityList
                         string txt = bpData["Tags"][j].ToString();
 
                         BodyPart.BPTags tag = txt.ToEnum<BodyPart.BPTags>();
-                        FlagsHelper.Set(ref bodyPart.flags, tag);
+                        bodyPart.flags.Set(tag);
                     }
                 }
 
@@ -132,19 +132,23 @@ public static class EntityList
                     bodyPart.hand = new BodyPart.Hand(bodyPart, ItemList.GetItemByID(baseWep), baseWep);
                 }
 
-                bodyPart.equippedItem = bpData.ContainsKey("Default Equipped") ? ItemList.GetItemByID(bpData["Default Equipped"].ToString()) : ItemList.GetItemByID("none");
+                bodyPart.equippedItem = bpData.ContainsKey("Default Equipped") ? ItemList.GetItemByID(bpData["Default Equipped"].ToString()) : ItemList.NoneItem;
                 return bodyPart;
             }
         }
 
-        Debug.LogError("Could not find body part: " + bodyPartID);
         return null;
     }
 
     public static BodyPart GetRandomExtremety()
     {
         List<BodyPart> parts = new List<BodyPart>() {
-            GetBodyPart("head"), GetBodyPart("arm"), GetBodyPart("leg"), GetBodyPart("leg"), GetBodyPart("tail"), GetBodyPart("wing")
+            GetBodyPart("head"),
+            GetBodyPart("arm"),
+            GetBodyPart("leg"),
+            GetBodyPart("leg"),
+            GetBodyPart("tail"),
+            GetBodyPart("wing")
         };
 
         BodyPart bodyPart = parts.GetRandom();

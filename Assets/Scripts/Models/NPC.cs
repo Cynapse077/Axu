@@ -6,7 +6,7 @@ using MoonSharp.Interpreter;
 [MoonSharpUserData]
 public class NPC
 {
-    public string name = "", ID, spriteID;
+    public string name, ID, spriteID;
     public int UID;
     public Coord worldPosition, localPosition;
     public int elevation;
@@ -23,11 +23,6 @@ public class NPC
     public string questID, dialogueID;
     public int maxHealth, maxStamina;
     public int weaponSkill;
-
-    Random RNG
-    {
-        get { return SeedManager.combatRandom; }
-    }
 
     public NPC(string _npcID, Coord wPos, Coord lPos, int ele)
     {
@@ -66,12 +61,12 @@ public class NPC
             return false;
         }
 
-        return (pos == worldPosition && elev == elevation);
+        return pos == worldPosition && elev == elevation;
     }
 
     public bool HasFlag(NPC_Flags flag)
     {
-        return (flags.Contains(flag));
+        return flags.Contains(flag);
     }
 
     public bool IsFollower()
@@ -96,6 +91,12 @@ public class NPC
 
     void FromBlueprint(NPC_Blueprint blueprint)
     {
+        if (blueprint == null)
+        {
+            Log.Error("NPC_Blueprint null.");
+            return;
+        }
+
         name = blueprint.name;
         ID = blueprint.ID;
         faction = blueprint.faction;
@@ -119,7 +120,7 @@ public class NPC
             wep = ItemList.GetItemByID("fists");
         }
 
-        firearm = string.IsNullOrEmpty(blueprint.firearm) ? ItemList.GetNone() : ItemList.GetItemByID(blueprint.firearm);
+        firearm = string.IsNullOrEmpty(blueprint.firearm) ? ItemList.NoneItem : ItemList.GetItemByID(blueprint.firearm);
 
         handItems = new List<Item> { wep };
 
@@ -136,22 +137,36 @@ public class NPC
         }
 
         if (blueprint.corpseItem != null)
+        {
             corpseItem = blueprint.corpseItem;
+        }
 
         if (HasFlag(NPC_Flags.Named_NPC))
         {
             name = NameGenerator.CharacterName(SeedManager.textRandom);
         }
-        else if (!HasFlag(NPC_Flags.Static) && SeedManager.combatRandom.Next(500) < World.DangerLevel() + 1)
+        else if (!HasFlag(NPC_Flags.Static) && RNG.Next(500) < World.DangerLevel() + 1)
         {
             List<Trait> muts = GameData.GetAll<Trait>().FindAll(x => x.effects.Contains(TraitEffects.Mutation));
 
-            for (int i = 0; i < SeedManager.combatRandom.Next(1, 4); i++)
+            for (int i = 0; i < RNG.Next(1, 4); i++)
             {
                 if (muts.Count > 0)
                 {
                     Trait t = muts.GetRandom();
                     traits.Add(t.ID);
+                }
+            }
+        }
+
+        if (blueprint.equipmentSet != null)
+        {
+            for (int i = 0; i < bodyParts.Count; i++)
+            {
+                if (bodyParts[i].canWearGear && bodyParts[i].equippedItem.IsNullOrDefault())
+                {
+                    var it = blueprint.equipmentSet.GetItemForSlot(bodyParts[i].slot);
+                    bodyParts[i].equippedItem = it;
                 }
             }
         }
@@ -166,6 +181,11 @@ public class NPC
     void ShuffleInventory(NPC_Blueprint blueprint)
     {
         inventory = new List<Item>();
+
+        if (blueprint == null)
+        {
+            return;
+        }
 
         if (blueprint.maxItems > 0)
         {
@@ -272,7 +292,7 @@ public class NPC
 
             for (int i = 0; i < RNG.Next(0, 2); i++)
             {
-                inventory.Add(new Item(items.GetRandom(RNG)));
+                inventory.Add(new Item(items.GetRandom(SeedManager.combatRandom)));
             }
         }
     }

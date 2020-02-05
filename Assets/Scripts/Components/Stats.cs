@@ -7,8 +7,8 @@ using MoonSharp.Interpreter;
 public class Stats : MonoBehaviour
 {
     [Header("Main Stats")]
-    public XPLevel MyLevel;
-    public int maxHealth, maxStamina, radiation;
+    public XPLevel level;
+    public int radiation;
 
     [Space(5)]
     [Header("Prefabs")]
@@ -34,6 +34,7 @@ public class Stats : MonoBehaviour
     [HideInInspector] public bool invincible = false;
 
     int _health, _stamina;
+    int maxHealth, maxStamina;
     int healTimer, restoreTimer;
 
     System.Random RNG
@@ -52,6 +53,22 @@ public class Stats : MonoBehaviour
         }
     }
 
+    public int MaxHealth
+    {
+        get
+        {
+            int hp = Mathf.Max(maxHealth + Endurance, 1);
+            return Mathf.Min(hp, 500);
+        }
+    }
+    public int MaxStamina
+    {
+        get
+        {
+            int st = Mathf.Max(maxStamina, 1);
+            return Mathf.Min(st, 200);
+        }
+    }
     public int Strength
     {
         get
@@ -166,11 +183,37 @@ public class Stats : MonoBehaviour
         World.turnManager.incrementTurnCounter -= UpdateStatusEffects;
     }
 
-    public void ChangeAttribute(string attribute, int amount)
+    public void ChangeAttribute(string att, int amount)
     {
-        if (Attributes.ContainsKey(attribute))
+        if (att == "MaxHealth" || att == "Health")
         {
-            Attributes[attribute] += amount;
+            maxHealth += amount;
+            health += amount;
+        }
+        else if (att == "MaxStamina" || att == "Stamina")
+        {
+            maxStamina += amount;
+            stamina += amount;
+        }
+        else if (Attributes.ContainsKey(att))
+        {
+            Attributes[att] += amount;
+        }
+    }
+
+    public void SetAttribute(string att, int amount)
+    {
+        if (att == "MaxHealth" || att == "Health")
+        {
+            maxHealth = amount;
+        }
+        else if (att == "MaxStamina" || att == "Stamina")
+        {
+            maxStamina = amount;
+        }
+        else if (Attributes.ContainsKey(att))
+        {
+            Attributes[att] = amount;
         }
     }
 
@@ -281,9 +324,9 @@ public class Stats : MonoBehaviour
 
     public void GainExperience(int amount)
     {
-        if (MyLevel != null && !hasTraitEffect(TraitEffects.Vampirism))
+        if (level != null && !hasTraitEffect(TraitEffects.Vampirism))
         {
-            MyLevel.AddXP(amount);
+            level.AddXP(amount);
         }
     }
 
@@ -300,14 +343,58 @@ public class Stats : MonoBehaviour
             }
         }
 
-        if (currentLevel % 2 == 0)
+        Felony playerFelony = Felony.PlayerFelony();
+
+        if (playerFelony == null)
         {
-            maxHealth += Mathf.Max((Endurance / 3) + 1, 1);
-            maxStamina += Mathf.Max((Endurance / 3) - 2, 1);
+            return;
         }
 
-        health = maxHealth;
-        stamina += maxStamina;
+        //Felony-based progression       
+        ProgressionLevel pLevel = playerFelony.GetLevelChanges(currentLevel);
+
+        if (pLevel != null)
+        {
+            for (int i = 0; i < pLevel.stats.Count; i++)
+            {
+                ChangeAttribute(pLevel.stats[i].Stat, pLevel.stats[i].Amount);
+                CombatLog.NewMessage(string.Format("<color=green>Your {0} has increased by <color=yellow>{1}</color>.</color>", pLevel.stats[i].Stat, pLevel.stats[i].Amount));
+            }
+
+            for (int i = 0; i < pLevel.traits.Count; i++)
+            {
+                if (!hasTrait(pLevel.traits[i]))
+                {
+                    Trait t = GameData.Get<Trait>(pLevel.traits[i]);
+
+                    if (t != null)
+                    {
+                        AddTrait(new Trait(t));
+                        CombatLog.NewMessage(string.Format("<color=green>You have gained the trait \"<color=yellow>{0}</color>\".</color>", t.name));
+                    }
+                }
+            }
+
+            for (int i = 0; i < pLevel.abilities.Count; i++)
+            {
+                Ability ab = GameData.Get<Ability>(pLevel.abilities[i]);
+
+                if (ab != null)
+                {
+                    if (entity.skills.abilities.Find(x => x.ID == ab.ID) == null)
+                    {
+                        CombatLog.NewMessage(string.Format("<color=green>You have learned the ability \"<color=yellow>{0}</color>\".</color>", ab.Name));
+                    }
+
+                    entity.skills.AddSkill(new Ability(ab), Ability.AbilityOrigin.Natrual);
+                }
+            }
+
+            maxHealth += playerFelony.healthPerLevel;
+            maxStamina += playerFelony.staminaPerLevel;
+            health = MaxHealth;
+            stamina = MaxStamina;
+        }
     }
 
     public int MissChance(Item wep)
@@ -319,7 +406,7 @@ public class Stats : MonoBehaviour
 
         if (HasEffect("Topple"))
         {
-            hitChance -= 5;
+            hitChance -= 10;
         }
 
         return (100 - hitChance);
@@ -358,7 +445,7 @@ public class Stats : MonoBehaviour
 
                 if (ranNum <= chance)
                 {
-                    AddProficiencyXP(proficiencies.Shield, Intelligence / 2 + 1);
+                    AddProficiencyXP(proficiencies.Shield, Intelligence);
                     hands[i].EquippedItem.OnBlock(entity, attacker);
                     return true;
                 }
@@ -496,7 +583,7 @@ public class Stats : MonoBehaviour
 
         if (entity.isPlayer)
         {
-            if (FlagsHelper.IsSet(targetPart.flags, BodyPart.BPTags.Crystal) && damageType.Contains(DamageTypes.Blunt) && RNG.Next(10) == 0 || 
+            if (targetPart.flags.IsSet(BodyPart.BPTags.Crystal) && damageType.Contains(DamageTypes.Blunt) && RNG.Next(10) == 0 || 
                 damageType.Contains(DamageTypes.Cleave) || damageType.Contains(DamageTypes.Slash) && RNG.Next(10) == 0)
                 sever = true;
         }
@@ -674,7 +761,7 @@ public class Stats : MonoBehaviour
 
         if (damage > 0)
         {
-            if (damage >= maxHealth / 5 && RNG.Next(1000) < 5)
+            if (damage >= MaxHealth / 5 && RNG.Next(1000) < 5)
             {
                 targetPart.WoundMe(damageTypes);
             }
@@ -752,9 +839,9 @@ public class Stats : MonoBehaviour
     {
         stamina += amount;
 
-        if (stamina > maxStamina)
+        if (stamina > MaxStamina)
         {
-            stamina = maxStamina;
+            stamina = MaxStamina;
         }
     }
     public void UseStamina(int amount)
@@ -771,6 +858,11 @@ public class Stats : MonoBehaviour
     {
         health += amount;
 
+        if (health > MaxHealth)
+        {
+            health = MaxHealth;
+        }
+
         if (entity.isPlayer)
         {
             CombatLog.NameMessage("Message_Heal", amount.ToString());
@@ -779,9 +871,9 @@ public class Stats : MonoBehaviour
 
     public void RestHP()
     {
-        if (health < maxHealth)
+        if (health < MaxHealth)
         {
-            int amount = maxHealth / 30;
+            int amount = MaxHealth / 30;
             amount = Mathf.Clamp(amount, 1, 50);
 
             if (entity.isPlayer || entity.AI.isFollower())
@@ -793,9 +885,9 @@ public class Stats : MonoBehaviour
 
     public void RestST()
     {
-        if (stamina < maxStamina)
+        if (stamina < MaxStamina)
         {
-            int amount = maxStamina / 30;
+            int amount = MaxStamina / 30;
             amount = Mathf.Clamp(amount, 1, 50);
             stamina += amount;
         }
@@ -1028,8 +1120,8 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
-            FlagsHelper.UnSet(ref MyBody.bodyParts[i].flags, BodyPart.BPTags.Leprosy);
-            FlagsHelper.UnSet(ref MyBody.bodyParts[i].flags, BodyPart.BPTags.Crystal);
+            MyBody.bodyParts[i].flags.UnSet(BodyPart.BPTags.Leprosy);
+            MyBody.bodyParts[i].flags.UnSet(BodyPart.BPTags.Crystal);
 
             for (int j = 0; j < MyBody.bodyParts[i].wounds.Count; j++)
             {
@@ -1067,22 +1159,22 @@ public class Stats : MonoBehaviour
 
         if (!replacementLimb.HasCComponent<CRot>())
         {
-            FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Synthetic);
+            newPart.flags.Set(BodyPart.BPTags.Synthetic);
         }
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Crystallization))
         {
-            FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Crystal);
+            newPart.flags.Set(BodyPart.BPTags.Crystal);
         }
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Leprosy))
         {
-            FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Leprosy);
+            newPart.flags.Set(BodyPart.BPTags.Leprosy);
         }
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Vampirism))
         {
-            FlagsHelper.Set(ref newPart.flags, BodyPart.BPTags.Vampire);
+            newPart.flags.Set(BodyPart.BPTags.Vampire);
         }
 
         CombatLog.NameItemMessage("Replace_Limb", MyBody.bodyParts[limbIndex].displayName, newLimbName);
@@ -1107,7 +1199,7 @@ public class Stats : MonoBehaviour
         }
         else
         {
-            MyBody.bodyParts[limbIndex].equippedItem = ItemList.GetNone();
+            MyBody.bodyParts[limbIndex].equippedItem = ItemList.NoneItem;
         }
 
 
@@ -1254,7 +1346,7 @@ public class Stats : MonoBehaviour
     //Called from Lua
     public List<BodyPart> UnCrystallizedParts()
     {
-        return MyBody.bodyParts.FindAll(x => !FlagsHelper.IsSet(x.flags, BodyPart.BPTags.Crystal) && !FlagsHelper.IsSet(x.flags, BodyPart.BPTags.Synthetic));
+        return MyBody.bodyParts.FindAll(x => !x.flags.IsSet(BodyPart.BPTags.Crystal) && !x.flags.IsSet(BodyPart.BPTags.Synthetic));
     }
 
     public bool IsFlying()
@@ -1264,17 +1356,17 @@ public class Stats : MonoBehaviour
             return false;
         }
 
-        return (MyInventory.CanFly());
+        return MyInventory.CanFly();
     }
 
     void TerrainEffects()
     {
         int tileNum = World.tileMap.GetTileID(entity.posX, entity.posY);
 
-        bool lavaExists = TileManager.GetByName("Lava") != null;
-
-        if (lavaExists && Attributes.ContainsKey("Heat Resist") && HeatResist < 80 && tileNum == TileManager.tiles["Lava"].ID && !MyInventory.CanFly())
+        if (TileManager.IsTile(tileNum, "Lava") && Attributes.ContainsKey("Heat Resist") && HeatResist < 80 && !MyInventory.CanFly())
+        {
             IndirectAttack(RNG.Next(5), DamageTypes.Heat, null, "<color=orange>lava</color>", true, false, false);
+        }
     }
 
     public int StealthCheck()
@@ -1290,7 +1382,7 @@ public class Stats : MonoBehaviour
                     continue;
                 }
 
-                if (!World.tileMap.PassThroughableTile(entity.posX + x, entity.posY + y))
+                if (!World.tileMap.LightPassableTile(entity.posX + x, entity.posY + y))
                 {
                     currentStealth++;
                 }
@@ -1461,23 +1553,29 @@ public class Stats : MonoBehaviour
 
     public int health
     {
-        get { return _health; }
+        get
+        {
+            return Mathf.Clamp(_health, 0, MaxHealth);
+        }
         set
         {
             _health = value;
             hpChanged?.Invoke();
-            _health = Mathf.Clamp(_health, 0, maxHealth);
+            _health = Mathf.Clamp(_health, 0, MaxHealth);
         }
     }
 
     public int stamina
     {
-        get { return _stamina; }
+        get
+        {
+            return Mathf.Clamp(_stamina, 0, MaxStamina);
+        }
         set
         {
             _stamina = value;
             stChanged?.Invoke();
-            _stamina = Mathf.Clamp(_stamina, 0, maxStamina);
+            _stamina = Mathf.Clamp(_stamina, 0, MaxStamina);
         }
     }
 

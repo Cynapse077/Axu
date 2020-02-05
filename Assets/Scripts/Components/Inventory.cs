@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 
@@ -14,14 +15,8 @@ public class Inventory : MonoBehaviour
     Item _firearm;
     int _maxItems = 15;
 
-    Stats stats
-    {
-        get { return entity.stats; }
-    }
-    Body body
-    {
-        get { return entity.body; }
-    }
+    Stats stats { get { return entity.stats; } }
+    Body body { get { return entity.body; } }
 
     public int maxItems
     {
@@ -74,9 +69,13 @@ public class Inventory : MonoBehaviour
     public void Init()
     {
         if (entity.isPlayer)
+        {
             GetFromBuilder(Manager.playerBuilder);
+        }
         else
+        {
             GetFromNPC();
+        }
     }
 
     public void SetStorage(int amount)
@@ -126,7 +125,7 @@ public class Inventory : MonoBehaviour
         }
 
         if (!entity.isPlayer && entity.AI.npcBase.HasFlag(NPC_Flags.Flying) || stats.HasEffect("Float") 
-            || EquippedItems() != null && EquippedItems().Find(x => x.HasProp(ItemProperty.Flying)) != null)
+            || EquippedItems().Find(x => x.HasProp(ItemProperty.Flying)) != null)
         {
             return true;
         }
@@ -136,7 +135,7 @@ public class Inventory : MonoBehaviour
 
     public bool HasItem(string id)
     {
-        return items.Find(x => x.ID == id) != null;
+        return items.Any(x => x.ID == id);
     }
 
     public Item GetItem(string id)
@@ -157,9 +156,19 @@ public class Inventory : MonoBehaviour
 
         if (i.HasCComponent<CLiquidContainer>() && World.tileMap.GetCellAt(destination) != null && World.tileMap.GetCellAt(destination).entity != null)
         {
-            if (i.GetCComponent<CLiquidContainer>().sLiquid != null)
+            CLiquidContainer container = i.GetCComponent<CLiquidContainer>();
+
+            if (container.sLiquid != null)
             {
-                i.GetCComponent<CLiquidContainer>().Pour(World.tileMap.GetCellAt(destination).entity);
+                for (int j = 0; j < container.FilledUnits(); j++)
+                {
+                    if (container.isEmpty())
+                    {
+                        break;
+                    }
+
+                    container.Pour(World.tileMap.GetCellAt(destination).entity);                    
+                }                
             }
 
             if (!i.HasProp(ItemProperty.Quest_Item) && !i.HasProp(ItemProperty.Artifact))
@@ -167,6 +176,7 @@ public class Inventory : MonoBehaviour
                 RemoveInstance(i);
                 Destroy(exp.gameObject);
                 CombatLog.NameMessage("Item_Impact_Shatter", i.Name);
+                return;
             }
         }
         else if (SeedManager.combatRandom.Next(100) < 12 + stats.proficiencies.Throwing.level)
@@ -320,7 +330,7 @@ public class Inventory : MonoBehaviour
                 PickupItem(firearm, true);
             }
 
-            firearm = ItemList.GetNone();
+            firearm = ItemList.NoneItem;
         }
     }
 
@@ -386,11 +396,6 @@ public class Inventory : MonoBehaviour
         }
 
         BodyPart.Hand hand = hands[armIndex];
-        
-        if (hand == null)
-        {
-            Debug.LogError("Inventory.Wield() - Selected hand does not exist.");
-        }
 
         if (hand.EquippedItem.HasProp(ItemProperty.Cannot_Remove) && hand.EquippedItem.ID != hand.baseItem)
         {
@@ -448,7 +453,7 @@ public class Inventory : MonoBehaviour
         {
             b.equippedItem.OnUnequip(entity, false);
             PickupItem(b.equippedItem, overrideMax);
-            b.equippedItem = ItemList.GetNone();
+            b.equippedItem = ItemList.NoneItem;
             entity.Wait();
         }
     }
@@ -464,9 +469,14 @@ public class Inventory : MonoBehaviour
         if (i.HasCComponent<CCharges>() && !i.UseCharge())
         {
             if (i.HasProp(ItemProperty.DestroyOnZeroCharges) && i.GetCComponent<CCharges>().current <= 0)
+            {
                 RemoveInstance(i);
+            }
             else
+            {
                 Alert.NewAlert("No_Charges", UIWindow.Inventory);
+            }
+
             return;
         }
 
@@ -550,7 +560,7 @@ public class Inventory : MonoBehaviour
 
                     if (s != null)
                     {
-                        eSkills.AddSkill(s, Ability.AbilityOrigin.Book);
+                        eSkills.AddSkill(s, Ability.AbilityOrigin.Natrual);
                         CombatLog.NameMessage("Learn_Skill", skill.Name);
                     }
                 }
@@ -585,10 +595,15 @@ public class Inventory : MonoBehaviour
 
         for (int i = 0; i < items.Count; i++)
         {
-            if (items[i].HasProp(ItemProperty.Throwing_Wep) || items[i].HasCComponent<CLiquidContainer>() && items[i].GetCComponent<CLiquidContainer>().sLiquid != null)
+            if (items[i].HasProp(ItemProperty.Throwing_Wep) || items[i].HasCComponent<CLiquidContainer>() 
+                && items[i].GetCComponent<CLiquidContainer>().sLiquid != null)
+            {
                 tItems.Add(items[i]);
+            }
             else
+            {
                 ntItems.Add(items[i]);
+            }
         }
 
         tItems.AddRange(ntItems);
@@ -668,11 +683,13 @@ public class Inventory : MonoBehaviour
         if (i == firearm)
         {
             if (i.stackable && i.amount > 0)
+            {
                 i.amount--;
+            }
             else
             {
                 firearm.OnUnequip(entity, false);
-                firearm = ItemList.GetNone();
+                firearm = ItemList.NoneItem;
             }
         }
         else if (items.Contains(i))
@@ -849,7 +866,7 @@ public class Inventory : MonoBehaviour
                 newItem.GetCComponent<CRot>().current = item.GetCComponent<CRot>().current;
             }
 
-            if (!FlagsHelper.IsSet(corpse.parts[i].Flgs, BodyPart.BPTags.Synthetic))
+            if (!corpse.parts[i].Flgs.IsSet(BodyPart.BPTags.Synthetic))
             {
                 if (randomNumer > (butcheryLevel + 1) * 10)
                 {
@@ -868,12 +885,18 @@ public class Inventory : MonoBehaviour
 
                 if (newItem != null)
                 {
-                    if (FlagsHelper.IsSet(corpse.parts[i].Flgs, BodyPart.BPTags.Leprosy) || corpse.lep)
+                    if (corpse.parts[i].Flgs.IsSet(BodyPart.BPTags.Leprosy) || corpse.lep)
+                    {
                         newItem.AddProperty(ItemProperty.OnAttach_Leprosy);
-                    else if (FlagsHelper.IsSet(corpse.parts[i].Flgs, BodyPart.BPTags.Crystal))
+                    }
+                    else if (corpse.parts[i].Flgs.IsSet(BodyPart.BPTags.Crystal))
+                    {
                         newItem.AddProperty(ItemProperty.OnAttach_Crystallization);
-                    else if (FlagsHelper.IsSet(corpse.parts[i].Flgs, BodyPart.BPTags.Vampire) || corpse.vamp)
+                    }
+                    else if (corpse.parts[i].Flgs.IsSet(BodyPart.BPTags.Vampire) || corpse.vamp)
+                    {
                         newItem.AddProperty(ItemProperty.OnAttach_Vampirism);
+                    }
 
                     if (corpse.cann)
                     {
@@ -943,7 +966,7 @@ public class Inventory : MonoBehaviour
 
     public bool HasSpearEquipped()
     {
-        List<BodyPart.Hand> hands = body.Hands;
+        var hands = body.Hands;
 
         for (int i = 0; i < hands.Count; i++)
         {
@@ -976,7 +999,7 @@ public class Inventory : MonoBehaviour
 
     public void Drop(Item i)
     {
-        if (entity == null || World.userInterface.CurrentState() == UIWindow.Inventory && !entity.isPlayer && i.HasProp(ItemProperty.Unique))
+        if (entity == null || World.userInterface.CurrentState == UIWindow.Inventory && !entity.isPlayer && i.HasProp(ItemProperty.Unique))
         {
             return;
         }
@@ -988,10 +1011,12 @@ public class Inventory : MonoBehaviour
             Item newItem = new Item(i) { amount = 1 };
 
             if (otherInventory != null)
+            {
                 otherInventory.PickupItem(newItem);
+            }
             else
             {
-                World.objectManager.NewInventory("Loot", new Coord(entity.myPos), World.tileMap.WorldPosition, World.tileMap.currentElevation, new List<Item>() { newItem });
+                World.objectManager.NewInventory("Loot", new Coord(entity.myPos), World.tileMap.WorldPosition, World.tileMap.currentElevation, newItem);
             }
         }
 
@@ -1183,7 +1208,7 @@ public class Inventory : MonoBehaviour
 
         if (firearm == null)
         {
-            firearm = ItemList.GetNone();
+            firearm = ItemList.NoneItem;
         }
 
         if (body.bodyParts != null)
@@ -1192,7 +1217,7 @@ public class Inventory : MonoBehaviour
             {
                 if (b.equippedItem == null)
                 {
-                    b.equippedItem = ItemList.GetNone();
+                    b.equippedItem = ItemList.NoneItem;
                 }
             }
         }
@@ -1223,22 +1248,22 @@ public class Inventory : MonoBehaviour
 
     public bool CanAfford(int cost)
     {
-        return (gold >= cost);
+        return gold >= cost;
     }
 
     public bool OverCapacity()
     {
-        return (items.Count > maxItems);
+        return items.Count > maxItems;
     }
 
     public bool IsNoneItem(Item i)
     {
-        return (i.ID == ItemList.GetNone().ID);
+        return i.ID == ItemList.NoneItem.ID;
     }
 
     public bool DiggingEquipped()
     {
-        return (EquippedItems().Find(x => x.HasProp(ItemProperty.Dig)) != null);
+        return EquippedItems().Any(x => x.HasProp(ItemProperty.Dig));
     }
 
     void GetFromNPC()
@@ -1269,6 +1294,6 @@ public class Inventory : MonoBehaviour
 
         body.GetFromBuilder(builder);
         gold = builder.money;
-        GameObject.FindObjectOfType<AmmoPanel>().Display(firearm != null && firearm.ID != "none");
+        GameObject.FindObjectOfType<AmmoPanel>().Display(!firearm.IsNullOrDefault());
     }
 }

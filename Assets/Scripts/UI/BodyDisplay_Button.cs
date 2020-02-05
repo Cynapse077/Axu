@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Text;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -42,62 +43,74 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             bpTitle.text = bodyPart.displayName;
 
-            string health = (bodyPart.isAttached ? "<color=green>Healthy</color>" : "<color=red>Severed</color>");
+            string health = bodyPart.isAttached ? "Char_Healthy" : "Char_Severed";
 
             if (bodyPart.isAttached && bodyPart.Crippled)
             {
-                health = "<color=yellow>Injured</color>";
+                health = "Char_Injured";
             }
 
             if (bodyPart.equippedItem == null)
             {
-                bodyPart.equippedItem = ItemList.GetNone();
+                bodyPart.equippedItem = ItemList.NoneItem;
             }
 
-            string wielded = (bodyPart.hand != null && bodyPart.hand.EquippedItem != null ? "\nWielded: " + bodyPart.hand.EquippedItem.InvDisplay("", false, true) : "");
+            string wielded = (bodyPart.hand != null && bodyPart.hand.EquippedItem != null 
+                ? "\n" + LocalizationManager.GetContent("Char_Wielded") + bodyPart.hand.EquippedItem.InvDisplay("", false, true) 
+                : string.Empty);
+            string equipped = bodyPart.equippedItem.IsNullOrDefault() 
+                ? string.Empty 
+                : "\n" + LocalizationManager.GetContent("Char_Equipped") + bodyPart.equippedItem.DisplayName();
 
-            string desc = "Status: " + health + 
-                "\nEquipped: " + bodyPart.equippedItem.DisplayName() + 
-                wielded +
-                "\nArmor: <color=grey>[" + (bodyPart.armor + bodyPart.equippedItem.armor + bodyPart.myBody.entity.stats.Defense).ToString() + "]</color>" +
-                "\n\nStats:\n";
+            StringBuilder sb = new StringBuilder();
+            sb.Append(LocalizationManager.GetContent("Char_Status") + LocalizationManager.GetContent(health));
+            sb.Append(equipped + wielded);
+            sb.Append("\n" + LocalizationManager.GetContent("Char_Armor") + "<color=grey>[" 
+                + (bodyPart.armor + bodyPart.equippedItem.armor + bodyPart.myBody.entity.stats.Defense).ToString() 
+                + "]</color>\n");
 
-            for (int i = 0; i < bodyPart.Attributes.Count; i++)
+            if (bodyPart.Attributes.Count > 0)
             {
-                desc += "  - " + LocalizationManager.GetContent(bodyPart.Attributes[i].Stat) + " <color=orange>(" + bodyPart.Attributes[i].Amount + ")</color>\n";
+                sb.Append("\n" + LocalizationManager.GetContent("Char_Stats") + "\n");
+                for (int i = 0; i < bodyPart.Attributes.Count; i++)
+                {
+                    sb.Append("  - " + LocalizationManager.GetContent(bodyPart.Attributes[i].Stat));
+                    sb.Append(" <color=orange>(" + bodyPart.Attributes[i].Amount + ")</color>\n");
+                }
             }
 
-            desc += "\nCybernetic:\n";
+            sb.Append("\n" + LocalizationManager.GetContent("Char_Cybernetic") + "\n");
 
             if (bodyPart.cybernetic != null)
             {
-                desc += "  <color=silver>" + bodyPart.cybernetic.Name + "</color> - <i>" + bodyPart.cybernetic.Desc + "</i>\n";
+                sb.Append("  <color=silver>" + bodyPart.cybernetic.Name + "</color> - <i>");
+                sb.Append(bodyPart.cybernetic.Desc + "</i>\n");
             }
             else
             {
-                desc += "  <color=grey>[N/A]</color>\n";
+                sb.Append(" " + LocalizationManager.GetContent("NoneBrackets") + "\n");
             }
 
-            desc += "\nWounds:\n";
+            sb.Append("\n" + LocalizationManager.GetContent("Char_Wounds") + "\n");
 
             if (bodyPart.wounds.Count == 0)
             {
-                desc += "  <color=grey>[NONE]</color>\n";
+                sb.Append(" " + LocalizationManager.GetContent("NoneBrackets") + "\n");
             }
             else
             {
                 for (int i = 0; i < bodyPart.wounds.Count; i++)
                 {
-                    desc += "  - <color=red>" + bodyPart.wounds[i].Name + "</color>\n";
+                    sb.Append("  - <color=red>" + bodyPart.wounds[i].Name + "</color>\n");
 
                     for (int j = 0; j < bodyPart.wounds[i].statMods.Count; j++)
                     {
-                        desc += "    - " + LocalizationManager.GetContent(bodyPart.wounds[i].statMods[j].Stat) + " " + bodyPart.wounds[i].statMods[j].Amount + "\n";
+                        sb.Append("    - " + LocalizationManager.GetContent(bodyPart.wounds[i].statMods[j].Stat) + " " + bodyPart.wounds[i].statMods[j].Amount + "\n");
                     }
                 }
             }
 
-            bpDescription.text = desc;
+            bpDescription.text = sb.ToString();
 
             if (display != null)
             {

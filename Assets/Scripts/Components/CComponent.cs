@@ -9,13 +9,17 @@ public class CComponent
     public string ID;
 
     public CComponent() { }
+    public CComponent(string id)
+    {
+        ID = id;
+    }
 
     public CComponent Clone()
     {
         return (CComponent)MemberwiseClone();
     }
 
-    public virtual void OnRemove() {}
+    public virtual void OnRemove() { }
 
     public virtual string ExtraInfo()
     {
@@ -63,20 +67,15 @@ public class CCharges : CComponent
     public int current;
     public int max;
 
-    public CCharges()
-    {
-        ID = "Charges";
-    }
+    public CCharges() : base("Charges") { }
 
-    public CCharges(int _max)
+    public CCharges(int _max) : base("Charges")
     {
-        ID = "Charges";
         current = max = _max;
     }
 
-    public CCharges(int _cur, int _max)
+    public CCharges(int _cur, int _max) : base("Charges")
     {
-        ID = "Charges";
         current = _cur;
         max = _max;
     }
@@ -88,15 +87,13 @@ public class CRechargeTurns : CComponent
     public int current;
     public int max;
 
-    public CRechargeTurns()
+    public CRechargeTurns() : base("RechargeTurns")
     {
-        ID = "RechargeTurns";
         World.turnManager.incrementTurnCounter += OnTurn;
     }
 
-    public CRechargeTurns(int current, int max)
+    public CRechargeTurns(int current, int max) : base("RechargeTurns")
     {
-        ID = "RechargeTurns";
         this.current = current;
         this.max = max;
 
@@ -142,13 +139,9 @@ public class CRot : CComponent
 {
     public int current;
 
-    public CRot()
+    public CRot() : base("Rot") { }
+    public CRot(int _cur) : base("Rot")
     {
-        ID = "Rot";
-    }
-    public CRot(int _cur)
-    {
-        ID = "Rot";
         current = _cur;
     }
 
@@ -165,13 +158,9 @@ public class CCorpse : CComponent
     public string owner;
     public bool cann, rad, lep, vamp;
 
-    public CCorpse()
+    public CCorpse() : base("Corpse") { }
+    public CCorpse(List<BodyPart> _parts, string _owner, bool _cannibalism, bool _rad, bool _lep, bool _vamp) : base("Corpse")
     {
-        ID = "Corpse";
-    }
-    public CCorpse(List<BodyPart> _parts, string _owner, bool _cannibalism, bool _rad, bool _lep, bool _vamp)
-    {
-        ID = "Corpse";
         owner = _owner;
         cann = _cannibalism;
         rad = _rad;
@@ -186,9 +175,8 @@ public class CCorpse : CComponent
         }
     }
 
-    public CCorpse(List<SBodyPart> _parts, string _owner, bool _cannibalism)
+    public CCorpse(List<SBodyPart> _parts, string _owner, bool _cannibalism) : base("Corpse")
     {
-        ID = "Corpse";
         owner = _owner;
         cann = _cannibalism;
 
@@ -202,13 +190,9 @@ public class CEquipped : CComponent
     public string itemID;
     public string baseItemID;
 
-    public CEquipped()
+    public CEquipped() : base("Equipped") { }
+    public CEquipped(string _itemID, string _baseID) : base("Equipped")
     {
-        ID = "Equipped";
-    }
-    public CEquipped(string _itemID, string _baseID)
-    {
-        ID = "Equipped";
         itemID = _itemID;
         baseItemID = _baseID;
     }
@@ -234,14 +218,9 @@ public class CFirearm : CComponent
     public int curr;
     public string currentAmmo;
 
-    public CFirearm()
+    public CFirearm() : base("Firearm") { }
+    public CFirearm(int _cur, int _max, int _shots, string _ammoID) : base("Firearm")
     {
-        ID = "Firearm";
-    }
-
-    public CFirearm(int _cur, int _max, int _shots, string _ammoID)
-    {
-        ID = "Firearm";
         curr = _cur;
         max = _max;
         shots = _shots;
@@ -312,10 +291,9 @@ public class CAbility : CComponent
     public string abID;
     public int abLvl;
 
-    public CAbility() { ID = "Ability"; }
-    public CAbility(string _abID, int _abLvl)
+    public CAbility() : base("Ability") { }
+    public CAbility(string _abID, int _abLvl) : base("Ability")
     {
-        ID = "Ability";
         abID = _abID;
         abLvl = _abLvl;
     }
@@ -342,10 +320,9 @@ public class CCoordinate : CComponent
     public string aNa;
     public bool isSet;
 
-    public CCoordinate() { ID = "Coordinate"; }
-    public CCoordinate(Coord _wPos, Coord _lPos, int _elev, string _areaName, bool _isSet)
+    public CCoordinate() : base("Coordinate") { }
+    public CCoordinate(Coord _wPos, Coord _lPos, int _elev, string _areaName, bool _isSet) : base("Coordinate")
     {
-        ID = "Coordinate";
         wPos = _wPos;
         lPos = _lPos;
         Ele = _elev;
@@ -396,10 +373,9 @@ public class CConsole : CComponent
     public string action;
     public string command;
 
-    public CConsole() { ID = "Console"; }
-    public CConsole(string _action, string _command)
+    public CConsole() : base("Console") { }
+    public CConsole(string _action, string _command) : base("Console")
     {
-        ID = "Console";
         action = _action;
         command = _command;
     }
@@ -420,23 +396,14 @@ public class CLuaEvent : CComponent
     public string evName;
     public LuaCall luaCall;
 
-    public CLuaEvent() { ID = "LuaEvent"; }
-    public CLuaEvent(string eventName, string script)
+    public CLuaEvent() : base("LuaEvent") { }
+    public CLuaEvent(string eventName, string script) : base("LuaEvent")
     {
-        ID = "LuaEvent";
         evName = eventName;
         luaCall = new LuaCall(script);
     }
 
-    public void CallEvent(string eventToCall, Entity ent)
-    {
-        if (eventToCall == evName)
-        {
-            LuaManager.CallScriptFunction(luaCall, ent);
-        }
-    }
-
-    public void CallEvent_Params(string eventToCall, params object[] obj)
+    public void CallEvent(string eventToCall, params object[] obj)
     {
         if (eventToCall == evName)
         {
@@ -448,17 +415,11 @@ public class CLuaEvent : CComponent
 [Serializable]
 public class CBlock : CComponent
 {
-    public int level;
+    public int level = 1;
 
-    public CBlock()
+    public CBlock() : base("Block") { }
+    public CBlock(int lvl) : base("Block")
     {
-        ID = "Block";
-        level = 1;
-    }
-
-    public CBlock(int lvl)
-    {
-        ID = "Block";
         level = lvl;
     }
 
@@ -481,10 +442,9 @@ public class CCoat : CComponent
     public int strikes;
     public Liquid liquid;
 
-    public CCoat() { ID = "Coat"; }
-    public CCoat(int s, Liquid l)
+    public CCoat() : base("Coat") { }
+    public CCoat(int s, Liquid l) : base("Coat")
     {
-        ID = "Coat";
         strikes = s;
         liquid = l;
     }
@@ -551,7 +511,7 @@ public class CLiquidContainer : CComponent
 
     public int Fill(Liquid l)
     {
-        if (currentAmount() >= capacity)
+        if (FilledUnits() >= capacity)
         {
             return 0;
         }
@@ -570,7 +530,7 @@ public class CLiquidContainer : CComponent
             l.units--;
             poured++;
 
-            if (roomLeft() <= 0 || currentAmount() >= capacity)
+            if (roomLeft() <= 0 || FilledUnits() >= capacity)
             {
                 break;
             }
@@ -578,7 +538,7 @@ public class CLiquidContainer : CComponent
 
         if (l.ID != liquid.ID)
         {
-            liquid = Liquid.Mix(new Liquid(l, 0), new Liquid(liquid, currentAmount()));
+            liquid = Liquid.Mix(new Liquid(l, 0), new Liquid(liquid, FilledUnits()));
         }
 
         return poured;
@@ -624,14 +584,14 @@ public class CLiquidContainer : CComponent
         return (liquid != null) ? capacity - liquid.units : capacity;
     }
 
-    public int currentAmount()
+    public int FilledUnits()
     {
         return (liquid != null) ? liquid.units : 0;
     }
 
     public bool isFull()
     {
-        return currentAmount() >= capacity;
+        return FilledUnits() >= capacity;
     }
 
     public bool isEmpty()
@@ -1071,9 +1031,10 @@ public class CAmmo : CComponent
     }
 }
 
+[Serializable]
 public class CTags : CComponent
 {
-    private List<string> tags;
+    public List<string> tags;
 
     public CTags()
     {

@@ -89,7 +89,7 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator FollowPath()
     {
-        if (worldPath.result == PathResult.Fail)
+        if (worldPath == null || worldPath.result == PathResult.Fail)
         {
             yield break;
         }
@@ -126,7 +126,7 @@ public class PlayerInput : MonoBehaviour
         {
             Path_AStar path = new Path_AStar(World.tileMap.WorldPosition, targetPos, World.tileMap.worldMap);
 
-            if (path.Traversable)
+            if (path != null && path.Traversable)
             {
                 worldPath = path;
             }
@@ -329,7 +329,7 @@ public class PlayerInput : MonoBehaviour
         }
         else if (KeyDown("Rest"))
         {
-            if (entity.stats.health < entity.stats.maxHealth || entity.stats.stamina < entity.stats.maxStamina)
+            if (entity.stats.health < entity.stats.MaxHealth || entity.stats.stamina < entity.stats.MaxStamina)
             {
                 if (World.objectManager.SafeToRest())
                 {
@@ -787,8 +787,8 @@ public class PlayerInput : MonoBehaviour
 
         if (fullMap)
         {
-            entity.stats.health = entity.stats.maxHealth;
-            entity.stats.stamina = entity.stats.maxStamina;
+            entity.stats.health = entity.stats.MaxHealth;
+            entity.stats.stamina = entity.stats.MaxHealth;
 
             int timePass = 20;
 

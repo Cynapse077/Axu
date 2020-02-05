@@ -24,7 +24,7 @@ public class CombatComponent
 
     int ExtraAttackChance
     {
-        get { return (MyStats.Dexterity * 2) - 2; }
+        get { return (MyStats.Dexterity * 2) - 4; }
     }
 
     public CombatComponent(Entity e)
@@ -72,7 +72,8 @@ public class CombatComponent
 
         for (int i = 0; i < hands.Count; i++)
         {
-            if (hands[i] != null && hands[i] != MyBody.MainHand && hands[i].IsAttached && (SeedManager.combatRandom.Next(100) <= ExtraAttackChance) || !attacked)
+            if (hands[i] != null && hands[i] != MyBody.MainHand && hands[i].IsAttached && (SeedManager.combatRandom.Next(100) <= ExtraAttackChance) 
+                || !attacked)
             {
                 if (!hands[i].arm.FreeToMove())
                 {
@@ -98,7 +99,8 @@ public class CombatComponent
         //Attack with proc weapons.
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
-            if (MyBody.bodyParts[i].isAttached && MyBody.bodyParts[i].equippedItem.HasProp(ItemProperty.Proc_Attack) && SeedManager.combatRandom.Next(100) < ExtraAttackChance)
+            if (MyBody.bodyParts[i].isAttached && MyBody.bodyParts[i].equippedItem.HasProp(ItemProperty.Proc_Attack) 
+                && SeedManager.combatRandom.Next(100) < ExtraAttackChance)
             {
                 if (AttackTarget(target, MyBody.bodyParts[i].equippedItem))
                 {
@@ -137,11 +139,11 @@ public class CombatComponent
 
         if (!target.entity.isPlayer && !target.entity.AI.HasSeenPlayer())
         {
-            return 0.0f;
+            return 0f;
         }
 
         int miss = MyStats.MissChance(hand.EquippedItem);
-        float percentage = 1.0f + (targetPart.Weight / (float)targetPart.myBody.TotalBodyWeight());
+        float percentage = 1f + (targetPart.Weight / (float)targetPart.myBody.TotalBodyWeight());
 
         if (MyInventory.TwoHandPenalty(hand))
         {
@@ -202,9 +204,13 @@ public class CombatComponent
             {
                 //if it's a physical attack from a firearm, use misc prof
                 if (wep.itemType == Proficiencies.Firearm || wep.itemType == Proficiencies.Armor || wep.itemType == Proficiencies.Butchery)
+                {
                     MyStats.AddProficiencyXP(MyStats.proficiencies.Misc, MyStats.Intelligence);
+                }
                 else
+                {
                     MyStats.AddProficiencyXP(wep, MyStats.Intelligence);
+                }
 
                 if (hand.arm != null)
                 {
@@ -319,7 +325,8 @@ public class CombatComponent
             }
         }
 
-        Item ammo = entity.inventory.firearm.HasCComponent<CFirearm>() ? ItemList.GetItemByID(entity.inventory.firearm.GetCComponent<CFirearm>().currentAmmo) : null;
+        Item ammo = entity.inventory.firearm.HasCComponent<CFirearm>() 
+            ? ItemList.GetItemByID(entity.inventory.firearm.GetCComponent<CFirearm>().currentAmmo) : null;
         TileDamage td = new TileDamage(entity, targetPos, entity.inventory.firearm.damageTypes);
 
         if (FirearmMiss(targetPos, iteration))
@@ -385,10 +392,15 @@ public class CombatComponent
             {
                 if (Mathf.Abs(x) + Mathf.Abs(y) >= 2 || destination.x + x < 0 || destination.x >= Manager.localMapSize.x
                     || destination.y + y < 0 || destination.y + y >= Manager.localMapSize.y)
+                {
                     continue;
+                }
 
-                if (World.tileMap.PassThroughableTile(destination.x + x, destination.y + y) && destination.x != entity.posX && destination.y != entity.posY)
+                if (World.tileMap.PassThroughableTile(destination.x + x, destination.y + y) 
+                    && destination.x != entity.posX && destination.y != entity.posY)
+                {
                     nearbyCoords.Add(new Coord(destination.x + x, destination.y + y));
+                }
             }
         }
 

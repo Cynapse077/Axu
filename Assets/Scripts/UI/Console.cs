@@ -138,11 +138,11 @@ public class Console : MonoBehaviour
                 else if (int.TryParse(parsedText[2], out pOut))
                 {
                     if (parsedText[1] == "level")
-                        playerStats.MyLevel.CurrentLevel = pOut;
+                        playerStats.level.CurrentLevel = pOut;
                     else if (parsedText[1] == "hp" || parsedText[1] == "HP" || parsedText[1] == "Health")
-                        playerStats.health = playerStats.maxHealth = pOut;
+                        playerStats.SetAttribute("Health", pOut);
                     else if (parsedText[1] == "st" || parsedText[1] == "ST" || parsedText[1] == "Stamina")
-                        playerStats.stamina = playerStats.maxStamina = pOut;
+                        playerStats.SetAttribute("Stamina", pOut);
                     else if (parsedText[1] == "heatresist")
                         playerStats.Attributes["Heat Resist"] = pOut;
                     else if (parsedText[1] == "coldresist")
@@ -294,7 +294,7 @@ public class Console : MonoBehaviour
 
                 if (GameData.TryGet(parsedText[1], out Quest q))
                 {
-                    Quest quest = new Quest(q);
+                    Quest quest = q.Clone();
                     ObjectManager.playerJournal.StartQuest(quest);
                     MyConsole.NewMessage("Added the quest \"" + quest.Name + "\" to the journal.");
                 }
@@ -610,7 +610,7 @@ public class Console : MonoBehaviour
 
                 if (s != null)
                 {
-                    ObjectManager.player.GetComponent<EntitySkills>().AddSkill(s, Ability.AbilityOrigin.Book);
+                    ObjectManager.player.GetComponent<EntitySkills>().AddSkill(s, Ability.AbilityOrigin.Natrual);
                     MyConsole.NewMessage("Gave the player the ability \"" + s.Name + "\".");
                 }
                 else
@@ -641,7 +641,7 @@ public class Console : MonoBehaviour
                 string itemID = parsedText[1];
                 Item item = null;
 
-                if (parsedText.Length == 2 && ItemList.GetItemByID(itemID).ID != ItemList.GetNone().ID)
+                if (parsedText.Length == 2 && !ItemList.GetItemByID(itemID).IsNullOrDefault())
                 {
                     item = ItemList.GetItemByID(itemID);
                 }
@@ -657,7 +657,7 @@ public class Console : MonoBehaviour
                     item = ItemList.GetItemByName(itemID);
                 }
 
-                if (item != null && item.ID != ItemList.GetNone().ID && playerInventory != null)
+                if (!item.IsNullOrDefault() && playerInventory != null)
                 {
                     playerInventory.PickupItem(item);
                     MyConsole.NewMessage("    Gave 1x " + item.Name);
@@ -797,7 +797,7 @@ public class Console : MonoBehaviour
 
             case "heal":
             case "fullheal":
-                playerStats.Heal(playerStats.maxHealth);
+                playerStats.Heal(playerStats.MaxHealth);
                 MyConsole.NewMessage("    Fully healed player.");
                 break;
 

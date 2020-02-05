@@ -150,6 +150,7 @@ public class WorldMap : MonoBehaviour
                 };
 
                 t.SetPixels(l);
+                t.Apply();
                 sr.sprite = Sprite.Create(t, new Rect(0, 0, tileResolution, tileResolution), new Vector2(0.5f, 0.5f), tileResolution);
             }
 

@@ -226,7 +226,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
         if (amount > 0)
         {
             CombatLog.NewMessage("You pour " + amount.ToString() + " units of " + liquid.Name + " into the " + relevantItems[index].DisplayName() + ".");
-            frm.SetLiquidVolume(frm.currentAmount() - amount);
+            frm.SetLiquidVolume(frm.FilledUnits() - amount);
             frm.CheckLiquid();
         }
         else

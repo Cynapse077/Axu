@@ -25,11 +25,6 @@ public class BaseAI : MonoBehaviour
     int currentPathFails = 0;
     int turnsLeftToPath = 30;
 
-    System.Random RNG
-    {
-        get { return SeedManager.combatRandom; }
-    }
-
     public bool isHostile
     {
         get { return npcBase.isHostile || npcBase.hostilityOverride; }
@@ -280,7 +275,7 @@ public class BaseAI : MonoBehaviour
     {
         if (entity.inventory.firearm == null)
         {
-            entity.inventory.firearm = ItemList.GetNone();
+            entity.inventory.firearm = ItemList.NoneItem;
         }
 
         if (!entity.inventory.firearm.HasProp(ItemProperty.Ranged) || isFollower() && target == ObjectManager.playerEntity)
@@ -1012,14 +1007,14 @@ public class BaseAI : MonoBehaviour
 
                 if (lps.Count > 0)
                 {
-                    NPC n = EntityList.GetNPCByID("theempty-tentacle", World.tileMap.WorldPosition, lps.GetRandom(RNG));
+                    NPC n = EntityList.GetNPCByID("theempty-tentacle", World.tileMap.WorldPosition, lps.GetRandom());
                     World.objectManager.SpawnNPC(n);
                     return true;
                 }
             }
             else
             {
-                tentacles.GetRandom(RNG).fighter.Remove();
+                tentacles.GetRandom().fighter.Remove();
             }
         }
 

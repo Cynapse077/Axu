@@ -32,7 +32,7 @@ public class EntitySkills : MonoBehaviour
                     {
                         level = sks[i].Value
                     };
-                    AddSkill(s, Ability.AbilityOrigin.Book);
+                    AddSkill(s, Ability.AbilityOrigin.Natrual);
                 }
             }
         }

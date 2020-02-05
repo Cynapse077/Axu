@@ -4,13 +4,13 @@ public static class StatInitializer
 {
     public static void GetPlayerStats(Stats s, PlayerBuilder builder)
     {
-        s.MyLevel = new XPLevel(s, builder.level.CurrentLevel, builder.level.XP, builder.level.XPToNext);
+        s.level = new XPLevel(s, builder.level.CurrentLevel, builder.level.XP, builder.level.XPToNext);
         s.gameObject.name = Manager.playerName;
-        s.maxHealth = builder.maxHP;
-        s.maxStamina = builder.maxST;
-        s.health = builder.hp;
-        s.stamina = builder.st;
         s.Attributes = new Dictionary<string, int>(builder.attributes);
+        s.SetAttribute("Health", builder.maxHP);
+        s.SetAttribute("Stamina", builder.maxST);
+        s.health = s.MaxHealth;
+        s.stamina = s.MaxStamina;
 
         s.statusEffects = new Dictionary<string, int>(builder.statusEffects);
         s.proficiencies = builder.proficiencies;
@@ -23,10 +23,12 @@ public static class StatInitializer
 
     public static void GetNPCStats(NPC npc, Stats s)
     {
-        s.health = s.maxHealth = npc.maxHealth;
-        s.stamina = s.maxStamina = npc.maxStamina;
-
         s.Attributes = new Dictionary<string, int>(npc.Attributes);
+        s.SetAttribute("Health", npc.maxHealth);
+        s.SetAttribute("Stamina", npc.maxStamina);
+        s.health = s.MaxHealth;
+        s.stamina = s.MaxStamina;
+
         s.statusEffects = new Dictionary<string, int>();
 
         if (npc.HasFlag(NPC_Flags.RPois))

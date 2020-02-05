@@ -473,13 +473,13 @@ public static class Utility
 
     public static bool IsNullOrDefault(this Item item)
     {
-        return item == null || item.ID == ItemList.GetNone().ID;
+        return item == null || item.ID == ItemList.NoneItem.ID;
     }
 }
 
 public static class FlagsHelper
 {
-    public static bool IsSet<T>(T flags, T flag) where T : struct
+    public static bool IsSet<T>(this T flags, T flag) where T : struct
     {
         int flagsValue = (int)(object)flags;
         int flagValue = (int)(object)flag;
@@ -487,9 +487,9 @@ public static class FlagsHelper
         return (flagsValue & flagValue) != 0;
     }
 
-    public static void Set<T>(ref T flags, T flag) where T : struct
+    public static void Set<T>(this T flags, T flag) where T : struct
     {
-        if (IsSet(flags, flag))
+        if (flags.IsSet(flag))
         {
             return;
         }
@@ -500,21 +500,21 @@ public static class FlagsHelper
         flags = (T)(object)(flagsValue | flagValue);
     }
 
-    public static void Toggle<T>(ref T flags, T flag, bool on) where T : struct
+    public static void Toggle<T>(this T flags, T flag, bool on) where T : struct
     {
         if (on)
         {
-            Set(ref flags, flag);
+            flags.Set(flag);
         }
         else
         {
-            UnSet(ref flags, flag);
+            flags.UnSet(flag);
         }
     }
 
-    public static void UnSet<T>(ref T flags, T flag) where T : struct
+    public static void UnSet<T>(this T flags, T flag) where T : struct
     {
-        if (!IsSet(flags, flag))
+        if (!flags.IsSet(flag))
         {
             return;
         }
