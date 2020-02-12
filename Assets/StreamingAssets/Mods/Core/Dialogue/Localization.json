@@ -1040,16 +1040,12 @@
             "Display" : "Loading..."
         },
         {
-            "ID" : "Title_Poetry",
-            "Display" : "You manage to crudely decipher the old text..."
-        },
-        {
             "ID" : "Title_Options",
             "Display" : "Options"
         },
         {
             "ID" : "Title_LevelUp",
-            "Display" : "Select A Trait:"
+            "Display" : "Select a Trait:"
         },
         {
             "ID" : "Title_Proficiencies",
@@ -1212,6 +1208,10 @@
     ],
     "Misc" : [
         {
+            "ID" : "Entity_Objective",
+            "Display" : "the {0}"
+        },
+        {
             "ID" : "None",
             "Display" : "None"
         },
@@ -1305,11 +1305,11 @@
         },
         {
             "ID" : "Dialogue_TooManyFollowers",
-            "Display" : "You have so many followers already. I think I'll stay here until I'm needed..."
+            "Display" : "You have so many followers already. I think I'll stay here until I'm needed."
         },
         {
             "ID" : "Dialogue_Follow",
-            "Display" : "Gotcha, I'll follow you."
+            "Display" : "Gotcha. I'll follow you."
         },
         {
             "ID" : "Quest_SimpleGoToDescription",
@@ -1406,6 +1406,18 @@
         {
             "ID" : "Char_Severed",
             "Display" : "<color=red>Severed</color>"
+        },
+        {
+            "ID" : "LevelUp_GainTrait",
+            "Display" : "<color=green>You have gained the trait \"<color=yellow>{0}</color>\".</color>"
+        },
+        {
+            "ID" : "LevelUp_StatGain",
+            "Display" : "<color=green>Your {0} has increased by <color=yellow>{1}</color>.</color>"
+        },
+        {
+            "ID" : "LevelUp_GainAbility",
+            "Display" : "<color=green>You have learned the ability \"<color=yellow>{0}</color>\".</color>"
         }
     ],
     "YesNo" : [
@@ -1593,11 +1605,6 @@
             "Message" : "You cannot remove that item!"
         },
         {
-            "ID" : "Starving",
-            "Display" : "Starving!",
-            "Message" : "You are too hungry to fast travel."
-        },
-        {
             "ID" : "Ambush",
             "Display" : "Ambush!",
             "Message" : "You have been ambushed! Flee or fight for your life!"
@@ -1618,14 +1625,9 @@
             "Message" : "You cannot rest while enemies are so close!"
         },
         {
-            "ID" : "Cannot_Rest_Hunger",
-            "Display" : "Cannot Rest!",
-            "Message" : "You cannot rest while starving!"
-        },
-        {
             "ID" : "No_Hands",
             "Display" : "No Hands",
-            "Message" : "You have no hands to equip that to!"
+            "Message" : "You have no hands to hold that item."
         },
         {
             "ID" : "Not_Enough_Hands",
@@ -1635,7 +1637,7 @@
         {
             "ID" : "Two_Handed",
             "Display" : "Need Unoccupied Hands",
-            "Message" : "You need two free hands to wield this weapon!"
+            "Message" : "You need two free hands to wield that weapon."
         },
         {
             "ID" : "Mastery",
@@ -1656,11 +1658,6 @@
             "ID" : "Too_Full",
             "Display" : "Too Full",
             "Message" : "Your stomach couldn't possibly take any more."
-        },
-        {
-            "ID" : "Cannot_Eat",
-            "Display" : "Cannot Eat",
-            "Message" : "As a Vampire, you cannot eat normal food."
         },
         {
             "ID" : "Dis_Lep_Eat",
@@ -1706,6 +1703,11 @@
             "ID" : "Not_Enough_Stamina",
             "Display" : "Not Enough Stamina",
             "Message" : "You don't have enough stamina to use this ability."
+        },
+        {
+            "ID" : "LastHead",
+            "Display" : "Last Head",
+            "Message" : "You cannot replace your only head!"
         }
     ],
     "Log" : [

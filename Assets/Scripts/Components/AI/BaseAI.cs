@@ -860,7 +860,7 @@ public class BaseAI : MonoBehaviour
         {
             npcBase.MakeFollower();
             dialogueController.SetupDialogueOptions();
-            CombatLog.NameMessage("Message_Hire", gameObject.name);
+            CombatLog.NameMessage("Message_Hire", entity.Name);
         }
     }
 
@@ -1029,7 +1029,7 @@ public class BaseAI : MonoBehaviour
         //Leprosy
         if (npcBase.HasFlag(NPC_Flags.Skills_Leprosy) && SeedManager.combatRandom.Next(100) < 20)
         {
-            CombatLog.CombatMessage("bites", gameObject.name, target.name, false);
+            CombatLog.CombatMessage("Bites", entity.Name, target.Name, entity.isPlayer);
 
             if (RNG.Next(100) < 10)
             {

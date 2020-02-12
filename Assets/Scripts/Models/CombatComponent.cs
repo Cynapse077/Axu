@@ -289,7 +289,7 @@ public class CombatComponent
 
         if (entity.isPlayer || entity.AI.InSightOfPlayer())
         {
-            CombatLog.NameItemMessage("Message_ThrowItem", entity.MyName, itemForThrowing.DisplayName());
+            CombatLog.NameItemMessage("Message_ThrowItem", entity.Name, itemForThrowing.DisplayName());
         }
 
         entity.InstatiateThrowingEffect(destination, 1.0f);

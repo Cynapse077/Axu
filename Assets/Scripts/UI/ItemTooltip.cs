@@ -150,7 +150,7 @@ public static class ItemTooltip
             displayItems.Add(GetContent("IT_OnUse_Bandage"));
         if (item.HasProp(ItemProperty.Surface_Tele))
             displayItems.Add(GetContent("IT_OnUse_SurfTel"));
-        if (item.HasProp(ItemProperty.Addictive) && World.difficulty.Level == Difficulty.DiffLevel.Hunted)
+        if (item.HasProp(ItemProperty.Addictive) && World.difficulty.AddictionsActive)
             displayItems.Add(GetContent("IT_Addictive"));
 
 

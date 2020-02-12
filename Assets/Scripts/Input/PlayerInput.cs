@@ -821,9 +821,7 @@ public class PlayerInput : MonoBehaviour
             }
 
             //Encounters!
-            float encRate = (World.difficulty.Level == Difficulty.DiffLevel.Adventurer) ? 0.8f : 1.0f;
-
-            if (SpawnController.HasFoundEncounter(encRate))
+            if (SpawnController.HasFoundEncounter(World.difficulty.EncounterRate()))
             {
                 worldPath = null;
                 entity.myPos = World.tileMap.CurrentMap.GetRandomFloorTile();
@@ -862,7 +860,7 @@ public class PlayerInput : MonoBehaviour
 
                 if (targetPos != null && World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
                 {
-                    World.userInterface.YesNoAction("YN_TravelUp".Translate(), () => { FindStairsUp(); }, null, "");
+                    World.userInterface.YesNoAction("YN_TravelUp".Localize(), () => { FindStairsUp(); }, null, "");
                 }
 
                 return false;
@@ -877,7 +875,7 @@ public class PlayerInput : MonoBehaviour
 
                 if (targetPos != null && World.tileMap.CurrentMap.has_seen[targetPos.x, targetPos.y])
                 {
-                    World.userInterface.YesNoAction("YN_TravelDown".Translate(), () => { FindStairsDown(); }, null, "");
+                    World.userInterface.YesNoAction("YN_TravelDown".Localize(), () => { FindStairsDown(); }, null, "");
                 }
 
                 return false;

@@ -83,7 +83,7 @@ public class Liquid : IWeighted, IAsset
             ev.CallEvent("OnDrink", stats);
         }
 
-        if (addictiveness > 0 && (World.difficulty.Level == Difficulty.DiffLevel.Rogue || World.difficulty.Level == Difficulty.DiffLevel.Hunted))
+        if (addictiveness > 0 && World.difficulty.AddictionsActive)
         {
             stats.ConsumedAddictiveSubstance(ID, true);
         }

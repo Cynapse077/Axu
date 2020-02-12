@@ -131,6 +131,6 @@ public static class CombatLog
 
     static void Append(string text)
     {
-        World.userInterface.NewLogMessage(Arrow + text);
+        World.userInterface.NewLogMessage(Arrow + text.CapFirst());
     }
 }

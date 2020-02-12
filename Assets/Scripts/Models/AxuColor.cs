@@ -20,7 +20,7 @@ public static class AxuColor
 
     public static string Color(this string s, Color color)
     {
-        return string.Format("<color=#{0}</color>", color.ToHex());
+        return string.Format("<color=#{0}>{1}</color>", color.ToHex(), s);
     }
 
     public static string ToHex(this Color c)

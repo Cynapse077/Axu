@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 
-[MoonSharp.Interpreter.MoonSharpUserData]
+[MoonSharpUserData]
 public class Room
 {
-
     public int width;
     public int height;
     public int left;

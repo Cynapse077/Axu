@@ -549,7 +549,7 @@ public class GoToGoal_Specific : Goal
         myQuest = q;
         destination = dest;
         elevation = ele;
-        description = "Quest_SimpleGoToDescription".Translate();
+        description = "Quest_SimpleGoToDescription".Localize();
         isComplete = false;
     }
 

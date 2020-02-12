@@ -133,8 +133,9 @@ public class WorldMap : MonoBehaviour
         //Set landmarks
         if (mi.biome != Biome.Mountain && mi.HasLandmark())
         {
+            Coord coord = new Coord(x, y);
             GameObject g = Instantiate(landmarkObject, new Vector3(x + 50 + 0.5f, y - 200 + 0.5f, -1), Quaternion.identity, transform);
-            g.name = string.Format("{0} - {1}", mi.landmark, new Coord(x, y).ToString());
+            g.name = string.Format("{0} - {1}", mi.landmark, coord.ToString());
             SpriteRenderer sr = g.GetComponent<SpriteRenderer>();
 
             if (mi.landmark == "River")
@@ -154,7 +155,7 @@ public class WorldMap : MonoBehaviour
                 sr.sprite = Sprite.Create(t, new Rect(0, 0, tileResolution, tileResolution), new Vector2(0.5f, 0.5f), tileResolution);
             }
 
-            landmarks.Add(new Coord(x, y), g);
+            landmarks.Add(coord, g);
         }
     }
 

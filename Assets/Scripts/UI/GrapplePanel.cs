@@ -179,7 +179,7 @@ public class GrapplePanel : MonoBehaviour
                 break;
 
             case "Release":
-                CombatLog.CombatMessage("Gr_ReleaseGrip", ObjectManager.player.name, targetLimb.myBody.entity.MyName, false);
+                CombatLog.CombatMessage("Gr_ReleaseGrip", ObjectManager.playerEntity.Name, targetLimb.myBody.entity.Name, false);
                 selectedGrip.Release();
                 break;
         }

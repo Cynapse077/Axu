@@ -13,4 +13,9 @@ public static class RNG
     {
         return SeedManager.combatRandom.Next(min, max);
     }
+
+    public static bool OneIn(int num)
+    {
+        return SeedManager.combatRandom.Next(0, num) == 0;
+    }
 }

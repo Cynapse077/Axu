@@ -65,6 +65,27 @@
         },
 
 
+        {
+            "ID" : "Item_Food", "Base" : "BaseItem",
+            "Rarity" : 1,
+            "Cost" : 10,
+            "Stackable" : true,
+            "Properties" : [ "Edible" ],
+            "Components" : [
+                { "ID" : "LuaEvent", "Event" : "OnConsume", "Script" : "Core.ItemActions.EatFood" }
+            ]
+        },
+        {
+            "ID" : "meat", "Base" : "Item_Food",
+            "Name" : "Dried Meat",
+            "FlavorText" : "Strips of dried meat. Well-preserved and great for long travels."
+        },
+        {
+            "ID" : "berries", "Base" : "Item_Food",
+            "Name" : "Berries",
+            "FlavorText" : "A small handful of foraged berries. Makes a delicious snack."
+        },
+
         {            
             "ID" : "arrow", "Base" : "Item_Ammo",
             "Name" : "Arrow",
@@ -1468,7 +1489,7 @@
             "Cost" : 10,
             "Properties" : [ "Slot_Head" ],
             "Display" : {
-				"On Ground" : "item-helm.png",
+				"On Ground" : "item-strawhat.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-strawhat.png",
                 "Layer" : "Head"
             }
@@ -1482,7 +1503,7 @@
             "Cost" : 25,
             "Properties" : [ "Slot_Head" ],
             "Display" : {
-				"On Ground" : "item-helm.png",
+				"On Ground" : "item-hood.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-hood.png",
                 "Layer" : "Head"
             }
@@ -1499,7 +1520,7 @@
             ],
             "Properties" : [ "Slot_Head" ],
             "Display" : {
-				"On Ground" : "item-helm.png",
+				"On Ground" : "item-minerhelmet.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-miner-helm.png",
                 "Layer" : "Head"
             }
@@ -1514,7 +1535,7 @@
             "Cost" : 65,
             "Properties" : [ "Slot_Head" ],
             "Display" : {
-				"On Ground" : "item-helm.png",
+				"On Ground" : "item-infantryhelmet.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-infantry-helm.png",
                 "Layer" : "Head"
             }
@@ -1548,7 +1569,7 @@
             "Cost" : 135,
             "Properties" : [ "Slot_Head" ],
             "Display" : {
-				"On Ground" : "item-helm.png",
+				"On Ground" : "item-hornedhelm.png",
                 "On Player" : "Mods/Core/Art/Player/Heads/char-horn-helm.png",
                 "Layer" : "Head"
             }
@@ -2236,11 +2257,13 @@
             "FlavorText" : "A small pill that can cure radiation poisoning.",
             "Cost" : 120,
             "Stackable" : true,
-            "Properties" : [ "Edible", "Cure_Radiation" ]
+            "Properties" : [ "Edible", "Cure_Radiation" ],
+            "Display" : {
+                "On Ground" : "item-tablet.png"
+            }
         },
-        {
-            "Base" : "BaseItem",
-        	"ID" : "caffeinepill",
+        {            
+        	"ID" : "caffeinepill", "Base" : "BaseItem",
             "Name" : "Caffeine Pill",
             "Rarity" : 2,
             "FlavorText" : "For a quick pick-me-up. Causes haste and restores a little stamina.",
@@ -2250,11 +2273,28 @@
                 { "Stat" : "Stamina", "Amount" : 3 },
                 { "Stat" : "Haste", "Amount" : 12 }
             ],
-            "Properties" : [ "Edible", "Addictive" ]
+            "Properties" : [ "Edible", "Addictive" ],
+            "Display" : {
+                "On Ground" : "item-pill.png"
+            }
         },
         {
-            "Base" : "BaseItem",
-        	"ID" : "explosive",
+            "ID" : "fruit", "Base" : "BaseItem",
+            "Name" : "Strange Fruit",
+            "Rarity" : 1,
+            "FlavorText" : "A strange fruit. You aren't sure what effects it will have on your body.",
+            "Cost" : 10,
+            "Stackable" : true,
+            "Properties" : [ "Edible" ],
+            "Components" : [
+                { "ID" : "LuaEvent", "Event" : "OnConsume", "Script" : "Core.ItemActions.EatStrangeFruit" }
+            ],
+            "Display" : {
+                "On Ground" : "item-strangefruit.png"
+            }
+        },
+        {            
+        	"ID" : "explosive", "Base" : "BaseItem",
             "Name" : "Explosive",
             "Rarity" : 3,
             "FlavorText" : "Throw this item at enemies to turn them into a fine mist.",
@@ -2264,7 +2304,7 @@
             "Display" : {
                 "On Ground" : "item-explosive.png"
             }
-        },
+        },        
         {
             "Base" : "BaseItem",
         	"ID" : "bandage",
@@ -3201,7 +3241,7 @@
             "Type" : "Misc_Object",
             "Material" : "Paper",
             "FlavorText" : "An acient tome containing a great secret.",
-            "Cost" : 300,
+            "Cost" : 600,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "blink"  },
                 { "ID" : "Requirement", 
@@ -3251,7 +3291,7 @@
             "Type" : "Misc_Object",
             "Material" : "Paper",
             "FlavorText" : "An acient tome containing a great secret.",
-            "Cost" : 200,
+            "Cost" : 550,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "radblast"  }
             ],
@@ -3281,7 +3321,7 @@
             "Type" : "Misc_Object",
             "Material" : "Paper",
             "FlavorText" : "An acient tome containing a great secret.",
-            "Cost" : 200,
+            "Cost" : 350,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "sprint"  }
             ],
@@ -4038,7 +4078,9 @@
             "FlavorText" : "Ugly bulbous entennae jutt out from the top of your skull.",
             "Properties" : [ "Slot_Head", "Cannot_Remove" ],
             "Display" : {
-                "On Ground" : "item-antennae.png"
+                "On Ground" : "item-antennae.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-antennae.png",
+                "Layer" : "Head"
             },
             "Lootable" : false
         },
@@ -4365,7 +4407,10 @@
             "Damage" : "1d8",
             "FlavorText" : "Made of a strong yet flexible metal. This blade is grafted to your arm.",
             "Properties" : [ "Quick", "Cannot_Remove" ],
-            "Lootable" : false
+            "Lootable" : false,
+            "Display" : {
+                "On Ground" : "item-foldingblade.png"
+            }
         },
 
         {

@@ -34,7 +34,7 @@ public static class LocalizationManager
         return (helpMessages.Count > 0) ? helpMessages.GetRandom() : "";
     }
 
-    public static string Translate(this string s)
+    public static string Localize(this string s)
     {
         return GetContent(s);
     }

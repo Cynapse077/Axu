@@ -854,7 +854,7 @@ public class COnHitAddStatus : CComponent
 {
     readonly string statusID;
     readonly IntRange turns;
-    readonly float chance;
+    readonly int chance;
 
     public COnHitAddStatus()
     {
@@ -864,7 +864,7 @@ public class COnHitAddStatus : CComponent
         chance = 0;
     }
 
-    public COnHitAddStatus(string _statusID, IntRange _turns, float _chance)
+    public COnHitAddStatus(string _statusID, IntRange _turns, int _chance)
     {
         ID = "OnHitAddStatus";
         statusID = _statusID;

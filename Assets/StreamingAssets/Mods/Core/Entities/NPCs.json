@@ -11,7 +11,8 @@
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
-				"Merchant"
+				"Merchant",
+                "HasName"
             ],
             "Position" : { "Zone" : "Xul Camp", "x" : 28, "y" : 7, "z" : 0 },
             "Stats" : {
@@ -46,7 +47,8 @@
                 "Doctor",
                 "Static",
                 "Can_Speak",
-                "Stationary_While_Passive"
+                "Stationary_While_Passive",
+                "HasName"
             ],
             "Position" : { "Zone" : "Ensis Exterior", "x" : 5, "y" : 20, "z" : 0 },
             "Stats" : {
@@ -123,7 +125,8 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive"
+                "Stationary_While_Passive",
+                "HasName"
             ],
             "Position" : { "Zone" : "Cave_Entrance", "x" : 40, "y" : 20, "z" : 0 },
             "Stats" : {
@@ -196,7 +199,8 @@
                 "Boss",
 				"No_Body",
 				"No_Strangle",
-				"No_TakeDown"
+				"No_TakeDown",
+                "HasName"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 23, "y" : 16, "z" : -8 },
             "Stats" : {
@@ -230,7 +234,8 @@
                 "Can_Speak",
                 "Stationary_While_Passive",
                 "Static",
-                "Boss"
+                "Boss",
+                "HasName"
             ],
             "Position" : { "Zone" : "Unassigned", "x" : 0, "y" : 0, "z" : 0 },
             "Stats" : {
@@ -262,7 +267,8 @@
                 "Human",
                 "Can_Speak",
                 "Stationary_While_Passive",
-                "Static"
+                "Static",
+                "HasName"
             ],
             "Position" : { "Zone" : "Oasis", "x" : 3, "y" : 6, "z" : 0 },
             "Stats" : {
@@ -345,7 +351,8 @@
                 "Can_Speak",
                 "Static",
                 "Stationary_While_Passive",
-                "Boss"
+                "Boss",
+                "HasName"
             ],
             "Position" : { "Zone" : "Ensis Exterior", "x" : 20, "y" : 27, "z" : 0 },
             "Stats" : {
@@ -416,7 +423,8 @@
                 "Static",
                 "Stationary_While_Passive",
                 "OnDisable_Regen",
-                "Boss"
+                "Boss",
+                "HasName"
             ],
 			"Dialogue" : "lomis_init",
             "Position" : { "Zone" : "Ensis Interior", "x" : 20, "y" : 6, "z" : 0 },
@@ -522,7 +530,8 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive"
+                "Stationary_While_Passive",
+                "HasName"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 10, "y" : 10, "z" : -5 },
             "Quest" : "homonculus",
@@ -558,7 +567,8 @@
                 "Can_Speak",
                 "Static",
                 "Merchant",
-                "Stationary_While_Passive"
+                "Stationary_While_Passive",
+                "HasName"
             ],
             "Position" : { "Zone" : "Abandoned Building", "x" : 20, "y" : 3, "z" : 0 },
             "Quest" : "ensis0",
@@ -599,7 +609,8 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive"
+                "Stationary_While_Passive",
+                "HasName"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 20, "y" : 24, "z" : 0 },
             "Quest" : "ensis_sub0",
@@ -677,7 +688,8 @@
                 "Static",
                 "Stationary_While_Passive",
                 "OnDisable_Regen",
-                "Boss"
+                "Boss",
+                "HasName"
             ],
             "Position" : { "Zone" : "Ensis Interior", "x" : 5, "y" : 10, "z" : -1 },
             "Stats" : {
@@ -715,7 +727,8 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive"
+                "Stationary_While_Passive",
+                "HasName"
             ],
             "Position" : { "Zone" : "Cathedral", "x" : 37, "y" : 14, "z" : 0 },
             "Stats" : {
@@ -748,7 +761,8 @@
                 "Human",
                 "Can_Speak",
                 "Static",
-                "Stationary_While_Passive"
+                "Stationary_While_Passive",
+                "HasName"
             ],
             "Position" : { "Zone" : "Kin Hideout", "x" : 22, "y" : 14, "z" : 0 },
             "Quest" : "kin0",
@@ -790,7 +804,8 @@
                 "RPois",
                 "Boss",
                 "OnDisable_Regen",
-				"Stationary_While_Passive"
+				"Stationary_While_Passive",
+                "HasName"
             ],
             "Position" : { "Zone" : "Magna_C", "x" : 3, "y" : 6, "z" : 0 },
             "Stats" : {
@@ -829,7 +844,8 @@
 				"Human",
 				"Static",
                 "Boss",
-				"Stationary_While_Passive"
+				"Stationary_While_Passive",
+                "HasName"
             ],
 			"Position" : { "Zone" : "Cathedral", "x" : 0, "y" : 0, "z" : -7 },
             "Stats" : {
@@ -867,7 +883,8 @@
             "Flags" : [
                 "Follower",
                 "Deteriortate_HP",
-                "No_Blood"
+                "No_Blood",
+                "HasName"
             ],
             "Stats" : {
                 "Health" : 56,
@@ -1058,7 +1075,8 @@
             "Flags" : [
                 "Named_NPC",
                 "Human",
-                "Can_Speak"
+                "Can_Speak",
+                "HasName"
             ],
             "Stats" : {
                 "Health" : 36,
@@ -1127,7 +1145,8 @@
                 "Named_NPC",
                 "Human",
                 "Can_Speak",
-                "Mercenary"
+                "Mercenary",
+                "HasName"
             ],
             "Stats" : {
                 "Health" : 35,
@@ -1224,7 +1243,8 @@
             "Flags" : [
                 "Human",
                 "Named_NPC",
-                "Can_Speak"
+                "Can_Speak",
+                "HasName"
             ],
             "Stats" : {
                 "Health" : 40,
@@ -1793,7 +1813,9 @@
             "Sprite" : "npc-bandit5.png",
             "Flags" : [
                 "Human",
-                "Can_Speak"
+                "Can_Speak",
+                "Named_NPC",
+                "HasName"
             ],
             "Stats" : {
                 "Health" : 150,
@@ -3768,7 +3790,8 @@
             "Sprite" : "npc-noggins.png",
             "Flags" : [
                 "RBleed",
-                "Boss"
+                "Boss",
+                "HasName"
             ],
             "Stats" : {
                 "Health" : 150,

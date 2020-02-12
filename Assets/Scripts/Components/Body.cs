@@ -347,7 +347,7 @@ public class Body : MonoBehaviour
                     partToDrop.AddProperty(ItemProperty.Cannibalism);
                 }
 
-                partToDrop.displayName = gameObject.name + " " + partToDrop.Name;
+                partToDrop.displayName = gameObject.name + "'s " + partToDrop.Name;
 
                 string handBaseItemID = "";
 

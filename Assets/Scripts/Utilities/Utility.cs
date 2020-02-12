@@ -23,6 +23,9 @@ public static class Utility
     }
 
     //Called from Lua
+    /// <summary>
+    /// Get the list of cells within a cone shape.
+    /// </summary>
     public static List<Coord> Cone(Entity ent, Coord pos, Coord direction, int length)
     {
         List<Coord> coords = new List<Coord>();
@@ -47,7 +50,7 @@ public static class Utility
             {
                 Coord newPos = new Coord(x, y);
 
-                if (newPos != ent.myPos && pos.DistanceTo(newPos) < length + 1f)
+                if ((ent == null || newPos != ent.myPos) && pos.DistanceTo(newPos) < length + 1f)
                 {
                     float b = Bearing(pos, newPos);
 
@@ -70,12 +73,12 @@ public static class Utility
     }
 
     /// <summary>
-    /// Iterate over a list, performing an action on each item within.
+    /// Iterate over a list, performing an action for each item within.
     /// </summary>
-    /// <param name="action"></param>
+    /// <param name="action">The action to perform for each element.</param>
     public static void IterateAction<T>(this List<T> list, Action<T> action)
     {
-        if (list == null || action == null)
+        if (list.NullOrEmpty() || action == null)
         {
             return;
         }
@@ -90,12 +93,12 @@ public static class Utility
     }
 
     /// <summary>
-    /// Iterate over a list in reverse, performing an action on each item within. Great for when you need to delete elements as you go.
+    /// Iterate over a list in reverse, performing an action for each item within.
     /// </summary>
-    /// <param name="action"></param>
+    /// <param name="action">The action to perform for each element.</param>
     public static void IterateAction_Reverse<T>(this List<T> list, Action<T> action)
     {
-        if (list == null || action == null)
+        if (list.NullOrEmpty() || action == null)
         {
             return;
         }
@@ -283,6 +286,11 @@ public static class Utility
     public static float ZeroToOne(this System.Random ran)
     {
         return (ran.Next(0, 101) * 0.01f);
+    }
+
+    public static float NegOneToOne(this System.Random ran)
+    {
+        return (ran.Next(-101, 101) * 0.01f);
     }
 
     public static bool CoinFlip(this System.Random ran)
@@ -474,6 +482,27 @@ public static class Utility
     public static bool IsNullOrDefault(this Item item)
     {
         return item == null || item.ID == ItemList.NoneItem.ID;
+    }
+
+    public static string CapFirst(this string s)
+    {
+        if (s.NullOrEmpty())
+            return null;
+
+        if (s.Length == 1)
+            return s.ToUpper();
+
+        //For HTML-tagged strings
+        if (s[0] == '<')
+        {
+            int indexOfEnd = s.IndexOf('>');
+            if (indexOfEnd > 0 && indexOfEnd < s.Length - 1)
+            {
+                return s.Substring(0, indexOfEnd + 1) + char.ToUpper(s[indexOfEnd + 1]) + s.Substring(indexOfEnd + 2);
+            }
+        }
+
+        return char.ToUpper(s[0]) + s.Substring(1);
     }
 }
 

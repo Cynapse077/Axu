@@ -596,7 +596,7 @@ public class MapObjectSprite : MonoBehaviour
                 break;
 
             case "Bookshelf":
-                World.userInterface.YesNoAction("YN_Read_Bookshelf".Translate(),
+                World.userInterface.YesNoAction("YN_Read_Bookshelf".Localize(),
                     () => {
                         World.userInterface.CloseWindows();
                         SetTypeAndSwapSprite("Bookshelf_Empty");

@@ -70,13 +70,12 @@ public class Addiction
 
     public void ItemUse(Stats stats)
     {
-        int val = World.difficulty.Level == Difficulty.DiffLevel.Rogue ? 4 : 2;
         lastTurnTaken = World.turnManager.turn;
         currUse++;
 
         if (!addicted)
         {
-            int newChance = (chanceToAddict * (currUse)) / val;
+            float newChance = (chanceToAddict * (currUse)) / World.difficulty.AddictionDivisible();
 
             if (SeedManager.combatRandom.Next(100) < newChance)
             {

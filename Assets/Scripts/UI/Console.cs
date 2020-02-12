@@ -101,10 +101,12 @@ public class Console : MonoBehaviour
                     return;
                 }
 
-                int o = int.Parse(parsedText[1]);
-                Inventory.BodyDropChance = o;
+                if (int.TryParse(parsedText[1], out int o))
+                {
+                    Inventory.BodyDropChance = o;
+                    MyConsole.NewMessage("Set body drop chance to " + parsedText[1] + "%");
+                }
 
-                MyConsole.NewMessage("Set body drop chance to " + parsedText[1] + "%");
                 break;
 
             case "5k":
@@ -863,8 +865,7 @@ public class Console : MonoBehaviour
                     }
                 }
 
-                CreateLocationEvent cl = new CreateLocationEvent(zoneID);
-                cl.RunEvent();
+                new CreateLocationEvent(zoneID).RunEvent();
                 break;
 
             case "removelocation":
@@ -886,8 +887,7 @@ public class Console : MonoBehaviour
                     }
                 }
 
-                RemoveLocationEvent rl = new RemoveLocationEvent(zID);
-                rl.RunEvent();
+                new RemoveLocationEvent(zID).RunEvent();
                 break;
 
             case "?":
@@ -978,7 +978,7 @@ public class Console : MonoBehaviour
 //CONSOLE COMMANDS
 public class ConsoleCommand
 {
-    protected static readonly char splitChar = ' ';
+    protected const char splitChar = ' ';
     public string command;
     public string alternateCommand;
     public string description;

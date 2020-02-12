@@ -109,6 +109,27 @@ function DrainHealth(defender, attacker)
 	end
 end
 
+--Eating a strange fruit. Has a random effect.
+function EatStrangeFruit(consumer)
+	local ran = Random(0, 3)
+
+	if (ran == 0) then
+		Log("You feel invigorated.")
+		consumer.stats.Heal(Random(1, 5))
+	elseif (ran == 1) then
+		consumer.stats.Radiate(Random(1, 5))
+		Log("The fruit has been heavily touched by radiation. You feel it seep into your body.")
+	elseif (ran == 2) then
+		Log("The fruit is spoiled. You feel sick.")
+		consumer.stats.AddStatusEffect("Poison", Random(2, 6))
+	end
+end
+
+--Normal eating method
+function EatFood(consumer)
+	consumer.stats.Heal(Random(1, 4))
+end
+
 --Helper function
 function TargetAvailableAt(position)
 	return (TileMap.WalkableTile(position.x, position.y) and TileMap.GetCellAt(position).entity ~= nil)

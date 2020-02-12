@@ -1040,7 +1040,7 @@
         {
             "Name" : "Brain Rot",
             "ID" : "brain_rot",
-            "Description" : "Your brain function is slowly deteriorating over time.",
+            "Description" : "Your brain functions are slowly deteriorating over time.",
             "LuaEvents" : [
                 { "Event" : "OnTurn", "Script" : "Core.Traits.OnTurn_BrainRot" }
             ],
@@ -1072,9 +1072,9 @@
         {
             "Name" : "Alcohol <color=red>Addiction</color>",
             "ID" : "addiction_liquid_alcohol",
-            "Description" : "You are addicted to Alcohol. Going without it can cause these withdrawal effects: (<color=red>-1 Accuracy, -1 Strength</color>)",
+            "Description" : "You are addicted to Alcohol. Going without it can cause these withdrawal effects: (<color=red>-2 Accuracy, -1 Strength</color>)",
             "Stats" : [
-                { "Stat" : "Accuracy", "Amount" : -1 },
+                { "Stat" : "Accuracy", "Amount" : -2 },
                 { "Stat" : "Strength", "Amount" : -1 }
             ],
             "Tags" : [ "Addiction" ],
@@ -1083,11 +1083,11 @@
         {
             "Name" : "Cytopke <color=red>Addiction</color>",
             "ID" : "addiction_liquid_cytopke",
-            "Description" : "You are addicted to Cytopke. Going without it can cause these withdrawal effects: (<color=red>+1 Strength, -1 Intelligence, -2 Speed</color>)",
+            "Description" : "You are addicted to Cytopke. Going without it can cause these withdrawal effects: (<color=red>+1 Strength, -2 Intelligence, -2 Speed</color>)",
             "Stats" : [
                 { "Stat" : "Strength", "Amount" : 1 },
                 { "Stat" : "Move Speed", "Amount" : -2 },
-                { "Stat" : "Intelligence", "Amount" : -1 }
+                { "Stat" : "Intelligence", "Amount" : -2 }
             ],
             "Tags" : [ "Addiction" ],
             "Stackable" : false

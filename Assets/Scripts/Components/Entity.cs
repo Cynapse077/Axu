@@ -43,7 +43,15 @@ public class Entity : MonoBehaviour
 
     public string Name
     {
-        get { return gameObject.name; }
+        get
+        {
+            if (!isPlayer && AI != null && !AI.npcBase.HasFlag(NPC_Flags.Static) && !AI.npcBase.HasFlag(NPC_Flags.Named_NPC))
+            {
+                return string.Format("Entity_Objective".Localize(), gameObject.name);
+            }
+
+            return gameObject.name;
+        }
     }
     public string MyName
     {
@@ -125,7 +133,7 @@ public class Entity : MonoBehaviour
         {
             if (mPos == null)
             {
-                mPos = new Coord(0, 0);
+                mPos = new Coord();
             }
 
             mPos.x = posX;
@@ -373,10 +381,10 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        if (stats.HasEffect("Confuse") && SeedManager.combatRandom.CoinFlip() || stats.HasEffect("Drunk") && SeedManager.combatRandom.Next(100) < 20)
+        if (stats.HasEffect("Confuse") && SeedManager.combatRandom.CoinFlip() || stats.HasEffect("Drunk") && RNG.Next(100) < 20)
         {
-            x = SeedManager.combatRandom.Next(-1, 2);
-            y = SeedManager.combatRandom.Next(-1, 2);
+            x = RNG.Next(-1, 2);
+            y = RNG.Next(-1, 2);
         }
 
         if (World.tileMap.WalkableTile(posX + x, posY + y))
@@ -665,8 +673,8 @@ public class Entity : MonoBehaviour
                 if (IsOtherEntityInTheWay(x, y))
                 {
                     Entity e = World.tileMap.GetCellAt(posX + x, posY + y).entity;
-                    e.stats.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 3));
-                    e.stats.IndirectAttack(SeedManager.combatRandom.Next(1, amount + 2), DamageTypes.Blunt, null, LocalizationManager.GetContent("Impact"), true);
+                    e.stats.AddStatusEffect("Stun", RNG.Next(1, 3));
+                    e.stats.IndirectAttack(RNG.Next(1, amount + 2), DamageTypes.Blunt, null, LocalizationManager.GetContent("Impact"), true);
                     stopMove = true;
                     break;
                 }
@@ -690,7 +698,7 @@ public class Entity : MonoBehaviour
 
                     if (i > 0 && stats.HasEffect("OffBalance") && SeedManager.combatRandom.CoinFlip())
                     {
-                        stats.AddStatusEffect("Topple", SeedManager.combatRandom.Next(1, 5));
+                        stats.AddStatusEffect("Topple", RNG.Next(1, 5));
                         break;
                     }
                 }
@@ -703,13 +711,13 @@ public class Entity : MonoBehaviour
 
             if (stopMove)
             {
-                stats.IndirectAttack(SeedManager.combatRandom.Next(1, amount + 2), DamageTypes.Blunt, null, LocalizationManager.GetContent("Impact"), true);
+                stats.IndirectAttack(RNG.Next(1, amount + 2), DamageTypes.Blunt, null, "Impact".Localize(), true);
             }
 
         }
-        else if (SeedManager.combatRandom.Next(100) < 10)
+        else if (RNG.OneIn(10))
         {
-            stats.AddStatusEffect("Stun", SeedManager.combatRandom.Next(1, 3));
+            stats.AddStatusEffect("Stun", RNG.Next(1, 3));
         }
     }
 
@@ -922,7 +930,7 @@ public class Entity : MonoBehaviour
                 World.soundManager.ShootFirearm();
         }
 
-        CombatLog.NameItemMessage("Message_FireWeapon", MyName, inventory.firearm.DisplayName());
+        CombatLog.NameItemMessage("Message_FireWeapon", Name, inventory.firearm.DisplayName());
 
         int numShots = inventory.firearm.GetCComponent<CFirearm>().shots;
 
@@ -1145,7 +1153,7 @@ public class Entity : MonoBehaviour
 
     public void CreateBloodstain(bool overrideRandom = false, int chance = 6)
     {
-        if (!GameSettings.Particle_Effects || SeedManager.combatRandom.Next(100) < chance && !overrideRandom 
+        if (!GameSettings.Particle_Effects || RNG.Next(100) < chance && !overrideRandom 
             || !isPlayer && AI.npcBase.HasFlag(NPC_Flags.No_Blood))
         {
             return;
@@ -1172,14 +1180,14 @@ public class Entity : MonoBehaviour
         {
             inventory.gold -= (inventory.gold / 10);
 
-            if (SeedManager.combatRandom.Next(100) < 10)
+            if (RNG.Next(100) < 10)
             {
                 stats.level.XP = 0;
             }
 
-            if (SeedManager.combatRandom.Next(100) < 10)
+            if (RNG.Next(100) < 10)
             {
-                int ranNum = SeedManager.combatRandom.Next(4);
+                int ranNum = RNG.Next(4);
 
                 if (ranNum == 0 && stats.Strength > 1)
                 {
@@ -1220,7 +1228,7 @@ public class Entity : MonoBehaviour
         {
             if (isPlayer && !e.AI.isHostile && e != fighter.lastTarget)
             {
-                World.userInterface.YesNoAction("YN_AttackPassive".Translate(), () =>
+                World.userInterface.YesNoAction("YN_AttackPassive".Localize(), () =>
                 {
                     fighter.Attack(e.stats, freeAction, null);
                     hitAnEnemy = true;

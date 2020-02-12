@@ -438,7 +438,7 @@ public class EntitySkills : MonoBehaviour
         if (entity.AI.InSightOfPlayer())
         {
             Instantiate(World.poolManager.roarEffect, transform.position, Quaternion.identity);
-            CombatLog.NameMessage("Message_Call", gameObject.name);
+            CombatLog.NameMessage("Message_Call", entity.Name);
         }
 
         foreach (Entity e in World.objectManager.onScreenNPCObjects)
@@ -458,7 +458,7 @@ public class EntitySkills : MonoBehaviour
 
         World.soundManager.TeleportSound();
         entity.ForcePosition();
-        CombatLog.NameMessage("Message_Teleport", gameObject.name);
+        CombatLog.NameMessage("Message_Teleport", entity.Name);
     }
 
     public bool PassiveDisarm(Entity attacker)
@@ -475,7 +475,7 @@ public class EntitySkills : MonoBehaviour
             return false;
         }
 
-        CombatLog.CombatMessage("Message_Disarm", attacker.name, gameObject.name, entity.isPlayer);
+        CombatLog.CombatMessage("Message_Disarm", attacker.Name, entity.Name, entity.isPlayer);
         otherInventory.Disarm();
 
         if (entity.isPlayer)

@@ -50,7 +50,7 @@ public static class SpawnController
 
         if (item != null && SeedManager.combatRandom.CoinFlip())
         {
-            World.userInterface.YesNoAction("YN_BanditAmbush_Item".Translate(), () =>
+            World.userInterface.YesNoAction("YN_BanditAmbush_Item".Localize(), () =>
             {
                 World.userInterface.BanditYes(goldAmount, item);
                 entity.inventory.RemoveInstance_All(item);
@@ -58,7 +58,7 @@ public static class SpawnController
         }
         else
         {
-            World.userInterface.YesNoAction("YN_BanditAmbush".Translate(), () =>
+            World.userInterface.YesNoAction("YN_BanditAmbush".Localize(), () =>
             {
                 World.userInterface.BanditYes(goldAmount, item);
                 entity.inventory.gold -= goldAmount;

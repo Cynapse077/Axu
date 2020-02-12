@@ -158,7 +158,7 @@ public class DialogueController : MonoBehaviour
                         myNPC.flags.Remove(NPC_Flags.At_Home);
                         World.userInterface.Dialogue_CustomChat(LocalizationManager.GetContent("Dialogue_Follow"));
 
-                        CombatLog.NameMessage("Message_New_Follower", myNPC.name);
+                        CombatLog.NameMessage("Message_New_Follower", bai.entity.Name);
                         World.userInterface.CloseWindows();
                     }
                     else
@@ -172,7 +172,7 @@ public class DialogueController : MonoBehaviour
                 dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Send_Home"), () => {
                     myNPC.flags.Add(NPC_Flags.At_Home);
                     myNPC.worldPosition = World.tileMap.worldMap.GetClosestLandmark("Home");
-                    CombatLog.NameMessage("Message_Sent_Home", myNPC.name);
+                    CombatLog.NameMessage("Message_Sent_Home", bai.entity.Name);
                     World.tileMap.HardRebuild();
                     World.userInterface.CloseWindows();
                 }));
@@ -187,14 +187,14 @@ public class DialogueController : MonoBehaviour
 
     void Hire()
     {
-        World.userInterface.YesNoAction("YN_Hire".Translate(), () => HireMe(), null, costToHire.ToString());
+        World.userInterface.YesNoAction("YN_Hire".Localize(), () => HireMe(), null, costToHire.ToString());
     }
 
     public void HireMe()
     {
         if (ObjectManager.playerEntity.inventory.gold < costToHire)
         {
-            Alert.NewAlert("Hire_No_Money".Translate(), UIWindow.Dialogue);
+            Alert.NewAlert("Hire_No_Money".Localize(), UIWindow.Dialogue);
         }
         else if (World.objectManager.NumFollowers() < 3)
         {

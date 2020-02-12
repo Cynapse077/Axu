@@ -42,9 +42,16 @@
                 },
                 {
                     "Level" : 10,
-                    "Abilities" : [ "blink" ],
+                    "Abilities" : [ "charge" ],
+                    "Traits" : [ "keeneye" ],
                     "Stats" : [
                         { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
                     ]
                 }
             ]
@@ -81,19 +88,27 @@
                 },
                 {
                     "Level" : 5,
-                    "Abilities" : [ "trip" ]
+                    "Abilities" : [ "juke" ]
                 },
                 {
                     "Level" : 7,
+                    "Traits" : [ "resist" ],
                     "Stats" : [
                         { "Stat" : "Strength", "Amount" : 1 }
                     ]
                 },
                 {
                     "Level" : 10,
-                    "Abilities" : [ "radblast" ],
+                    "Traits" : [ "simple" ],
                     "Stats" : [
                         { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Traits" : [ "keeneye" ],
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
                     ]
                 }
             ]
@@ -140,9 +155,16 @@
                 },
                 {
                     "Level" : 10,
-                    "Abilities" : [ "healing0" ],
+                    "Abilities" : [ "energystorm" ],
+                    "Traits" : [ "bookworm" ],
                     "Stats" : [
                         { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Intelligence", "Amount" : 1 }
                     ]
                 }
             ] 
@@ -183,15 +205,22 @@
                 },
                 {
                     "Level" : 7,
+                    "Traits" : [ "resist" ],
                     "Stats" : [
                         { "Stat" : "Strength", "Amount" : 1 }
                     ]
                 },
                 {
-                    "Level" : 10,
-                    "Abilities" : [ "blink" ],
+                    "Level" : 10,                    
                     "Stats" : [
                         { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Abilities" : [ "blink" ],
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
                     ]
                 }
             ]
@@ -226,6 +255,7 @@
                 },
                 {
                     "Level" : 5,
+                    "Traits" : [ "vision" ],
                     "Abilities" : [ "confsquare" ]
                 },
                 {
@@ -237,8 +267,15 @@
                 {
                     "Level" : 10,
                     "Abilities" : [ "radblast" ],
+                    "Traits" : [ "swimmer" ],
                     "Stats" : [
                         { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
                     ]
                 }
             ]
@@ -282,8 +319,15 @@
                 {
                     "Level" : 10,
                     "Abilities" : [ "spirits" ],
+                    "Traits" : [ "organized" ],
                     "Stats" : [
                         { "Stat" : "Intelligence", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
                     ]
                 }
             ]
@@ -334,6 +378,12 @@
                     "Abilities" : [ "firebreath" ],
                     "Stats" : [
                         { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
                     ]
                 }
             ]

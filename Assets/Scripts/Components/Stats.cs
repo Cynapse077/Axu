@@ -358,7 +358,7 @@ public class Stats : MonoBehaviour
             for (int i = 0; i < pLevel.stats.Count; i++)
             {
                 ChangeAttribute(pLevel.stats[i].Stat, pLevel.stats[i].Amount);
-                CombatLog.NewMessage(string.Format("<color=green>Your {0} has increased by <color=yellow>{1}</color>.</color>", pLevel.stats[i].Stat, pLevel.stats[i].Amount));
+                CombatLog.NewMessage(string.Format("LevelUp_StatGain".Localize(), pLevel.stats[i].Stat, pLevel.stats[i].Amount));
             }
 
             for (int i = 0; i < pLevel.traits.Count; i++)
@@ -369,8 +369,8 @@ public class Stats : MonoBehaviour
 
                     if (t != null)
                     {
-                        AddTrait(new Trait(t));
-                        CombatLog.NewMessage(string.Format("<color=green>You have gained the trait \"<color=yellow>{0}</color>\".</color>", t.name));
+                        AddTrait(new Trait(t));                        
+                        CombatLog.NewMessage(string.Format("LevelUp_GainTrait".Localize(), t.name));
                     }
                 }
             }
@@ -383,7 +383,7 @@ public class Stats : MonoBehaviour
                 {
                     if (entity.skills.abilities.Find(x => x.ID == ab.ID) == null)
                     {
-                        CombatLog.NewMessage(string.Format("<color=green>You have learned the ability \"<color=yellow>{0}</color>\".</color>", ab.Name));
+                        CombatLog.NewMessage(string.Format("LevelUp_GainAbility".Localize(), ab.Name));
                     }
 
                     entity.skills.AddSkill(new Ability(ab), Ability.AbilityOrigin.Natrual);
@@ -421,7 +421,7 @@ public class Stats : MonoBehaviour
 
         if (entity.isPlayer || attacker.isPlayer || entity.AI.InSightOfPlayer())
         {
-            CombatLog.Combat_Full(entity.isPlayer, 0, false, gameObject.name, true, attacker.name, "", weapon.DisplayName());
+            CombatLog.Combat_Full(entity.isPlayer, 0, false, entity.Name, true, attacker.Name, "", weapon.DisplayName());
         }
     }
 
@@ -522,7 +522,7 @@ public class Stats : MonoBehaviour
                 displayOrange = !displayOrange;
             }
 
-            CombatLog.Combat_Full(entity.isPlayer, damage, crit, gameObject.name, false, attacker.name, targetPart.displayName, weapon.DisplayName());
+            CombatLog.Combat_Full(entity.isPlayer, damage, crit, entity.Name, false, attacker.Name, targetPart.displayName, weapon.DisplayName());
         }
 
         PostDamage(attacker, damage, damTypes, targetPart);
@@ -653,7 +653,7 @@ public class Stats : MonoBehaviour
         HashSet<DamageTypes> dTypes = new HashSet<DamageTypes>() { DamageTypes.Blunt };
         int damage = CalculateDamage(amount, dTypes, false, targetPart, true, true);
 
-        CombatLog.NewSimpleCombat("Damage_Simplified", damage, gameObject.name, entity.isPlayer);
+        CombatLog.NewSimpleCombat("Damage_Simplified", damage, entity.Name, entity.isPlayer);
         PostDamage(null, damage, dTypes, targetPart);
     }
 
@@ -666,7 +666,7 @@ public class Stats : MonoBehaviour
 
         if (health <= 0)
         {
-            CombatLog.NameMessage("Message_Die", gameObject.name);
+            CombatLog.NameMessage("Message_Die", entity.Name);
             return;
         }
 
@@ -1134,7 +1134,7 @@ public class Stats : MonoBehaviour
     {
         if (MyBody.bodyParts[limbIndex].slot == ItemProperty.Slot_Head && MyBody.GetBodyPartsBySlot(ItemProperty.Slot_Head).Count <= 1)
         {
-            Alert.CustomAlert_WithTitle("Last Head", "You cannot replace your only head!");
+            Alert.NewAlert("LastHead");
             return;
         }
 

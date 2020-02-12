@@ -140,7 +140,7 @@ public class UserInterface : MonoBehaviour
     {
         if (dead && (playerInput.keybindings.GetKey("Enter") || playerInput.keybindings.GetKey("Pause")))
         {
-            if (World.difficulty.Level == Difficulty.DiffLevel.Rogue || World.difficulty.Level == Difficulty.DiffLevel.Hunted)
+            if (World.difficulty.Permadeath)
             {
                 Manager.ClearFiles();
                 World.Reset();
@@ -561,7 +561,7 @@ public class UserInterface : MonoBehaviour
     public void OpenSaveAndQuitDialogue()
     {
         CloseWindows();
-        YesNoAction("YN_SaveQuit".Translate(), () => { fadePanel.CrossFadeAlpha(1.0f, 0.3f, true); SaveAndQuit(); }, () => { CloseWindows(); }, "");
+        YesNoAction("YN_SaveQuit".Localize(), () => { fadePanel.CrossFadeAlpha(1.0f, 0.3f, true); SaveAndQuit(); }, () => { CloseWindows(); }, "");
     }
 
     public void LookToolipOn(Transform tr, BaseAI npc)
@@ -789,7 +789,7 @@ public class UserInterface : MonoBehaviour
                 else
                 {
                     CloseWindows();
-                    YesNoAction("YN_Amputate".Translate(), () => {
+                    YesNoAction("YN_Amputate".Localize(), () => {
                         CloseWindows();
                         playerInventory.entity.body.RemoveLimb(parts[indexToUse]);
                     }, null, parts[indexToUse].displayName);

@@ -390,7 +390,7 @@ public class CharacterCreation : MonoBehaviour
             else
             {
                 YNPanel.gameObject.SetActive(true);
-                YNPanel.Display("YN_MainMenu".Translate(), () => { LoadMainMenu(); }, () => { EndConfirmReturn(); }, "");
+                YNPanel.Display("YN_MainMenu".Localize(), () => { LoadMainMenu(); }, () => { EndConfirmReturn(); }, "");
                 confirmReturn = true;
             }
         }
@@ -421,7 +421,7 @@ public class CharacterCreation : MonoBehaviour
     {
         confirmStart = true;
         YNPanel.gameObject.SetActive(true);
-        YNPanel.Display("YN_StartProf".Translate(), () => { SendDataToManager(); }, () => { EndConfirmStart(); }, currentProf.name);
+        YNPanel.Display("YN_StartProf".Localize(), () => { SendDataToManager(); }, () => { EndConfirmStart(); }, currentProf.name);
     }
 
     void EndConfirmStart()

@@ -401,7 +401,7 @@ public class TileMap : MonoBehaviour
     {
         Coord c = WorldPosition;
 
-        currentElevation = (name == "Workshop") ? -5 : 0;
+        currentElevation = 0;
         ObjectManager.playerEntity.posX = Manager.localMapSize.x / 2;
         ObjectManager.playerEntity.posY = 2;
         ObjectManager.playerEntity.ForcePosition();
@@ -418,11 +418,14 @@ public class TileMap : MonoBehaviour
                 c = worldMap.GetLandmark("Abandoned Building");
         }
 
-        worldCoordX = c.x;
-        worldCoordY = c.y;
+        if (c != null)
+        {
+            worldCoordX = c.x;
+            worldCoordY = c.y;
 
-        ObjectManager.playerEntity.BeamDown();
-        ObjectManager.player.GetComponent<PlayerInput>().CheckMinimap();
+            ObjectManager.playerEntity.BeamDown();
+            ObjectManager.player.GetComponent<PlayerInput>().CheckMinimap();
+        }
     }
 
     public Cell GetCellAt(Coord c)

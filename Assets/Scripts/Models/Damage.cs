@@ -75,7 +75,7 @@ public class Damage
 
         for (int i = 0; i < Num; i++)
         {
-            damage += SeedManager.combatRandom.Next(Sides) + 1;
+            damage += RNG.Next(Sides) + 1;
         }
 
         return damage;
@@ -125,7 +125,7 @@ public class Damage
 
         dice = int.Parse(ss[0]);
 
-        return new Damage(dice, sides, inc, DamageTypes.Blunt);
+        return new Damage(dice, sides, inc);
     }
 }
 

@@ -288,12 +288,12 @@ public class MouseController : MonoBehaviour
         {
             if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == TileManager.tiles["Stairs_Up"].ID)
             {
-                userInterface.YesNoAction("YN_GoUp".Translate(), () => { playerInput.GoUp(); }, null, "");
+                userInterface.YesNoAction("YN_GoUp".Localize(), () => { playerInput.GoUp(); }, null, "");
                 return;
             }
             else if (World.tileMap.GetTileID(playerEntity.posX, playerEntity.posY) == TileManager.tiles["Stairs_Down"].ID)
             {
-                userInterface.YesNoAction("YN_GoDown".Translate(), () => { playerInput.GoDown(); }, null, "");
+                userInterface.YesNoAction("YN_GoDown".Localize(), () => { playerInput.GoDown(); }, null, "");
                 return;
             }
 

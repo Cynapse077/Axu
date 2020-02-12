@@ -356,5 +356,5 @@ public enum NPC_Flags
     Skills_Leprosy, Summon_Adds, OnDeath_Explode, OnDeath_PoisonGas, Hit_And_Run, Inactive,
 
     Can_Speak, Solid_Limbs, No_Melee, RPois, RBleed, Resist_Webs, OnDisable_Regen, No_Strangle, No_TakeDown,
-    NO_XP, Vampire, Faction_Leader
+    NO_XP, Vampire, Faction_Leader, HasName
 }

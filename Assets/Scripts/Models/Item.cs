@@ -110,9 +110,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
     }
 
     #region On___ Functions
-    public void OnEquip(Stats stats, bool wieldMainHand, bool skipCommands = false)
+    public void OnEquip(Stats stats, bool wieldMainHand)
     {
-        if (!OnUseReject())
+        if (!OnEquipReject())
         {
             ChangeStats(stats, false);
         }
@@ -132,9 +132,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
         RunCommands(wieldMainHand ? "OnWield" : "OnEquip", stats.entity);
     }
 
-    public void OnUnequip(Entity entity, bool inMainHand, bool skipCommands = false)
+    public void OnUnequip(Entity entity, bool inMainHand)
     {
-        if (!OnUseReject())
+        if (!OnEquipReject())
         {
             ChangeStats(entity.stats, true);
         }
@@ -146,7 +146,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             CAbility cab = GetCComponent<CAbility>();
 
             //Remove the ability if it is not present on other equipment.
-            if (entity.inventory.EquippedItems().Find(x => x.HasCComponent<CAbility>() && x.GetCComponent<CAbility>().abID == cab.abID && x != this) == null)
+            if (!entity.inventory.EquippedItems().Any(x => x.HasCComponent<CAbility>() && x.GetCComponent<CAbility>().abID == cab.abID && x != this))
             {
                 entity.skills.RemoveSkill(cab.abID, Ability.AbilityOrigin.Item);
             }
@@ -164,7 +164,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             return;
         }
 
-        if (myEntity.isPlayer && HasProp(ItemProperty.OnAttack_Radiation) && SeedManager.combatRandom.Next(100) < 5)
+        if (myEntity.isPlayer && HasProp(ItemProperty.OnAttack_Radiation) && RNG.OneIn(20))
         {
             myEntity.stats.Radiate(1);
         }
@@ -196,7 +196,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             GetCComponent<CItemLevel>().AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
         }
 
-        if (HasProp(ItemProperty.Knockback) && SeedManager.combatRandom.Next(100) <= 5)
+        if (HasProp(ItemProperty.Knockback) && RNG.Next(100) <= 5)
         {
             if (attackedEntity != null && attackedEntity.myPos.DistanceTo(myEntity.myPos) < 2f)
             {
@@ -210,11 +210,15 @@ public class Item : ComponentHolder<CComponent>, IAsset
         RunCommands("OnBlock", targetEntity, myEntity);
     }
 
+    public void OnThrow(Entity myEntity, Coord destination)
+    {
+        RunCommands("OnThrow", myEntity, destination);
+    }
+
     public void OnConsume(Stats stats)
     {
         if (HasProp(ItemProperty.Replacement_Limb)) 
         {
-            //TODO: Add training for limbs here?
             for (int i = 0; i < 10; i++)
             {
                 stats.entity.body.TrainLimbOfType(properties.ToArray());
@@ -238,12 +242,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
             GetCComponent<CCoat>().OnStrike(stats);
         }
 
-        if (World.difficulty.Level == Difficulty.DiffLevel.Hunted || World.difficulty.Level == Difficulty.DiffLevel.Rogue)
+        if (World.difficulty.AddictionsActive && ContainsProperty(ItemProperty.Addictive))
         {
-            if (ContainsProperty(ItemProperty.Addictive))
-            {
-                stats.ConsumedAddictiveSubstance(ID, false);
-            }
+            stats.ConsumedAddictiveSubstance(ID, false);
         }
     }
     #endregion
@@ -284,7 +285,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public bool AttackCrits(int chance)
     {
-        return (SeedManager.combatRandom.Next(100) <= chance);
+        return (RNG.Next(100) <= chance);
     }
 
     public int CalculateDamage(int strength, int proficiency)
@@ -391,12 +392,12 @@ public class Item : ComponentHolder<CComponent>, IAsset
         if (HasProp(ItemProperty.Poison) || ContainsDamageType(DamageTypes.Venom))
         {
             CombatLog.SimpleMessage("Drink_Poison");
-            stats.AddStatusEffect("Poison", SeedManager.combatRandom.Next(6, 10));
+            stats.AddStatusEffect("Poison", RNG.Next(6, 10));
         }
 
         if (HasProp(ItemProperty.Radiate))
         {
-            stats.Radiate(SeedManager.combatRandom.Next(10, 40));
+            stats.Radiate(RNG.Next(10, 40));
         }
 
         if (HasProp(ItemProperty.Cure_Radiation))
@@ -926,7 +927,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             || HasProp(ItemProperty.Slot_Tail) || HasProp(ItemProperty.Slot_Wing));
     }
 
-    bool OnUseReject()
+    bool OnEquipReject()
     {
         return !HasProp(ItemProperty.Weapon) && !HasProp(ItemProperty.Armor) && !HasProp(ItemProperty.Ranged);
     }

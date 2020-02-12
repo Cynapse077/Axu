@@ -472,16 +472,7 @@ public static class ItemUtility
             {
                 string status = dat["Status"].ToString();
                 IntRange turnRange = new IntRange(dat["Turns"]);
-
-                float chance = 0f;
-                if (dat["Chance"].IsDouble)
-                {
-                    chance = (float)(double)dat["Chance"];
-                }
-                else if (dat["Chance"].IsInt)
-                {
-                    chance = (int)dat["Chance"];
-                }
+                int chance = (int)dat["Chance"];
 
                 COnHitAddStatus onhit = new COnHitAddStatus(status, turnRange, chance);
                 comps.Add(onhit);

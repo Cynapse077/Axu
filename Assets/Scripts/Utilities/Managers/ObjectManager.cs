@@ -619,10 +619,11 @@ public class ObjectManager : MonoBehaviour
         onScreenMapObjects.Remove(go);
     }
 
-    //remove all map objects on screen
+    /// <summary>
+    /// Remove all map objects on screen.
+    /// </summary>
     public void RemoveObjectInstances()
     {
-
         for (int i = 0; i < onScreenMapObjects.Count; i++)
         {
             if (onScreenMapObjects[i] != null)
@@ -711,9 +712,13 @@ public class ObjectManager : MonoBehaviour
         for (int i = 0; i < SeedManager.localRandom.Next(2, 5); i++)
         {
             Coord c = h.GetRandomPosition();
+            int tries = 0;
 
-            if (takenPositions.Contains(c))
+            while (takenPositions.Contains(c) && tries < 10)
+            {
                 c = h.GetRandomPosition();
+                tries++;
+            }
 
             takenPositions.Add(c);
 
