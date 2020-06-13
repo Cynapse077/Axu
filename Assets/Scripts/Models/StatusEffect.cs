@@ -242,7 +242,7 @@ public class Status_Sick : StatusEffect
         if (Random.Range(0, 100) < 10)
         {
             int amount = Random.Range(1, 3);
-            World.objectManager.CreatePoolOfLiquid(stats.entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, "liquid_vomit", amount);
+            World.objectManager.CreatePoolOfLiquid(stats.entity.myPos, "liquid_vomit", amount);
         }
 
         base.OnTurn();

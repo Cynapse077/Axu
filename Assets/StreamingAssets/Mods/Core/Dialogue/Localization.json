@@ -21,9 +21,13 @@
             "Display" : "Trade"
         },
         {
-            "ID" : "Dialogue_Heal Wounds",
-            "Display" : "Heal Wounds/Diseases"
+            "ID" : "Dialogue_Healing",
+            "Display" : "Healing"
         },
+        {
+            "ID" : "NotNeeded",
+            "Display" : "<color=grey>(Not needed)</color>"
+		},
         {
             "ID" : "Dialogue_Replace Limb",
             "Display" : "Replace Limb"
@@ -32,6 +36,10 @@
             "ID" : "Dialogue_Amputate Limb",
             "Display" : "<color=red>Amputate</color> Limb"
         },
+        {
+            "ID" : "Dialogue_Cybernetics",
+            "Display" : "Cybernetics (1x Bottle Cap)"
+		},
         {
             "ID" : "Dialogue_Hire",
             "Display" : "Hire"
@@ -318,7 +326,7 @@
         },
         {
             "ID" : "IT_Firearm_Ammo",
-            "Display" : "Ammo: <color=cyan>([INPUT1] / [INPUT2])</color>"
+            "Display" : "Ammo: <color=cyan>({0} / {1})</color>"
         },
         {
             "ID" : "IT_OnConsume_Poison",
@@ -1212,6 +1220,22 @@
             "Display" : "the {0}"
         },
         {
+            "ID" : "ShotDamageBonus",
+            "Display" : "Shot Damage + "
+		},
+        {
+            "ID" : "ChanceToAddStatus",
+            "Display" : "{0}% chance to add the \"{1}\" status."
+		},
+        {
+            "ID" : "LivingWeaponLevel",
+            "Display" : "<color=cyan>Level</color> <color=yellow>{0}</color> <color=grey>({1} %xp)</color>"
+		},
+        {
+            "ID" : "LevelMax",
+            "Display" : "<color=cyan>Level</color> <color=yellow>{0}</color> (MAX)"
+		},
+        {
             "ID" : "None",
             "Display" : "None"
         },
@@ -1297,11 +1321,11 @@
         },
         {
             "ID" : "Limb_Left",
-            "Display" : "(L)"
+            "Display" : "{0} (L)"
         },
         {
             "ID" : "Limb_Right",
-            "Display" : "(R)"
+            "Display" : "{0} (R)"
         },
         {
             "ID" : "Dialogue_TooManyFollowers",

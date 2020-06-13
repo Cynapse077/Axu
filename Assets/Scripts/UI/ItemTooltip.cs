@@ -48,7 +48,7 @@ public static class ItemTooltip
         }
 
 
-        if (item.HasProp(ItemProperty.Ranged) || item.HasCComponent<CFirearm>())
+        if (item.HasProp(ItemProperty.Ranged) && item.TryGetCComponent(out CFirearm cf))
         {
             displayItems.Add(GetContent("IT_Firearm", true));
             displayItems.Add(GetContent_Input("IT_Type", WeaponType(item)));
@@ -56,8 +56,7 @@ public static class ItemTooltip
             string damageString = GetContent_Input("IT_Damage", item.TotalDamage().ToString());
             displayItems.Add(damageString);
 
-            CFirearm cf = item.GetCComponent<CFirearm>();
-            displayItems.Add(GetContent_Input("IT_Firearm_Ammo", cf.curr.ToString(), cf.max.ToString()));
+            displayItems.Add("It_Firearm_Ammo".Localize().Format(cf.curr.ToString(), cf.max.ToString()));
         }
 
         //Weapons

@@ -6,16 +6,26 @@
             "NPCs" : [ "merch" ],
             "Hostile" : false,
             "Faction" : "villagers",
-            "Weight" : 1.0
+            "Weight" : 100
         },
         {
             "ID" : "eversight-ambush",
             "Enter Dialogue" : "A group of Eversight Assassins have snuck up on you. Prepare to fight!",
             "Groups" : [ "Eversight 1" ],
-            "Weight" : 0.1,
+            "Weight" : 10,
             "Hostile" : true,
             "Faction" : "eversight",
             "Min Difficulty" : "Hunted"
-        }
+        },
+        {
+            "ID" : "serial-house",
+            "Enter Dialogue" : "You've come across a house with a strange aura...",
+            "Weight" : 10,
+            "Hostile" : false,
+            "Nullifying Flag" : "Spawned_SerialHouse",
+            "Flag To Add" : "Spawned_SerialHouse",
+            "Maps" : [ "Encounter_SerialHouse" ],
+            "Player Start Pos" : { "x" : 24, "y" : 4 }
+		}
     ]
 }

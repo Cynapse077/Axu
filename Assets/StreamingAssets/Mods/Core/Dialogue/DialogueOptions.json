@@ -21,7 +21,6 @@
 		{
 			"ID" : "akklune_where",
 			"Display" : "You are on the planet Axu, far from home. It has been a prison colony planet for generations now, a place you are sent to when you are too different or dangerous to keep around. I do not know your crimes, but it does not matter. There is no reason we cannot work together.",
-			"OnSelect" :  "Core.DialogueActions.TestDialogue",
 			"Responses" : [
 				{
 					"Display" : "What should I do now?",
@@ -403,7 +402,7 @@
 
 		{
 			"ID" : "pugelder_init",
-			"Display" : "Hello, human. \n\n<color=grey><i>The Puggle Elder sniffs the air.</i></color>",
+			"Display" : "Hello, human.\n\n<color=grey><i>The Puggle Elder sniffs the air.</i></color>",
 			"Responses" : [
 				{
 					"Display" : "Wait, you're not going to attack me?",
@@ -431,10 +430,24 @@
 		},
 		{
 			"ID" : "pugelder_trust",
-			"Display" : "I see no need for senseless violence. I am afraid I must be going. Do not cause trouble. I've had to ban too many humans from my village.",
+			"Display" : "I see no need for senseless violence. Do not cause trouble. I've had to ban too many humans from my village.",
 			"Responses" : [
 				{
+					"Display" : "Have you met a man named Grum?",
+					"GoTo" : "pugelder_grum"
+				},
+				{
 					"Display" : "Fair enough. (Leave)",
+					"GoTo" : "End"
+				}
+			]
+		},
+		{
+			"ID" : "pugelder_grum",
+			"Display" : "Grum? Of course. He lived with us for a time before proving to be incapable of sustaining a peaceful atmosphere. We tried to teach him many things, but a student who refuses to learn cannot be taught. After he threatened to skin our young, I had to cast him back out into the wilds.",
+			"Responses" : [
+				{
+					"Display" : "A shame. (End)",
 					"GoTo" : "End"
 				}
 			]

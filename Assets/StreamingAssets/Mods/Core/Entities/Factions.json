@@ -42,7 +42,8 @@
                 "wildlifepeace",
                 "xul",
                 "ensis",
-                "frostborne"
+                "frostborne",
+                "empire"
             ],
             "Hidden" : true
         },
@@ -52,7 +53,8 @@
             "Hostile To" : [
                 "krish",
                 "bandits",
-                "deepones"
+                "deepones",
+                "empire"
             ]
         },
         {
@@ -63,7 +65,8 @@
                 "frostborne",
                 "wildlife",
                 "krish",
-                "bandits"
+                "bandits",
+                "empire"
             ]
         },
         {
@@ -79,7 +82,8 @@
                 "villagers",
                 "bandits",
                 "xul",
-                "frostborne"
+                "frostborne",
+                "empire"
             ]
         },
         {
@@ -90,7 +94,8 @@
                 "followers",
                 "frostborne",
                 "bandits",
-                "xul"
+                "xul",
+                "empire"
             ],
             "Hidden" : true
         },
@@ -104,7 +109,8 @@
                 "wildlife",
                 "puggles",
                 "krish",
-				"deepones"
+				"deepones",
+                "empire"
             ]
         },
         {
@@ -116,7 +122,8 @@
                 "wildlife",
                 "puggles",
                 "ensis",
-                "krish"
+                "krish",
+                "empire"
             ]
         },
         {
@@ -125,7 +132,8 @@
             "Hostile To" : [
                 "bandits", 
                 "wildlife",
-                "krish"
+                "krish",
+                "empire"
             ]
         },
         {
@@ -140,7 +148,8 @@
                 "kin",
                 "wildlife",
                 "wildlifepeace",
-                "xul"
+                "xul",
+                "empire"
             ]
         },
         {
@@ -152,7 +161,8 @@
                 "wildlife",
                 "puggles",
                 "krish",
-                "deepones"
+                "deepones",
+                "empire"
             ],
             "Hidden" : true
         },
@@ -168,7 +178,8 @@
                 "frostborne",
                 "xul",
                 "mutants",
-                "krish"
+                "krish",
+                "empire"
             ],
             "Hidden" : true
         },
@@ -179,7 +190,8 @@
 				"bandits",
                 "krish",
                 "deepones",
-				"eversight"
+				"eversight",
+                "empire"
 			],
             "Hidden" : true
 		},
@@ -196,7 +208,8 @@
                 "frostborne",
                 "kin",
                 "xul",
-                "krish"
+                "krish",
+                "empire"
             ],
             "Hidden" : true
         },
@@ -207,7 +220,8 @@
                 "player",
                 "followers",
                 "mutants",
-                "krish"
+                "krish",
+                "empire"
             ],
             "Hidden" : true
         },
@@ -223,7 +237,8 @@
                 "kin",
                 "frostborne",
                 "xul",
-                "krish"
+                "krish",
+                "empire"
             ],
             "Hidden" : true
         },
@@ -234,9 +249,16 @@
                 "bandits",
                 "wildlife",
                 "kin",
-                "krish"
+                "krish",
+                "eversight",
+                "empire"
             ],
             "Hidden" : true
-        }
+        },
+        {
+            "Name" : "The Empire",
+            "ID" : "empire",
+            "Hostile To" : [ "all" ]
+		}
     ]
 }

@@ -3439,6 +3439,44 @@
             "MaxItemRarity" : 4
         },
         {
+            "Name" : "Security Bot",
+            "ID" : "secbot",
+            "Faction" : "empire",
+            "Body Structure" : "Flying Drone",
+            "Sprite" : "npc-secbot.png",
+            "Flags" : [
+                "No_Blood",
+                "Stationary",
+                "RPois",
+                "RBleed",
+				"No_Strangle"
+            ],
+            "Stats" : {
+                "Health" : 45,
+                "Stamina" : 2,
+
+                "Defense" : 4,
+                "Strength" : 5,
+                "Dexterity" : 8,
+                "Intelligence" : 4,
+                "Endurance" : 4,
+
+                "Speed" : 18,
+                "Perception" : 12,
+                "Accuracy" : 2
+            },
+            "Weapon_Choices" : [
+                "turret"
+            ],
+			"Weapon Skill" : 3,
+            "Firearm" : "turret",
+            "Inventory" : [
+                { "Item" : "bullet", "Min" : 15, "Max" : 65 }
+            ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 3
+        },
+        {
             "Name" : "Cursed Statue",
             "ID" : "statue",
             "Faction" : "deepones",

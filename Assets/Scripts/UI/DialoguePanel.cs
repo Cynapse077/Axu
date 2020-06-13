@@ -67,12 +67,30 @@ public class DialoguePanel : MonoBehaviour
 
         for (int i = 0; i < node.options.Length; i++)
         {
+            if (!node.nullifyingFlag.NullOrEmpty() && ObjectManager.playerJournal.HasFlag(node.nullifyingFlag))
+            {
+                cMax--;
+                continue;
+            }
+
+            if (!node.requiredFlag.NullOrEmpty() && !ObjectManager.playerJournal.HasFlag(node.requiredFlag))
+            {
+                cMax--;
+                continue;
+            }
+
             GameObject g = Instantiate(button, transform);
             g.GetComponentInChildren<Text>().text = node.options[i].display;
 
             string nID = node.options[i].nextID;
 
             g.GetComponent<Button>().onClick.AddListener(() => GetNextNode(nID));
+            g.GetComponent<Button>().onClick.AddListener(() => { 
+                if (!node.flag.NullOrEmpty())
+                {
+                    ObjectManager.playerJournal.AddFlag(node.flag);
+                }
+            });
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(2, UIWindow.Dialogue);
             g.GetComponent<OnHover_SetSelectedIndex>().offset = 2;
         }
@@ -99,9 +117,13 @@ public class DialoguePanel : MonoBehaviour
     public void ChooseDialogue()
     {
         if (nodeDialogue)
+        {
             transform.GetChild(UserInterface.selectedItemNum + 2).GetComponent<Button>().onClick.Invoke();
+        }
         else
+        {
             controller.dialogueChoices[UserInterface.selectedItemNum].callBack();
+        }
     }
 
     void GetNextNode(string node)

@@ -234,7 +234,7 @@
         {
             "Name" : "Simple",
             "ID" : "simple",
-            "Description" : "You have higher health and resiliance to attacks, but your stamina and intelligence are lower. <color=green>Health ▲, Defense ▲</color>, <color=red>Stamina ▼, Intelligence ▼</color>",
+            "Description" : "You have higher health and resiliance to attacks, but your stamina and intelligence are lower. <color=green>Health/Defense ▲</color>, <color=red>Stamina/Intelligence ▼</color>",
             "Stats" : [
                 { "Stat" : "Health", "Amount" : 10 },
                 { "Stat" : "Stamina", "Amount" : -5 },
@@ -501,7 +501,7 @@
         {
             "Name" : "Tail",
             "ID" : "extail",
-            "Description" : "You have a small tail protruding from the base of your back.",
+            "Description" : "You have a small tail protruding from the base of your spine.",
             "Stats" : [
 				{ "Stat" : "Speed", "Amount" : 1 },
 				{ "Stat" : "Charisma", "Amount" : -1 }

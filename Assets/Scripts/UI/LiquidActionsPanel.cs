@@ -34,7 +34,7 @@ public class LiquidActionsPanel : MonoBehaviour
     void OnGround()
     {
         CLiquidContainer cl = cont.GetCComponent<CLiquidContainer>();
-        World.objectManager.CreatePoolOfLiquid(ObjectManager.playerEntity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, cl.sLiquid.ID, cl.sLiquid.units);
+        World.objectManager.CreatePoolOfLiquid(ObjectManager.playerEntity.myPos, cl.sLiquid.ID, cl.sLiquid.units);
 
         cl.SetLiquidVolume(0);
         cl.CheckLiquid();

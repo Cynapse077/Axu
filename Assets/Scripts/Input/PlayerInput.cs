@@ -68,7 +68,7 @@ public class PlayerInput : MonoBehaviour
     public void ChangeCursorMode(CursorMode cm)
     {
         cursorMode = cm;
-        directionSelectObject.SetActive(cursorMode == CursorMode.Direction || KeyHeld("AlternateAttack"));
+        directionSelectObject.SetActive(cursorMode == CursorMode.Direction);
         cursorControlScript.enabled = (cursorMode == CursorMode.Tile);
 
         if (!cursorControlScript.enabled)
@@ -153,9 +153,13 @@ public class PlayerInput : MonoBehaviour
             List<ContextualMenu.ContextualAction> co = ContextualMenu.GetActions();
 
             if (co.Count == 1)
+            {
                 co[0].myAction();
+            }
             else if (co.Count > 0)
+            {
                 World.userInterface.OpenContextActions(co);
+            }
         }
 
         if (World.userInterface.NoWindowsOpen)
@@ -171,9 +175,14 @@ public class PlayerInput : MonoBehaviour
         }
 
         if (Mathf.Abs(mapPositionPointer.transform.position.x - PointerPos.x) > 6 || Mathf.Abs(mapPositionPointer.transform.position.y - PointerPos.y) > 6)
+        {
             mapPositionPointer.transform.position = PointerPos;
+        }
         else
+        {
             mapPositionPointer.transform.position = Vector3.Lerp(mapPositionPointer.transform.position, PointerPos, 0.5f);
+        }
+
         World.userInterface.ChangeMapNameInSideBar();
 
         if (worldPath != null)
@@ -193,9 +202,13 @@ public class PlayerInput : MonoBehaviour
         if (KeyDown("Pause") && World.userInterface.NoWindowsOpen)
         {
             if (cursorMode == CursorMode.Tile)
+            {
                 fireWeapon = false;
+            }
             else if (cursorMode == CursorMode.Direction)
+            {
                 walking = false;
+            }
 
             ChangeCursorMode(CursorMode.None);
             return;
@@ -222,6 +235,15 @@ public class PlayerInput : MonoBehaviour
         {
             showMinimap = !showMinimap;
             World.userInterface.ChangeMapNameInSideBar();
+        }
+
+        if (KeyHeld("AlternateAttack") || KeyHeld("GrappleAttack"))
+        {
+            directionSelectObject.SetActive(true);
+        }
+        else
+        {
+            directionSelectObject.SetActive(cursorMode == CursorMode.Direction);
         }
 
         if (AnyInputDown())
@@ -298,14 +320,18 @@ public class PlayerInput : MonoBehaviour
             ChangeCursorMode((cursorMode == CursorMode.Tile) ? CursorMode.None : CursorMode.Tile);
             cursorControlScript.Reset();
         }
-        else if (!fullMap && KeyDown("Interact") && World.userInterface.NoWindowsOpen && cursorMode != CursorMode.Direction)
+        else if (!fullMap && KeyDown("Interact") && World.userInterface.NoWindowsOpen && cursorMode == CursorMode.None)
         {
             List<ContextualMenu.ContextualAction> co = ContextualMenu.GetActions();
 
             if (co.Count == 1)
+            {
                 co[0].myAction();
+            }
             else
+            {
                 ChangeCursorMode(CursorMode.Direction);
+            }
         }
         else if (KeyDown("Pickup"))
         {
@@ -413,23 +439,41 @@ public class PlayerInput : MonoBehaviour
     void SingleInput()
     {
         if (KeyDown("North"))
+        {
             Action(0, 1);
+        }
         else if (KeyDown("East"))
+        {
             Action(1, 0);
+        }
         else if (KeyDown("South"))
+        {
             Action(0, -1);
+        }
         else if (KeyDown("West"))
+        {
             Action(-1, 0);
+        }
         else if (KeyDown("NorthEast") && !GameSettings.FourWayMovement)
+        {
             Action(1, 1);
+        }
         else if (KeyDown("SouthEast") && !GameSettings.FourWayMovement)
+        {
             Action(1, -1);
+        }
         else if (KeyDown("SouthWest") && !GameSettings.FourWayMovement)
+        {
             Action(-1, -1);
+        }
         else if (KeyDown("NorthWest") && !GameSettings.FourWayMovement)
+        {
             Action(-1, 1);
+        }
         else if (KeyDown("Wait"))
+        {
             Action(0, 0);
+        }
     }
 
     void HoldKeys()
@@ -437,36 +481,52 @@ public class PlayerInput : MonoBehaviour
         if (!waitForRefresh)
         {
             if (KeyHeld("North"))
+            {
                 HeldKeyAction(0, 1);
+            }
             else if (KeyHeld("East"))
+            {
                 HeldKeyAction(1, 0);
+            }
             else if (KeyHeld("South"))
+            {
                 HeldKeyAction(0, -1);
+            }
             else if (KeyHeld("West"))
+            {
                 HeldKeyAction(-1, 0);
+            }
             else if (KeyHeld("NorthEast") && !GameSettings.FourWayMovement)
+            {
                 HeldKeyAction(1, 1);
+            }
             else if (KeyHeld("SouthEast") && !GameSettings.FourWayMovement)
+            {
                 HeldKeyAction(1, -1);
+            }
             else if (KeyHeld("SouthWest") && !GameSettings.FourWayMovement)
+            {
                 HeldKeyAction(-1, -1);
+            }
             else if (KeyHeld("NorthWest") && !GameSettings.FourWayMovement)
+            {
                 HeldKeyAction(-1, 1);
+            }
             else if (KeyHeld("Wait"))
+            {
                 HeldKeyAction(0, 0);
+            }
         }
     }
 
     void HeldKeys_Menu(int amount)
     {
-        float waitTime = 0.1f;
-
         World.userInterface.SwitchSelectedNum(amount);
 
         if (canHoldKeys)
         {
             waitForRefresh = true;
-            Invoke("Refresh", waitTime);
+            StartCoroutine(Refresh());
         }
     }
 
@@ -542,9 +602,13 @@ public class PlayerInput : MonoBehaviour
             }
 
             if (x == 0 && y == 0)
+            {
                 entity.Wait();
+            }
             else
+            {
                 entity.Action(x, y);
+            }
 
             entity.resting = false;
             entity.CancelWalk();
@@ -576,8 +640,6 @@ public class PlayerInput : MonoBehaviour
 
     void HeldKeyAction(int x, int y)
     {
-        float waitTime = 0.1f;
-
         if (!fullMap)
         {
             if (!entity.canAct)
@@ -586,11 +648,18 @@ public class PlayerInput : MonoBehaviour
             }
             
             if (x != 0)
+            {
                 FlipX(x < 0);
+            }
+
             if (x == 0 && y == 0)
+            {
                 entity.Wait();
+            }
             else
+            {
                 entity.Action(x, y);
+            }
 
             entity.resting = false;
             entity.CancelWalk();
@@ -606,12 +675,13 @@ public class PlayerInput : MonoBehaviour
         if (canHoldKeys)
         {
             waitForRefresh = true;
-            Invoke("Refresh", waitTime);
+            StartCoroutine(Refresh());
         }
     }
 
-    void Refresh()
+    IEnumerator Refresh()
     {
+        yield return new WaitForSeconds(0.1f);
         waitForRefresh = false;
     }
 
@@ -662,12 +732,6 @@ public class PlayerInput : MonoBehaviour
         ChangeCursorMode(CursorMode.Tile);
         cursorControlScript.throwingItem = true;
         cursorControlScript.FindClosestEnemy(0);
-    }
-
-    public void ToggleBlink()
-    {
-        ChangeCursorMode(CursorMode.Tile);
-        cursorControlScript.blinking = true;
     }
 
     public void SearchArea(Coord pos, bool passive)
@@ -726,9 +790,13 @@ public class PlayerInput : MonoBehaviour
     public void BringNPCs1()
     {
         if (npcsToMove == null)
+        {
             npcsToMove = new List<NPC>();
+        }
         else
+        {
             npcsToMove.Clear();
+        }
 
         if (!fullMap)
         {
@@ -790,12 +858,7 @@ public class PlayerInput : MonoBehaviour
             entity.stats.health = entity.stats.MaxHealth;
             entity.stats.stamina = entity.stats.MaxHealth;
 
-            int timePass = 20;
-
-            if (x != 0 && y != 0)
-                timePass = 20;
-            else
-                timePass = (y != 0) ? 20 : 30;
+            int timePass = (x != 0 && y != 0) ? 20 : (y != 0) ? 20 : 30;
 
             if (entity.inventory.CanFly())
             {
@@ -849,7 +912,9 @@ public class PlayerInput : MonoBehaviour
     bool TryChangeElevation(int num)
     {
         if (num == 0)
+        {
             return false;
+        }
 
         if (num > 0)
         {

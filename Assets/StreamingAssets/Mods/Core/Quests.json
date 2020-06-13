@@ -130,7 +130,7 @@
                     "Progress Flag" : "Can_Open_Prison_Cells"
                 }
 			],
-            "End Dialogue" : "Thank you for coming. My name is Lomis, and this is my city. I am the leader of the Ensis. Listen, I think we can make a deal. You do some work for us, and I can get you a seat on a space craft. You do want to go home right? Good. Now, I've granted you access to the <color=cyan>lower levels of the facility</color>. Beneath the <color=yellow>Prison</color> is the <color=yellow>Workshop</color>. You will meet our head engineer, Ka-Nil there. He is overseeing construction on the ship. Be wary, he is a very peculiar individual.",
+            "End Dialogue" : "Thank you for coming. My name is Lomis, and this is my city. I am the leader of the Ensis. Listen, I think we can make a deal. You do some work for us, and I can get you a seat on a space craft. You do want to go home, right? Good. Now, I've granted you access to the <color=cyan>lower levels of the facility</color>. Beneath the <color=yellow>Prison</color> is the <color=yellow>Workshop</color>. You will meet our head engineer, Ka-Nil there. He is overseeing construction on the ship. Be wary, he is a very peculiar individual.",
 
             "Chained Quest" : "ensis7"
         },
@@ -533,7 +533,7 @@
 			"Steps" : [
 				{ "Goal" : "Talk To", "NPC" : "kanil" }
 			],
-			"End Dialogue" : "Locating Xzol has proven to be quite the problem. He seems to slip in and out of existence on a whim, but I feel like there is more solidity to it than that. His body is physical, and must be constrained the limitations of our plane. I believe he is hiding somewhere deep within the planet to regain his power after the devastation he caused. There are some deep tunnels in the desert, but I cannot be sure that's where he is hiding out. If we activate sonar above, we should be able to map out the entirety of the tunnels below the planet. This will give us a location.",
+			"End Dialogue" : "Locating Xzol has proven to be quite the problem. He seems to slip in and out of existence on a whim, but I feel like there is more solidity to it than that. His body is physical, and must be constrained the limitations of our plane. I believe he is hiding somewhere deep within the planet to regain his power after the devastation he caused. There are some tunnels in the desert, but I cannot be sure that's where he is hiding out. If we activate sonar above, we should be able to map out the entirety of the tunnels below the planet. This will give us a location.",
 
 			"Chained Quest" : "ensis29"
 		},
@@ -548,15 +548,33 @@
                 {
                     "Event" : "OnStart",
                     "Create Location" : { "Zone ID" : "Tunnel Entrance" }
+                },
+                {
+                    "Event" : "OnComplete",
+                    "Progress Flag" : "Sonar_Complete"
                 }
             ],
 			"Steps" : [
 				{ "Goal" : "Go", "To" : [ "Tunnel Entrance", 0 ] },
 				{ "Goal" : "Interact", "Object Type" : "Terminal_Off", "Coordinate" : "Tunnel Entrance", "Elevation" : 0,  "Amount" : 1, "Description" : "Turn on the sonar." }
 			],
-			"End Dialogue" : "<i>[Ka-Nil's voice resonates from the terminal]</i>\nExcellent! I can see everything below! There appears to be something in the Tunnels, though I can't be sure of what it is exactly. It looks like a mass of... I don't even know. My best guess would be something to do with The Deep. [TO BE CONTINUED...]"
-		},
+			"End Dialogue" : "<i>[Ka-Nil's voice resonates from the terminal]</i>\nExcellent! I can see everything below! There appears to be something in the Tunnels, though I can't be sure of what it is exactly. It looks like a mass of... I don't even know. My best guess would be something to do with The Deep. Head back and I'll show you what I've made with the Animus Stones.",
 
+            "Chained Quest" : "ensis30"
+		},
+        {
+            "Name" : "The Animus Weapon",
+            "ID" : "ensis30",
+            "Description" : "Head back to Oromir and retrieve the Animus Weapon.",
+            "Rewards" : {
+                "XP" : 0,
+                "Items" : [ "animusknife" ]
+			},
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "oromir" }
+			],
+            "End Dialogue" : "[TO BE CONTINUED...]"
+		},
 
 		{
             "Name" : "Isazna, the Prophet",
@@ -700,7 +718,7 @@
                 { "Goal" : "Kill NPC", "NPC" : [ "oromir", 1 ] },
                 { "Goal" : "Talk To", "NPC" : "gemskhet" }
             ],
-            "End Dialogue" : "I trust the Duke of Lies has been slain? Good now we move onto the next phase of our plan...\n\n(TO BE CONTINUED...)"
+            "End Dialogue" : "I trust the Duke of Lies has been slain? Good. Now we move onto the next phase of our plan...\n\n(TO BE CONTINUED...)"
         },
 
         {
@@ -719,7 +737,7 @@
             "Chained Quest" : "blacksmith1"
         },
         {
-            "Name" : "Damn Snappers",
+            "Name" : "Damned Snappers",
             "ID" : "blacksmith1",
             "Description" : "The Xul Blacksmith needs you to kill <color=yellow>5 Winged Snappers</color> to encourage customers to come South.",
             "Rewards" : {

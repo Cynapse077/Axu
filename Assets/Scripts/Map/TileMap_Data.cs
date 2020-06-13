@@ -14,6 +14,7 @@ public class TileMap_Data
     public List<TileChange> changes;
     public List<House> houses;
     public Vault vault;
+    public string mapName = null;
 
     Path_TileData[,] pathTileData;
 
@@ -69,14 +70,38 @@ public class TileMap_Data
     }
 
     /// <summary>
-    /// Load a specific map
+    /// Load a specific map. Previous map is for layering purposes.
     /// </summary>
-    public TileMap_Data(string mapName, bool friendly)
+    public TileMap_Data(string mapName, bool friendly, TileMap_Data previousMap = null)
     {
-        mapInfo = new MapInfo(World.tileMap.WorldPosition, Biome.Default);
+        this.mapName = mapName;
+        mapInfo = new MapInfo(World.tileMap.WorldPosition, World.tileMap.worldMap.GetTileAt(World.tileMap.worldCoordX, World.tileMap.worldCoordY).biome);
         SeedManager.NPCSeed(mapName);
         Init();
         mapInfo.friendly = friendly;
+        visited = true;
+
+        if (previousMap != null)
+        {
+            for (int x = 0; x < previousMap.Width; x++)
+            {
+                for (int y = 0; y < previousMap.Height; y++)
+                {
+                    map_data[x, y] = previousMap.map_data[x, y];
+                }
+            }
+        }
+        else
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    map_data[x, y] = TileMap_Generator.TileFromBiome(mapInfo.biome);
+                }
+            }
+        }
+
         LoadSpecificMap(mapName);
         FinalPass();
     }
@@ -158,8 +183,7 @@ public class TileMap_Data
         {
             int ranNum = RNG.Next(1000);
 
-            //TODO: Random houses, rocks, etc.
-            if (ranNum <= 2)
+            if (ranNum <= 5)
             {
                 Ruins();
             }
@@ -215,6 +239,7 @@ public class TileMap_Data
     //Final pass, defining details
     void FinalPass()
     {
+        //Doors
         if (!visited)
         {
             for (int x = 0; x < Width; x++)
@@ -472,12 +497,12 @@ public class TileMap_Data
             bool SW = (y > 0 && x > 0 && !p(map_data[x - 1, y - 1].ID));
             bool NW = (y < Height - 1 && x > 0 && !p(map_data[x - 1, y + 1].ID));
 
-            if (NE) sum = 16;
+            if      (NE) sum = 16;
             else if (SE) sum = 17;
             else if (SW) sum = 18;
             else if (NW) sum = 19;
 
-            if (NE && SW && !NW && !SE) sum = 20;
+            if      (NE && SW && !NW && !SE) sum = 20;
             else if (NW && SE && !NE && !SW) sum = 21;
             else if (NE && NW && !SE && !SW) sum = 22;
             else if (SE && SW && !NE && !NW) sum = 23;
@@ -486,9 +511,13 @@ public class TileMap_Data
         }
 
         if (replaceID == -1)
+        {
             World.tileMap.SetTileGraphic(this, x, y, tIndex, sum);
+        }
         else
+        {
             World.tileMap.SetTileGraphic_AlphaMask(this, x, y, sum, replaceID);
+        }
     }
 
     //Sets up pathfinding tiledata
@@ -599,12 +628,12 @@ public class TileMap_Data
         House.HouseType ht = House.HouseType.Villager;
         string wallType = "Wall_Brick";
 
-        if (RNG.Next(100) < 25)
+        if (RNG.Next(100) < 5)
         {
             ht = House.HouseType.Merchant;
             wallType = "Wall_Store";
         }
-        else if (RNG.Next(100) < 15)
+        else if (RNG.Next(100) < 5)
         {
             ht = House.HouseType.Doctor;
             wallType = "Wall_Hospital";
@@ -614,12 +643,16 @@ public class TileMap_Data
 
         for (int i = 0; i < houses.Count; i++)
         {
+            if (h.houseType != House.HouseType.Villager && h.houseType == houses[i].houseType)
+            {
+                return false;
+            }
+
             for (int j = 0; j < h.rooms.Length; j++)
             {
                 for (int k = 0; k < houses[i].rooms.Length; k++)
                 {
-                    if (h.rooms[j].CollidesWith(houses[i].rooms[k]) ||h.houseType == House.HouseType.Doctor && ht == House.HouseType.Doctor 
-                        || h.houseType == House.HouseType.Merchant && ht == House.HouseType.Merchant)
+                    if (h.rooms[j].CollidesWith(houses[i].rooms[k]))
                     {
                         return false;
                     }
@@ -645,7 +678,7 @@ public class TileMap_Data
             }
         }
 
-        List<Coord> possinleDoorPos = new List<Coord>();
+        List<Coord> possibleDoorPos = new List<Coord>();
 
         //set tiles
         for (int i = 0; i < h.rooms.Length; i++)
@@ -686,7 +719,7 @@ public class TileMap_Data
 
                             if (x == h.Left() - 1 || x == h.Right() || y == h.Bottom() - 1 || y == h.Top())
                             {
-                                possinleDoorPos.Add(newWall);
+                                possibleDoorPos.Add(newWall);
                             }
 
                             visited = true;
@@ -696,13 +729,13 @@ public class TileMap_Data
             }
         }
 
-        PlaceDoorInHouse(h, possinleDoorPos, wallType);
+        PlaceDoorInHouse(possibleDoorPos, wallType);
 
         houses.Add(h);
         return true;
     }
 
-    void PlaceDoorInHouse(House h, List<Coord> possibleDoorPos, string wallType)
+    void PlaceDoorInHouse(List<Coord> possibleDoorPos, string wallType)
     {
         List<Coord> finalDoors = new List<Coord>();
 
@@ -719,7 +752,7 @@ public class TileMap_Data
 
         Coord door = null;
 
-        //place door
+        //Place door
         if (finalDoors.Count > 0)
         {
             door = finalDoors.GetRandom(RNG);
@@ -800,6 +833,17 @@ public class TileMap_Data
 
     bool LoadMap(Map map)
     {
+        int diffX = (Width - map.size.x) / 2;
+        int diffY = (Height - map.size.y) / 2;
+
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                map_data[x, y] = TileMap_Generator.TileFromBiome(mapInfo.biome, false);
+            }
+        }
+
         for (int x = 0; x < map.size.x; x++)
         {
             for (int y = 0; y < map.size.y; y++)
@@ -810,33 +854,36 @@ public class TileMap_Data
                 }
 
                 int id = map.tiles[x * map.size.y + y];
-
                 if (id != TileManager.tiles["Default"].ID)
                 {
-                    map_data[x, y] = TileManager.GetByID(id);
+                    map_data[x + diffX, y + diffY] = TileManager.GetByID(id);
                 }
 
                 if (id == TileManager.tiles["Default_NoBlock"].ID)
                 {
-                    map_data[x, y] = TileMap_Generator.TileFromBiome(mapInfo.biome, false);
+                    map_data[x + diffX, y + diffY] = TileMap_Generator.TileFromBiome(mapInfo.biome, false);
                 }
             }
+        }
+
+        Coord AdjustedPosition(Coord c)
+        {
+            return new Coord(c.x + diffX, c.y + diffY);
         }
 
         if (!visited)
         {
             for (int i = 0; i < map.objects.Count; i++)
             {
-                World.objectManager.NewObjectAtSpecificScreen(map.objects[i].Key, map.objects[i].Value, mapInfo.position, -elevation);
+                World.objectManager.NewObjectAtSpecificScreen(map.objects[i].Key, AdjustedPosition(map.objects[i].Value), mapInfo.position, -elevation);
             }
 
             for (int i = 0; i < map.npcs.Count; i++)
             {
                 string npcID = map.npcs[i].Key;
-                Coord localPos = new Coord(map.npcs[i].Value);
-                NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npcID);
+                Coord localPos = AdjustedPosition(map.npcs[i].Value);
 
-                if (bp == null)
+                if (!GameData.TryGet<NPC_Blueprint>(npcID, out var bp))
                 {
                     continue;
                 }
@@ -881,15 +928,23 @@ public class TileMap_Data
                 float distToCenter = Vector2.Distance(center, new Vector2(x, y));
 
                 if (distToCenter < RNG.Next(4, 6))
+                {
                     map_data[x, y] = TileManager.GetByName("Lava");
+                }
                 else if (distToCenter < RNG.Next(11, 13))
+                {
                     map_data[x, y] = TileManager.GetByName("Volcano_Wall");
+                }
                 else
                 {
-                    if (RNG.Next(1000) < 10)
+                    if (RNG.OneIn(100))
+                    {
                         map_data[x, y] = TileManager.GetByName("Volcano_Wall");
+                    }
                     else
-                        map_data[x, y] = (RNG.Next(100) < 25) ? TileManager.GetByName("Mountain_Floor") : TileManager.GetByName("UG_Dirt_1");
+                    {
+                        map_data[x, y] = RNG.OneIn(4) ? TileManager.GetByName("Mountain_Floor") : TileManager.GetByName("UG_Dirt_1");
+                    }
                 }
             }
         }
@@ -934,6 +989,8 @@ public class TileMap_Data
                         World.objectManager.NewObjectAtSpecificScreen("Web", new Coord(x, y), mapInfo.position, -elevation);
                     else if (RNG.Next(10000) < Mathf.Abs(elevation) + 1)
                         World.objectManager.NewObjectAtSpecificScreen("Chest", new Coord(x, y), mapInfo.position, -elevation);
+                    else if (RNG.Next(50000) < Mathf.Abs(elevation + 1))
+                        World.objectManager.NewObjectAtSpecificScreen("Chest_Large", new Coord(x, y), mapInfo.position, -elevation);
                 }
             }
         }
@@ -977,6 +1034,12 @@ public class TileMap_Data
                 if (WalkableTile(x, y) && RNG.Next(100) < 10 && map_data[x, y] != TileManager.tiles["Stairs_Up"] && map_data[x, y] != TileManager.tiles["Stairs_Down"])
                 {
                     string t = (RNG.Next(100) < 85) ? "Barrel" : "Chest";
+
+                    if (RNG.Next(100) == 0)
+                    {
+                        t = "Chest_Large";
+                    }
+
                     World.objectManager.NewObjectAtSpecificScreen(t, new Coord(x, y), mapInfo.position, World.tileMap.currentElevation);
                 }
             }
@@ -1078,7 +1141,7 @@ public class TileMap_Data
         int w = 3, h = 3;
         float sinXAmount = RNG.Next(50, 100) / 100f, sinYAmount = RNG.Next(50, 100) / 100f;
         float amplitude = RNG.Next(20, 50) * 0.1f;
-        float offset = 1.0f;
+        float offset;
 
         bool W = (x > 0 && RiverAt(x - 1, y));
         bool E = (x < Manager.worldMapSize.x - 1 && RiverAt(x + 1, y));
@@ -1130,7 +1193,7 @@ public class TileMap_Data
         int w = 2, h = 2;
         float sinXAmount = RNG.ZeroToOne(), sinYAmount = RNG.ZeroToOne();
         float amplitude = RNG.Next(30, 50) * 0.1f;
-        float offset = 1.0f;
+        float offset;
 
         bool W = (x > 0 && VillageAt(x - 1, y));
         bool E = (x < Manager.worldMapSize.x - 1 && VillageAt(x + 1, y));
@@ -1193,16 +1256,6 @@ public class TileMap_Data
         return null;
     }
 
-    bool NoExistingPrefabs()
-    {
-        if (loadedFromData)
-        {
-            return false;
-        }
-
-        return (!mapInfo.HasLandmark());
-    }
-
     public bool IsWaterTile(int x, int y)
     {
         if (x < 0 || x > Width || y < 0 || y > Height)
@@ -1220,7 +1273,9 @@ public class TileMap_Data
         houses = new List<House>();
 
         if (World.turnManager != null)
+        {
             lastTurnSeen = World.turnManager.turn;
+        }
     }
 
     public struct TileChange

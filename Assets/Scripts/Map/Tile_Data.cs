@@ -55,7 +55,6 @@ public class TileAtlas
     public Sprite GetSpriteAt(int index)
     {
         int row = 0;
-        int column = 0;
 
         while (index > columns)
         {
@@ -63,8 +62,6 @@ public class TileAtlas
             ++row;
         }
 
-        column = index;
-
-        return Sprite.Create(texture, new Rect(column * textureSize, row * textureSize, textureSize, textureSize), pivot);
+        return Sprite.Create(texture, new Rect(index * textureSize, row * textureSize, textureSize, textureSize), pivot);
     }
 }

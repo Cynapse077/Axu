@@ -2,6 +2,7 @@
 
 public class WrapSprite : MonoBehaviour
 {
+    const float lerpSpeed = 10f;
     public Vector2 scrollDelta;
 
     Material mat;
@@ -10,8 +11,8 @@ public class WrapSprite : MonoBehaviour
     void Start()
     {
         mat = GetComponent<SpriteRenderer>().material;
-        scrollDelta.x *= 0.00008f;
-        scrollDelta.y *= 0.00008f;
+        scrollDelta.x *= 8f / 100000f;
+        scrollDelta.y *= 5f / 100000f;
         World.turnManager.incrementTurnCounter += OffsetClouds;
         OffsetClouds();
     }
@@ -33,7 +34,7 @@ public class WrapSprite : MonoBehaviour
 
         if (oldOffset != newOffset)
         {
-            mat.SetTextureOffset("_MainTex", Vector2.Lerp(oldOffset, newOffset, Time.deltaTime * 10f));
+            mat.SetTextureOffset("_MainTex", Vector2.Lerp(oldOffset, newOffset, Time.fixedDeltaTime * lerpSpeed));
         }
     }
 

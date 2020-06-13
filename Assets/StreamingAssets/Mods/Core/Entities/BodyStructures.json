@@ -54,6 +54,10 @@
             "Parts" : [ "turret", "tripod" ]
         },
         {
+            "Name" : "Flying Drone",
+            "Parts" : [ "turret", "propeller", "chest_robot" ]
+		},
+        {
             "Name" : "Scritter",
             "Parts" : [ "head", "body", "back", "leg", "leg", "hindleg" ]
         },
@@ -263,12 +267,20 @@
             "Tags" : [ "Synthetic", "NonSeverable", "CannotWearGear" ]
         },
         {
+            "Name" : "Propeller",
+            "ID" : "propeller",
+            "Slot" : "Slot_Wing",
+            "Size" : 3,
+            "Stat" : [ { "Stat" : "Speed", "Amount" : 5 } ],
+            "Tags" : [ "Synthetic", "NonSeverable", "CannotWearGear" ]
+		},
+        {
             "Name" : "Arm",
             "ID" : "arm_mech",
             "Slot" : "Slot_Arm",
             "Size" : 5,
             "Stats" : [ { "Stat" : "Strength", "Amount" : 1 }, { "Stat" : "Dexterity", "Amount" : 1 } ],
-            "Tags" : [ "Synthetic", "External" ],
+            "Tags" : [ "Synthetic" ],
 			"Wielding" : "fists"
         },
         {
@@ -277,7 +289,7 @@
             "Slot" : "Slot_Head",
             "Size" : 4,
             "Stats" : [ { "Stat" : "Intelligence", "Amount" : 1 }, { "Stat" : "Accuracy", "Amount" : 1 } ],
-            "Tags" : [ "Synthetic", "External" ]
+            "Tags" : [ "Synthetic" ]
         },
         {
             "Name" : "Wing",
@@ -285,7 +297,7 @@
             "Slot" : "Slot_Wing",
             "Size" : 7,
             "Stats" : [ { "Stat" : "Speed", "Amount" : 2 } ],
-            "Tags" : [ "Synthetic", "External" ]
+            "Tags" : [ "Synthetic" ]
         },
 
         {

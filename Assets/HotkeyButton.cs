@@ -36,10 +36,7 @@ public class HotkeyButton : MonoBehaviour, IPointerClickHandler
 
     public void DoAction()
     {
-        if (onUse != null)
-        {
-            onUse();
-        }
+        onUse?.Invoke();
     }
 
     void Update()

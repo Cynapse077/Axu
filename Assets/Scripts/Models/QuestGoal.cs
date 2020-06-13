@@ -49,7 +49,7 @@ public class Goal : EventContainer
 
         if (myQuest != null)
         {
-            myQuest.CompleteGoal(this);
+            myQuest.Notify_GoalCompleted();
         }
     }
 
@@ -82,11 +82,11 @@ public class Goal : EventContainer
 
             if (bp == null)
             {
-                Log.Error("NPC with ID " + npcID + " does not exist.");
+                Log.Error("NPC with ID '" + npcID + "' does not exist.");
                 return null;
             }
 
-            if (bp.zone == "")
+            if (bp.zone.NullOrEmpty())
             {
                 Log.Error("Blueprint zone for '" + bp.ID + "' is empty.");
                 return null;
@@ -109,7 +109,7 @@ public class Goal : EventContainer
     }
 }
 
-//A goal that cannot by itself complete. It must be completed through other code.
+//A goal that cannot complete itself. It must be completed through other code.
 public class EmptyGoal : Goal
 {
     public EmptyGoal(Quest q, string desc)
@@ -461,7 +461,6 @@ public class GoToGoal : Goal
 {
     readonly string destination;
     readonly int elevation;
-    Coord coordDest;
 
     public GoToGoal(Quest q, string dest, int ele, string desc)
     {
@@ -471,26 +470,18 @@ public class GoToGoal : Goal
         elevation = ele;
         description = desc;
         isComplete = false;
-
-        coordDest = q.GetZone(destination);
     }
 
     public override void Init(bool skipEvent)
     {
         base.Init(skipEvent);
         EventHandler.instance.EnteredScreen += EnteredArea;
-
-        if (coordDest == null)
-        {
-            coordDest = myQuest.GetZone(destination);
-        }
-
-        World.objectManager.NewMapIcon(0, coordDest);
+        World.objectManager.NewMapIcon(0, Destination());
     }
 
     void EnteredArea(Coord c, int ele)
     {
-        if (c == coordDest && Mathf.Abs(ele) == Mathf.Abs(elevation))
+        if (c == Destination() && Mathf.Abs(ele) == Mathf.Abs(elevation))
         {
             Complete();
         }
@@ -498,26 +489,26 @@ public class GoToGoal : Goal
 
     public override bool CanComplete()
     {
-        return (World.tileMap.CurrentMap.mapInfo.position == coordDest && Mathf.Abs(World.tileMap.currentElevation) == Mathf.Abs(elevation));
+        return (World.tileMap.CurrentMap.mapInfo.position == Destination() && Mathf.Abs(World.tileMap.currentElevation) == Mathf.Abs(elevation));
     }
 
     public override void Complete()
     {
-        World.objectManager.RemoveMapIconAt(coordDest);
+        World.objectManager.RemoveMapIconAt(Destination());
         EventHandler.instance.EnteredScreen -= EnteredArea;
         base.Complete();
     }
 
     public override void Fail()
     {
-        World.objectManager.RemoveMapIconAt(coordDest);
+        World.objectManager.RemoveMapIconAt(Destination());
         EventHandler.instance.EnteredScreen -= EnteredArea;
         base.Fail();
     }
 
     public override Coord Destination()
     {
-        return coordDest;
+        return myQuest.GetZone(destination);
     }
 
     public override string ToString()
@@ -527,7 +518,8 @@ public class GoToGoal : Goal
             return description;
         }
 
-        string s = string.Format("Travel to the {0}", World.tileMap.worldMap.GetZoneNameAt(coordDest.x, coordDest.y, 0));
+        Coord dest = Destination();
+        string s = string.Format("Travel to the {0}", World.tileMap.worldMap.GetZoneNameAt(dest.x, dest.y, 0));
 
         if (elevation != 0)
         {
@@ -1055,14 +1047,6 @@ public class Fetch_Homonculus : Goal
         }
     }
 
-    void TalkToNPC(NPC n)
-    {
-        if (npcTarget == n.ID && CanComplete())
-        {
-            Complete();
-        }
-    }
-
     public void AddItem(Item i)
     {
         items.Add(i);
@@ -1121,9 +1105,9 @@ public class Fetch_Homonculus : Goal
 
             if (canAdd)
             {   
-                if (!items[i].HasCComponent<CRot>())
+                if (!items[i].HasCComponent<CRot>() && !b.flags.Contains(BodyPart.BPFlags.Synthetic))
                 {
-                    b.flags.Set(BodyPart.BPTags.Synthetic);
+                    b.flags.Add(BodyPart.BPFlags.Synthetic);
                 }
 
                 for (int j = 0; j < items[i].statMods.Count; j++)
@@ -1258,6 +1242,11 @@ public class FetchGoal : Goal
             return description;
         }
 
-        return string.Format("Give {0} {1} x{2}.", GameData.Get<NPC_Blueprint>(npcTarget).name, GameData.Get<Item>(itemID).Name, max.ToString());
+        if (GameData.TryGet<Item>(itemID, out var item) && GameData.TryGet<NPC_Blueprint>(npcTarget, out var npc))
+        {
+            return string.Format("Give {0} {1} x{2}.", npc.name, item.Name, max.ToString());
+        }
+        
+        return string.Empty;
     }
 }

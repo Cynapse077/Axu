@@ -65,7 +65,7 @@ public class MapObject
 
     void SetRotation()
     {
-        if (SeedManager.combatRandom.Next(100) < 10 || blueprint.objectType == "Bloodstain_Permanent")
+        if (RNG.OneIn(10) || blueprint.objectType == "Bloodstain_Permanent")
         {
             rotation = Random.Range(0, 360);
         }
@@ -80,8 +80,11 @@ public class MapObject
                 {
                     int cx = localPosition.x + x, cy = localPosition.y + y;
 
-                    if (cx <= 0 || cx >= Manager.localMapSize.x - 1 || cy <= 0 || cy >= Manager.localMapSize.y - 1 || Mathf.Abs(x) + Mathf.Abs(y) > 1 || x == 0 && y == 0)
+                    if (cx <= 0 || cx >= Manager.localMapSize.x - 1 || cy <= 0 || cy >= Manager.localMapSize.y - 1 
+                        || Mathf.Abs(x) + Mathf.Abs(y) > 1 || x == 0 && y == 0)
+                    {
                         continue;
+                    }
 
                     if (!World.tileMap.WalkableTile(cx, cy))
                     {
@@ -112,25 +115,10 @@ public class MapObject
     void SetupInventory()
     {
         //Setup inventory
-        switch (blueprint.objectType)
-        {
-            case "Chest":
-                inv = Inventory.GetDrops(SeedManager.combatRandom.Next(1, 4));
-                break;
-            case "Barrel":
-                if (SeedManager.combatRandom.OneIn(20))
-                {
-                    inv = Inventory.GetDrops(SeedManager.combatRandom.Next(1, 3));
-                }
-                break;
-            case "Loot":
-            case "Body":
-                inv = new List<Item>();
-                break;
-        }
-
         if (blueprint.inventory != null)
         {
+            inv = new List<Item>();
+
             for (int i = 0; i < blueprint.inventory.Count; i++)
             {
                 Item item = ItemList.GetItemByID(blueprint.inventory[i]);
@@ -138,6 +126,30 @@ public class MapObject
                 if (!item.IsNullOrDefault())
                 {
                     inv.Add(item);
+                }
+            }
+        }
+        else if (blueprint.container != null)
+        {
+            inv = new List<Item>();
+
+            if (blueprint.container.chanceToContainItems > 0 && RNG.Next(100) < blueprint.container.chanceToContainItems)
+            {
+                int numItems = RNG.Next(1, blueprint.container.maxItems + 1);
+
+                if (blueprint.container.possibleItems.NullOrEmpty())
+                {
+                    inv = Inventory.GetDrops(numItems);
+                }
+                else
+                {
+                    for (int i = 0; i < numItems; i++)
+                    {
+                        if (GameData.TryGet(blueprint.container.possibleItems.GetRandom(), out Item item))
+                        {
+                            inv.Add(new Item(item));
+                        }
+                    }
                 }
             }
         }
@@ -153,12 +165,12 @@ public class MapObject
 
     public bool CanSpawnThisObject(Coord pos, int elev)
     {
-        return (pos == worldPosition && elev == elevation);
+        return pos == worldPosition && elev == elevation;
     }
 
     public bool HasEvent(string eventName)
     {
-        return (blueprint.luaEvents != null && blueprint.luaEvents.ContainsKey(eventName)) ;
+        return blueprint.luaEvents != null && blueprint.luaEvents.ContainsKey(eventName);
     }
 
     public LuaCall GetEvent(string eventName)

@@ -115,9 +115,7 @@ public class SlotSelectPanel : MonoBehaviour
             g.GetComponent<Button>().onClick.AddListener(() => { SelectPressed(i); });
             g.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(2, UIWindow.Inventory, true, false);
 
-            string n = LocalizationManager.GetContent("Slot_Hand") + " " + ((i % 2 == 0) ? LocalizationManager.GetContent("Limb_Right") : LocalizationManager.GetContent("Limb_Left"));
-
-            n = ((curInv.entity.body.Hands[i] == curInv.entity.body.MainHand) ? "<color=yellow>" : "<color=white>") + n + "</color>";
+            string n = (i % 2 == 0 ? "Limb_Right" : "Limb_Left").Localize("Slot_Hand".Localize()).Color(curInv.entity.body.Hands[i] == curInv.entity.body.MainHand ? Color.yellow : Color.white);
 
             g.GetComponentInChildren<Text>().text = n + " - " + inv.entity.body.Hands[i].EquippedItem.InvDisplay(inv.entity.body.Hands[i].baseItem);
         }

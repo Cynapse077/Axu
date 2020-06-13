@@ -25,6 +25,8 @@ public class Entity : MonoBehaviour
     Vector3 targetPosition;
     Coord mPos;
 
+    static readonly Vector3 splashOffset = new Vector3(0.5f, 0.2f, 0f);
+
     bool swimming
     {
         get
@@ -235,7 +237,7 @@ public class Entity : MonoBehaviour
         if (pos != null)
         {
             UnSetCell();
-            myPos = pos;
+            myPos = new Coord(pos);
             SetCell();
         }
 
@@ -317,7 +319,7 @@ public class Entity : MonoBehaviour
                 if (!World.objectManager.SafeToRest())
                 {
                     CancelWalk();
-                }                
+                }
             }
             else if (resting) //Resting
             {
@@ -340,7 +342,7 @@ public class Entity : MonoBehaviour
                     return;
                 }
 
-                Action(walkDirection.x, walkDirection.y);                
+                Action(walkDirection.x, walkDirection.y);
             }
             else //None
             {
@@ -360,7 +362,9 @@ public class Entity : MonoBehaviour
     public bool Action(int x, int y)
     {
         if (stats.dead || !canAct || UserInterface.paused || !ObjectManager.doneLoading || ObjectManager.player == null)
+        {
             return false;
+        }
 
         resting = false;
 
@@ -381,7 +385,7 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        if (stats.HasEffect("Confuse") && SeedManager.combatRandom.CoinFlip() || stats.HasEffect("Drunk") && RNG.Next(100) < 20)
+        if (stats.HasEffect("Confuse") && SeedManager.combatRandom.CoinFlip() || stats.HasEffect("Drunk") && RNG.OneIn(5))
         {
             x = RNG.Next(-1, 2);
             y = RNG.Next(-1, 2);
@@ -432,7 +436,7 @@ public class Entity : MonoBehaviour
                     }
                 }
             }
-            else if(inventory.HasSpearEquipped())
+            else if (inventory.HasSpearEquipped())
             {
                 //try other tiles if you have a spear
                 const int range = 2;
@@ -459,14 +463,22 @@ public class Entity : MonoBehaviour
         else if (inventory.DiggingEquipped())
         {
             if (walkDirection != null)
+            {
                 CancelWalk();
+            }
             else
+            {
                 Dig(x, y);
+            }
         }
         else if (inventory.CanFly() && World.tileMap.PassThroughableTile(posX + x, posY + y))
+        {
             Move(x, y);
+        }
         else
+        {
             CancelWalk();
+        }
 
         return true;
     }
@@ -538,7 +550,7 @@ public class Entity : MonoBehaviour
             }
             else
             {
-                Move(x / 2, y / 2);               
+                Move(x / 2, y / 2);
             }
         }
 
@@ -581,7 +593,7 @@ public class Entity : MonoBehaviour
             if (World.tileMap.IsWaterTile(_posX, _posY) && !inventory.CanFly())
             {
                 World.soundManager.Splash();
-                SimplePool.Spawn(World.poolManager.splash, new Vector3(transform.position.x + 0.5f + x, transform.position.y + 0.2f + y, transform.position.z));
+                SimplePool.Spawn(World.poolManager.splash, transform.position + splashOffset);
             }
         }
 
@@ -728,7 +740,7 @@ public class Entity : MonoBehaviour
             return false;
         }
 
-        return (World.tileMap.GetCellAt(posX + x, posY + y).entity != null);
+        return World.tileMap.GetCellAt(posX + x, posY + y).entity != null;
     }
 
     public void Charge(Coord direction, int amount)
@@ -736,7 +748,7 @@ public class Entity : MonoBehaviour
         StartCoroutine("ChargeCo", new object[] { direction, amount });
     }
 
-    //Charge in a direction
+    //Charge in a direction. Called from above
     IEnumerator ChargeCo(object[] objs)
     {
         Coord dir = (Coord)objs[0];
@@ -847,9 +859,9 @@ public class Entity : MonoBehaviour
         if (targetCell.entity != null || targetCell.mapObjects.Count > 0)
         {
             CancelWalk();
-            if (targetCell.entity != null && targetCell.entity != ObjectManager.playerEntity)
+            if (targetCell.entity != null && !targetCell.entity.isPlayer)
             {
-                BaseAI bai = targetCell.entity.GetComponent<BaseAI>();
+                BaseAI bai = targetCell.entity.AI;
 
                 if (!bai.isHostile && bai.npcBase.HasFlag(NPC_Flags.Can_Speak) && World.objectManager.SafeToRest())
                 {
@@ -865,9 +877,13 @@ public class Entity : MonoBehaviour
                     MapObjectSprite obj = targetCell.mapObjects[i];
 
                     if (isPlayer && obj.isDoor_Closed)
+                    {
                         OpenDoor(obj);
+                    }
                     else
+                    {
                         obj.Interact();
+                    }
                 }
 
                 EndTurn(0.05f, 15);
@@ -878,13 +894,15 @@ public class Entity : MonoBehaviour
     public bool ReloadWeapon()
     {
         if (!inventory.firearm.HasProp(ItemProperty.Ranged) || inventory.firearm.MagFull())
+        {
             return false;
+        }
 
         if (inventory.Reload(inventory.firearm))
         {
             if (isPlayer)
             {
-                CombatLog.NewMessage(string.Format(LocalizationManager.GetContent("Message_Reload"), inventory.firearm.DisplayName(), 
+                CombatLog.NewMessage(string.Format("Message_Reload".Localize(), inventory.firearm.DisplayName(), 
                     ItemList.GetItemByID(inventory.firearm.GetCComponent<CFirearm>().currentAmmo).DisplayName()));
             }
 
@@ -892,13 +910,17 @@ public class Entity : MonoBehaviour
 
             //quiver
             if (inventory.firearm.HasProp(ItemProperty.Bow) && body.GetBodyPartBySlot(ItemProperty.Slot_Back).equippedItem.HasProp(ItemProperty.Quick_Reload))
+            {
                 time /= 2;
+            }
 
             EndTurn(0.2f, time);
             return true;
         }
         else if (isPlayer)
+        {
             Alert.NewAlert("No_Ammo");
+        }
 
         return false;
     }
@@ -906,12 +928,16 @@ public class Entity : MonoBehaviour
     public void ShootAtTile(int x, int y)
     {
         if (x == posX && y == posY)
+        {
             return;
+        }
 
         if (inventory.firearm.Charges() <= 0)
         {
             if (isPlayer)
+            {
                 Alert.NewAlert("No_Ammo");
+            }
 
             return;
         }
@@ -925,41 +951,32 @@ public class Entity : MonoBehaviour
         if (inventory.firearm.HasProp(ItemProperty.Ranged))
         {
             if (inventory.firearm.HasProp(ItemProperty.Bow))
+            {
                 World.soundManager.ShootBow();
+            }
             else
+            {
                 World.soundManager.ShootFirearm();
+            }
         }
 
         CombatLog.NameItemMessage("Message_FireWeapon", Name, inventory.firearm.DisplayName());
 
-        int numShots = inventory.firearm.GetCComponent<CFirearm>().shots;
-
-        for (int i = 0; i < numShots; i++)
+        if (inventory.firearm.TryGetCComponent(out CFirearm cf))
         {
-            fighter.ShootFireArm(new Coord(x, y), i);
-
-            if (inventory.firearm.HasProp(ItemProperty.Burst) || i == 0)
+            for (int i = 0; i < cf.shots; i++)
             {
-                inventory.firearm.Fire();
-                yield return new WaitForSeconds(0.1f);
+                fighter.ShootFireArm(new Coord(x, y), i);
+
+                if (inventory.firearm.HasProp(ItemProperty.Burst) || i == 0)
+                {
+                    inventory.firearm.Fire();
+                    yield return new WaitForSeconds(0.1f);
+                }
             }
         }
 
         yield return null;
-    }
-
-    public void BulletTrail(Vector2 start, Vector2 end)
-    {
-        GameObject bullet = SimplePool.Spawn(World.poolManager.shootEffect, targetPosition);
-        LineRenderer lr = bullet.GetComponent<LineRenderer>();
-        lr.SetPosition(0, start + new Vector2(0.5f, 0.5f));
-        lr.SetPosition(1, end + new Vector2(0.5f, 0.5f));
-    }
-
-    public void InstatiateThrowingEffect(Coord destination, float spdMul)
-    {
-        GameObject lo = Instantiate(World.poolManager.throwEffect, transform.position, Quaternion.identity);
-        lo.GetComponent<LerpPos>().Init(destination, spdMul);
     }
 
     public void Wait()
@@ -983,19 +1000,20 @@ public class Entity : MonoBehaviour
     }
 
     //Check to see if enities or items are in sight
-    public bool inSight(Coord otherPos)
+    public bool InSight(Coord otherPos)
     {
-        return inSight(otherPos.x, otherPos.y);
+        return InSight(otherPos.x, otherPos.y);
     }
 
-    public bool inSight(int cX, int cY)
+    public bool InSight(int cX, int cY)
     {
-        if (!Manager.lightingOn)
+        if (!Manager.lightingOn || cX == posX && cY == posY)
         {
             return true;
         }
 
-        if (stats != null && stats.HasEffect("Blind") || myPos.DistanceTo(new Coord(cX, cY)) >= sightRange && !World.tileMap.IsTileLit(cX, cY))
+        if (stats != null && stats.HasEffect("Blind") 
+            || myPos.DistanceTo(new Coord(cX, cY)) >= sightRange && !World.tileMap.IsTileLit(cX, cY))
         {
             return false;
         }
@@ -1008,7 +1026,9 @@ public class Entity : MonoBehaviour
         for (int ix = 0, iy = 0; ix < nx || iy < ny;)
         {
             if (!World.tileMap.LightPassableTile(p.x, p.y) && p != myPos)
+            {
                 return false;
+            }
 
             float fx = (0.5f + ix) / nx, fy = (0.5f + iy) / ny;
 
@@ -1043,7 +1063,9 @@ public class Entity : MonoBehaviour
             for (int y = -radius; y <= radius; y++)
             {
                 if (x == 0 && y == 0)
+                {
                     continue;
+                }
 
                 if (World.tileMap.WalkableTile(posX + x, posY + y))
                 {
@@ -1078,7 +1100,7 @@ public class Entity : MonoBehaviour
             stats.entity = this;
         }
 
-        float spd = (stats.Attributes.ContainsKey("Speed")) ? stats.Speed : 10f;
+        float spd = stats.Attributes.ContainsKey("Speed") ? stats.Speed : 10f;
 
         if (swimming)
         {
@@ -1110,9 +1132,8 @@ public class Entity : MonoBehaviour
         }
 
         spd -= inventory.BurdenPenalty();
-        spd = Mathf.Clamp(spd, 1, 50);
 
-        return (int)spd;
+        return Mathf.RoundToInt(Mathf.Clamp(spd, 1f, 50f));
     }
 
     public void EndTurn(float waitTime = 0, int cost = 10)
@@ -1121,9 +1142,13 @@ public class Entity : MonoBehaviour
         stats.PostTurn();
 
         if (isPlayer)
+        {
             World.turnManager.EndTurn(waitTime, cost);
+        }
         else
+        {
             actionPoints -= cost;
+        }
     }
 
     public bool TeleportToSurface()
@@ -1180,12 +1205,12 @@ public class Entity : MonoBehaviour
         {
             inventory.gold -= (inventory.gold / 10);
 
-            if (RNG.Next(100) < 10)
+            if (RNG.OneIn(10))
             {
                 stats.level.XP = 0;
             }
 
-            if (RNG.Next(100) < 10)
+            if (RNG.OneIn(10))
             {
                 int ranNum = RNG.Next(4);
 
@@ -1257,9 +1282,14 @@ public class Entity : MonoBehaviour
             Vector3 intPos = targetPosition + new Vector3(0.5f, 0.5f, 0);
 
             if (x < 0)
+            {
                 intPos.x += x;
+            }
+
             if (y < 0)
+            {
                 intPos.y += y;
+            }
 
             GameObject ss = SimplePool.Spawn(World.poolManager.slashEffects[4], intPos);
             ss.GetComponent<WeaponHitEffect>().DiagonalSlashDirection(x, y, body.MainHand.EquippedItem);
@@ -1269,13 +1299,18 @@ public class Entity : MonoBehaviour
             for (int p = -1; p <= 1; p++)
             {
                 if (x != 0)
+                {
                     AttackTile(posX + x, posY + p, true);
+                }
+
                 if (y != 0)
+                {
                     AttackTile(posX + p, posY + y, true);
+                }
             }
 
             GameObject ss = SimplePool.Spawn(World.poolManager.slashEffects[3], targetPosition + new Vector3(x, y, 0));
-            ss.GetComponent<WeaponHitEffect>().FaceChildOtherDirection((Flipped()) ? -1 : 1, x, y, body.MainHand.EquippedItem);
+            ss.GetComponent<WeaponHitEffect>().FaceChildOtherDirection(Flipped() ? -1 : 1, x, y, body.MainHand.EquippedItem);
         }
 
         EndTurn(0.1f, fighter.AttackAPCost());
@@ -1284,12 +1319,15 @@ public class Entity : MonoBehaviour
     bool Flipped()
     {
         if (isPlayer)
-            return isPlayer && playerInput.childSprite.flipX;
+        {
+            return playerInput.childSprite.flipX;
+        }
         else
+        {
             return spriteRenderer.flipX;
+        }
     }
 
-    //TODO: Cache this.
     public int LightBonus()
     {
         if (inventory == null || stats == null || body.bodyParts == null)
@@ -1327,6 +1365,16 @@ public class Entity : MonoBehaviour
         return Mathf.Clamp(lightAmount + stats.IllumunationCheck(), 1, Manager.localMapSize.x);
     }
 
+    public bool HasNPCFlag(NPC_Flags flag)
+    {
+        if (isPlayer || AI == null)
+        {
+            return false;
+        }
+
+        return AI.npcBase.HasFlag(flag);
+    }
+
     void CacheVariables()
     {
         stats = GetComponent<Stats>();
@@ -1355,7 +1403,6 @@ public class Entity : MonoBehaviour
         SStats myStats = stats.ToSimpleStats();
 
         List<SItem> items = new List<SItem>();
-
         if (includeInventory)
         {
             for (int i = 0; i < inventory.items.Count; i++)
@@ -1404,10 +1451,14 @@ public class Entity : MonoBehaviour
 
             if (!includeInventory && body.Hands[i].baseItem != handItem.ID)
             {
-                handItem = (GameData.Get<Item>(body.Hands[i].baseItem)).ToSerializedItem();
+                if (GameData.TryGet(body.Hands[i].baseItem, out Item it))
+                {
+                    handItem = it.ToSerializedItem();
+                }
             }
 
-            handItems.Add(handItem);
+            if (handItem != null)
+                handItems.Add(handItem);
         }
 
         PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, MyName, Manager.profName, stats.level, myStats,

@@ -4,37 +4,43 @@
             "ID" : "BaseItem",
             "Rarity" : 100,
             "Type" : "Misc_Object",
-            "Cost" : 0
+            "Cost" : 0,
+            "Abstract Parent" : true
         },
 
         {
             "ID" : "Item_Ammo", "Base" : "BaseItem",
             "Stackable" : true,
-            "Properties" : [ "Ammunition" ]
+            "Properties" : [ "Ammunition" ],
+            "Abstract Parent" : true
         },
         {
             "ID" : "Item_Weapon", "Base" : "BaseItem",
             "Damage" : "1d4",
             "Attack Type" : "Bash",
-            "Properties" : [ "Weapon" ]
+            "Properties" : [ "Weapon" ],
+            "Abstract Parent" : true
         },
         {
             "ID" : "Item_Thrown", "Base" : "Item_Weapon",
             "Properties" : [ "Throwing_Wep" ],
-            "Stackable" : true
+            "Stackable" : true,
+            "Abstract Parent" : true
         },
         {
             "ID" : "Item_Ranged", "Base" : "BaseItem",
             "Type" : "Firearm",
             "Damage" : "1d4",
-            "Properties" : [ "Ranged" ]
+            "Properties" : [ "Ranged" ],
+            "Abstract Parent" : true
         },
         {
             "ID" : "Item_Armor", "Base" : "BaseItem",
             "Type" : "Armor",
             "Damage" : "1d2",
             "Properties" : [ "Armor" ],
-            "Armor" : 1
+            "Armor" : 1,
+            "Abstract Parent" : true
         },
         {
             "ID" : "Item_Corpse", "Base" : "BaseItem",
@@ -44,14 +50,16 @@
             "Properties" : [ "Edible", "Severed_BodyPart" ],
             "Display" : {
                 "On Ground" : "item-body.png"
-            }
+            },
+            "Abstract Parent" : true
         },
         {
             "ID" : "Item_BodyPart", "Base" : "Item_Corpse",
             "Properties" : [ "Replacement_Limb" ],
             "Display" : {
                 "On Ground" : "item-limb.png"
-            }
+            },
+            "Abstract Parent" : true
         },
         {
             "ID" : "none", "Base" : "BaseItem",
@@ -61,27 +69,29 @@
             "FlavorText" : "There's nothing here.",
             "Display" : {
                 "On Ground" : "item-none.png"
-            }
+            },
+            "Abstract Parent" : true
         },
-
-
         {
             "ID" : "Item_Food", "Base" : "BaseItem",
-            "Rarity" : 1,
             "Cost" : 10,
             "Stackable" : true,
             "Properties" : [ "Edible" ],
             "Components" : [
                 { "ID" : "LuaEvent", "Event" : "OnConsume", "Script" : "Core.ItemActions.EatFood" }
-            ]
+            ],
+            "Abstract Parent" : true
         },
+
         {
             "ID" : "meat", "Base" : "Item_Food",
+            "Rarity" : 1,
             "Name" : "Dried Meat",
             "FlavorText" : "Strips of dried meat. Well-preserved and great for long travels."
         },
         {
             "ID" : "berries", "Base" : "Item_Food",
+            "Rarity" : 1,
             "Name" : "Berries",
             "FlavorText" : "A small handful of foraged berries. Makes a delicious snack."
         },
@@ -192,8 +202,8 @@
             ]
         },
         {
-            "Base" : "Item_Ammo",
             "ID" : "bolt_poison",
+            "Base" : "Item_Ammo",
             "Name" : "<color=green>Poisonous</color> Bolt",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a crossbow. Can <color=green>poison</color> targets.",
@@ -219,8 +229,8 @@
             ]
         },
         {
-            "Base" : "Item_Ammo",
             "ID" : "bolt_confuse",
+            "Base" : "Item_Ammo",
             "Name" : "<color=magenta>Runic</color> Bolt",
             "Rarity" : 2,
             "FlavorText" : "Ammunition for a crossbow. Can <color=magenta>confuse</color> targets.",
@@ -283,8 +293,8 @@
         },
 
         {
-            "Base" : "Item_Weapon",
         	"ID" : "knuckles",
+            "Base" : "Item_Weapon",
             "Name" : "Brass Knuckles",
             "Type" : "Unarmed",
             "Damage" : "2d2",
@@ -299,8 +309,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "fistfillers",
+            "Base" : "Item_Weapon",
             "Name" : "Fist Fillers",
             "Type" : "Unarmed",
             "Damage" : "1d3+1",
@@ -315,8 +325,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "caestus",
+            "Base" : "Item_Weapon",
             "Name" : "Caestus",
             "Type" : "Unarmed",
             "Damage" : "1d5",
@@ -331,8 +341,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "shockglove",
+            "Base" : "Item_Weapon",
             "Name" : "Shock Glove",
             "Type" : "Unarmed",
             "Damage" : "1d5+1",
@@ -351,8 +361,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "drillfist",
+            "Base" : "Item_Weapon",
             "Name" : "Drill Fist",
             "Type" : "Unarmed",
             "Damage" : "1d7",
@@ -372,8 +382,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "woodplank",
+            "Base" : "Item_Weapon",
             "Name" : "Wood Plank",
             "Type" : "Blunt",
             "Damage" : "1d3-1",
@@ -389,8 +399,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "femur",
+            "Base" : "Item_Weapon",
             "Name" : "Femur",
             "Type" : "Blunt",
             "Damage" : "1d3-1",
@@ -406,8 +416,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "club",
+            "Base" : "Item_Weapon",
             "Name" : "Club",
             "Type" : "Blunt",
             "Rarity" : 1,
@@ -421,8 +431,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "spikedbranch",
+            "Base" : "Item_Weapon",
             "Name" : "Spiked Branch",
             "Type" : "Blunt",
             "Damage" : "1d3+1",
@@ -441,8 +451,8 @@
             ]
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "hammer",
+            "Base" : "Item_Weapon",
             "Name" : "Hammer",
             "Type" : "Blunt",
             "Damage" : "2d2-1",
@@ -457,8 +467,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "chains",
+            "Base" : "Item_Weapon",
             "Name" : "Chains",
             "Type" : "Blunt",
             "Damage" : "2d2",
@@ -474,8 +484,8 @@
             }
         },
         {
-            "Base" : "Item_Weapon",
         	"ID" : "barbedbat",
+            "Base" : "Item_Weapon",
         	"Name" : "Barbed Bat",
         	"Type" : "Blunt",
         	"Damage" : "1d4+1",
@@ -609,7 +619,7 @@
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
                 "Layer" : "Weapon"
             }
-        },        
+        },
         {
             "Base" : "Item_Weapon",
         	"ID" : "bonesaw",
@@ -697,7 +707,7 @@
             "FlavorText" : "Most commonly used by nobles, and for dueling purposes. A fast but flimsy weapon.",
             "Cost" : 48,
             "Attack Type" : "Slash",
-            "Properties" : [ "Quick" ],
+            "Properties" : [ "Quick", "Damage_From_Dex" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-weapon.png",
@@ -839,7 +849,7 @@
             "FlavorText" : "Its reach alone offers you great boons during battle.",
             "Cost" : 25,
             "Attack Type" : "Spear",
-            "Properties" : [ "Two_Handed", "Quick" ],
+            "Properties" : [ "Two_Handed", "Quick", "Damage_From_Str_And_Dex" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-spear.png",
@@ -1154,7 +1164,7 @@
             "FlavorText" : "A light, balanced dagger with no hilt. It is used for launching at foes from a distance.",
             "Cost" : 11,
             "Attack Type" : "Knife",
-            "Properties" : [ "Quick" ],
+            "Properties" : [ "Quick", "Damage_From_Dex" ],
             "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
@@ -1170,6 +1180,7 @@
             "FlavorText" : "A small projectile axe.",
             "Cost" : 20,
             "Attack Type" : "Slash",
+            "Properties" : [ "Damage_From_Dex" ],
             "Damage Types" : [ "Slash" ],
             "Display" : {
                 "On Ground" : "item-axe.png",
@@ -1186,7 +1197,8 @@
             "FlavorText" : "A light spear that is made to be thrown. It is very aerodynamic, and can pierce armor effectively.",
             "Cost" : 45,
             "Attack Type" : "Spear",
-            "Damage Types" : [ "Pierce" ],
+            "Properties" : [ "Damage_From_Dex" ],
+            "Damage Types" : [ "Pierce"],
             "Display" : {
                 "On Ground" : "item-staff.png",
                 "On Player" : "Mods/Core/Art/Player/Weapons/char-spear.png",
@@ -1369,7 +1381,7 @@
             "Attack Type" : "Knife",
             "FlavorText" : "A small parrying dagger. Often used to disarm opponents.",
             "Cost" : 45,
-            "Properties" : [ "Disarm" ],
+            "Properties" : [ "Disarm", "Damage_From_Dex" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-knife.png",
@@ -1386,7 +1398,7 @@
             "Attack Type" : "Knife",
             "FlavorText" : "A three-pronged parrying dagger designed to tear blades from opponents' hands.",
             "Cost" : 50,
-            "Properties" : [ "Disarm" ],
+            "Properties" : [ "Disarm", "Damage_From_Dex" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
                 "On Ground" : "item-sai.png",
@@ -2818,61 +2830,6 @@
                 "Layer" : "Leg"
             }
         },
-        {
-        	"ID" : "mechwings",
-            "Name" : "Mechanical Wings",
-            "Type" : "Misc_Object", 
-            "Armor" : 1,
-            "Rarity" : 5,
-            "FlavorText" : "Mechanical wings with a back strap. Enables the wearer to fly.",
-            "Cost" :  1450,
-            "Components" : [
-                { "ID" : "LuaEvent", "Event" : "OnEquip", "Script" : "Core.ItemActions.AddMechBodyPart:wing_mech" },
-                { "ID" : "LuaEvent", "Event" : "OnEquip", "Script" : "Core.ItemActions.AddMechBodyPart:wing_mech" },
-                { "ID" : "LuaEvent", "Event" : "OnUnequip", "Script" : "Core.ItemActions.RemoveMechBodyPart:wing_mech" },
-                { "ID" : "LuaEvent", "Event" : "OnUnequip", "Script" : "Core.ItemActions.RemoveMechBodyPart:wing_mech" }
-            ],
-            "Properties" : [
-                "Armor",
-                "Slot_Back",
-                "Flying"
-            ],
-            "Display" : {
-				"On Ground" : "item-mechwings.png",
-                "On Player" : "Mods/Core/Art/Player/Backs/char-mechwings.png",
-                "Layer" : "Back"
-            }
-        },
-        {
-        	"ID" : "arm_intrine",
-            "Name" : "Intrine Arm",
-            "Type" : "Misc_Object", 
-            "Armor" : 1,
-            "Rarity" : 5,
-            "FlavorText" : "A mechanical arm.It floats in mid-air as to not impede your movements, granting increased strength and dexterity. It it moved by thought alone.",
-            "Cost" :  1450,
-            "Components" : [
-                { "ID" : "LuaEvent", "Event" : "OnAttach", "Script" : "Core.ItemActions.AddMechBodyPart:arm_mech" }
-            ],
-            "Display" : {
-                "On Ground" : "item-intrine-arm.png"
-            }
-        },
-        {
-        	"ID" : "head_intrine",
-            "Name" : "Intrine Head",
-            "Type" : "Misc_Object", 
-            "Armor" : 1,
-            "Rarity" : 5,
-            "FlavorText" : "An additional mechanical head attached to the base of your neck. Grants you extra accuracy and intelligence.",
-            "Cost" :  1450,
-            "Components" : [
-                { "ID" : "LuaEvent", "Event" : "OnAttach", "Script" : "Core.ItemActions.AddMechBodyPart:head_mech" }
-            ],
-            "Display" : {
-                "On Ground" : "item-intrine-head.png"
-            }
-        },
 
         {
             "ID" : "flask",
@@ -3050,7 +3007,7 @@
             "Name" : "Lesser Tome of Health",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 100,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "healing0"  },
@@ -3070,7 +3027,7 @@
             "Name" : "Tome of Health",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 200,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "healing1"  },
@@ -3145,7 +3102,7 @@
             "Name" : "Echo's Tome",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "echo"  },
@@ -3165,7 +3122,7 @@
             "Name" : "Tome of Fire",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "firestream"  }
@@ -3180,7 +3137,7 @@
             "Name" : "Tome of Flames",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "firesquare"  }
@@ -3195,7 +3152,7 @@
             "Name" : "Tome of Hypothermia",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "icesquare"  }
@@ -3210,7 +3167,7 @@
             "Name" : "Tome of Icicle",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "icestream"  }
@@ -3225,7 +3182,7 @@
             "Name" : "Tome of Lightning",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "zapline"  }
@@ -3240,13 +3197,13 @@
             "Name" : "Tome of Escape",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 600,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "blink"  },
                 { "ID" : "Requirement", 
                     "Requirements" : [
-                        { "Stat" : "Intelligence", "Amount" : 5 }
+                        { "Stat" : "Intelligence", "Amount" : 7 }
                     ]
                 }
             ],
@@ -3260,7 +3217,7 @@
             "Name" : "Tome of Heat",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 300,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "firewall"  }
@@ -3275,7 +3232,7 @@
             "Name" : "Tome of Toxin",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 200,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "poisonsquare"  }
@@ -3290,7 +3247,7 @@
             "Name" : "Tome of Radiation",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 550,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "radblast"  }
@@ -3305,7 +3262,7 @@
             "Name" : "Tome of Confusion",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 200,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "confusion"  }
@@ -3320,7 +3277,7 @@
             "Name" : "Tome of Haste",
             "Type" : "Misc_Object",
             "Material" : "Paper",
-            "FlavorText" : "An acient tome containing a great secret.",
+            "FlavorText" : "An ancient tome containing a great secret.",
             "Cost" : 350,
             "Components" : [
                 { "ID" : "Ability", "Ability" : "sprint"  }
@@ -4441,6 +4398,26 @@
                 "On Ground" : "item-map.png"
             },
             "Properties" : []
+        },
+        {
+            "Base" : "Item_Weapon",
+            "ID" : "animusknife",
+            "Name" : "Animus Knife",
+            "Type" : "Blade",
+            "Damage" : "2d4",
+            "FlavorText" : "A small knife crafted of Animus Stones. It gives the ability to trap a Deep One in its constructed body.",
+            "Cost" : 0,
+            "Attack Type" : "Knife",
+            "Damage Types" : [ "Slash" ],
+            "Properties" : [ "Quest_Item", "Unique" ],
+            "Components" : [
+                { "ID" : "Ability", "Ability" : "animustrap", "Level" : 1 }
+            ],
+            "Display" : {
+                "On Ground" : "item-knife.png",
+                "On Player" : "Mods/Core/Art/Player/Weapons/char-dagger.png",
+                "Layer" : "Weapon"
+            }
         }
     ]
 }

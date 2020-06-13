@@ -23,6 +23,7 @@ public class Felony : IAsset
     public string bodyStructure;
     public int healthPerLevel;
     public int staminaPerLevel;
+    public string baseBodyTexture;
 
     public Felony(JsonData dat)
     {
@@ -33,54 +34,36 @@ public class Felony : IAsset
     {
         name = dat["Name"].ToString();
         ID = dat["ID"].ToString();
-        description = dat["Description"].ToString();
-        bodyStructure = dat["Body Structure"].ToString();
+        dat.TryGetString("Description", out description);
+        dat.TryGetString("Body Structure", out bodyStructure, "Humanoid");
+        dat.TryGetString("BodyTexturePath", out baseBodyTexture, "Mods/Core/Art/Player/Bases/char-baseBody.png");
 
-        HP = (int)dat["Stats"]["HP Bonus"];
-        ST = (int)dat["Stats"]["ST Bonus"];
-
-        STR = (int)dat["Stats"]["Strength"];
-        DEX = (int)dat["Stats"]["Dexterity"];
-        INT = (int)dat["Stats"]["Intelligence"];
-        END = (int)dat["Stats"]["Endurance"];
-
-        healthPerLevel = (int)dat["HealthPerLevel"];
-        staminaPerLevel = (int)dat["StaminaPerLevel"];
+        dat["Stats"].TryGetInt("HP Bonus", out HP);
+        dat["Stats"].TryGetInt("ST Bonus", out ST);
+        dat["Stats"].TryGetInt("Strength", out STR);
+        dat["Stats"].TryGetInt("Dexterity", out DEX);
+        dat["Stats"].TryGetInt("Intelligence", out INT);
+        dat["Stats"].TryGetInt("Endurance", out END);
 
         traits = new string[dat["Traits"].Count];
-        items = new List<StringInt>();
-        proficiencies = new int[10];
-        skills = new List<SSkill>();
-        progression = new List<ProgressionLevel>();
-
         if (dat["Traits"].Count > 0)
         {
             for (int t = 0; t < dat["Traits"].Count; t++)
             {
                 string trait = dat["Traits"][t].ToString();
 
-                if (!string.IsNullOrEmpty(trait))
+                if (!trait.NullOrEmpty())
                 {
                     traits[t] = trait;
                 }
             }
         }
 
-        if (dat.ContainsKey("Money"))
-        {
-            startingMoney = (int)dat["Money"];
-        }
+        dat.TryGetInt("Money", out startingMoney);
+        dat.TryGetString("Weapon", out weapon);
+        dat.TryGetString("Firearm", out firearm);
 
-        if (dat.ContainsKey("Weapon"))
-        {
-            weapon = dat["Weapon"].ToString();
-        }
-
-        if (dat.ContainsKey("Firearm"))
-        {
-            firearm = dat["Firearm"].ToString();
-        }
-
+        items = new List<StringInt>();
         if (dat.ContainsKey("Items"))
         {
             for (int j = 0; j < dat["Items"].Count; j++)
@@ -89,10 +72,7 @@ public class Felony : IAsset
             }
         }
 
-        for (int j = 0; j < proficiencies.Length; j++)
-        {
-            proficiencies[j] = 0;
-        }
+        proficiencies = new int[12];
 
         SetProf(dat, "Blade", 0);
         SetProf(dat, "Blunt", 1);
@@ -107,15 +87,17 @@ public class Felony : IAsset
         SetProf(dat, "Butchery", 10);
         SetProf(dat, "Martial Arts", 11);
 
+        skills = new List<SSkill>();
         if (dat.ContainsKey("Skills"))
         {
             for (int s = 0; s < dat["Skills"].Count; s++)
             {
                 string skillName = dat["Skills"][s].ToString();
-                skills.Add(new SSkill(skillName, 1, 0, 0, 0));
+                skills.Add(new SSkill(skillName, 1, 0, 0, new List<Ability.AbilityOrigin>() { Ability.AbilityOrigin.Natrual }));
             }
         }
 
+        progression = new List<ProgressionLevel>();
         if (dat.ContainsKey("Progression"))
         {
             for (int i = 0; i < dat["Progression"].Count; i++)
@@ -123,6 +105,9 @@ public class Felony : IAsset
                 progression.Add(new ProgressionLevel(dat["Progression"][i]));
             }
         }
+
+        dat.TryGetInt("HealthPerLevel", out healthPerLevel);
+        dat.TryGetInt("StaminaPerLevel", out staminaPerLevel);
     }
 
     void SetProf(JsonData dat, string name, int id)

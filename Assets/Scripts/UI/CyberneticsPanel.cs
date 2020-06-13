@@ -42,7 +42,7 @@ public class CyberneticsPanel : UIPanel
         Initialize();
 
         bpAnchor.DestroyChildren();
-        augmentableBodyParts = bod.bodyParts.FindAll(x => x.organic && x.isAttached);
+        augmentableBodyParts = bod.bodyParts.FindAll(x => x.Organic && x.Attached);
 
         foreach (BodyPart b in augmentableBodyParts)
         {

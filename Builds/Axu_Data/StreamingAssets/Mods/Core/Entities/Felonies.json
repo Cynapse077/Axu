@@ -1,0 +1,392 @@
+{
+    "Felonies" : [
+        {
+            "Name" : "Vigilante",
+            "ID" : "vigilante",
+            "Description" : "Seeing corruption and inability, you took the laws into your own hands. Your cunning and intuition may save you yet.",
+            "Body Structure" : "Humanoid",
+            "Stats" : {
+                "HP Bonus" : -1,
+                "ST Bonus" : 0,
+
+           		"Strength" : 5,
+            	"Dexterity" : 6,
+            	"Intelligence" : 5,
+            	"Endurance" : 6
+            },
+            "Traits" : [
+            	"stealthy",
+            	"fastwalk"
+            ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+            "Proficiencies" : { "Blade" : 1 },
+            "Skills" : [ "juke" ],
+            "Weapon" : "dagger",
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "sprint" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Stealth", "Amount" : 2 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "charge" ],
+                    "Traits" : [ "keeneye" ],
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name" : "Murderer",
+            "ID" : "murderer",
+            "Description" : "An act of anger is what brought you to this new hell. Strength and ferocity are your allies.",
+            "Body Structure" : "Humanoid",
+            "Stats" : {
+                "HP Bonus" : -2,
+                "ST Bonus" : -4,
+
+                "Strength" : 7,
+                "Dexterity" : 4,
+                "Intelligence" : 4,
+                "Endurance" : 6
+            },
+            "Traits" : [
+                "healthy",
+                "thickskin"
+            ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+            "Proficiencies" : { "Blunt" : 1 },
+            "Skills" : [ "charge" ],
+            "Weapon" : "club",
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "juke" ]
+                },
+                {
+                    "Level" : 7,
+                    "Traits" : [ "resist" ],
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Traits" : [ "simple" ],
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Traits" : [ "keeneye" ],
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name" : "Heretic",
+            "ID" : "heretic",
+            "Description" : "Your practices were said to be harmful to the <i>\"greater good\"</i>. You must now rely on your intelligence to survive.",
+            "Body Structure" : "Humanoid",
+            "Stats" : {
+                "HP Bonus" : -4,
+                "ST Bonus" : 2,
+
+           		"Strength" : 4,
+            	"Dexterity" : 5,
+            	"Intelligence" : 7,
+            	"Endurance" : 5
+            },
+            "Traits" : [
+            	"energetic",
+            	"vision"
+            ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+            "Proficiencies" : { "Polearm" : 1 },
+            "Skills" : [ "zapline" ],
+            "Weapon" : "staff",
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Stamina", "Amount" : 3 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "rockspire" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Intelligence", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "energystorm" ],
+                    "Traits" : [ "bookworm" ],
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Intelligence", "Amount" : 1 }
+                    ]
+                }
+            ] 
+        },
+        {
+            "Name" : "Technophile",
+            "ID" : "cyborg",
+            "Description" : "Flesh and steel. Your interest in becoming more than human was considered <i>\"dangerous\"</i>.\n<color=yellow><i>(Starts with a synthetic arm, leg, and chest.)</i></color>",
+            "Body Structure" : "Cyborg",
+            "Stats" : {
+                "HP Bonus" : 3,
+                "ST Bonus" : 4,
+
+                "Strength" : 5,
+                "Dexterity" : 4,
+                "Intelligence" : 5,
+                "Endurance" : 6
+            },
+            "Traits" : [
+                "radresist"
+            ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+            "Proficiencies" : { "Firearm" : 1 },
+            "Skills" : [ "brace" ],
+            "Weapon" : "hatchet",
+            "Money" : 10,
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "trip" ]
+                },
+                {
+                    "Level" : 7,
+                    "Traits" : [ "resist" ],
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,                    
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Abilities" : [ "blink" ],
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name" : "Experiment",
+            "ID" : "experiment",
+            "Description" : "By some sick measure of mercy, a failed experiment such as yourself was exiled rather than killed on the spot.\n<color=yellow><i>(Starts with random mutations.)</i></color>",
+            "Body Structure" : "Humanoid",
+            "Stats" : {
+                "HP Bonus" : 0,
+                "ST Bonus" : 0,
+
+                "Strength" : 0,
+                "Dexterity" : 0,
+                "Intelligence" : 0,
+                "Endurance" : 0
+            },
+            "Traits" : [
+            	"experiment"
+            ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+            "Proficiencies" : { "Unarmed" : 1 },            
+            "Weapon" : "",
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Traits" : [ "vision" ],
+                    "Abilities" : [ "confsquare" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Intelligence", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "radblast" ],
+                    "Traits" : [ "swimmer" ],
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                }
+            ]
+        },
+        {
+        	"Name" : "Smuggler",
+        	"ID" : "smuggler",
+        	"Description" : "You smuggled bionics and heretical literature into Empire-controlled planets. Eventually, you were caught and sent to Axu.\n<color=yellow><i>(Starts with extra money)</i></color>",
+        	"Body Structure" : "Humanoid",
+        	"Stats" : {
+        		"HP Bonus" : 0,
+        		"ST Bonus" : 0,
+
+        		"Strength" : 5,
+        		"Dexterity" : 5,
+        		"Intelligence" : 5,
+        		"Endurance" : 5
+        	},
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+        	"Traits" : [ "puggishrogue" ],
+            "Skills" : [ "sprint" ],
+        	"Money" : 300,
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "echo" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "spirits" ],
+                    "Traits" : [ "organized" ],
+                    "Stats" : [
+                        { "Stat" : "Intelligence", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name" : "Fool",
+            "ID" : "fool",
+            "Description" : "I have a feeling people just grew tired of having you around...",
+            "Body Structure" : "Humanoid",
+            "Stats" : {
+                "HP Bonus" : 0,
+                "ST Bonus" : 0,
+
+           		"Strength" : 4,
+            	"Dexterity" : 4,
+            	"Intelligence" : 4,
+            	"Endurance" : 4
+            },
+            "Traits" : [
+                "irritating"
+            ],
+            "HealthPerLevel" : 3,
+            "StaminaPerLevel" : 1,
+            "Proficiencies" : { "Misc" : 2 },
+            "Items" : [
+                { "Item" : "throwingknife", "Amount" : 4 }
+            ],
+            "Money" : 50,
+            "Progression" : [
+                {
+                    "Level" : 4,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 5,
+                    "Abilities" : [ "sprint" ]
+                },
+                {
+                    "Level" : 7,
+                    "Stats" : [
+                        { "Stat" : "Strength", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 10,
+                    "Abilities" : [ "firebreath" ],
+                    "Stats" : [
+                        { "Stat" : "Dexterity", "Amount" : 1 }
+                    ]
+                },
+                {
+                    "Level" : 15,
+                    "Stats" : [
+                        { "Stat" : "Endurance", "Amount" : 1 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

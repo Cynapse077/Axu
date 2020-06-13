@@ -35,8 +35,7 @@ public class EquipmentPanel : UIPanel
             wep.GetComponentInChildren<Text>().text = hands[i].EquippedItem.InvDisplay(hands[i].baseItem, false, true, false);
             Color col = hands[i] == curInv.entity.body.MainHand ? Color.yellow : AxuColor.Orange;
 
-            string n = (LocalizationManager.GetContent("Slot_Hand") + " " 
-                + ((i % 2 == 0) ? LocalizationManager.GetContent("Limb_Right") : LocalizationManager.GetContent("Limb_Left"))).Color(col);
+            string n = (i % 2 == 0 ? "Limb_Right" : "Limb_Left").Localize("Slot_Hand".Localize()).Color(col);
 
             wep.transform.GetChild(1).GetComponent<Text>().text = n;
             wep.GetComponent<Button>().onClick.AddListener(() => OnSelect(wep.transform.GetSiblingIndex()));
@@ -47,7 +46,7 @@ public class EquipmentPanel : UIPanel
 
         GameObject fire = SimplePool.Spawn(equipmentButton, equipmentBase);
         fire.GetComponentInChildren<Text>().text = (curInv.firearm == null) ? ItemList.NoneItem.Name : curInv.firearm.InvDisplay("none", false, true, true);
-        fire.transform.GetChild(1).GetComponent<Text>().text = LocalizationManager.GetContent("TT_Ranged").Color(AxuColor.Orange);
+        fire.transform.GetChild(1).GetComponent<Text>().text = "TT_Ranged".Localize().Color(AxuColor.Orange);
         fire.GetComponent<Button>().onClick.AddListener(() => OnSelect(fire.transform.GetSiblingIndex()));
         fire.GetComponent<OnHover_SetSelectedIndex>().SetHoverMode(0, UIWindow.Inventory);
         fire.GetComponent<ItemButton>().icon.sprite = SwitchSprite(curInv.firearm);
@@ -67,7 +66,7 @@ public class EquipmentPanel : UIPanel
 
     public static Sprite SwitchSprite(Item item)
     {
-        string id = (string.IsNullOrEmpty(item.renderer.onGround)) ? "item-empty.png" : item.renderer.onGround;
+        string id = item.renderer.onGround.NullOrEmpty() ? "item-empty.png" : item.renderer.onGround;
 
         return SpriteManager.GetObjectSprite(id);
     }
@@ -113,7 +112,7 @@ public class EquipmentPanel : UIPanel
 
         if (index < hands.Count)
         {
-            if (!curInv.UnEquipWeapon(hands[index].EquippedItem, index))
+            if (!curInv.UnEquipWeapon(hands[index]))
             {
                 return;
             }

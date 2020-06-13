@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
@@ -21,12 +22,12 @@ public class Body : MonoBehaviour
     {
         get
         {
-            if (bodyParts.Find(x => x.slot == ItemProperty.Slot_Arm && x.isAttached) == null)
+            if (bodyParts.Find(x => x.slot == ItemProperty.Slot_Arm && x.Attached) == null)
             {
                 return defaultHand;
             }
 
-            return bodyParts.Find(x => x.slot == ItemProperty.Slot_Arm && x.isAttached).hand;
+            return bodyParts.Find(x => x.slot == ItemProperty.Slot_Arm && x.Attached).hand;
         }
     }
 
@@ -78,8 +79,8 @@ public class Body : MonoBehaviour
             bodyParts = EntityList.DefaultBodyStructure();
         }
 
-        Item handItem = (entity.AI.npcBase.handItems.Count > 0 && entity.AI.npcBase.handItems[0] != null) ? entity.AI.npcBase.handItems[0] : ItemList.GetItemByName("fists");
-        defaultHand = new BodyPart.Hand(GetBodyPartBySlot(ItemProperty.Slot_Head), handItem, handItem.ID);
+        Item handItem = (entity.AI.npcBase.handItems.Count > 0 && entity.AI.npcBase.handItems[0] != null) ? entity.AI.npcBase.handItems[0] : ItemList.GetItemByID("fists");
+        defaultHand = new BodyPart.Hand(bodyParts.First(x => x.Attached), handItem, handItem.ID);
 
         for (int i = 0; i < entity.AI.npcBase.handItems.Count; i++)
         {
@@ -96,7 +97,7 @@ public class Body : MonoBehaviour
 
         for (int i = 0; i < bodyParts.Count; i++)
         {
-            if (bodyParts[i].equippedItem == null || bodyParts[i].equippedItem.Name == "")
+            if (bodyParts[i].equippedItem.IsNullOrDefault() || bodyParts[i].equippedItem.Name.NullOrEmpty())
             {
                 bodyParts[i].equippedItem = ItemList.NoneItem;
             }
@@ -118,12 +119,12 @@ public class Body : MonoBehaviour
 
     public List<BodyPart> SeverableBodyParts()
     {
-        return bodyParts.FindAll(x => x.isAttached && !x.flags.IsSet(BodyPart.BPTags.NonSeverable));
+        return bodyParts.FindAll(x => x.Severable);
     }
 
     public List<BodyPart> TargetableBodyParts()
     {
-        return bodyParts.FindAll(x => x.isAttached);
+        return bodyParts.FindAll(x => x.Attached);
     }
 
     public int TotalBodyWeight()
@@ -140,7 +141,7 @@ public class Body : MonoBehaviour
 
     public void TrainLimb(BodyPart part)
     {
-        part.AddXP(entity, SeedManager.combatRandom.NextDouble());
+        part.AddXP(entity, RNG.NextDouble());
     }
 
     public void TrainLimbOfType(ItemProperty[] types)
@@ -159,7 +160,7 @@ public class Body : MonoBehaviour
 
         if (parts.Count > 0)
         {
-            parts.GetRandom().AddXP(entity, SeedManager.combatRandom.NextDouble());
+            parts.GetRandom().AddXP(entity, RNG.NextDouble());
         }
     }
     public void TrainLimbOfType(ItemProperty t)
@@ -168,7 +169,7 @@ public class Body : MonoBehaviour
 
         if (parts.Count > 0)
         {
-            parts.GetRandom().AddXP(entity, SeedManager.combatRandom.NextDouble());
+            parts.GetRandom().AddXP(entity, RNG.NextDouble());
         }
     }
 
@@ -241,7 +242,7 @@ public class Body : MonoBehaviour
             {
                 if (bp.grip.GripBroken())
                 {
-                    string message = LocalizationManager.GetContent("Gr_BreakGrip");
+                    string message = "Gr_BreakGrip".Localize();
                     message = message.Replace("[ATTACKER]", entity.MyName);
                     message = message.Replace("[DEFENDER]", bp.grip.HeldBody.entity.MyName);
                     message = (!entity.isPlayer ? "<color=cyan>" : "<color=orange>") + message;
@@ -272,7 +273,7 @@ public class Body : MonoBehaviour
     /// </summary>
     public void RemoveLimb(BodyPart b)
     {
-        if (bodyParts.Contains(b) && b.isAttached)
+        if (bodyParts.Contains(b) && b.Attached)
         {
             RemoveLimb(bodyParts.FindIndex(x => x == b));
         }
@@ -280,12 +281,22 @@ public class Body : MonoBehaviour
 
     public void RemoveLimb(int id)
     {
-        if (!bodyParts[id].isAttached || bodyParts[id].flags.IsSet(BodyPart.BPTags.NonSeverable))
+        if (!bodyParts[id].Attached || bodyParts[id].HasFlag(BodyPart.BPFlags.NonSeverable))
         {
             return;
         }
 
-        bodyParts[id].Sever(entity);
+        if (bodyParts[id].equippedItem.lootable)
+        {
+            if (!MyInventory.IsNoneItem(bodyParts[id].equippedItem))
+            {
+                Item i = bodyParts[id].equippedItem;
+
+                MyInventory.UnEquipArmor(bodyParts[id], true);
+                MyInventory.Drop(i);
+                CombatLog.NameMessage("Item_Removed", i.DisplayName());
+            }
+        }
 
         if (bodyParts[id].slot == ItemProperty.Slot_Arm)
         {
@@ -303,41 +314,23 @@ public class Body : MonoBehaviour
             }
         }
 
-        if (bodyParts[id].equippedItem.lootable)
-        {
-            if (!MyInventory.IsNoneItem(bodyParts[id].equippedItem))
-            {
-                Item i = bodyParts[id].equippedItem;
-
-                MyInventory.UnEquipArmor(bodyParts[id], true);
-                MyInventory.Drop(i);
-                CombatLog.NameMessage("Item_Removed", i.DisplayName());
-            }
-        }
-
-        if (bodyParts[id].flags.IsSet(BodyPart.BPTags.External))
-        {
-            //Aizith external. Remove from list
-            bodyParts.Remove(bodyParts[id]);
-            Categorize(new List<BodyPart>(bodyParts));
-            return;
-        }
+        bodyParts[id].Sever(entity);
 
         Item partToDrop = new Item(ItemList.GetSeveredBodyPart(bodyParts[id]));
 
         if (partToDrop != null)
         {
-            if (bodyParts[id].organic)
+            if (bodyParts[id].Organic)
             {
-                if (bodyParts[id].flags.IsSet(BodyPart.BPTags.Leprosy) || MyStats.hasTraitEffect(TraitEffects.Leprosy))
+                if (bodyParts[id].HasFlag(BodyPart.BPFlags.Leprosy) || MyStats.hasTraitEffect(TraitEffects.Leprosy))
                 {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Leprosy);
                 }
-                else if (bodyParts[id].flags.IsSet(BodyPart.BPTags.Crystal) || MyStats.hasTraitEffect(TraitEffects.Crystallization))
+                if (bodyParts[id].HasFlag(BodyPart.BPFlags.Crystal) || MyStats.hasTraitEffect(TraitEffects.Crystallization))
                 {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Crystallization);
                 }
-                else if (bodyParts[id].flags.IsSet(BodyPart.BPTags.Vampire) || MyStats.hasTraitEffect(TraitEffects.Vampirism))
+                if (bodyParts[id].HasFlag(BodyPart.BPFlags.Vampire) || MyStats.hasTraitEffect(TraitEffects.Vampirism))
                 {
                     partToDrop.AddProperty(ItemProperty.OnAttach_Vampirism);
                 }
@@ -373,10 +366,10 @@ public class Body : MonoBehaviour
                 {
                     foreach (Stat_Modifier sm in partToDrop.statMods)
                     {
-                        if (SeedManager.combatRandom.Next(100) < 30)
+                        if (RNG.Next(100) < 30)
                         {
                             int mod = Mathf.Clamp(World.DangerLevel() / 5, 0, 5);
-                            sm.Amount += SeedManager.combatRandom.Next(0, mod + 1);
+                            sm.Amount += RNG.Next(0, mod + 1);
                         }
                     }
                 }
@@ -404,7 +397,7 @@ public class Body : MonoBehaviour
             }
         }
 
-        bodyParts[id].flags.UnSet(BodyPart.BPTags.Synthetic);
+        bodyParts[id].RemoveFlag(BodyPart.BPFlags.Synthetic);
     }
 
     public List<BodyPart.Hand> Hands
@@ -415,7 +408,7 @@ public class Body : MonoBehaviour
 
             for (int i = 0; i < bodyParts.Count; i++)
             {
-                if (bodyParts[i].hand != null && bodyParts[i].isAttached)
+                if (bodyParts[i].hand != null && bodyParts[i].Attached)
                 {
                     hands.Add(bodyParts[i].hand);
                 }
@@ -427,12 +420,12 @@ public class Body : MonoBehaviour
 
     public BodyPart GetBodyPartBySlot(ItemProperty sl)
     {
-        return (bodyParts.Find(x => x.slot == sl));
+        return bodyParts.Find(x => x.slot == sl);
     }
 
     public List<BodyPart> GetBodyPartsBySlot(ItemProperty sl)
     {
-        return (bodyParts.FindAll(x => x.slot == sl));
+        return bodyParts.FindAll(x => x.slot == sl);
     }
 
     public List<BodyPart.Hand> FreeHands()
@@ -442,7 +435,7 @@ public class Body : MonoBehaviour
 
     public List<BodyPart> AttachedArms()
     {
-        return bodyParts.FindAll(x => x.slot == ItemProperty.Slot_Arm && x.isAttached);
+        return bodyParts.FindAll(x => x.slot == ItemProperty.Slot_Arm && x.Attached);
     }
 
     public List<BodyPart> GrippableLimbs()
@@ -451,7 +444,7 @@ public class Body : MonoBehaviour
 
         for (int i = 0; i < bodyParts.Count; i++)
         {
-            if (bodyParts[i].isAttached && bodyParts[i].hand != null)
+            if (bodyParts[i].Attached && bodyParts[i].hand != null)
             {
                 if (bodyParts[i].hand.EquippedItem.ID == bodyParts[i].hand.baseItem || bodyParts[i].hand.EquippedItem.itemType == Proficiencies.Unarmed)
                 {
@@ -465,7 +458,7 @@ public class Body : MonoBehaviour
 
     public void AttachLimb(int id)
     {
-        if (!bodyParts[id].isAttached)
+        if (!bodyParts[id].Attached)
         {
             bodyParts[id].Attach(MyStats);
             bodyParts[id].myBody = this;

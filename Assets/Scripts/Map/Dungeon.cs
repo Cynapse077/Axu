@@ -5,7 +5,7 @@ public class Dungeon
 {
     Vault_Blueprint blueprint;
     List<Room> rooms;
-    readonly int[,] map_data;
+    int[,] map_data;
 
     int FloorTile
     {
@@ -176,6 +176,19 @@ public class Dungeon
         MakeCorridors(true);
     }
 
+    void Building_Alt()
+    {
+        for (int x = 0; x < Manager.localMapSize.x; x++)
+        {
+            for (int y = 0; y < Manager.localMapSize.y; y++)
+            {
+                map_data[x, y] = TileManager.GetByName("Dream_Wall").ID;
+            }
+        }
+
+
+    }
+
     void Cellar()
     {
         FillMapWithWalls();
@@ -217,7 +230,8 @@ public class Dungeon
             if (RNG.Next(100) < 80)
             {
                 int radius = RNG.Next(3, 7);
-                Coord center = new Coord(RNG.Next(radius + 1, Manager.localMapSize.x - radius - 1), RNG.Next(radius + 1, Manager.localMapSize.y - radius - 1));
+                Coord center = new Coord(RNG.Next(radius + 1, Manager.localMapSize.x - radius - 1), 
+                                         RNG.Next(radius + 1, Manager.localMapSize.y - radius - 1));
                 CircleRoom(center, radius);
             }
             else
@@ -249,9 +263,13 @@ public class Dungeon
             int move = (RNG.CoinFlip()) ? 1 : -1;
 
             if (horizontal)
+            {
                 st.x += move;
+            }
             else
+            {
                 st.y += move;
+            }
 
 
             if (st.x <= 0 || st.y <= 0 || st.x >= Manager.localMapSize.x - 1 || st.y >= Manager.localMapSize.y - 1 || visited.Contains(st))
@@ -259,12 +277,18 @@ public class Dungeon
                 if (st.x <= 0 || st.y <= 0 || st.x >= Manager.localMapSize.x - 1 || st.y >= Manager.localMapSize.y - 1)
                 {
                     if (horizontal)
+                    {
                         st.x -= move;
+                    }
                     else
+                    {
                         st.y -= move;
+                    }
 
-                    if (RNG.Next(500) == 0)
+                    if (RNG.OneIn(500))
+                    {
                         st = new Coord(start.x, start.y);
+                    }
                 }
 
                 numFails++;
@@ -364,7 +388,8 @@ public class Dungeon
                 }
 
                 if (roundCorners && 
-                    (rx == e.left && ry == e.top || rx == e.left && ry == e.bottom || rx == e.right && ry == e.top || rx == e.right && ry == e.bottom))
+                    (rx == e.left && ry == e.top || rx == e.left && ry == e.bottom 
+                    || rx == e.right && ry == e.top || rx == e.right && ry == e.bottom))
                 {
                     continue;
                 }
@@ -394,7 +419,7 @@ public class Dungeon
         {
             for (int y = center.y - radius - 1; y <= center.y + radius + 1; y++)
             {
-                if (x <= 0 || y <= 0 || x >= Manager.localMapSize.x - 1 || y >= Manager.localMapSize.y - 1)
+                if (x <= 0 || y <= 0 || x >= Manager.localMapSize.x - 2 || y >= Manager.localMapSize.y - 2)
                 {
                     continue;
                 }
@@ -429,9 +454,14 @@ public class Dungeon
             int xOffset = 0, yOffset = 0;
 
             if (x != x1)
+            {
                 xOffset = (x < x1) ? 1 : -1;
+            }
+
             if (y != y1)
+            {
                 yOffset = (y < y1) ? 1 : -1;
+            }
 
             if (RNG.CoinFlip())
             {
@@ -484,7 +514,7 @@ public class Dungeon
 
     bool OutOfBounds(int x, int y)
     {
-        return (x < 0 || x >= Manager.localMapSize.x || y < 0 || y >= Manager.localMapSize.y);
+        return x < 0 || x >= Manager.localMapSize.x || y < 0 || y >= Manager.localMapSize.y;
     }
 
     public int GetTileAt(int x, int y)

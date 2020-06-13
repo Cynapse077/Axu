@@ -77,7 +77,7 @@ public class MapObjectSprite : MonoBehaviour
             objectBase.inv = inv.items;
         }
 
-        if (lightSource != null)
+        if (lightSource.Active)
         {
             SetLit(false);
         }
@@ -137,7 +137,7 @@ public class MapObjectSprite : MonoBehaviour
 
         if (bp.container != null)
         {
-            SetInventory(100);
+            SetInventory();
         }
 
         if (objectBase.HasEvent("OnTurn"))
@@ -290,7 +290,7 @@ public class MapObjectSprite : MonoBehaviour
     {
         int tIndex = 0;
 
-        if (NeighborAt(localPos.x, localPos.y + 1)) tIndex++;
+        if (NeighborAt(localPos.x, localPos.y + 1)) tIndex ++;
         if (NeighborAt(localPos.x - 1, localPos.y)) tIndex += 2;
         if (NeighborAt(localPos.x + 1, localPos.y)) tIndex += 4;
         if (NeighborAt(localPos.x, localPos.y - 1)) tIndex += 8;
@@ -347,7 +347,7 @@ public class MapObjectSprite : MonoBehaviour
 
     void SetLit(bool lit)
     {
-        if (lightSource == null)
+        if (!lightSource.Active)
         {
             return;
         }
@@ -366,7 +366,7 @@ public class MapObjectSprite : MonoBehaviour
 
                 float dist = lPos.DistanceTo(new Coord(x, y));
 
-                if (dist <= rad && Line.inSight(lPos, x, y))
+                if ((dist <= rad && Line.inSight(lPos, x, y)) || (lPos.x == x && lPos.y == y))
                 {
                     World.tileMap.tileRenderers[x, y].lit = lit;
                 }
@@ -381,7 +381,7 @@ public class MapObjectSprite : MonoBehaviour
             return false;
         }
 
-        return (cell.InSight);
+        return cell.InSight;
     }
 
     void SetPositionToLocalPos()
@@ -416,12 +416,9 @@ public class MapObjectSprite : MonoBehaviour
             {
                 spriteRenderer.sprite = SwitchSprite(inv.items[0]);
 
-                Item first = inv.items[0];
-
-                if (first.HasCComponent<CLiquidContainer>() && !first.GetCComponent<CLiquidContainer>().isEmpty())
+                if (inv.items[0].TryGetCComponent(out CLiquidContainer cl) && !cl.IsEmpty())
                 {
-                    Liquid liquid = ItemList.GetLiquidByID(first.GetCComponent<CLiquidContainer>().sLiquid.ID);
-
+                    Liquid liquid = ItemList.GetLiquidByID(cl.sLiquid.ID);
                     myColor = (liquid != null) ? (Color)liquid.color : Color.white;
                 }
                 else
@@ -455,7 +452,7 @@ public class MapObjectSprite : MonoBehaviour
         return SpriteManager.GetObjectSprite(id);
     }
 
-    void SetInventory(int capacity)
+    void SetInventory()
     {
         Inventory inv2 = gameObject.AddComponent<Inventory>();
         inv2.maxItems = 300;
@@ -484,15 +481,11 @@ public class MapObjectSprite : MonoBehaviour
                     World.objectManager.RemoveObject(objectBase, gameObject);
                     Destroy(gameObject);
                 }
-                else if (objectBase.blueprint.objectType == "Pool" && inv.items.Count == 1 && inv.items[0].HasCComponent<CLiquidContainer>())
+                else if (objectBase.blueprint.objectType == "Pool" && inv.items.Count == 1 
+                     && inv.items[0].TryGetCComponent(out CLiquidContainer cl) && cl.IsEmpty())
                 {
-                    CLiquidContainer cl = inv.items[0].GetCComponent<CLiquidContainer>();
-
-                    if (cl.isEmpty())
-                    {
-                        World.objectManager.RemoveObject(objectBase, gameObject);
-                        Destroy(gameObject);
-                    }
+                    World.objectManager.RemoveObject(objectBase, gameObject);
+                    Destroy(gameObject);
                 }
             }
         }
@@ -500,21 +493,10 @@ public class MapObjectSprite : MonoBehaviour
 
     public void ForceOpen()
     {
-        if (isDoor_Closed)
+        var bp = GameData.Get<MapObject_Blueprint>(objectType);
+        if (!bp.openType.NullOrEmpty())
         {
-            if (objectType == "Door_Closed")
-                SetTypeAndSwapSprite("Door_Open");
-            else if (objectType == "Ensis_Door_Closed")
-                SetTypeAndSwapSprite("Ensis_Door_Open");
-            else if (objectType == "Prison_Door_Closed")
-                SetTypeAndSwapSprite("Prison_Door_Open");
-            else if (objectType == "Magna_Door_Closed")
-                SetTypeAndSwapSprite("Magna_Door_Open");
-            else if (objectType == "Kin_Door_Closed")
-                SetTypeAndSwapSprite("Kin_Door_Open");
-            else if (objectType == "Elec_Door_Closed")
-                SetTypeAndSwapSprite("Elec_Door_Open");
-
+            SetTypeAndSwapSprite(bp.openType);
             World.soundManager.OpenDoor();
         }
     }
@@ -577,6 +559,9 @@ public class MapObjectSprite : MonoBehaviour
             case "Chest":
                 SetTypeAndSwapSprite("Chest_Open");
                 break;
+            case "Chest_Large":
+                SetTypeAndSwapSprite("Chest_Large_Open");
+                break;
 
             case "Crystal":
                 Landmark landmark = World.tileMap.GetRandomLandmark();
@@ -588,7 +573,7 @@ public class MapObjectSprite : MonoBehaviour
                 World.tileMap.HardRebuild();
                 CombatLog.SimpleMessage("Crystal_Tele");
 
-                if (SeedManager.combatRandom.Next(100) < 10 && !ObjectManager.playerEntity.stats.hasTraitEffect(TraitEffects.Crystallization))
+                if (RNG.OneIn(10) && !ObjectManager.playerEntity.stats.hasTraitEffect(TraitEffects.Crystallization))
                 {
                     ObjectManager.playerEntity.stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
                     CombatLog.SimpleMessage("Crystal_Rad");
@@ -635,9 +620,7 @@ public class MapObjectSprite : MonoBehaviour
                         break;
                     }
 
-                    NPC_Blueprint bp = GameData.Get<NPC_Blueprint>("hauler");
-
-                    if (bp == null)
+                    if (!GameData.TryGet("hauler", out NPC_Blueprint bp))
                     {
                         break;
                     }
@@ -671,7 +654,7 @@ public class MapObjectSprite : MonoBehaviour
         {
             inv = GetComponent<Inventory>();
 
-            if (objectType == "Chest" || objectType == "Chest_Open" || inv.items.Count > 0)
+            if (inv.items.Count > 0)
             {
                 World.userInterface.OpenLoot(inv);
             }
@@ -742,9 +725,11 @@ public class MapObjectSprite : MonoBehaviour
         childObject.rotation = Quaternion.Euler(0, 0, objectBase.rotation);
     }
 
-    public class LightSource
+    public struct LightSource
     {
-        public int radius { get; protected set; }
+        public int radius;
+
+        public bool Active => radius > 0;
 
         public LightSource(int _radius)
         {

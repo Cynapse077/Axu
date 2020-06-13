@@ -101,8 +101,10 @@ public static class ContextualMenu
                     case "Barrel":
                     case "Chest":
                     case "Chest_Open":
+                    case "Chest_Large":
+                    case "Chest_Large_Open":
                     case "Cryopod_Close":
-                        actions.Add(new ContextualAction(string.Format("Open {0} {1}", mos.name, dir), () => mos.Interact() ));
+                        actions.Add(new ContextualAction(string.Format("Open {0} {1}", mos.name, dir), () => mos.Interact()));
                         break;
                     case "Grave":
                         if (ObjectManager.playerEntity.inventory.DiggingEquipped())

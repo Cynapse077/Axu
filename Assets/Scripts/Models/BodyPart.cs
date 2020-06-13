@@ -14,9 +14,9 @@ public class BodyPart : IWeighted
     public string displayName;
     public int armor, level = 0;
     public ItemProperty slot;
-    public BPTags flags;
-    public List<Stat_Modifier> Attributes;
-    public List<Wound> wounds;
+    public List<BPFlags> flags = new List<BPFlags>();
+    public List<Stat_Modifier> Attributes = new List<Stat_Modifier>();
+    public List<Wound> wounds = new List<Wound>();
     public Grip grip;
     public Hand hand;
     public Cybernetic cybernetic;
@@ -34,7 +34,7 @@ public class BodyPart : IWeighted
         set { _weight = value; }
     }
 
-    public bool isAttached
+    public bool Attached
     {
         get { return _attached; }
         protected set { _attached = value; }
@@ -42,27 +42,25 @@ public class BodyPart : IWeighted
 
     public bool Crippled
     {
-        get { return wounds != null && wounds.Count > 0; }
+        get { return !wounds.NullOrEmpty(); }
     }
 
-    public bool external
+    public bool Organic
     {
-        get { return flags.IsSet(BPTags.External); }
+        get { return !HasFlag(BPFlags.Synthetic);  }
     }
 
-    public bool organic
+    public bool CanWearGear
     {
-        get { return !flags.IsSet(BPTags.Synthetic);  }
+        get { return !HasFlag(BPFlags.CannotWearGear); }
     }
 
-    public bool canWearGear
+    public bool Severable
     {
-        get { return !flags.IsSet(BPTags.CannotWearGear); }
-    }
-
-    public bool severable
-    {
-        get { return !flags.IsSet(BPTags.NonSeverable); }
+        get 
+        { 
+            return !HasFlag(BPFlags.NonSeverable) && Attached; 
+        }
     }
 
     public void SetXP(double xp, double max)
@@ -81,6 +79,7 @@ public class BodyPart : IWeighted
         armor = 1;
         displayName = name;
         wounds = new List<Wound>();
+        flags = new List<BPFlags>();
     }
 
     public BodyPart(string na, bool att)
@@ -92,6 +91,7 @@ public class BodyPart : IWeighted
         armor = 1;
         displayName = name;
         wounds = new List<Wound>();
+        flags = new List<BPFlags>();
     }
 
     public BodyPart(BodyPart other)
@@ -145,7 +145,7 @@ public class BodyPart : IWeighted
             myBody = entity.body;
         }
 
-        if (level >= 5 || flags.IsSet(BPTags.Synthetic) || !isAttached || flags.IsSet(BPTags.External))
+        if (level >= 5 || !Organic || !Attached)
         {
             return;
         }
@@ -220,7 +220,7 @@ public class BodyPart : IWeighted
             showMessage = false;
         }
 
-        if (flags.IsSet(BPTags.Leprosy))
+        if (HasFlag(BPFlags.Leprosy) && !stats.hasTrait("leprosy"))
         {
             if (showMessage)
             {
@@ -229,7 +229,7 @@ public class BodyPart : IWeighted
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
         }
-        else if (flags.IsSet(BPTags.Crystal))
+        else if (HasFlag(BPFlags.Crystal) && !stats.hasTrait("crystal"))
         {
             if (showMessage)
             {
@@ -238,7 +238,7 @@ public class BodyPart : IWeighted
 
             stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
         }
-        else if (flags.IsSet(BPTags.Vampire) && !stats.hasTrait("vampirism"))
+        else if (HasFlag(BPFlags.Vampire) && !stats.hasTrait("vampirism") && !stats.hasTrait("pre_vamp"))
         {
             if (showMessage)
             {
@@ -257,7 +257,7 @@ public class BodyPart : IWeighted
     public void Remove(Stats stats)
     {
         wounds.Clear();
-        flags.UnSet(BPTags.Synthetic);
+        RemoveFlag(BPFlags.Synthetic);
 
         for (int i = 0; i < Attributes.Count; i++)
         {
@@ -271,6 +271,27 @@ public class BodyPart : IWeighted
         {
             cybernetic.Remove();
         }
+    }
+
+    public void AddFlag(BPFlags flag)
+    {
+        if (!flags.Contains(flag))
+        {
+            flags.Add(flag);
+        }
+    }
+
+    public void RemoveFlag(BPFlags flag)
+    {
+        if (flags.Contains(flag))
+        {
+            flags.Remove(flag);
+        }
+    }
+
+    public bool HasFlag(BPFlags flag)
+    {
+        return flags.Contains(flag);
     }
 
     public SBodyPart ToSerializedBodyPart()
@@ -378,7 +399,7 @@ public class BodyPart : IWeighted
         _weight = other._weight;
         slot = other.slot;
         name = other.name;
-        _attached = other.isAttached;
+        _attached = other.Attached;
         equippedItem = new Item(other.equippedItem);
         armor = other.armor;
         displayName = name;
@@ -406,7 +427,7 @@ public class BodyPart : IWeighted
 
         public bool IsAttached
         {
-            get { return (arm != null && arm.isAttached); }
+            get { return (arm != null && arm.Attached); }
         }
         public bool IsMainHand
         {
@@ -562,16 +583,14 @@ public class BodyPart : IWeighted
     }
 
     [Flags]
-    public enum BPTags
+    public enum BPFlags
     {
-        None = 0,
-        Synthetic = 1,
-        External = 1 << 1,
-        Crystal = 1 << 2,
-        Vampire = 1 << 3,
-        Leprosy = 1 << 4, 
-        NonSeverable = 1 << 5,
-        CannotWearGear = 1 << 6
+        Synthetic,
+        Crystal,
+        Vampire,
+        Leprosy, 
+        NonSeverable,
+        CannotWearGear
     }
 }
 
@@ -580,7 +599,7 @@ public class SBodyPart
 {
     public string Name { get; set; }
     public string Cyb { get; set; }
-    public BodyPart.BPTags Flgs;
+    public List<BodyPart.BPFlags> Flgs;
     public SItem item { get; set; }
     public int Lvl;
     public double[] XP;
@@ -593,7 +612,7 @@ public class SBodyPart
     public List<Wound> Wounds { get; set; }
 
     public SBodyPart() { }
-    public SBodyPart(string name, BodyPart.BPTags flags, SItem _item, bool attached, ItemProperty slot, int size, List<Stat_Modifier> stats, int armor,
+    public SBodyPart(string name, List<BodyPart.BPFlags> flags, SItem _item, bool attached, ItemProperty slot, int size, List<Stat_Modifier> stats, int armor,
         int level, double currXP, double maxXP, List<Wound> wnds, SHand hand, string cyberneticID)
     {
         Name = name;

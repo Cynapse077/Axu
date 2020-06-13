@@ -28,11 +28,11 @@ public class Addiction
         }
     }
 
-    string itemDisplay
+    string ItemDisplay
     {
         get
         {
-            if (ItemList.GetItemByID(addictedID) != null)
+            if (ItemList.GetItemByID(addictedID).IsNullOrDefault())
             {
                 return ItemList.GetItemByID(addictedID).DisplayName();
             }
@@ -100,7 +100,7 @@ public class Addiction
                 AffectStats(stats, true);
             }
 
-            CombatLog.NameMessage("Message_Add_Subside", itemDisplay);
+            CombatLog.NameMessage("Message_Add_Subside", ItemDisplay);
             stats.RemoveTrait("addiction_" + addictedID);
             stats.addictions.Remove(this);
         }
@@ -127,13 +127,13 @@ public class Addiction
             {
                 withdrawal = true;
                 AffectStats(ObjectManager.playerEntity.stats, false);
-                CombatLog.NameMessage("Message_Add_Withdrawals", itemDisplay);
+                CombatLog.NameMessage("Message_Add_Withdrawals", ItemDisplay);
             }
             else
             {
                 if (World.turnManager.turn % CravingReminderTime == 0)
                 {
-                    CombatLog.NameMessage("Message_Add_Crave", itemDisplay);
+                    CombatLog.NameMessage("Message_Add_Crave", ItemDisplay);
                     ObjectManager.playerEntity.CancelWalk();
                 }
             }

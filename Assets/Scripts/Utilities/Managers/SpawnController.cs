@@ -4,22 +4,20 @@ using System.Collections.Generic;
 [MoonSharp.Interpreter.MoonSharpUserData]
 public static class SpawnController
 {
-    static System.Random rng { get { return SeedManager.combatRandom; } }
-
     public static void SpawnStaticNPCs()
     {
         List<NPC_Blueprint> static_npcs = EntityList.npcs.FindAll(x => x.flags.Contains(NPC_Flags.Static));
 
         foreach (NPC_Blueprint bp in static_npcs)
         {
-            if (bp.zone != "")
+            if (!bp.zone.NullOrEmpty())
             {
                 NPC npc = new NPC(bp, new Coord(0, 0), new Coord(0, 0), 0);
 
                 if (bp.zone.Contains("Random_"))
                 {
                     npc.elevation = 0;
-                    npc.localPosition = new Coord(Random.Range(0, Manager.localMapSize.x), Random.Range(0, Manager.localMapSize.y));
+                    npc.localPosition = new Coord(RNG.Next(0, Manager.localMapSize.x), RNG.Next(0, Manager.localMapSize.y));
 
                     string biome = bp.zone.Replace("Random_", "");
                     Biome b = biome.ToEnum<Biome>();
@@ -43,7 +41,7 @@ public static class SpawnController
         Entity entity = ObjectManager.playerEntity;
         int goldAmount = (entity.inventory.gold > 0) ? Random.Range(entity.inventory.gold / 2, entity.inventory.gold + 1) : 100;
 
-        if (entity.inventory.items.Count > 0 && rng.CoinFlip())
+        if (entity.inventory.items.Count > 0 && RNG.CoinFlip())
         {
             item = entity.inventory.items.GetRandom();
         }
@@ -81,12 +79,16 @@ public static class SpawnController
         }
 
         NPCGroup_Blueprint spawn = bps.GetRandom();
-        int amount = rng.Next(2, 7);
+        int amount = RNG.Next(2, 7);
 
         SpawnFromGroupName(spawn.ID, amount);
+
+        World.tileMap.CheckNPCTiles();
+        World.tileMap.HardRebuild();
+        World.objectManager.NoStickNPCs();
     }
 
-    public static void BiomeSpawn(int mx, int my, TileMap_Data mapData)
+    public static void BiomeSpawn(TileMap_Data mapData)
     {
         if (mapData.elevation == 0)
         {
@@ -95,11 +97,11 @@ public static class SpawnController
                 HouseObjects();
             }
 
-            int numSpawns = mapData.mapInfo.friendly ? rng.Next(1, 4) : rng.Next(0, 4);
+            int numSpawns = mapData.mapInfo.friendly ? RNG.Next(1, 4) : RNG.Next(0, 4);
 
             if (!mapData.mapInfo.friendly)
             {
-                if (rng.Next(100) < 60)
+                if (RNG.Next(100) < 60)
                 {
                     numSpawns = 0;
                 }
@@ -110,7 +112,7 @@ public static class SpawnController
             //Bandit ambush in village
             if (!mapData.mapInfo.landmark.NullOrEmpty() && mapData.mapInfo.landmark.Contains("Village"))
             {
-                if (rng.OneIn(300))
+                if (RNG.OneIn(300))
                 {
                     CombatLog.NewMessage("You hear a commition...");
                     NPCGroup_Blueprint gb = GameData.GetRandom<NPCGroup_Blueprint>((a) => {
@@ -122,7 +124,7 @@ public static class SpawnController
 
                     if (gb != null)
                     {
-                        for (int i = 0; i < rng.Next(2, 6); i++)
+                        for (int i = 0; i < RNG.Next(2, 6); i++)
                         {
                             NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
                             int amount = s.AmountToSpawn();
@@ -151,7 +153,7 @@ public static class SpawnController
                     return;
                 }
 
-                NPCGroup_Blueprint gb = gbs.GetRandom(rng);
+                NPCGroup_Blueprint gb = gbs.GetRandom();
 
                 for (int i = 0; i < numSpawns; i++)
                 {
@@ -187,7 +189,7 @@ public static class SpawnController
     static void Encounter()
     {
         //crystal
-        if (rng.Next(1000) <= 2)
+        if (RNG.Next(1000) <= 2)
         {
             Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
 
@@ -199,7 +201,7 @@ public static class SpawnController
         }
 
         //Random minibosses.
-        if (World.DangerLevel() >= 6 && rng.Next(1000) < ObjectManager.playerEntity.stats.level.CurrentLevel + 1)
+        if (World.DangerLevel() >= 3 && RNG.Next(500) < ObjectManager.playerEntity.stats.level.CurrentLevel + 1)
         {
             List<NPCGroup_Blueprint> bps = new List<NPCGroup_Blueprint>();
 
@@ -218,40 +220,49 @@ public static class SpawnController
         }
     }
 
-    public static bool SetupOverworldEncounter()
+    public static void SetupOverworldEncounter(Incident forcedIncident = null)
     {
         Entity entity = ObjectManager.playerEntity;
 
-        bool canSpawnBanditAmbush = GameData.Get<Faction>("bandits") != null && !ObjectManager.playerEntity.inventory.DisguisedAs(GameData.Get<Faction>("bandits"));
+        bool canSpawnBanditAmbush = GameData.TryGet("bandits", out Faction bandits) 
+            && !ObjectManager.playerEntity.inventory.DisguisedAs(bandits);
 
-        if (CanSpawnIncident() && rng.Next(100) < 50)
+        if (CanSpawnIncident() && RNG.Next(100) < 50)
         {
             bool p(IAsset asset)
             {
-                if (asset is Incident inc)
-                {
-                    return inc.CanSpawn();
-                }
-
-                return false;
+                return asset is Incident inc && inc.CanSpawn();
             }
 
-            var incident = GameData.Get<Incident>(p).GetRandom();
-            incident.Spawn();
+            var incidents = GameData.Get<Incident>(p);
+            if (incidents.Count == 0 && canSpawnBanditAmbush)
+            {
+                SpawnBanditAmbush();
+            }
+            else
+            {
+                DoIncident(Utility.WeightedChoice(incidents));
+            }            
         }
         else if (canSpawnBanditAmbush)
         {
             SpawnBanditAmbush();
         }
-        else
+    }
+
+    public static void DoIncident(Incident incident)
+    {
+        if (incident == null)
         {
-            return false;
+            return;
         }
 
-        World.tileMap.CheckNPCTiles();
+        incident.Spawn();
+
         World.tileMap.HardRebuild();
+        World.tileMap.CheckNPCTiles();
         World.objectManager.NoStickNPCs();
-        return true;
+        World.tileMap.LightCheck();
     }
 
     static bool CanSpawnIncident()
@@ -348,11 +359,11 @@ public static class SpawnController
 
         if (gbs.Count > 0)
         {
-            NPCGroup_Blueprint gb = gbs.GetRandom(rng);
+            NPCGroup_Blueprint gb = gbs.GetRandom();
             int amountSpawned = 0;
             int maxSpawns = 15;
 
-            for (int i = 0; i < rng.Next(1, 5); i++)
+            for (int i = 0; i < RNG.Next(1, 5); i++)
             {
                 if (amountSpawned >= maxSpawns)
                 {
@@ -383,12 +394,16 @@ public static class SpawnController
 
         if (v != null && v.blueprint.ID == "Cave_Ice")
         {
-            SpawnObject("Ore", SeedManager.localRandom.Next(2, 5));
+            SpawnObject("Ore", RNG.Next(2, 5));
         }
 
-        if (rng.Next(100) < 5)
+        if (RNG.Next(100) < 5)
         {
-            SpawnObject("Chest", (SeedManager.combatRandom.Next(100) < 10) ? 2 : 1);
+            SpawnObject("Chest", (RNG.Next(100) < 10) ? 2 : 1);
+        }
+        else if (RNG.Next(200) == 0)
+        {
+            SpawnObject("Chest_Large");
         }
     }
 
@@ -408,7 +423,7 @@ public static class SpawnController
     public static NPC SpawnNPCByID(string npcID, Coord worldPos, int elevation = 0, Coord localPos = null)
     {
         NPC npc;
-        Coord defaultCoord = new Coord(SeedManager.combatRandom.Next(1, Manager.localMapSize.x - 2), SeedManager.combatRandom.Next(3, Manager.localMapSize.y - 2));
+        Coord defaultCoord = new Coord(RNG.Next(1, Manager.localMapSize.x - 2), RNG.Next(3, Manager.localMapSize.y - 2));
 
         //Move NPC, or create new if they have not been spawned yet.
         if (World.objectManager.npcClasses.Find(x => x.ID == npcID && x.HasFlag(NPC_Flags.Static)) != null)
@@ -469,7 +484,7 @@ public static class SpawnController
 
             if (stPos == null)
             {
-                stPos = new Coord(rng.Next(0, Manager.localMapSize.x - 1), rng.Next(0, Manager.localMapSize.y - 1));
+                stPos = new Coord(RNG.Next(0, Manager.localMapSize.x - 1), RNG.Next(0, Manager.localMapSize.y - 1));
             }
 
             if (stPos != null)

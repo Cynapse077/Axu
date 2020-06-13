@@ -43,7 +43,7 @@ public class ShopPanel : MonoBehaviour
         {
             GameObject g = SimplePool.Spawn(itemButton, merchantBase);
             g.GetComponent<ItemButton>().icon.sprite = InventoryPanel.SwitchSprite(it);
-            g.GetComponentInChildren<Text>().text = it.InvDisplay("") + " - <color=yellow>$</color>" + it.buyCost(influence);
+            g.GetComponentInChildren<Text>().text = it.InvDisplay("") + " - <color=yellow>$</color>" + it.BuyCost(influence);
             g.GetComponent<Button>().onClick.AddListener(() => { World.userInterface.SelectPressed(g.transform.GetSiblingIndex()); });
             g.GetComponent<OnHover_SetSelectedIndex>().column = 0;
         }
@@ -52,7 +52,7 @@ public class ShopPanel : MonoBehaviour
         {
             GameObject g = SimplePool.Spawn(itemButton, inventoryBase);
             g.GetComponent<ItemButton>().icon.sprite = InventoryPanel.SwitchSprite(it);
-            g.GetComponentInChildren<Text>().text = it.InvDisplay("") + " - <color=yellow>$</color>" + it.sellCost(influence);
+            g.GetComponentInChildren<Text>().text = it.InvDisplay("") + " - <color=yellow>$</color>" + it.SellCost(influence);
             g.GetComponent<Button>().onClick.AddListener(() => { World.userInterface.SelectPressed(g.transform.GetSiblingIndex()); });
             g.GetComponent<OnHover_SetSelectedIndex>().column = 1;
         }

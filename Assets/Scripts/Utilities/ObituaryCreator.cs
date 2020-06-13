@@ -19,8 +19,7 @@ public static class ObituaryCreator
         "Decapitated themselves to swap heads.",
         "Drank their own vomit. Vomited it up. Rinse and repeat.",
         "Shot in the head.",
-        "Death by natural causes. The rarest death there is on Axu.",
-        ""
+        "Death by natural causes. The rarest death there is on Axu."
     };
 
     static readonly string[] finalWords = new string[]
@@ -32,7 +31,8 @@ public static class ObituaryCreator
         "Alas, we hardly new ye.",
         "Will not be missed.",
         "\"Are you truly certain its me buried here?\"",
-        "We took all the valuables. Please don't dig them up."
+        "We took all the valuables. Please don't dig them up.",
+        "What an ass."
     };
 
     static readonly string[] alternateNames = new string[]

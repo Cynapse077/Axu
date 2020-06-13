@@ -671,6 +671,7 @@ public class UserInterface : MonoBehaviour
         playerInventory.gold -= playerStats.CostToCureWounds();
         DPanel.SetText(LocalizationManager.GetContent("Healed_Wounds"));
         playerStats.CureAllWounds();
+        CloseWindows();
     }
 
     public void Dialogue_ReplaceLimb(bool fromDoctor = true)
@@ -780,7 +781,7 @@ public class UserInterface : MonoBehaviour
             List<BodyPart> parts = playerInventory.entity.body.SeverableBodyParts();
             indexToUse = selectedItemNum;
 
-            if (parts[indexToUse].isAttached)
+            if (parts[indexToUse].Attached)
             {
                 if (parts[indexToUse].slot == ItemProperty.Slot_Head && playerInventory.entity.body.GetBodyPartsBySlot(ItemProperty.Slot_Head).Count < 2)
                 {
@@ -802,6 +803,7 @@ public class UserInterface : MonoBehaviour
         }
         else if (paused && uiState == UIWindow.PauseMenu)
         {
+            selectedItemNum = Mathf.Clamp(selectedItemNum, 0, pausePanel.buttons.Length - 1);
             pausePanel.buttons[selectedItemNum].onClick.Invoke();
         }
         else if (uiState == UIWindow.TargetBodyPart)
@@ -841,7 +843,7 @@ public class UserInterface : MonoBehaviour
             if (selectedItemNum >= shopInv.items.Count || shopInv.items[selectedItemNum] == null)
                 return;
 
-            int cost = shopInv.items[selectedItemNum].buyCost(charisma);
+            int cost = shopInv.items[selectedItemNum].BuyCost(charisma);
 
             if ((playerInventory.CanAfford(cost) || friendly))
             {
@@ -877,7 +879,7 @@ public class UserInterface : MonoBehaviour
                 return;
 
             bool isFollower = shopInv.entity.AI.isFollower();
-            int cost = playerInventory.items[selectedItemNum].sellCost(charisma);
+            int cost = playerInventory.items[selectedItemNum].SellCost(charisma);
             Item newItem = new Item(playerInventory.items[selectedItemNum]);
 
             if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand))

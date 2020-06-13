@@ -342,14 +342,14 @@ namespace Augments
         public override void Attach(BodyPart bp)
         {
             base.Attach(bp);
-            bodyPart.AddAttribute(attribute, 3);
-            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, 3);
+            bodyPart.AddAttribute(attribute, bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, bonus);
         }
 
         public override void Remove()
         {
-            bodyPart.AddAttribute(attribute, -3);
-            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, -3);
+            bodyPart.AddAttribute(attribute, -bonus);
+            bodyPart.myBody.entity.stats.ChangeAttribute(attribute, -bonus);
             base.Remove();
         }
 
@@ -426,7 +426,7 @@ namespace Augments
     public class SpringTendon : Cybernetic
     {
         const int bonus = 3;
-        const string attribute = "Accuracy";
+        const string attribute = "Speed";
 
         public SpringTendon()
         {

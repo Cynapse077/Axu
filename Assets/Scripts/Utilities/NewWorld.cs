@@ -45,12 +45,12 @@ public class NewWorld
 
                 if (tmData != null)
                 {
-                    AddDataToArray(ref holder, new ScreenToJson(tmData, 0));
+                    AddDataToArray(ref holder, new ScreenToJson(tmData, 0, tmData.mapName ?? string.Empty));
                 }
                 else if (tileMap.worldData != null && tileMap.worldData.dataExists(x, y))
                 {
                     tmData = new TileMap_Data(x, y, 0, true) { lastTurnSeen = tileMap.worldData.LastTurnSeen(x, y) };
-                    AddDataToArray(ref holder, new ScreenToJson(tmData, 0));
+                    AddDataToArray(ref holder, new ScreenToJson(tmData, 0, tmData.mapName ?? string.Empty));
                 }
             }
         }
@@ -64,7 +64,7 @@ public class NewWorld
 
                 if (tmd != null)
                 {
-                    AddDataToArray(ref holder, new ScreenToJson(tmd, tmd.elevation));
+                    AddDataToArray(ref holder, new ScreenToJson(tmd, tmd.elevation, tmd.mapName ?? string.Empty));
                 }
             }
         }
@@ -107,10 +107,11 @@ public class NewWorld
 
     void AddDataToArray(ref ScreenHolder holder, ScreenToJson s2json)
     {
-        if (s2json.LTS > 0 && World.objectManager.CanDiscard(s2json.P[0], s2json.P[1], s2json.P[2]) && 
-            Turn_Num - s2json.LTS >= Cutoffthreshold)
+        int x = s2json.P[0], y = s2json.P[1], z = s2json.P[2];
+
+        if (s2json.LTS > 0 && World.objectManager.CanDiscard(x, y, x) && Turn_Num - s2json.LTS >= Cutoffthreshold)
         {
-			RemoveStuffAt(s2json.P[0], s2json.P[1], s2json.P[2]);
+			RemoveStuffAt(x, y, z);
 		} else
         {
             holder.Sc.Add(s2json);
@@ -148,9 +149,8 @@ public class OldWorld
         for (int i = 0; i < wData["Objects"].Count; i++)
         {
             JsonData obj = wData["Objects"][i];
-            MapObject_Blueprint bp = GameData.Get<MapObject_Blueprint>(obj["Type"].ToString());
 
-            if (bp == null)
+            if (!GameData.TryGet<MapObject_Blueprint>(obj["Type"].ToString(), out var bp))
             {
                 continue;
             }
@@ -170,7 +170,11 @@ public class OldWorld
 
                 for (int j = 0; j < Mathf.Min(obj["Items"].Count, 50); j++)
                 {
-                    m.inv.Add(SaveData.GetItemFromJsonData(obj["Items"][j]));
+                    var item = SaveData.GetItemFromJsonData(obj["Items"][j]);
+                    if (item != null)
+                    {
+                        m.inv.Add(item);
+                    }
                 }
             }
 
@@ -236,7 +240,11 @@ public class OldWorld
 
             for (int j = 0; j < npcData["HIt"].Count; j++)
             {
-                n.handItems.Add(SaveData.GetItemFromJsonData(npcData["HIt"][j]));
+                var item = SaveData.GetItemFromJsonData(npcData["HIt"][j]);
+                if (item != null)
+                {
+                    n.handItems.Add(item);
+                }
             }
 
             if (npcData.ContainsKey("Atr"))
@@ -292,7 +300,11 @@ public class OldWorld
 
         for (int i = 0; i < wData["NPCs"][num]["Inv"].Count; i++)
         {
-            items.Add(SaveData.GetItemFromJsonData(wData["NPCs"][num]["Inv"][i]));
+            var item = SaveData.GetItemFromJsonData(wData["NPCs"][num]["Inv"][i]);
+            if (item != null)
+            {
+                items.Add(item);
+            }
         }
 
         return items;
@@ -306,7 +318,7 @@ public class OldScreens
 
     public OldScreens()
     {
-        loadJson = File.ReadAllText(Manager.SaveDirectory + "/" + Manager.playerName + ".axu");
+        loadJson = File.ReadAllText(Path.Combine(Manager.SaveDirectory, Manager.playerName + ".axu"));
         sData = JsonMapper.ToObject(loadJson)["Local"];
     }
 
@@ -338,6 +350,25 @@ public class OldScreens
         }
 
         return false;
+    }
+
+    public string GetMapNameAt(int x, int y, int z = 0)
+    {
+        JsonData sc = sData["Sc"];
+
+        for (int i = 0; i < sc.Count; i++)
+        {
+            if ((int)sc[i]["P"][0] == x && (int)sc[i]["P"][1] == y && (int)sc[i]["P"][2] == z)
+            {
+                if (sc[i].ContainsKey("N"))
+                {
+                    return sc[i]["N"].ToString();
+                }
+                break;
+            }
+        }
+
+        return string.Empty;
     }
 
     public Coord GetStartPos()
@@ -430,12 +461,14 @@ public struct ScreenToJson
     public int[] P; //Position
     public int LTS; //Last Turn Seen
     public List<TileMap_Data.TileChange> Ch; //Changes
+    public string N;
 
-    public ScreenToJson(TileMap_Data dt, int elevation)
+    public ScreenToJson(TileMap_Data dt, int elevation, string name)
     {
         P = new int[3] { dt.mapInfo.position.x, dt.mapInfo.position.y, dt.elevation };
         LTS = dt.lastTurnSeen;
         Ch = new List<TileMap_Data.TileChange>();
+        N = name;
 
         if (dt.changes != null)
         {

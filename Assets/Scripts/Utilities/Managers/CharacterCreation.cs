@@ -4,10 +4,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class CharacterCreation : MonoBehaviour
 {
-    public string characterName { get; set; }
+    public string characterName;
     [HideInInspector]
     public List<Trait> appliedTraits = new List<Trait>();
 
@@ -23,6 +24,7 @@ public class CharacterCreation : MonoBehaviour
     public Text pNameText;
     public Text pDescText;
     public Text diffDescText;
+    public Image charPicture;
     public GameObject textPrefab;
     public GameObject classPrefab;
     public InputField field;
@@ -56,6 +58,7 @@ public class CharacterCreation : MonoBehaviour
         DiffPanel.SetActive(false);
         CharPanel.SetActive(true);
         loadingGO.SetActive(true);
+        charPicture.sprite = null;
     }
 
     void Start()
@@ -95,15 +98,41 @@ public class CharacterCreation : MonoBehaviour
 
     public void InputName()
     {
-        characterName = field.text;
+        string text = StripReservedCharacters(field.text);
+
+        characterName = text;
+        field.text = text;
         canSelectProf = false;
     }
 
     public void EndEdit()
     {
-        characterName = field.text;
+        string text = StripReservedCharacters(field.text);
+
+        characterName = text;
+        field.text = text;
+        EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(classAnchor.GetChild(selectedNum).gameObject);
         StartCoroutine("InputBuffer");
+    }
+
+    public static string StripReservedCharacters(string text)
+    {
+        for (int i = 0; i < text.Length; i++)
+        {
+            if (IsReservedCharacter(text[i]))
+            {
+                text = text.Replace(text[i], '_');
+            }
+        }
+
+        return text;
+    }
+
+    private static bool IsReservedCharacter(char c)
+    {
+        return c == '<' || c == '>' || c == '\\' || c == '/' || c == '*' || c == '@' 
+            || c == '\n' || c == '\r' || c == '.' || c == ',';
     }
 
     IEnumerator InputBuffer()
@@ -307,15 +336,24 @@ public class CharacterCreation : MonoBehaviour
         Felony p = professions[profNum];
         InitializePanels();
 
-        AttTexts[0].text = AttTexts[0].GetComponent<LocalizedText>().BaseText + ": " 
-            + ((p.ID == "experiment") ? "??" : p.STR.ToString()).Color(AxuColor.Orange);
-        AttTexts[1].text = AttTexts[1].GetComponent<LocalizedText>().BaseText + ": " 
-            + ((p.ID == "experiment") ? "??" : p.DEX.ToString()).Color(AxuColor.Orange);
-        AttTexts[2].text = AttTexts[2].GetComponent<LocalizedText>().BaseText + ": "
-            + ((p.ID == "experiment") ? "??" : p.INT.ToString()).Color(AxuColor.Orange);
-        AttTexts[3].text = AttTexts[3].GetComponent<LocalizedText>().BaseText + ": " 
-            + ((p.ID == "experiment") ? "??" : p.END.ToString()).Color(AxuColor.Orange);
-        pNameText.text = "The " + p.name;
+        Texture2D charTex = new Texture2D(18, 18, TextureFormat.ARGB32, true)
+        {
+            filterMode = FilterMode.Point
+        };
+        charTex.LoadImage(File.ReadAllBytes(Path.Combine(Application.streamingAssetsPath, p.baseBodyTexture)));
+        charPicture.sprite = Sprite.Create(charTex, new Rect(0f, 0f, charTex.width, charTex.height), new Vector2(0.5f, 0.5f), 16);
+
+        string AttributeText(int index, int attLevel)
+        {
+            return AttTexts[index].GetComponent<LocalizedText>().BaseText + ": "
+                + ((p.ID == "experiment") ? "??" : attLevel.ToString()).Color(AxuColor.Orange);
+        }
+
+        AttTexts[0].text = AttributeText(0, p.STR);
+        AttTexts[1].text = AttributeText(1, p.DEX);
+        AttTexts[2].text = AttributeText(2, p.INT);
+        AttTexts[3].text = AttributeText(3, p.END);
+        pNameText.text = "Entity_Objective".Localize(p.name.ToUpper()).CapFirst();
         pDescText.text = p.description;
 
         appliedTraits.Clear();
@@ -330,7 +368,7 @@ public class CharacterCreation : MonoBehaviour
             Trait t = TraitList.GetTraitByID(p.traits[x]);
             appliedTraits.Add(t);
             GameObject g = Instantiate(textPrefab, traitAnchor);
-            g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", t.name, t.description);
+            g.GetComponent<Text>().text = string.Format("<color=yellow>{0}</color> - <i>{1}</i>", t.Name, t.description);
         }
 
         profAnchor.DespawnChildren();
@@ -339,7 +377,7 @@ public class CharacterCreation : MonoBehaviour
         if (p.proficiencies.Length <= 0)
         {
             GameObject g = SimplePool.Spawn(textPrefab, profAnchor);
-            g.GetComponent<Text>().text = "";
+            g.GetComponent<Text>().text = string.Empty;
         }
 
         for (int y = 0; y < p.proficiencies.Length; y++)
@@ -379,6 +417,7 @@ public class CharacterCreation : MonoBehaviour
                 YNPanel.noButton.onClick.Invoke();
                 return;
             }
+
             if (DiffPanel.activeSelf)
             {
                 DiffPanel.SetActive(false);
@@ -615,10 +654,13 @@ public class CharacterCreation : MonoBehaviour
 
         for (int i = 0; i < currentProf.skills.Count; i++)
         {
-            Ability s = GameData.Get<Ability>(currentProf.skills[i].Name).Clone();
-            s.origin.Set(Ability.AbilityOrigin.Natrual);
+            if (GameData.TryGet(currentProf.skills[i].Name, out Ability ab))
+            {
+                Ability newAbility = ab.Clone();
+                newAbility.SetFlag(Ability.AbilityOrigin.Natrual);
+                Manager.playerBuilder.abilities.Add(newAbility);
+            }
 
-            Manager.playerBuilder.abilities.Add(s);
         }
 
         for (int i = 0; i < currentProf.items.Count; i++)
@@ -658,8 +700,8 @@ public class CharacterCreation : MonoBehaviour
     public static List<BodyPart> SortBodyParts(List<BodyPart> bps)
     {
         List<BodyPart> newBPs = new List<BodyPart>();
-        List<BodyPart> heads = bps.FindAll(x => x.slot == ItemProperty.Slot_Head);
 
+        List<BodyPart> heads = bps.FindAll(x => x.slot == ItemProperty.Slot_Head);
         for (int i = 0; i < heads.Count; i++)
         {
             heads[i].displayName = GetDisplayName(heads[i].name, heads.Count > 1, i);
@@ -669,7 +711,6 @@ public class CharacterCreation : MonoBehaviour
         }
 
         List<BodyPart> torsos = bps.FindAll(x => x.slot == ItemProperty.Slot_Chest);
-
         for (int i = 0; i < torsos.Count; i++)
         {
             torsos[i].displayName = GetDisplayName(torsos[i].name, torsos.Count > 1, i);
@@ -679,7 +720,6 @@ public class CharacterCreation : MonoBehaviour
         }
 
         List<BodyPart> backs = bps.FindAll(x => x.slot == ItemProperty.Slot_Back);
-
         for (int i = 0; i < backs.Count; i++)
         {
             backs[i].displayName = GetDisplayName(backs[i].name, backs.Count > 1, i);
@@ -689,7 +729,6 @@ public class CharacterCreation : MonoBehaviour
         }
 
         List<BodyPart> wings = bps.FindAll(x => x.slot == ItemProperty.Slot_Wing);
-
         for (int i = 0; i < wings.Count; i++)
         {
             wings[i].displayName = GetDisplayName(wings[i].name, wings.Count > 1, i);
@@ -699,7 +738,6 @@ public class CharacterCreation : MonoBehaviour
         }
 
         List<BodyPart> arms = bps.FindAll(x => x.slot == ItemProperty.Slot_Arm);
-
         for (int i = 0; i < arms.Count; i++)
         {
             arms[i].displayName = GetDisplayName(arms[i].name, arms.Count > 1, i);
@@ -709,7 +747,6 @@ public class CharacterCreation : MonoBehaviour
         }
 
         List<BodyPart> legs = bps.FindAll(x => x.slot == ItemProperty.Slot_Leg);
-
         for (int i = 0; i < legs.Count; i++)
         {
             legs[i].displayName = GetDisplayName(legs[i].name, legs.Count > 1, i);
@@ -719,7 +756,6 @@ public class CharacterCreation : MonoBehaviour
         }
 
         List<BodyPart> tails = bps.FindAll(x => x.slot == ItemProperty.Slot_Tail);
-
         for (int i = 0; i < tails.Count; i++)
         {
             tails[i].displayName = GetDisplayName(tails[i].name, tails.Count > 1, i);
@@ -736,8 +772,7 @@ public class CharacterCreation : MonoBehaviour
         if (moreThanOne)
         {
             string s = (index % 2 == 0) ? "Limb_Right" : "Limb_Left";
-
-            return pName + " " + LocalizationManager.GetContent(s);
+            return s.Localize(pName);
         }
 
         return pName;

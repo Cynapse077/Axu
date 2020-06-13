@@ -13,7 +13,7 @@ public class Mod
     string filePath;
     bool isActive = true;
 
-    static readonly bool LogAll = false;
+    const bool LogAll = false;
 
     public bool IsActive { get { return isActive; } }
 
@@ -45,8 +45,8 @@ public class Mod
         JsonData dat = JsonMapper.ToObject(settingContents);
 
         dat.TryGetString("ID", out id, "MOD_" + ModUtility.GetNextFreeID());
-        dat.TryGetString("Name", out name, "Unnamed");
         dat.TryGetInt("Load Order", out loadOrder, ModUtility.GetNextLoadOrder(this));
+        dat.TryGetString("Name", out name, "Unnamed");
         dat.TryGetString("Description", out description, "No description.");
         dat.TryGetString("Creator", out creator, "Unknown");
 
@@ -149,7 +149,7 @@ public class Mod
         //Entities folder
         curPath = Path.Combine(filePath, ModUtility.EntitiesFolder);
         if (Directory.Exists(curPath))
-        {            
+        {
             AddData<Ability>(curPath, "Abilities.json", "Abilities");
             AddData<Trait>(curPath, "Traits.json", "Traits");
             AddData<Wound>(curPath, "Wounds.json", "Wounds");

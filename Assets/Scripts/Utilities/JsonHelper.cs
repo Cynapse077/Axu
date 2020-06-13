@@ -87,6 +87,18 @@ public static class JsonHelper {
 		return str.ToString().IsEscaped(index);
 	}
 
+    public static List<string> ToStringList(this JsonData dat)
+    {
+        List<string> list = new List<string>();
+
+        for (int i = 0; i < dat.Count; i++)
+        {
+            list.Add(dat[i].ToString());
+        }
+
+        return list;
+    }
+
     public static bool ContainsKey(this JsonData data, string key)
     {
         return (data.Keys.Contains(key) && data[key] != null);
@@ -136,7 +148,7 @@ public static class JsonHelper {
             return true;
         }
 
-        o = 0.0;
+        o = defaultValue;
         return false;
     }
 
@@ -171,11 +183,9 @@ public static class JsonHelper {
             defaultValue = new Coord(0);
         }
 
-        if (dat.ContainsKey(key) && dat[key].Count == 2)
+        if (dat.ContainsKey(key) && dat[key].Count > 1)
         {
-            int x = 0, y = 0;
-
-            if (dat.TryGetInt("x", out x) && dat.TryGetInt("y", out y))
+            if (dat[key].TryGetInt("x", out int x) && dat[key].TryGetInt("y", out int y))
             {
                 o = new Coord(x, y);
                 return true;

@@ -409,10 +409,32 @@ function DrainBlood(caster, direction, skill)
 	end
 
 	ApplyChanges(caster, skill)
-end	
+end
 
+--Animus Trap
+function AnimusTrap(caster, targetPos, skill)
+	local target = TargetAt(targetPos)
+
+	if (target ~= nil and not target.isPlayer) then
+		if (target.HasNPCFlag(NPC_Flags.DeepOne) and not target.HasNPCFlag(NPC_Flags.Free_DeepOne)) then
+			Log(target.Name .. " has been trapped in their physical body!")
+			target.stats.AddStatusEffect("AnimusTrap", 1000)
+			ApplyChanges(caster, skill)
+		end
+	end
+end
+
+--Utility functions. Copy over to other Lua files to use.
 function TargetAvailableInDirection(position, direction)
 	return (TileMap.WalkableTile(position.x + direction.x, position.y + direction.y) and TileMap.GetCellAt(position + direction).entity ~= nil)
+end
+
+function TargetAt(position)
+	if (TileMap.WalkableTile(position.x, position.y)) then
+		return TileMap.GetCellAt(position).entity
+	end
+
+	return nil
 end
 
 function Clamp(num, min, max)

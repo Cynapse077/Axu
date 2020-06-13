@@ -463,6 +463,12 @@
         "Tags" : [ "Walkable", "Farm" ],
         "Biome" : "None"
     },
+    {
+        "ID" : "Farm_3",
+        "TileIndex" : 39,
+        "Tags" : [ "Walkable", "Farm" ],
+        "Biome" : "None"
+    },
 
     {
         "ID" : "Desert_Sand_1",

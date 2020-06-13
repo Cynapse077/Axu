@@ -107,7 +107,7 @@ public class Journal : MonoBehaviour
         {
             if (n.HasFlag(NPC_Flags.Follower) || n.faction.ID == "follower")
             {
-                string factionID = (GameData.Get<NPC_Blueprint>(n.ID)).faction.ID;
+                string factionID = GameData.Get<NPC_Blueprint>(n.ID).faction.ID;
 
                 if (factionID == facID)
                 {

@@ -67,7 +67,8 @@ public class DialogueController : MonoBehaviour
         if (!string.IsNullOrEmpty(myNPC.dialogueID))
         {
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => World.userInterface.Dialogue_Inquire(myNPC.dialogueID)));
-        } else
+        } 
+        else
         {
             dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => World.userInterface.Dialogue_Chat(myNPC.faction)));
         }
@@ -79,10 +80,15 @@ public class DialogueController : MonoBehaviour
 
         if (myNPC.HasFlag(NPC_Flags.Doctor))
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Heal Wounds"), () => World.userInterface.Dialogue_Heal()));
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Replace Limb"), () => World.userInterface.Dialogue_ReplaceLimb()));
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Amputate Limb"), () => World.userInterface.Dialogue_AmputateLimb()));
-            dialogueChoices.Add(new DialogueChoice("Cybernetics (1x Bottle Cap)", () => World.userInterface.OpenCyberneticsPanel(ObjectManager.playerEntity.body)));
+            string cureEnding = ObjectManager.playerEntity.stats.CostToCureWounds() > 0 ? " - <color=yellow>$</color>" + ObjectManager.playerEntity.stats.CostToCureWounds() :  " " + "NotNeeded".Localize();
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Healing".Localize() + cureEnding, () => 
+            { 
+                World.userInterface.Dialogue_Heal();
+                SetupDialogueOptions();
+            }));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Replace Limb".Localize(), () => World.userInterface.Dialogue_ReplaceLimb()));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Amputate Limb", () => World.userInterface.Dialogue_AmputateLimb()));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Cybernetics".Localize(), () => World.userInterface.OpenCyberneticsPanel(ObjectManager.playerEntity.body)));
         }
 
         if (myNPC.HasFlag(NPC_Flags.Mercenary) && !bai.isFollower())

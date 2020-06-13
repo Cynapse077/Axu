@@ -15,7 +15,6 @@ public class Cell
     event Action<Entity> onEntityEnter;
     bool inSight, hasSeen;
 
-
     public Cell()
     {
         position = new Coord(0, 0);
@@ -79,6 +78,7 @@ public class Cell
 
     public void RecievePulse(Coord previous, int moveCount, bool on)
     {
+        //In reverse in case we need to destroy an object during this pulse.
         mapObjects.IterateAction_Reverse((x) => x.ReceivePulse(previous, moveCount, on));
     }
 
@@ -103,11 +103,7 @@ public class Cell
                 World.tileMap.CurrentMap.ModifyTilePathCost(position.x, position.y, EntityInCellCost);
             }
 
-            if (onEntityEnter != null)
-            {
-                onEntityEnter(entity);
-            }
-
+            onEntityEnter?.Invoke(entity);
             mapObjects.IterateAction_Reverse((x) => x.OnEntityEnter(e));
         }
     }
@@ -174,12 +170,12 @@ public class Cell
 
     public bool HasInventory()
     {
-        return (mapObjects.Any(x => x.inv != null));
+        return mapObjects.Any(x => x.inv != null);
     }
 
     public Inventory MyInventory()
     {
-        return (mapObjects.Find(x => x.inv != null).inv);
+        return mapObjects.Find(x => x.inv != null).inv;
     }
 
     public Item GetPool()
@@ -199,11 +195,6 @@ public class Cell
         }
 
         return null;
-    }
-
-    public void UnregisterCallbacks()
-    {
-        World.tileMap.OnScreenChange -= Reset;
     }
 
     public void UpdateInSight(bool _inSight, bool _hasSeen)

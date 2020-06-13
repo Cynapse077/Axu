@@ -341,8 +341,8 @@ MonoBehaviour:
   loadMenu: {fileID: 1411382722}
   background: {fileID: 240438016}
   background2: {fileID: 737500724}
-  localMapWidth: 45
-  localMapHeight: 30
+  localMapWidth: 55
+  localMapHeight: 40
   worldMapWidth: 200
   worldMapHeight: 200
   currentSelected: 1

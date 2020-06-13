@@ -1,0 +1,239 @@
+{
+    "ItemModifiers" : [
+        {
+            "Name" : "<color=silver>Heavy</color>",
+            "ID" : "heavy",
+            "Damage" : "0d0+2",
+            "Stat Mods" : [
+                { "Stat" : "Attack Delay", "Amount" : 2 }
+            ],
+            "Cost" : 5,
+            "Description" : "It is very heavy.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=silver>Sharp</color>",
+            "ID" : "sharp",
+            "Damage" : "0d1+1",
+            "Damage Type" : "Cleave",
+            "Cost" : 25,
+            "Description" : "It is very sharp.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=silver>Balanced</color>",
+            "ID" : "steady",
+            "Stat Mods" : [
+                { "Stat" : "Accuracy", "Amount" : 1 }
+            ],
+            "Cost" : 10,
+            "Description" : "It is easy to use.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=red>Serrated</color>",
+            "ID" : "serrated",
+            "Damage" : "0d1-1",
+            "Damage Type" : "Bleed",
+            "Cost" : 15,
+            "Description" : "It is likely to cause bleeding.",
+            "Mod Type" : "Weapon",
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Bleed", "Turns" : "2~7", "Chance" : 5 }
+            ]
+        },
+        {
+            "Name" : "<color=magenta>Runed</color>",
+            "ID" : "runed",
+            "Damage" : "1d0",
+            "Cost" : 36,
+            "Description" : "Its surface is covered in mesmerizing runes.",
+            "Mod Type" : "Weapon",
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Confuse", "Turns" : "3~8", "Chance" : 5 }
+            ]
+        },
+        {
+            "Name" : "<color=orange>Scalding</color>",
+            "ID" : "scalding",
+            "Damage" : "0d1+1",
+            "Damage Type" :"Heat",
+            "Cost" : 31,
+            "Description" : "Heat radiates from its surface.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=blue>Frozen</color>",
+            "ID" : "frozen",
+            "Damage" : "0d1+1",
+            "Damage Type" :"Cold",
+            "Cost" : 31,
+            "Description" : "Its surface is cold to the touch.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=green>Venomous</color>",
+            "ID" : "venomous",
+            "Damage Type" : "Venom",
+            "Cost" : 35,
+            "Description" : "It is coated in venom.",
+            "Mod Type" : "Weapon",
+            "Components" : [
+                { "ID" : "OnHitAddStatus", "Status" : "Poison", "Turns" : "2~7", "Chance" : 5 }
+            ]
+        },
+        {
+            "Name" : "<color=yellow>Voltaic</color>",
+            "ID" : "voltaic",
+            "Damage Type" : "Energy",
+            "Components" : [
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
+            ],
+            "Properties" : [
+            	"Stun",
+                "Shock_Nearby"
+            ],
+            "Cost" : 45,
+            "Description" : "Electricity courses through it.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=red>Vampiric</color>",
+            "ID" : "vampiric",
+            "Damage" : "0d0-1",
+            "Components" : [
+                { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.DrainHealth" }
+            ],
+            "Properties" : [
+                "DrainHealth"
+            ],
+            "Cost" : 50,
+            "Description" : "The blood coating the weapon feeds the wielder.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=green>Glowing</color>",
+            "ID" : "glowing",
+            "Damage" : "0d1+0",
+            "Properties" : [
+                "OnAttack_Radiation"
+            ],
+            "Cost" : 22,
+            "Description" : "It glows a sickly green with radiation.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=orange>Insulated</color>",
+            "ID" : "insulated",
+            "Stat Mods" : [
+                { "Stat" : "Cold Resist", "Amount" : 10 },
+                { "Stat" : "Heat Resist", "Amount" : 10 }
+            ],
+            "Cost" : 10,
+            "Description" : "It will protect from heat and cold.",
+            "Mod Type" : "Armor"
+        },
+        {
+            "Name" : "<color=olive>C</color><color=green>a</color><color=olive>m</color><color=green>o</color>",
+            "ID" : "camo",
+            "Stat Mods" : [
+                { "Stat" : "Stealth", "Amount" : 2 }
+            ],
+            "Cost" : 18,
+            "Description" : "It has a camo pattern.",
+            "Mod Type" : "Armor"
+        },
+        {
+            "Name" : "<color=olive>Pocketed</color>",
+            "ID" : "pocketed",
+            "Stat Mods" : [
+                { "Stat" : "Storage Capacity", "Amount" : 3 }
+            ],
+            "Cost" : 41,
+            "Description" : "It is lined with pockets to help carry goods.",
+            "Mod Type" : "Armor"
+        },
+        {
+            "Name" : "<color=green>Xul</color>",
+            "ID" : "xul",
+            "Stat Mods" : [
+                { "Stat" : "Strength", "Amount" : 1 },
+                { "Stat" : "Attack Delay", "Amount" : -2 }
+            ],
+            "Unique" : true,
+            "Cost" : 100,
+            "Description" : "Xul technology grants strength to its bearer.",
+            "Mod Type" : "Weapon"
+        },
+        {
+            "Name" : "<color=yellow>Adrenal</color>",
+            "ID" : "adrenal",
+            "Stat Mods" : [
+                { "Stat" : "Speed", "Amount" : 2 }
+            ],
+            "Cost" : 85,
+            "Description" : "A constant stream of adrenaline is supplied by it.",
+            "Mod Type" : "Armor"
+        },
+        {
+            "Name" : "<color=yellow>Golden</color>",
+            "ID" : "golden",
+            "Cost" : 150,
+            "Description" : "Gold laces its surface.",
+            "Mod Type" : "All"
+        },
+        {
+            "Name" : "<color=cyan>J</color><color=yellow>e</color><color=cyan>w</color><color=yellow>e</color><color=cyan>l</color><color=yellow>e</color><color=cyan>d</color>",
+            "ID" : "jeweled",
+            "Cost" : 120,
+            "Description" : "There are interlaced jewels on its surface.",
+            "Mod Type" : "All"
+        },
+        {
+            "Name" : "<color=silver>Scoped</color>",
+            "ID" : "scoped",
+            "Cost" : 80,
+            "Stat Mods" : [
+                { "Stat" : "Accuracy", "Amount" : 2 }
+            ],
+            "Description" : "It has an attached scope.",
+            "Mod Type" : "Ranged"
+        },
+        {
+            "Name" : "<color=grey>Spring-Loaded</color>",
+            "ID" : "quickreload",
+            "Properties" : [
+                "Quick_Reload"
+            ],
+            "Cost" : 55,
+            "Description" : "It has an Easy-Reload system.",
+            "Mod Type" : "Ranged"
+        },
+        {
+            "Name" : "<color=silver>Sturdy</color>",
+            "ID" : "sturdy",
+            "Armor" : 1,
+            "Cost" : 44,
+            "Description" : "It is well built, providing extra defense.",
+            "Mod Type" : "Shield"
+        },
+        {
+            "Name" : "Spiked",
+            "ID" : "spiked",
+            "Damage" : "1d1",
+            "Cost" : 65,
+            "Description" : "It has spikes jutting out of its surface.",
+            "Mod Type" : "Shield" 
+        },
+        {
+            "Name" : "Living",
+            "ID" : "growing",
+            "Components" : [
+                { "ID" : "ItemLevel" }
+            ],
+            "Cost" : 300,
+            "Description" : "It grows stronger with every strike.",
+            "Mod Type" : "Weapon" 
+        }
+    ]
+}

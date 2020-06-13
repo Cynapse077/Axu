@@ -28,6 +28,11 @@ public class CComponent
 
     public static CComponent FromJson(JsonData data)
     {
+        if (!data.ContainsKey("ID"))
+        {
+            return null;
+        }
+
         string id = data["ID"].ToString();
         JsonReader reader = new JsonReader(data.ToJson());
 
@@ -126,7 +131,9 @@ public class CRechargeTurns : CComponent
     public override string ExtraInfo()
     {
         if (max <= 0)
+        {
             return "Charge: 0%";
+        }
 
         int percent = (int)(current / (float)max * 100f);
 
@@ -147,7 +154,7 @@ public class CRot : CComponent
 
     public override string ExtraInfo()
     {
-        return string.Format(LocalizationManager.GetContent("IT_Spoils"), current);
+        return string.Format("IT_Spoils".Localize(), current);
     }
 }
 
@@ -199,10 +206,9 @@ public class CEquipped : CComponent
 
     public override string ExtraInfo()
     {
-        string eq = baseItemID;
-        if (!string.IsNullOrEmpty(eq))
+        if (!baseItemID.NullOrEmpty())
         {
-            return "Equipped: " + ItemList.GetItemByID(eq).DisplayName();
+            return "Equipped: " + ItemList.GetItemByID(baseItemID).DisplayName();
         }
 
         return base.ExtraInfo();
@@ -304,7 +310,8 @@ public class CAbility : CComponent
 
         if (skill != null)
         {
-            return string.Format("<color=magenta>Ability: {0}</color>", skill.Name);
+            string s = "IT_Ability".Localize();
+            return s.Replace("[INPUT]", skill.Name);
         }
 
         return base.ExtraInfo();
@@ -332,7 +339,7 @@ public class CCoordinate : CComponent
 
     public override string ExtraInfo()
     {
-        return isSet ? (aNa + " - \n@ " + lPos.ToString()) : LocalizationManager.GetContent("IT_NotSet");
+        return isSet ? (aNa + " - \n@ " + lPos.ToString()) : "IT_NotSet".Localize();
     }
 
     public void Activate(Entity entity)
@@ -363,7 +370,7 @@ public class CCoordinate : CComponent
             isSet = true;
         }
 
-        ObjectManager.player.GetComponent<PlayerInput>().CheckMinimap();
+        World.playerInput.CheckMinimap();
     }
 }
 
@@ -425,7 +432,7 @@ public class CBlock : CComponent
 
     public override string ExtraInfo()
     {
-        string s = LocalizationManager.GetContent("IT_Block");
+        string s = "IT_Block".Localize();
 
         if (s.Contains("[INPUT]"))
         {
@@ -460,7 +467,7 @@ public class CCoat : CComponent
 
     public override string ExtraInfo()
     {
-        return string.Format(LocalizationManager.GetContent("IT_Coat"), liquid.Name, strikes);
+        return string.Format("IT_Coat".Localize(), liquid.Name, strikes);
     }
 }
 
@@ -530,7 +537,7 @@ public class CLiquidContainer : CComponent
             l.units--;
             poured++;
 
-            if (roomLeft() <= 0 || FilledUnits() >= capacity)
+            if (RoomLeft() <= 0 || FilledUnits() >= capacity)
             {
                 break;
             }
@@ -557,7 +564,7 @@ public class CLiquidContainer : CComponent
 
     public void Drink(Entity ent)
     {
-        if (liquid != null && !isEmpty())
+        if (liquid != null && !IsEmpty())
         {
             liquid.Drink(ent.stats);
             liquid.units--;
@@ -579,7 +586,7 @@ public class CLiquidContainer : CComponent
         liquid = l;
     }
 
-    public int roomLeft()
+    public int RoomLeft()
     {
         return (liquid != null) ? capacity - liquid.units : capacity;
     }
@@ -589,21 +596,19 @@ public class CLiquidContainer : CComponent
         return (liquid != null) ? liquid.units : 0;
     }
 
-    public bool isFull()
+    public bool IsFull()
     {
         return FilledUnits() >= capacity;
     }
 
-    public bool isEmpty()
+    public bool IsEmpty()
     {
         return liquid == null || liquid.units <= 0;
     }
 
     public override string ExtraInfo()
     {
-        string s = isEmpty() 
-            ? LocalizationManager.GetContent("IT_LiquidUnits_Empty") 
-            : LocalizationManager.GetContent("IT_LiquidUnits") + "\n(" + liquid.Description + ")";
+        string s = IsEmpty() ? "IT_LiquidUnits_Empty".Localize() : "IT_LiquidUnits".Localize() + "\n(" + liquid.Description + ")";
 
         if (s.Contains("[INPUT1]"))
         {
@@ -700,7 +705,7 @@ public class CItemLevel : CComponent
             {
                 if (level >= maxLevel)
                 {
-                    xp = 0;
+                    xp = 0.0;
                     break;
                 }
 
@@ -711,7 +716,7 @@ public class CItemLevel : CComponent
         else
         {
             level = maxLevel;
-            xp = 0;
+            xp = 0.0;
         }
     }
 
@@ -724,12 +729,11 @@ public class CItemLevel : CComponent
     {      
         if (level < maxLevel)
         {
-            double xpPercent = Math.Round(xp / 10.0, 2);
-            return string.Format("<color=cyan>Level</color> <color=yellow>{0}</color> <color=grey>({1} %xp)</color>", level, xpPercent);
+            return string.Format("LivingWeaponLevel".Localize(), level, Math.Round(xp / 10.0, 2));
         }
         else
         {
-            return "Level " + level.ToString() + " (MAX)";
+            return "LevelMax".Localize().Format(level.ToString());
         }
     }
 }
@@ -787,10 +791,6 @@ public class CRequirement : CComponent
                         return false;
                     }
                 }
-                else
-                {
-                    return false;
-                }
             }
         }
 
@@ -802,14 +802,6 @@ public class CRequirement : CComponent
 public class CDNAHolder : CComponent
 {
     string npc;
-
-    public bool IsEmpty
-    {
-        get
-        {
-            return string.IsNullOrEmpty(npc);
-        }
-    }
 
     public CDNAHolder()
     {
@@ -830,7 +822,7 @@ public class CDNAHolder : CComponent
 
     public NPC_Blueprint GetNPC()
     {
-        if (IsEmpty)
+        if (IsEmpty())
         {
             return null;
         }
@@ -838,14 +830,24 @@ public class CDNAHolder : CComponent
         return GameData.Get<NPC_Blueprint>(npc);
     }
 
+    public bool IsEmpty()
+    {
+        return npc.NullOrEmpty();
+    }
+
     public override string ExtraInfo()
     {
-        if (IsEmpty)
+        if (IsEmpty())
         {
             return "DNA: <color=grey>(Empty)</color>";
         }
 
         NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npc);
+        if (bp == null)
+        {
+            return "DNA: <color=grey>(Empty)</color>";
+        }
+
         return "DNA: " + bp.name;
     }
 }
@@ -876,7 +878,7 @@ public class COnHitAddStatus : CComponent
     {
         if (!statusID.NullOrEmpty() && target != null)
         {
-            if (SeedManager.combatRandom.Next(100) < chance)
+            if (RNG.Chance(chance))
             {
                 target.stats.AddStatusEffect(statusID, turns.GetRandom());
             }
@@ -885,7 +887,12 @@ public class COnHitAddStatus : CComponent
 
     public override string ExtraInfo()
     {
-        return ((int)chance).ToString() + "% chance to add the status effect \"" + statusID + "\" on hit";
+        if (statusID.NullOrEmpty())
+        {
+            return null;
+        }
+
+        return "ChanceToAddStatus".Localize().Format(chance.ToString(), statusID);
     }
 }
 
@@ -902,6 +909,7 @@ public class CLocationMap : CComponent
 
     public CLocationMap(string zID, string qID)
     {
+        ID = "LocationMap";
         zoneID = zID;
         questID = qID;
     }
@@ -933,9 +941,10 @@ public class CLocationMap : CComponent
             {
                 if (GameData.TryGet(questID, out Quest q))
                 {
-                    q.goals = new Goal[1] { new GoToGoal_Specific(q, pos, 0) };
-                    q.AddEvent(QuestEvent.EventType.OnFail, new RemoveSpecificLocationEvent(pos));
-                    ObjectManager.playerJournal.StartQuest(q);
+                    Quest newQuest = q.Clone();
+                    newQuest.goals = new Goal[1] { new GoToGoal_Specific(newQuest, pos, 0) };
+                    newQuest.AddEvent(QuestEvent.EventType.OnFail, new RemoveSpecificLocationEvent(pos));
+                    ObjectManager.playerJournal.StartQuest(newQuest);
                 }
                 else
                 {
@@ -973,7 +982,7 @@ public class CDisguise : CComponent
             return string.Empty;
         }
 
-        return LocalizationManager.GetContent("IT_Disguise").Format(faction.name);
+        return "IT_Disguise".Localize().Format(faction.name);
     }
 }
 
@@ -1004,12 +1013,12 @@ public class CAmmo : CComponent
 
     public bool CanUseOn(Item item)
     {
-        if (!item.HasCComponent<CFirearm>())
+        if (item.TryGetCComponent(out CFirearm cf))
         {
-            return false;
+            return cf.ammoID == ammoType;
         }
 
-        return item.GetCComponent<CFirearm>().ammoID == ammoType;
+        return false;
     }
 
     public void OnHit(Entity source, Coord c)
@@ -1024,7 +1033,7 @@ public class CAmmo : CComponent
     {
         if (extraDamage != null && !extraDamage.IsEmpty)
         {
-            return "Shot Damage + " + extraDamage.ToString();
+            return "ShotDamageBonus".Localize() + extraDamage.ToString();
         }
 
         return string.Empty;

@@ -32,14 +32,14 @@ public class ReplaceLimb_Panel : MonoBehaviour
         bpTitle.text = LocalizationManager.GetContent("Title_ReplaceLimb");
         itTitle.text = LocalizationManager.GetContent("Title_ReplaceLimb_Item");
 
-        severableBodyParts = inv.entity.body.bodyParts.FindAll(x => x.severable && !x.external);
+        severableBodyParts = inv.entity.body.bodyParts.FindAll(x => x.Severable && x.Organic);
 
         foreach (BodyPart b in severableBodyParts)
         {
             GameObject bp = Instantiate(bodyPartObject, bpAnchor);
-            string myText = (b.isAttached ? "<color=green>" : "<color=red>") + b.displayName + "</color>";
+            string myText = (b.Attached ? "<color=green>" : "<color=red>") + b.displayName + "</color>";
 
-            if (b.isAttached)
+            if (b.Attached)
             {
                 myText += " : ";
 

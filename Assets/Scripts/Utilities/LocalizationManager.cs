@@ -38,4 +38,9 @@ public static class LocalizationManager
     {
         return GetContent(s);
     }
+
+    public static string Localize(this string s, params string[] vs)
+    {
+        return GetContent(s).Format(vs);
+    }
 }

@@ -1,0 +1,374 @@
+{
+    "Liquids" : [
+        {
+            "ID" : "liquid_default",
+            "Name" : "<color=grye>Dilute Solution</color>",
+            "Description" : "A heavily diluted liquid that most likely serves no purpose.",
+            "Frequency" : 1,
+            "Color" : [ 175, 175, 175 ],
+            "Price Per Unit" : 0,
+            "LuaEvents" : [
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_unstable",
+            "Name" : "<color=orange>Unstable Concoction</color>",
+            "Description" : "Be careful. This looks like it might explode.",
+            "Frequency" : 1,
+            "Color" : [ 255, 255, 0 ],
+            "Price Per Unit" : 3,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Unstable" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Unstable" }
+            ]
+        },
+        {
+            "ID" : "liquid_water",
+            "Name" : "<color=cyan>Water</color>",
+            "Description" : "Fresh water.",
+            "Frequency" : 100,
+            "Color" : [ 0, 155, 255 ],
+            "Price Per Unit" : 1,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Water" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_saltwater",
+            "Name" : "<color=white>Salt Water</color>",
+            "Description" : "Ocean water.",
+            "Frequency" : 100,
+            "Color" : [ 100, 187, 243 ],
+            "Price Per Unit" : 1,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_SaltWater" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+		{
+			"ID" : "liquid_preservative",
+			"Name" : "Preservative",
+			"Description" : "Coat organic matter with this to make it rot slower.",
+			"Frequency" : 10,
+			"Color" : [ 100, 187, 243 ],
+			"Price Per Unit" : 10,
+			"LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Preservative" },
+                { "Event" : "OnCoat", "Script" : "Core.Liquids.OnCoat_Preservative" }
+			]
+		},
+        {
+            "ID" : "liquid_salamandis",
+            "Name" : "<color=red>Salamandis</color>",
+            "Description" : "Causes the consumer to regrow lost limbs.",
+            "Frequency" : 10,
+            "Color" : [ 240, 170, 33 ],
+            "Price Per Unit" : 500,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Salamandis" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_regenitrol",
+            "Name" : "<color=lime>Regenitrol</color>",
+            "Description" : "Heals wounds gradually over time.",
+            "Frequency" : 30,
+            "Color" : [ 130, 236, 88 ],
+            "Addictiveness" : 10,
+            "Price Per Unit" : 60,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Regenitrol" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Regenitrol" }
+            ]
+        },
+        {
+            "ID" : "liquid_poison",
+            "Name" : "<color=green>Poison</color>",
+            "Description" : "Induces poison.",
+            "Frequency" : 50,
+            "Color" : [ 110, 164, 88 ],
+            "Price Per Unit" : 10,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Poison" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Poison" }
+            ]
+        },
+        {
+            "ID" : "liquid_antidote",
+            "Name" : "Antidote",
+            "Description" : "Cures poison.",
+            "Frequency" : 50,
+            "Color" : [ 213, 188, 230 ],
+            "Price Per Unit" : 15,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Antidote" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_mutagen",
+            "Name" : "<color=magenta>Mutagen</color>",
+            "Description" : "Progresses radiation towards mutation.",
+            "Frequency" : 8,
+            "Color" : [ 155, 55, 217 ],
+            "Price Per Unit" : 150,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
+            ]
+        },
+        {
+            "ID" : "liquid_lunium",
+            "Name" : "<color=yellow>Lunium</color>",
+            "Description" : "Drinking can remove up to 2 random mutations.",
+            "Color" : [ 215, 222, 33 ],
+            "Frequency" : 14,
+            "Price Per Unit" : 150,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Lunium" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Lunium" }
+            ]
+        },
+        {
+            "ID" : "liquid_alcohol",
+            "Name" : "<color=olive>Alcohol</color>",
+            "Description" : "Made of some fermented fruit.",
+            "Frequency" : 80,
+            "Color" : [ 160, 100, 28 ],
+            "Addictiveness" : 4,
+            "Price Per Unit" : 25,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Alcohol" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Alcohol" }
+            ]
+        },
+        {
+            "ID" : "liquid_lava",
+            "Name" : "<color=red>Lava</color>",
+            "Description" : "Molten rock, slightly cooled.",
+            "Frequency" : 8,
+            "Color" : [ 231, 75, 15 ],
+            "Price Per Unit" : 55,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Lava" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Lava" }
+            ]
+        },
+        {
+            "ID" : "liquid_vomit",
+            "Name" : "<color=olive>Vomit</color>",
+            "Description" : "Don't drink this. Please.",
+            "Frequency" : 1,
+            "Color" : [ 145, 184, 38 ],
+            "Price Per Unit" : 0,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Vomit" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_blood",
+            "Name" : "<color=red>Blood</color>",
+            "Description" : "You usually want to keep this in your body.",
+            "Frequency" : 5,
+            "Color" : [ 255, 0, 0 ],
+            "Price Per Unit" : 0,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Blood" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_blood_vamp",
+            "Name" : "<color=red>Vampiric Blood</color>",
+            "Description" : "Blood from a vampiric creature.",
+            "Frequency" : 5,
+            "Color" : [ 184, 38, 38 ],
+            "Price Per Unit" : 50,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Blood_Vamp" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_blood_pois",
+            "Name" : "<color=green>Poisonous</color> <color=red>Blood</color>",
+            "Description" : "Blood that induces poison.",
+            "Frequency" : 5,
+            "Color" : [ 184, 38, 38 ],
+            "Price Per Unit" : 0,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Blood_Poison" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Blood_Poison" }
+            ]
+        },
+        {
+            "ID" : "liquid_blood_lep",
+            "Name" : "<color=olive>Leprosic</color> <color=red>Blood</color>",
+            "Description" : "Blood of a leper.",
+            "Frequency" : 5,
+            "Color" : [ 184, 38, 38 ],
+            "Price Per Unit" : 0,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Blood_Lep" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_cytopke",
+            "Name" : "<color=green>Cytopke</color>",
+            "Description" : "Heals the user over a long period of time. Very addictive.",
+            "Frequency" : 1,
+            "Color" : [ 0, 255, 0 ],
+            "Addictiveness" : 30,
+            "Price Per Unit" : 150,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Cytopke" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Regenitrol" }
+            ]
+        },
+        {
+            "ID" : "liquid_float",
+            "Name" : "<color=silver>Float</color>",
+            "Description" : "Causes the user to float in the air for a short duration.",
+            "Frequency" : 50,
+            "Color" : [ 160, 100, 28 ],
+            "Price Per Unit" : 20,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Float" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Base" }
+            ]
+        },
+        {
+            "ID" : "liquid_mutagen_bird",
+            "Name" : "<color=magenta>Bird Mutagen</color>",
+            "Description" : "Causes the consumer to mutate with bird-like traits.",
+            "Frequency" : 0,
+            "Color" : [ 155, 55, 217 ],
+            "Price Per Unit" : 300,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Bird" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
+            ]
+        },
+        {
+            "ID" : "liquid_mutagen_spider",
+            "Name" : "<color=magenta>Spider Mutagen</color>",
+            "Description" : "Causes the consumer to mutate with spider-like traits.",
+            "Frequency" : 0,
+            "Color" : [ 155, 55, 217 ],
+            "Price Per Unit" : 300,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Spider" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
+            ]
+        },
+        {
+            "ID" : "liquid_mutagen_reptile",
+            "Name" : "<color=magenta>Reptile Mutagen</color>",
+            "Description" : "Causes the consumer to mutate with reptile-like traits.",
+            "Frequency" : 0,
+            "Color" : [ 155, 55, 217 ],
+            "Price Per Unit" : 300,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Reptile" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
+            ]
+        },
+        {
+            "ID" : "liquid_mutagen_chimera",
+            "Name" : "<color=magenta>Chimera Mutagen</color>",
+            "Description" : "Causes the consumer to mutate with chimera-like traits.",
+            "Frequency" : 0,
+            "Color" : [ 155, 55, 217 ],
+            "Price Per Unit" : 300,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Chimera" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
+            ]
+        },
+        {
+            "ID" : "liquid_mutagen_aquatic",
+            "Name" : "<color=magenta>Aquatic Mutagen</color>",
+            "Description" : "Causes the consumer to mutate with aquatic traits.",
+            "Frequency" : 0,
+            "Color" : [ 155, 55, 217 ],
+            "Price Per Unit" : 300,
+            "LuaEvents" : [
+                { "Event" : "OnDrink", "Script" : "Core.Liquids.OnDrink_Mutagen_Aquatic" },
+                { "Event" : "OnSplash", "Script" : "Core.Liquids.OnSplash_Mutagen" }
+            ]
+        }
+    ],
+
+    "Mixing Tables" : [
+        {
+            "Input1" : "liquid_water",
+            "Input2" : "liquid_saltwater",
+            "Output" : "liquid_saltwater"
+        },
+        {
+            "Input1" : "liquid_mutagen",
+            "Input2" : "liquid_lunium",
+            "Output" : "liquid_unstable"
+        },
+        {
+            "Input1" : "liquid_blood",
+            "Input2" : "liquid_poison",
+            "Output" : "liquid_blood_pois"
+        },
+        {
+            "Input1" : "liquid_blood",
+            "Input2" : "liquid_blood_pois",
+            "Output" : "liquid_blood_pois"
+        },
+        {
+            "Input1" : "liquid_blood",
+            "Input2" : "liquid_blood_vamp",
+            "Output" : "liquid_blood_vamp"
+        },
+        {
+            "Input1" : "liquid_blood",
+            "Input2" : "liquid_blood_lep",
+            "Output" : "liquid_blood_lep"
+        },
+        {
+            "Input1" : "liquid_regenitrol",
+            "Input2" : "liquid_lunium",
+            "Output" : "liquid_cytopke" 
+        },
+        {
+            "Input1" : "liquid_mutagen",
+            "Input2" : "liquid_float",
+            "Output" : "liquid_mutagen_bird"
+        },
+        {
+            "Input1" : "liquid_mutagen",
+            "Input2" : "liquid_poison",
+            "Output" : "liquid_mutagen_spider"
+        },
+        {
+            "Input1" : "liquid_mutagen",
+            "Input2" : "liquid_lava",
+            "Output" : "liquid_mutagen_reptile"
+        },
+        {
+            "Input1" : "liquid_alcohol",
+            "Input2" : "liquid_mutagen",
+            "Output" : "liquid_mutagen_chimera"
+        },
+        {
+            "Input1" : "liquid_saltwater",
+            "Input2" : "liquid_mutagen",
+            "Output" : "liquid_mutagen_aquatic"
+        },
+		{
+			"Input1" : "liquid_saltwater",
+			"Input2" : "liquid_regenitrol",
+			"Output" : "liquid_preservative"
+		}
+    ]
+}

@@ -13,7 +13,7 @@ public class Generate_WorldMap : MonoBehaviour
     static float stretchX;
     static float stretchY;
 
-    readonly static int islandThreshold = 25;
+    const int IslandThreshold = 25;
 
     public static MapGenInfo Generate(System.Random _rng, int _width, int _height, int layers, float outer, float inner)
     {
@@ -47,11 +47,10 @@ public class Generate_WorldMap : MonoBehaviour
                 for (int i = 1; i < layers + 1; i++)
                 {
                     float perlin = Mathf.PerlinNoise(xOrg + x / width * outerScale * i, yOrg + y / height * outerScale * i);
-
-                    b += perlin - DistanceToPoint(centerX, centerY, x, y) * 0.55f / (i * 0.5f);
+                    b += perlin - DistanceToPoint(centerX, centerY, x, y) * 0.55f / (i / 2f);
                 }
 
-                b *= (Mathf.PerlinNoise(xOrg2 + x / width * scale2, yOrg2 + y / height * scale2)) / (layers - 1);
+                b *= Mathf.PerlinNoise(xOrg2 + x / width * scale2, yOrg2 + y / height * scale2) / (layers - 1);
 
                 map_data[(int)x, (int)y] = GetGeneralBiome(xOrg3, yOrg3, x, y, b);
 
@@ -88,7 +87,7 @@ public class Generate_WorldMap : MonoBehaviour
                     bool canAdd = true;
                     Coord c = new Coord(x, y);
 
-                    foreach (List<Coord> island in islands)
+                    foreach (var island in islands)
                     {
                         if (island.Contains(c))
                         {
@@ -112,7 +111,7 @@ public class Generate_WorldMap : MonoBehaviour
         {
             int size = currIsland.Count;
 
-            if (size < islandThreshold)
+            if (size < IslandThreshold)
             {
                 for (int i = 0; i < currIsland.Count; i++)
                 {
@@ -150,7 +149,9 @@ public class Generate_WorldMap : MonoBehaviour
                 for (int y = next.y - 1; y <= next.y + 1; y++)
                 {
                     if (x < 0 || y < 0 || x >= Manager.worldMapSize.x || y >= Manager.worldMapSize.y)
+                    {
                         continue;
+                    }
 
                     if ((x == next.x || y == next.y) && !processed[x, y] && data[x, y] != 0)
                     {
@@ -177,12 +178,17 @@ public class Generate_WorldMap : MonoBehaviour
         {
             float perlin = Mathf.PerlinNoise(xOrg + x / width * innerScale * stretchX, yOrg + y / height * innerScale * stretchY) / 1.8f;
             perlin = Mathf.Clamp01(perlin);
-            perlin += (c / 1.25f);
+            perlin += c / 1.25f;
 
             if (perlin > 0.6f)
+            {
                 return (perlin > 0.8f) ? 4 : 3;
-            else if (perlin < 0.15f)
+            }
+            
+            if (perlin < 0.15f)
+            {
                 return (perlin < 0.1f) ? 0 : 5;
+            }
 
             return GetBiome(xOrg * 2, yOrg * 2, x, y, (perlin + c) / 2f);
         }
@@ -192,18 +198,19 @@ public class Generate_WorldMap : MonoBehaviour
     {
         float perlin = Mathf.PerlinNoise(xOrg + x / width * 15, yOrg + y / height * 15) * 0.5f;
         perlin = Mathf.Clamp01(perlin);
-        perlin += (c);
+        perlin += c;
 
         if (perlin < 0.5f)
+        {
             return 2;
+        }
 
         return 1;
     }
 
     static float DistanceToPoint(int x1, int y1, float x, float y)
     {
-        float distanceX = (x1 - x) * (x1 - x), distanceY = (y1 - y) * (y1 - y);
-        return Mathf.Sqrt(distanceX + distanceY) / (height / 2 - 1);
+        return Mathf.Sqrt(Mathf.Pow(x1 - x, 2) + Mathf.Pow(y1 - y, 2)) / (height / 2 - 1);
     }
 }
 

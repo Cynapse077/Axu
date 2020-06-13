@@ -19,15 +19,14 @@ public class NPCSprite : MonoBehaviour, EntitySprite
     {
         spriteID = spriteKey;
         spriteRenderer.sprite = SpriteManager.GetNPCSprite(spriteID);
-        int lx = (Random.value < 0.5f) ? 1 : -1;
-        SetXScale(lx);
+        SetXScale(RNG.NegOneOrOne());
     }
 
     public void SetXScale(int x)
     {
         if (x != 0)
         {
-            spriteObject.GetComponent<SpriteRenderer>().flipX = (x > 0);
+            spriteObject.GetComponent<SpriteRenderer>().flipX = x > 0;
         }
     }
 
@@ -42,7 +41,7 @@ public class NPCSprite : MonoBehaviour, EntitySprite
         {
             spriteRenderer.sprite = swimmingSprite;
         }
-        else if (!string.IsNullOrEmpty(spriteID))
+        else if (!spriteID.NullOrEmpty())
         {
             spriteRenderer.sprite = SpriteManager.GetNPCSprite(spriteID);
         }

@@ -53,18 +53,16 @@ namespace Pathfinding
 
     public class Path_AStar
     {
-        static Dictionary<CoordPair, Queue<Path_Node>> cachedPaths = new Dictionary<CoordPair, Queue<Path_Node>>();
-
         Queue<Path_Node> steps;
         public readonly PathResult result;
         public readonly Coord start;
         public readonly Coord end;
 
-        Dictionary<Path_Node, Path_Node> Came_From = new Dictionary<Path_Node, Path_Node>();
-        Dictionary<Path_Node, float> g_score = new Dictionary<Path_Node, float>();
-        Dictionary<Path_Node, float> f_score = new Dictionary<Path_Node, float>();
-        List<Path_Node> ClosedSet = new List<Path_Node>();
-        SimplePriorityQueue<Path_Node> OpenSet = new SimplePriorityQueue<Path_Node>();
+        static Dictionary<Path_Node, Path_Node> Came_From = new Dictionary<Path_Node, Path_Node>();
+        static Dictionary<Path_Node, float> g_score = new Dictionary<Path_Node, float>();
+        static Dictionary<Path_Node, float> f_score = new Dictionary<Path_Node, float>();
+        static List<Path_Node> ClosedSet = new List<Path_Node>();
+        static SimplePriorityQueue<Path_Node> OpenSet = new SimplePriorityQueue<Path_Node>();
 
         public int StepCount
         {
@@ -89,20 +87,18 @@ namespace Pathfinding
                 return;
             }
 
-            this.start = startCoord;
-            this.end = endCoord;
+            Came_From.Clear();
+            g_score.Clear();
+            f_score.Clear();
+            ClosedSet.Clear();
+            OpenSet.Clear();
+
+            start = startCoord;
+            end = endCoord;
 
             if (World.tileMap.tileGraph == null)
             {
                 World.tileMap.tileGraph = new Path_TileGraph(World.tileMap.CurrentMap);
-            }
-
-            CoordPair cp = new CoordPair(start, end);
-            if (cachedPaths.ContainsKey(cp))
-            {
-                steps = cachedPaths[cp];
-                result = PathResult.Success;
-                return;
             }
 
             Path_TileData startTileData = World.tileMap.CurrentMap.GetTileData(startCoord.x, startCoord.y);
@@ -110,6 +106,8 @@ namespace Pathfinding
 
             if (startTileData == null || endTileData == null)
             {
+                steps = null;
+                result = PathResult.Fail;
                 return;
             }
 
@@ -117,15 +115,10 @@ namespace Pathfinding
             {
                 steps = null;
                 result = PathResult.Fail;
+                return;
             }
-            else
-            {
-                result = PathResult.Success;
-                if (cachedPaths.ContainsKey(cp))
-                {
-                    cachedPaths.Add(new CoordPair(start, end), steps);
-                }
-            }
+
+            result = PathResult.Success;
         }
 
         public Path_AStar(Coord startCoord, Coord endCoord, WorldMap_Data gr)
@@ -140,17 +133,19 @@ namespace Pathfinding
                 return;
             }
 
+            Came_From.Clear();
+            g_score.Clear();
+            f_score.Clear();
+            ClosedSet.Clear();
+            OpenSet.Clear();
+
             Path_TileData start = gr.GetPathDataAt(startCoord.x, startCoord.y), end = gr.GetPathDataAt(endCoord.x, endCoord.y);
 
             if (!Calculate(World.worldMap.tileGraph.nodes, start, end, true, ObjectManager.playerEntity))
             {
                 steps = null;
+                result = PathResult.Fail;
             }
-        }
-
-        public static void ClearCache()
-        {
-            cachedPaths.Clear();
         }
 
         public static List<Coord> GetPath(Coord start, Coord end, bool ignoreCosts, Entity entity)
@@ -173,16 +168,11 @@ namespace Pathfinding
             foreach (Path_Node n in nodes.Values)
             {
                 g_score[n] = Mathf.Infinity;
-            }
-
-            g_score[nodes[start]] = 0;
-
-            foreach (Path_Node n in nodes.Values)
-            {
                 f_score[n] = Mathf.Infinity;
             }
 
-            f_score[nodes[start]] = HeuristicCostEstimate(nodes[start].data.position, nodes[end].data.position);
+            g_score[nodes[start]] = 0;
+            f_score[nodes[start]] = Distance(nodes[start], nodes[end]);
 
 
             while (OpenSet.Count > 0)
@@ -208,7 +198,7 @@ namespace Pathfinding
                     }
 
                     const float costToEnterFactor = 0.8f;
-                    float tentative_g_score = g_score[current] + GetDistance(current, neighbor) + neighbor.data.costToEnter * costToEnterFactor;
+                    float tentative_g_score = g_score[current] + Distance(current, neighbor) + neighbor.data.costToEnter * costToEnterFactor;
 
                     if (ignoreCosts && neighbor.data.costToEnter < 100)
                     {
@@ -222,7 +212,7 @@ namespace Pathfinding
 
                     Came_From[neighbor] = current;
                     g_score[neighbor] = tentative_g_score;
-                    f_score[neighbor] = g_score[neighbor] + HeuristicCostEstimate(neighbor.data.position, nodes[end].data.position);
+                    f_score[neighbor] = g_score[neighbor] + Distance(neighbor, nodes[end]);
 
                     if (!OpenSet.Contains(neighbor))
                     {
@@ -232,18 +222,6 @@ namespace Pathfinding
             }
 
             return false;
-        }
-
-
-        float DistBetween(Path_Node a, Path_Node b)
-        {
-            if (Mathf.Abs(a.data.position.x - b.data.position.x) + Mathf.Abs(a.data.position.y - b.data.position.y) == 1)
-                return 1.00f;
-
-            if (Mathf.Abs(a.data.position.x - b.data.position.x) == 1 && Mathf.Abs(a.data.position.y - b.data.position.y) == 1)
-                return 1.01f;
-
-            return Mathf.Sqrt(Mathf.Pow(a.data.position.x - b.data.position.x, 2) + Mathf.Pow(a.data.position.y - b.data.position.y, 2));
         }
 
         void ReconstructPath(Dictionary<Path_Node, Path_Node> Came_From, Path_Node current)
@@ -260,22 +238,17 @@ namespace Pathfinding
             steps = new Queue<Path_Node>(total_path.Reverse());
         }
 
-        float HeuristicCostEstimate(Coord a, Coord b)
+        float Distance(Path_Node datA, Path_Node datB)
         {
-            return Mathf.Sqrt(Mathf.Pow(a.x - b.x, 2) + Mathf.Pow(a.y - b.y, 2));
-        }
+            Coord a = datA.data.position;
+            Coord b = datB.data.position;
 
-        float GetDistance(Path_Node nodeA, Path_Node nodeB)
-        {
-            int dstX = Mathf.Abs(nodeA.data.position.x - nodeB.data.position.x);
-            int dstY = Mathf.Abs(nodeA.data.position.y - nodeB.data.position.y);
-
-            if (dstX > dstY)
+            if (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1)
             {
-                return 14.0f * dstY + 10.0f * (dstX - dstY);
+                return 1.00f;
             }
 
-            return 14.0f * dstX + 10.0f * (dstY - dstX);
+            return Mathf.Sqrt(Mathf.Pow(a.x - b.x, 2) + Mathf.Pow(a.y - b.y, 2));
         }
 
         public Coord GetNextStep()

@@ -8,7 +8,7 @@ using UnityEngine;
 [MoonSharpUserData]
 public class Ability : IAsset
 {
-    public const int maxLvl = 10;
+    public const int MaxLevel = 10;
     public const int XPToNext = 1000;
     public static readonly LuaCall castCall = new LuaCall("Core.Abilities.Cast");
     public static readonly LuaCall castCoordCall = new LuaCall("Core.Abilities.Cast_Coordinate");
@@ -26,7 +26,7 @@ public class Ability : IAsset
     public int timeCost;
     public DiceRoll dice;
     public DiceRoll dicePerLevel;
-    public AbilityOrigin origin;
+    public List<AbilityOrigin> origin = new List<AbilityOrigin>();
     
     List<AbilityTags> tags;
     double _xp;
@@ -99,7 +99,7 @@ public class Ability : IAsset
         castType = CastType.Instant;
         tags = new List<AbilityTags>();
         damageType = DamageTypes.None;
-        origin = AbilityOrigin.None;
+        origin = new List<AbilityOrigin>();
         level = 1;
         timeCost = 10;
     }
@@ -113,7 +113,6 @@ public class Ability : IAsset
     public Ability(Ability other)
     {
         CopyFrom(other);
-        origin = AbilityOrigin.None;
     }
 
     public Ability Clone()
@@ -164,7 +163,7 @@ public class Ability : IAsset
         tags.Add(se);
     }
 
-    void ReduceCooldown()
+    public void ReduceCooldown()
     {
         if (cooldown > 0)
         {
@@ -174,7 +173,7 @@ public class Ability : IAsset
 
     public void AddXP(int amount)
     {
-        if (level >= maxLvl || !CanLevelUp || !origin.IsSet(AbilityOrigin.Natrual))
+        if (level >= MaxLevel || !CanLevelUp || !origin.Contains(AbilityOrigin.Natrual))
         {
             XP = 0;
         }
@@ -184,7 +183,7 @@ public class Ability : IAsset
 
             while (XP >= XPToNext)
             {
-                if (level >= maxLvl || !CanLevelUp)
+                if (level >= MaxLevel || !CanLevelUp)
                 {
                     XP = 0;
                     break;
@@ -284,25 +283,30 @@ public class Ability : IAsset
 
     public void RemoveFlag(AbilityOrigin ab)
     {
-        origin.UnSet(ab);
+        if (origin.Contains(ab))
+        {
+            origin.Remove(ab);
+        }
     }
 
     public void SetFlag(AbilityOrigin ab)
     {
-        origin.Set(ab);
+        if (!origin.Contains(ab))
+        {
+            origin.Add(ab);
+        }
     }
 
     [System.Flags]
     public enum AbilityOrigin
     {
-        None = 0,
-        Natrual = 1 << 0,
-        Trait = 1 << 1,
-        Item = 1 << 2, 
-        Cybernetic = 1 << 3
+        Natrual,
+        Trait,
+        Item, 
+        Cybernetic
     }
 
-    //Called from LuaManager
+    //Called from Lua
     public static void ApplyChanges(Entity caster, Ability skill)
     {
         if (skill.HasTag(AbilityTags.OpensNewWindow))
@@ -317,9 +321,9 @@ public class Ability : IAsset
         {
             skill.AddXP(caster.stats.Intelligence);
 
-            if (skill.HasTag(AbilityTags.Radiate_Self) && SeedManager.combatRandom.Next(5) == 0)
+            if (skill.HasTag(AbilityTags.Radiate_Self) && RNG.OneIn(5))
             {
-                caster.stats.Radiate(SeedManager.combatRandom.Next(0, 6));
+                caster.stats.Radiate(RNG.Next(0, 6));
             }
         }
 
@@ -402,10 +406,10 @@ public class SSkill
     public string Name { get; protected set; }
     public int Lvl { get; protected set; }
     public double XP { get; protected set; }
-    public Ability.AbilityOrigin Flg { get; protected set; }
+    public List<Ability.AbilityOrigin> Flg { get; protected set; }
     public int CD;
 
-    public SSkill(string _name, int lvl, double xp, int cooldown, Ability.AbilityOrigin origin)
+    public SSkill(string _name, int lvl, double xp, int cooldown, List<Ability.AbilityOrigin> origin)
     {
         Name = _name;
         Lvl = lvl;

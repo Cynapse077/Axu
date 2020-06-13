@@ -21,6 +21,21 @@ public class ComponentHolder<Comp>
         return (T)components.FirstOrDefault(x => x.GetType() == typeof(T) && p(x));
     }
 
+    public bool TryGetCComponent<T>(out T t) where T : Comp
+    {
+        foreach (var comp in components)
+        {
+            if (comp.GetType() == typeof(T))
+            {
+                t = (T)comp;
+                return true;
+            }
+        }
+
+        t = default;
+        return false;
+    }
+
     public bool HasCComponent<T>() where T : Comp
     {
         return components.Any(x => x.GetType() == typeof(T));
@@ -43,7 +58,7 @@ public class ComponentHolder<Comp>
     {
         if (components.Any(x => x.GetType() == typeof(T)))
         {
-            components.Remove(components.Find(x => x.GetType() == typeof(T)));
+            components.Remove(components.FirstOrDefault(x => x.GetType() == typeof(T)));
         }
     }
 
@@ -51,7 +66,7 @@ public class ComponentHolder<Comp>
     {
         if (components.Any(x => x.GetType() == typeof(T) && p(x)))
         {
-            components.Remove(components.Find(x => x.GetType() == typeof(T) && p(x)));
+            components.Remove(components.FirstOrDefault(x => x.GetType() == typeof(T) && p(x)));
         }
     }
 

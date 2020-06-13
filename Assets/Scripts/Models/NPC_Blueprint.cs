@@ -19,6 +19,7 @@ public class NPC_Blueprint : IAsset
     public int elevation;
     public string zone;
     public int weaponSkill;
+    public int bonusXP;
 
     public string[] spriteIDs;
     public KeyValuePair<string, Coord>[] inventory;
@@ -63,6 +64,7 @@ public class NPC_Blueprint : IAsset
         weaponSkill = other.weaponSkill;
         spriteIDs = other.spriteIDs;
         equipmentSet = other.equipmentSet;
+        bonusXP = other.bonusXP;
 
         inventory = new KeyValuePair<string, Coord>[other.inventory.Length];
         for (int i = 0; i < other.inventory.Length; i++)
@@ -203,6 +205,7 @@ public class NPC_Blueprint : IAsset
         dat.TryGetString("Corpse_Item", out corpseItem);
         dat.TryGetString("Quest", out quest);
         dat.TryGetString("Dialogue", out dialogue);
+        dat.TryGetInt("XP Bonus", out bonusXP);
 
         zone = string.Empty;
 

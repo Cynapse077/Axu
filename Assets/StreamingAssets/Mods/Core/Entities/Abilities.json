@@ -551,6 +551,20 @@
             "Script" : "Core.Abilities.Blink",
             "AI" : "Core.AbilityAI.Empty",
             "Icon" : "Mods/Core/Art/Abilities/ability-blink.png"
-        }
+        },
+        {
+            "Name" : "Animus Trap",
+            "ID" : "animustrap",
+            "Description" : "Trap a Deep One in their physical body.",
+            "Stamina Cost" : 4,
+            "Time Cost" : 20,
+            "Cooldown" : 30,
+            "Range" : 4,
+            "Cast Type" : "Target",
+            "Levels Up" : false,
+            "Script" : "Core.Abilities.AnimusTrap",
+            "AI" : "Core.AbilityAI.Empty",
+            "Icon" : "Mods/Core/Art/Abilities/ability-animustrap.png"
+		}
     ]
 }

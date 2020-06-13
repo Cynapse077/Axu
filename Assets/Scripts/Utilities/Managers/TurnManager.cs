@@ -328,7 +328,7 @@ public class TurnManager : MonoBehaviour
             {
                 if (World.objectManager.onScreenNPCObjects[i] != null)
                 {
-                    World.objectManager.onScreenNPCObjects[i].GetComponentInChildren<SpriteRenderer>().enabled = playerEntity.inSight(World.objectManager.onScreenNPCObjects[i].myPos);
+                    World.objectManager.onScreenNPCObjects[i].GetComponentInChildren<SpriteRenderer>().enabled = playerEntity.InSight(World.objectManager.onScreenNPCObjects[i].myPos);
                 }
             }
         }

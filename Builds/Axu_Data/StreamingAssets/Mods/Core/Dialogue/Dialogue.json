@@ -1,0 +1,110 @@
+{
+	"Dialogue" : [
+		{
+			"ID" : "Greetings",
+			"Dialogues" : [
+				"Hello."
+			]
+		},
+		{
+			"ID" : "ensis",
+			"Dialogues" : [
+				"We are the Ensis. Our goal is to bring society together, and create a utopia on Axu.",
+				"If you need equipment, find shops in nearby villages. They'll set you up with a means to defend yourself.",
+				"Beware of swamps. Noxious fumes and water could be the death of you!",
+				"Bandit Brutes are incredibly tough and sturdy. It would take someone with immense skill to bring one down.",
+				"Skill with any weapon is more important than your strength. Practice, practice, practice!",
+				"Make sure to use your abilities whenever you can. There's no sense in holding back against the creatures here.",
+				"Have you met with our brother, Akk-Lune? Last I heard, he was sent out of the stronghold on a mission.",
+				"Arthomas is our second in command. A passionate warrior with a heart of gold. It's no wonder he is regarded so highly by our leader, Lomis.",
+				"While we focus on technology that can help one thrive, the <color=yellow>Frostborne</color> have only created war machines.",
+				"Our attempts to aid the <color=yellow>Frostborne</color> have not gone well. They attack anyone on sight, with no regard for mercy. I don't know what they want, but I'd prefer to stay away.",
+				"Our prison used to be full of scum. Right now, we only have one prisoner, the leader of the <color=yellow>\"Kin of the Deep\"</color>, Isazna. She has abilities that would scare any normal person.",
+				"Our leader, Lomis, is one of the kindest people I have ever met. Over the years, the Ensis has gone from a militant force to a sort of government. We take care of those less fortunate in the hope we can all thrive together."
+			]
+		},
+		{
+			"ID" : "villagers",
+			"Dialogues" : [
+				"I've heard there are dangerous things lurking under the soil.",
+				"Straying far from town can be dangerous. Bandits love to pick off the weak or unprepared.",
+				"I lost my cousin to Bandits last year. I was lucky to get out alive.",
+				"If you need equipment, talk to a shopkeeper. They'll set you up with a means to defend yourself.",
+				"Beware of swamps. Noxious fumes and water could be the death of you!",
+				"Bandit Brutes are incredibly tough and sturdy. It would take someone with immense skill to bring one down.",
+				"Skill with any weapon is more important than your strength. Practice, practice, practice!",
+				"The graveyards are growing, and the farms shrinking...",
+				"Make sure to use your abilities whenever you can. There's no sense in holding back against the creatures here.",
+				"I've heard stories of treasure in the mountains.",
+				"There's no shame in hiring Mercenaries for help. Merchants often travel with several to ensure their safety.",
+				"Rest up whenever you can. Going into danger prepared is very worth the time spent.",
+				"Always remember that you can only carry so much. Bring back what's most useful or valuable. The former is always more important. Your life is worth more than a few $.",
+				"Light sources won't last forever. Keep an eye on them.",
+				"Up North is a strange faction called the <color=yellow>Frostborne</color>. Any attempts to communicate with them has ended in open hostility. Be sure to not venture into the snow.",
+				"Every once in a while, you see a ship pass by overhead. This means new exiles are coming to Axu. The crimes you hear about get less severe every year. I wonder what's going on over there.",
+				"It's been a few generations since Axu has become a dumping ground for unwanted criminals. Nowadays, many of the ones you meet here have been born on the planet. I don't know why we can't go home.",
+				"This cult called <color=yellow>\"The Kin of the Deep\"</color> comes by every now and again, recruiting for their cause. They promise power in exchange for faith. I have to say, it's tempting at times...",
+				"<color=yellow>The Ensis</color> are a curious bunch. Recently, they have been helping out the common folk. They say that prosperity is shared. I tend to agree, but I'm not about to go join them.",
+				"Some folk talk of a strange man living in the forest. They say he is able to communicate with and befriend animals! I bet it's just a myth, though.",
+				"We had a public library some time ago. The written works were hidden after a raid by the <color=yellow>Kin of the Deep</color>. Are they against progress and learning?",
+				"The <color=yellow>Servants of Krish</color> are a group of Vampires and other monstrosities who worship Krish, goddess of blood, death and decay. I've heard they come up from their nest to feed every month or so."
+			]
+		},
+		{
+			"ID" : "kin",
+			"Dialogues" : [
+				"Glory to The Deep Ones.",
+				"In the past six months, our numbers have nearly doubled! It's easy to see why after Isazna shows you The Truth.",
+				"Isazna has showed me visions of the future. The Deep Ones will grant us strength equal to our faith, and take over this wretched wasteland. Order will finally be in place.",
+				"The Deep Ones are ancient gods that preside over this planet. We can talk to them, ask for advice or abilities through ritual and prayer.",
+				"Priestess Isazna was captured by those scummy Ensis bastards. They see us as a threat. Perhaps they should.",
+				"Are you here to join us?",
+				"Both the <color=yellow>Ensis</color> and the <color=yellow>Frostborne</color> rely on technology to keep their standing. We have a much greater power at our command.",
+				"I've heard people speak of horrifying experiments the Ensis have done upon its populace."
+			]
+		},
+		{
+			"ID" : "mutants",
+			"Dialogues" : [
+				"Gr-Greetings, traveller. Please make yourself at home. Don't m-m-mind the dirt.",
+				"These w-words still f-f-feel awkward on my tongue, but we d-do as we have been shown.",
+				"Always building, always w-wworking...",
+				"The creators, would they be proud of what we've accomplished?"
+			] 
+		},
+		{
+			"ID" : "spirits",
+			"Dialogues" : [
+				"Hasaras haniss. Deo welm mena qiz no felm. Wojenam mo kee ba rosh ni fem? Hala.",
+				"Mo keppen. Mo keppen ras femalitas.",
+				"Hei na menas oppem, du welden no fiis.",
+				"Loos no qoppen ma has! Heenesam min ka loom.",
+				"Hos?",
+				"Albiju res ma loo. Seep ki los harsaras.",
+				"...",
+				"...?",
+				"<i>*The spirit looks at you with confusion.*</i>"
+			]
+		},
+		{
+			"ID" : "followers",
+			"Dialogues" : [
+				"Where to?",
+				"Keep up, will you?"
+			]
+		},
+		{
+			"ID" : "xul",
+			"Dialogues" : [
+				"Hello there."
+			]
+		},
+		{
+			"ID" : "puggles_friendly",
+			"Dialogues" : [
+				"Grruff?",
+				"Haaallo there."
+			]
+		}
+	]   
+}

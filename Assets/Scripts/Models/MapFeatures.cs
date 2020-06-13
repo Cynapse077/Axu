@@ -40,19 +40,19 @@ public class MapFeatures
             for (int i = 0; i < ais.Count; i++)
             {
                 if (ais[i].HasFlag(NPC_Flags.Merchant))
-                    features.Add(LocalizationManager.GetContent("MF_Merchant"));
+                    features.Add("MF_Merchant".Localize());
 
                 if (ais[i].HasFlag(NPC_Flags.Book_Merchant))
-                    features.Add(LocalizationManager.GetContent("MF_BookMerchant"));
+                    features.Add("MF_BookMerchant".Localize());
 
                 if (ais[i].HasFlag(NPC_Flags.Doctor))
-                    features.Add(LocalizationManager.GetContent("MF_Doctor"));
+                    features.Add("MF_Doctor".Localize());
 
                 if (ais[i].HasFlag(NPC_Flags.Mercenary))
-                    features.Add(LocalizationManager.GetContent("MF_Mercenary"));
+                    features.Add("MF_Mercenary".Localize());
 
                 if (!string.IsNullOrEmpty(ais[i].questID))
-                    features.Add(LocalizationManager.GetContent("MF_Quest"));
+                    features.Add("MF_Quest".Localize());
             }
         }
 

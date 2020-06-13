@@ -18,7 +18,6 @@ public class MouseController : MonoBehaviour
     Entity playerEntity;
     PlayerInput playerInput;
     Camera worldCamera;
-    int storedXPos = -1, storedYPos = -1;
     List<GameObject> lineObjects = new List<GameObject>();
 
     void Start()
@@ -78,18 +77,11 @@ public class MouseController : MonoBehaviour
         }
     }
 
-    void MapCoordChanged()
-    {
-        if (storedXPos >= 0 && storedXPos < Manager.localMapSize.x && storedYPos < 0 && storedYPos >= -Manager.localMapSize.y)
-        {
-            DrawPath(new Coord(storedXPos, storedYPos + Manager.localMapSize.y));
-        }
-    }
-
     public void DrawPath(Coord newPos)
     {
         ClearUIObjects();
-        if (!World.OutOfLocalBounds(newPos.x, newPos.y) && World.tileMap.CurrentMap.has_seen[newPos.x, newPos.y])
+
+        if (!World.OutOfLocalBounds(newPos) && World.tileMap.CurrentMap.has_seen[newPos.x, newPos.y])
         {
             Path_AStar path = new Path_AStar(playerEntity.myPos, newPos, playerEntity.inventory.CanFly(), playerEntity);
 
@@ -134,7 +126,9 @@ public class MouseController : MonoBehaviour
     void LocalMapHandling(Vector3 pos)
     {
         if (playerEntity == null)
+        {
             return;
+        }
 
         cursor.position = pos;
         int posX = (int)cursor.position.x, posY = (int)cursor.position.y;
@@ -155,7 +149,10 @@ public class MouseController : MonoBehaviour
                         {
                             if (Mathf.Abs(x) + Mathf.Abs(y) == 2 || posX + x < 0 || posX + x > Manager.localMapSize.x - 1
                                 || posY + y >= 0 || posY + y < -Manager.localMapSize.y)
+                            {
                                 continue;
+                            }
+
                             MovePlayer(new Coord(posX + x, posY + y));
                         }
                     }
@@ -208,7 +205,7 @@ public class MouseController : MonoBehaviour
         }
         else
         {
-            bool canSee = (playerEntity.inSight(posX, posY) || World.tileMap.CurrentMap.has_seen[posX, posY + Manager.localMapSize.y]);
+            bool canSee = (playerEntity.InSight(posX, posY) || World.tileMap.CurrentMap.has_seen[posX, posY + Manager.localMapSize.y]);
             sRenderer.sprite = (canSee) ? sprites[0] : sprites[1];
 
             Coord targetPos = new Coord((int)cursor.position.x, (int)cursor.position.y);
@@ -216,9 +213,14 @@ public class MouseController : MonoBehaviour
             if (canSee)
             {
                 if (Input.GetMouseButtonUp(0))
+                {
                     MovePlayer(targetPos);
+                }
+
                 if (Input.GetMouseButtonDown(1) && ObjectManager.playerEntity.inventory.firearm.HasProp(ItemProperty.Ranged))
+                {
                     ObjectManager.playerEntity.ShootAtTile(targetPos.x, targetPos.y);
+                }
             }
 
             arrow.SetActive(false);
@@ -228,12 +230,12 @@ public class MouseController : MonoBehaviour
     void WorldMapHandling()
     {
         if (worldCamera == null)
+        {
             worldCamera = GameObject.FindObjectOfType<MiniMap>().GetComponent<Camera>();
+        }
 
         Ray ray = worldCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Vector3 pos = hit.point;
 
@@ -301,9 +303,13 @@ public class MouseController : MonoBehaviour
             if (playerInput)
             {
                 if (World.tileMap.GetCellAt(targetPos).mapObjects.Count > 0 && World.tileMap.GetCellAt(targetPos).HasInventory())
+                {
                     playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
+                }
                 else
+                {
                     playerEntity.Wait();
+                }
             }
 
             return;
@@ -319,8 +325,11 @@ public class MouseController : MonoBehaviour
                 playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
                 return;
             }
+
             if (World.tileMap.GetCellAt(targetPos).mapObjects.Count > 0)
+            {
                 playerInput.SelectDirection(targetPos.x - playerEntity.posX, targetPos.y - playerEntity.posY);
+            }
         }
 
         //Move to the selected position.

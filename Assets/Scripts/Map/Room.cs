@@ -84,7 +84,9 @@ public class Room
         for (int i = 0; i < otherRooms.Count; i++)
         {
             if (otherRooms[i] == this || otherRooms[i].isConnected)
+            {
                 continue;
+            }
 
             float dist = Vector2.Distance(myPos, otherRooms[i].myPos);
 
@@ -97,7 +99,9 @@ public class Room
         }
 
         if (!isConnected)
+        {
             return ClosestRoom(otherRooms);
+        }
 
         return closest;
     }
@@ -110,7 +114,10 @@ public class Room
         for (int i = 0; i < otherRooms.Count; i++)
         {
             if (otherRooms[i] == this)
+            {
                 continue;
+            }
+
             float dist = Vector2.Distance(myPos, otherRooms[i].myPos);
             if (dist < distance)
             {

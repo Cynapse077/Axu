@@ -12,7 +12,6 @@ public class BodyDisplayPanel : MonoBehaviour
     public Transform legs_R;
     public Transform legs_L;
     public Transform tails;
-    public Transform external;
 
     public BodyDisplay_Button chest;
     public BodyDisplay_Button back;
@@ -37,7 +36,7 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external && i < 3)
+            if (i < 3)
             {
                 heads.GetChild(i).GetComponent<Image>().color = Color.white;
                 heads.GetChild(i).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
@@ -48,7 +47,7 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external && i < 4)
+            if (i < 4)
             {
                 if (i % 2 == 0)
                 {
@@ -67,7 +66,7 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external && i < 6)
+            if (i < 6)
             {
                 if (i % 2 == 0)
                 {
@@ -86,7 +85,7 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external && i < 6)
+            if (i < 6)
             {
                 if (i % 2 == 0)
                 {
@@ -105,21 +104,10 @@ public class BodyDisplayPanel : MonoBehaviour
 
         for (int i = 0; i < parts.Count; i++)
         {
-            if (!parts[i].external && i < 3)
+            if (i < 3)
             {
                 tails.GetChild(i).GetComponent<Image>().color = Color.white;
                 tails.GetChild(i).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
-            }
-        }
-
-        parts = body.bodyParts.FindAll(x => x.external);
-
-        for (int i = 0; i < parts.Count; i++)
-        {
-            if (i < 4)
-            {
-                external.GetChild(i).GetComponent<Image>().color = Color.white;
-                external.GetChild(i).GetComponent<BodyDisplay_Button>().SetBodyPart(parts[i]);
             }
         }
 
@@ -137,7 +125,7 @@ public class BodyDisplayPanel : MonoBehaviour
 
         foreach (Trait t in body.entity.stats.traits)
         {
-            string tName = "  " + t.name;
+            string tName = "  " + t.Name;
 
             if (t.ContainsEffect(TraitEffects.Mutation))
                 tName = "<color=magenta>" + tName + "</color>";
@@ -195,12 +183,6 @@ public class BodyDisplayPanel : MonoBehaviour
         {
             tails.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
             tails.GetChild(i).GetComponent<Image>().color = offColor;
-        }
-
-        for (int i = 0; i < external.childCount; i++)
-        {
-            external.GetChild(i).GetComponent<BodyDisplay_Button>().SetTargets(title, desc, this);
-            external.GetChild(i).GetComponent<Image>().color = offColor;
         }
 
         back.SetTargets(title, desc, this);

@@ -84,13 +84,20 @@ public static class CombatLog
     public static void Combat_Full(bool defenderIsPlayer, int dmg, bool crit, string defender, bool miss = false, string attacker = "", string defBP = "", string item = "")
     {
         string key = crit ? "Damage_Weapon_Crit" : "Damage_Weapon";
+
         if (dmg <= 0)
+        {
             key = "Block_Defense";
+        }
+
         if (miss)
+        {
             key = "Miss";
+        }
+
         string colorCode = defenderIsPlayer ? "<color=orange>" : "<color=cyan>";
 
-        StringBuilder sb = new StringBuilder(colorCode + LocalizationManager.GetContent(key) + "</color>");
+        StringBuilder sb = new StringBuilder(colorCode + key.Localize() + "</color>");
 
         sb.Replace("[ATTACKER]", attacker);
         sb.Replace("[DEFENDER]", defender);
@@ -103,7 +110,7 @@ public static class CombatLog
 
     public static void NameMessage(string key, string name, string textToReplace = "[NAME]")
     {
-        Append(LocalizationManager.GetContent(key).Replace(textToReplace, name));
+        Append(key.Localize().Replace(textToReplace, name));
     }
 
     public static void DisplayItemsBelow(Inventory inv)
@@ -115,9 +122,9 @@ public static class CombatLog
         for (int i = 0; i < inv.items.Count; i++)
         {
             if (i < max)
-                message += " " + inv.items[i].DisplayName() + (inv.items[i].stackable && inv.items[i].amount > 1 ? " x" + inv.items[i].amount : "") + ",";
+                message += " " + inv.items[i].DisplayName() + (inv.items[i].stackable && inv.items[i].amount > 1 ? " x" + inv.items[i].amount : string.Empty) + ",";
             else if (i == max)
-                message += " " + inv.items[i].DisplayName() + (inv.items[i].stackable && inv.items[i].amount > 1 ? " x" + inv.items[i].amount : "");
+                message += " " + inv.items[i].DisplayName() + (inv.items[i].stackable && inv.items[i].amount > 1 ? " x" + inv.items[i].amount : string.Empty);
             else if (i == max + 1 && !addedLast)
             {
                 message += " ...";

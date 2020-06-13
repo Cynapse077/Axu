@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Linq;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,14 +47,8 @@ public class TileMap : MonoBehaviour
                 }
 
                 TileMap_Data old = currentMap;
-
                 currentMap = value;
-
-                if (OnScreenChange != null)
-                {
-                    OnScreenChange(old, currentMap);
-                    Path_AStar.ClearCache();
-                }
+                OnScreenChange?.Invoke(old, currentMap);
             }
 
             tileGraph = null;
@@ -110,7 +105,8 @@ public class TileMap : MonoBehaviour
 
     public void LoadMap(string mapName)
     {
-        screens[worldCoordX, worldCoordY] = CurrentMap = new TileMap_Data(mapName, true);
+        var oldMap = CurrentMap;
+        screens[worldCoordX, worldCoordY] = CurrentMap = new TileMap_Data(mapName, true, oldMap);
         HardRebuild();
     }
 
@@ -141,12 +137,13 @@ public class TileMap : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Rect r = new Rect(x * Manager.TileResolution, y * Manager.TileResolution, Manager.TileResolution, Manager.TileResolution);
+                int tr = Manager.TileResolution;
+                Rect r = new Rect(x * tr, y * tr, tr, tr);
 
                 r.x += (x != 0) ? x : 0;
                 r.y += (y != 0) ? y : 0;
 
-                Sprite s = Sprite.Create(tex, r, new Vector2(0.5f, 0.5f), Manager.TileResolution);
+                Sprite s = Sprite.Create(tex, r, new Vector2(0.5f, 0.5f), tr);
                 ss[width * y + x] = s;
             }
         }
@@ -185,6 +182,7 @@ public class TileMap : MonoBehaviour
             for (int y = 0; y < size_y; y++)
             {
                 cells[x, y] = new Cell(new Coord(x, y));
+                //Note, we offset display y.
                 GameObject t = Instantiate(tilePrefab, new Vector3(x + 0.5f, y - (Manager.localMapSize.y - 0.5f), 0), Quaternion.identity, transform);
                 tileRenderers[x, y] = t.GetComponent<TileRenderer>();
                 tileRenderers[x, y].SetPosition(x, y);
@@ -198,14 +196,12 @@ public class TileMap : MonoBehaviour
         for (int i = 0; i < worldMap.vaultAreas.Count; i++)
         {
             Coord vPos = worldMap.vaultAreas[i];
-
-            string landmark = worldMap.GetTileAt(worldMap.vaultAreas[i].x, worldMap.vaultAreas[i].y).landmark;
-            if (landmark.NullOrEmpty())
+            if (worldMap.GetTileAt(vPos.x, vPos.y).landmark.NullOrEmpty())
             {
                 continue;
             }
 
-            Zone_Blueprint zb = worldMap.GetZone(worldMap.GetTileAt(worldMap.vaultAreas[i].x, worldMap.vaultAreas[i].y).landmark);
+            Zone_Blueprint zb = worldMap.GetZone(worldMap.GetTileAt(vPos.x, vPos.y).landmark);
             if (zb == null || zb.underground.NullOrEmpty())
             {
                 continue;
@@ -274,9 +270,7 @@ public class TileMap : MonoBehaviour
             }
         }
 
-        List<Coord> cos = ShadowCasting.GetVisibleCells();
-
-        foreach (Coord c in cos)
+        foreach (Coord c in ShadowCasting.GetVisibleCells())
         {
             CurrentMap.has_seen[c.x, c.y] = true;
             cells[c.x, c.y].UpdateInSight(true, CurrentMap.has_seen[c.x, c.y]);
@@ -333,7 +327,7 @@ public class TileMap : MonoBehaviour
     void Rebuild(int mx, int my, int elevation, bool lightCheck = true)
     {
         Coord worldPos = new Coord(mx, my);
-        bool exists = false;
+        bool exists;
         currentElevation = elevation;
 
         if (currentElevation != 0)
@@ -346,20 +340,22 @@ public class TileMap : MonoBehaviour
             if (screens[mx, my] == null)
             {
                 exists = (worldData != null && worldData.dataExists(mx, my));
-                screens[mx, my] = CurrentMap = new TileMap_Data(mx, my, currentElevation, exists);
+                string mapName = exists ? worldData.GetMapNameAt(mx, my) : null;
+                screens[mx, my] = CurrentMap = mapName.NullOrEmpty() 
+                    ? screens[mx, my] = CurrentMap = new TileMap_Data(mx, my, currentElevation, exists) 
+                    : screens[mx, my] = CurrentMap = new TileMap_Data(mapName, true);
 
                 ApplyMapChanges(exists, mx, my, worldPos);
             }
             else
             {
                 CurrentMap = screens[mx, my];
-                exists = true;
             }
         }
 
         if (!CurrentMap.visited)
         {
-            SpawnController.BiomeSpawn(mx, my, CurrentMap);
+            SpawnController.BiomeSpawn(CurrentMap);
         }
 
         CurrentMap.visited = true;
@@ -378,19 +374,18 @@ public class TileMap : MonoBehaviour
         //For mountains, current position set to walkable.
         if (ObjectManager.playerEntity != null)
         {
-            if (screens[mx, my].GetTileNumAt(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == TileManager.tiles["Mountain"].ID)
+            int px = ObjectManager.playerEntity.posX, py = ObjectManager.playerEntity.posY;
+            if (screens[mx, my].GetTileNumAt(px, py) == TileManager.tiles["Mountain"].ID)
             {
-                screens[mx, my].ChangeTile(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY, TileManager.tiles["Mountain_Floor"]);
+                screens[mx, my].ChangeTile(px, py, TileManager.tiles["Mountain_Floor"]);
             }
         }
 
         if (exists)
         {
-            List<TileMap_Data.TileChange> changes = worldData.GetChanges(worldPos);
-
-            for (int i = 0; i < changes.Count; i++)
+            foreach (var c in worldData.GetChanges(worldPos))
             {
-                CurrentMap.ChangeTile(changes[i].x, changes[i].y, TileManager.GetByID(changes[i].tType));
+                CurrentMap.ChangeTile(c.x, c.y, TileManager.GetByID(c.tType));
             }
         }
     }
@@ -412,10 +407,7 @@ public class TileMap : MonoBehaviour
         }
         else if (name == "Home_Base")
         {
-            if (ObjectManager.playerJournal.HasFlag("Found_Base"))
-                c = worldMap.GetLandmark("Home");
-            else
-                c = worldMap.GetLandmark("Abandoned Building");
+            c = ObjectManager.playerJournal.HasFlag("Found_Base") ? worldMap.GetLandmark("Home") : worldMap.GetLandmark("Abandoned Building");
         }
 
         if (c != null)
@@ -424,7 +416,7 @@ public class TileMap : MonoBehaviour
             worldCoordY = c.y;
 
             ObjectManager.playerEntity.BeamDown();
-            ObjectManager.player.GetComponent<PlayerInput>().CheckMinimap();
+            World.playerInput.CheckMinimap();
         }
     }
 
@@ -451,11 +443,10 @@ public class TileMap : MonoBehaviour
     //empty tiles in current map
     public Coord GetRandomPosition()
     {
-        Coord c = CurrentMap.GetRandomFloorTile();
-
-        return c ?? new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y / 2);
+        return CurrentMap.GetRandomFloorTile() ?? new Coord(Manager.localMapSize.x / 2, Manager.localMapSize.y / 2);
     }
 
+    //Called from Lua
     public Coord EmptyAdjacent(Coord c)
     {
         tmpCoordList.Clear();
@@ -464,6 +455,11 @@ public class TileMap : MonoBehaviour
         {
             for (int y = c.y - 1; y <= c.y + 1; y++)
             {
+                if (x == 0 && y == 0)
+                {
+                    continue;
+                }
+
                 if (cells[x, y].Walkable && cells[x, y].entity == null)
                 {
                     tmpCoordList.Add(new Coord(x, y));
@@ -471,12 +467,7 @@ public class TileMap : MonoBehaviour
             }
         }
 
-        if (tmpCoordList.Empty())
-        {
-            return null;
-        }
-
-        return tmpCoordList.GetRandom();
+        return tmpCoordList.Any() ? tmpCoordList.GetRandom() : null;
     }
 
     public bool IsWaterTile(int x, int y)
@@ -523,7 +514,7 @@ public class TileMap : MonoBehaviour
 
     public Vault GetVaultAt(Coord myPos)
     {
-        if (Vaults.Find(x => x.position == myPos) == null)
+        if (!Vaults.Any(x => x.position == myPos))
         {
             if (worldMap.GetTileAt(myPos.x, myPos.y).landmark == "Village")
             {
@@ -536,7 +527,7 @@ public class TileMap : MonoBehaviour
             }
         }
 
-        return Vaults.Find(x => x.position == myPos);
+        return Vaults.FirstOrDefault(x => x.position == myPos);
     }
 
     /// <summary>
@@ -600,10 +591,9 @@ public class TileMap : MonoBehaviour
         {
             for (int x = 0; x < size_x; x++)
             {
-                Coord c = new Coord(x, y);
-                if (ObjectManager.playerEntity.inSight(c) && WalkableTile(x, y))
+                if (ObjectManager.playerEntity.InSight(x, y) && WalkableTile(x, y))
                 {
-                    tmpCoordList.Add(c);
+                    tmpCoordList.Add(new Coord(x, y));
                 }
             }
         }
@@ -690,6 +680,7 @@ public class TileMap : MonoBehaviour
 
             return true;
         }
+
         return false;
     }
 
@@ -702,7 +693,9 @@ public class TileMap : MonoBehaviour
     public bool DigTile(int x, int y, bool canDestroyBuiltWalls)
     {
         if (World.OutOfLocalBounds(x, y) || CurrentMap.WalkableTile(x, y) || !CurrentMap.map_data[x, y].CanDig(canDestroyBuiltWalls))
+        {
             return false;
+        }
 
         SetTile(TileManager.tiles["Mountain_Floor"], x, y);
         HardRebuild();
@@ -717,10 +710,9 @@ public class TileMap : MonoBehaviour
             return;
         }
 
-        int tileNum = CurrentMap.GetTileNumAt(x, y);
-        Tile_Data newTile = (tileNum == TileManager.tiles["Lava"].ID) ? TileManager.tiles["Mountain_Floor"] : TileManager.tiles["Ice"];
+        string tID = currentMap.GetTileNumAt(x, y) == TileManager.tiles["Lava"].ID ? "Mountain_Floor" : "Ice";
 
-        SetTile(newTile, x, y);
+        SetTile(TileManager.tiles[tID], x, y);
         SoftRebuild();
     }
 
@@ -739,12 +731,14 @@ public class TileMap : MonoBehaviour
         return true;
     }
 
+    const int AlphaMaskIndex = 21;
     public void SetTileGraphic_AlphaMask(TileMap_Data tm, int x, int y, int autoNum, int replaceID)
     {
-        Texture2D tex = new Texture2D(16, 16, TextureFormat.ARGB32, true) { filterMode = FilterMode.Point };
+        int tr = Manager.TileResolution;
+        Texture2D tex = new Texture2D(tr, tr, TextureFormat.ARGB32, true) { filterMode = FilterMode.Point };
         
         Color[] c1 = sprites[tm.map_data[x, y].ID].GetPixels(), c2 = sprites[replaceID].GetPixels();
-        Color[] alphaMask = tilesetManager.GetTileSet(21).Autotile[autoNum].GetPixels();
+        Color[] alphaMask = tilesetManager.GetTileSet(AlphaMaskIndex).Autotile[autoNum].GetPixels();
         Color[] newC = new Color[c2.Length];
 
         for (int i = 0; i < c2.Length; i++)
@@ -755,7 +749,7 @@ public class TileMap : MonoBehaviour
         tex.SetPixels(newC);
         tex.Apply();
 
-        Sprite s = Sprite.Create(tex, new Rect(0, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+        Sprite s = Sprite.Create(tex, new Rect(0, 0, tr, tr), new Vector2(0.5f, 0.5f), tr);
         tileRenderers[x, y].SetSprite(s);
     }
 
@@ -783,8 +777,9 @@ public class TileMap : MonoBehaviour
             else if (currentMap.mapInfo.biome == Biome.Mountain)
                 tsIndex = 8;
         }
-        else if (tsIndex == 21)
+        else if (tsIndex == AlphaMaskIndex)
         {
+            //Hard-coded tile index 32: plains grass
             SetTileGraphic_AlphaMask(tm, x, y, autoNum, 32);
             return;
         }
@@ -793,7 +788,7 @@ public class TileMap : MonoBehaviour
 
         if (tileIndex == 15 && SeedManager.localRandom.CoinFlip())
         {
-            if (SeedManager.localRandom.Next(100) < 85 && ts.Norm.Length > 0)
+            if (RNG.Next(100) < 85 && ts.Norm.Length > 0)
                 tileRenderers[x, y].SetSprite(sprites[ts.Norm.GetRandom(SeedManager.localRandom)]);
             else if (ts.Rare.Length > 0)
                 tileRenderers[x, y].SetSprite(sprites[ts.Rare.GetRandom(SeedManager.localRandom)]);
@@ -813,7 +808,7 @@ public class TileMap : MonoBehaviour
 
     public string TileName(int x = -1, int y = -1)
     {
-        if (x == -1 && y == -1)
+        if (x < 0 || y < 0)
         {
             x = worldCoordX;
             y = worldCoordY;
@@ -822,29 +817,9 @@ public class TileMap : MonoBehaviour
         return worldMap.GetZoneNameAt(x, y, currentElevation);
     }
 
-    public List<Landmark> NearbyLandmarks(int distMax)
-    {
-        List<Landmark> lms = new List<Landmark>();
-
-        for (int i = 0; i < worldMap.landmarks.Count; i++)
-        {
-            if (Vector2.Distance(WorldPosition.toVector2(), worldMap.landmarks[i].pos.toVector2()) < distMax)
-            {
-                lms.Add(worldMap.landmarks[i]);
-            }
-        }
-
-        return lms;
-    }
-
-    public Coord ClosestTown()
-    {
-        return worldMap.GetClosestLandmark("Village");
-    }
-
     public Landmark GetRandomLandmark()
     {
-        return worldMap.landmarks.GetRandom(SeedManager.textRandom);
+        return worldMap.landmarks.GetRandom();
     }
 
     public void RevealMap()
@@ -883,7 +858,7 @@ public class TileMap : MonoBehaviour
     {
         if (screens[x, y] == null && worldData != null && worldData.dataExists(x, y))
         {
-            screens[x, y] = new TileMap_Data(x, y, 0, worldData.dataExists(x, y));
+            screens[x, y] = new TileMap_Data(x, y, 0, true);
         }
 
         return screens[x, y];

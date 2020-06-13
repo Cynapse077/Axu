@@ -24,13 +24,16 @@ public static class EntityList
     public static NPC GetNPCByID(string id, Coord worldPos, Coord localPos, int elevation = 0)
     {
         if (elevation == 0)
+        {
             elevation = tileMap.currentElevation;
+        }
 
         for (int i = 0; i < npcs.Count; i++)
         {
             if (npcs[i].ID == id)
+            {
                 return new NPC(npcs[i], worldPos, localPos, elevation);
-                
+            }
         }
 
         Debug.LogError("No NPC with the ID of '" + id + "'.");
@@ -115,8 +118,8 @@ public static class EntityList
                     {
                         string txt = bpData["Tags"][j].ToString();
 
-                        BodyPart.BPTags tag = txt.ToEnum<BodyPart.BPTags>();
-                        bodyPart.flags.Set(tag);
+                        BodyPart.BPFlags tag = txt.ToEnum<BodyPart.BPFlags>();
+                        bodyPart.flags.Add(tag);
                     }
                 }
 

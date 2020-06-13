@@ -127,7 +127,7 @@ public class CursorControl : MonoBehaviour
 
         KeyInput();
 
-        if (playerEntity.inSight(myPos) && Vector2.Distance(playerEntity.transform.position, transform.position) <= range && World.tileMap.WalkableTile(myPosX, myPosY))
+        if (playerEntity.InSight(myPos) && Vector2.Distance(playerEntity.transform.position, transform.position) <= range && World.tileMap.WalkableTile(myPosX, myPosY))
         {
             int s = (activeSkill != null && activeSkill.HasTag(AbilityTags.Small_Square) && activeSkill.castType == CastType.Target) ? 2 : 0;
             spriteRenderer.sprite = sprites[s];

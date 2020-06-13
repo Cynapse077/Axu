@@ -11,7 +11,7 @@ public class LevelUpButton : MonoBehaviour
     public void SetValues(Trait t)
     {
         myTrait = t;
-        titleText.text = myTrait.name;
+        titleText.text = myTrait.Name;
         descriptionText.text = myTrait.description;
     }
 

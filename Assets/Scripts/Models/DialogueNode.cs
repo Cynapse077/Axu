@@ -43,6 +43,9 @@ public class DialogueNode : IAsset
     public string ModID { get; set; }
     public string display;
     public DialogueResponse[] options;
+    public string requiredFlag;
+    public string nullifyingFlag;
+    public string flag;
     public LuaCall onSelect;
 
     public DialogueNode()
@@ -63,9 +66,14 @@ public class DialogueNode : IAsset
     public void FromJson(JsonData dat)
     {
         if (dat.ContainsKey("ID"))
+        {
             ID = dat["ID"].ToString();
+        }
+
         if (dat.ContainsKey("Display"))
+        {
             display = dat["Display"].ToString();
+        }
         
         if (dat.ContainsKey("Responses"))
         {
@@ -78,6 +86,19 @@ public class DialogueNode : IAsset
 
                 options[i] = new DialogueResponse(disp, nextID);
             }
+        }
+
+        if (dat.ContainsKey("RequiredFlag"))
+        {
+            requiredFlag = dat["RequiredFlag"].ToString();
+        }
+        if (dat.ContainsKey("NullifyingFlag"))
+        {
+            nullifyingFlag = dat["NullifyingFlag"].ToString();
+        }
+        if (dat.ContainsKey("Flag"))
+        {
+            flag = dat["Flag"].ToString();
         }
 
         onSelect = null;

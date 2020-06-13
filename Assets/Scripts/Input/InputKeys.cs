@@ -11,9 +11,13 @@ public class InputKeys
     public InputKeys(JsonData data = null)
     {
         if (data == null)
+        {
             Defaults();
+        }
         else
+        {
             Load(data);
+        }
     }
 
     void Load(JsonData data)
@@ -66,15 +70,25 @@ public class InputKeys
         else if (press == KeyPress.Down)
         {
             if (search == "Enter")
+            {
                 return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.KeypadEnter));
-            if (search == "North")
+            }
+            else if (search == "North")
+            {
                 return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.UpArrow));
-            if (search == "South")
+            }
+            else if (search == "South")
+            {
                 return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.DownArrow));
-            if (search == "East")
+            }
+            else if (search == "East")
+            {
                 return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.RightArrow));
-            if (search == "West")
+            }
+            else if (search == "West")
+            {
                 return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift || Input.GetKeyDown(KeyCode.LeftArrow));
+            }
 
             return (Input.GetKeyDown(kc1.keyCode) && ShiftHeld() == kc1.Shift);
 

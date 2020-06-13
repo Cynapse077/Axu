@@ -13,6 +13,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
     public Proficiencies itemType;
     public int armor, amount = 1, accuracy, rarity, tileID = -1;
     public bool lootable, stackable = false;
+    public bool abstractParent = false;
 
     public HashSet<ItemProperty> properties = new HashSet<ItemProperty>();
     public HashSet<DamageTypes> damageTypes = new HashSet<DamageTypes>();
@@ -119,9 +120,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
         UpdateUserSprite(stats, wieldMainHand, false);
 
-        if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
+        if (TryGetCComponent(out CAbility cab) && !HasProp(ItemProperty.Tome))
         {
-            Ability sk = new Ability(GameData.Get<Ability>(GetCComponent<CAbility>().abID));
+            Ability sk = new Ability(GameData.Get<Ability>(cab.abID));
 
             if (sk != null)
             {
@@ -141,12 +142,10 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
         UpdateUserSprite(entity.stats, inMainHand, true);
 
-        if (HasCComponent<CAbility>() && !HasProp(ItemProperty.Tome))
+        if (TryGetCComponent(out CAbility cab) && !HasProp(ItemProperty.Tome))
         {
-            CAbility cab = GetCComponent<CAbility>();
-
             //Remove the ability if it is not present on other equipment.
-            if (!entity.inventory.EquippedItems().Any(x => x.HasCComponent<CAbility>() && x.GetCComponent<CAbility>().abID == cab.abID && x != this))
+            if (!entity.inventory.EquippedItems().Any(x => x.TryGetCComponent(out CAbility cab2) && cab2.abID == cab.abID && x != this))
             {
                 entity.skills.RemoveSkill(cab.abID, Ability.AbilityOrigin.Item);
             }
@@ -170,9 +169,8 @@ public class Item : ComponentHolder<CComponent>, IAsset
         }
 
         //Weapon coatings
-        if (HasCComponent<CCoat>())
+        if (TryGetCComponent(out CCoat cc))
         {
-            CCoat cc = GetCComponent<CCoat>();
             cc.OnStrike(attackedEntity.stats);
 
             if (cc.strikes <= 0)
@@ -182,7 +180,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         }
 
         //Status effects
-        foreach (CComponent c in CComponentsOfType<COnHitAddStatus>())
+        foreach (var c in CComponentsOfType<COnHitAddStatus>())
         {
             if (c is COnHitAddStatus cOnHit)
             {
@@ -191,12 +189,12 @@ public class Item : ComponentHolder<CComponent>, IAsset
         }
 
         //Item level
-        if (HasCComponent<CItemLevel>())
+        if (TryGetCComponent(out CItemLevel ci))
         {
-            GetCComponent<CItemLevel>().AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
+            ci.AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
         }
 
-        if (HasProp(ItemProperty.Knockback) && RNG.Next(100) <= 5)
+        if (HasProp(ItemProperty.Knockback) && RNG.OneIn(20))
         {
             if (attackedEntity != null && attackedEntity.myPos.DistanceTo(myEntity.myPos) < 2f)
             {
@@ -219,9 +217,14 @@ public class Item : ComponentHolder<CComponent>, IAsset
     {
         if (HasProp(ItemProperty.Replacement_Limb)) 
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < RNG.Next(1, 4); i++)
             {
                 stats.entity.body.TrainLimbOfType(properties.ToArray());
+
+                if (stats.hasTrait("cannibal") && HasProp(ItemProperty.Cannibalism))
+                {
+                    stats.entity.body.TrainLimbOfType(properties.ToArray());
+                }
             }
         }
         else
@@ -232,14 +235,14 @@ public class Item : ComponentHolder<CComponent>, IAsset
         ApplyEffects(stats);
         RunCommands("OnConsume", stats.entity);
 
-        if (HasCComponent<CLiquidContainer>())
+        if (TryGetCComponent(out CLiquidContainer cl))
         {
-            GetCComponent<CLiquidContainer>().Drink(stats.entity);
+            cl.Drink(stats.entity);
         }
 
-        if (HasCComponent<CCoat>())
+        if (TryGetCComponent(out CCoat cc))
         {
-            GetCComponent<CCoat>().OnStrike(stats);
+            cc.OnStrike(stats);
         }
 
         if (World.difficulty.AddictionsActive && ContainsProperty(ItemProperty.Addictive))
@@ -285,16 +288,30 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public bool AttackCrits(int chance)
     {
-        return (RNG.Next(100) <= chance);
+        return RNG.Next(100) <= chance;
+    }
+
+    public int GetDamageStats(Stats stats)
+    {
+        if (HasProp(ItemProperty.Damage_From_Dex))
+        {
+            return stats.Dexterity;
+        }
+        if (HasProp(ItemProperty.Damage_From_Str_And_Dex))
+        {
+            return (stats.Dexterity + stats.Strength) / 2;
+        }
+
+        return stats.Strength;
     }
 
     public int CalculateDamage(int strength, int proficiency)
     {
         Damage nDmg = new Damage(damage + modifier.damage);
 
-        if (HasCComponent<CItemLevel>())
+        if (TryGetCComponent(out CItemLevel ci))
         {
-            nDmg.Sides += GetCComponent<CItemLevel>().DamageBonus();
+            nDmg.Sides += ci.DamageBonus();
         }
 
         return nDmg.Roll() + (strength / 2 - 1) + proficiency + 1;
@@ -378,9 +395,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public void ApplyEffects(Stats stats)
     {
-        if (HasProp(ItemProperty.Selected_Tele) && HasCComponent<CCoordinate>())
+        if (HasProp(ItemProperty.Selected_Tele) && TryGetCComponent(out CCoordinate cc))
         {
-            GetCComponent<CCoordinate>().Activate(stats.entity);
+            cc.Activate(stats.entity);
         }
 
         if (HasProp(ItemProperty.ReplaceLimb))
@@ -520,7 +537,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         return (damageTypes.Contains(search));
     }
 
-    public int buyCost(int bonus)
+    public int BuyCost(int bonus)
     {
         int totCost = (cost + modifier.cost > 0) ? (cost + modifier.cost) : cost;
 
@@ -533,16 +550,16 @@ public class Item : ComponentHolder<CComponent>, IAsset
         {
             CLiquidContainer cl = GetCComponent<CLiquidContainer>();
 
-            if (!cl.isEmpty())
+            if (!cl.IsEmpty())
             {
                 Liquid liquid = ItemList.GetLiquidByID(cl.sLiquid.ID, cl.sLiquid.units);
                 totCost += liquid.pricePerUnit * liquid.units;
             }
         }
 
-        return (int)((100f - (bonus * 3f)) / 100f * totCost * 2f);
+        return UnityEngine.Mathf.FloorToInt((100f - (bonus * 3f)) / 100f * totCost * 2f);
     }
-    public int sellCost(int bonus)
+    public int SellCost(int bonus)
     {
         int totCost = (cost + modifier.cost > 0) ? (cost + modifier.cost) : cost;
 
@@ -551,11 +568,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
             totCost *= 5;
         }
 
-        if (HasCComponent<CLiquidContainer>())
+        if (TryGetCComponent(out CLiquidContainer cl))
         {
-            CLiquidContainer cl = GetCComponent<CLiquidContainer>();
-
-            if (!cl.isEmpty())
+            if (!cl.IsEmpty())
             {
                 Liquid liquid = ItemList.GetLiquidByID(cl.sLiquid.ID, cl.sLiquid.units);
                 totCost += liquid.pricePerUnit * liquid.units;
@@ -575,9 +590,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public void Preserve()
     {
-        if (HasCComponent<CRot>())
+        if (TryGetCComponent(out CRot cr))
         {
-            GetCComponent<CRot>().OnRemove();
+            cr.OnRemove();
             RemoveCComponent<CRot>();
             AddProperty(ItemProperty.Preserved);
         }
@@ -585,9 +600,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public void Unload()
     {
-        CFirearm cf = GetCComponent<CFirearm>();
-
-        if (cf != null)
+        if (TryGetCComponent(out CFirearm cf))
         {
             cf.Unload();
         }
@@ -627,14 +640,12 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public bool MagFull()
     {
-        CFirearm cf = GetCComponent<CFirearm>();
-
-        if (cf == null)
+        if (!TryGetCComponent(out CFirearm cf))
         {
             return true;
         }
 
-        return (cf.curr == cf.max);
+        return cf.curr == cf.max;
     }
 
     public bool Fire()
@@ -644,9 +655,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             return true;
         }
 
-        CFirearm fi = GetCComponent<CFirearm>();
-
-        if (fi == null || fi.curr <= 0)
+        if (!TryGetCComponent(out CFirearm fi) || fi.curr <= 0)
         {
             return false;
         }
@@ -657,9 +666,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public int Reload(int amount, Item ammoID)
     {
-        CFirearm fi = GetCComponent<CFirearm>();
-
-        if (fi == null)
+        if (!TryGetCComponent(out CFirearm fi))
         {
             return 0;
         }
@@ -687,13 +694,14 @@ public class Item : ComponentHolder<CComponent>, IAsset
         string baseName = (string.IsNullOrEmpty(displayName) ? Name : displayName);
 
         if (modifier != null && !string.IsNullOrEmpty(modifier.name))
-            baseName = modifier.name + " " + baseName;
-        else if (HasCComponent<CLiquidContainer>())
         {
-            CLiquidContainer cl = GetCComponent<CLiquidContainer>();
+            baseName = modifier.name + " " + baseName;
+        }
+        else if (TryGetCComponent(out CLiquidContainer cl))
+        {
             string liqName = LocalizationManager.GetContent("IT_LiquidUnits_Empty");
 
-            if (!cl.isEmpty())
+            if (!cl.IsEmpty())
             {
                 liqName = ItemList.GetLiquidByID(cl.sLiquid.ID).Name;
             }
@@ -768,10 +776,9 @@ public class Item : ComponentHolder<CComponent>, IAsset
             return baseName + " " + ((armor == 0) ? DisplayDamage() : DisplayArmor());
         }
 
-        if (HasProp(ItemProperty.Ranged))
+        if (HasProp(ItemProperty.Ranged) && TryGetCComponent(out CFirearm cf))
         {
-            int sh = GetCComponent<CFirearm>().shots;
-            return baseName + " " + DisplayDamage() + "<color=olive>(x" + sh + ")</color>";
+            return baseName + " " + DisplayDamage() + "<color=olive>(x" + cf.shots + ")</color>";
         }
 
         if (HasProp(ItemProperty.Armor))
@@ -795,9 +802,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public string DisplayArmor()
     {
-        string s = "<color=silver>[";
-
-        return s + armor.ToString() + "]</color>";
+        return string.Format("<color=silver>[{0}]</color>", armor);
     }
 
     //used only to check differences in names between items. items with modifiers cannot stack.
@@ -835,9 +840,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     public bool HasTag(string tag)
     {
-        CTags cTags = GetCComponent<CTags>();
-
-        if (cTags == null)
+        if (!TryGetCComponent(out CTags cTags))
         {
             return false;
         }
@@ -990,6 +993,11 @@ public class Item : ComponentHolder<CComponent>, IAsset
             SetComponentList(ItemUtility.GetComponentsFromData(dat["Components"]));
         }
 
+        if (dat.ContainsKey("Abstract Parent"))
+        {
+            abstractParent = (bool)dat["Abstract Parent"];
+        }
+
         //Properties
         if (dat.ContainsKey("Properties"))
         {
@@ -1098,7 +1106,8 @@ public enum ItemProperty
     Weapon, Two_Handed, Ranged, Dig, Quick, Very_Quick, Slow, Very_Slow, Throwing_Wep, Disarm, Shock_Nearby, Burst, Quick_Reload,
     Legible, Explosive, Edible, Severed_BodyPart, Radiate, Cannibalism, Corpse,
     Tome, Replacement_Limb, Flying,
-    Quest_Item, Randart, Unique, Addictive, Bow, DrainHealth, Pool, NoMods, Preserved, Proc_Attack, OnAttach_Vampirism
+    Quest_Item, Randart, Unique, Addictive, Bow, DrainHealth, Pool, NoMods, Preserved, Proc_Attack, OnAttach_Vampirism,
+    Damage_From_Dex, Damage_From_Str_And_Dex
 }
 
 [System.Serializable]

@@ -771,7 +771,7 @@ public class Console : MonoBehaviour
                 {
                     int limbIndex = UnityEngine.Random.Range(0, playerEntity.body.bodyParts.Count);
 
-                    if (playerEntity.body.bodyParts[limbIndex].severable)
+                    if (playerEntity.body.bodyParts[limbIndex].Severable)
                     {
                         playerEntity.body.RemoveLimb(limbIndex);
                         MyConsole.NewMessage("    Removed Limb " + limbIndex.ToString());
@@ -890,6 +890,31 @@ public class Console : MonoBehaviour
                 new RemoveLocationEvent(zID).RunEvent();
                 break;
 
+            case "startincident":
+                if (!PlayerInput.fullMap)
+                {
+                    MyConsole.Error("Must be done from the world map.");
+                    return;
+                }
+
+                if (parsedText.Length < 2)
+                {
+                    MyConsole.Error("Specify an incident ID.");
+                    return;
+                }
+
+                if (!GameData.TryGet(parsedText[1], out Incident incident))
+                {
+                    MyConsole.Error("Could not find incident with that id.");
+                    return;
+                }
+
+                World.playerInput.TriggerLocalOrWorldMap();
+                World.tileMap.HardRebuild();
+                incident.Spawn();
+
+                break;
+
             case "?":
             case "help":
             case "commands":
@@ -945,6 +970,7 @@ public class Console : MonoBehaviour
                 MyConsole.NewMessage("  - <b>load <i>[map ID]</i></b>\n    Loads a map by its id.");
                 MyConsole.NewMessage("  - <b>addlocation <i>[zone ID]</i></b>\n    Adds the specified zone to the world map.");
                 MyConsole.NewMessage("  - <b>removelocation <i>[zone ID]</i></b>\n    Removes the specified zone from the world map.");
+                MyConsole.NewMessage("  - <b>startincident <i>[incident ID]</i></b>\n    Sets up the specified incident. Can only be done on the world map.");
                 MyConsole.NewMessage("  - <b>detonate</b>\n      Kills all NPCs on the screen.");
                 MyConsole.NewMessage("  - <b>reveal</b>\n      Reveals all tiles on the map");
                 MyConsole.NewMessage("  - <b>wizard</b>\n      Combines the previous two commands. Kills all NPCs on screen, and reveals the map. Cynapse is too lazy to type two commands.");

@@ -14,11 +14,13 @@ namespace MapCreator
         public GameObject tilePrefab;
         public GameObject buttonPrefab;
         public GameObject loadButtonPrefab;
+        public GameObject itemButtonPrefab;
         public Image currentSelectedImage;
         public Sprite[] Sprites { get; protected set; }
         public MC_Selection_Type selectType = MC_Selection_Type.Paint;
 
         public GameObject Menu;
+        public GameObject ItemMenu;
         public GameObject SaveMenu;
         public GameObject LoadMenu;
         public InputField mapNameInput;
@@ -29,10 +31,12 @@ namespace MapCreator
         public Transform objectAnchor;
         public Transform npcAnchor;
         public Transform loadButtonAnchor;
+        public Transform itemButtonAnchor;
         public GameObject yesNoButton;
         public GameObject helpMenu;
         public Text locationText;
         public Text mapInfoText;
+        public Text itemInfoText;
         public Text mapNameTitle;
         public RectTransform Tooltip;
         public Sprite empty;
@@ -54,18 +58,14 @@ namespace MapCreator
         int Elevation = 0;
         Coord mapSize;
         List<MapObject_Blueprint> cachedObjects;
+        bool initializedItems = false;
 
         List<MapObject_Blueprint> AssetsForReading
         {
             get
             {
                 return GameData.Get<MapObject_Blueprint>((IAsset asset) => {
-                    if (asset is MapObject_Blueprint bp)
-                    {
-                        return bp.displayInEditor;
-                    }
-
-                    return false;
+                    return asset is MapObject_Blueprint bp && bp.displayInEditor;
                 });
             }
         }
@@ -107,7 +107,8 @@ namespace MapCreator
             changes = new List<ChangeHolder>();
             savedMaps = new List<MapCreator_Screen>();
 
-            tileSize = (tileSize) * (Screen.width / 1600f);
+            tileSize *= Screen.width / 1600f;
+            tileSize -= 0.01f;
 
             yesNoButton.SetActive(false);
             helpMenu.SetActive(false);
@@ -641,7 +642,9 @@ namespace MapCreator
 
         public void SaveMap()
         {
-            SetName(mapNameInput.text);
+            string text = CharacterCreation.StripReservedCharacters(mapNameInput.text);
+            mapNameInput.text = text;
+            SetName(text);
             CurrentLocationID = mapTypeSelector.text;
             Elevation = -elevationSelector.value;
 
@@ -683,6 +686,37 @@ namespace MapCreator
         public void MainMenu()
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        }
+
+        public void ToggleItemsMenu(bool on)
+        {
+            ItemMenu.SetActive(on);
+            itemInfoText.text = "";
+
+            if (initializedItems)
+            {
+                return;
+            }
+
+            itemButtonAnchor.DespawnChildren();
+
+            var items = GameData.GetAll<Item>();
+            int index = 0;
+
+            foreach (var i in items)
+            {
+                if (i.abstractParent || !i.lootable)
+                {
+                    continue;
+                }
+
+                GameObject button = SimplePool.Spawn(itemButtonPrefab, itemButtonAnchor);
+                button.GetComponentInChildren<Text>().text = i.Name;
+                button.GetComponent<MapCreator_ItemButton>().Init(this, i);
+                index++;
+            }
+
+            initializedItems = true;
         }
 
         public void SaveMenuActive()
@@ -730,8 +764,10 @@ namespace MapCreator
                 string name = d["Name"].ToString();
                 int elevation = d.ContainsKey("elev") ? (int)d["elev"] : 0;
                 string landmark = d.ContainsKey("locationID") ? d["locationID"].ToString() : "";
+                int width = d.ContainsKey("width") ? (int)d["width"] : mapSize.x;
+                int height = d.ContainsKey("height") ? (int)d["height"] : mapSize.y;
 
-                MapCreator_Screen sc = new MapCreator_Screen(name, elevation, mapSize, landmark);
+                MapCreator_Screen sc = new MapCreator_Screen(name, elevation, new Coord(width, height), landmark);
 
                 for (int j = 0; j < d["IDs"].Count; j++)
                 {
@@ -775,14 +811,18 @@ namespace MapCreator
         public void NewMap()
         {
             if (changes != null)
+            {
                 changes.Clear();
+            }
 
             CurrentTile = 32;
             FillAllWithCurrent();
             CancelSaveMenu();
 
             if (changes != null)
+            {
                 changes.Clear();
+            }
         }
 
         void OpenYesNoDialogue()
@@ -816,32 +856,43 @@ namespace MapCreator
         public void LoadMap(int m)
         {
             MapCreator_Screen screen = savedMaps[m];
-            int max = screen.IDs.Length;
+            int diffX = (mapSize.x - screen.width) / 2;
+            int diffY = (mapSize.y - screen.height) / 2;
 
             for (int x = 0; x < mapSize.x; x++)
             {
                 for (int y = 0; y < mapSize.y; y++)
                 {
-                    if (x * mapSize.y + y >= max)
-                        continue;
-
-                    int index = screen.IDs[x * mapSize.y + y];
-                    cells[x, y].SetTile(Sprites[index], index);
+                    cells[x, y].SetTile(Sprites[32], 32);
                     cells[x, y].EmptySprite(MC_Selection_Type.Paint);
+                }
+            }
+
+            for (int x = 0; x < screen.width; x++)
+            {
+                for (int y = 0; y < screen.height; y++)
+                {
+                    if (x >= mapSize.x || y >= mapSize.y)
+                    {
+                        continue;
+                    }
+
+                    int index = screen.IDs[x * screen.height + y];
+                    cells[x + diffX, y + diffY].SetTile(Sprites[index], index);
                 }
             }
 
             for (int i = 0; i < savedMaps[m].objects.Count; i++)
             {
                 MapCreator_Object mco = savedMaps[m].objects[i];
-                cells[mco.Pos.x, mco.Pos.y].SetObject(mco.Name);
-                AutotileObjects(mco.Pos.x, mco.Pos.y, true);
+                cells[mco.Pos.x + diffX, mco.Pos.y + diffY].SetObject(mco.Name);
+                AutotileObjects(mco.Pos.x + diffX, mco.Pos.y + diffY, true);
             }
 
             for (int i = 0; i < savedMaps[m].npcs.Count; i++)
             {
                 MapCreator_Object mco = savedMaps[m].npcs[i];
-                cells[mco.Pos.x, mco.Pos.y].SetNPC(mco.Name);
+                cells[mco.Pos.x + diffX, mco.Pos.y + diffY].SetNPC(mco.Name);
             }
 
             SaveMenuActive();
@@ -864,6 +915,7 @@ namespace MapCreator
                 }
             }
 
+            SetPlace(0);
             changes.Clear();
         }
 
@@ -884,9 +936,13 @@ namespace MapCreator
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     if (SaveMenu.activeSelf)
+                    {
                         CancelSaveMenu();
+                    }
                     else
+                    {
                         SaveMenuActive();
+                    }
                 }
 
                 if (Input.GetKeyUp(KeyCode.LeftShift))
@@ -911,11 +967,17 @@ namespace MapCreator
             npcAnchor.gameObject.SetActive(id == 2);
 
             if (id == 0)
+            {
                 selectType = MC_Selection_Type.Paint;
+            }
             else if (id == 1)
+            {
                 selectType = MC_Selection_Type.Place_Object;
+            }
             else if (id == 2)
+            {
                 selectType = MC_Selection_Type.Place_NPC;
+            }
         }
 
         public void OpenHelpMenu()
@@ -972,11 +1034,13 @@ namespace MapCreator
         {
             public string Name;
             public Coord Pos;
+            public List<string> Items;
 
             public MapCreator_Object(string n, Coord p)
             {
                 Name = n;
                 Pos = p;
+                Items = new List<string>();
             }
         }
 
@@ -994,10 +1058,15 @@ namespace MapCreator
             }
         }
 
-        struct ChangeHolder
+        class ChangeHolder
         {
-            public List<Change> changes;
+            public List<Change> changes = new List<Change>();
             public Coord previousPos;
+
+            public ChangeHolder()
+            {
+                changes = new List<Change>();
+            }
 
             public ChangeHolder(List<Change> c, Coord pp)
             {

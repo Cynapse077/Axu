@@ -27,7 +27,7 @@ public class BodyPartTargetPanel : MonoBehaviour
             GameObject g = Instantiate(bpButton, bpAnchor);
             Text buttonText = g.GetComponentInChildren<Text>();
 
-            if (!b.isAttached || Amputate && !b.severable)
+            if (!b.Attached || Amputate && !b.Severable)
                 buttonText.text = "<color=grey>" + b.displayName + "</color>";
             else
             {
@@ -81,7 +81,7 @@ public class BodyPartTargetPanel : MonoBehaviour
                 break;
 
             case SelectionType.Grab:
-                if (!bp.isAttached)
+                if (!bp.Attached)
                     return;
 
                 ObjectManager.playerEntity.skills.Grapple_GrabPart(bp);

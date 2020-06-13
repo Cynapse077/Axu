@@ -72,8 +72,7 @@ public class CombatComponent
 
         for (int i = 0; i < hands.Count; i++)
         {
-            if (hands[i] != null && hands[i] != MyBody.MainHand && hands[i].IsAttached && (SeedManager.combatRandom.Next(100) <= ExtraAttackChance) 
-                || !attacked)
+            if (hands[i] != null && hands[i] != MyBody.MainHand && hands[i].IsAttached && RNG.Chance(ExtraAttackChance) || !attacked)
             {
                 if (!hands[i].arm.FreeToMove())
                 {
@@ -99,10 +98,9 @@ public class CombatComponent
         //Attack with proc weapons.
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
-            if (MyBody.bodyParts[i].isAttached && MyBody.bodyParts[i].equippedItem.HasProp(ItemProperty.Proc_Attack) 
-                && SeedManager.combatRandom.Next(100) < ExtraAttackChance)
+            if (MyBody.bodyParts[i].Attached && MyBody.bodyParts[i].equippedItem.HasProp(ItemProperty.Proc_Attack) && RNG.Chance(ExtraAttackChance))
             {
-                if (AttackTarget(target, MyBody.bodyParts[i].equippedItem))
+                if (ExtraProcAttack(target, MyBody.bodyParts[i].equippedItem))
                 {
                     soundItem = MyBody.bodyParts[i].equippedItem;
                 }
@@ -174,7 +172,7 @@ public class CombatComponent
         HashSet<DamageTypes> dt = wep.damageTypes;
         int missChance = Mathf.FloorToInt(MissChance(hand, target, targetPart));
 
-        if (SeedManager.combatRandom.Next(100) < missChance)
+        if (RNG.Chance(missChance))
         {
             target.Miss(entity, wep);
 
@@ -187,7 +185,7 @@ public class CombatComponent
         }
 
         int profLevel = (entity.isPlayer) ? MyStats.CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
-        int damage = wep.CalculateDamage(MyStats.Strength, profLevel);
+        int damage = wep.CalculateDamage(wep.GetDamageStats(MyStats), profLevel);
         bool crit = wep.AttackCrits((profLevel - 1 + MyStats.Accuracy + wep.Accuracy) / 2);
 
         //firearms have reduced physical damage.
@@ -226,21 +224,21 @@ public class CombatComponent
         return true;
     }
 
-    bool AttackTarget(Stats target, Item wep)
+    bool ExtraProcAttack(Stats target, Item wep)
     {
         if (target == null || wep == null)
         {
             return false;
         }
 
-        if (SeedManager.combatRandom.Next(100) < 45)
+        if (RNG.Chance(45))
         {
             target.Miss(entity, wep);
             return false;
         }
 
-        int profLevel = (entity.isPlayer) ? MyStats.CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
-        int damage = wep.CalculateDamage(MyStats.Strength, profLevel);
+        int profLevel = entity.isPlayer ? MyStats.CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
+        int damage = wep.CalculateDamage(wep.GetDamageStats(MyStats), profLevel);
 
         return target.TakeDamage(wep, damage, wep.damageTypes, entity);
     }
@@ -275,7 +273,7 @@ public class CombatComponent
             return;
         }
 
-        bool miss = (SeedManager.combatRandom.Next(100) > 40 + MyStats.proficiencies.Throwing.level + MyStats.Accuracy);
+        bool miss = RNG.Next(100) > 40 + MyStats.proficiencies.Throwing.level + MyStats.Accuracy;
 
         if (miss)
         {
@@ -292,7 +290,7 @@ public class CombatComponent
             CombatLog.NameItemMessage("Message_ThrowItem", entity.Name, itemForThrowing.DisplayName());
         }
 
-        entity.InstatiateThrowingEffect(destination, 1.0f);
+        InstatiateThrowingEffect(destination, 1.0f);
 
         if (!itemForThrowing.HasProp(ItemProperty.Explosive))
         {
@@ -325,44 +323,50 @@ public class CombatComponent
             }
         }
 
-        Item ammo = entity.inventory.firearm.HasCComponent<CFirearm>() 
-            ? ItemList.GetItemByID(entity.inventory.firearm.GetCComponent<CFirearm>().currentAmmo) : null;
+        Item ammo = entity.inventory.firearm.TryGetCComponent(out CFirearm fComp) ? ItemList.GetItemByID(fComp.currentAmmo) : null;
         TileDamage td = new TileDamage(entity, targetPos, entity.inventory.firearm.damageTypes);
 
         if (FirearmMiss(targetPos, iteration))
         {
-            td.pos.x += SeedManager.combatRandom.Next(-1, 2);
-            td.pos.y += SeedManager.combatRandom.Next(-1, 2);
+            td.pos.x += RNG.Next(-1, 2);
+            td.pos.y += RNG.Next(-1, 2);
         }
 
-        entity.InstatiateThrowingEffect(td.pos, 2.0f);
+        InstatiateThrowingEffect(td.pos, 2.0f);
 
         td.damage = entity.inventory.firearm.CalculateDamage(entity.stats.Dexterity - 4, entity.stats.CheckProficiencies(entity.inventory.firearm).level);
 
-        if (ammo != null && ammo.HasCComponent<CAmmo>())
+        var ammoComp = ammo?.GetCComponent<CAmmo>();
+        if (ammoComp != null)
         {
             //Add extra damage from ammunition
-            td.damage += ammo.GetCComponent<CAmmo>().extraDamage.Roll();
+            td.damage += ammoComp.extraDamage.Roll();
         }
 
         td.crit = entity.inventory.firearm.AttackCrits(entity.stats.proficiencies.Firearm.level + 1);
-        td.myName = ammo == null ? LocalizationManager.GetContent("Bullet") : ammo.DisplayName();
+        td.myName = ammo == null ? "Bullet".Localize() : ammo.DisplayName();
         td.ApplyDamage();
 
-        if (ammo != null && ammo.HasCComponent<CAmmo>())
+        if (ammoComp != null)
         {
             //Apply ammunition effects
-            ammo.GetCComponent<CAmmo>().OnHit(entity, td.pos);
+            ammoComp.OnHit(entity, td.pos);
         }
 
         entity.stats.AddProficiencyXP(entity.inventory.firearm, entity.stats.Dexterity);
+    }
+
+    public void InstatiateThrowingEffect(Coord destination, float spdMul)
+    {
+        GameObject lo = GameObject.Instantiate(World.poolManager.throwEffect, entity.gameObject.transform.position, Quaternion.identity);
+        lo.GetComponent<LerpPos>().Init(destination, spdMul);
     }
 
     bool FirearmMiss(Coord targetPos, int iteration)
     {
         float denom = (float)entity.stats.proficiencies.Firearm.level + 2 + entity.stats.Accuracy / 2 - entity.inventory.firearm.Accuracy;
         denom = Mathf.Clamp(denom, 0.05f, 100.0f);
-        float missChance = (1.0f / denom) * 100f, maxMiss = SeedManager.combatRandom.Next(100);
+        float missChance = 1f / denom * 100f, maxMiss = RNG.Next(100);
 
         if (entity.myPos.DistanceTo(targetPos) >= entity.stats.FirearmRange)
         {
@@ -371,12 +375,12 @@ public class CombatComponent
 
         if (entity.inventory.firearm.Accuracy < 0)
         {
-            missChance *= 2.0f;
+            missChance *= 2f;
         }
 
         if (!entity.inventory.firearm.HasProp(ItemProperty.Burst))
         {
-            maxMiss -= (3 * iteration);
+            maxMiss -= 3f * iteration;
         }
 
         return maxMiss <= missChance;
@@ -432,11 +436,11 @@ public class CombatComponent
 
         if (entity.isPlayer)
         {
-            World.userInterface.PlayerDied(((MyStats.lastHit == null) ? "<color=yellow>???</color>" : MyStats.lastHit.MyName));
+            World.userInterface.PlayerDied((MyStats.lastHit == null) ? "<color=yellow>???</color>" : MyStats.lastHit.name);
 
             if (World.difficulty.Level == Difficulty.DiffLevel.Scavenger && MyInventory.items.Count > 0)
             {
-                int numToDrop = SeedManager.combatRandom.Next(0, 3);
+                int numToDrop = RNG.Next(3);
 
                 for (int i = 0; i < numToDrop; i++)
                 {
@@ -467,7 +471,9 @@ public class CombatComponent
             {
                 if (!entity.AI.npcBase.HasFlag(NPC_Flags.NO_XP))
                 {
-                    ObjectManager.playerEntity.stats.GainExperience((MyStats.Strength + MyStats.Dexterity + MyStats.Intelligence + MyStats.Endurance * 2) / 2 + 1);
+                    int xp = (MyStats.Strength + MyStats.Dexterity + MyStats.Intelligence + MyStats.Endurance * 2) / 2 + 1;
+                    xp += entity.AI.npcBase.bonusXP;
+                    ObjectManager.playerEntity.stats.GainExperience(xp);
                 }
             }
 

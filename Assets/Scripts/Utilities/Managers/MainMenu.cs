@@ -14,16 +14,20 @@ public class MainMenu : MonoBehaviour
     public Image background2;
 
     [Space(20)]
-    public int localMapWidth = 45;
-    public int localMapHeight = 30;
-    public int worldMapWidth = 200;
-    public int worldMapHeight = 200;
+    int localMapWidth = 45;
+    int localMapHeight = 30;
+    int worldMapWidth = 200;
+    int worldMapHeight = 200;
     public int currentSelected = 1;
 
     SoundManager soundManager;
     bool canUseInput = false;
     readonly bool showOptions = false;
     MainMenuPanel mmp;
+
+    const int DefaultScreenWidth = 1280;
+    const int DefaultScreenHeight = 720;
+    const int DefaultMapSize = 200;
 
     void Start()
     {
@@ -118,11 +122,17 @@ public class MainMenu : MonoBehaviour
             if (GameSettings.Keybindings.GetKey("Enter"))
             {
                 if (currentSelected == 0)
+                {
                     Continue();
+                }
                 else if (currentSelected == 1)
+                {
                     New();
+                }
                 else if (currentSelected == 2)
+                {
                     Quit();
+                }
 
                 soundManager.MenuTick();
             }
@@ -178,29 +188,26 @@ public class MainMenu : MonoBehaviour
         string gameFile = Application.streamingAssetsPath + "/Game.json";
         JsonData dat = JsonMapper.ToObject(File.ReadAllText(gameFile));
 
+        TurnManager.dayLength = 4000;
+        TurnManager.nightLength = 2000;
         if (dat.ContainsKey("Day Length"))
         {
-            dat["Day Length"].TryGetInt("Day", out TurnManager.dayLength, 4000);
-            dat["Day Length"].TryGetInt("Night", out TurnManager.nightLength, 2000);
-        }
-        else
-        {
-            TurnManager.dayLength = 4000;
-            TurnManager.nightLength = 2000;
+            dat["Day Length"].TryGetInt("Day", out TurnManager.dayLength, TurnManager.dayLength);
+            dat["Day Length"].TryGetInt("Night", out TurnManager.nightLength, TurnManager.nightLength);
         }
 
-        dat.TryGetCoord("Default Screen Size", out GameSettings.DefaultScreenSize, new Coord(1280, 720));
+        dat.TryGetCoord("Default Screen Size", out GameSettings.DefaultScreenSize, new Coord(DefaultScreenWidth, DefaultScreenHeight));
 
         if (dat.ContainsKey("World Map"))
         {
-            dat["World Map"].TryGetCoord("Size", out Manager.worldMapSize, new Coord(200, 200));
+            dat["World Map"].TryGetCoord("Size", out Manager.worldMapSize, new Coord(DefaultMapSize));
             WorldMap.BiomePath = dat["World Map"]["Texture"].ToString();
             WorldMap.LandmarkPath = dat["World Map"]["Location Texture"].ToString();
         }
 
         if (dat.ContainsKey("Local Map"))
         {
-            dat["Local Map"].TryGetCoord("Size", out Manager.localMapSize, new Coord(45, 30));
+            dat["Local Map"].TryGetCoord("Size", out Manager.localMapSize, new Coord(localMapWidth, localMapHeight));
             TileMap.imagePath = dat["Local Map"]["Texture"].ToString();
         }
     }

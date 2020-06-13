@@ -3,18 +3,34 @@ using System.Collections.Generic;
 using LitJson;
 using UnityEngine;
 
-public class Incident : IAsset
+public class Incident : IAsset, IWeighted
 {
     public string ID { get; set; }
     public string ModID { get; set; }
+    public int Weight 
+    { 
+        get
+        {
+            return weight;
+        }
+        set
+        {
+            weight = value;
+        }
+    }
 
     public string enterDialogue;
     public string factionID;
+    public string requiredFlag;
+    public string nullifyingFlag;
+    public string flagToAdd;
     public bool hostile;
+    public Coord playerStartPos;
     public List<string> groupIDs;
     public List<string> npcIDs;
     public List<string> objectIDs;
-    public double weight = 1.0;
+    public List<string> maps;
+    public int weight;
     public Difficulty.DiffLevel minDifficulty = Difficulty.DiffLevel.Adventurer;
 
     public Incident(JsonData dat)
@@ -46,7 +62,7 @@ public class Incident : IAsset
 
         if (dat.ContainsKey("Weight"))
         {
-            weight = (double)dat["Weight"];
+            weight = (int)dat["Weight"];
         }
 
         if (dat.ContainsKey("Min Difficulty"))
@@ -55,39 +71,59 @@ public class Incident : IAsset
             minDifficulty = val.ToEnum<Difficulty.DiffLevel>();
         }
 
+        if (dat.ContainsKey("Required Flag"))
+        {
+            requiredFlag = dat["Required Flag"].ToString();
+        }
+
+        if (dat.ContainsKey("Nullifying Flag"))
+        {
+            nullifyingFlag = dat["Nullifying Flag"].ToString();
+        }
+
+        if (dat.ContainsKey("Flag To Add"))
+        {
+            flagToAdd = dat["Flag To Add"].ToString();
+        }
+
         if (dat.ContainsKey("Groups"))
         {
-            groupIDs = new List<string>();
-
-            for (int i = 0; i < dat["Groups"].Count; i++)
-            {
-                groupIDs.Add(dat["Groups"][i].ToString());
-            }
+            groupIDs = dat["Groups"].ToStringList();
         }
 
         if (dat.ContainsKey("NPCs"))
         {
-            npcIDs = new List<string>();
-
-            for (int i = 0; i < dat["NPCs"].Count; i++)
-            {
-                npcIDs.Add(dat["NPCs"][i].ToString());
-            }
+            npcIDs = dat["NPCs"].ToStringList();
         }
 
         if (dat.ContainsKey("Objects"))
         {
-            objectIDs = new List<string>();
+            objectIDs = dat["Objects"].ToStringList();
+        }
 
-            for (int i = 0; i < dat["Objects"].Count; i++)
-            {
-                objectIDs.Add(dat["Objects"][i].ToString());
-            }
+        if (dat.ContainsKey("Maps"))
+        {
+            maps = dat["Maps"].ToStringList();
+        }
+
+        if (dat.ContainsKey("Player Start Pos"))
+        {
+            playerStartPos = new Coord((int)dat["Player Start Pos"][0], (int)dat["Player Start Pos"][1]);
         }
     }
 
     public bool CanSpawn()
     {
+        if (!nullifyingFlag.NullOrEmpty() && ObjectManager.playerJournal.HasFlag(nullifyingFlag))
+        {
+            return false;
+        }
+
+        if (!requiredFlag.NullOrEmpty() && !ObjectManager.playerJournal.HasFlag(requiredFlag))
+        {
+            return false;
+        }
+
         if (minDifficulty > World.difficulty.Level)
         {
             return false;
@@ -119,7 +155,12 @@ public class Incident : IAsset
 
     public void Spawn()
     {
-        Alert.CustomAlert(enterDialogue);
+        if (!maps.NullOrEmpty())
+        {
+            World.tileMap.LoadMap(maps.GetRandom());
+        }
+
+        ObjectManager.playerEntity.ForcePosition(playerStartPos ?? World.tileMap.CurrentMap.GetRandomFloorTile());
 
         if (!groupIDs.NullOrEmpty())
         {
@@ -158,6 +199,13 @@ public class Incident : IAsset
                 }
             }
         }
+
+        if (!flagToAdd.NullOrEmpty())
+        {
+            ObjectManager.playerJournal.AddFlag(flagToAdd);
+        }
+
+        Alert.CustomAlert(enterDialogue);
     }
 
     public IEnumerable<string> LoadErrors()

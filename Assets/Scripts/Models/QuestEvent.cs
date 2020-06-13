@@ -144,11 +144,11 @@ public class SpawnNPCEvent : QuestEvent
 
     public override void RunEvent()
     {
-        Coord wPos = World.worldMap.worldMapData.GetLandmark(zone);
-        NPC n = new NPC(GameData.Get<NPC_Blueprint>(npcID), wPos, localPos, elevation);
-
-        if (n != null)
+        if (GameData.TryGet<NPC_Blueprint>(npcID, out var bp))
         {
+            Coord wPos = World.worldMap.worldMapData.GetLandmark(zone);        
+            NPC n = new NPC(bp, wPos, localPos, elevation);
+
             if (!giveItem.NullOrEmpty())
             {
                 n.inventory.Add(ItemList.GetItemByID(giveItem));
@@ -270,7 +270,7 @@ public class SpawnObjectEvent : QuestEvent
         {
             MapObject m = World.objectManager.NewObjectAtSpecificScreen(objectID, localPos, c, elevation);
 
-            if (giveItem != "")
+            if (!giveItem.NullOrEmpty())
             {
                 m.inv.Add(ItemList.GetItemByID(giveItem));
             }
@@ -529,6 +529,11 @@ public class ReplaceItemOnNPCEvent : QuestEvent
         if (itemID.NullOrEmpty())
         {
             yield return "ReplaceItemOnNPCEvent - itemID is null.";
+        }
+
+        if (replacementID.NullOrEmpty())
+        {
+            yield return "ReplaceItemOnNPCEvent - replacementID is null.";
         }
     }
 }
@@ -895,7 +900,7 @@ public class SetItemModifierEvent : QuestEvent
                 {
                     foreach (BodyPart.Hand hand in entity.body.Hands)
                     {
-                        if (hand.arm.isAttached && !hand.EquippedItem.HasProp(ItemProperty.Cannot_Remove))
+                        if (hand.arm.Attached && !hand.EquippedItem.HasProp(ItemProperty.Cannot_Remove))
                         {
                             item = hand.EquippedItem;
                             break;

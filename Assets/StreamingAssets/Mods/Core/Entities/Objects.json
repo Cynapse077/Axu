@@ -12,8 +12,7 @@
         },
         {
             "ObjectType" : "BaseChest",
-            "Name" : "Small Chest",
-            "Container" : { "Capacity" : 25 },
+            "Name" : "Small Chest",            
             "Description" : "A small wooden chest. It could contain various items.",
             "Display In Editor" : false
         },
@@ -39,20 +38,46 @@
         {
             "ObjectType" : "Chest", 
             "Base" : "BaseChest",
+            "Container" : { 
+                "ItemsChance" : 100,
+                "MaxItems" : 4
+            },
             "Sprite" : "object-chest_closed.png",
             "Display In Editor" : true
         },
         {
             "ObjectType" : "Chest_Open", 
             "Base" : "BaseChest",
+            "Name" : "Large Chest",  
+            "Description" : "A large ornate chest. It could contain various items.",
+            "Container" : {},
             "Sprite" : "object-chest_open.png",
+            "Display In Editor" : true
+        },
+        {
+            "ObjectType" : "Chest_Large", 
+            "Base" : "BaseChest",
+            "Name" : "Large Chest",  
+            "Description" : "A large ornate chest. It could contain various items.",
+            "Container" : { 
+                "ItemsChance" : 100,
+                "MaxItems" : 7
+            },
+            "Sprite" : "object-chestlarge_closed.png",
+            "Display In Editor" : true
+        },
+        {
+            "ObjectType" : "Chest_Large_Open", 
+            "Base" : "BaseChest",
+            "Container" : {},
+            "Sprite" : "object-chestlarge_open.png",
             "Display In Editor" : true
         },
         {
             "Name" : "Loot",
             "ObjectType" : "Loot",
+            "Container" : {},
             "Sprite" : "object-loot.png",
-            "Container" : { "Capacity" : 20 },
             "Description" : "Items strewn about the ground.",
             "Display In Editor" : false
         },
@@ -60,14 +85,20 @@
             "Name" : "Wood Barrel",
             "ObjectType" : "Barrel",
             "Sprite" : "object-barrel_closed.png",
-            "Container" : { "Capacity" : 5 },
+            "Container" : { 
+                "ItemsChance" : 10,
+                "MaxItems" : 1,
+                "PossibleItems" : [
+                    "meat", "berries", "fruit", "frond", "shovel", "plywoodshield", "pitchfork"   
+				]
+            },
             "Description" : "A wood barrel with metal rings. It could contain loot."
         },
         {
             "Name" : "Wood Barrel",
             "ObjectType" : "Barrel_Open",
             "Sprite" : "object-barrel_open.png",
-            "Container" : { "Capacity" : 5 },
+            "Container" : {},
             "Description" : "A wood barrel with metal rings. It has been opened."
         },
         {
@@ -116,7 +147,8 @@
             "Sprite" : "object-door_wood_closed.png",
             "Description" : "A wood door.",
 			"Opaque" : true,
-            "Path Cost" : 100
+            "Path Cost" : 100,
+            "OpenType" : "Door_Open"
         },
         {
             "Name" : "Door",
@@ -134,7 +166,8 @@
 				"Receive" : true
 			},
             "Path Cost" : 100,
-            "Permissions" : [ "Can_Open_Prison_Cells" ]
+            "Permissions" : [ "Can_Open_Prison_Cells" ],
+            "OpenType" : "Prison_Door_Open"
         },
         {
             "Name" : "Prison Door",
@@ -158,7 +191,8 @@
 				"Receive" : true
 			},
 			"Permissions" : [ "Can_Enter_Ensis" ],
-            "Path Cost" : 100
+            "Path Cost" : 100,
+            "OpenType" : "Ensis_Door_Open"
         },
         {
             "Name" : "Ensistic Door",
@@ -182,7 +216,8 @@
 				"Receive" : true
 			},
 			"Permissions" : [ "Can_Enter_Magna" ],
-            "Path Cost" : 100
+            "Path Cost" : 100,
+            "OpenType" : "Magna_Door_Open"
         },
 		{
             "Name" : "Strange Door",
@@ -206,7 +241,8 @@
 				"Receive" : true
 			},
 			"Permissions" : [ "Can_Enter_Fab" ],
-            "Path Cost" : 100
+            "Path Cost" : 100,
+            "OpenType" : "Kin_Door_Open"
 		},
 		{
 			"Name" : "Magnetic Door",
@@ -230,7 +266,8 @@
 				"Receive" : true
 			},
             "Permissions" : [ "Nope" ],
-            "Path Cost" : 100
+            "Path Cost" : 100,
+            "OpenType" : "Elec_Door_Open"
 		},
 		{
 			"Name" : "Barred Door",
@@ -252,7 +289,8 @@
             "Opaque" : true,
             "Path Cost" : 100,
             "Display In Editor" : false,
-            "Permissions" : [ "Nope" ]
+            "Permissions" : [ "Nope" ],
+            "OpenType" : "Home_Door_Open"
         },
         {
             "Name" : "Open Door",
@@ -260,6 +298,22 @@
             "Sprite" : "object-door-electric-open.png",
             "Description" : "An open steel door. There is a slot beside it on the wall.",
             "Display In Editor" : false
+        },
+        {
+            "Name" : "Closed Door",
+            "ObjectType" : "Gold_Door_Closed",
+            "Sprite" : "object-door_gold_closed.png",
+            "Description" : "A closed gold door.",
+            "Opaque" : true,
+            "Path Cost" : 100,
+            "Permissions" : [ "Sonar_Complete" ],
+            "OpenType" : "Gold_Door_Open"
+        },
+        {
+            "Name" : "Open Door",
+            "ObjectType" : "Gold_Door_Open",
+            "Sprite" : "object-door_gold_open.png",
+            "Description" : "An open gold door."
         },
 		{
 			"Name" : "Switch",

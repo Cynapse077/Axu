@@ -95,15 +95,14 @@ public static class LuaManager
             return null;
         }
 
-        var parms = parameters;
-
         if (!luaCall.variable.NullOrEmpty())
         {
-            object[] ps = new object[parameters.Length + 1];
+            var parms = parameters;
+            object[] ps = new object[parms.Length + 1];
 
-            for (int i = 0; i < parameters.Length; i++)
+            for (int i = 0; i < parms.Length; i++)
             {
-                ps[i] = parameters[i];
+                ps[i] = parms[i];
             }
 
             ps[ps.Length - 1] = luaCall.variable;

@@ -1,0 +1,213 @@
+{
+    "EquipmentSets" : [
+        {
+            "ID" : "set_villager",
+            "Set" : [
+                {
+                    "Slot" : "Slot_Head",
+                    "Items" : [
+                        { "Item" : "none", "Weight" : 10 },
+                        { "Item" : "leatherhood", "Weight" : 1 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Chest",
+                    "Items" : [
+                        { "Item" : "plainshirt", "Weight" : 10 },
+                        { "Item" : "duster", "Weight" : 1 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Back",
+                    "Items" : [
+                        { "Item" : "none", "Weight" : 10 },
+                        { "Item" : "worncape", "Weight" : 5 },
+                        { "Item" : "woolscarf", "Weight" : 2 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Arm",
+                    "Items" : [
+                        { "Item" : "none", "Weight" : 10 },
+                        { "Item" : "woolglove", "Weight" : 1 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Leg",
+                    "Items" : [ { "Item" : "leatherboot" } ]
+                }
+            ]
+        },
+        {
+            "ID" : "set_farmer",
+            "Set" : [
+                {
+                    "Slot" : "Slot_Head",
+                    "Items" : [
+                        { "Item" : "strawhat" }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Chest",
+                    "Items" : [
+                        { "Item" : "plainshirt", "Weight" : 10 },
+                        { "Item" : "duster", "Weight" : 1 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Back",
+                    "Items" : [
+                        { "Item" : "worncape", "Weight" : 5 },
+                        { "Item" : "woolscarf", "Weight" : 2 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Arm",
+                    "Items" : [
+                        { "Item" : "none", "Weight" : 10 },
+                        { "Item" : "woolglove", "Weight" : 1 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Leg",
+                    "Items" : [ { "Item" : "leatherboot" } ]
+                }
+            ]
+        },
+        {
+            "ID" : "set_merchant",
+            "Set" : [
+                {
+                    "Slot" : "Slot_Head",
+                    "Items" : [
+                        { "Item" : "none", "Weight" : 10 },
+                        { "Item" : "leatherhood", "Weight" : 1 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Chest",
+                    "Items" : [
+                        { "Item" : "plainshirt", "Weight" : 10 },
+                        { "Item" : "duster", "Weight" : 1 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Back",
+                    "Items" : [ { "Item" : "largepack" } ]
+                },
+                {
+                    "Slot" : "Slot_Arm",
+                    "Items" : [
+                        { "Item" : "none", "Weight" : 10 },
+                        { "Item" : "woolglove", "Weight" : 1 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Leg",
+                    "Items" : [ { "Item" : "leatherboot" } ]
+                }
+            ]
+        },
+        {
+            "ID" : "set_bandit0",
+            "Set" : [
+                {
+                    "Slot" : "Slot_Head",
+                    "Items" : [ { "Item" : "skullmask" } ]
+                },
+                {
+                    "Slot" : "Slot_Chest",
+                    "Items" : [
+                        { "Item" : "cloak1" },
+                        { "Item" : "duster" }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Back",
+                    "Items" : [
+                        { "Item" : "worncape", "Weight" : 5 },
+                        { "Item" : "woolscarf", "Weight" : 2 }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Leg",
+                    "Items" : [ { "Item" : "hikingshoe" } ]
+                }
+            ]
+        },
+        {
+            "ID" : "set_bandit1",
+            "Set" : [
+                {
+                    "Slot" : "Slot_Head",
+                    "Items" : [ { "Item" : "skullmask" } ]
+                },
+                {
+                    "Slot" : "Slot_Chest",
+                    "Items" : [
+                        { "Item" : "cloak1" },
+                        { "Item" : "duster" }
+                    ]
+                },
+                {
+                    "Slot" : "Slot_Back",
+                    "Items" : [ { "Item" : "quiver" } ]
+                },
+                {
+                    "Slot" : "Slot_Leg",
+                    "Items" : [ { "Item" : "hikingshoe" } ]
+                }
+            ]
+        },
+        {
+            "ID" : "set_bandit2",
+            "Set" : [
+                {
+                    "Slot" : "Slot_Head",
+                    "Items" : [ { "Item" : "skullmask" } ]
+                },
+                {
+                    "Slot" : "Slot_Chest",
+                    "Items" : [ { "Item" : "cloak1" } ]
+                },
+                {
+                    "Slot" : "Slot_Back",
+                    "Items" : [ { "Item" : "thickcape" } ]
+                },
+                {
+                    "Slot" : "Slot_Arm",
+                    "Items" : [ { "Item" : "gauntlet" } ]
+                },
+                {
+                    "Slot" : "Slot_Leg",
+                    "Items" : [ { "Item" : "hikingshoe" } ]
+                }
+            ]
+        },
+        {
+            "ID" : "set_frostborne",
+            "Set" : [
+                {
+                    "Slot" : "Slot_Head",
+                    "Items" : [ { "Item" : "leatherhood" } ]
+                },
+                {
+                    "Slot" : "Slot_Chest",
+                    "Items" : [ { "Item" : "winterjacket" } ]
+                },
+                {
+                    "Slot" : "Slot_Back",
+                    "Items" : [ { "Item" : "woolscarf" } ]
+                },
+                {
+                    "Slot" : "Slot_Arm",
+                    "Items" : [ { "Item" : "woolglove" } ]
+                },
+                {
+                    "Slot" : "Slot_Leg",
+                    "Items" : [ { "Item" : "snowboot" } ]
+                }
+            ]
+        }
+    ]
+}

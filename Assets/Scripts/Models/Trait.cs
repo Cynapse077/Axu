@@ -4,8 +4,7 @@ using LitJson;
 [System.Serializable]
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class Trait : IAsset
-{
-    public string _name { get; protected set; }
+{    
     public string ID { get; set; }
     public string ModID { get; set; }
     public string description;
@@ -21,23 +20,25 @@ public class Trait : IAsset
     public ReplaceBodyPart replaceBodyPart;
     public LuaCall luaCall;
 
-    public string name
+    string name;
+
+    public string Name
     {
         get
         {
             if (effects.Contains(TraitEffects.Mutation))
-                return "<color=magenta>" + _name + "</color>";
+                return "<color=magenta>" + name + "</color>";
             else if (effects.Contains(TraitEffects.Disease))
-                return "<color=red>" + _name + "</color>";
+                return "<color=red>" + name + "</color>";
 
-            return _name;
+            return name;
         }
-        set { _name = value; }
+        set { name = value; }
     }
 
     public Trait(string _name, string _id)
     {
-        name = _name;
+        Name = _name;
         ID = _id;
 
         stats = new List<Stat_Modifier>();
@@ -48,7 +49,7 @@ public class Trait : IAsset
 
     public Trait(Trait other)
     {
-        name = other._name;
+        Name = other.name;
         ID = other.ID;
         description = other.description;
         nextTier = other.nextTier;
@@ -96,8 +97,7 @@ public class Trait : IAsset
 
                 if (remove)
                 {
-                    int statAmount = stats[i].Amount * -1;
-                    stats[i].Amount = statAmount;
+                    stats[i].Amount = -stats[i].Amount;
                 }
 
                 if (playerStats.proficiencies.Profs.ContainsKey(stats[i].Stat))
@@ -129,7 +129,9 @@ public class Trait : IAsset
         for (int m = 0; m < playerMuts.Count; m++)
         {
             if (playerMuts[m].ID == ID || playerMuts[m] == this)
+            {
                 continue;
+            }
 
             if (playerMuts[m].replaceBodyPart != null && replaceBodyPart.slot == playerMuts[m].replaceBodyPart.slot
                 && playerMuts[m].replaceBodyPart.allOfType)
@@ -166,7 +168,7 @@ public class Trait : IAsset
             for (int i = 0; i < bps.Count; i++)
             {
                 //If it's not organic, skip it.
-                if (!bps[i].organic || bps[i].external)
+                if (!bps[i].Organic)
                 {
                     continue;
                 }
@@ -182,7 +184,14 @@ public class Trait : IAsset
                 //Rename parts
                 if (replaceBodyPart.allOfType)
                 {
-                    bps[i].flags.Toggle(BodyPart.BPTags.CannotWearGear, !replaceBodyPart.canWearGear);
+                    if (replaceBodyPart.canWearGear && bps[i].flags.Contains(BodyPart.BPFlags.CannotWearGear))
+                    {
+                        bps[i].flags.Remove(BodyPart.BPFlags.CannotWearGear);
+                    }
+                    else if (!bps[i].flags.Contains(BodyPart.BPFlags.CannotWearGear))
+                    {
+                        bps[i].flags.Add(BodyPart.BPFlags.CannotWearGear);
+                    }
 
                     if (!replaceBodyPart.canWearGear)
                     {
@@ -200,7 +209,14 @@ public class Trait : IAsset
                 {
                     if (i == 0)
                     {
-                        bps[i].flags.Toggle(BodyPart.BPTags.CannotWearGear, !replaceBodyPart.canWearGear);
+                        if (replaceBodyPart.canWearGear && bps[i].flags.Contains(BodyPart.BPFlags.CannotWearGear))
+                        {
+                            bps[i].flags.Remove(BodyPart.BPFlags.CannotWearGear);
+                        }
+                        else if (!bps[i].flags.Contains(BodyPart.BPFlags.CannotWearGear))
+                        {
+                            bps[i].flags.Add(BodyPart.BPFlags.CannotWearGear);
+                        }
                     }
                 }
             }
@@ -269,12 +285,12 @@ public class Trait : IAsset
 
             if (replaceBodyPart.removeAll)
             {
-                List<BodyPart> unremoval = targetParts.FindAll(x => x.slot == replaceBodyPart.slot);
+                List<BodyPart> unremoveall = targetParts.FindAll(x => x.slot == replaceBodyPart.slot);
 
-                for (int i = 0; i < unremoval.Count; i++)
+                for (int i = 0; i < unremoveall.Count; i++)
                 {
-                    entity.body.bodyParts.Add(unremoval[i]);
-                    unremoval[i].Attach(entity.stats);
+                    entity.body.bodyParts.Add(unremoveall[i]);
+                    unremoveall[i].Attach(entity.stats);
                 }
             }
         }
@@ -284,9 +300,9 @@ public class Trait : IAsset
             BodyPart part = entity.body.bodyParts[i];
 
             //Set the Can Wear Gear flag back to default.
-            if (!replaceBodyPart.canWearGear)
+            if (!replaceBodyPart.canWearGear && entity.body.bodyParts[i].flags.Contains(BodyPart.BPFlags.CannotWearGear))
             {
-                entity.body.bodyParts[i].flags.UnSet(BodyPart.BPTags.CannotWearGear);
+                entity.body.bodyParts[i].flags.Remove(BodyPart.BPFlags.CannotWearGear);
             }
 
             //Reset equipment
@@ -300,7 +316,7 @@ public class Trait : IAsset
 
     public void FromJson(JsonData dat)
     {
-        name = dat["Name"].ToString();
+        Name = dat["Name"].ToString();
         ID = dat["ID"].ToString();
 
         dat.TryGetString("Description", out description);
@@ -329,8 +345,8 @@ public class Trait : IAsset
 
             string slotString = newData["Slot"].ToString();
             ItemProperty slot = slotString.ToEnum<ItemProperty>();
-            string bpName = newData.ContainsKey("BodyPartName") ? newData["BodyPartName"].ToString() : "";
-            string newItem = (newData.ContainsKey("NewEquippedItem")) ? newData["NewEquippedItem"].ToString() : null;
+            string bpName = newData.ContainsKey("BodyPartName") ? newData["BodyPartName"].ToString() : string.Empty;
+            string newItem = newData.ContainsKey("NewEquippedItem") ? newData["NewEquippedItem"].ToString() : null;
             bool cwg = newData.ContainsKey("CanWearGear") ? (bool)newData["CanWearGear"] : true;
             bool aot = newData.ContainsKey("AllOfType") ? (bool)newData["AllOfType"] : false;
 
@@ -388,7 +404,7 @@ public class Trait : IAsset
 
     public bool ContainsEffect(TraitEffects te)
     {
-        return (effects != null && effects.Contains(te));
+        return effects != null && effects.Contains(te);
     }
 
     public IEnumerable<string> LoadErrors()

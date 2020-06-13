@@ -1,0 +1,13 @@
+{
+	"Default Screen Size" : { "x" : 1280, "y" : 720 },
+    "Day Length" : { "Day" : 4000, "Night" : 2000 },
+	"Local Map" : {
+		"Size" : { "x" : 45, "y" : 30 },
+		"Texture" : "/Mods/Core/Art/LocalMap.png"
+	},
+	"World Map" : {
+		"Size" : { "x" : 200, "y" : 200 },
+		"Texture" : "/Mods/Core/Art/Biomes.png",
+		"Location Texture" : "/Mods/Core/Art/Landmarks.png"
+	}
+}

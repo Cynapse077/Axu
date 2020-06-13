@@ -7,7 +7,6 @@ public class EntitySkills : MonoBehaviour
 {
     public List<Ability> abilities;
     public Entity entity;
-    public MindWalker mindWalker;
 
     int grappleLevel
     {
@@ -20,19 +19,18 @@ public class EntitySkills : MonoBehaviour
 
         if (!entity.isPlayer)
         {
-            NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(entity.AI.npcBase.ID);
-
-            if (bp != null)
+            if (GameData.TryGet(entity.AI.npcBase.ID, out NPC_Blueprint bp))
             {
                 KeyValuePair<string, int>[] sks = bp.skills;
 
                 for (int i = 0; i < sks.Length; i++)
                 {
-                    Ability s = new Ability(GameData.Get<Ability>(sks[i].Key))
+                    if (GameData.TryGet(sks[i].Key, out Ability ab))
                     {
-                        level = sks[i].Value
-                    };
-                    AddSkill(s, Ability.AbilityOrigin.Natrual);
+                        var ability = ab.Clone();
+                        ability.level = sks[i].Value;
+                        AddSkill(ability, Ability.AbilityOrigin.Natrual);
+                    }
                 }
             }
         }
@@ -40,15 +38,23 @@ public class EntitySkills : MonoBehaviour
         {
             for (int i = 0; i < Manager.playerBuilder.abilities.Count; i++)
             {
-                AddSkill(new Ability(Manager.playerBuilder.abilities[i]), Manager.playerBuilder.abilities[i].origin);
+                var ab = new Ability(Manager.playerBuilder.abilities[i]);
+                for (int j = 0; j < Manager.playerBuilder.abilities[i].origin.Count; j++)
+                {
+                    ab.SetFlag(Manager.playerBuilder.abilities[i].origin[j]);
+                }
+
+                AddSkill(ab, Ability.AbilityOrigin.Natrual);
             }
-
-
-            mindWalker = new MindWalker(entity);
         }
     }
 
-    void OnDisable()
+    private void OnDisable()
+    {
+        RemoveCallbacks();
+    }
+
+    public void RemoveCallbacks()
     {
         for (int i = 0; i < abilities.Count; i++)
         {
@@ -106,7 +112,7 @@ public class EntitySkills : MonoBehaviour
         {
             s.RemoveFlag(origin);
 
-            if (s.origin == Ability.AbilityOrigin.None)
+            if (s.origin.Count == 0)
             {
                 s.UnregisterCallbacks();
                 abilities.Remove(s);
@@ -118,9 +124,10 @@ public class EntitySkills : MonoBehaviour
 
     public void Grapple_GrabPart(BodyPart targetLimb)
     {
-        if (entity.body.GrippableLimbs().Count > 0)
+        var grippableLimbs = entity.body.GrippableLimbs();
+        if (grippableLimbs.Count > 0)
         {
-            entity.body.GrippableLimbs().GetRandom().GrabPart(targetLimb);
+            grippableLimbs.GetRandom().GrabPart(targetLimb);
 
             if (entity.isPlayer)
             {
@@ -142,7 +149,7 @@ public class EntitySkills : MonoBehaviour
             chance += 3;
         }
 
-        bool success = SeedManager.combatRandom.Next(40) <= chance;
+        bool success = RNG.Next(40) <= chance;
 
         if (!target.entity.isPlayer && target.entity.AI.npcBase.HasFlag(NPC_Flags.No_TakeDown))
         {
@@ -158,8 +165,8 @@ public class EntitySkills : MonoBehaviour
             CombatLog.NewMessage(message);
 
             entity.body.ReleaseAllGrips(true);
-            target.AddStatusEffect("Topple", SeedManager.combatRandom.Next(3, 8));
-            target.IndirectAttack(SeedManager.combatRandom.Next(1, 6), DamageTypes.Blunt, entity, LocalizationManager.GetContent("Takedown_Name"), true, false, false);
+            target.AddStatusEffect("Topple", RNG.Next(3, 8));
+            target.IndirectAttack(RNG.Next(1, 6), DamageTypes.Blunt, entity, "Takedown_Name".Localize(), true, false, false);
         }
         else
         {
@@ -168,9 +175,9 @@ public class EntitySkills : MonoBehaviour
             message = message.Replace("[DEFENDER]", target.entity.MyName);
             CombatLog.NewMessage(message);
 
-            if (SeedManager.combatRandom.Next(100) < 10)
+            if (RNG.Chance(10))
             {
-                entity.stats.AddStatusEffect("OffBalance", SeedManager.combatRandom.Next(1, 4));
+                entity.stats.AddStatusEffect("OffBalance", RNG.Next(1, 4));
             }
         }
 
@@ -215,9 +222,9 @@ public class EntitySkills : MonoBehaviour
             chance += 4;
         }
 
-        if (SeedManager.combatRandom.Next(20 + target.stats.Strength) <= chance)
+        if (RNG.Next(20 + target.stats.Strength) <= chance)
         {
-            string message = LocalizationManager.GetContent("Gr_Shove");
+            string message = "Gr_Shove".Localize();
             message = message.Replace("[ATTACKER]", entity.MyName);
             message = message.Replace("[DEFENDER]", target.MyName);
             CombatLog.NewMessage(message);
@@ -225,9 +232,9 @@ public class EntitySkills : MonoBehaviour
             target.ForceMove(target.posX - entity.posX, target.posY - entity.posY, entity.stats.Strength);
             entity.body.ReleaseAllGrips(true);
 
-            if (SeedManager.localRandom.Next(100) < 1)
+            if (RNG.Chance(1))
             {
-                target.stats.AddStatusEffect("Topple", SeedManager.combatRandom.Next(2, 4));
+                target.stats.AddStatusEffect("Topple", RNG.Next(2, 4));
             }
         }
         else
@@ -237,13 +244,13 @@ public class EntitySkills : MonoBehaviour
             message = message.Replace("[DEFENDER]", target.MyName);
             CombatLog.NewMessage(message);
 
-            if (SeedManager.combatRandom.Next(10) == 0)
+            if (RNG.OneIn(10))
             {
-                target.stats.AddStatusEffect("OffBalance", SeedManager.combatRandom.Next(1, 4));
+                target.stats.AddStatusEffect("OffBalance", RNG.Next(1, 4));
             }
-            else if (SeedManager.combatRandom.Next(100) < 6)
+            else if (RNG.Chance(6))
             {
-                entity.stats.AddStatusEffect("OffBalance", SeedManager.combatRandom.Next(1, 4));
+                entity.stats.AddStatusEffect("OffBalance", RNG.Next(1, 4));
             }
         }
 
@@ -281,17 +288,17 @@ public class EntitySkills : MonoBehaviour
 
         if (success)
         {
-            string message = LocalizationManager.GetContent("Gr_Strangle");
+            string message = "Gr_Strangle".Localize();
             message = message.Replace("[ATTACKER]", entity.MyName);
             message = message.Replace("[DEFENDER]", target.entity.MyName);
             CombatLog.NewMessage(message);
 
             target.AddStatusEffect("Strangle", entity.stats.Strength * 2);
-            target.SimpleDamage(SeedManager.combatRandom.Next(1, 4));
+            target.SimpleDamage(RNG.Next(1, 4));
         }
         else
         {
-            string message = LocalizationManager.GetContent("Gr_Strangle_Fail");
+            string message = "Gr_Strangle_Fail".Localize();
             message = message.Replace("[ATTACKER]", entity.MyName);
             message = message.Replace("[DEFENDER]", target.entity.MyName);
             CombatLog.NewMessage(message);
@@ -323,28 +330,28 @@ public class EntitySkills : MonoBehaviour
 
         if (success)
         {
-            if (targetLimb.severable && targetLimb.isAttached && entity.stats.Strength > otherBody.entity.stats.Strength * 2)
+            if (targetLimb.Severable && entity.stats.Strength > otherBody.entity.stats.Strength * 2)
             {
                 otherBody.RemoveLimb(targetLimb);
                 grip.Release();
                 otherBody.entity.stats.AddStatusEffect("Stun", 3);
 
-                message = LocalizationManager.GetContent("Gr_Pull_Success");
+                message = "Gr_Pull_Success".Localize();
             }
             else
             {
                 targetLimb.WoundMe(new HashSet<DamageTypes>() { DamageTypes.Pull });
                 otherBody.entity.stats.SimpleDamage(SeedManager.combatRandom.Next(1, 5));
-                otherBody.entity.stats.AddStatusEffect("OffBalance", SeedManager.combatRandom.Next(2, 5));
+                otherBody.entity.stats.AddStatusEffect("OffBalance", RNG.Next(2, 5));
             }
         }
         else
         {
-            message = LocalizationManager.GetContent("Gr_Pull_Fail");
+            message = "Gr_Pull_Fail".Localize();
 
-            if (SeedManager.combatRandom.Next(100) < 5)
+            if (RNG.Chance(5))
             {
-                entity.stats.AddStatusEffect("OffBalance", SeedManager.combatRandom.Next(1, 4));
+                entity.stats.AddStatusEffect("OffBalance", RNG.Next(1, 4));
             }
         }
 
@@ -373,7 +380,7 @@ public class EntitySkills : MonoBehaviour
     {
         int pressure = entity.stats.Strength + grappleLevel;
 
-        if (SeedManager.combatRandom.Next(grip.heldPart.armor + 90) < pressure)
+        if (RNG.Next(grip.heldPart.armor + 90) < pressure)
         {
             grip.heldPart.InflictPhysicalWound();
         }
@@ -401,8 +408,7 @@ public class EntitySkills : MonoBehaviour
 
     public void Grapple_Disarm(BodyPart.Grip grip)
     {
-        int chance = entity.stats.Strength + grappleLevel;
-        bool success = SeedManager.combatRandom.Next(100) < chance;
+        bool success = RNG.Chance(entity.stats.Strength + grappleLevel);
 
         if (success)
         {
@@ -454,7 +460,12 @@ public class EntitySkills : MonoBehaviour
     {
         entity.BeamDown();
         entity.UnSetCell();
-        entity.myPos = World.tileMap.InSightCoords().GetRandom(SeedManager.combatRandom);
+
+        var possCoords = World.tileMap.InSightCoords();
+        if (possCoords.Count > 0)
+        {
+            entity.myPos = possCoords.GetRandom();
+        }
 
         World.soundManager.TeleportSound();
         entity.ForcePosition();
@@ -495,31 +506,8 @@ public class EntitySkills : MonoBehaviour
     void UseStaminaIfNotPlayer(int cost)
     {
         if (!entity.isPlayer)
-            entity.stats.UseStamina(cost);
-    }
-
-    bool TargetAvailable(Coord direction)
-    {
-        return (World.tileMap.WalkableTile(entity.posX + direction.x, entity.posY + direction.y) && World.tileMap.GetCellAt(entity.myPos + direction).entity != null);
-    }
-}
-
-public class MindWalker
-{
-    public Entity entity;
-    Stats stats;
-
-    public int Strength
-    {
-        get
         {
-            return stats.Intelligence;
+            entity.stats.UseStamina(cost);
         }
-    }
-
-    public MindWalker(Entity ent)
-    {
-        entity = ent;
-        stats = entity.stats;
     }
 }

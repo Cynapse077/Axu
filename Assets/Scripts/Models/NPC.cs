@@ -23,12 +23,11 @@ public class NPC
     public string questID, dialogueID;
     public int maxHealth, maxStamina;
     public int weaponSkill;
+    public int bonusXP;
 
     public NPC(string _npcID, Coord wPos, Coord lPos, int ele)
     {
-        Attributes = NPC_Blueprint.DefaultAttributes();
         FromBlueprint(GameData.Get<NPC_Blueprint>(_npcID));
-
         worldPosition = wPos;
         localPosition = lPos;
         elevation = ele;
@@ -36,22 +35,10 @@ public class NPC
 
     public NPC(NPC_Blueprint bp, Coord wPos, Coord lPos, int ele)
     {
-        Attributes = NPC_Blueprint.DefaultAttributes();
         FromBlueprint(bp);
-
         worldPosition = wPos;
         localPosition = lPos;
         elevation = ele;
-    }
-
-    public void AssignStats()
-    {
-        if (maxHealth < 0)
-        {
-            maxHealth = 0;
-        }
-
-        isHostile = faction.HostileToPlayer();
     }
 
     public bool CanSpawnThisNPC(Coord pos, int elev)
@@ -91,6 +78,8 @@ public class NPC
 
     void FromBlueprint(NPC_Blueprint blueprint)
     {
+        Attributes = NPC_Blueprint.DefaultAttributes();
+
         if (blueprint == null)
         {
             Log.Error("NPC_Blueprint null.");
@@ -103,7 +92,14 @@ public class NPC
         dialogueID = blueprint.dialogue;
         maxHealth = blueprint.health;
         maxStamina = blueprint.stamina;
-        AssignStats();
+        bonusXP = blueprint.bonusXP;
+
+        if (maxHealth < 0)
+        {
+            maxHealth = 0;
+        }
+
+        isHostile = faction.HostileToPlayer();
 
         Attributes = new Dictionary<string, int>(blueprint.attributes);
         bodyParts = new List<BodyPart>(blueprint.bodyParts);
@@ -113,21 +109,13 @@ public class NPC
 
         string wepID = blueprint.weaponPossibilities.GetRandom(SeedManager.combatRandom);
         Item wep = ItemList.GetItemByID(wepID);
-
-        if (wep == null)
-        {
-            UnityEngine.Debug.LogError("Weapon with ID \"" + wepID + "\" not found. From NPC Blueprint \"" + blueprint.ID + "\".");
-            wep = ItemList.GetItemByID("fists");
-        }
-
-        firearm = string.IsNullOrEmpty(blueprint.firearm) ? ItemList.NoneItem : ItemList.GetItemByID(blueprint.firearm);
-
         handItems = new List<Item> { wep };
-
         if (!wep.lootable)
         {
             handItems.Add(new Item(wep));
         }
+
+        firearm = string.IsNullOrEmpty(blueprint.firearm) ? ItemList.NoneItem : ItemList.GetItemByID(blueprint.firearm);
 
         ShuffleInventory(blueprint);
 
@@ -163,7 +151,7 @@ public class NPC
         {
             for (int i = 0; i < bodyParts.Count; i++)
             {
-                if (bodyParts[i].canWearGear && bodyParts[i].equippedItem.IsNullOrDefault())
+                if (bodyParts[i].CanWearGear && bodyParts[i].equippedItem.IsNullOrDefault())
                 {
                     var it = blueprint.equipmentSet.GetItemForSlot(bodyParts[i].slot);
                     bodyParts[i].equippedItem = it;
@@ -356,5 +344,5 @@ public enum NPC_Flags
     Skills_Leprosy, Summon_Adds, OnDeath_Explode, OnDeath_PoisonGas, Hit_And_Run, Inactive,
 
     Can_Speak, Solid_Limbs, No_Melee, RPois, RBleed, Resist_Webs, OnDisable_Regen, No_Strangle, No_TakeDown,
-    NO_XP, Vampire, Faction_Leader, HasName
+    NO_XP, Vampire, Faction_Leader, HasName, DeepOne
 }

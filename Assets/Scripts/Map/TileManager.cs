@@ -77,11 +77,11 @@ public static class TileManager
         return tiles.FirstOrDefault(x => x.Value.ID == id).Value;
     }
 
-    public static Tile_Data GetByName(string id)
+    public static Tile_Data GetByName(string name)
     {
-        if (tiles.ContainsKey(id))
+        if (tiles.ContainsKey(name))
         {
-            return tiles[id];
+            return tiles[name];
         }
 
         return null;

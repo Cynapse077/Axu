@@ -20,6 +20,7 @@ public class MapObject_Blueprint : IAsset
     public bool saved = true;
     public bool displayInEditor = true;
     public ObjectRenderLayer renderLayer;
+    public string openType;
 
     //For storedObject in Quests
     public Coord localPosition;
@@ -110,6 +111,7 @@ public class MapObject_Blueprint : IAsset
         pulseInfo = other.pulseInfo;
         container = other.container;
         displayInEditor = other.displayInEditor;
+        openType = other.openType;
     }
 
     public void FromJson(JsonData dat)
@@ -138,10 +140,31 @@ public class MapObject_Blueprint : IAsset
         dat.TryGetBool("Saved", out saved, saved);
         dat.TryGetBool("Display In Editor", out displayInEditor, displayInEditor);
         dat.TryGetBool("Random Rotation", out randomRotation, randomRotation);
+        dat.TryGetString("OpenType", out openType, null);
 
         if (dat.ContainsKey("Container"))
         {
-            container = new Container((int)dat["Container"]["Capacity"]);
+            container = new Container();
+
+            if (dat["Container"].ContainsKey("ItemsChance"))
+            {
+                container.chanceToContainItems = (int)dat["Container"]["ItemsChance"];
+            }
+
+            if (dat["Container"].ContainsKey("PossibleItems"))
+            {
+                container.possibleItems = new List<string>();
+
+                for (int i = 0; i < dat["Container"]["PossibleItems"].Count; i++)
+                {
+                    container.possibleItems.Add(dat["Container"]["PossibleItems"][i].ToString());
+                }
+            }
+
+            if (dat["Container"].ContainsKey("MaxItems"))
+            {
+                container.maxItems = (int)dat["Container"]["MaxItems"];
+            }
         }
 
         if (dat.ContainsKey("Tint"))
@@ -221,12 +244,9 @@ public class MapObject_Blueprint : IAsset
 
     public class Container
     {
-        public int capacity;
-
-        public Container(int _capacity)
-        {
-            capacity = _capacity;
-        }
+        public int chanceToContainItems;
+        public List<string> possibleItems;
+        public int maxItems;
     }
 }
 

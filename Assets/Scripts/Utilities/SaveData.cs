@@ -200,24 +200,44 @@ public class SaveData : MonoBehaviour
     void SetUpInventory()
     {
         //items
-        JsonData invJson = playerJson["Inv"];
-        for (int i = 0; i < invJson.Count; i++)
+        if (playerJson.ContainsKey("Inv"))
         {
-            Manager.playerBuilder.items.Add(GetItemFromJsonData(invJson[i]));
+            JsonData invJson = playerJson["Inv"];
+            for (int i = 0; i < invJson.Count; i++)
+            {
+                var item = GetItemFromJsonData(invJson[i]);
+                if (item != null)
+                {
+                    Manager.playerBuilder.items.Add(item);
+                }
+            }
         }
 
         //body parts
-        JsonData bpJson = playerJson["BodyParts"];
-        Manager.playerBuilder.bodyParts = GetBodyPartsFromJson(bpJson);
+        if (playerJson.ContainsKey("BodyParts"))
+        {
+            JsonData bpJson = playerJson["BodyParts"];
+            Manager.playerBuilder.bodyParts = GetBodyPartsFromJson(bpJson);
+        }
 
         //Hand items
-        for (int i = 0; i < playerJson["HIt"].Count; i++)
+        if (playerJson.ContainsKey("HIt"))
         {
-            Manager.playerBuilder.handItems.Add(GetItemFromJsonData(playerJson["HIt"][i]));
+            for (int i = 0; i < playerJson["HIt"].Count; i++)
+            {
+                var item = GetItemFromJsonData(playerJson["HIt"][i]);
+                if (item != null)
+                {
+                    Manager.playerBuilder.handItems.Add(item);
+                }
+            }
         }
 
         //Firearm
-        Manager.playerBuilder.firearm = GetItemFromJsonData(playerJson["F"]);
+        if (playerJson.ContainsKey("F"))
+        {
+            Manager.playerBuilder.firearm = GetItemFromJsonData(playerJson["F"]);
+        }
     }
 
     public static List<BodyPart> GetBodyPartsFromJson(JsonData dat)
@@ -246,7 +266,7 @@ public class SaveData : MonoBehaviour
                 bp.hand = new BodyPart.Hand(bp, ItemList.GetItemByID(baseItem), baseItem);
             }
 
-            if (dat[i].ContainsKey("Stats") && dat[i]["Stats"].Count > 0)
+            if (dat[i].ContainsKey("Stats"))
             {
                 for (int j = 0; j < dat[i]["Stats"].Count; j++)
                 {
@@ -282,7 +302,17 @@ public class SaveData : MonoBehaviour
                 bp.SetXP((double)dat[i]["XP"][0], (double)dat[i]["XP"][1]);
             }
 
-            bp.flags = dat[i].ContainsKey("Flgs") ? (BodyPart.BPTags)(int)dat[i]["Flgs"] : BodyPart.BPTags.None;
+            if (dat[i].ContainsKey("Flgs"))
+            {
+                for (int j = 0; j < dat[i]["Flgs"].Count; j++)
+                {
+                    bp.flags.Add((BodyPart.BPFlags)(int)(dat[i]["Flgs"][j]));
+                }
+            }
+            else
+            {
+                bp.flags = new List<BodyPart.BPFlags>();
+            }
 
             //Wounds
             bp.wounds = new List<Wound>();
@@ -310,7 +340,11 @@ public class SaveData : MonoBehaviour
                 }
             }
 
-            bp.equippedItem = GetItemFromJsonData(dat[i]["item"]);
+            if (dat[i].ContainsKey("item"))
+            {
+                bp.equippedItem = GetItemFromJsonData(dat[i]["item"]);
+            }
+
             parts.Add(bp);
         }
 
@@ -319,9 +353,12 @@ public class SaveData : MonoBehaviour
 
     public void SetUpJournal()
     {
-        for (int i = 0; i < playerJson["Quests"].Count; i++)
+        if (playerJson.ContainsKey("Quests"))
         {
-            Manager.playerBuilder.quests.Add(GetQuest(playerJson["Quests"][i]));
+            for (int i = 0; i < playerJson["Quests"].Count; i++)
+            {
+                Manager.playerBuilder.quests.Add(GetQuest(playerJson["Quests"][i]));
+            }
         }
 
         Manager.playerBuilder.progressFlags = new List<string>();
@@ -362,17 +399,32 @@ public class SaveData : MonoBehaviour
     {
         List<Ability> abilities = new List<Ability>();
 
-        for (int i = 0; i < playerJson["Skills"].Count; i++)
+        if (playerJson.ContainsKey("Skills"))
         {
-            string sID = playerJson["Skills"][i]["Name"].ToString();
-            Ability s = new Ability(GameData.Get<Ability>(sID));
+            for (int i = 0; i < playerJson["Skills"].Count; i++)
+            {
+                string sID = playerJson["Skills"][i]["Name"].ToString();
+                Ability s = new Ability(GameData.Get<Ability>(sID));
 
-            playerJson["Skills"][i].TryGetInt("Lvl", out s.level);
-            s.XP = (double)playerJson["Skills"][i]["XP"];
-            s.origin = playerJson["Skills"][i].ContainsKey("Flg") ? (Ability.AbilityOrigin)(int)playerJson["Skills"][i]["Flg"] : Ability.AbilityOrigin.None;
-            playerJson.TryGetInt("CD", out s.cooldown);
+                playerJson["Skills"][i].TryGetInt("Lvl", out s.level);
+                s.XP = (double)playerJson["Skills"][i]["XP"];
 
-            abilities.Add(s);
+                if (playerJson["Skills"][i].ContainsKey("Flg"))
+                {
+                    for (int j = 0; j < playerJson["Skills"][i]["Flg"].Count; j++)
+                    {
+                        s.origin.Add((Ability.AbilityOrigin)(int)(playerJson["Skills"][i]["Flg"][j]));
+                    }
+                }
+                else
+                {
+                    s.origin = new List<Ability.AbilityOrigin>();
+                }
+
+                playerJson.TryGetInt("CD", out s.cooldown);
+
+                abilities.Add(s);
+            }
         }
 
         Manager.playerBuilder.abilities = abilities;
@@ -380,10 +432,20 @@ public class SaveData : MonoBehaviour
 
     public static Item GetItemFromJsonData(JsonData data)
     {
+        if (!data.ContainsKey("ID") || !data.ContainsKey("MID"))
+        {
+            return null;
+        }
+
         string iID = data["ID"].ToString();
         string mName = data["MID"].ToString();
 
         Item it = ItemList.GetItemByID(iID);
+
+        if (it == null || it.IsNullOrDefault())
+        {
+            return null;
+        }
 
         it.amount = (int)data["Am"];
 
@@ -415,7 +477,14 @@ public class SaveData : MonoBehaviour
 
         if (data.ContainsKey("Com"))
         {
-            it.SetComponentList(GetComponentsFromData(data["Com"]));
+            var comps = GetComponentsFromData(data["Com"]);
+            if (comps == null)
+            {
+                Log.Error("Could not load item " + iID + " - component is null.");
+                return null;
+            }
+
+            it.SetComponentList(comps);
         }
 
         it.statMods = new List<Stat_Modifier>();
@@ -438,7 +507,11 @@ public class SaveData : MonoBehaviour
 
         for (int i = 0; i < data.Count; i++)
         {
-            comps.Add(CComponent.FromJson(data[i]));
+            var comp = CComponent.FromJson(data[i]);
+            if (comp == null)
+            {
+                return null;
+            }
         }
 
         return comps;

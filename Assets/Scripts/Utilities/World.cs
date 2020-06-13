@@ -38,6 +38,11 @@ public static class World
         return (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y);
     }
 
+    public static bool OutOfLocalBounds(Coord c)
+    {
+        return OutOfLocalBounds(c.x, c.y);
+    }
+
     public static bool OutOfWorldBounds(int x, int y)
     {
         return (x < 0 || y < 0 || x >= Manager.worldMapSize.x || y >= Manager.worldMapSize.y);

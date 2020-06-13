@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace MapCreator
 {
@@ -9,6 +10,7 @@ namespace MapCreator
         public int tileID;
         public int objectID = -1;
         public int npcID;
+        public List<string> itemIDs = new List<string>();
         public Coord pos;
         public Image mapObject;
         public Image npc;
@@ -24,13 +26,17 @@ namespace MapCreator
         void Initialize()
         {
             if (mct == null)
+            {
                 mct = GameObject.FindObjectOfType<MapCreatorTool>();
+            }
         }
 
         public void SetTile(Sprite s, int id)
         {
             if (image == null)
+            {
                 image = GetComponent<Image>();
+            }
 
             image.sprite = s;
             tileID = id;
@@ -130,14 +136,18 @@ namespace MapCreator
             float y = (mapObject.sprite.texture.height > mapObject.sprite.texture.width) ? 1f : 0.5f;
             mapObject.rectTransform.localScale = new Vector3(0.5f, y, 1f);
 
-            if (mapObject.sprite.texture.width > 16)
-                mapObject.sprite = Sprite.Create(mapObject.sprite.texture, new Rect(0, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+            if (mapObject.sprite.texture.width > Manager.TileResolution)
+            {
+                mapObject.sprite = Sprite.Create(mapObject.sprite.texture, new Rect(0, 0, Manager.TileResolution, Manager.TileResolution), new Vector2(0.5f, 0.5f), Manager.TileResolution);
+            }
         }
 
         public void SetNPCSprite(int id)
         {
             if (id < 0)
+            {
                 EmptySprite(MapCreatorTool.MC_Selection_Type.Place_NPC);
+            }
             else
             {
                 npc.sprite = mct.npcSprites[id].sprite;
@@ -165,9 +175,14 @@ namespace MapCreator
                 }
 
                 if (Input.GetMouseButton(0))
+                {
                     OnPress();
+                }
+
                 if (Input.GetMouseButton(1))
-                    EmptySprite(mct.selectType);
+                {
+                    EmptySprite(mct.selectType);                
+                }
             }
         }
 
@@ -216,6 +231,8 @@ namespace MapCreator
                     OnPress();
                 else if (eventData.button == PointerEventData.InputButton.Right)
                     EmptySprite(mct.selectType);
+                else if (eventData.button == PointerEventData.InputButton.Middle)
+                    mct.ToggleItemsMenu(true);
             }
         }
     }

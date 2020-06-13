@@ -1,27 +1,4 @@
 
---Adds a mechanical body part to the player's body.
-function AddMechBodyPart(entity, partID)
-	local bp = EntityList.GetBodyPart(partID)
-
-	if (bp ~= nil) then
-		entity.body.AddBodyPart(bp)
-		bp.Attach(entity.stats, true)
-		Log("ASDF")
-	end
-end	
---Removes it.
-function RemoveMechBodyPart(entity, partID)
-	local bpName = EntityList.GetBodyPart(partID).name
-
-	for i = 1, #entity.body.bodyParts do
-		if (entity.body.bodyParts[i].name == bpName) then
-			entity.inventory.PickupItem(entity.body.bodyParts[i].equippedItem);
-			entity.body.RemoveLimb(entity.body.bodyParts[i]);
-			return
-		end
-	end
-end	
-
 --Shocks nearby entities to the target.
 function ShockAdjacent(defender, attacker)
 	if (Random(0, 100) < 60) then

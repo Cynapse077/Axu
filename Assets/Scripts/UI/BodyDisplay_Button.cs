@@ -29,9 +29,9 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
         img = GetComponent<Image>();
         bodyPart = bp;
 
-        img.color = (bp.isAttached) ? Color.white : Color.red;
+        img.color = (bp.Attached) ? Color.white : Color.red;
 
-        if (bp.isAttached && bp.Crippled)
+        if (bp.Attached && bp.Crippled)
         {
             img.color = Color.yellow;
         }
@@ -43,9 +43,9 @@ public class BodyDisplay_Button : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             bpTitle.text = bodyPart.displayName;
 
-            string health = bodyPart.isAttached ? "Char_Healthy" : "Char_Severed";
+            string health = bodyPart.Attached ? "Char_Healthy" : "Char_Severed";
 
-            if (bodyPart.isAttached && bodyPart.Crippled)
+            if (bodyPart.Attached && bodyPart.Crippled)
             {
                 health = "Char_Injured";
             }

@@ -11,27 +11,27 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
     Texture2D newTex;
     Texture2D baseSprite;
     Color[] emptyColors;
-    Color blank;
+    static readonly Color Blank = Color.clear;
+    static readonly Vector2 Pivot = new Vector2(0.5f, 0f);
 
     const int BaseBodySlot = 2;
 
     void Init()
     {
         baseSprite = new Texture2D(18, 18, TextureFormat.ARGB32, true);
-        spritePath = Path.Combine(Application.streamingAssetsPath,"Mods/Core/Art/Player/Bases/char-baseBody.png");
+        spritePath = Path.Combine(Application.streamingAssetsPath, Felony.PlayerFelony().baseBodyTexture);
         byte[] imageBytes = File.ReadAllBytes(spritePath);
         baseSprite.LoadImage(imageBytes);
         baseSprite.filterMode = FilterMode.Point;
 
         //Fill array of transparent colors.
-        blank = Color.clear;
         emptyColors = new Color[baseSprite.width * baseSprite.height];
 
         for (int x = 0; x < baseSprite.width; x++)
         {
             for (int y = 0; y < baseSprite.height; y++)
             {
-                emptyColors[y * baseSprite.width + x] = blank;
+                emptyColors[y * baseSprite.width + x] = Blank;
             }
         }
 
@@ -101,7 +101,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
         }
 
         newTex.Apply();
-        body.sprite = Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), new Vector2(0.5f, 0), 16f);
+        body.sprite = Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), Pivot, 16);
     }
 
     void MergeTextures(ref Texture2D t1, Texture2D t2)
@@ -139,7 +139,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
     {
         if (baseSprite != null)
         {
-            body.sprite = (swim) ? swimmingSprite : Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), new Vector2(0.5f, 0), 16f);
+            body.sprite = swim ? swimmingSprite : Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), Pivot, 16f);
         }
     }
 }

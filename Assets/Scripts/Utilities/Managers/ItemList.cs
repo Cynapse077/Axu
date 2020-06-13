@@ -97,7 +97,7 @@ public static class ItemList
                 }
             }
 
-            if (SeedManager.combatRandom.Next(100) <= threshold)
+            if (RNG.Chance(threshold))
             {
                 string[] sk = new string[] {
                     "juke", "charge", "firestream", "icestream", "radblast", "firewall", "confsquare", "sprint"
@@ -105,7 +105,7 @@ public static class ItemList
 
                 if (!newItem.HasCComponent<CAbility>())
                 {
-                    CAbility cab = new CAbility(sk.GetRandom(), SeedManager.combatRandom.Next(1, 4));
+                    CAbility cab = new CAbility(sk.GetRandom(), RNG.Next(1, 4));
                     newItem.AddComponent(cab);
 
                     threshold /= 2;

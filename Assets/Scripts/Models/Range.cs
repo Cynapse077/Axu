@@ -43,7 +43,7 @@ public struct IntRange
             max = min + 1;
         }
 
-        return SeedManager.combatRandom.Next(min, max);
+        return RNG.Next(min, max);
     }
 
     public void FromString(string value)

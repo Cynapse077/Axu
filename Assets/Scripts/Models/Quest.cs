@@ -274,7 +274,7 @@ public class Quest : EventContainer, IAsset
         }
         else if (dat.ContainsKey("Random From"))
         {
-            int ran = SeedManager.combatRandom.Next(0, dat["Random From"].Count);
+            int ran = RNG.Next(0, dat["Random From"].Count);
             id = dat["Random From"][ran].ToString();
         }
 
@@ -289,10 +289,7 @@ public class Quest : EventContainer, IAsset
 
         bp.zone = dat["Zone"].ToString();
         dat.TryGetInt("Elevation", out bp.elevation, 0);
-
-        Coord position = new Coord(SeedManager.combatRandom.Next(0, Manager.localMapSize.x), SeedManager.combatRandom.Next(0, Manager.localMapSize.y));
-        dat.TryGetCoord("Position", out position, position);
-        bp.localPosition = position;
+        dat.TryGetCoord("Position", out bp.localPosition, Coord.RandomInLocalBounds());
 
         List<string> inventory = new List<string>();
 
@@ -352,9 +349,7 @@ public class Quest : EventContainer, IAsset
         dat.TryGetString("Zone", out bp.zone, bp.zone);
         dat.TryGetInt("Elevation", out bp.elevation, 0);
 
-        Coord position = Coord.RandomInLocalBounds();
-        dat.TryGetCoord("Position", out position, position);
-        bp.localPosition = position;
+        dat.TryGetCoord("Position", out bp.localPosition, Coord.RandomInLocalBounds());
 
         storedNPCBlueprint = bp;
     }
@@ -448,9 +443,9 @@ public class Quest : EventContainer, IAsset
 
     public QuestEvent GetEvent(string key, JsonData data)
     {
-        //TODO: Move this to a FromJson function in each class.
         switch (key)
         {
+            //TODO: Move this to a FromJson function in each class.
             case "Spawn NPC":
                 string npcID = data["NPC"].ToString();
                 int npcElevation = (int)data["Elevation"];
@@ -672,7 +667,7 @@ public class Quest : EventContainer, IAsset
         }
     }
 
-    public void CompleteGoal(Goal goal)
+    public void Notify_GoalCompleted()
     {
         foreach (Goal g in goals)
         {

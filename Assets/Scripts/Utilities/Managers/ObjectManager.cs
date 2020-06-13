@@ -37,6 +37,10 @@ public class ObjectManager : MonoBehaviour
             return;
         }
 
+        player = null;
+        playerEntity = null;
+        playerJournal = null;
+        SpawnedNPCs = 0;
         World.objectManager = this;
         onScreenNPCObjects = new List<Entity>();
         StartCoroutine("Initialize", Manager.playerName);
@@ -391,14 +395,16 @@ public class ObjectManager : MonoBehaviour
 
     void SpawnEffect(int index, string effectName, Entity spawner, Coord position, int dmg, Ability skill, float rotation)
     {
-        if (playerEntity.inSight(position))
+        if (playerEntity.InSight(position))
         {
             Vector2 pos = new Vector2(position.x, position.y - Manager.localMapSize.y);
             GameObject effect = Instantiate(World.poolManager.abilityEffects[index], pos, Quaternion.identity);
             effect.name = effectName;
 
             if (index == 1)
+            {
                 effect.transform.position += new Vector3(0.5f, 0.5f, 0);
+            }
 
             effect.transform.rotation = Quaternion.Euler(0f, 0f, rotation);
         }
@@ -418,7 +424,7 @@ public class ObjectManager : MonoBehaviour
 
     public void SpawnShock(Entity spawner, Coord position, int dmg, float rotation)
     {
-        if (playerEntity.inSight(position))
+        if (playerEntity.InSight(position))
         {
             GameObject effect = Instantiate(World.poolManager.abilityEffects[1], position.toVector2(), Quaternion.identity);
             effect.name = LocalizationManager.GetContent("Shock");
@@ -439,7 +445,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    public void CreatePoolOfLiquid(Coord localPos, Coord worldPos, int elev, string liquidID, int amount)
+    public void CreatePoolOfLiquid(Coord localPos, string liquidID, int amount)
     {
         Cell c = World.tileMap.GetCellAt(localPos);
         Liquid newLiq = ItemList.GetLiquidByID(liquidID, amount);
@@ -449,7 +455,8 @@ public class ObjectManager : MonoBehaviour
             return;
         }
 
-        if (c.GetPool() == null && !World.tileMap.IsWaterTile(localPos.x, localPos.y + Manager.localMapSize.y))
+        var pool = c.GetPool();
+        if (pool == null && !World.tileMap.IsWaterTile(localPos.x, localPos.y + Manager.localMapSize.y))
         {
             MapObject m = NewObjectAtSpecificScreen("Loot", localPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
             Item i = ItemList.GetItemByID("pool");
@@ -458,7 +465,7 @@ public class ObjectManager : MonoBehaviour
         }
         else
         {
-            c.GetPool().GetCComponent<CLiquidContainer>().Fill(newLiq);
+            pool.GetCComponent<CLiquidContainer>().Fill(newLiq);
         }
     }
 
@@ -787,7 +794,7 @@ public class ObjectManager : MonoBehaviour
 
             BaseAI bAI = onScreenNPCObjects[i].AI;
 
-            if (bAI.isHostile && playerEntity.inSight(onScreenNPCObjects[i].myPos))
+            if (bAI.isHostile && playerEntity.InSight(onScreenNPCObjects[i].myPos))
             {
                 if (bAI.isStationary)
                 {

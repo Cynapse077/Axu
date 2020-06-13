@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 
@@ -37,10 +38,8 @@ public class Stats : MonoBehaviour
     int maxHealth, maxStamina;
     int healTimer, restoreTimer;
 
-    System.Random RNG
-    {
-        get { return SeedManager.combatRandom; }
-    }
+    const int MaxAttribute = 50;
+    const int MaxResistance = 90;
 
     public List<Trait> Mutations
     {
@@ -49,7 +48,7 @@ public class Stats : MonoBehaviour
             if (traits.FindAll(x => x.ContainsEffect(TraitEffects.Mutation)).Count <= 0)
                 return new List<Trait>();
 
-            return (traits.FindAll(x => x.ContainsEffect(TraitEffects.Mutation)));
+            return traits.FindAll(x => x.ContainsEffect(TraitEffects.Mutation));
         }
     }
 
@@ -74,7 +73,7 @@ public class Stats : MonoBehaviour
         get
         {
             int str = Mathf.Max(Attributes["Strength"], 1);
-            return Mathf.Min(str, 50);
+            return Mathf.Min(str, MaxAttribute);
         }
     }
     public int Dexterity
@@ -82,7 +81,7 @@ public class Stats : MonoBehaviour
         get
         {
             int dex = Mathf.Max(Attributes["Dexterity"], 1);
-            return Mathf.Min(dex, 50);
+            return Mathf.Min(dex, MaxAttribute);
         }
     }
     public int Intelligence
@@ -90,7 +89,7 @@ public class Stats : MonoBehaviour
         get
         {
             int intel = Mathf.Max(Attributes["Intelligence"], 1);
-            return Mathf.Min(intel, 50);
+            return Mathf.Min(intel, MaxAttribute);
         }
     }
     public int Endurance
@@ -98,7 +97,7 @@ public class Stats : MonoBehaviour
         get
         {
             int end = Mathf.Max(Attributes["Endurance"], 1);
-            return Mathf.Min(end, 50);
+            return Mathf.Min(end, MaxAttribute);
         }
     }
 
@@ -106,8 +105,8 @@ public class Stats : MonoBehaviour
     {
         get
         {
-            int spd = (HasEffect("Haste")) ? Attributes["Speed"] * 2 : Attributes["Speed"];
-            return Mathf.Min(spd, 50);
+            int spd = HasEffect("Haste") ? Attributes["Speed"] * 2 : Attributes["Speed"];
+            return Mathf.Min(spd, MaxAttribute);
         }
     }
     public int Accuracy
@@ -125,15 +124,15 @@ public class Stats : MonoBehaviour
 
     public int HeatResist
     {
-        get { return Mathf.Min(Attributes["Heat Resist"], 90); }
+        get { return Mathf.Min(Attributes["Heat Resist"], MaxResistance); }
     }
     public int ColdResist
     {
-        get { return Mathf.Min(Attributes["Cold Resist"], 90); }
+        get { return Mathf.Min(Attributes["Cold Resist"], MaxResistance); }
     }
     public int EnergyResist
     {
-        get { return Mathf.Min(Attributes["Energy Resist"], 90); }
+        get { return Mathf.Min(Attributes["Energy Resist"], MaxResistance); }
     }
     public int HPRegen
     {
@@ -363,14 +362,36 @@ public class Stats : MonoBehaviour
 
             for (int i = 0; i < pLevel.traits.Count; i++)
             {
-                if (!hasTrait(pLevel.traits[i]))
+                if (pLevel.traits[i] == "Random_Mutation")
+                {
+                    var muts = TraitList.GetAvailableMutations(this);
+
+                    if (muts.Count > 0)
+                    {
+                        Trait newMut = new Trait(muts.GetRandom());
+                        AddTrait(newMut);
+                        CombatLog.NewMessage(string.Format("LevelUp_GainTrait".Localize(), newMut.Name));
+                    }
+                } 
+                else if (pLevel.traits[i] == "Random_Trait")
+                {
+                    var traits = GameData.GetAll<Trait>().FindAll(x => x.ContainsEffect(TraitEffects.Random_Trait) && !hasTrait(x.ID));
+
+                    if (traits.Count > 0)
+                    {
+                        Trait newTrait = new Trait(traits.GetRandom());
+                        AddTrait(newTrait);
+                        CombatLog.NewMessage(string.Format("LevelUp_GainTrait".Localize(), newTrait.Name));
+                    }
+                }
+                else if (!hasTrait(pLevel.traits[i]))
                 {
                     Trait t = GameData.Get<Trait>(pLevel.traits[i]);
 
                     if (t != null)
                     {
                         AddTrait(new Trait(t));                        
-                        CombatLog.NewMessage(string.Format("LevelUp_GainTrait".Localize(), t.name));
+                        CombatLog.NewMessage(string.Format("LevelUp_GainTrait".Localize(), t.Name));
                     }
                 }
             }
@@ -400,7 +421,7 @@ public class Stats : MonoBehaviour
     public int MissChance(Item wep)
     {
         int hitChance = 45;
-        int profLevel = (entity.isPlayer) ? CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
+        int profLevel = entity.isPlayer ? CheckProficiencies(wep).level : entity.AI.npcBase.weaponSkill;
 
         hitChance += (profLevel * 3) + (Accuracy * 5) + (wep.Accuracy * 5);
 
@@ -409,7 +430,7 @@ public class Stats : MonoBehaviour
             hitChance -= 10;
         }
 
-        return (100 - hitChance);
+        return 100 - hitChance;
     }
 
     public void Miss(Entity attacker, Item weapon)
@@ -467,6 +488,12 @@ public class Stats : MonoBehaviour
             return false;
         }
 
+        if (entity.HasNPCFlag(NPC_Flags.DeepOne) && !HasEffect("AnimusTrap"))
+        {
+            CombatLog.NewMessage(entity.Name + " cannot be harmed.");
+            return false;
+        }
+
         if (!CanHit(attacker))
         {
             Miss(attacker, weapon);
@@ -496,7 +523,7 @@ public class Stats : MonoBehaviour
         {
             if (hasTraitEffect(TraitEffects.Zap_On_Hit) && RNG.Next(100) < 5)
             {
-                attacker.stats.IndirectAttack(RNG.Next(1, 6), DamageTypes.Energy, entity, LocalizationManager.GetContent("Shock"), true);
+                attacker.stats.IndirectAttack(RNG.Next(1, 6), DamageTypes.Energy, entity, "Shock".Localize(), true);
             }
 
             HandleSeverence(damTypes, targetPart, sevChance);
@@ -532,6 +559,12 @@ public class Stats : MonoBehaviour
 
     bool CanHit(Entity attacker)
     {
+        //Underwater characters can only be hit by other underwater characters.
+        if (HasEffect("Underwater") && !attacker.stats.HasEffect("Underwater"))
+        {
+            return false;
+        }
+
         //Toppled vs Flying enemy. If grip exists, can still hit.
         if (MyInventory.CanFly() && attacker.stats.HasEffect("Topple"))
         {
@@ -562,39 +595,34 @@ public class Stats : MonoBehaviour
             }
 
             return !willMiss;
-        }
-
-        if (HasEffect("Underwater") && !attacker.stats.HasEffect("Underwater"))
-        {
-            return false;
-        }
+        }        
 
         return true;
     }
 
     void HandleSeverence(HashSet<DamageTypes> damageType, BodyPart targetPart, int sevChance = 0)
     {
-        if (!targetPart.severable)
+        if (!targetPart.Severable)
         {
             return;
         }
 
-        bool sever = false;
+        bool canSever = false;
 
         if (entity.isPlayer)
         {
-            if (targetPart.flags.IsSet(BodyPart.BPTags.Crystal) && damageType.Contains(DamageTypes.Blunt) && RNG.Next(10) == 0 || 
-                damageType.Contains(DamageTypes.Cleave) || damageType.Contains(DamageTypes.Slash) && RNG.Next(10) == 0)
-                sever = true;
+            if (targetPart.flags.Contains(BodyPart.BPFlags.Crystal) && damageType.Contains(DamageTypes.Blunt) && RNG.OneIn(10) || 
+                damageType.Contains(DamageTypes.Cleave) || damageType.Contains(DamageTypes.Slash) && RNG.OneIn(10))
+                canSever = true;
         }
         else
         {
             if (entity.AI.npcBase.HasFlag(NPC_Flags.Solid_Limbs) && damageType.Contains(DamageTypes.Blunt) || 
-                damageType.Contains(DamageTypes.Cleave) || damageType.Contains(DamageTypes.Slash) && RNG.Next(10) == 0)
-                sever = true;
+                damageType.Contains(DamageTypes.Cleave) || damageType.Contains(DamageTypes.Slash) && RNG.OneIn(10))
+                canSever = true;
         }
 
-        if (sever && RNG.Next(100) < (3 + sevChance))
+        if (canSever && RNG.Next(100) < (3 + sevChance))
         {
             if (targetPart.slot == ItemProperty.Slot_Head)
             {
@@ -647,7 +675,9 @@ public class Stats : MonoBehaviour
     public void SimpleDamage(int amount)
     {
         if (invincible || dead || HasEffect("Underwater"))
+        {
             return;
+        }
 
         BodyPart targetPart = Utility.WeightedChoice(MyBody.TargetableBodyParts());
         HashSet<DamageTypes> dTypes = new HashSet<DamageTypes>() { DamageTypes.Blunt };
@@ -672,12 +702,9 @@ public class Stats : MonoBehaviour
 
         if (attacker != null && !entity.isPlayer)
         {
-            if (attacker == ObjectManager.playerEntity)
+            if (attacker == ObjectManager.playerEntity && !entity.AI.isFollower())
             {
-                if (!entity.AI.isFollower())
-                {
-                    entity.AI.BecomeHostile();
-                }
+                entity.AI.BecomeHostile();
             }
 
             entity.AI.SetTarget(attacker);
@@ -823,13 +850,21 @@ public class Stats : MonoBehaviour
             entity.CancelWalk();
 
             if (damageType == DamageTypes.Venom)
+            {
                 CombatLog.SimpleMessage("Damage_Poison");
+            }
             else if (damageType == DamageTypes.Bleed)
+            {
                 CombatLog.SimpleMessage("Damage_Bleed");
+            }
             else if (damageType == DamageTypes.Hunger)
+            {
                 CombatLog.SimpleMessage("Damage_Hunger");
+            }
             else if (damageType == DamageTypes.Heat)
+            {
                 CombatLog.SimpleMessage("Damage_Heat");
+            }
         }
 
         ApplyDamage(amount, false, damageType == DamageTypes.Bleed);
@@ -877,9 +912,13 @@ public class Stats : MonoBehaviour
             amount = Mathf.Clamp(amount, 1, 50);
 
             if (entity.isPlayer || entity.AI.isFollower())
+            {
                 health += amount;
+            }
             else if (World.turnManager.turn % 3 == 0)
+            {
                 health += amount;
+            }
         }
     }
 
@@ -998,13 +1037,13 @@ public class Stats : MonoBehaviour
                 return;
             }
 
-            mutID = availableMuts.GetRandom(RNG).ID;
+            mutID = availableMuts.GetRandom().ID;
         }
 
         Trait mutation = TraitList.GetTraitByID(mutID);
 
         if (mutation == null || !mutation.stackable && hasTrait(mutation.ID) 
-            && string.IsNullOrEmpty(mutation.nextTier) || mutation.stackable && TraitStacks(mutation.ID) >= mutation.maxStacks)
+            && mutation.nextTier.NullOrEmpty() || mutation.stackable && TraitStacks(mutation.ID) >= mutation.maxStacks)
         {
             radiation = 0;
             return;
@@ -1021,11 +1060,11 @@ public class Stats : MonoBehaviour
 
         CheckMutationIntegrity(mutation);
         InitializeNewTrait(mutation);
-        radiation = RNG.Next(0, 5);
+        radiation = RNG.Next(5);
 
         if (entity.isPlayer)
         {
-            CombatLog.NameMessage("Message_Mutate", mutation.name);
+            CombatLog.NameMessage("Message_Mutate", mutation.Name);
         }
     }
 
@@ -1067,7 +1106,7 @@ public class Stats : MonoBehaviour
 
             for (int i = 0; i < t.abilityIDs.Count; i++)
             {
-                if (GameData.Get<Ability>(t.abilityIDs[i]) != null && skills.abilities.Find(x => x.ID == t.abilityIDs[i]) != null)
+                if (GameData.Get<Ability>(t.abilityIDs[i]) != null && skills.abilities.Any(x => x.ID == t.abilityIDs[i]))
                 {
                     skills.RemoveSkill(t.abilityIDs[i], Ability.AbilityOrigin.Trait);
                 }
@@ -1120,10 +1159,10 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
-            MyBody.bodyParts[i].flags.UnSet(BodyPart.BPTags.Leprosy);
-            MyBody.bodyParts[i].flags.UnSet(BodyPart.BPTags.Crystal);
+            MyBody.bodyParts[i].RemoveFlag(BodyPart.BPFlags.Leprosy);
+            MyBody.bodyParts[i].RemoveFlag(BodyPart.BPFlags.Crystal);
 
-            for (int j = 0; j < MyBody.bodyParts[i].wounds.Count; j++)
+            for (int j = MyBody.bodyParts[i].wounds.Count - 1; j >= 0 ; j--)
             {
                 MyBody.bodyParts[i].wounds[j].Cure(MyBody.bodyParts[i]);
             }
@@ -1138,7 +1177,7 @@ public class Stats : MonoBehaviour
             return;
         }
 
-        if (MyBody.bodyParts[limbIndex].isAttached)
+        if (MyBody.bodyParts[limbIndex].Attached)
         {
             MyBody.RemoveLimb(limbIndex);
         }
@@ -1149,7 +1188,7 @@ public class Stats : MonoBehaviour
         }
 
         Item replacementLimb = MyInventory.items[itemIndex];
-        string newLimbName = (replacementLimb.displayName != "") ? replacementLimb.displayName : replacementLimb.Name;
+        string newLimbName = !replacementLimb.displayName.NullOrEmpty() ? replacementLimb.displayName : replacementLimb.Name;
 
         BodyPart newPart = new BodyPart(MyBody.bodyParts[limbIndex].name, MyBody.bodyParts[limbIndex].slot)
         {
@@ -1159,22 +1198,22 @@ public class Stats : MonoBehaviour
 
         if (!replacementLimb.HasCComponent<CRot>())
         {
-            newPart.flags.Set(BodyPart.BPTags.Synthetic);
+            newPart.AddFlag(BodyPart.BPFlags.Synthetic);
         }
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Crystallization))
         {
-            newPart.flags.Set(BodyPart.BPTags.Crystal);
+            newPart.AddFlag(BodyPart.BPFlags.Crystal);
         }
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Leprosy))
         {
-            newPart.flags.Set(BodyPart.BPTags.Leprosy);
+            newPart.AddFlag(BodyPart.BPFlags.Leprosy);
         }
 
         if (replacementLimb.HasProp(ItemProperty.OnAttach_Vampirism))
         {
-            newPart.flags.Set(BodyPart.BPTags.Vampire);
+            newPart.AddFlag(BodyPart.BPFlags.Vampire);
         }
 
         CombatLog.NameItemMessage("Replace_Limb", MyBody.bodyParts[limbIndex].displayName, newLimbName);
@@ -1253,7 +1292,6 @@ public class Stats : MonoBehaviour
             if (kvp.Key == "Regen")
             {
                 Heal(Endurance + 1);
-
             }
             else if (kvp.Key == "Poison")
             {
@@ -1286,7 +1324,7 @@ public class Stats : MonoBehaviour
             else if (kvp.Key == "Sick" && RNG.Next(100) < 5)
             {
                 int amount = RNG.Next(1, 3);
-                World.objectManager.CreatePoolOfLiquid(entity.myPos, World.tileMap.WorldPosition, World.tileMap.currentElevation, "liquid_vomit", amount);
+                World.objectManager.CreatePoolOfLiquid(entity.myPos, "liquid_vomit", amount);
             }
             else if (kvp.Key == "Aflame")
             {
@@ -1346,7 +1384,7 @@ public class Stats : MonoBehaviour
     //Called from Lua
     public List<BodyPart> UnCrystallizedParts()
     {
-        return MyBody.bodyParts.FindAll(x => !x.flags.IsSet(BodyPart.BPTags.Crystal) && !x.flags.IsSet(BodyPart.BPTags.Synthetic));
+        return MyBody.bodyParts.FindAll(x => !x.HasFlag(BodyPart.BPFlags.Crystal) && !x.HasFlag(BodyPart.BPFlags.Synthetic));
     }
 
     public bool IsFlying()
@@ -1463,7 +1501,7 @@ public class Stats : MonoBehaviour
             return;
         }
 
-        if (part != null && entity.isPlayer && part.isAttached && part.equippedItem.armor > 0)
+        if (part != null && entity.isPlayer && part.Attached && part.equippedItem.armor > 0)
         {
             AddProficiencyXP(part.equippedItem, RNG.Next(5, 21));
         }
@@ -1502,29 +1540,28 @@ public class Stats : MonoBehaviour
 
         for (int i = 0; i < t.abilityIDs.Count; i++)
         {
-            Ability s = new Ability(GameData.Get<Ability>(t.abilityIDs[i]));
+            Ability s = GameData.Get<Ability>(t.abilityIDs[i]);
 
             if (s != null)
             {
-                s.SetFlag(Ability.AbilityOrigin.Trait);
-                entity.skills.AddSkill(s, Ability.AbilityOrigin.Trait);
+                entity.skills.AddSkill(new Ability(s), Ability.AbilityOrigin.Trait);
             }
         }
     }
 
     public bool hasTraitEffect(TraitEffects t)
     {
-        return (traits.Find(trait => trait.ContainsEffect(t)) != null);
+        return traits.Find(trait => trait.ContainsEffect(t)) != null;
     }
 
     public bool hasTrait(string id)
     {
-        if (id == "" || id == null)
+        if (id.NullOrEmpty())
         {
             return false;
         }
 
-        return (traits.Find(x => x.ID == id) != null);
+        return traits.Find(x => x.ID == id) != null;
     }
 
     //Called from Lua.
@@ -1538,6 +1575,11 @@ public class Stats : MonoBehaviour
             {
                 newTraits.Add(_traits[i]);
             }
+        }
+
+        if (newTraits.NullOrEmpty())
+        {
+            return "None";
         }
 
         return newTraits.GetRandom();
@@ -1586,7 +1628,7 @@ public class Stats : MonoBehaviour
             return false;
         }
 
-        return (traits.Find(x => x.ContainsEffect(TraitEffects.Fast_Swimming)) != null);
+        return traits.Find(x => x.ContainsEffect(TraitEffects.Fast_Swimming)) != null;
     }
 
     public bool FasterSwimmer()
@@ -1596,7 +1638,7 @@ public class Stats : MonoBehaviour
             return false;
         }
 
-        return (traits.Find(x => x.ContainsEffect(TraitEffects.Faster_Swimming)) != null);
+        return traits.Find(x => x.ContainsEffect(TraitEffects.Faster_Swimming)) != null;
     }
 
     int TurnsToHeal()
@@ -1626,11 +1668,19 @@ public class Stats : MonoBehaviour
     {
         int cost = 0;
 
+        foreach (var t in traits)
+        {
+            if (t.ContainsEffect(TraitEffects.Disease) && !t.ContainsEffect(TraitEffects.No_Cure))
+            {
+                cost += 150 - (Influence / 2);
+            }
+        }
+
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
             for (int j = 0; j < MyBody.bodyParts[i].wounds.Count; j++)
             {
-                cost += 35 - (Attributes["Charisma"] / 2);
+                cost += 35 - (Influence / 2);
             }
         }
 
@@ -1639,7 +1689,7 @@ public class Stats : MonoBehaviour
 
     public int CostToReplaceLimbs()
     {
-        return 550 - (Attributes["Charisma"] * 2);
+        return 550 - (Influence * 2);
     }
 
     void InitializeFromData()

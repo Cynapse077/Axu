@@ -22,7 +22,7 @@ public class Explosive : MonoBehaviour
         nameOfDamage = n;
     }
 
-    public void DetonateExplosion(HashSet<DamageTypes> dTypes, Entity spawner)
+    public void DetonateExplosion(Entity spawner)
     {
         damage = Mathf.Min(Random.Range(10, 25) + World.DangerLevel(), 99);
         destroy = true;

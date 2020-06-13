@@ -60,7 +60,7 @@ public static class Utility
                     {
                         Cell c = World.tileMap.GetCellAt(x, y);
 
-                        if (c != null && c.Walkable_IgnoreEntity && ent.inSight(newPos))
+                        if (c != null && c.Walkable_IgnoreEntity && ent.InSight(newPos))
                         {
                             coords.Add(newPos);
                         }
@@ -503,55 +503,6 @@ public static class Utility
         }
 
         return char.ToUpper(s[0]) + s.Substring(1);
-    }
-}
-
-public static class FlagsHelper
-{
-    public static bool IsSet<T>(this T flags, T flag) where T : struct
-    {
-        int flagsValue = (int)(object)flags;
-        int flagValue = (int)(object)flag;
-
-        return (flagsValue & flagValue) != 0;
-    }
-
-    public static void Set<T>(this T flags, T flag) where T : struct
-    {
-        if (flags.IsSet(flag))
-        {
-            return;
-        }
-
-        int flagsValue = (int)(object)flags;
-        int flagValue = (int)(object)flag;
-
-        flags = (T)(object)(flagsValue | flagValue);
-    }
-
-    public static void Toggle<T>(this T flags, T flag, bool on) where T : struct
-    {
-        if (on)
-        {
-            flags.Set(flag);
-        }
-        else
-        {
-            flags.UnSet(flag);
-        }
-    }
-
-    public static void UnSet<T>(this T flags, T flag) where T : struct
-    {
-        if (!flags.IsSet(flag))
-        {
-            return;
-        }
-
-        int flagsValue = (int)(object)flags;
-        int flagValue = (int)(object)flag;
-
-        flags = (T)(object)(flagsValue & (~flagValue));
     }
 }
 

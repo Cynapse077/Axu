@@ -4,6 +4,7 @@
             "Name" : "Vigilante",
             "ID" : "vigilante",
             "Description" : "Seeing corruption and inability, you took the laws into your own hands. Your cunning and intuition may save you yet.",
+            "BodyTexturePath" : "Mods/Core/Art/Player/Bases/char-baseBody.png",
             "Body Structure" : "Humanoid",
             "Stats" : {
                 "HP Bonus" : -1,
@@ -60,6 +61,7 @@
             "Name" : "Murderer",
             "ID" : "murderer",
             "Description" : "An act of anger is what brought you to this new hell. Strength and ferocity are your allies.",
+            "BodyTexturePath" : "Mods/Core/Art/Player/Bases/char-baseBody.png",
             "Body Structure" : "Humanoid",
             "Stats" : {
                 "HP Bonus" : -2,
@@ -117,6 +119,7 @@
             "Name" : "Heretic",
             "ID" : "heretic",
             "Description" : "Your practices were said to be harmful to the <i>\"greater good\"</i>. You must now rely on your intelligence to survive.",
+            "BodyTexturePath" : "Mods/Core/Art/Player/Bases/char-baseBody.png",
             "Body Structure" : "Humanoid",
             "Stats" : {
                 "HP Bonus" : -4,
@@ -173,6 +176,7 @@
             "Name" : "Technophile",
             "ID" : "cyborg",
             "Description" : "Flesh and steel. Your interest in becoming more than human was considered <i>\"dangerous\"</i>.\n<color=yellow><i>(Starts with a synthetic arm, leg, and chest.)</i></color>",
+            "BodyTexturePath" : "Mods/Core/Art/Player/Bases/char-baseBody_technophile.png",
             "Body Structure" : "Cyborg",
             "Stats" : {
                 "HP Bonus" : 3,
@@ -229,6 +233,7 @@
             "Name" : "Experiment",
             "ID" : "experiment",
             "Description" : "By some sick measure of mercy, a failed experiment such as yourself was exiled rather than killed on the spot.\n<color=yellow><i>(Starts with random mutations.)</i></color>",
+            "BodyTexturePath" : "Mods/Core/Art/Player/Bases/char-baseBody_experiment.png",
             "Body Structure" : "Humanoid",
             "Stats" : {
                 "HP Bonus" : 0,
@@ -255,7 +260,7 @@
                 },
                 {
                     "Level" : 5,
-                    "Traits" : [ "vision" ],
+                    "Traits" : [ "Random_Mutation" ],
                     "Abilities" : [ "confsquare" ]
                 },
                 {
@@ -267,13 +272,14 @@
                 {
                     "Level" : 10,
                     "Abilities" : [ "radblast" ],
-                    "Traits" : [ "swimmer" ],
+                    "Traits" : [ "Random_Mutation" ],
                     "Stats" : [
                         { "Stat" : "Strength", "Amount" : 1 }
                     ]
                 },
                 {
                     "Level" : 15,
+                    "Traits" : [ "Random_Mutation" ],
                     "Stats" : [
                         { "Stat" : "Endurance", "Amount" : 1 }
                     ]
@@ -284,6 +290,7 @@
         	"Name" : "Smuggler",
         	"ID" : "smuggler",
         	"Description" : "You smuggled bionics and heretical literature into Empire-controlled planets. Eventually, you were caught and sent to Axu.\n<color=yellow><i>(Starts with extra money)</i></color>",
+            "BodyTexturePath" : "Mods/Core/Art/Player/Bases/char-baseBody.png",
         	"Body Structure" : "Humanoid",
         	"Stats" : {
         		"HP Bonus" : 0,
@@ -336,6 +343,7 @@
             "Name" : "Fool",
             "ID" : "fool",
             "Description" : "I have a feeling people just grew tired of having you around...",
+            "BodyTexturePath" : "Mods/Core/Art/Player/Bases/char-baseBody_fool.png",
             "Body Structure" : "Humanoid",
             "Stats" : {
                 "HP Bonus" : 0,
@@ -365,6 +373,7 @@
                 },
                 {
                     "Level" : 5,
+                    "Traits" : [ "Random_Trait" ],
                     "Abilities" : [ "sprint" ]
                 },
                 {
@@ -376,12 +385,14 @@
                 {
                     "Level" : 10,
                     "Abilities" : [ "firebreath" ],
+                    "Traits" : [ "Random_Trait" ],
                     "Stats" : [
                         { "Stat" : "Dexterity", "Amount" : 1 }
                     ]
                 },
                 {
                     "Level" : 15,
+                    "Traits" : [ "Random_Trait" ],
                     "Stats" : [
                         { "Stat" : "Endurance", "Amount" : 1 }
                     ]
