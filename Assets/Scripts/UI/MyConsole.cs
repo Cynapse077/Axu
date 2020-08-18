@@ -31,7 +31,7 @@ public static class MyConsole
 
     public static void NewMessage(string message)
     {
-        if (message == "")
+        if (message.NullOrEmpty())
             return;
 
         messages.Add(message);
@@ -84,6 +84,6 @@ public static class MyConsole
 
     public static void NewHelpLine(string title, string desc)
     {
-        NewMessage("-<b>" + title + "</b>\n      " + desc + ".");
+        NewMessage("-<b>" + title + "</b>\n      " + desc);
     }
 }

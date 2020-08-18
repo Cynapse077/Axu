@@ -25,12 +25,10 @@ namespace Pathfinding
 
         public override bool Equals(object obj)
         {
-            if (!(obj is CoordPair))
+            if (!(obj is CoordPair pair))
             {
                 return false;
             }
-
-            CoordPair pair = (CoordPair)obj;
 
             return pair.first == first && pair.second == second;
         }
@@ -53,7 +51,7 @@ namespace Pathfinding
 
     public class Path_AStar
     {
-        Queue<Path_Node> steps;
+        List<Path_Node> steps;
         public readonly PathResult result;
         public readonly Coord start;
         public readonly Coord end;
@@ -111,6 +109,12 @@ namespace Pathfinding
                 return;
             }
 
+            if (startTileData.region != endTileData.region)
+            {
+                steps = null;
+                result = PathResult.Fail;
+            }
+
             if (!Calculate(World.tileMap.tileGraph.nodes, startTileData, endTileData, ignoreCosts, entity))
             {
                 steps = null;
@@ -140,6 +144,12 @@ namespace Pathfinding
             OpenSet.Clear();
 
             Path_TileData start = gr.GetPathDataAt(startCoord.x, startCoord.y), end = gr.GetPathDataAt(endCoord.x, endCoord.y);
+
+            if (start.region != end.region)
+            {
+                steps = null;
+                result = PathResult.Fail;
+            }
 
             if (!Calculate(World.worldMap.tileGraph.nodes, start, end, true, ObjectManager.playerEntity))
             {
@@ -197,12 +207,18 @@ namespace Pathfinding
                         continue;
                     }
 
+                    float costToEnter = neighbor.data.costToEnter;
+                    if (entity.isPlayer && costToEnter >= 100)
+                    {
+                        costToEnter -= 100;
+                    }
+
                     const float costToEnterFactor = 0.8f;
-                    float tentative_g_score = g_score[current] + Distance(current, neighbor) + neighbor.data.costToEnter * costToEnterFactor;
+                    float tentative_g_score = g_score[current] + Distance(current, neighbor) + costToEnter * costToEnterFactor;
 
                     if (ignoreCosts && neighbor.data.costToEnter < 100)
                     {
-                        tentative_g_score -= neighbor.data.costToEnter * costToEnterFactor;
+                        tentative_g_score -= costToEnter * costToEnterFactor;
                     }
                     
                     if (OpenSet.Contains(neighbor) && tentative_g_score > g_score[neighbor])
@@ -226,16 +242,15 @@ namespace Pathfinding
 
         void ReconstructPath(Dictionary<Path_Node, Path_Node> Came_From, Path_Node current)
         {
-            Queue<Path_Node> total_path = new Queue<Path_Node>();
-            total_path.Enqueue(current);
+            steps = new List<Path_Node> { current };
 
             while (Came_From.ContainsKey(current))
             {
                 current = Came_From[current];
-                total_path.Enqueue(current);
+                steps.Add(current);
             }
 
-            steps = new Queue<Path_Node>(total_path.Reverse());
+            steps.Reverse();
         }
 
         float Distance(Path_Node datA, Path_Node datB)
@@ -243,22 +258,35 @@ namespace Pathfinding
             Coord a = datA.data.position;
             Coord b = datB.data.position;
 
-            if (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1)
+            float ox = Mathf.Abs(a.x - b.x);
+            float oy = Mathf.Abs(a.y - b.y);
+            if (ox + oy == 1)
             {
-                return 1.00f;
+                return 0.95f;
             }
 
-            return Mathf.Sqrt(Mathf.Pow(a.x - b.x, 2) + Mathf.Pow(a.y - b.y, 2));
+            return Mathf.Sqrt(Mathf.Pow(ox, 2) + Mathf.Pow(oy, 2));
         }
 
-        public Coord GetNextStep()
+        public Coord Peek()
         {
             if (steps == null || steps.Count <= 0)
             {
                 return null;
             }
 
-            Coord nextPosition = steps.Dequeue().data.position;
+            return steps[0].data.position;
+        }
+
+        public Coord Pop()
+        {
+            if (steps == null || steps.Count <= 0)
+            {
+                return null;
+            }
+
+            Coord nextPosition = steps[0].data.position;
+            steps.RemoveAt(0);
             return nextPosition;
         }
     }

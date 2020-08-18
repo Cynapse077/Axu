@@ -16,7 +16,10 @@ public class DialogueSingle : IAsset
     public void FromJson(JsonData dat)
     {
         if (dat.ContainsKey("ID"))
+        {
             ID = dat["ID"].ToString();
+        }
+
         if (dat.ContainsKey("Dialogues"))
         {
             dialogues = new string[dat["Dialogues"].Count];
@@ -52,10 +55,7 @@ public class DialogueNode : IAsset
     {
         ID = "null";
         display = "ERROR";
-        options = new DialogueResponse[]
-            {
-                new DialogueResponse("End", "End")
-            };
+        options = new DialogueResponse[] { new DialogueResponse("End", "End") };
     }
 
     public DialogueNode(JsonData dat)
@@ -101,11 +101,13 @@ public class DialogueNode : IAsset
             flag = dat["Flag"].ToString();
         }
 
-        onSelect = null;
-
         if (dat.ContainsKey("OnSelect"))
         {
             onSelect = new LuaCall(dat["OnSelect"].ToString());
+        }
+        else
+        {
+            onSelect = null;
         }
     }
 

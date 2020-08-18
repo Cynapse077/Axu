@@ -76,8 +76,7 @@ public class Addiction
         if (!addicted)
         {
             float newChance = (chanceToAddict * (currUse)) / World.difficulty.AddictionDivisible();
-
-            if (SeedManager.combatRandom.Next(100) < newChance)
+            if (RNG.Chance(newChance))
             {
                 FullAddiction(stats);
             }

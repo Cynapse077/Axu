@@ -19,7 +19,9 @@ public class Faction : IAsset
     public void FromJson(JsonData dat)
     {
         if (dat.ContainsKey("ID"))
+        {
             ID = dat["ID"].ToString();
+        }
 
         dat.TryGetString("Name", out name);
         dat.TryGetBool("Hidden", out hidden, false);
@@ -51,6 +53,7 @@ public class Faction : IAsset
         {
             return true;
         }
+
         if (hostileTo.Contains("none"))
         {
             return false;

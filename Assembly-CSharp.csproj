@@ -75,6 +75,7 @@
     <Compile Include="Assets\HotkeyManager.cs" />
     <Compile Include="Assets\ModPrefab.cs" />
     <Compile Include="Assets\ModsPanel.cs" />
+    <Compile Include="Assets\MouseFocusFix.cs" />
     <Compile Include="Assets\Scenes\MapCreator\MapCreatorTool.cs" />
     <Compile Include="Assets\Scenes\MapCreator\MapCreator_Cell.cs" />
     <Compile Include="Assets\Scenes\MapCreator\MapCreator_SideButton.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Assets\Scripts\UI\UseItemOnOtherPanel.cs" />
     <Compile Include="Assets\Scripts\UI\UserInterface.cs" />
     <Compile Include="Assets\Scripts\UI\YesNoPanel.cs" />
+    <Compile Include="Assets\Scripts\Utilities\Constants.cs" />
     <Compile Include="Assets\Scripts\Utilities\EntityList.cs" />
     <Compile Include="Assets\Scripts\Utilities\GameSettings.cs" />
     <Compile Include="Assets\Scripts\Utilities\JsonHelper.cs" />

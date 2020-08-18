@@ -103,7 +103,7 @@ public class PlayerInput : MonoBehaviour
                 break;
             }
 
-            Coord next = worldPath.GetNextStep();
+            Coord next = worldPath.Pop();
 
             if (next == null)
             {

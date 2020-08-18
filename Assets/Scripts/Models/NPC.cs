@@ -168,12 +168,12 @@ public class NPC
 
     void ShuffleInventory(NPC_Blueprint blueprint)
     {
-        inventory = new List<Item>();
-
         if (blueprint == null)
         {
             return;
         }
+
+        inventory = new List<Item>();
 
         if (blueprint.maxItems > 0)
         {
@@ -205,21 +205,21 @@ public class NPC
                 inventory.Add(ItemList.GetItemByRarity(ItemList.TimedDropRarity(blueprint.maxItemRarity)));
             }
 
-            if (RNG.Next(100) < 10)
+            if (RNG.Chance(10))
             {
                 Item ammo = ItemList.GetItemByID("arrow");
                 ammo.amount = RNG.Next(5, 25);
                 inventory.Insert(0, ammo);
             }
 
-            if (RNG.Next(100) < 8)
+            if (RNG.Chance(8))
             {
                 Item ammo = ItemList.GetItemByID("bolt");
                 ammo.amount = RNG.Next(5, 25);
                 inventory.Insert(0, ammo);
             }
 
-            if (RNG.Next(100) < 5)
+            if (RNG.Chance(5))
             {
                 Item ammo = ItemList.GetItemByID("bullet");
                 ammo.amount = RNG.Next(1, 25);
@@ -233,8 +233,7 @@ public class NPC
             {
                 Item i = ItemList.GetItemByID(kvp.Key);
                 int amount = RNG.Next(kvp.Value.x, kvp.Value.y + 1);
-
-                if (amount > 0)
+                if (i != null && amount > 0)
                 {
                     if (i.stackable)
                     {
@@ -257,7 +256,7 @@ public class NPC
         {
             foreach (var kvp in blueprint.itemChances)
             {
-                if (RNG.Next(100) <= kvp.Value)
+                if (RNG.Chance(kvp.Value))
                 {
                     inventory.Add(ItemList.GetItemByID(kvp.Key));
                 }
@@ -266,39 +265,38 @@ public class NPC
 
         if (HasFlag(NPC_Flags.Doctor))
         {
-            bool p(IAsset asset)
+            List<Item> items = GameData.Get<Item>((IAsset asset) => asset is Item i && i.HasProp(ItemProperty.ReplaceLimb) && !i.HasCComponent<CRot>());
+            if (items.Count > 0)
             {
-                if (asset is Item i)
+                for (int i = 0; i < RNG.Next(0, 2); i++)
                 {
-                    return i.HasProp(ItemProperty.ReplaceLimb) && !i.HasCComponent<CRot>();
+                    inventory.Add(new Item(items.GetRandom()));
                 }
-
-                return false;
-            }
-
-            List<Item> items = GameData.Get<Item>(p);
-
-            for (int i = 0; i < RNG.Next(0, 2); i++)
-            {
-                inventory.Add(new Item(items.GetRandom(SeedManager.combatRandom)));
             }
         }
     }
 
     public void MakeFollower()
     {
-        faction = GameData.Get<Faction>("followers");
-        flags.Add(NPC_Flags.Follower);
+        if (GameData.TryGet("followers", out Faction fac))
+        {
+            faction = fac;
+        }
 
+        AddFlag(NPC_Flags.Follower);
         if (flags.Contains(NPC_Flags.Stationary_While_Passive))
         {
             flags.Remove(NPC_Flags.Stationary_While_Passive);
         }
+
     }
 
     public void AddFlag(NPC_Flags fl)
     {
-        flags.Add(fl);
+        if (!flags.Contains(fl))
+        {
+            flags.Add(fl);
+        }
     }
 
     public void ReshuffleInventory()

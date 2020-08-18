@@ -3,6 +3,7 @@ using LitJson;
 using System.IO;
 using Pathfinding;
 using System.Collections.Generic;
+using System;
 
 public class TileMap_Data
 {
@@ -270,7 +271,7 @@ public class TileMap_Data
         {
             Biome nBiome = WorldData.GetTileAt(mapInfo.position.x, mapInfo.position.y + 1).biome;
 
-            if (MapInfo.BiomeHasEdge(nBiome) && mapInfo.biome != nBiome)
+            if (MapInfo.BiomeHasEdge(mapInfo.biome, nBiome) && mapInfo.biome != nBiome)
             {
                 for (int x = 0; x < Width; x++)
                 {
@@ -289,7 +290,7 @@ public class TileMap_Data
         {
             Biome eBiome = WorldData.GetTileAt(mapInfo.position.x + 1, mapInfo.position.y).biome;
 
-            if (MapInfo.BiomeHasEdge(eBiome) && mapInfo.biome != eBiome)
+            if (MapInfo.BiomeHasEdge(mapInfo.biome, eBiome) && mapInfo.biome != eBiome)
             {
                 for (int y = 0; y < Height; y++)
                 {
@@ -308,7 +309,7 @@ public class TileMap_Data
         {
             Biome sBiome = WorldData.GetTileAt(mapInfo.position.x, mapInfo.position.y - 1).biome;
 
-            if (MapInfo.BiomeHasEdge(sBiome) && mapInfo.biome != sBiome)
+            if (MapInfo.BiomeHasEdge(mapInfo.biome, sBiome) && mapInfo.biome != sBiome)
             {
                 for (int x = 0; x < Width; x++)
                 {
@@ -327,7 +328,7 @@ public class TileMap_Data
         {
             Biome wBiome = WorldData.GetTileAt(mapInfo.position.x - 1, mapInfo.position.y).biome;
 
-            if (MapInfo.BiomeHasEdge(wBiome) && mapInfo.biome != wBiome)
+            if (MapInfo.BiomeHasEdge(mapInfo.biome, wBiome) && mapInfo.biome != wBiome)
             {
                 for (int y = 0; y < Height; y++)
                 {
@@ -466,11 +467,11 @@ public class TileMap_Data
                             || TileManager.GetByID(z).biome == tile.biome
                         ), true, TileMap_Generator.TileFromBiome(mapInfo.biome, false).ID);
                 }
-                else if (elevation != 0 && tile.HasTag("Walkable") && !tile.HasTag("Underground"))
+                else if (elevation != 0 && tile.Walkable && !tile.HasTag("Underground"))
                 {
                     BitwiseAutotile(x, y, 21,
                         (
-                            z => !TileManager.GetByID(z).HasTag("Walkable") || !TileManager.GetByID(z).HasTag("Underground")
+                            z => !TileManager.GetByID(z).Walkable || !TileManager.GetByID(z).HasTag("Underground")
                         ), true, TileManager.tiles["UG_Dirt_1"].ID);
                 }
             }
@@ -524,12 +525,67 @@ public class TileMap_Data
     public void SetUpTileData()
     {
         pathTileData = new Path_TileData[Width, Height];
+        int curRegion = 0;
+
+        bool validator(int x, int y)
+        {
+            return WalkableTile(x, y) && map_data[x, y].costToEnter < 100;
+        }
 
         for (int x = 0; x < Width; x++)
         {
             for (int y = 0; y < Height; y++)
             {
-                pathTileData[x, y] = new Path_TileData(WalkableTile(x, y), new Coord(x, y), map_data[x, y].costToEnter);
+                Coord p = new Coord(x, y);
+                pathTileData[x, y] = new Path_TileData(WalkableTile(x, y), p, map_data[x, y].costToEnter);
+            }
+        }
+
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                if (pathTileData[x, y].region < 0 && validator(x, y))
+                {
+                    SetRegion(x, y, validator, ref curRegion);
+                }
+            }
+        }
+    }
+
+    private void SetRegion(int sx, int sy, Func<int, int, bool> validator, ref int region)
+    {
+        bool[,] processed = new bool[map_data.GetLength(0), map_data.GetLength(1)];
+        Queue<Coord> myQueue = new Queue<Coord>();
+
+        Coord stPos = new Coord(sx, sy);
+
+        myQueue.Enqueue(stPos);
+        pathTileData[sx, sy].region = region;
+        processed[stPos.x, stPos.y] = true;
+
+        while (myQueue.Count > 0)
+        {
+            Coord next = myQueue.Dequeue();
+
+            for (int x = next.x - 1; x <= next.x + 1; x++)
+            {
+                for (int y = next.y - 1; y <= next.y + 1; y++)
+                {
+                    if (x < 0 || y < 0 || x >= Manager.localMapSize.x || y >= Manager.localMapSize.y)
+                    {
+                        continue;
+                    }
+
+                    if (pathTileData[x, y].region < 0 && !processed[x, y] && validator(x, y))
+                    {
+                        Coord c = new Coord(x, y);
+
+                        myQueue.Enqueue(c);
+                        pathTileData[x, y].region = region;
+                        processed[x, y] = true;
+                    }
+                }
             }
         }
     }
@@ -543,7 +599,7 @@ public class TileMap_Data
 
         if (pathTileData[x, y] == null)
         {
-            pathTileData[x, y] = new Path_TileData(map_data[x, y].HasTag("Walkable"), new Coord(x, y), map_data[x, y].costToEnter);
+            pathTileData[x, y] = new Path_TileData(map_data[x, y].Walkable, new Coord(x, y), map_data[x, y].costToEnter);
         }
 
         return pathTileData[x, y];
@@ -558,7 +614,7 @@ public class TileMap_Data
 
         if (pathTileData[x, y] == null)
         {
-            pathTileData[x, y] = new Path_TileData(map_data[x, y].HasTag("Walkable"), new Coord(x, y), map_data[x, y].costToEnter);
+            pathTileData[x, y] = new Path_TileData(map_data[x, y].Walkable, new Coord(x, y), map_data[x, y].costToEnter);
         }
 
         pathTileData[x, y].walkable = walk;
@@ -574,7 +630,7 @@ public class TileMap_Data
 
         if (pathTileData[x, y] == null)
         {
-            pathTileData[x, y] = new Path_TileData(map_data[x, y].HasTag("Walkable"), new Coord(x, y), map_data[x, y].costToEnter);
+            pathTileData[x, y] = new Path_TileData(map_data[x, y].Walkable, new Coord(x, y), map_data[x, y].costToEnter);
         }
 
         pathTileData[x, y].costToEnter += cost;
@@ -588,7 +644,7 @@ public class TileMap_Data
         {
             for (int y = 0; y < Height; y++)
             {
-                if (map_data[x, y].HasTag("Walkable") && map_data[x, y] != TileManager.tiles["Lava"])
+                if (map_data[x, y].Walkable && map_data[x, y] != TileManager.tiles["Lava"])
                 {
                     floorTiles.Add(new Coord(x, y));
                 }
@@ -615,7 +671,7 @@ public class TileMap_Data
             return false;
         }
 
-        return map_data[x, y].HasTag("Walkable");
+        return map_data[x, y].Walkable;
     }
 
     bool CreateHouse()
@@ -783,7 +839,7 @@ public class TileMap_Data
 
                 Tile_Data t = map_data[x + ex, y + ey];
 
-                if (t != TileManager.tiles[wallType] && !t.HasTag("Walkable"))
+                if (t != TileManager.tiles[wallType] && !t.Walkable)
                 {
                     map_data[x + ex, y + ey] = TileMap_Generator.TileFromBiome(mapInfo.biome);
                 }

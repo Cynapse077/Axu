@@ -311,7 +311,6 @@ public class MapObjectSprite : MonoBehaviour
     public void SetTypeAndSwapSprite(string t)
     {
         MapObject_Blueprint bp = ItemList.GetMOB(t);
-
         if (bp != null)
         {
             if (objectBase.HasEvent("OnTurn"))
@@ -365,7 +364,6 @@ public class MapObjectSprite : MonoBehaviour
                 }
 
                 float dist = lPos.DistanceTo(new Coord(x, y));
-
                 if ((dist <= rad && Line.inSight(lPos, x, y)) || (lPos.x == x && lPos.y == y))
                 {
                     World.tileMap.tileRenderers[x, y].lit = lit;

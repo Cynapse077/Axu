@@ -19,13 +19,7 @@ public class UseItemOnOtherPanel : MonoBehaviour
     List<Item> relevantItems;
     string actionName;
 
-    public int numItems
-    {
-        get
-        {
-            return (relevantItems == null) ? 0 : relevantItems.Count;
-        }
-    }
+    public int NumItems => relevantItems.NullOrEmpty() ? 0 : relevantItems.Count;
 
     void OnDisable()
     {
@@ -62,9 +56,9 @@ public class UseItemOnOtherPanel : MonoBehaviour
     {
         if (gameObject.activeSelf)
         {
-            title.text = (actionName == "Give Item") ? LocalizationManager.GetContent("Title_Give") : LocalizationManager.GetContent("Title_Use");
+            title.text = (actionName == "Give Item" ? "Title_Give" : "Title_Use").Localize();
             inventoryBase.DespawnChildren();
-            relevantItems = (p != null) ? inventory.items.FindAll(p) : relevantItems;
+            relevantItems = p != null ? inventory.items.FindAll(p) : relevantItems;
 
             for (int i = 0; i < relevantItems.Count; i++)
             {
@@ -107,64 +101,49 @@ public class UseItemOnOtherPanel : MonoBehaviour
 
         for (int i = 0; i < quests.Count; i++)
         {
-            if (quests[i].ActiveGoal.goalType == "FetchPropertyGoal")
+            if (quests[i].ActiveGoal is FetchPropertyGoal fpg && item.HasProp(fpg.itemProperty))
             {
-                FetchPropertyGoal fpg = (FetchPropertyGoal)quests[i].ActiveGoal;
+                inventory.RemoveInstance(relevantItems[index]);
+                relevantItems.Remove(item);
+                UpdateInventory(null);
+                fpg.AddAmount(1);
 
-                if (item.HasProp(fpg.itemProperty))
+                if (fpg.isComplete)
                 {
-                    inventory.RemoveInstance(relevantItems[index]);
-                    relevantItems.Remove(item);
-                    UpdateInventory(null);
-                    fpg.AddAmount(1);
-
-                    if (fpg.isComplete)
-                    {
-                        gameObject.SetActive(false);
-                        return;
-                    }
-
-                    break;
+                    gameObject.SetActive(false);
+                    return;
                 }
+
+                break;
             }
-            else if (quests[i].ActiveGoal.goalType == "FetchGoal")
+            else if (quests[i].ActiveGoal is FetchGoal fg && item.ID == fg.itemID)
             {
-                FetchGoal fg = (FetchGoal)quests[i].ActiveGoal;
+                inventory.RemoveInstance(relevantItems[index]);
+                UpdateInventory(null);
+                fg.AddAmount(1);
 
-                if (item.ID == fg.itemID)
+                if (fg.isComplete)
                 {
-                    inventory.RemoveInstance(relevantItems[index]);
-                    UpdateInventory(null);
-                    fg.AddAmount(1);
-
-                    if (fg.isComplete)
-                    {
-                        gameObject.SetActive(false);
-                        return;
-                    }
-
-                    break;
+                    gameObject.SetActive(false);
+                    return;
                 }
+
+                break;
             }
-            else if (quests[i].ActiveGoal.goalType == "Fetch_Homonculus")
+            else if (quests[i].ActiveGoal is Fetch_Homonculus fh && item.HasProp(fh.itemProperty))
             {
-                Fetch_Homonculus fg = (Fetch_Homonculus)quests[i].ActiveGoal;
+                inventory.RemoveInstance(item);
+                relevantItems.Remove(item);
+                fh.AddItem(item);
+                UpdateInventory(null);
 
-                if (item.HasProp(fg.itemProperty))
+                if (fh.isComplete)
                 {
-                    inventory.RemoveInstance(item);
-                    relevantItems.Remove(item);
-                    fg.AddItem(item);
-                    UpdateInventory(null);
-
-                    if (fg.isComplete)
-                    {
-                        gameObject.SetActive(false);
-                        return;
-                    }
-
-                    break;
+                    gameObject.SetActive(false);
+                    return;
                 }
+
+                break;
             }
         }
 
@@ -198,16 +177,14 @@ public class UseItemOnOtherPanel : MonoBehaviour
             Item target = relevantItems[index];
             Liquid lq = ItemList.GetLiquidByID(container.sLiquid.ID, container.sLiquid.units);
 
-            if (target.HasCComponent<CCoat>())
+            if (target.TryGetCComponent(out CCoat cc))
             {
-                CCoat cc = target.GetCComponent<CCoat>();
                 cc.liquid = new Liquid(lq, 1);
                 cc.strikes = 10;
             }
             else
             {
-                CCoat cc = new CCoat(5, new Liquid(lq, 1));
-                target.AddComponent(cc);
+                target.AddComponent(new CCoat(5, new Liquid(lq, 1)));
             }
 
             lq.Coat(target);
@@ -239,11 +216,11 @@ public class UseItemOnOtherPanel : MonoBehaviour
 
     public void UpdateTooltip()
     {
-        ToolTipPanel.gameObject.SetActive(numItems > 0);
+        ToolTipPanel.gameObject.SetActive(NumItems > 0);
 
-        if (numItems > 0)
+        if (NumItems > 0)
         {
-            bool display = (relevantItems.Count > 0 && UserInterface.selectedItemNum < numItems);
+            bool display = (relevantItems.Count > 0 && UserInterface.selectedItemNum < NumItems);
             ToolTipPanel.UpdateTooltip(relevantItems[UserInterface.selectedItemNum], display);
         }
     }
@@ -255,9 +232,9 @@ public class UseItemOnOtherPanel : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(inventoryBase.GetChild(UserInterface.selectedItemNum).gameObject);
         }
 
-        if (numItems > 0)
+        if (NumItems > 0)
         {
-            scrollBar.value = 1f - (UserInterface.selectedItemNum / (float)numItems);
+            scrollBar.value = 1f - (UserInterface.selectedItemNum / (float)NumItems);
 
             for (int i = 0; i < inventoryBase.childCount; i++)
             {

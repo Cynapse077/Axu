@@ -66,10 +66,14 @@ public class CameraControl : MonoBehaviour
         minX = horExtent - 4;
         maxX = (Manager.localMapSize.x - horExtent + 6);
 
-        if (cam.orthographicSize > Manager.localMapSize.y / 2)
+        if (cam.orthographicSize > Manager.localMapSize.y / 2f)
         {
-            minY = maxY = (-Manager.localMapSize.y / 2);
-            minX = maxX = (Manager.localMapSize.x / 2);
+            minY = maxY = (-Manager.localMapSize.y / 2f);
+        }
+
+        if (cam.orthographicSize < (Manager.localMapSize.x) / 2f)
+        {
+            minX = maxX = (Manager.localMapSize.x / 2f);
         }
     }
     public void ForcePosition()

@@ -27,10 +27,14 @@ public static class TileMap_Generator
         }
 
         if (b == Biome.Plains && SeedManager.localRandom.Next(100) < 5)
+        {
             AdditionalLayer(ref td, b, TileManager.tiles["Shore_Sand"], 30, 6);
+        }
 
         if (b == Biome.Forest && SeedManager.localRandom.Next(100) < 5)
+        {
             AdditionalLayer(ref td, b, TileManager.tiles["Plains_Grass_2"], 25, 6);
+        }
 
         if (b == Biome.Swamp || (b == Biome.Forest || b == Biome.Plains) && SeedManager.localRandom.Next(100) < 4)
         {
@@ -46,15 +50,14 @@ public static class TileMap_Generator
 
     static void AdditionalLayer(ref Tile_Data[,] map, Biome biome, Tile_Data replaceTile, int chance, int iterations)
     {
-        for (int x = 0; x < Manager.localMapSize.x; x++)
+        for (int x = 1; x < Manager.localMapSize.x - 1; x++)
         {
-            for (int y = 0; y < Manager.localMapSize.y; y++)
+            for (int y = 1; y < Manager.localMapSize.y - 1; y++)
             {
-                if (x == 0 || y == 0 || x == Manager.localMapSize.x - 1 || y == Manager.localMapSize.y - 1)
-                    continue;
-
                 if (SeedManager.localRandom.Next(100) < chance)
+                {
                     map[x, y] = replaceTile;
+                }
             }
         }
 
@@ -87,7 +90,9 @@ public static class TileMap_Generator
                 ranNum = RNG.Next(100);
 
                 if (ranNum == 99 && includeTrees)
+                {
                     return TileManager.tiles["Desert_Cactus"];
+                }
 
                 if (ranNum < 3)
                     return TileManager.tiles["Desert_Vines"];
@@ -120,7 +125,9 @@ public static class TileMap_Generator
                 if (ranNum > 1 || !includeTrees)
                 {
                     if (ranNum == 2)
+                    {
                         return TileManager.tiles["Snow_2"];
+                    }
 
                     return (RNG.Next(100) < 96) ? TileManager.tiles["Snow_1"] : TileManager.tiles["Snow_3"];
                 }
@@ -137,7 +144,9 @@ public static class TileMap_Generator
                 else
                 {
                     if (SeedManager.localRandom.Next(200) < 1)
+                    {
                         return TileManager.tiles["Plains_Vine"];
+                    }
 
                     if (r < 5)
                         return TileManager.tiles["Plains_Flower"];
@@ -151,10 +160,14 @@ public static class TileMap_Generator
                 bool isTree = (RNG.Next(100) < 2 && includeTrees);
 
                 if (isTree)
+                {
                     return (SeedManager.localRandom.Next(100) < 90) ? TileManager.tiles["Forest_Tree"] : TileManager.tiles["Forest_Tree_Dead"];
+                }
 
-                if (SeedManager.localRandom.Next(200) < 1)
+                if (SeedManager.localRandom.Next(200) == 0)
+                {
                     return TileManager.tiles["Forest_Vine"];
+                }
 
                 ranNum = RNG.Next(100);
 
@@ -175,9 +188,13 @@ public static class TileMap_Generator
                 if (RNG.Next(100) < 8)
                 {
                     if (RNG.OneIn(1000))
+                    {
                         return TileManager.tiles["Shore_Star"];
+                    }
                     else
+                    {
                         return (RNG.CoinFlip()) ? TileManager.tiles["Shore_Rock_2"] : TileManager.tiles["Shore_Rock"];
+                    }
                 }
                 else
                 {
@@ -217,29 +234,38 @@ public static class TileMap_Generator
             int move = (RNG.CoinFlip()) ? 1 : -1;
 
             if (horizontal)
+            {
                 st.x += move;
+            }
             else
+            {
                 st.y += move;
-
+            }
 
             if (st.x <= 0 || st.y <= 0 || st.x >= Manager.localMapSize.x - 1 || st.y >= Manager.localMapSize.y - 1 || visited.Contains(st))
             {
                 if (st.x <= 0 || st.y <= 0 || st.x >= Manager.localMapSize.x - 1 || st.y >= Manager.localMapSize.y - 1)
                 {
                     if (horizontal)
+                    {
                         st.x -= move;
+                    }
                     else
+                    {
                         st.y -= move;
+                    }
 
-                    if (RNG.Next(1000) < 1)
-                        st = new Coord(start.x, start.y);
+                    if (RNG.Next(1000) < 1 && visited.Count > 0)
+                    {
+                        st = new Coord(visited.GetRandom());
+                    }
                 }
 
                 numFails++;
             }
             else
             {
-                visited.Add(new Coord(st.x, st.y));
+                visited.Add(new Coord(st));
             }
         }
 
@@ -268,7 +294,9 @@ public static class TileMap_Generator
                         int curX = x + ex, curY = y + ey;
 
                         if (OutOfBounds(curX, curY) || input[curX, curY] != replace)
+                        {
                             notWaterNeighbors++;
+                        }
                     }
                 }
 
@@ -294,15 +322,21 @@ public static class TileMap_Generator
                         for (int ey = -1; ey <= 1; ey++)
                         {
                             if (OutOfBounds(x + ex, y + ey) || ex == 0 && ey == 0 || Math.Abs(ex) + Math.Abs(ey) > 1)
+                            {
                                 continue;
+                            }
 
                             if (td[x + ex, y + ey] == water)
+                            {
                                 waterNeighbors++;
+                            }
                         }
                     }
 
                     if (waterNeighbors <= 0)
+                    {
                         td[x, y] = TileFromBiome(b);
+                    }
                 }
             }
         }

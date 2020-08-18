@@ -88,6 +88,7 @@ public class Vault_Blueprint :IAsset
     public int depth, light;
     public Rules rules;
     public TileInfo tileInfo;
+    public int[] excludeSpawnsOn;
 
     public Vault_Blueprint(JsonData dat)
     {
@@ -146,6 +147,16 @@ public class Vault_Blueprint :IAsset
             {
                 wt[i].tileID = dat["Floor Tiles"][i]["ID"].ToString();
                 wt[i].Weight = (int)dat["Floor Tiles"][i]["Weight"];
+            }
+        }
+
+        if (dat.ContainsKey("Exclude Spawns On"))
+        {
+            excludeSpawnsOn = new int[dat["Exclude Spawns On"].Count];
+
+            for (int i = 0; i < dat["Exclude Spawns On"].Count; i++)
+            {
+                excludeSpawnsOn[i] = (int)dat["Exclude Spawns On"][i];
             }
         }
 

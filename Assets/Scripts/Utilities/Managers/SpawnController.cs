@@ -7,17 +7,15 @@ public static class SpawnController
     public static void SpawnStaticNPCs()
     {
         List<NPC_Blueprint> static_npcs = EntityList.npcs.FindAll(x => x.flags.Contains(NPC_Flags.Static));
-
         foreach (NPC_Blueprint bp in static_npcs)
         {
             if (!bp.zone.NullOrEmpty())
             {
-                NPC npc = new NPC(bp, new Coord(0, 0), new Coord(0, 0), 0);
-
+                NPC npc = new NPC(bp, new Coord(), new Coord(), 0);
                 if (bp.zone.Contains("Random_"))
                 {
                     npc.elevation = 0;
-                    npc.localPosition = new Coord(RNG.Next(0, Manager.localMapSize.x), RNG.Next(0, Manager.localMapSize.y));
+                    npc.localPosition = Coord.RandomInLocalBounds();
 
                     string biome = bp.zone.Replace("Random_", "");
                     Biome b = biome.ToEnum<Biome>();
@@ -27,7 +25,7 @@ public static class SpawnController
                 {
                     npc.localPosition = bp.localPosition;
                     npc.elevation = bp.elevation;
-                    npc.worldPosition = (bp.zone == "Unassigned") ? new Coord(-1, -1) : World.tileMap.worldMap.GetLandmark(bp.zone);
+                    npc.worldPosition = (bp.zone == "Unassigned") ? new Coord(-1) : World.tileMap.worldMap.GetLandmark(bp.zone);
                 }
 
                 World.objectManager.CreateNPC(npc);
@@ -39,14 +37,14 @@ public static class SpawnController
     {
         Item item = null;
         Entity entity = ObjectManager.playerEntity;
-        int goldAmount = (entity.inventory.gold > 0) ? Random.Range(entity.inventory.gold / 2, entity.inventory.gold + 1) : 100;
+        int goldAmount = (entity.inventory.gold > 0) ? RNG.Next(entity.inventory.gold / 2, entity.inventory.gold + 1) : 100;
 
         if (entity.inventory.items.Count > 0 && RNG.CoinFlip())
         {
             item = entity.inventory.items.GetRandom();
         }
 
-        if (item != null && SeedManager.combatRandom.CoinFlip())
+        if (item != null && RNG.CoinFlip())
         {
             World.userInterface.YesNoAction("YN_BanditAmbush_Item".Localize(), () =>
             {
@@ -64,7 +62,6 @@ public static class SpawnController
         }
 
         List<NPCGroup_Blueprint> bps = new List<NPCGroup_Blueprint>();
-
         foreach (NPCGroup_Blueprint gb in GameData.GetAll<NPCGroup_Blueprint>())
         {
             if (gb.ID.Contains("Bandits") && gb.level <= World.DangerLevel())
@@ -80,7 +77,6 @@ public static class SpawnController
 
         NPCGroup_Blueprint spawn = bps.GetRandom();
         int amount = RNG.Next(2, 7);
-
         SpawnFromGroupName(spawn.ID, amount);
 
         World.tileMap.CheckNPCTiles();
@@ -101,7 +97,7 @@ public static class SpawnController
 
             if (!mapData.mapInfo.friendly)
             {
-                if (RNG.Next(100) < 60)
+                if (RNG.Chance(60))
                 {
                     numSpawns = 0;
                 }
@@ -115,24 +111,18 @@ public static class SpawnController
                 if (RNG.OneIn(300))
                 {
                     CombatLog.NewMessage("You hear a commition...");
-                    NPCGroup_Blueprint gb = GameData.GetRandom<NPCGroup_Blueprint>((a) => {
-                        if (!(a is NPCGroup_Blueprint asset))
-                            return false;
 
-                        return asset.ID.Contains("Bandit") && asset.CanSpawn(2);
-                    });
-
+                    NPCGroup_Blueprint gb = GameData.GetRandom<NPCGroup_Blueprint>((a) => a is NPCGroup_Blueprint asset && asset.ID.Contains("Bandit") && asset.CanSpawn(2));
                     if (gb != null)
                     {
                         for (int i = 0; i < RNG.Next(2, 6); i++)
                         {
                             NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
-                            int amount = s.AmountToSpawn();
 
+                            int amount = s.AmountToSpawn();
                             for (int j = 0; j < amount; j++)
                             {
                                 Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
-
                                 if (c != null)
                                 {
                                     NPC n = new NPC(s.npcID, mapData.mapInfo.position, c, mapData.elevation);
@@ -147,23 +137,20 @@ public static class SpawnController
             if (numSpawns > 0)
             {
                 List<NPCGroup_Blueprint> gbs = GroupsThatCanSpawnHere(mapData);
-
                 if (gbs.Count <= 0)
                 {
                     return;
                 }
 
                 NPCGroup_Blueprint gb = gbs.GetRandom();
-
                 for (int i = 0; i < numSpawns; i++)
                 {
                     NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
-                    int amount = s.AmountToSpawn();
 
+                    int amount = s.AmountToSpawn();
                     for (int j = 0; j < amount; j++)
                     {
                         Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
-
                         if (c != null)
                         {
                             NPC n = new NPC(s.npcID, mapData.mapInfo.position, c, mapData.elevation);
@@ -227,22 +214,17 @@ public static class SpawnController
         bool canSpawnBanditAmbush = GameData.TryGet("bandits", out Faction bandits) 
             && !ObjectManager.playerEntity.inventory.DisguisedAs(bandits);
 
-        if (CanSpawnIncident() && RNG.Next(100) < 50)
+        if (CanSpawnIncident() && RNG.CoinFlip())
         {
-            bool p(IAsset asset)
-            {
-                return asset is Incident inc && inc.CanSpawn();
-            }
-
-            var incidents = GameData.Get<Incident>(p);
+            var incidents = GameData.Get<Incident>((IAsset asset) => asset is Incident inc && inc.CanSpawn());
             if (incidents.Count == 0 && canSpawnBanditAmbush)
             {
                 SpawnBanditAmbush();
             }
             else
             {
-                DoIncident(Utility.WeightedChoice(incidents));
-            }            
+                DoIncident(incidents.WeightedChoice());
+            }
         }
         else if (canSpawnBanditAmbush)
         {
@@ -268,12 +250,6 @@ public static class SpawnController
     static bool CanSpawnIncident()
     {
         var incidents = GameData.GetAll<Incident>();
-
-        if (incidents.Count == 0)
-        {
-            return false;
-        }
-
         for (int i = 0; i < incidents.Count; i++)
         {
             if (incidents[i].CanSpawn())
@@ -337,26 +313,26 @@ public static class SpawnController
 
     static void SpawnUndergroundEnemies(TileMap_Data map)
     {
-        if (map.visited)
+        if (map.visited && World.turnManager.turn > map.lastTurnSeen + 6000)
         {
             return;
         }
 
+        //Don't do random spawns on these floors.
         Vault v = World.tileMap.GetVaultAt(World.tileMap.WorldPosition);
-
-        //Don't do random spawns on these floors. Will need a way to determine this in the json file
-        if (v.blueprint.ID == "Prison")
+        if (v.blueprint.excludeSpawnsOn != null)
         {
             int ele = Mathf.Abs(map.elevation);
-
-            if (ele >= 5 || ele == 1)
+            for (int i = 0; i < v.blueprint.excludeSpawnsOn.Length; i++)
             {
-                return;
+                if (ele == v.blueprint.excludeSpawnsOn[i])
+                {
+                    return;
+                }
             }
         }
 
         List<NPCGroup_Blueprint> gbs = GroupsThatCanSpawnHere(map);
-
         if (gbs.Count > 0)
         {
             NPCGroup_Blueprint gb = gbs.GetRandom();

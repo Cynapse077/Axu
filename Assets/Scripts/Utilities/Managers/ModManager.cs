@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 using System.Collections.Generic;
 
 public static class ModManager

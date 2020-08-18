@@ -292,24 +292,17 @@ public static class ItemList
         });
     }
 
-    public static void TryAddMod(ref Item i, int chance)
+    public static void TryAddMod(ref Item item, int chance)
     {
-        if (SeedManager.combatRandom.Next(100) <= chance)
+        if (RNG.Chance(chance))
         {
-            Item newItem = new Item(i);
-            List<ItemModifier> ms = GameData.Get<ItemModifier>((IAsset asset) => {
-                if (asset is ItemModifier mod)
-                {
-                    return !mod.unique && mod.CanAddToItem(newItem);
-                }
-
-                return false;
-            });
+            var i = item;
+            List<ItemModifier> ms = GameData.Get<ItemModifier>((IAsset asset) => asset is ItemModifier mod && !mod.unique && mod.CanAddToItem(i));
 
             if (ms.Count > 0)
             {
-                ItemModifier m = new ItemModifier(ms.GetRandom(SeedManager.combatRandom));
-                i.AddModifier(m);
+                ItemModifier m = new ItemModifier(ms.GetRandom());
+                item.AddModifier(m);
             }
         }
     }
@@ -340,7 +333,7 @@ public static class ItemList
 
     public static Liquid GetRandomLiquid(int amount = -1)
     {
-        return new Liquid(Utility.WeightedChoice(GameData.GetAll<Liquid>()), amount < 0 ? 1 : amount);
+        return new Liquid(GameData.GetAll<Liquid>().WeightedChoice(), amount < 0 ? 1 : amount);
     }
 }
 
@@ -392,14 +385,13 @@ public static class ItemUtility
             {
                 string ammoType = dat["Type"].ToString();
                 LuaCall onHit = null;
-                Damage extraDamage = new Damage(0,0,0, DamageTypes.Pierce);
 
                 if (dat.ContainsKey("OnHit"))
                 {
                     onHit = new LuaCall(dat["OnHit"].ToString());
                 }
 
-                dat.TryGetDamage("Damage", out extraDamage, extraDamage);
+                dat.TryGetDamage("Damage", out Damage extraDamage, new Damage(0, 0, 0, DamageTypes.Pierce));
                 CAmmo ammo = new CAmmo(ammoType, onHit, extraDamage);
                 comps.Add(ammo);
             }

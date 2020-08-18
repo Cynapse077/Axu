@@ -14,6 +14,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
     public int armor, amount = 1, accuracy, rarity, tileID = -1;
     public bool lootable, stackable = false;
     public bool abstractParent = false;
+    public int attackRange = 1;
 
     public HashSet<ItemProperty> properties = new HashSet<ItemProperty>();
     public HashSet<DamageTypes> damageTypes = new HashSet<DamageTypes>();
@@ -878,6 +879,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         attackType = other.attackType;
         renderer = other.renderer;
         displayName = other.displayName;
+        attackRange = other.attackRange;
 
         CopyLists(other);
     }
@@ -977,6 +979,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         dat.TryGetInt("Accuracy", out accuracy, accuracy);
         dat.TryGetString("FlavorText", out flavorText);
         dat.TryGetDamage("Damage", out damage, damage);
+        dat.TryGetInt("Attack Range", out attackRange, 1);
 
         if (rarity < 100 && rarity > ItemUtility.MaxRarity)
         {

@@ -43,7 +43,7 @@ public class HotkeyButton : MonoBehaviour, IPointerClickHandler
     {
         if (ability != null)
         {
-            cooldown.fillAmount = (ability.cooldown / (float)ability.maxCooldown);
+            cooldown.fillAmount = ability.cooldown / (float)ability.maxCooldown;
         }
     }
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Threading;
-using System.IO;
+using Axu.Constants;
 using System.Collections.Generic;
 using Pathfinding;
 using LitJson;
@@ -126,7 +126,6 @@ public class WorldMap_Data
         else if (biome <= 0.42f)
         { //Plains
             tiles[x, y] = new MapInfo(c, (rng.Next(0, 101) < 95) ? Biome.Plains : Biome.Forest);
-
         }
         else if (biome <= 0.63f)
         { //Forest
@@ -148,7 +147,9 @@ public class WorldMap_Data
             for (int y = 0; y < height; y++)
             {
                 if (tiles[x, y].biome == Biome.Mountain || tiles[x, y].biome == Biome.Ocean)
+                {
                     continue;
+                }
 
                 float yOrg = rng.Next(-1000, 1000), yCoord = yOrg + y / height * (scale / 1.5f);
                 float perlin = Mathf.PerlinNoise(x * 3, yCoord);
@@ -159,9 +160,13 @@ public class WorldMap_Data
                 if (Mathf.Abs(val) > 0.9f)
                 {
                     if (y > centerY + 15)
+                    {
                         tiles[x, y].biome = Biome.Tundra;
+                    }
                     else if (y < centerY - 15)
+                    {
                         tiles[x, y].biome = Biome.Desert;
+                    }
                 }
             }
         }
@@ -228,7 +233,7 @@ public class WorldMap_Data
         }
     }
 
-    bool GrassTile(int x, int y)
+    bool CommonTile(int x, int y)
     {
         return tiles[x, y].biome == Biome.Plains || tiles[x, y].biome == Biome.Forest ||
             (tiles[x, y].biome == Biome.Tundra && rng.Next(100) < 40) || (tiles[x, y].biome == Biome.Desert && rng.Next(100) < 40);
@@ -241,7 +246,7 @@ public class WorldMap_Data
             for (int y = 0; y < height; y++)
             {
                 //Place down shore tiles along edges.
-                if (GrassTile(x, y) && tiles[x, y].biome != Biome.Tundra && tiles[x, y].biome != Biome.Desert)
+                if (CommonTile(x, y) && tiles[x, y].biome != Biome.Tundra && tiles[x, y].biome != Biome.Desert)
                 {
                     for (int ex = -1; ex <= 1; ex++)
                     {
@@ -251,7 +256,9 @@ public class WorldMap_Data
                                 continue;
 
                             if (tiles[x + ex, y + ey].biome == Biome.Ocean)
+                            {
                                 tiles[x, y].biome = Biome.Shore;
+                            }
                         }
                     }
                 }
@@ -324,7 +331,7 @@ public class WorldMap_Data
 
         for (int i = 0; i < riverTiles.Count; i++)
         {
-            tiles[riverTiles[i].x, riverTiles[i].y].landmark = "River";
+            tiles[riverTiles[i].x, riverTiles[i].y].landmark = C_Landmarks.River;
         }
 
         return true;
@@ -357,7 +364,7 @@ public class WorldMap_Data
                             continue;
                         }
 
-                        if (tiles[rx, ry].landmark == "River" && !riverTiles.Contains(new Coord(rx, ry)))
+                        if (tiles[rx, ry].landmark == C_Landmarks.River && !riverTiles.Contains(new Coord(rx, ry)))
                         {
                             return false;
                         }
@@ -487,7 +494,7 @@ public class WorldMap_Data
             }
         }
 
-        landmarks.Add(new Landmark(pos, (zb.ID == "Village" ? "Village of " + zb.name : zb.name)));
+        landmarks.Add(new Landmark(pos, (zb.ID == C_Landmarks.Village ? "Village of " + zb.name : zb.name)));
         return pos;
     }
 
@@ -559,7 +566,7 @@ public class WorldMap_Data
             Coord v = possibleLocations.GetRandom(rng);
             possibleLocations.Remove(v);
             Village_Data vd = new Village_Data(v, vData.name, vData.mapPosition);
-            tiles[v.x, v.y].landmark = "Village";
+            tiles[v.x, v.y].landmark = C_Landmarks.Village;
             tiles[v.x, v.y].friendly = true;
             villages.Add(vd);
         }
@@ -573,7 +580,7 @@ public class WorldMap_Data
         {
             for (int y = 1; y < height - 1; y++)
             {
-                if (GrassTile(x, y) && !tiles[x, y].HasLandmark())
+                if (CommonTile(x, y) && !tiles[x, y].HasLandmark())
                 {
                     bool canAdd = true;
 
@@ -583,7 +590,7 @@ public class WorldMap_Data
                         {
                             int offX = x + neighbors[i].placement.relativePosition.x, offY = y + neighbors[i].placement.relativePosition.y;
 
-                            if (!GrassTile(offX, offY) || tiles[offX, offY].HasLandmark())
+                            if (!CommonTile(offX, offY) || tiles[offX, offY].HasLandmark())
                             {
                                 canAdd = false;
                             }
@@ -614,7 +621,7 @@ public class WorldMap_Data
         {
             int x = mapGenInfo.biggestIsland[i].x, y = mapGenInfo.biggestIsland[i].y;
 
-            if (GrassTile(x, y) && !tiles[x, y].HasLandmark())
+            if (CommonTile(x, y) && !tiles[x, y].HasLandmark())
             {
                 bool canAdd = true;
 
@@ -630,7 +637,7 @@ public class WorldMap_Data
                             break;
                         }
 
-                        if (!GrassTile(newX, newY) || tiles[newX, newY].HasLandmark())
+                        if (!CommonTile(newX, newY) || tiles[newX, newY].HasLandmark())
                         {
                             canAdd = false;
                             break;
@@ -661,7 +668,7 @@ public class WorldMap_Data
         {
             for (int y = 1; y < height - 1; y++)
             {
-                if (GrassTile(x, y) && !tiles[x, y].HasLandmark() && p(tiles[x, y]))
+                if (CommonTile(x, y) && !tiles[x, y].HasLandmark() && p(tiles[x, y]))
                 {
                     openPositions.Add(new Coord(x, y));
                 }
@@ -906,7 +913,9 @@ public class WorldMap_Data
                 foreach (Zone_Blueprint n in bp.neighbors)
                 {
                     if (n.ID == search)
+                    {
                         return n;
+                    }
                 }
             }
         }
@@ -945,13 +954,13 @@ public class WorldMap_Data
 
         if (mi.HasLandmark())
         {
-            if (mi.landmark == "River")
+            if (mi.landmark == C_Landmarks.River)
             {
                 return mi.biome.ToString();
             }
-            else if (mi.landmark == "Village")
+            else if (mi.landmark == C_Landmarks.Village)
             {
-                string s = LocalizationManager.GetContent("loc_village");
+                string s = "loc_village".Localize();
 
                 if (s.Contains("[NAME]"))
                 {
@@ -1012,8 +1021,14 @@ public struct MapInfo
         return biome != Biome.Mountain;
     }
 
-    public static bool BiomeHasEdge(Biome b)
+    public static bool BiomeHasEdge(Biome a, Biome b)
     {
+        if (a == Biome.Plains && (b == Biome.Forest || b == Biome.Swamp))
+            return true;
+
+        if (a == Biome.Forest && b == Biome.Swamp)
+            return true;
+
         return b == Biome.Mountain || b == Biome.Tundra || b == Biome.Ocean || b == Biome.Desert;
     }
 }

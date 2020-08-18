@@ -8,6 +8,7 @@ namespace Pathfinding
         public bool walkable;
         public Coord position;
         public int costToEnter;
+        public int region = -1;
 
         public Path_TileData(bool _walkable, Coord _position, int _cost)
         {

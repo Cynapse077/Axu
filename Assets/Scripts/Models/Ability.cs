@@ -38,7 +38,7 @@ public class Ability : IAsset
         {
             if (dice == null)
             {
-                return new DiceRoll(0, 0, 0);
+                return new DiceRoll();
             }
 
             DiceRoll roll = dice;
@@ -60,11 +60,12 @@ public class Ability : IAsset
         get
         {
             if (cachedSprite != null)
+            {
                 return cachedSprite;
+            }
 
             Texture2D icon = new Texture2D(0, 0);
             string path = Path.Combine(Application.streamingAssetsPath, iconPath);
-
             if (!File.Exists(path))
             {
                 Debug.LogError(path + " has no sprite.");
@@ -223,13 +224,11 @@ public class Ability : IAsset
 
     public void FromJson(JsonData dat)
     {
-        if (dat.ContainsKey("Name"))
-            Name = dat["Name"].ToString();
         if (dat.ContainsKey("ID"))
             ID = dat["ID"].ToString();
-        if (dat.ContainsKey("Description"))
-            Description = dat["Description"].ToString();
 
+        dat.TryGetString("Name", out Name);
+        dat.TryGetString("Description", out Description);
         dat.TryGetString("Icon", out iconPath);
         dat.TryGetInt("Stamina Cost", out staminaCost, staminaCost);
         dat.TryGetInt("Time Cost", out timeCost, timeCost);
@@ -333,8 +332,8 @@ public class Ability : IAsset
     //Called from LuaManager
     public static void SpawnEffect(Entity caster, int x, int y, Ability skill, float rotation)
     {
-        string effectName = "";
-        int id = 0;
+        string effectName;
+        int id;
         int damage = skill.totalDice.Roll();
 
         if (damage > 0)
@@ -355,7 +354,7 @@ public class Ability : IAsset
             case DamageTypes.Venom:
                 id = 2;
                 effectName = "poison";
-                damage = SeedManager.combatRandom.Next(1, 4);
+                damage = RNG.Next(1, 4);
                 break;
             case DamageTypes.NonLethal:
                 damage = 0;

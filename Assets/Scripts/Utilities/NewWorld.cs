@@ -45,12 +45,12 @@ public class NewWorld
 
                 if (tmData != null)
                 {
-                    AddDataToArray(ref holder, new ScreenToJson(tmData, 0, tmData.mapName ?? string.Empty));
+                    AddDataToArray(ref holder, new ScreenToJson(tmData, tmData.mapName ?? string.Empty));
                 }
                 else if (tileMap.worldData != null && tileMap.worldData.dataExists(x, y))
                 {
                     tmData = new TileMap_Data(x, y, 0, true) { lastTurnSeen = tileMap.worldData.LastTurnSeen(x, y) };
-                    AddDataToArray(ref holder, new ScreenToJson(tmData, 0, tmData.mapName ?? string.Empty));
+                    AddDataToArray(ref holder, new ScreenToJson(tmData, tmData.mapName ?? string.Empty));
                 }
             }
         }
@@ -64,7 +64,7 @@ public class NewWorld
 
                 if (tmd != null)
                 {
-                    AddDataToArray(ref holder, new ScreenToJson(tmd, tmd.elevation, tmd.mapName ?? string.Empty));
+                    AddDataToArray(ref holder, new ScreenToJson(tmd, tmd.mapName ?? string.Empty));
                 }
             }
         }
@@ -463,7 +463,7 @@ public struct ScreenToJson
     public List<TileMap_Data.TileChange> Ch; //Changes
     public string N;
 
-    public ScreenToJson(TileMap_Data dt, int elevation, string name)
+    public ScreenToJson(TileMap_Data dt, string name)
     {
         P = new int[3] { dt.mapInfo.position.x, dt.mapInfo.position.y, dt.elevation };
         LTS = dt.lastTurnSeen;

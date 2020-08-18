@@ -279,7 +279,7 @@
 			}
 		},
         {
-            "Name" : "Closed Door",
+            "Name" : "Base Door",
             "ObjectType" : "Home_Door_Closed",
             "Sprite" : "object-door-electric-closed.png",
             "Description" : "A closed steel door. There is a slot beside it on the wall.",
@@ -288,12 +288,11 @@
             ],
             "Opaque" : true,
             "Path Cost" : 100,
-            "Display In Editor" : false,
             "Permissions" : [ "Nope" ],
             "OpenType" : "Home_Door_Open"
         },
         {
-            "Name" : "Open Door",
+            "Name" : "Base Door",
             "ObjectType" : "Home_Door_Open",
             "Sprite" : "object-door-electric-open.png",
             "Description" : "An open steel door. There is a slot beside it on the wall.",

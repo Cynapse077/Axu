@@ -53,7 +53,7 @@ public class EquipmentSet : IAsset
         {
             if (choices[i].slot == slot)
             {
-                return GameData.Get<Item>(Utility.WeightedChoice(choices[i].items).itemID);
+                return GameData.Get<Item>(choices[i].items.WeightedChoice().itemID);
             }
         }
 
@@ -62,6 +62,17 @@ public class EquipmentSet : IAsset
 
     public IEnumerable<string> LoadErrors()
     {
+        for (int i = 0; i < choices.Count; i++)
+        {
+            for (int j = 0; j < choices[i].items.Count; j++)
+            {
+                if (!GameData.TryGet<Item>(choices[i].items[j].itemID, out _))
+                {
+                    yield return "Item '" + choices[i].items[j].itemID + "' does not exist.";
+                }
+            }
+        }
+
         yield break;
     }
 }

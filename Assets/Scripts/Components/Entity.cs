@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using Axu.Constants;
 
 [MoonSharpUserData]
 public class Entity : MonoBehaviour
@@ -31,7 +32,7 @@ public class Entity : MonoBehaviour
     {
         get
         {
-            return (World.tileMap != null && World.tileMap.IsWaterTile(posX, posY) && !inventory.CanFly());
+            return World.tileMap != null && World.tileMap.IsWaterTile(posX, posY) && !inventory.CanFly();
         }
     }
 
@@ -39,7 +40,7 @@ public class Entity : MonoBehaviour
     {
         get
         {
-            return stats != null && stats.HasEffect("Underwater");
+            return stats != null && stats.HasEffect(C_StatusEffects.Underwater);
         }
     }
 
@@ -62,7 +63,7 @@ public class Entity : MonoBehaviour
 
     public bool Walking
     {
-        get { return (isPlayer && walkDirection != null); }
+        get { return isPlayer && walkDirection != null; }
     }
 
     public int posX
@@ -70,8 +71,7 @@ public class Entity : MonoBehaviour
         get { return _posX; }
         set
         {
-            value = Mathf.Clamp(value, 0, Manager.localMapSize.x - 1);
-            _posX = value;
+            _posX = Mathf.Clamp(value, 0, Manager.localMapSize.x - 1);
             targetPosition = new Vector3(_posX, _posY - Manager.localMapSize.y, _posY * 0.01f);
 
             if (isPlayer)
@@ -86,8 +86,7 @@ public class Entity : MonoBehaviour
         get { return _posY; }
         set
         {
-            value = Mathf.Clamp(value, 0, Manager.localMapSize.y - 1);
-            _posY = value;
+            _posY = Mathf.Clamp(value, 0, Manager.localMapSize.y - 1);
             targetPosition = new Vector3(_posX, _posY - Manager.localMapSize.y, _posY * 0.01f);
             GetComponentInChildren<SpriteRenderer>().sortingOrder = -_posY;
 
@@ -102,7 +101,7 @@ public class Entity : MonoBehaviour
     {
         get
         {
-            if (stats != null && stats.HasEffect("Blind"))
+            if (stats != null && stats.HasEffect(C_StatusEffects.Blind))
             {
                 return 0;
             }
@@ -295,16 +294,15 @@ public class Entity : MonoBehaviour
         }
 
         if (canAct)
-        {            
+        {
             if (playerInput.localPath != null) //Pathing
             {
                 if (playerInput.localPath.Traversable)
                 {
-                    Coord c = playerInput.localPath.GetNextStep();
-
+                    Coord c = playerInput.localPath.Pop();
                     if (c.x == posX && c.y == posY && playerInput.localPath.StepCount > 0)
                     {
-                        c = playerInput.localPath.GetNextStep();
+                        c = playerInput.localPath.Pop();
                     }
 
                     if (c != null)
@@ -326,13 +324,17 @@ public class Entity : MonoBehaviour
                 if (!World.objectManager.SafeToRest())
                 {
                     resting = false;
+                    return;
                 }
 
                 if (stats.health < stats.MaxHealth || stats.stamina < stats.MaxStamina || FollowersNeedHealing())
+                {
                     Wait();
+                }
                 else
+                {
                     resting = false;
-                
+                }
             }
             else if (walkDirection != null) //Walking
             {
@@ -385,7 +387,7 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        if (stats.HasEffect("Confuse") && SeedManager.combatRandom.CoinFlip() || stats.HasEffect("Drunk") && RNG.OneIn(5))
+        if ((stats.HasEffect(C_StatusEffects.Confused) && RNG.CoinFlip()) || (stats.HasEffect(C_StatusEffects.Drunk) && RNG.OneIn(5)))
         {
             x = RNG.Next(-1, 2);
             y = RNG.Next(-1, 2);
@@ -422,10 +424,12 @@ public class Entity : MonoBehaviour
                             if (Walking)
                             {
                                 CancelWalk();
-                                return true;
+                            }
+                            else
+                            {
+                                OpenDoor(m);
                             }
 
-                            OpenDoor(m);
                             return true;
                         }
                         else if (m.objectBase.Solid)
@@ -441,19 +445,18 @@ public class Entity : MonoBehaviour
                 //try other tiles if you have a spear
                 const int range = 2;
                 int rangeX = x * range;
-                int newY = y * range;
+                int rangeY = y * range;
 
-                if (!World.tileMap.WalkableTile(posX + rangeX, posY + newY))
+                if (!World.tileMap.WalkableTile(posX + rangeX, posY + rangeY))
                 {
                     Move(x, y);
                     return true;
                 }
 
-                Cell tCell = World.tileMap.GetCellAt(posX + rangeX, posY + newY);
-
+                Cell tCell = World.tileMap.GetCellAt(posX + rangeX, posY + rangeY);
                 if (tCell != null && tCell.entity != null)
                 {
-                    return EntityBasedDecision(tCell, rangeX, newY, true);
+                    return EntityBasedDecision(tCell, rangeX, rangeY, true);
                 }
             }
 
@@ -486,16 +489,15 @@ public class Entity : MonoBehaviour
     bool EntityBasedDecision(Cell targetCell, int x, int y, bool stopSwap = false)
     {
         Entity otherEntity = targetCell.entity;
-
         if (otherEntity == null)
         {
             return false;
         }
 
+        int maxAbsDir = Mathf.Max(Mathf.Abs(x), Mathf.Abs(y));
         if (isPlayer)
         {
             BaseAI bai = otherEntity.AI;
-
             if (bai != null && bai.isHostile)
             {
                 Swipe(x, y);
@@ -506,9 +508,9 @@ public class Entity : MonoBehaviour
                 SwapPosition(new Coord(x, y), otherEntity);
                 return true;
             }
-            else if (Mathf.Abs(x) == 2 || Mathf.Abs(y) == 2)
+            else if (maxAbsDir > 1)
             {
-                Move(x / 2, y / 2);
+                Move(x / maxAbsDir, y / maxAbsDir);
                 return true;
             }
 
@@ -528,7 +530,7 @@ public class Entity : MonoBehaviour
             }
         }
 
-        if (inventory.HasSpearEquipped() && (Mathf.Abs(x) == 2 || Mathf.Abs(y) == 2))
+        if (inventory.HasSpearEquipped() && maxAbsDir > 1)
         {
             if (isPlayer)
             {
@@ -540,8 +542,7 @@ public class Entity : MonoBehaviour
             }
             else if (otherEntity.isPlayer && AI.isHostile || AI.ShouldAttack(otherEntity.AI))
             {
-                Cell c = World.tileMap.GetCellAt(posX + (x / 2), posY + (y / 2));
-
+                Cell c = World.tileMap.GetCellAt(posX + (x / maxAbsDir), posY + (y / maxAbsDir));
                 if (c.entity == null || c.entity.isPlayer && AI.isHostile || AI.ShouldAttack(c.entity.AI))
                 {
                     Swipe(x, y);
@@ -550,7 +551,7 @@ public class Entity : MonoBehaviour
             }
             else
             {
-                Move(x / 2, y / 2);
+                Move(x / maxAbsDir, y / maxAbsDir);
             }
         }
 
@@ -570,7 +571,7 @@ public class Entity : MonoBehaviour
             return;
         }
 
-        if (!isPlayer && AI.isStationary || stats.SkipTurn() || !body.FreeToMove() || stats.HasEffect("Stuck"))
+        if (!isPlayer && AI.isStationary || stats.SkipTurn() || !body.FreeToMove() || stats.HasEffect(C_StatusEffects.Stuck))
         {
             EndTurn(0.01f);
             return;
@@ -631,20 +632,18 @@ public class Entity : MonoBehaviour
                 s.GetComponent<WeaponHitEffect>().FaceChildOtherDirection(playerDir, x, y, body.MainHand.EquippedItem);
             }
 
-            if (!AttackTile(posX + x, posY + y))
+            int range = inventory.HighestAttackRange();
+            for (int i = 0; i < range; i++)
             {
-                if (inventory.HasSpearEquipped())
-                {
-                    x += x;
-                    y += y;
+                if (AttackTile(posX + x, posY + y))
+                    break;
 
-                    if (!AttackTile(posX + x, posY + y))
-                    {
-                        EndTurn(0.01f, fighter.AttackAPCost());
-                    }
-                }
+                x += offsetX;
+                y += offsetY;
             }
         }
+
+        EndTurn(0.1f, fighter.AttackAPCost());
     }
 
     void Dig(int x, int y)
@@ -685,8 +684,8 @@ public class Entity : MonoBehaviour
                 if (IsOtherEntityInTheWay(x, y))
                 {
                     Entity e = World.tileMap.GetCellAt(posX + x, posY + y).entity;
-                    e.stats.AddStatusEffect("Stun", RNG.Next(1, 3));
-                    e.stats.IndirectAttack(RNG.Next(1, amount + 2), DamageTypes.Blunt, null, LocalizationManager.GetContent("Impact"), true);
+                    e.stats.AddStatusEffect(C_StatusEffects.Stunned, RNG.Next(1, 3));
+                    e.stats.IndirectAttack(RNG.Next(1, amount + 2), DamageTypes.Blunt, null, "Impact".Localize(), true);
                     stopMove = true;
                     break;
                 }
@@ -708,9 +707,9 @@ public class Entity : MonoBehaviour
                         World.tileMap.LightCheck();
                     }
 
-                    if (i > 0 && stats.HasEffect("OffBalance") && SeedManager.combatRandom.CoinFlip())
+                    if (i > 0 && stats.HasEffect(C_StatusEffects.OffBalance) && SeedManager.combatRandom.CoinFlip())
                     {
-                        stats.AddStatusEffect("Topple", RNG.Next(1, 5));
+                        stats.AddStatusEffect(C_StatusEffects.Topple, RNG.Next(1, 5));
                         break;
                     }
                 }
@@ -729,7 +728,7 @@ public class Entity : MonoBehaviour
         }
         else if (RNG.OneIn(10))
         {
-            stats.AddStatusEffect("Stun", RNG.Next(1, 3));
+            stats.AddStatusEffect(C_StatusEffects.Stunned, RNG.Next(1, 3));
         }
     }
 
@@ -756,13 +755,11 @@ public class Entity : MonoBehaviour
         dir.y = Mathf.Clamp(dir.y, -1, 1);
 
         int numTiles = (int)objs[1];
-
         for (int i = 0; i < numTiles; i++)
         {
             if (World.tileMap.WalkableTile(posX + dir.x, posY + dir.y))
             {
                 Cell targetCell = World.tileMap.GetCellAt(myPos + dir);
-
                 if (!targetCell.Walkable_IgnoreEntity)
                 {
                     break;
@@ -855,14 +852,12 @@ public class Entity : MonoBehaviour
         }
 
         Cell targetCell = World.tileMap.GetCellAt(posX + x, posY + y);
-
         if (targetCell.entity != null || targetCell.mapObjects.Count > 0)
         {
             CancelWalk();
             if (targetCell.entity != null && !targetCell.entity.isPlayer)
             {
                 BaseAI bai = targetCell.entity.AI;
-
                 if (!bai.isHostile && bai.npcBase.HasFlag(NPC_Flags.Can_Speak) && World.objectManager.SafeToRest())
                 {
                     World.userInterface.ShowNPCDialogue(targetCell.entity.GetComponent<DialogueController>());
@@ -875,7 +870,6 @@ public class Entity : MonoBehaviour
                 for (int i = 0; i < targetCell.mapObjects.Count; i++)
                 {
                     MapObjectSprite obj = targetCell.mapObjects[i];
-
                     if (isPlayer && obj.isDoor_Closed)
                     {
                         OpenDoor(obj);
@@ -1070,7 +1064,6 @@ public class Entity : MonoBehaviour
                 if (World.tileMap.WalkableTile(posX + x, posY + y))
                 {
                     Cell c = World.tileMap.GetCellAt(posX + x, posY + y);
-
                     if (c.Walkable)
                     {
                         emptyCoords.Add(new Coord(posX + x, posY + y));
@@ -1178,7 +1171,7 @@ public class Entity : MonoBehaviour
 
     public void CreateBloodstain(bool overrideRandom = false, int chance = 6)
     {
-        if (!GameSettings.Particle_Effects || RNG.Next(100) < chance && !overrideRandom 
+        if (!GameSettings.Particle_Effects || RNG.Chance(chance) && !overrideRandom 
             || !isPlayer && AI.npcBase.HasFlag(NPC_Flags.No_Blood))
         {
             return;
@@ -1312,8 +1305,6 @@ public class Entity : MonoBehaviour
             GameObject ss = SimplePool.Spawn(World.poolManager.slashEffects[3], targetPosition + new Vector3(x, y, 0));
             ss.GetComponent<WeaponHitEffect>().FaceChildOtherDirection(Flipped() ? -1 : 1, x, y, body.MainHand.EquippedItem);
         }
-
-        EndTurn(0.1f, fighter.AttackAPCost());
     }
 
     bool Flipped()

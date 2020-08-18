@@ -19,6 +19,8 @@ public class MouseController : MonoBehaviour
     PlayerInput playerInput;
     Camera worldCamera;
     List<GameObject> lineObjects = new List<GameObject>();
+    int prevX = -1, prevY = -1;
+    Coord prevPlayerPos;
 
     void Start()
     {
@@ -59,7 +61,9 @@ public class MouseController : MonoBehaviour
         cursorPosition = pos;
 
         if (Input.GetAxis("MouseX") != 0 || Input.GetAxis("MouseY") != 0)
+        {
             CursorIsActive = true;
+        }
 
         if (World.userInterface != null && !World.userInterface.NoWindowsOpen)
         {
@@ -73,42 +77,28 @@ public class MouseController : MonoBehaviour
         }
         else if (CursorIsActive)
         {
-            LocalMapHandling(pos);
+            bool refresh = (int)pos.x != prevX || (int)pos.y != prevY || prevPlayerPos != ObjectManager.playerEntity.myPos;
+            LocalMapHandling(pos, refresh);
         }
+
+        prevX = (int)pos.x;
+        prevY = (int)pos.y;
+        prevPlayerPos = ObjectManager.playerEntity.myPos;
     }
 
     public void DrawPath(Coord newPos)
     {
+        newPos.y += Manager.localMapSize.y;
         ClearUIObjects();
 
-        if (!World.OutOfLocalBounds(newPos) && World.tileMap.CurrentMap.has_seen[newPos.x, newPos.y])
+        if (!World.OutOfLocalBounds(newPos))
         {
             Path_AStar path = new Path_AStar(playerEntity.myPos, newPos, playerEntity.inventory.CanFly(), playerEntity);
-
-            if (path != null && path.Traversable)
+            while (path.Traversable)
             {
-                while (true)
-                {
-                    Coord c = path.GetNextStep();
-                    if (c == null)
-                    {
-                        break;
-                    }
-
-                    GameObject g = SimplePool.Spawn(pathObject, new Vector2(c.x, c.y - Manager.localMapSize.y));
-                    lineObjects.Add(g);
-                }
-
-                for (int i = 0; i < path.StepCount; i++)
-                {
-                    
-                    Coord c = path.GetNextStep();
-                    if (c != null)
-                    {
-                        GameObject g = SimplePool.Spawn(pathObject, new Vector2(c.x, c.y - Manager.localMapSize.y));
-                        lineObjects.Add(g);
-                    }
-                }
+                Coord c = path.Pop();
+                GameObject g = SimplePool.Spawn(pathObject, new Vector2(c.x, c.y - Manager.localMapSize.y));
+                lineObjects.Add(g);
             }
         }
     }
@@ -123,7 +113,7 @@ public class MouseController : MonoBehaviour
         lineObjects.Clear();
     }
 
-    void LocalMapHandling(Vector3 pos)
+    void LocalMapHandling(Vector3 pos, bool refreshPath)
     {
         if (playerEntity == null)
         {
@@ -209,6 +199,17 @@ public class MouseController : MonoBehaviour
             sRenderer.sprite = (canSee) ? sprites[0] : sprites[1];
 
             Coord targetPos = new Coord((int)cursor.position.x, (int)cursor.position.y);
+            if (refreshPath)
+            {
+                if (canSee)
+                {
+                    DrawPath(targetPos);
+                }
+                else
+                {
+                    ClearUIObjects();
+                }
+            }
 
             if (canSee)
             {

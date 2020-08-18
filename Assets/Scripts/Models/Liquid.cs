@@ -60,7 +60,7 @@ public class Liquid : IWeighted, IAsset
         Weight = 101 - (int)d["Frequency"];
         pricePerUnit = (int)d["Price Per Unit"];
         addictiveness = d.ContainsKey("Addictiveness") ? (int)d["Addictiveness"] : 0;
-        byte r = (byte)((int)d["Color"][0]), g = (byte)((int)d["Color"][1]), b = (byte)((int)d["Color"][2]);
+        byte r = (byte)(int)d["Color"][0], g = (byte)(int)d["Color"][1], b = (byte)(int)d["Color"][2];
         color = new Color32(r, g, b, 255);
 
         events = new List<CLuaEvent>();

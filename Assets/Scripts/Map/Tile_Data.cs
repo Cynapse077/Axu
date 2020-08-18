@@ -12,7 +12,8 @@ public class Tile_Data
     public int costToEnter;
     TileAtlas atlas;
 
-    public bool Autotiles { get { return atlas != null; } }
+    public bool Autotiles => atlas != null;
+    public bool Walkable => HasTag("Walkable");
 
     public Tile_Data(int _id, Biome _biome, List<string> _tags, int _cost, TileAtlas _atlas)
     {

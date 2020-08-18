@@ -941,6 +941,21 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
+    public int HighestAttackRange()
+    {
+        int highest = 1;
+        var hands = body.Hands;
+        for (int i = 0; i < hands.Count; i++)
+        {
+            if (hands[i].EquippedItem != null && hands[i].EquippedItem.attackRange > highest)
+            {
+                highest = hands[i].EquippedItem.attackRange;
+            }
+        }
+
+        return highest;
+    }
+
     Inventory CheckForInventories(Coord pos)
     {
         Cell c = World.tileMap.GetCellAt(pos);

@@ -59,7 +59,11 @@
         {
             "ID" : "Dialogue_Send_Home",
             "Display" : "Send to Base"
-        }
+        },
+        {
+            "ID" : "Dialogue_Hand_Over_Items",
+            "Display" : "Hand Over Items"
+		}
     ],
     "Options Menu" : [
         {

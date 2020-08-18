@@ -3,7 +3,6 @@ using LitJson;
 
 public class ItemModifier : IAsset
 {
-
     public string ID { get; set; }
     public string ModID { get; set; }
     public string name;

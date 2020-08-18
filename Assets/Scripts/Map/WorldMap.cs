@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Pathfinding;
+using Axu.Constants;
 
 [RequireComponent(typeof(MeshFilter))]
 [MoonSharp.Interpreter.MoonSharpUserData]
@@ -21,7 +22,7 @@ public class WorldMap : MonoBehaviour
     Dictionary<Coord, GameObject> landmarks;
     Color[][] lmTiles;
 
-    /*void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.F10))
         {
@@ -53,7 +54,7 @@ public class WorldMap : MonoBehaviour
         }
 
         File.WriteAllBytes(filename, tex.EncodeToPNG());
-    }*/
+    }
 
     public void Init()
     {
@@ -138,9 +139,9 @@ public class WorldMap : MonoBehaviour
             g.name = string.Format("{0} - {1}", mi.landmark, coord.ToString());
             SpriteRenderer sr = g.GetComponent<SpriteRenderer>();
 
-            if (mi.landmark == "River")
+            if (mi.landmark == C_Landmarks.River)
             {
-                sr.sprite = tsm.GetTileSet("River").Autotile[BitwiseRivers(x, y)];
+                sr.sprite = tsm.GetTileSet(C_Landmarks.River).Autotile[BitwiseRivers(x, y)];
             }
             else
             {
@@ -171,23 +172,14 @@ public class WorldMap : MonoBehaviour
     {
         switch (b)
         {
-            case Biome.Shore:
-                return 1;
-            case Biome.Plains:
-                return 2;
-            case Biome.Forest:
-                return 3;
-            case Biome.Swamp:
-                return 4;
-            case Biome.Mountain:
-                return 5;
-            case Biome.Desert:
-                return 6;
-            case Biome.Tundra:
-                return 7;
-            case Biome.Ocean:
-            default:
-                return 0;
+            case Biome.Ocean: default: return 0;
+            case Biome.Shore: return 1;
+            case Biome.Plains: return 2;
+            case Biome.Forest: return 3;
+            case Biome.Swamp: return 4;
+            case Biome.Mountain: return 5;
+            case Biome.Desert: return 6;
+            case Biome.Tundra: return 7;
         }
     }
 
@@ -229,16 +221,16 @@ public class WorldMap : MonoBehaviour
     {
         int sum = 0;
 
-        if (y < Manager.worldMapSize.y - 1 && (worldMapData.GetTileAt(x, y + 1).landmark == "River" || worldMapData.GetTileAt(x, y + 1).biome == Biome.Ocean)
+        if (y < Manager.worldMapSize.y - 1 && (worldMapData.GetTileAt(x, y + 1).landmark == C_Landmarks.River || worldMapData.GetTileAt(x, y + 1).biome == Biome.Ocean)
             || y >= Manager.worldMapSize.y - 1)
             sum++;
-        if (x > 0 && (worldMapData.GetTileAt(x - 1, y).landmark == "River" || worldMapData.GetTileAt(x - 1, y).biome == Biome.Ocean)
+        if (x > 0 && (worldMapData.GetTileAt(x - 1, y).landmark == C_Landmarks.River || worldMapData.GetTileAt(x - 1, y).biome == Biome.Ocean)
             || x <= 0)
             sum += 2;
-        if (x < Manager.worldMapSize.x - 1 && (worldMapData.GetTileAt(x + 1, y).landmark == "River" || worldMapData.GetTileAt(x + 1, y).biome == Biome.Ocean)
+        if (x < Manager.worldMapSize.x - 1 && (worldMapData.GetTileAt(x + 1, y).landmark == C_Landmarks.River || worldMapData.GetTileAt(x + 1, y).biome == Biome.Ocean)
             || x >= Manager.worldMapSize.x - 1)
             sum += 4;
-        if (y > 0 && (worldMapData.GetTileAt(x, y - 1).landmark == "River" || worldMapData.GetTileAt(x, y - 1).biome == Biome.Ocean)
+        if (y > 0 && (worldMapData.GetTileAt(x, y - 1).landmark == C_Landmarks.River || worldMapData.GetTileAt(x, y - 1).biome == Biome.Ocean)
             || y <= 0)
             sum += 8;
 

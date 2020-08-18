@@ -151,7 +151,7 @@ public class Dungeon
                 {
                     for (int y = points[i].y - radiusY; y <= points[i].y + radiusY; y++)
                     {
-                        if (x <= 0 || y <= 0 || x >= Manager.localMapSize.x - 2 || y >= Manager.localMapSize.y - 2)
+                        if (x <= 1 || y <= 1 || x >= Manager.localMapSize.x - 2 || y >= Manager.localMapSize.y - 2)
                         {
                             continue;
                         }
@@ -272,9 +272,9 @@ public class Dungeon
             }
 
 
-            if (st.x <= 0 || st.y <= 0 || st.x >= Manager.localMapSize.x - 1 || st.y >= Manager.localMapSize.y - 1 || visited.Contains(st))
+            if (st.x <= 0 || st.y <= 0 || st.x >= Manager.localMapSize.x - 2 || st.y >= Manager.localMapSize.y - 2 || visited.Contains(st))
             {
-                if (st.x <= 0 || st.y <= 0 || st.x >= Manager.localMapSize.x - 1 || st.y >= Manager.localMapSize.y - 1)
+                if (st.x <= 0 || st.y <= 0 || st.x >= Manager.localMapSize.x - 2 || st.y >= Manager.localMapSize.y - 2)
                 {
                     if (horizontal)
                     {
@@ -377,12 +377,13 @@ public class Dungeon
         }
 
         bool roundCorners = (RNG.Next(100) <= 40);
+        bool added = false;
 
         for (int rx = e.left; rx <= e.right; rx++)
         {
             for (int ry = e.bottom; ry <= e.top; ry++)
             {
-                if (rx <= 0 || ry <= 0 || rx >= Manager.localMapSize.x - 1 || ry >= Manager.localMapSize.y - 1)
+                if (rx <= 1 || ry <= 1 || rx >= Manager.localMapSize.x - 2 || ry >= Manager.localMapSize.y - 2)
                 {
                     continue;
                 }
@@ -395,12 +396,16 @@ public class Dungeon
                 }
 
                 map_data[rx, ry] = FloorTile;
+                added = true;
             }
         }
 
-        rooms.Add(e);
+        if (added)
+        {
+            rooms.Add(e);
+        }
 
-        return true;
+        return added;
     }
 
     bool CircleRoom(Coord center, int radius)
@@ -415,11 +420,12 @@ public class Dungeon
             }
         }
 
+        bool added = false;
         for (int x = center.x - radius - 1; x <= center.x + radius + 1; x++)
         {
             for (int y = center.y - radius - 1; y <= center.y + radius + 1; y++)
             {
-                if (x <= 0 || y <= 0 || x >= Manager.localMapSize.x - 2 || y >= Manager.localMapSize.y - 2)
+                if (x <= 1 || y <= 1 || x >= Manager.localMapSize.x - 2 || y >= Manager.localMapSize.y - 2)
                 {
                     continue;
                 }
@@ -427,11 +433,17 @@ public class Dungeon
                 if (Vector2.Distance(center.toVector2(), new Vector2(x, y)) <= radius)
                 {
                     map_data[x, y] = FloorTile;
+                    added = true;
                 }
             }
         }
-        rooms.Add(e);
-        return true;
+
+        if (added)
+        {
+            rooms.Add(e);
+        }
+
+        return added;
     }
 
     void MakeCorridors(bool strict = true, bool offset = true)

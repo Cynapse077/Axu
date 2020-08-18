@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿using Axu.Constants;
 using System.Collections.Generic;
 using System;
-using System.Linq;
+using UnityEngine;
 
 public class DialogueController : MonoBehaviour
 {
@@ -56,7 +56,7 @@ public class DialogueController : MonoBehaviour
                 acceptQuest = () => {
                     World.userInterface.CloseWindows();
                     journal.StartQuest(myQuest);
-                    myNPC.questID = "";
+                    myNPC.questID = string.Empty;
                     myQuest = null;
                     SetupDialogueOptions();
                 };
@@ -66,16 +66,16 @@ public class DialogueController : MonoBehaviour
 
         if (!string.IsNullOrEmpty(myNPC.dialogueID))
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => World.userInterface.Dialogue_Inquire(myNPC.dialogueID)));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Chat".Localize(), () => World.userInterface.Dialogue_Inquire(myNPC.dialogueID)));
         } 
         else
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Chat"), () => World.userInterface.Dialogue_Chat(myNPC.faction)));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Chat".Localize(), () => World.userInterface.Dialogue_Chat(myNPC.faction)));
         }
 
         if (myNPC.HasFlag(NPC_Flags.Merchant) || myNPC.HasFlag(NPC_Flags.Doctor) || myNPC.HasFlag(NPC_Flags.Book_Merchant))
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Trade"), () => World.userInterface.Dialogue_Shop()));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Trade".Localize(), World.userInterface.Dialogue_Shop));
         }
 
         if (myNPC.HasFlag(NPC_Flags.Doctor))
@@ -87,19 +87,19 @@ public class DialogueController : MonoBehaviour
                 SetupDialogueOptions();
             }));
             dialogueChoices.Add(new DialogueChoice("Dialogue_Replace Limb".Localize(), () => World.userInterface.Dialogue_ReplaceLimb()));
-            dialogueChoices.Add(new DialogueChoice("Dialogue_Amputate Limb", () => World.userInterface.Dialogue_AmputateLimb()));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Amputate Limb".Localize(), () => World.userInterface.Dialogue_AmputateLimb()));
             dialogueChoices.Add(new DialogueChoice("Dialogue_Cybernetics".Localize(), () => World.userInterface.OpenCyberneticsPanel(ObjectManager.playerEntity.body)));
         }
 
         if (myNPC.HasFlag(NPC_Flags.Mercenary) && !bai.isFollower())
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Hire"), () => { Hire(); }));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Hire".Localize(), () => Hire()));
         }
 
         if (bai.isFollower() && !myNPC.HasFlag(NPC_Flags.Deteriortate_HP) && !myNPC.HasFlag(NPC_Flags.Static))
         {
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Trade"), () => World.userInterface.Dialogue_Shop()));
-            dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Manage_Equipment"), () => {
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Trade".Localize(), World.userInterface.Dialogue_Shop));
+            dialogueChoices.Add(new DialogueChoice("Dialogue_Manage_Equipment".Localize(), () => {
                 World.userInterface.CloseWindows();
                 World.userInterface.OpenInventory(GetComponent<Inventory>());
             }));
@@ -110,7 +110,7 @@ public class DialogueController : MonoBehaviour
 
         CheckQuests();
 
-        dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Leave"), () => World.userInterface.CloseWindows()));
+        dialogueChoices.Add(new DialogueChoice("Dialogue_Leave".Localize(), World.userInterface.CloseWindows));
     }
 
     void CheckQuests()
@@ -121,32 +121,17 @@ public class DialogueController : MonoBehaviour
         {
             if (quests[i].ActiveGoal != null)
             {
-                if (quests[i].ActiveGoal.goalType == "FetchPropertyGoal")
+                if (quests[i].ActiveGoal is FetchPropertyGoal fpg && fpg.npcTarget == myNPC.ID)
                 {
-                    FetchPropertyGoal fpg = (FetchPropertyGoal)quests[i].ActiveGoal;
-
-                    if (fpg.npcTarget == myNPC.ID)
-                    {
-                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => World.userInterface.GiveItem(fpg.itemProperty)));
-                    }
+                    dialogueChoices.Add(new DialogueChoice("Dialogue_Hand_Over_Items".Localize(), () => World.userInterface.GiveItem(fpg.itemProperty)));
                 }
-                else if (quests[i].ActiveGoal.goalType == "FetchGoal")
+                else if (quests[i].ActiveGoal is FetchGoal fg && fg.npcTarget == myNPC.ID)
                 {
-                    FetchGoal fg = (FetchGoal)quests[i].ActiveGoal;
-
-                    if (fg.npcTarget == myNPC.ID)
-                    {
-                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => World.userInterface.GiveItem(fg.itemID)));
-                    }
+                    dialogueChoices.Add(new DialogueChoice("Dialogue_Hand_Over_Items".Localize(), () => World.userInterface.GiveItem(fg.itemID)));
                 }
-                else if (quests[i].ActiveGoal.goalType == "Fetch_Homonculus")
+                else if (quests[i].ActiveGoal is Fetch_Homonculus fh && fh.npcTarget == myNPC.ID)
                 {
-                    Fetch_Homonculus fh = (Fetch_Homonculus)quests[i].ActiveGoal;
-
-                    if (fh.npcTarget == myNPC.ID)
-                    {
-                        dialogueChoices.Add(new DialogueChoice("Hand Over Items", () => World.userInterface.GiveItem(fh.itemProperty)));
-                    }
+                    dialogueChoices.Add(new DialogueChoice("Dialogue_Hand_Over_Items".Localize(), () => World.userInterface.GiveItem(fh.itemProperty)));
                 }
             }
         }
@@ -154,30 +139,30 @@ public class DialogueController : MonoBehaviour
 
     void CheckBase()
     {
-        if (journal.HasFlag("Found_Base"))
+        if (journal.HasFlag(C_QuestFlags.FoundBase))
         {
             if (myNPC.HasFlag(NPC_Flags.At_Home))
             {
-                dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Follow_Me"), () => {
+                dialogueChoices.Add(new DialogueChoice("Dialogue_Follow_Me".Localize(), () => {
                     if (World.objectManager.NumFollowers() < 3)
                     {
                         myNPC.flags.Remove(NPC_Flags.At_Home);
-                        World.userInterface.Dialogue_CustomChat(LocalizationManager.GetContent("Dialogue_Follow"));
+                        World.userInterface.Dialogue_CustomChat("Dialogue_Follow".Localize());
 
                         CombatLog.NameMessage("Message_New_Follower", bai.entity.Name);
                         World.userInterface.CloseWindows();
                     }
                     else
                     {
-                        World.userInterface.Dialogue_CustomChat(LocalizationManager.GetContent("Dialogue_TooManyFollowers"));
+                        World.userInterface.Dialogue_CustomChat("Dialogue_TooManyFollowers".Localize());
                     }
                 }));
             }
             else
             {
-                dialogueChoices.Add(new DialogueChoice(LocalizationManager.GetContent("Dialogue_Send_Home"), () => {
+                dialogueChoices.Add(new DialogueChoice("Dialogue_Send_Home".Localize(), () => {
                     myNPC.flags.Add(NPC_Flags.At_Home);
-                    myNPC.worldPosition = World.tileMap.worldMap.GetClosestLandmark("Home");
+                    myNPC.worldPosition = World.tileMap.worldMap.GetClosestLandmark(C_Landmarks.Home);
                     CombatLog.NameMessage("Message_Sent_Home", bai.entity.Name);
                     World.tileMap.HardRebuild();
                     World.userInterface.CloseWindows();

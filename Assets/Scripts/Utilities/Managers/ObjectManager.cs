@@ -1,6 +1,7 @@
-using UnityEngine;
+using Axu.Constants;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class ObjectManager : MonoBehaviour
@@ -133,7 +134,7 @@ public class ObjectManager : MonoBehaviour
             return false;
         }
 
-        Coord homePos = World.tileMap.worldMap.GetLandmark("Home");
+        Coord homePos = World.tileMap.worldMap.GetLandmark(C_Landmarks.Home);
 
         if (homePos.x == x && homePos.y == y && z == 0)
         {
@@ -364,7 +365,7 @@ public class ObjectManager : MonoBehaviour
         Instantiate(World.poolManager.abilityEffects[6], newPos, Quaternion.identity);
         TileDamage td = new TileDamage(spawner, position, new HashSet<DamageTypes>() { DamageTypes.Heat })
         {
-            myName = LocalizationManager.GetContent("Explosion"),
+            myName = "Explosion".Localize(),
             damage = Random.Range(4, 10)
         };
         td.ApplyDamage();
@@ -377,7 +378,7 @@ public class ObjectManager : MonoBehaviour
         Instantiate(World.poolManager.abilityEffects[2], newPos, Quaternion.identity);
         TileDamage td = new TileDamage(spawner, position, new HashSet<DamageTypes>() { DamageTypes.Venom })
         {
-            myName = LocalizationManager.GetContent("Poisonous Gas"),
+            myName = "Poisonous Gas".Localize(),
             damage = Random.Range(2, 5)
         };
         td.ApplyDamage();
@@ -427,7 +428,7 @@ public class ObjectManager : MonoBehaviour
         if (playerEntity.InSight(position))
         {
             GameObject effect = Instantiate(World.poolManager.abilityEffects[1], position.toVector2(), Quaternion.identity);
-            effect.name = LocalizationManager.GetContent("Shock");
+            effect.name = "Shock".Localize();
             effect.transform.position += new Vector3(0.5f, 0.5f, 0);
 
             effect.transform.rotation = Quaternion.Euler(0f, 0f, rotation);
@@ -439,7 +440,7 @@ public class ObjectManager : MonoBehaviour
             TileDamage td = new TileDamage(spawner, position, new HashSet<DamageTypes>() { DamageTypes.Energy })
             {
                 damage = dmg,
-                myName = LocalizationManager.GetContent("Shock")
+                myName = "Shock".Localize()
             };
             td.ApplyDamage();
         }
@@ -458,8 +459,8 @@ public class ObjectManager : MonoBehaviour
         var pool = c.GetPool();
         if (pool == null && !World.tileMap.IsWaterTile(localPos.x, localPos.y + Manager.localMapSize.y))
         {
-            MapObject m = NewObjectAtSpecificScreen("Loot", localPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
-            Item i = ItemList.GetItemByID("pool");
+            MapObject m = NewObjectAtSpecificScreen(C_Objects.Loot, localPos, World.tileMap.WorldPosition, World.tileMap.currentElevation);
+            Item i = ItemList.GetItemByID(C_Items.Pool);
             i.GetCComponent<CLiquidContainer>().SetLiquid(newLiq);
             m.inv.Insert(0, i);
         }
@@ -662,7 +663,7 @@ public class ObjectManager : MonoBehaviour
     public void BuildingObjects(House h, Coord worldPos, string npcID)
     {
         Coord localPos = h.GetRandomPosition();
-        if (SeedManager.combatRandom.Next(100) < 20 && npcID == "villager")
+        if (RNG.OneIn(5) && npcID == C_NPCs.Villager)
         {
             localPos = World.tileMap.GetRandomPosition();
         }
@@ -688,7 +689,7 @@ public class ObjectManager : MonoBehaviour
     void HouseObjects(House h, Coord worldPos)
     {
         Coord c = h.GetRandomPosition();
-        NewObjectAtSpecificScreen("Bed", c, worldPos);
+        NewObjectAtSpecificScreen(C_Objects.Bed, c, worldPos);
         Coord c2 = h.GetRandomPosition();
         int numTries = 0;
 
@@ -698,7 +699,7 @@ public class ObjectManager : MonoBehaviour
             numTries++;
         }
 
-        NewObjectAtSpecificScreen("Table", c2, worldPos);
+        NewObjectAtSpecificScreen(C_Objects.Table, c2, worldPos);
 
         Coord c3 = h.GetRandomPosition();
         numTries = 0;
@@ -709,7 +710,7 @@ public class ObjectManager : MonoBehaviour
             numTries++;
         }
 
-        NewObjectAtSpecificScreen(SeedManager.localRandom.CoinFlip() ? "Chair_Left" : "Chair_Right", c3, worldPos);
+        NewObjectAtSpecificScreen(SeedManager.localRandom.CoinFlip() ? C_Objects.Chair_Left : C_Objects.Chair_Right, c3, worldPos);
     }
 
     void ShopObjects(House h, Coord worldPos)
@@ -729,7 +730,7 @@ public class ObjectManager : MonoBehaviour
 
             takenPositions.Add(c);
 
-            NewObjectAtSpecificScreen("Barrel", c, worldPos);
+            NewObjectAtSpecificScreen(C_Objects.Barrel, c, worldPos);
         }
     }
 
@@ -741,7 +742,7 @@ public class ObjectManager : MonoBehaviour
         {
             if (poses[i].x % 2 == 0 && poses[i].y % 2 == 0)
             {
-                NewObjectAtSpecificScreen("Bed", poses[i], worldPos);
+                NewObjectAtSpecificScreen(C_Objects.Bed, poses[i], worldPos);
             }
         }
     }
@@ -794,7 +795,7 @@ public class ObjectManager : MonoBehaviour
 
             BaseAI bAI = onScreenNPCObjects[i].AI;
 
-            if (bAI.isHostile && playerEntity.InSight(onScreenNPCObjects[i].myPos))
+            if (bAI.isHostile && onScreenNPCObjects[i].AI.InSightOfPlayer())
             {
                 if (bAI.isStationary)
                 {

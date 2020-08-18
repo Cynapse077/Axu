@@ -1,3 +1,5 @@
+--These methods are used for determining if an NPC should use an ability (before random chance checks)
+
 function Empty(skill, entity, target)
 	return false
 end
@@ -93,7 +95,7 @@ function FriendlyAt(entity, x, y)
 		end
 
 		if (cell.entity == entity or entity.AI.isFollower()) then
-			return (cell.entity.isPlayer or cell.entity.AI.isFollower())
+			return cell.entity.isPlayer or cell.entity.AI.isFollower()
 		end
 
 		if (not cell.entity.isPlayer) then

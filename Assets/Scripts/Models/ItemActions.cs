@@ -67,7 +67,7 @@ public struct ItemActions
         if (item.HasCComponent<CCoordinate>())
         {
             CCoordinate ccord = item.GetCComponent<CCoordinate>();
-            Actions.Add(((!ccord.isSet) ? (new ItemAction("Set", "Action_Set")) : (new ItemAction("Use", "Action_Use"))));
+            Actions.Add(!ccord.isSet ? (new ItemAction("Set", "Action_Set")) : (new ItemAction("Use", "Action_Use")));
         }
 
         if (item.HasProp(ItemProperty.Legible) || CanAdd(item, "Read"))

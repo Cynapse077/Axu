@@ -392,7 +392,7 @@ public static class Utility
         return (T)Enum.Parse(typeof(T), enumString);
     }
 
-    public static T WeightedChoice<T>(List<T> list) where T : IWeighted
+    public static T WeightedChoice<T>(this List<T> list) where T : IWeighted
     {
         return WeightedChoice(list.ToArray());
     }

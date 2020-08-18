@@ -7,8 +7,6 @@ public class Goal : EventContainer
     public bool isComplete = false;
     public int amount = 0;
     public string description;
-    public string goalType { get; protected set; }
-
     protected Quest myQuest;
 
     public Goal() { }
@@ -92,7 +90,7 @@ public class Goal : EventContainer
                 return null;
             }
 
-            NPC npc = new NPC(bp, new Coord(0, 0), new Coord(0, 0), 0)
+            NPC npc = new NPC(bp, new Coord(), new Coord(), 0)
             {
                 localPosition = bp.localPosition,
                 elevation = bp.elevation,
@@ -114,7 +112,6 @@ public class EmptyGoal : Goal
 {
     public EmptyGoal(Quest q, string desc)
     {
-        goalType = "Empty";
         myQuest = q;
         description = desc;
     }
@@ -137,7 +134,6 @@ public class ChoiceGoal : Goal
 
     public ChoiceGoal(Quest q, Goal[] gs, string desc)
     {
-        goalType = "ChoiceGoal";
         myQuest = q;
         description = desc;
 
@@ -226,7 +222,6 @@ public class SpecificKillGoal : Goal
 {
     public SpecificKillGoal(Quest q, string desc)
     {
-        goalType = "SpecificKillGoal";
         myQuest = q;
         description = desc;
         isComplete = false;
@@ -330,7 +325,6 @@ public class NPCKillGoal : Goal
 
     public NPCKillGoal(Quest q, string nID, int amt, string desc)
     {
-        goalType = "NPCKillGoal";
         myQuest = q;
         npcID = nID;
         amount = 0;
@@ -399,7 +393,6 @@ public class FactionKillGoal : Goal
 
     public FactionKillGoal(Quest q, string _faction, int amt, string desc)
     {
-        goalType = "FactionKillGoal";
         myQuest = q;
         faction = _faction;
         amount = 0;
@@ -464,7 +457,6 @@ public class GoToGoal : Goal
 
     public GoToGoal(Quest q, string dest, int ele, string desc)
     {
-        goalType = "GoToGoal";
         myQuest = q;
         destination = dest;
         elevation = ele;
@@ -537,7 +529,6 @@ public class GoToGoal_Specific : Goal
 
     public GoToGoal_Specific(Quest q, Coord dest, int ele)
     {
-        goalType = "GoToGoal_Specific";
         myQuest = q;
         destination = dest;
         elevation = ele;
@@ -612,7 +603,6 @@ public class InteractGoal : Goal
 
     public InteractGoal(Quest q, string objType, string wPos, int ele, int amt, string desc)
     {
-        goalType = "InteractGoal";
         myQuest = q;
         zone = wPos;
         elevation = ele;
@@ -684,7 +674,6 @@ public class InteractUIDGoal : Goal
 {
     public InteractUIDGoal(Quest q, string desc)
     {
-        goalType = "InteractUIDGoal";
         myQuest = q;
         description = desc;
         amount = 0;
@@ -729,16 +718,20 @@ public class InteractUIDGoal : Goal
 
     public override void Complete()
     {
-        World.objectManager.RemoveMapIconAt(Destination());
-        EventHandler.instance.InteractedWithObject -= InteractedWithObject;
+        RemoveReferences();
         base.Complete();
     }
 
     public override void Fail()
     {
+        RemoveReferences();
+        base.Fail();
+    }
+
+    private void RemoveReferences()
+    {
         World.objectManager.RemoveMapIconAt(Destination());
         EventHandler.instance.InteractedWithObject -= InteractedWithObject;
-        base.Fail();
     }
 
     public override string ToString()
@@ -765,7 +758,6 @@ public class TalkToGoal : Goal
 
     public TalkToGoal(Quest q, string n, string desc)
     {
-        goalType = "TalkToGoal";
         myQuest = q;
         npcTarget = n;
         description = desc;
@@ -800,16 +792,20 @@ public class TalkToGoal : Goal
     public override void Complete()
     {
         World.objectManager.RemoveMapIconAt(Destination());
-        EventHandler.instance.TalkedToNPC -= TalkToNPC;
-        EventHandler.instance.NPCDied -= NPCDied;
+        RemoveReferences();
         base.Complete();
     }
 
     public override void Fail()
     {
+        RemoveReferences();
+        base.Fail();
+    }
+
+    private void RemoveReferences()
+    {
         EventHandler.instance.TalkedToNPC -= TalkToNPC;
         EventHandler.instance.NPCDied -= NPCDied;
-        base.Fail();
     }
 
     public override Coord Destination()
@@ -841,7 +837,6 @@ public class TalkToStoredNPCGoal : Goal
 {
     public TalkToStoredNPCGoal(Quest q, string desc)
     {
-        goalType = "TalkToStoredNPCGoal";
         myQuest = q;
         description = desc;
         isComplete = false;
@@ -875,16 +870,20 @@ public class TalkToStoredNPCGoal : Goal
     public override void Complete()
     {
         World.objectManager.RemoveMapIconAt(Destination());
-        EventHandler.instance.TalkedToNPC -= TalkToNPC;
-        EventHandler.instance.NPCDied -= NPCDied;
+        RemoveReferences();
         base.Complete();
     }
 
     public override void Fail()
     {
+        RemoveReferences();
+        base.Fail();
+    }
+
+    private void RemoveReferences()
+    {
         EventHandler.instance.TalkedToNPC -= TalkToNPC;
         EventHandler.instance.NPCDied -= NPCDied;
-        base.Fail();
     }
 
     public override Coord Destination()
@@ -918,84 +917,14 @@ public class TalkToStoredNPCGoal : Goal
     }
 }
 
-public class FetchPropertyGoal : Goal
+public class FetchPropertyGoal : FetchGoalBase
 {
     public readonly ItemProperty itemProperty;
-    public readonly string npcTarget;
-    readonly int max;
 
-    public FetchPropertyGoal(Quest q, string nid, string prop, int amt, string desc)
+    public FetchPropertyGoal(Quest q, string nid, string prop, int amt, string desc) : base(q, nid, amt)
     {
-        goalType = "FetchPropertyGoal";
-        myQuest = q;
-        npcTarget = nid;
         itemProperty = prop.ToEnum<ItemProperty>();
-        max = amt;
-        amount = 0;
         description = desc;
-        isComplete = false;
-    }
-
-    public override void Init(bool skipEvent)
-    {
-        base.Init(skipEvent);
-        EventHandler.instance.NPCDied += NPCDied;
-        CheckNPCValidity(npcTarget);
-        World.objectManager.NewMapIcon(0, Destination());
-    }
-
-    void NPCDied(NPC n)
-    {
-        if (n.ID == npcTarget)
-        {
-            Fail();
-        }
-    }
-
-    void TalkToNPC(NPC n)
-    {
-        if (npcTarget == n.ID && CanComplete())
-        {
-            Complete();
-        }
-    }
-
-    public void AddAmount(int amt)
-    {
-        amount += amt;
-
-        if (amount >= max)
-        {
-            World.userInterface.CloseWindows();
-            Complete();
-        }
-    }
-
-    public override void Complete()
-    {
-        EventHandler.instance.NPCDied -= NPCDied;
-        World.objectManager.RemoveMapIconAt(Destination());
-        base.Complete();
-    }
-
-    public override void Fail()
-    {
-        EventHandler.instance.NPCDied -= NPCDied;
-        World.objectManager.RemoveMapIconAt(Destination());
-        base.Fail();
-    }
-
-    public override Coord Destination()
-    {
-        NPC n = CheckNPCValidity(npcTarget);
-
-        if (n == null)
-        {
-            Log.Error("FetchPropertyGoal: NPC Target is null. Cannot get destination position.");
-            return null;
-        }
-
-        return n.worldPosition;
     }
 
     public override string ToString()
@@ -1006,45 +935,25 @@ public class FetchPropertyGoal : Goal
         }
 
         NPC_Blueprint bp = GameData.Get<NPC_Blueprint>(npcTarget);
+        if (bp == null)
+        {
+            return string.Empty;
+        }
 
         return string.Format("Give {0} items of type \"{1}\" x{2}.", bp.name, itemProperty.ToString(), (max - amount).ToString());
     }
 }
 
-public class Fetch_Homonculus : Goal
+public class Fetch_Homonculus : FetchGoalBase
 {
     public readonly ItemProperty itemProperty;
-    public readonly string npcTarget;
     public List<Item> items;
-    readonly int max;
 
-    public Fetch_Homonculus(Quest q, string nid, string prop, int amt, string desc)
+    public Fetch_Homonculus(Quest q, string nid, string prop, int amt, string desc) : base(q, nid, amt)
     {
-        goalType = "Fetch_Homonculus";
-        myQuest = q;
-        npcTarget = nid;
         itemProperty = prop.ToEnum<ItemProperty>();
         items = new List<Item>();
-        max = amt;
-        amount = 0;
         description = desc;
-        isComplete = false;
-    }
-
-    public override void Init(bool skipEvent)
-    {
-        base.Init(skipEvent);
-        EventHandler.instance.NPCDied += NPCDied;
-        CheckNPCValidity(npcTarget);
-        World.objectManager.NewMapIcon(0, Destination());
-    }
-
-    void NPCDied(NPC n)
-    {
-        if (n.ID == npcTarget)
-        {
-            Fail();
-        }
     }
 
     public void AddItem(Item i)
@@ -1129,26 +1038,6 @@ public class Fetch_Homonculus : Goal
         base.Complete();
     }
 
-    public override void Fail()
-    {
-        EventHandler.instance.NPCDied -= NPCDied;
-        World.objectManager.RemoveMapIconAt(Destination());
-        base.Fail();
-    }
-
-    public override Coord Destination()
-    {
-        NPC n = CheckNPCValidity(npcTarget);
-
-        if (n == null)
-        {
-            Log.Error("Fetch_KeepInMemGoal: NPC Target is null. Cannot get destination position.");
-            return null;
-        }
-
-        return n.worldPosition;
-    }
-
     public override string ToString()
     {
         if (!string.IsNullOrEmpty(description))
@@ -1162,34 +1051,20 @@ public class Fetch_Homonculus : Goal
     }
 }
 
-public class FetchGoal : Goal
+public class FetchGoalBase : Goal
 {
-    public readonly string itemID;
     public readonly string npcTarget;
-    public readonly int npcTargetOverrideUID;
-    readonly int max;
+    protected readonly int max;
 
-    public FetchGoal(Quest q, string nid, string id, int amt, string desc)
+    public FetchGoalBase(Quest quest, string npc, int amt)
     {
-        goalType = "FetchGoal";
-        myQuest = q;
-        npcTarget = nid;
-        itemID = id;
+        myQuest = quest;
         max = amt;
+        npcTarget = npc;
         amount = 0;
-        description = desc;
-        isComplete = false;
     }
 
-    public override void Init(bool skipEvent)
-    {
-        base.Init(skipEvent);
-        EventHandler.instance.NPCDied += NPCDied;
-        CheckNPCValidity(npcTarget);
-        World.objectManager.NewMapIcon(0, Destination());
-    }
-
-    void NPCDied(NPC n)
+    protected void NPCDied(NPC n)
     {
         if (n.ID == npcTarget)
         {
@@ -1208,18 +1083,30 @@ public class FetchGoal : Goal
         }
     }
 
+    public override void Init(bool skipEvent)
+    {
+        base.Init(skipEvent);
+        EventHandler.instance.NPCDied += NPCDied;
+        CheckNPCValidity(npcTarget);
+        World.objectManager.NewMapIcon(0, Destination());
+    }
+
     public override void Complete()
     {
-        EventHandler.instance.NPCDied -= NPCDied;
-        World.objectManager.RemoveMapIconAt(Destination());
+        RemoveReferences();
         base.Complete();
     }
 
     public override void Fail()
     {
+        RemoveReferences();
+        base.Fail();
+    }
+
+    private void RemoveReferences()
+    {
         EventHandler.instance.NPCDied -= NPCDied;
         World.objectManager.RemoveMapIconAt(Destination());
-        base.Fail();
     }
 
     public override Coord Destination()
@@ -1228,11 +1115,23 @@ public class FetchGoal : Goal
 
         if (n == null)
         {
-            Log.Error("FetchGoal: NPC Target is null. Cannot get destination position.");
+            Log.Error("FetchGoalBase: NPC Target is null. Cannot get destination position.");
             return null;
         }
 
         return n.worldPosition;
+    }
+}
+
+public class FetchGoal : FetchGoalBase
+{
+    public readonly string itemID;
+
+    public FetchGoal(Quest q, string nid, string id, int amt, string desc) : base(q, nid, amt)
+    {
+        itemID = id;
+        description = desc;
+        isComplete = false;
     }
 
     public override string ToString()

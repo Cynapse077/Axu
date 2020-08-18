@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using Augments;
+using Axu.Constants;
 
 [MoonSharpUserData]
 [Serializable]
@@ -174,22 +175,22 @@ public class BodyPart : IWeighted
         switch (slot)
         {
             case ItemProperty.Slot_Arm:
-                stat = (level % 2 == 0) ? "Dexterity" : "Strength";
+                stat = (level % 2 == 0) ? C_Attributes.Dexterity : C_Attributes.Strength;
                 break;
             case ItemProperty.Slot_Chest:
             case ItemProperty.Slot_Back:
-                entity.stats.ChangeAttribute("Health", 3);
-                entity.stats.ChangeAttribute("Stamina", 2);
+                entity.stats.ChangeAttribute(C_Attributes.Health, 3);
+                entity.stats.ChangeAttribute(C_Attributes.Stamina, 2);
                 break;
             case ItemProperty.Slot_Head:
-                stat = "Intelligence";
+                stat = C_Attributes.Intelligence;
                 break;
             case ItemProperty.Slot_Leg:
             case ItemProperty.Slot_Wing:
-                stat = "Speed";
+                stat = C_Attributes.MoveSpeed;
                 break;
             case ItemProperty.Slot_Tail:
-                stat = (level % 2 == 0) ? "Dexterity" : "Speed";
+                stat = (level % 2 == 0) ? C_Attributes.Dexterity : C_Attributes.MoveSpeed;
                 break;
         }
 
@@ -220,32 +221,32 @@ public class BodyPart : IWeighted
             showMessage = false;
         }
 
-        if (HasFlag(BPFlags.Leprosy) && !stats.hasTrait("leprosy"))
+        if (HasFlag(BPFlags.Leprosy) && !stats.hasTrait(C_Traits.Leprosy))
         {
             if (showMessage)
             {
                 Alert.NewAlert("Dis_Lep_Attach");
             }
 
-            stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
+            stats.InitializeNewTrait(TraitList.GetTraitByID(C_Traits.Leprosy));
         }
-        else if (HasFlag(BPFlags.Crystal) && !stats.hasTrait("crystal"))
+        else if (HasFlag(BPFlags.Crystal) && !stats.hasTrait(C_Traits.Crystalization))
         {
             if (showMessage)
             {
                 Alert.NewAlert("Dis_Cry_Attach");
             }
 
-            stats.InitializeNewTrait(TraitList.GetTraitByID("crystal"));
+            stats.InitializeNewTrait(TraitList.GetTraitByID(C_Traits.Crystalization));
         }
-        else if (HasFlag(BPFlags.Vampire) && !stats.hasTrait("vampirism") && !stats.hasTrait("pre_vamp"))
+        else if (HasFlag(BPFlags.Vampire) && !stats.hasTrait(C_Traits.Vampirism) && !stats.hasTrait(C_Traits.Fledgling))
         {
             if (showMessage)
             {
                 Alert.NewAlert("Dis_Vamp_Attach");
             }
 
-            stats.InitializeNewTrait(TraitList.GetTraitByID("pre_vamp"));
+            stats.InitializeNewTrait(TraitList.GetTraitByID(C_Traits.Fledgling));
         }
 
         for (int i = 0; i < Attributes.Count; i++)
@@ -296,7 +297,7 @@ public class BodyPart : IWeighted
 
     public SBodyPart ToSerializedBodyPart()
     {
-        if (equippedItem == null || equippedItem.ID == "none")
+        if (equippedItem == null || equippedItem.ID == C_Items.None)
         {
             equippedItem = ItemList.NoneItem;
         }
@@ -305,7 +306,7 @@ public class BodyPart : IWeighted
 
         if (hand != null)
         {
-            string baseItem = (!string.IsNullOrEmpty(hand.baseItem)) ? "fists" : hand.baseItem;
+            string baseItem = (!string.IsNullOrEmpty(hand.baseItem)) ? C_Items.Fist : hand.baseItem;
 
             hnd = new SHand(hand.EquippedItem.ToSerializedItem(), baseItem);
         }
@@ -331,7 +332,7 @@ public class BodyPart : IWeighted
         {
             if (g.GripBroken())
             {
-                string message = LocalizationManager.GetContent("Gr_BreakGrip");
+                string message = "Gr_BreakGrip".Localize();
                 message = message.Replace("[ATTACKER]", g.myPart.myBody.entity.MyName);
                 message = message.Replace("[DEFENDER]", myBody.entity.MyName);
                 CombatLog.NewMessage(message.Color(myBody.entity.isPlayer ? UnityEngine.Color.cyan : AxuColor.Orange));
@@ -363,7 +364,7 @@ public class BodyPart : IWeighted
             grip.Grab(part);
         }
 
-        string message = LocalizationManager.GetContent("Gr_Grab");
+        string message = "Gr_Grab".Localize();
         message = message.Replace("[ATTACKER]", myBody.entity.MyName);
         message = message.Replace("[DEFENDER]", part.myBody.entity.MyName);
         message = message.Replace("[ATTACKER_LIMB]", displayName);
@@ -380,7 +381,7 @@ public class BodyPart : IWeighted
 
         if (!forced)
         {
-            string message = LocalizationManager.GetContent("Gr_Release");
+            string message = "Gr_Release".Localize();
             message = message.Replace("[ATTACKER]", myBody.entity.MyName);
             message = message.Replace("[DEFENDER]", grip.heldPart.myBody.entity.MyName);
             message = message.Replace("[DEFENDER_LIMB]", grip.heldPart.name);
@@ -415,7 +416,6 @@ public class BodyPart : IWeighted
                 arm = this
             };
         }
-
     }
 
     [MoonSharpUserData]
@@ -423,7 +423,7 @@ public class BodyPart : IWeighted
     {
         public BodyPart arm;
         public Item EquippedItem;
-        public string baseItem = "fists";
+        public string baseItem = C_Items.Fist;
 
         public bool IsAttached
         {
@@ -522,7 +522,7 @@ public class BodyPart : IWeighted
             {
                 if (b.bodyParts[i].hand != null && b.bodyParts[i].hand.EquippedItem.ID == b.bodyParts[i].hand.baseItem)
                 {
-                    str += b.bodyParts[i].GetStatMod("Strength").Amount;
+                    str += b.bodyParts[i].GetStatMod(C_Attributes.Strength).Amount;
                 }
             }
 
@@ -639,8 +639,8 @@ public class SHand
 
     public SHand()
     {
-        item = ItemList.GetItemByID("fists").ToSerializedItem();
-        bItem = "fists";
+        item = ItemList.GetItemByID(C_Items.Fist).ToSerializedItem();
+        bItem = C_Items.Fist;
     }
 
     public SHand(SItem it, string bi)

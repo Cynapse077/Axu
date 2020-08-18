@@ -196,7 +196,9 @@ public class CursorControl : MonoBehaviour
         targetIndex = offset;
 
         if (targetIndex >= allTargets.Count)
+        {
             targetIndex = 0;
+        }
 
         allTargets = allTargets.OrderBy(x => playerEntity.myPos.DistanceTo(x.myPos)).ToList();
 
@@ -383,7 +385,9 @@ public class CursorControl : MonoBehaviour
         else if (activeSkill != null)
         {
             if (World.tileMap.GetCellAt(new Coord(_myPosX, _myPosY)).mapObjects.Find(x => x.isDoor_Closed) != null)
+            {
                 return;
+            }
 
             activeSkill.ActivateCoordinateSkill(skills, myPos);
             input.activeSkill = null;
@@ -397,7 +401,9 @@ public class CursorControl : MonoBehaviour
             if (playerEntity.inventory.firearm.HasProp(ItemProperty.Ranged))
             {
                 if (myPos == playerEntity.myPos)
+                {
                     return;
+                }
 
                 Item fa = playerEntity.inventory.firearm;
                 
@@ -416,7 +422,9 @@ public class CursorControl : MonoBehaviour
                         BaseAI bai = World.objectManager.onScreenNPCObjects[i].AI;
 
                         if (bai.isFollower())
+                        {
                             bai.ForceTarget(World.tileMap.GetCellAt(myPosX, myPosY).entity);
+                        }
                     }
 
                     CombatLog.SimpleMessage("Message_SetTarget");
@@ -430,7 +438,9 @@ public class CursorControl : MonoBehaviour
         ClearUIObjects();
 
         if (camControl == null && Camera.main != null)
+        {
             camControl = Camera.main.GetComponent<CameraControl>();
+        }
 
         Coord newPos = myPos;
         Line line = new Line(playerEntity.myPos, newPos);
@@ -443,7 +453,9 @@ public class CursorControl : MonoBehaviour
         }
 
         if (!GameSettings.UseMouse)
+        {
             camControl.SetTargetTransform(transform);
+        }
     }
 
     void ClearUIObjects()

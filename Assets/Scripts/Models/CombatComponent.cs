@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Axu.Constants;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class CombatComponent
@@ -247,7 +248,7 @@ public class CombatComponent
     {
         int timeCost = MyBody.MainHand.EquippedItem.GetAttackAPCost() + MyStats.AttackDelay;
 
-        if (MyStats.HasEffect("Topple"))
+        if (MyStats.HasEffect(C_StatusEffects.Topple))
         {
             timeCost += 7;
         }

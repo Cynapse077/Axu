@@ -977,7 +977,7 @@ public class Console : MonoBehaviour
                 MyConsole.NewMessage("  - <b>completequest</b>\n    Completes the current tracked quest.");
                 MyConsole.NewMessage("  - <b>startquest</b> <i>[ID]</i>\n    Starts the quest with the input ID.");
                 MyConsole.NewMessage("  - <b>questflag <i>[flag]</i></b>\n    Gives the player the input quest flag. Possibilities: " +
-                    "\n\tCan_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Can_Enter_Fab, HostileTo_[factionID]");
+                    "\n\tCan_Enter_Ensis, Can_Open_Prison_Cells, Can_Enter_Magna, Can_Enter_Fab, HostileTo_[factionID], etc...");
                 MyConsole.NewMessage("  - <b>weather <i>[amount (0-3)]</i></b>\n    Sets the world weather to the appropriate number.");
                 MyConsole.NewMessage("  - <b>5k</b>\n    Increases the turn counter by 5000.");
                 MyConsole.NewMessage("  - <b>10k</b>\n    Increases the turn counter by 10000.");

@@ -1,3 +1,4 @@
+using Axu.Constants;
 using UnityEngine;
 using Pathfinding;
 using System.Collections.Generic;
@@ -91,7 +92,7 @@ public class BaseAI : MonoBehaviour
 
     bool CanDoAnAction()
     {
-        if (entity == null || !doneInit || ObjectManager.playerEntity == null || entity.stats.HasEffect("Blind"))
+        if (entity == null || !doneInit || ObjectManager.playerEntity == null || entity.stats.HasEffect(C_StatusEffects.Blind))
         {
             return false;
         }
@@ -156,7 +157,7 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        if (npcBase.HasFlag(NPC_Flags.Inactive)|| !CanDoAnAction())
+        if (npcBase.HasFlag(NPC_Flags.Inactive) || !CanDoAnAction())
         {
             if (entity)
             {
@@ -178,7 +179,7 @@ public class BaseAI : MonoBehaviour
 
         List<BodyPart.Grip> gripsAgainst = entity.body.AllGripsAgainst();
 
-        if (gripsAgainst.Count > 0 && SeedManager.combatRandom.Next(100) < 30)
+        if (gripsAgainst.Count > 0 && RNG.Chance(30))
         {
             Coord pos = entity.GetEmptyCoords().GetRandom();
 
@@ -235,7 +236,7 @@ public class BaseAI : MonoBehaviour
             g.parent = transform;
             hasSeenPlayer = true;
 
-            if (!hasAskedForHelp && entity.skills.HasAndCanUseSkill("help") && SeedManager.combatRandom.Next(100) < 25)
+            if (!hasAskedForHelp && entity.skills.HasAndCanUseSkill(C_Abilities.Help) && RNG.Chance(25))
             {
                 entity.skills.CallForHelp();
                 hasAskedForHelp = true;
@@ -263,7 +264,7 @@ public class BaseAI : MonoBehaviour
 
     public bool isFollower()
     {
-        return npcBase.HasFlag(NPC_Flags.Follower) || npcBase.faction.ID == "followers";
+        return npcBase.HasFlag(NPC_Flags.Follower) || npcBase.faction.ID == C_Factions.Followers;
     }
 
     bool HasThrowingItem()
@@ -285,7 +286,7 @@ public class BaseAI : MonoBehaviour
 
         distanceToTarget = GetDistance(target);
 
-        if (RNG.Next(100) > 40 && distanceToTarget < sightRange)
+        if (RNG.Chance(60) && distanceToTarget < sightRange)
         {
             RangedAttack(target.myPos);
             return true;
@@ -369,7 +370,7 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        Coord next = path.GetNextStep();
+        Coord next = path.Pop();
 
         if (next == null)
         {
@@ -379,7 +380,7 @@ public class BaseAI : MonoBehaviour
 
         if (next.x == entity.posX && next.y == entity.posY && path.StepCount > 0)
         {
-            next = path.GetNextStep();
+            next = path.Pop();
         }
 
         int moveX = next.x - entity.posX, moveY = next.y - entity.posY;
@@ -505,11 +506,11 @@ public class BaseAI : MonoBehaviour
     {
         if (path != null && path.Traversable)
         {
-            Coord next = path.GetNextStep();
+            Coord next = path.Pop();
 
             if (next == entity.myPos && path.StepCount > 0)
             {
-                next = path.GetNextStep();
+                next = path.Pop();
             }
 
             ConfirmAction(next.x - entity.posX, next.y - entity.posY);
@@ -615,9 +616,9 @@ public class BaseAI : MonoBehaviour
 
     public void BecomeHostile()
     {
-        if (!isHostile && npcBase.HasFlag(NPC_Flags.Faction_Leader) && !ObjectManager.playerJournal.HasFlag("HostileTo_" + npcBase.faction.ID))
+        if (!isHostile && npcBase.HasFlag(NPC_Flags.Faction_Leader) && !ObjectManager.playerJournal.HasFlag(C_Factions.HostileTo_(npcBase.faction)))
         {
-            ObjectManager.playerJournal.AddFlag("HostileTo_" + npcBase.faction.ID);
+            ObjectManager.playerJournal.AddFlag(C_Factions.HostileTo_(npcBase.faction));
             npcBase.questID = string.Empty;
             dialogueController.SetupDialogueOptions();
         }
@@ -753,7 +754,7 @@ public class BaseAI : MonoBehaviour
             {
                 for (int y = entity.posY - 1; y <= entity.posY + 1; y++)
                 {
-                    if (x == entity.posX || y == entity.posY && World.tileMap.WalkableTile(x, y))
+                    if ((x == entity.posX || y == entity.posY) && World.tileMap.WalkableTile(x, y))
                     {
                         World.objectManager.SpawnPoisonGas(entity, new Coord(x, y));
                     }
@@ -762,9 +763,9 @@ public class BaseAI : MonoBehaviour
         }
 
         //Destroy all tentacles.
-        if (npcBase.ID == "empty")
+        if (npcBase.ID == C_NPCs.TheEmpty)
         {
-            List<Entity> tentacles = World.objectManager.onScreenNPCObjects.FindAll(x => x.AI.npcBase.ID == "theempty-tentacle");
+            List<Entity> tentacles = World.objectManager.onScreenNPCObjects.FindAll(x => x.AI.npcBase.ID == C_NPCs.TheEmpty_Tentacle);
 
             foreach (Entity e in tentacles)
             {
@@ -780,7 +781,7 @@ public class BaseAI : MonoBehaviour
     {
         spriteComponent = GetComponent<NPCSprite>();
         gameObject.name = npcBase.name;
-        perception = npcBase.Attributes["Perception"];
+        perception = npcBase.Attributes[C_Attributes.Perception];
 
         if (npcBase.faction != null && npcBase.faction.HostileToPlayer())
         {
@@ -912,7 +913,7 @@ public class BaseAI : MonoBehaviour
 
     bool UseAbility_Lua()
     {
-        if (SeedManager.combatRandom.Next(100) > 25 || entity.stats.HasEffect("Blind"))
+        if (RNG.Chance(50) || entity.stats.HasEffect(C_StatusEffects.Blind))
         {
             return false;
         }
@@ -947,15 +948,15 @@ public class BaseAI : MonoBehaviour
 
         if (possible.Count > 0)
         {
-            Ability choice = possible.GetRandom(SeedManager.combatRandom);
+            Ability choice = possible.GetRandom();
 
             switch (choice.castType)
             {
                 case CastType.Direction:
                     int dirX = (target.posX - entity.posX), dirY = (target.posY - entity.posY);
 
-                    if (dirX != 0) dirX = (dirX > 0) ? 1 : -1;
-                    if (dirY != 0) dirY = (dirY > 0) ? 1 : -1;
+                    if (dirX != 0) dirX = dirX > 0 ? 1 : -1;
+                    if (dirY != 0) dirY = dirY > 0 ? 1 : -1;
 
                     choice.ActivateCoordinateSkill(entity.skills, new Coord(dirX, dirY));
                     break;
@@ -978,19 +979,19 @@ public class BaseAI : MonoBehaviour
         distanceToTarget = GetDistance(target);
 
         //Call for help
-        if (!hasAskedForHelp && entity.skills.HasAndCanUseSkill("help") && RNG.Chance(10))
+        if (!hasAskedForHelp && entity.skills.HasAndCanUseSkill(C_Abilities.Help) && RNG.Chance(10))
         {
             entity.skills.CallForHelp();
             hasAskedForHelp = true;
-            entity.skills.abilities.Find(x => x.ID == "help").InitializeCooldown();
+            entity.skills.abilities.Find(x => x.ID == C_Abilities.Help).InitializeCooldown();
 
             return true;
         }
 
         //The End - Spawn tentacle
-        if (npcBase.ID == "empty" && RNG.Next(100) < 20)
+        if (npcBase.ID == C_NPCs.TheEmpty && RNG.Chance(20))
         {
-            List<Entity> tentacles = World.objectManager.onScreenNPCObjects.FindAll(x => x.AI.npcBase.ID == "theempty-tentacle");
+            List<Entity> tentacles = World.objectManager.onScreenNPCObjects.FindAll(x => x.AI.npcBase.ID == C_NPCs.TheEmpty_Tentacle);
 
             if (tentacles.Count < 6)
             {
@@ -1007,7 +1008,7 @@ public class BaseAI : MonoBehaviour
 
                 if (lps.Count > 0)
                 {
-                    NPC n = EntityList.GetNPCByID("theempty-tentacle", World.tileMap.WorldPosition, lps.GetRandom());
+                    NPC n = EntityList.GetNPCByID(C_NPCs.TheEmpty_Tentacle, World.tileMap.WorldPosition, lps.GetRandom());
                     World.objectManager.SpawnNPC(n);
                     return true;
                 }
@@ -1022,7 +1023,7 @@ public class BaseAI : MonoBehaviour
         if (npcBase.HasFlag(NPC_Flags.Summon_Adds) && RNG.OneIn(10) && entity.skills.CanUseSkill(3))
         {
             entity.stats.UseStamina(3);
-            SummonAdd("Slimeites 1");
+            SummonAdd(C_NPCGroups.Slimeites);
             return true;
         }
 
@@ -1031,9 +1032,9 @@ public class BaseAI : MonoBehaviour
         {
             CombatLog.CombatMessage("Bites", entity.Name, target.Name, entity.isPlayer);
 
-            if (RNG.Next(100) < 10)
+            if (RNG.Chance(10))
             {
-                target.stats.InitializeNewTrait(TraitList.GetTraitByID("leprosy"));
+                target.stats.InitializeNewTrait(TraitList.GetTraitByID(C_Traits.Leprosy));
             }
 
             entity.fighter.Attack(target.stats, true);
@@ -1041,7 +1042,7 @@ public class BaseAI : MonoBehaviour
         }
 
         //Grappling
-        if (distanceToTarget < 2f && entity.skills.HasAndCanUseSkill("grapple") && RNG.OneIn(5))
+        if (distanceToTarget < 2f && entity.skills.HasAndCanUseSkill(C_Abilities.Grapple) && RNG.OneIn(5))
         {
             if (entity.body.AllGrips() == null || entity.body.AllGrips().Count == 0)
             {
@@ -1079,9 +1080,9 @@ public class BaseAI : MonoBehaviour
         if (RNG.OneIn(5) && npcBase.HasFlag(NPC_Flags.Aquatic) 
             && TileManager.isWaterTile(World.tileMap.GetTileID(entity.posX, entity.posY)))
         {
-            if (entity.body.AllGripsAgainst().Count <= 0 && !entity.stats.HasEffect("Underwater"))
+            if (entity.body.AllGripsAgainst().Count <= 0 && !entity.stats.HasEffect(C_StatusEffects.Underwater))
             {
-                entity.stats.AddStatusEffect("Underwater", RNG.Next(3, 11));
+                entity.stats.AddStatusEffect(C_StatusEffects.Underwater, RNG.Next(3, 11));
                 return true;
             }
         }

@@ -5,6 +5,7 @@
             "Rarity" : 100,
             "Type" : "Misc_Object",
             "Cost" : 0,
+            "Attack Range" : 1,
             "Abstract Parent" : true
         },
 
@@ -813,6 +814,7 @@
             "FlavorText" : "A long pole used for bashing foes from a distance.",
             "Cost" : 21,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Two_Handed", "Knockback" ],
             "Damage Types" : [ "Blunt" ],
             "Display" : {
@@ -831,6 +833,7 @@
             "FlavorText" : "Often used to move hay. Can be repurposed into a weapon if the need arises. The ancestor of the Trident.",
             "Cost" : 25,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Two_Handed" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
@@ -849,6 +852,7 @@
             "FlavorText" : "Its reach alone offers you great boons during battle.",
             "Cost" : 25,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Two_Handed", "Quick", "Damage_From_Str_And_Dex" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
@@ -867,6 +871,7 @@
             "FlavorText" : "Originating as a fishing tool, this three-pronged spear can be deadly in the right hands.",
             "Cost" : 45,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Two_Handed" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
@@ -885,6 +890,7 @@
             "FlavorText" : "A long polearm with a large axe head on the end.",
             "Cost" : 111,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Two_Handed" ],
             "Damage Types" : [ "Pierce", "Cleave" ],
             "Display" : {
@@ -904,6 +910,7 @@
             "FlavorText" : "Lances were made as mounted weapons. Few have made use of lances in on-foot combat.",
             "Cost" : 120,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Very_Slow", "Two_Handed", "Knockback" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
@@ -1197,6 +1204,7 @@
             "FlavorText" : "A light spear that is made to be thrown. It is very aerodynamic, and can pierce armor effectively.",
             "Cost" : 45,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Damage_From_Dex" ],
             "Damage Types" : [ "Pierce"],
             "Display" : {
@@ -2322,7 +2330,7 @@
         	"ID" : "bandage",
             "Name" : "Bandage",
             "Rarity" : 1,
-            "FlavorText" : "Strands of cloth, that when applied, can be ued to stop bleeding.",
+            "FlavorText" : "Strands of cloth, that when applied, can be used to stop bleeding.",
             "Cost" : 11,
             "Stackable" : true,
             "Properties" : [ "Stop_Bleeding" ],
@@ -2656,6 +2664,7 @@
             "Cost" : 800,
             "Rarity" : 5,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Components" : [
                 { "ID" : "LuaEvent", "Event" : "OnHit", "Script" : "Core.ItemActions.ShockAdjacent" }
             ],
@@ -3425,7 +3434,7 @@
             "Damage" : "3d4+2",
             "Rarity" : 100,
             "Attack Type" : "Bash",
-            "FlavorText" : "An enormous mace, dwarfing any reasonable weapon. It is incredibly slow to swing, but can hit harder than anything else.",
+            "FlavorText" : "An enormous mace, dwarfing any reasonable weapon. It is incredibly slow to swing, but can hit harder than most weapons.",
             "Cost" : 103,
             "Properties" : [ "Weapon", "Two_Handed", "Very_Slow", "Knockback" ],
             "Damage Types" : [ "Blunt" ],
@@ -3514,6 +3523,7 @@
             "Cost" : 1500,
             "Rarity" : 100,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Stat Mods" : [
                 { "Stat" : "Intelligence", "Amount" : 1 }
             ],
@@ -3560,6 +3570,7 @@
             "Cost" : 1500,
             "Rarity" : 100,
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Stat Mods" : [
                 { "Stat" : "Strength", "Amount" : 1 }
             ],
@@ -3927,6 +3938,7 @@
             "Damage" : "1d5",
             "FlavorText" : "Thin translucent tendrils that protrude from your arms.",
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Cannot_Remove" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {
@@ -3944,6 +3956,7 @@
             "Damage" : "1d8",
             "FlavorText" : "A long, slime-covered tentacle sits in the place of your arm.",
             "Attack Type" : "Spear",
+            "Attack Range" : 2,
             "Properties" : [ "Cannot_Remove" ],
             "Damage Types" : [ "Pierce" ],
             "Display" : {

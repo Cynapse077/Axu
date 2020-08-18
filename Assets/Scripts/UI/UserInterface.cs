@@ -1058,7 +1058,7 @@ public class UserInterface : MonoBehaviour
             case UIWindow.Loot:
                 return LPanel.max;
             case UIWindow.UseItemOnItem:
-                return UsePanel.numItems - 1;
+                return UsePanel.NumItems - 1;
             case UIWindow.LevelUp:
                 return Mathf.Max(1, levelUpTraits.Count);
             case UIWindow.LiquidActions:

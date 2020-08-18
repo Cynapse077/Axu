@@ -687,12 +687,13 @@ public class Quest : EventContainer, IAsset
 
     void Complete()
     {
-        ObjectManager.playerEntity.stats.GainExperience(rewards.xp);
-        ObjectManager.playerEntity.inventory.gold += rewards.money;
+        var player = ObjectManager.playerEntity;
+        player.stats.GainExperience(rewards.xp);
+        player.inventory.gold += rewards.money;
 
         foreach (string i in rewards.itemRewards)
         {
-            ObjectManager.playerEntity.inventory.PickupItem(ItemList.GetItemByID(i));
+            player.inventory.PickupItem(ItemList.GetItemByID(i));
         }
 
         RunEvent(this, QuestEvent.EventType.OnComplete);
@@ -700,7 +701,7 @@ public class Quest : EventContainer, IAsset
 
         if (!string.IsNullOrEmpty(chainedQuest) && GameData.TryGet(chainedQuest, out Quest q))
         {
-            ObjectManager.playerJournal.StartQuest(new Quest(GameData.Get<Quest>(chainedQuest)));
+            ObjectManager.playerJournal.StartQuest(q.Clone());
         }
 
         if (!string.IsNullOrEmpty(endDialogue))
@@ -710,8 +711,7 @@ public class Quest : EventContainer, IAsset
 
         if (StoredNPC != null)
         {
-            Entity ent = World.objectManager.GetEntityFromNPC(StoredNPC);
-            World.objectManager.DemolishNPC(ent, StoredNPC);
+            World.objectManager.DemolishNPC(World.objectManager.GetEntityFromNPC(StoredNPC), StoredNPC);
         }
     }
 

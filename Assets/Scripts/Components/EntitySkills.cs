@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using Axu.Constants;
 
 [MoonSharpUserData]
 public class EntitySkills : MonoBehaviour
@@ -158,7 +159,7 @@ public class EntitySkills : MonoBehaviour
 
         if (success)
         {
-            string message = LocalizationManager.GetContent("Gr_TakeDown");
+            string message = "Gr_TakeDown".Localize();
             message = message.Replace("[ATTACKER]", entity.MyName);
             message = message.Replace("[DEFENDER]", target.entity.MyName);
             message = message.Replace("[DEFENDER_LIMB]", limbName);
@@ -170,14 +171,14 @@ public class EntitySkills : MonoBehaviour
         }
         else
         {
-            string message = LocalizationManager.GetContent("Gr_TakeDown_Fail");
+            string message = "Gr_TakeDown_Fail".Localize();
             message = message.Replace("[ATTACKER]", entity.MyName);
             message = message.Replace("[DEFENDER]", target.entity.MyName);
             CombatLog.NewMessage(message);
 
-            if (RNG.Chance(10))
+            if (RNG.OneIn(10))
             {
-                entity.stats.AddStatusEffect("OffBalance", RNG.Next(1, 4));
+                entity.stats.AddStatusEffect(C_StatusEffects.OffBalance, RNG.Next(1, 4));
             }
         }
 
@@ -217,7 +218,7 @@ public class EntitySkills : MonoBehaviour
             }
         }
 
-        if (target.stats.HasEffect("OffBalance"))
+        if (target.stats.HasEffect(C_StatusEffects.OffBalance))
         {
             chance += 4;
         }
@@ -234,7 +235,7 @@ public class EntitySkills : MonoBehaviour
 
             if (RNG.Chance(1))
             {
-                target.stats.AddStatusEffect("Topple", RNG.Next(2, 4));
+                target.stats.AddStatusEffect(C_StatusEffects.Topple, RNG.Next(2, 4));
             }
         }
         else
@@ -246,11 +247,11 @@ public class EntitySkills : MonoBehaviour
 
             if (RNG.OneIn(10))
             {
-                target.stats.AddStatusEffect("OffBalance", RNG.Next(1, 4));
+                target.stats.AddStatusEffect(C_StatusEffects.OffBalance, RNG.Next(1, 4));
             }
             else if (RNG.Chance(6))
             {
-                entity.stats.AddStatusEffect("OffBalance", RNG.Next(1, 4));
+                entity.stats.AddStatusEffect(C_StatusEffects.OffBalance, RNG.Next(1, 4));
             }
         }
 
@@ -293,7 +294,7 @@ public class EntitySkills : MonoBehaviour
             message = message.Replace("[DEFENDER]", target.entity.MyName);
             CombatLog.NewMessage(message);
 
-            target.AddStatusEffect("Strangle", entity.stats.Strength * 2);
+            target.AddStatusEffect(C_StatusEffects.Strangled, entity.stats.Strength * 2);
             target.SimpleDamage(RNG.Next(1, 4));
         }
         else
@@ -334,7 +335,7 @@ public class EntitySkills : MonoBehaviour
             {
                 otherBody.RemoveLimb(targetLimb);
                 grip.Release();
-                otherBody.entity.stats.AddStatusEffect("Stun", 3);
+                otherBody.entity.stats.AddStatusEffect(C_StatusEffects.Stunned, 3);
 
                 message = "Gr_Pull_Success".Localize();
             }
@@ -342,7 +343,7 @@ public class EntitySkills : MonoBehaviour
             {
                 targetLimb.WoundMe(new HashSet<DamageTypes>() { DamageTypes.Pull });
                 otherBody.entity.stats.SimpleDamage(SeedManager.combatRandom.Next(1, 5));
-                otherBody.entity.stats.AddStatusEffect("OffBalance", RNG.Next(2, 5));
+                otherBody.entity.stats.AddStatusEffect(C_StatusEffects.OffBalance, RNG.Next(2, 5));
             }
         }
         else
@@ -351,7 +352,7 @@ public class EntitySkills : MonoBehaviour
 
             if (RNG.Chance(5))
             {
-                entity.stats.AddStatusEffect("OffBalance", RNG.Next(1, 4));
+                entity.stats.AddStatusEffect(C_StatusEffects.OffBalance, RNG.Next(1, 4));
             }
         }
 
@@ -417,7 +418,7 @@ public class EntitySkills : MonoBehaviour
 
             if (item.lootable)
             {
-                World.objectManager.NewInventory("Loot", grip.HeldBody.entity.GetEmptyCoords().GetRandom(), World.tileMap.WorldPosition, World.tileMap.currentElevation, new List<Item>() { item });
+                World.objectManager.NewInventory(C_Objects.Loot, grip.HeldBody.entity.GetEmptyCoords().GetRandom(), World.tileMap.WorldPosition, World.tileMap.currentElevation, new List<Item>() { item });
             }
 
             CombatLog.NewMessage(grip.HeldBody.entity.MyName + "'s " + item.DisplayName() + " is torn from their hand by " + entity.MyName + "!");

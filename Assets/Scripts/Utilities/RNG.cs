@@ -19,6 +19,11 @@ public static class RNG
         return Next(100) < chance;
     }
 
+    public static bool Chance(double chance)
+    {
+        return Next(100) < chance;
+    }
+
     public static bool OneIn(int num)
     {
         return SeedManager.combatRandom.Next(0, num) == 0;

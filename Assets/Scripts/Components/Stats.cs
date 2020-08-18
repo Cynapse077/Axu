@@ -507,7 +507,7 @@ public class Stats : MonoBehaviour
 
         if (targetPart == null)
         {
-            targetPart = Utility.WeightedChoice(MyBody.TargetableBodyParts());
+            targetPart = MyBody.TargetableBodyParts().WeightedChoice();
         }
 
         //Blocking with shields
@@ -653,7 +653,7 @@ public class Stats : MonoBehaviour
             lastHit = attacker;
         }
 
-        BodyPart targetPart = Utility.WeightedChoice(MyBody.TargetableBodyParts());
+        BodyPart targetPart = MyBody.TargetableBodyParts().WeightedChoice();
         int damage = CalculateDamage(amount, dTypes, crit, targetPart, ignoreArmor, ignoreResists);
 
         if (damage <= 0)
@@ -679,7 +679,7 @@ public class Stats : MonoBehaviour
             return;
         }
 
-        BodyPart targetPart = Utility.WeightedChoice(MyBody.TargetableBodyParts());
+        BodyPart targetPart = MyBody.TargetableBodyParts().WeightedChoice();
         HashSet<DamageTypes> dTypes = new HashSet<DamageTypes>() { DamageTypes.Blunt };
         int damage = CalculateDamage(amount, dTypes, false, targetPart, true, true);
 

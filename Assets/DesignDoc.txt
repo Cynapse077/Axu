@@ -14,9 +14,6 @@
 - Patrolling Empire soldiers.
 - Graverobbing radiant quest.
 - Puggle pup pet.
-- Late-game goal to acquire an abandoned Empire orbital weapon.
-	- Acts like an ability, loooong recharge. Or a thrown consumable to not be overpowered. Decimates targets in an area.
-	- Only works above ground.
 
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------

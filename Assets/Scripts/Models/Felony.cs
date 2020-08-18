@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using LitJson;
 
 [System.Serializable]
@@ -133,7 +134,14 @@ public class Felony : IAsset
 
     public static Felony PlayerFelony()
     {
-        return GameData.Get<Felony>(Manager.profName);
+        return GameData.Get<Felony>((IAsset asset) => {
+            if (asset is Felony felony)
+            {
+                return felony.name == Manager.profName;
+            }
+
+            return false;
+        }).FirstOrDefault();
     }
 
     public IEnumerable<string> LoadErrors()
