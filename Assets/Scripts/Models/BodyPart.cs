@@ -8,7 +8,7 @@ using Axu.Constants;
 [Serializable]
 public class BodyPart : IWeighted
 {
-    const int maxLevel = 5;
+    const int MaxLevel = 8;
 
     public Body myBody;
     public string name;
@@ -41,28 +41,10 @@ public class BodyPart : IWeighted
         protected set { _attached = value; }
     }
 
-    public bool Crippled
-    {
-        get { return !wounds.NullOrEmpty(); }
-    }
-
-    public bool Organic
-    {
-        get { return !HasFlag(BPFlags.Synthetic);  }
-    }
-
-    public bool CanWearGear
-    {
-        get { return !HasFlag(BPFlags.CannotWearGear); }
-    }
-
-    public bool Severable
-    {
-        get 
-        { 
-            return !HasFlag(BPFlags.NonSeverable) && Attached; 
-        }
-    }
+    public bool Crippled => !wounds.NullOrEmpty();
+    public bool Organic => !HasFlag(BPFlags.Synthetic);
+    public bool CanWearGear => !HasFlag(BPFlags.CannotWearGear);
+    public bool Severable => !HasFlag(BPFlags.NonSeverable) && Attached;
 
     public void SetXP(double xp, double max)
     {
@@ -146,7 +128,7 @@ public class BodyPart : IWeighted
             myBody = entity.body;
         }
 
-        if (level >= 5 || !Organic || !Attached)
+        if (level >= MaxLevel || !Organic || !Attached)
         {
             return;
         }
@@ -163,7 +145,7 @@ public class BodyPart : IWeighted
 
     public void LevelUp(Entity entity)
     {
-        if (level >= maxLevel)
+        if (level >= MaxLevel)
         {
             return;
         }
@@ -175,7 +157,7 @@ public class BodyPart : IWeighted
         switch (slot)
         {
             case ItemProperty.Slot_Arm:
-                stat = (level % 2 == 0) ? C_Attributes.Dexterity : C_Attributes.Strength;
+                stat = level % 2 == 0 ? C_Attributes.Dexterity : C_Attributes.Strength;
                 break;
             case ItemProperty.Slot_Chest:
             case ItemProperty.Slot_Back:
@@ -190,7 +172,7 @@ public class BodyPart : IWeighted
                 stat = C_Attributes.MoveSpeed;
                 break;
             case ItemProperty.Slot_Tail:
-                stat = (level % 2 == 0) ? C_Attributes.Dexterity : C_Attributes.MoveSpeed;
+                stat = level % 2 == 0 ? C_Attributes.Dexterity : C_Attributes.MoveSpeed;
                 break;
         }
 
@@ -306,12 +288,11 @@ public class BodyPart : IWeighted
 
         if (hand != null)
         {
-            string baseItem = (!string.IsNullOrEmpty(hand.baseItem)) ? C_Items.Fist : hand.baseItem;
-
+            string baseItem = !string.IsNullOrEmpty(hand.baseItem) ? C_Items.Fist : hand.baseItem;
             hnd = new SHand(hand.EquippedItem.ToSerializedItem(), baseItem);
         }
 
-        string cybID = (cybernetic == null) ? "" : cybernetic.ID;
+        string cybID = cybernetic != null ? cybernetic.ID : "";
 
         SItem equipped = equippedItem.ToSerializedItem();
         SBodyPart simple = new SBodyPart(name, flags, equipped, _attached, slot, Weight, Attributes, armor, level, currXP, maxXP, wounds, hnd, cybID);
@@ -411,10 +392,7 @@ public class BodyPart : IWeighted
 
         if (other.hand != null)
         {
-            hand = new Hand(other.hand)
-            {
-                arm = this
-            };
+            hand = new Hand(other.hand) { arm = this };
         }
     }
 
@@ -425,10 +403,7 @@ public class BodyPart : IWeighted
         public Item EquippedItem;
         public string baseItem = C_Items.Fist;
 
-        public bool IsAttached
-        {
-            get { return (arm != null && arm.Attached); }
-        }
+        public bool IsAttached => arm != null && arm.Attached;
         public bool IsMainHand
         {
             get
@@ -501,10 +476,7 @@ public class BodyPart : IWeighted
         public BodyPart myPart;
         public BodyPart heldPart;
 
-        public Body HeldBody
-        {
-            get { return heldPart.myBody; }
-        }
+        public Body HeldBody => heldPart.myBody;
 
         public Grip(BodyPart part, BodyPart me)
         {
@@ -515,7 +487,6 @@ public class BodyPart : IWeighted
         int GripStrength()
         {
             int str = 2;
-
             Body b = myPart.myBody;
 
             for (int i = 0; i < b.bodyParts.Count; i++)
@@ -531,23 +502,24 @@ public class BodyPart : IWeighted
 
         public bool GripBroken(int strPenalty = 0)
         {
+            const int penaltyForInjured = 3;
+
             if (heldPart == null)
             {
                 return true;
             }
 
-            int rollFor = SeedManager.combatRandom.Next(0, GripStrength()) - strPenalty;
+            int rollFor = RNG.Next(0, GripStrength()) - strPenalty;
+            int rollAgainst = RNG.Next(-2, HeldBody.entity.stats.Strength - 1);
 
             if (myPart.Crippled)
             {
-                rollFor -= 3;
+                rollFor -= penaltyForInjured;
             }
-
-            int rollAgainst = SeedManager.combatRandom.Next(-2, HeldBody.entity.stats.Strength - 1);
 
             if (heldPart.Crippled)
             {
-                rollAgainst -= 3;
+                rollAgainst -= penaltyForInjured;
             }
 
             return rollAgainst > rollFor;
@@ -555,7 +527,7 @@ public class BodyPart : IWeighted
 
         public bool CanStrangle()
         {
-            return heldPart.slot == ItemProperty.Slot_Head && SeedManager.combatRandom.Next(100) < 20 && myPart.myBody.entity.stats.Strength > 6;
+            return heldPart.slot == ItemProperty.Slot_Head && RNG.Chance(20) && myPart.myBody.entity.stats.Strength > 6;
         }
 
         public void Release()

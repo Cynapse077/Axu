@@ -181,7 +181,7 @@ namespace MapCreator
 
                 if (Input.GetMouseButton(1))
                 {
-                    EmptySprite(mct.selectType);                
+                    EmptySprite(mct.selectType);
                 }
             }
         }

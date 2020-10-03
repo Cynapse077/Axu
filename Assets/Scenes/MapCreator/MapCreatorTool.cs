@@ -124,7 +124,7 @@ namespace MapCreator
                 //Clip image to bottom left
                 if (objectSprites[i].texture.width > 20)
                 {
-                    objectSprites[i] = Sprite.Create(objectSprites[i].texture, new Rect(96, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+                    objectSprites[i] = Sprite.Create(objectSprites[i].texture, new Rect(96, 0, Manager.TileResolution, Manager.TileResolution), new Vector2(0.5f, 0.5f), Manager.TileResolution);
                 }
 
                 GameObject g = Instantiate(buttonPrefab, objectAnchor);
@@ -410,9 +410,9 @@ namespace MapCreator
         {
             if (cells[px, py].objectID > 0 && ViewableObjects[cells[px, py].objectID].autotile)
             {
-                int xOffset = BitwiseNeighbors(px, py, cells[px, py].objectID) * 16;
+                int xOffset = BitwiseNeighbors(px, py, cells[px, py].objectID) * Manager.TileResolution;
                 Texture2D t = SpriteManager.GetObjectSprite(ViewableObjects[cells[px, py].objectID].spriteID).texture;
-                cells[px, py].mapObject.sprite = Sprite.Create(t, new Rect(xOffset, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+                cells[px, py].mapObject.sprite = Sprite.Create(t, new Rect(xOffset, 0, Manager.TileResolution, Manager.TileResolution), new Vector2(0.5f, 0.5f), Manager.TileResolution);
             }
 
             if (initial)

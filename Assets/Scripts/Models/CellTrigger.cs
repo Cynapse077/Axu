@@ -2,13 +2,21 @@
 
 public class CellTrigger
 {
-    readonly Action<Entity> actionToPerform;
-    readonly IntRect rect;
+    public LuaCall luaCall;
+    public IntRect rect;
 
-    public CellTrigger(int l, int b, int w, int h, Action<Entity> action)
+    public CellTrigger() { }
+
+    public CellTrigger(IntRect rect, LuaCall call)
+    {
+        this.rect = rect;
+        luaCall = call;
+    }
+
+    public CellTrigger(int l, int b, int w, int h, LuaCall call)
     {
         rect = new IntRect(l, b, w, h);
-        actionToPerform = action;
+        luaCall = call;
         Init();
     }
 
@@ -58,11 +66,11 @@ public class CellTrigger
         return true;
     }
 
-    public void PerformAction(Entity e)
+    private void PerformAction(Entity e)
     {
         if (e.isPlayer)
         {
-            actionToPerform(e);
+            LuaManager.CallScriptFunction(luaCall, e);
             Destroy(null, null);
         }
     }
@@ -72,25 +80,10 @@ public struct IntRect
 {
     public int left, bottom, width, height;
 
-    public int right
-    {
-        get { return left + width; }
-    }
-
-    public int top
-    {
-        get { return bottom + height; }
-    }
-
-    public int centerX
-    {
-        get { return left + (width / 2); }
-    }
-
-    public int centerY
-    {
-        get { return bottom + (height / 2); }
-    }
+    public int right => left + width;
+    public int top => bottom + height;
+    public int centerX => left + (width / 2);
+    public int centerY => bottom + (height / 2);
 
     public IntRect(int l, int b, int w, int h)
     {

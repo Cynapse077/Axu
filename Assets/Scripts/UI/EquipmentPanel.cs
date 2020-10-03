@@ -66,7 +66,7 @@ public class EquipmentPanel : UIPanel
 
     public static Sprite SwitchSprite(Item item)
     {
-        string id = item.renderer.onGround.NullOrEmpty() ? "item-empty.png" : item.renderer.onGround;
+        string id = item.IsNullOrDefault() || item.renderer.onGround.NullOrEmpty() ? "item-empty.png" : item.renderer.onGround;
 
         return SpriteManager.GetObjectSprite(id);
     }

@@ -391,7 +391,7 @@ public class PlayerInput : MonoBehaviour
         if (AnyInput())
         {
             moveTimer += Time.deltaTime;
-            canHoldKeys = (moveTimer >= 0.25f);
+            canHoldKeys = moveTimer >= 0.25f;
         }
 
         if (AnyInputUp())
@@ -893,7 +893,7 @@ public class PlayerInput : MonoBehaviour
                 sidePanelUI.SetActive(!fullMap);
 
                 SetStoredTravelPosition();
-                World.tileMap.HardRebuild();
+                World.tileMap.HardRebuild_NoLight();
                 SpawnController.SetupOverworldEncounter();
             }
         }

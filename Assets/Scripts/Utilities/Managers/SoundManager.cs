@@ -107,7 +107,7 @@ public class SoundManager : MonoBehaviour
         {
             fadeOut = false;
 
-            musicSource.volume += (Time.deltaTime * 0.5f);
+            musicSource.volume += Time.deltaTime * 0.5f;
 
             if (musicSource.volume >= MusicVolume)
             {
@@ -118,7 +118,7 @@ public class SoundManager : MonoBehaviour
         {
             fadeIn = false;
 
-            musicSource.volume -= (Time.deltaTime * 0.5f);
+            musicSource.volume -= Time.deltaTime * 0.5f;
 
             if (musicSource.volume <= 0.0f)
             {
@@ -166,14 +166,9 @@ public class SoundManager : MonoBehaviour
 
     public void OverrideMusic(AudioClip[] audioClips)
     {
-        //If we have a matching track, don't fade in and out
-        for (int i = 0; i < audioClips.Length; i++)
+        if (zoneTracks == audioClips)
         {
-            if (musicSource.clip == audioClips[i])
-            {
-                initialized = true;
-                return;
-            }
+            return;
         }
 
         zoneTracks = audioClips;

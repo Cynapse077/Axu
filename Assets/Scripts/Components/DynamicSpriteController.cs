@@ -101,7 +101,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
         }
 
         newTex.Apply();
-        body.sprite = Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), Pivot, 16);
+        body.sprite = Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), Pivot, Manager.TileResolution);
     }
 
     void MergeTextures(ref Texture2D t1, Texture2D t2)
@@ -139,7 +139,7 @@ public class DynamicSpriteController : MonoBehaviour, EntitySprite
     {
         if (baseSprite != null)
         {
-            body.sprite = swim ? swimmingSprite : Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), Pivot, 16f);
+            body.sprite = swim ? swimmingSprite : Sprite.Create(newTex, new Rect(0, 0, baseSprite.width, baseSprite.height), Pivot, Manager.TileResolution);
         }
     }
 }

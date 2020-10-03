@@ -18,6 +18,7 @@ namespace Axu
 
             public const string Perception = "Perception";
             public const string MoveSpeed = "Speed";
+            public const string Influence = "Charisma";
         }
 
         public static class C_StatusEffects
@@ -36,6 +37,7 @@ namespace Axu
         public static class C_Factions
         {
             public const string Followers = "followers";
+            public const string Bandits = "bandits";
 
             public static string HostileTo_(Faction other)
             {

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class TurnManager : MonoBehaviour
@@ -17,35 +18,20 @@ public class TurnManager : MonoBehaviour
     public Weather currentWeather = Weather.Clear;
     public event Action incrementTurnCounter;
 
-    Color currentColor;
     int turnsSinceWeatherChange = 0, TurnsTilWeatherChange = 750;
     List<Entity> npcs = new List<Entity>();
     List<TurnTimer> timers = new List<TurnTimer>();
     int timeOfDay = 0;
     Entity playerEntity;
 
-    public int FullDayLength
-    {
-        get { return dayLength + nightLength; }
-    }
-
-    public int Day
-    {
-        get { return (turn / FullDayLength) + 1; }
-    }
-
+    public int FullDayLength => dayLength + nightLength;
+    public int Day => (turn / FullDayLength) + 1;
     public int TimeOfDay
     {
         get { return timeOfDay; }
         protected set { timeOfDay = value; }
     }
-    public float DayProgress
-    {
-        get
-        {
-            return Mathf.PingPong(turn, FullDayLength) / FullDayLength;
-        }
-    }
+    public float DayProgress => Mathf.PingPong(turn, FullDayLength) / FullDayLength;
 
     void OnEnable()
     {

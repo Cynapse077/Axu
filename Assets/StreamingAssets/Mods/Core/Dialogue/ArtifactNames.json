@@ -11,5 +11,11 @@
 		"Bright", "Waning", "Chill", "Grasp", "Broken",
 		"Blessing", "Xeno", "Forbid", "Pulse", "Pressure",
 		"Dredge", "Fae", "Limp", "Shock", "Boom"
-    ]
+    ],
+
+	"Names Complex" :
+	[
+		"The {0}",
+		"{0} of {1}"
+	]
 }

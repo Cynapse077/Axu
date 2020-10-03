@@ -48,7 +48,7 @@ public class MouseController : MonoBehaviour
             {
                 HandleMouseInput();
             }
-        }       
+        }
     }
 
     void HandleMouseInput()
@@ -83,7 +83,7 @@ public class MouseController : MonoBehaviour
 
         prevX = (int)pos.x;
         prevY = (int)pos.y;
-        prevPlayerPos = ObjectManager.playerEntity.myPos;
+        prevPlayerPos = new Coord(ObjectManager.playerEntity.myPos);
     }
 
     public void DrawPath(Coord newPos)
@@ -195,13 +195,13 @@ public class MouseController : MonoBehaviour
         }
         else
         {
-            bool canSee = (playerEntity.InSight(posX, posY) || World.tileMap.CurrentMap.has_seen[posX, posY + Manager.localMapSize.y]);
+            bool canSee = playerEntity.InSight(posX, posY) || World.tileMap.CurrentMap.has_seen[posX, posY + Manager.localMapSize.y];
             sRenderer.sprite = (canSee) ? sprites[0] : sprites[1];
 
             Coord targetPos = new Coord((int)cursor.position.x, (int)cursor.position.y);
             if (refreshPath)
             {
-                if (canSee)
+                if (canSee && playerInput.cursorMode == PlayerInput.CursorMode.None)
                 {
                     DrawPath(targetPos);
                 }

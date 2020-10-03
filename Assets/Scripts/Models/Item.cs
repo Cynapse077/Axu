@@ -9,7 +9,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 {
     public string ID { get; set; }
     public string ModID { get; set; }
-    public string Name, displayName = "", flavorText;
+    public string Name, displayName, flavorText;
     public Proficiencies itemType;
     public int armor, amount = 1, accuracy, rarity, tileID = -1;
     public bool lootable, stackable = false;
@@ -123,7 +123,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
         if (TryGetCComponent(out CAbility cab) && !HasProp(ItemProperty.Tome))
         {
-            Ability sk = new Ability(GameData.Get<Ability>(cab.abID));
+            Ability sk = GameData.Get<Ability>(cab.abID).Clone();
 
             if (sk != null)
             {
@@ -192,7 +192,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
         //Item level
         if (TryGetCComponent(out CItemLevel ci))
         {
-            ci.AddXP(SeedManager.combatRandom.NextDouble() * 8.0);
+            ci.AddXP(RNG.NextDouble() * 8.0);
         }
 
         if (HasProp(ItemProperty.Knockback) && RNG.OneIn(20))
@@ -333,7 +333,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
 
     void ChangeStats(Stats stats, bool reverseEffect = false)
     {
-        int multiplier = (reverseEffect) ? -1 : 1;
+        int multiplier = reverseEffect ? -1 : 1;
 
         foreach (Stat_Modifier mod in statMods)
         {
@@ -352,9 +352,7 @@ public class Item : ComponentHolder<CComponent>, IAsset
             {
                 case "Haste":
                     if (!reverseEffect)
-                    {
                         stats.AddStatusEffect("Haste", mod.Amount);
-                    }
                     break;
                 case "Health":
                     stats.health += am;
@@ -370,25 +368,17 @@ public class Item : ComponentHolder<CComponent>, IAsset
                     break;
                 case "Storage Capacity":
                     if (stats.entity.inventory != null)
-                    {
                         stats.entity.inventory.AddRemoveStorage(am);
-                    }
                     else
-                    {
                         stats.GetComponent<Inventory>().AddRemoveStorage(am);
-                    }
                     break;
                 case "Light":
                     if (stats.entity.isPlayer && World.tileMap != null)
-                    {
                         World.tileMap.LightCheck();
-                    }
                     break;
                 case "Accuracy":
                     if (stats.Attributes.ContainsKey("Accuracy"))
-                    {
                         stats.Attributes["Accuracy"] += am;
-                    }
                     break;
             }
         }

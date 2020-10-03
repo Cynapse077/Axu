@@ -219,9 +219,13 @@ public class Stats : MonoBehaviour
     public void ConsumedAddictiveSubstance(string id, bool liquid)
     {
         if (addictions.Find(x => x.addictedID == id) != null)
+        {
             addictions.Find(x => x.addictedID == id).ItemUse(this);
+        }
         else
+        {
             addictions.Add(new Addiction(id, (liquid ? ItemList.GetLiquidByID(id).addictiveness : 5)));
+        }
     }
 
     public bool SkipTurn()
@@ -233,11 +237,11 @@ public class Stats : MonoBehaviour
     {
         if (effectName == "Stun" && hasTraitEffect(TraitEffects.Stun_Resist) || effectName == "Confuse" && hasTraitEffect(TraitEffects.Confusion_Resist))
         {
-            if (RNG.Next(100) > 20)
+            if (RNG.Chance(80))
             {
                 turns /= 2;
             }
-            else if (RNG.Next(100) < 2)
+            else if (RNG.Chance(2))
             {
                 return;
             }
@@ -521,7 +525,7 @@ public class Stats : MonoBehaviour
 
         if (damage > 0)
         {
-            if (hasTraitEffect(TraitEffects.Zap_On_Hit) && RNG.Next(100) < 5)
+            if (hasTraitEffect(TraitEffects.Zap_On_Hit) && RNG.Chance(5))
             {
                 attacker.stats.IndirectAttack(RNG.Next(1, 6), DamageTypes.Energy, entity, "Shock".Localize(), true);
             }
@@ -529,7 +533,7 @@ public class Stats : MonoBehaviour
             HandleSeverence(damTypes, targetPart, sevChance);
             weapon.OnHit(attacker, entity);
 
-            if (RNG.Next(100) < 20)
+            if (RNG.Chance(20))
             {
                 MyBody.TrainLimbOfType(new ItemProperty[] { ItemProperty.Slot_Back, ItemProperty.Slot_Chest });
             }
@@ -542,13 +546,6 @@ public class Stats : MonoBehaviour
 
         if (entity.isPlayer || entity.AI.InSightOfPlayer())
         {
-            bool displayOrange = entity.isPlayer;
-
-            if (damage <= 0)
-            {
-                displayOrange = !displayOrange;
-            }
-
             CombatLog.Combat_Full(entity.isPlayer, damage, crit, entity.Name, false, attacker.Name, targetPart.displayName, weapon.DisplayName());
         }
 
@@ -662,7 +659,11 @@ public class Stats : MonoBehaviour
             return 0;
         }
 
-        CombatLog.NewIndirectCombat("Damage_Indirect", damage, sourceName, entity.MyName, targetPart.displayName, entity.isPlayer);
+        if (entity.isPlayer || entity.AI.InSightOfPlayer())
+        {
+            CombatLog.NewIndirectCombat("Damage_Indirect", damage, sourceName, entity.MyName, targetPart.displayName, entity.isPlayer);
+        }
+
         PostDamage(attacker, damage, dTypes, targetPart);
 
         return damage;
@@ -683,7 +684,11 @@ public class Stats : MonoBehaviour
         HashSet<DamageTypes> dTypes = new HashSet<DamageTypes>() { DamageTypes.Blunt };
         int damage = CalculateDamage(amount, dTypes, false, targetPart, true, true);
 
-        CombatLog.NewSimpleCombat("Damage_Simplified", damage, entity.Name, entity.isPlayer);
+        if (entity.isPlayer || entity.AI.InSightOfPlayer())
+        {
+            CombatLog.NewSimpleCombat("Damage_Simplified", damage, entity.Name, entity.isPlayer);
+        }
+
         PostDamage(null, damage, dTypes, targetPart);
     }
 
@@ -760,7 +765,7 @@ public class Stats : MonoBehaviour
                 {
                     ApplyResist(ref damage, HeatResist);
 
-                    if (RNG.Next(100) < 3)
+                    if (RNG.Chance(3))
                     {
                         AddStatusEffect("Aflame", RNG.Next(2, 6));
                     }
@@ -769,7 +774,7 @@ public class Stats : MonoBehaviour
                 {
                     ApplyResist(ref damage, ColdResist);
 
-                    if (RNG.Next(100) < 3)
+                    if (RNG.Chance(3))
                     {
                         AddStatusEffect("Slow", RNG.Next(2, 5));
                     }
@@ -778,7 +783,7 @@ public class Stats : MonoBehaviour
                 {
                     ApplyResist(ref damage, EnergyResist);
 
-                    if (RNG.Next(100) < 3)
+                    if (RNG.Chance(3))
                     {
                         AddStatusEffect("Stun", RNG.Next(1, 3));
                     }
@@ -807,11 +812,11 @@ public class Stats : MonoBehaviour
     }
 
     //The actual application of damage, from Damage()
-    void ApplyDamage(int amount, bool crit, bool bloodstain = false)
+    void ApplyDamage(int amount, bool bloodstain = false)
     {
         health -= amount;
 
-        if (RNG.Next(100) < 20 && bloodstain)
+        if (RNG.Chance(20) && bloodstain)
         {
             entity.CreateBloodstain();
         }
@@ -867,7 +872,7 @@ public class Stats : MonoBehaviour
             }
         }
 
-        ApplyDamage(amount, false, damageType == DamageTypes.Bleed);
+        ApplyDamage(amount, damageType == DamageTypes.Bleed);
     }
 
     public void RestoreStamina(int amount)
@@ -1015,7 +1020,7 @@ public class Stats : MonoBehaviour
             return;
         }
 
-        if (hasTraitEffect(TraitEffects.Rad_Resist) && RNG.Next(100) < 10)
+        if (hasTraitEffect(TraitEffects.Rad_Resist) && RNG.Chance(10))
         {
             radiation /= 2;
 
@@ -1231,9 +1236,13 @@ public class Stats : MonoBehaviour
             if (MyBody.bodyParts[limbIndex].slot == ItemProperty.Slot_Arm)
             {
                 if (MyBody.bodyParts[limbIndex].hand == null)
+                {
                     MyBody.bodyParts[limbIndex].hand = new BodyPart.Hand(MyBody.bodyParts[limbIndex], ItemList.GetItemByID(item.ID), ce.baseItemID);
+                }
                 else
+                {
                     MyBody.bodyParts[limbIndex].hand.SetEquippedItem(ItemList.GetItemByID(item.ID), entity);
+                }
             }
         }
         else
@@ -1299,7 +1308,7 @@ public class Stats : MonoBehaviour
 
                 if (hasTraitEffect(TraitEffects.Poison_Resist))
                 {
-                    amount = (SeedManager.combatRandom.Next(100) < 20) ? 0 : amount / 2;
+                    amount = RNG.Chance(20) ? 0 : amount / 2;
                 }
 
                 if (health > amount)
@@ -1313,7 +1322,9 @@ public class Stats : MonoBehaviour
                 int amount = RNG.Next(2, 5);
 
                 if (hasTraitEffect(TraitEffects.Bleed_Resist))
-                    amount = (SeedManager.combatRandom.Next(100) < 20) ? 0 : amount / 2;
+                {
+                    amount = RNG.Chance(20) ? 0 : amount / 2;
+                }
 
                 if (health > amount)
                 {
@@ -1321,7 +1332,7 @@ public class Stats : MonoBehaviour
                 }
 
             }
-            else if (kvp.Key == "Sick" && RNG.Next(100) < 5)
+            else if (kvp.Key == "Sick" && RNG.Chance(5))
             {
                 int amount = RNG.Next(1, 3);
                 World.objectManager.CreatePoolOfLiquid(entity.myPos, "liquid_vomit", amount);

@@ -270,10 +270,13 @@ public class TileMap : MonoBehaviour
             }
         }
 
-        foreach (Coord c in ShadowCasting.GetVisibleCells())
+        if (ObjectManager.playerEntity != null)
         {
-            CurrentMap.has_seen[c.x, c.y] = true;
-            cells[c.x, c.y].UpdateInSight(true, CurrentMap.has_seen[c.x, c.y]);
+            foreach (Coord c in ShadowCasting.GetVisibleCells(ObjectManager.playerEntity.myPos, ObjectManager.playerEntity.sightRange))
+            {
+                CurrentMap.has_seen[c.x, c.y] = true;
+                cells[c.x, c.y].UpdateInSight(true, true);
+            }
         }
 
         for (int y = 0; y < size_y; y++)

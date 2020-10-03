@@ -130,6 +130,19 @@
             "Icon" : "Mods/Core/Art/Abilities/ability-juke.png"
         },
         {
+            "Name" : "Whirlwind",
+            "ID" : "whirlwind",
+            "Description" : "Dash to an adjacent open tile and perform an attack on all adjacent tiles.",
+            "Levels Up" : false,
+            "Stamina Cost" : 5,
+            "Cooldown" : 25,
+            "Time Cost" : 15,
+            "Cast Type" : "Direction",
+            "Script" : "Core.Abilities.Dash",
+            "AI" : "Core.AbilityAI.Empty",
+            "Icon" : "Mods/Core/Art/Abilities/ability-whirlwind.png"
+        },
+        {
             "Name" : "Charge",
             "ID" : "charge",
             "Description" : "Charge [Skill Level + 3] tiles in a single direction, attacking and pushing an enemy if they are in the way.",

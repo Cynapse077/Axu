@@ -257,8 +257,8 @@ public class SaveData : MonoBehaviour
                 Attributes = new List<Stat_Modifier>()
             };
 
-            int slot = (int)dat[i]["Slot"];
-            bp.slot = (ItemProperty)slot;
+            dat[i].TryGetEnum("Slot", out bp.slot, ItemProperty.Slot_Back);
+            dat[i].TryGetInt("Lvl", out bp.level);
 
             if (dat[i].ContainsKey("Hnd"))
             {
@@ -291,12 +291,6 @@ public class SaveData : MonoBehaviour
                 }
             }
 
-            //body part levels/xp
-            if (dat[i].ContainsKey("Lvl"))
-            {
-                bp.level = (int)dat[i]["Lvl"];
-            }
-
             if (dat[i].ContainsKey("XP"))
             {
                 bp.SetXP((double)dat[i]["XP"][0], (double)dat[i]["XP"][1]);
@@ -306,7 +300,7 @@ public class SaveData : MonoBehaviour
             {
                 for (int j = 0; j < dat[i]["Flgs"].Count; j++)
                 {
-                    bp.flags.Add((BodyPart.BPFlags)(int)(dat[i]["Flgs"][j]));
+                    bp.flags.Add((BodyPart.BPFlags)(int)dat[i]["Flgs"][j]);
                 }
             }
             else
@@ -342,7 +336,8 @@ public class SaveData : MonoBehaviour
 
             if (dat[i].ContainsKey("item"))
             {
-                bp.equippedItem = GetItemFromJsonData(dat[i]["item"]);
+                var item = GetItemFromJsonData(dat[i]["item"]);
+                bp.equippedItem = item.IsNullOrDefault() ? ItemList.NoneItem : new Item(item);
             }
 
             parts.Add(bp);
@@ -413,7 +408,7 @@ public class SaveData : MonoBehaviour
                 {
                     for (int j = 0; j < playerJson["Skills"][i]["Flg"].Count; j++)
                     {
-                        s.origin.Add((Ability.AbilityOrigin)(int)(playerJson["Skills"][i]["Flg"][j]));
+                        s.origin.Add((Ability.AbilityOrigin)(int)playerJson["Skills"][i]["Flg"][j]);
                     }
                 }
                 else
@@ -447,12 +442,9 @@ public class SaveData : MonoBehaviour
             return null;
         }
 
-        it.amount = (int)data["Am"];
-
-        if (data.ContainsKey("DName"))
-        {
-            it.displayName = data["DName"].ToString();
-        }
+        data.TryGetInt("Am", out it.amount, 1);
+        data.TryGetString("DName", out it.displayName);
+        data.TryGetInt("Ar", out it.armor);
 
         if (data.ContainsKey("Props"))
         {
@@ -466,11 +458,6 @@ public class SaveData : MonoBehaviour
         if (data.ContainsKey("Dmg"))
         {
             it.damage = new Damage((int)data["Dmg"][0], (int)data["Dmg"][1], (int)data["Dmg"][2], it.damage.Type);
-        }
-
-        if (data.ContainsKey("Ar"))
-        {
-            it.armor = (int)data["Ar"];
         }
 
         it.AddModifier(ItemList.GetModByID(mName));
@@ -488,7 +475,6 @@ public class SaveData : MonoBehaviour
         }
 
         it.statMods = new List<Stat_Modifier>();
-
         if (data.ContainsKey("Sm"))
         {
             for (int i = 0; i < data["Sm"].Count; i++)

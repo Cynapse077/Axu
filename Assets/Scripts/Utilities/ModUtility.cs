@@ -22,6 +22,12 @@ public static class ModUtility
         }
     }
 
+    public static void Reset()
+    {
+        NextFreeID = -1;
+        NextLoadID = 1;
+    }
+
     public static int GetNextFreeID()
     {
         return ++NextFreeID;

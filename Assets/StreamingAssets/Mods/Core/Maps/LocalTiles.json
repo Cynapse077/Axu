@@ -30,7 +30,7 @@
     {
         "ID" : "Lava",
         "TileIndex" : 74,
-        "Tags" : [ "Liquid", "Walkable", "Volcano" ],
+        "Tags" : [ "Walkable", "Volcano" ],
         "Biome" : "None",
 		"Path Cost" : 888
     },

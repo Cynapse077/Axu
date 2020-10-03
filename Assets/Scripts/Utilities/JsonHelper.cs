@@ -144,7 +144,7 @@ public static class JsonHelper {
     {
         if (dat.ContainsKey(key))
         {
-            o = (double)dat[key];
+            o = dat[key].ToDouble();
             return true;
         }
 

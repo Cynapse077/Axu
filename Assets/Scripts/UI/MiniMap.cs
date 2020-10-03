@@ -12,7 +12,7 @@ public class MiniMap : MonoBehaviour
     {
         miniMap = GetComponent<Camera>();
         miniMap.aspect = 1f;
-        openOrthoSize = (Screen.height / 16f / scaleFactor);
+        openOrthoSize = (Screen.height / Manager.TileResolution / scaleFactor);
         miniOrthoSize = openOrthoSize / 4f;
 
         rt = new RenderTexture(Screen.width, Screen.height, 0) { filterMode = FilterMode.Point };

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using LitJson;
 
 namespace Augments
 {
@@ -16,6 +18,18 @@ namespace Augments
             new FoldingBlade(), new ArmCannon(), new ImpactSole(), new NanoRegen(),
             new NanoAdrenal(), new TargetSensor(), new Shielding(), new SpringTendon()
         };
+
+        public static List<Cybernetic> AllCybernetics()
+        {
+            List<Cybernetic> list = new List<Cybernetic>();
+
+            for (int i = 0; i < cyberArray.Length; i++)
+            {
+                list.Add(cyberArray[i]);
+            }
+
+            return list;
+        }
 
         public static void AddCyberneticToData(Cybernetic c)
         {

@@ -28,22 +28,12 @@ public class Entity : MonoBehaviour
 
     static readonly Vector3 splashOffset = new Vector3(0.5f, 0.2f, 0f);
 
-    bool swimming
-    {
-        get
-        {
-            return World.tileMap != null && World.tileMap.IsWaterTile(posX, posY) && !inventory.CanFly();
-        }
-    }
-
-    bool underwater
-    {
-        get
-        {
-            return stats != null && stats.HasEffect(C_StatusEffects.Underwater);
-        }
-    }
-
+    bool swimming => World.tileMap != null && World.tileMap.IsWaterTile(posX, posY) && !inventory.CanFly();
+    bool underwater => stats != null && stats.HasEffect(C_StatusEffects.Underwater);
+    public bool Walking => isPlayer && walkDirection != null;
+    public bool CanMove => !stats.SkipTurn();
+    float LerpSpeed => (float)GameSettings.Animation_Speed * 0.008f;
+    public string MyName => Name;
     public string Name
     {
         get
@@ -56,16 +46,6 @@ public class Entity : MonoBehaviour
             return gameObject.name;
         }
     }
-    public string MyName
-    {
-        get { return Name; }
-    }
-
-    public bool Walking
-    {
-        get { return isPlayer && walkDirection != null; }
-    }
-
     public int posX
     {
         get { return _posX; }
@@ -80,7 +60,6 @@ public class Entity : MonoBehaviour
             }
         }
     }
-
     public int posY
     {
         get { return _posY; }
@@ -96,7 +75,6 @@ public class Entity : MonoBehaviour
             }
         }
     }
-
     public int sightRange
     {
         get
@@ -127,7 +105,6 @@ public class Entity : MonoBehaviour
             return l + LightBonus();
         }
     }
-
     public Coord myPos
     {
         get
@@ -248,15 +225,6 @@ public class Entity : MonoBehaviour
         }
     }
 
-    float LerpSpeed
-    {
-        get
-        {
-            float lspeed = 0.8f;
-            return lspeed * (float)GameSettings.Animation_Speed * 0.01f;
-        }
-    }
-
     void Update()
     {
         if (isPlayer)
@@ -266,12 +234,17 @@ public class Entity : MonoBehaviour
 
         if (transform.position != targetPosition)
         {
-            transform.position = (GameSettings.Animation_Speed >= 55) ? targetPosition : Vector3.Lerp(transform.position, targetPosition, LerpSpeed);
+            transform.position = GameSettings.Animation_Speed >= 55.0 ? targetPosition : Vector3.Lerp(transform.position, targetPosition, LerpSpeed);
         }
     }
 
-    bool FollowersNeedHealing()
+    bool YouOrFollowersNeedToRest()
     {
+        if (stats.health < stats.MaxHealth || stats.stamina < stats.MaxStamina)
+        {
+            return true;
+        }
+
         foreach (Entity npc in World.objectManager.onScreenNPCObjects)
         {
             if (npc.AI.isFollower() && !npc.AI.npcBase.HasFlag(NPC_Flags.Deteriortate_HP))
@@ -327,7 +300,7 @@ public class Entity : MonoBehaviour
                     return;
                 }
 
-                if (stats.health < stats.MaxHealth || stats.stamina < stats.MaxStamina || FollowersNeedHealing())
+                if (YouOrFollowersNeedToRest())
                 {
                     Wait();
                 }
@@ -350,14 +323,6 @@ public class Entity : MonoBehaviour
             {
                 CancelWalk();
             }
-        }
-    }
-
-    public bool CanMove
-    {
-        get
-        {
-            return !stats.SkipTurn();
         }
     }
 
@@ -558,12 +523,17 @@ public class Entity : MonoBehaviour
         return true;
     }
 
+    public void AbilityMove(Coord dir)
+    {
+        Move(dir.x, dir.y, false);
+    }
+
     //Movement
-    void Move(int x, int y)
+    void Move(int x, int y, bool endTurn = true)
     {
         if (!World.tileMap.WalkableTile(posX + x, posY + y) || !World.tileMap.GetCellAt(posX + x, posY + y).Walkable_IgnoreEntity)
         {
-            if (!isPlayer)
+            if (!isPlayer && endTurn)
             {
                 EndTurn(0.01f);
             }
@@ -573,7 +543,11 @@ public class Entity : MonoBehaviour
 
         if (!isPlayer && AI.isStationary || stats.SkipTurn() || !body.FreeToMove() || stats.HasEffect(C_StatusEffects.Stuck))
         {
-            EndTurn(0.01f);
+            if (endTurn)
+            {
+                EndTurn(0.01f);
+            }
+
             return;
         }
 
@@ -604,10 +578,18 @@ public class Entity : MonoBehaviour
             World.tileMap.LightCheck();
         }
 
-        EndTurn();
+        if (endTurn)
+        {
+            EndTurn();
+        }
     }
 
-    void Swipe(int x, int y)
+    public void AbilitySwipe(Coord dir)
+    {
+        Swipe(dir.x, dir.y, false);
+    }
+
+    void Swipe(int x, int y, bool endTurn = true)
     {
         if (stats.SkipTurn() || World.OutOfLocalBounds(posX + x, posY + y))
         {
@@ -643,7 +625,8 @@ public class Entity : MonoBehaviour
             }
         }
 
-        EndTurn(0.1f, fighter.AttackAPCost());
+        if (endTurn)
+            EndTurn(0.1f, fighter.AttackAPCost());
     }
 
     void Dig(int x, int y)
@@ -744,7 +727,7 @@ public class Entity : MonoBehaviour
 
     public void Charge(Coord direction, int amount)
     {
-        StartCoroutine("ChargeCo", new object[] { direction, amount });
+        StartCoroutine(nameof(ChargeCo), new object[] { direction, amount });
     }
 
     //Charge in a direction. Called from above
@@ -1427,7 +1410,7 @@ public class Entity : MonoBehaviour
             sskills.Add(skills.abilities[s].ToSerializedSkill());
         }
 
-        Journal journal = GetComponent<Journal>();
+        Journal journal = ObjectManager.playerJournal;
 
         List<SQuest> quests = new List<SQuest>();
         for (int q = 0; q < journal.quests.Count; q++)
@@ -1452,9 +1435,11 @@ public class Entity : MonoBehaviour
                 handItems.Add(handItem);
         }
 
+        var firearm = inventory.firearm ?? ItemList.NoneItem;
+
         PlayerCharacter me = new PlayerCharacter(Manager.worldSeed, MyName, Manager.profName, stats.level, myStats,
             World.tileMap.WorldPosition, myPos, World.tileMap.currentElevation, traits, stats.proficiencies.GetProfs(),
-            bodyParts, inventory.gold, items, handItems, inventory.firearm.ToSerializedItem(), sskills, stats.Attributes["Charisma"], 
+            bodyParts, inventory.gold, items, handItems, firearm.ToSerializedItem(), sskills, stats.Attributes["Charisma"], 
             quests, World.turnManager.currentWeather, ObjectManager.playerJournal.AllFlags());
 
         return me;

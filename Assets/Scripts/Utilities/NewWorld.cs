@@ -76,7 +76,8 @@ public class NewWorld
     void SaveFile(GameSave save, string playerName)
     {
         JsonData saveJson = JsonMapper.ToJson(save);
-        string saveFilePath = Path.Combine(Manager.SaveDirectory, playerName + ".axu");
+        string name = playerName;
+        string saveFilePath = Path.Combine(Manager.SaveDirectory, name + ".axu");
 
         File.WriteAllText(saveFilePath, saveJson.ToString());
         doneSaving = true;

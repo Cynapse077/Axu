@@ -29,20 +29,7 @@ public class MusicManager : MonoBehaviour
     public void Init(TileMap_Data newMap)
     {
         World.tileMap.OnScreenChange += ChangeLocation;
-
-        for (int i = 0; i < musicZones.Length; i++)
-        {
-            if (musicZones[i].ZoneID == newMap.mapInfo.landmark)
-            {
-                if (musicZones[i].underground && newMap.elevation != 0 || !musicZones[i].underground && newMap.elevation == 0)
-                {
-                    soundManager.OverrideMusic(musicZones[i].songs);
-                    return;
-                }                
-            }
-        }
-
-        soundManager.OverrideMusic(defaultMusic);
+        ChangeLocation(null, newMap);
     }
 
     void OnDisable()
@@ -55,38 +42,36 @@ public class MusicManager : MonoBehaviour
 
     bool ChangeLocation(TileMap_Data oldMap, TileMap_Data newMap)
     {
-        bool changeInElevation = (oldMap.elevation != 0 && newMap.elevation == 0 || oldMap.elevation == 0 && newMap.elevation != 0);
-
-        //Same landmark area and no change in elevation info.
-        if (oldMap.mapInfo.landmark == newMap.mapInfo.landmark && !changeInElevation)
+        if (!newMap.mapInfo.landmark.NullOrEmpty())
         {
-            return false;
-        }
-
-        for (int i = 0; i < musicZones.Length; i++)
-        {
-            if (musicZones[i].ZoneID == newMap.mapInfo.landmark)
+            for (int i = 0; i < musicZones.Length; i++)
             {
-                if (musicZones[i].underground && newMap.elevation != 0 || !musicZones[i].underground && newMap.elevation == 0)
+                if (!newMap.mapInfo.landmark.NullOrEmpty() && musicZones[i].ZoneID == newMap.mapInfo.landmark)
                 {
-                    soundManager.OverrideMusic(musicZones[i].songs);
-                    return true;
-                }                
+                    if (musicZones[i].underground && newMap.elevation != 0 || !musicZones[i].underground && newMap.elevation == 0)
+                    {
+                        soundManager.OverrideMusic(musicZones[i].songs);
+                        return true;
+                    }
+                }
             }
         }
 
-        //Fallback to generic music.
-        for (int i = 0; i < musicZones.Length; i++)
+        //Biome
+        if (newMap.elevation == 0 && newMap.mapInfo.biome != Biome.Default)
         {
-            if (musicZones[i].ZoneID == oldMap.mapInfo.landmark)
+            for (int i = 0; i < musicZones.Length; i++)
             {
-                if (musicZones[i].underground && oldMap.elevation != 0 || !musicZones[i].underground && oldMap.elevation == 0)
+                if (musicZones[i].biome == newMap.mapInfo.biome)
                 {
-                    soundManager.OverrideMusic(defaultMusic);
+                    soundManager.OverrideMusic(musicZones[i].songs);
                     return true;
                 }
             }
         }
+
+        //Fallback to generic music.
+        soundManager.OverrideMusic(defaultMusic);
 
         return false;
     }
@@ -96,6 +81,7 @@ public class MusicManager : MonoBehaviour
 public struct MusicZone
 {
     public string ZoneID;
+    public Biome biome;
     public bool underground;
     public AudioClip[] songs;
 }

@@ -157,10 +157,10 @@ public struct NPCSpawn_Blueprint : IWeighted
         range = new IntRange(_minAmount, _maxAmount);
     }
 
-    public int AmountToSpawn()
+    public int AmountToSpawn(System.Random rand)
     {
         int max = Mathf.Min(AbsMax, range.max + World.DangerLevel() / 2);
-        int a = (max > range.min) ? Random.Range(range.min, max) : range.min;
+        int a = (max > range.min) ? rand.Next(range.min, max) : range.min;
 
         a = Mathf.Clamp(a, 1, AbsMax);
         return a;

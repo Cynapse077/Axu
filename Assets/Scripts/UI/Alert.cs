@@ -4,10 +4,7 @@ public static class Alert
 {
     static UIWindow previousWindow = UIWindow.None;
 
-    static UserInterface userInterface
-    {
-        get { return World.userInterface; }
-    }
+    static UserInterface userInterface => World.userInterface;
 
     public static void CustomAlert(string content)
     {

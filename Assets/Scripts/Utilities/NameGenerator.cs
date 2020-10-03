@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using LitJson;
+using System.Linq;
 
 public static class NameGenerator
 {
     static List<string> Prefixes;
     static List<string> Suffixes;
+    static List<string> TownSuffixes;
     static List<string> ArtWords;
-
-    static string[] townEnds = new string[] {
-        "ton", "ville", "wood", "dale", "crag", "field", "ham", "hope", "ard"
-    };
+    static List<string> ArtNamesComplex;
 
     public static string CharacterName(System.Random rand)
     {
@@ -33,8 +32,8 @@ public static class NameGenerator
     {
         string name = Prefixes.GetRandom(rand) + Suffixes.GetRandom(rand);
 
-        if (rand.Next(100) < 30)
-            name += townEnds.GetRandom(rand);
+        if (rand.Next(100) < 30 && !TownSuffixes.NullOrEmpty())
+            name += TownSuffixes.GetRandom(rand);
 
         return name;
     }
@@ -42,22 +41,25 @@ public static class NameGenerator
     public static string ArtifactName(System.Random rand)
     {
         string name1 = ArtWords.GetRandom(rand);
-        int ranNum = rand.Next(100);
+        string name2 = ArtWords.GetRandom(rand);
 
-        if (ranNum < 33)
+        if (ArtNamesComplex.Any())
         {
-            return "The " + name1;
+            int ranNum = rand.Next(100);
+
+            if (ranNum < 66)
+            {
+                string chosenName = ArtNamesComplex.GetRandom(rand);
+                if (chosenName.Contains("{1}"))
+                {
+                    return chosenName.Format(name1, name2);
+                }
+
+                return chosenName.Format(name1);
+            }
         }
-        else if (ranNum < 66)
-        {
-            string name2 = ArtWords.GetRandom(rand);
-            return name1 + " of " + name2;
-        }
-        else
-        {
-            string name2 = ArtWords.GetRandom(rand);
-            return name1 + name2.ToLower();
-        }
+
+        return name1 + name2.ToLower();
     }
 
     public static void FillSylList(string appPath)
@@ -67,7 +69,9 @@ public static class NameGenerator
 
         Prefixes = new List<string>();
         Suffixes = new List<string>();
+        TownSuffixes = new List<string>();
         ArtWords = new List<string>();
+        ArtNamesComplex = new List<string>();
 
         string sylList = File.ReadAllText(appPath + "/Mods/Core/Dialogue/NameSyllables.json");
         JsonData data = JsonMapper.ToObject(sylList);
@@ -88,12 +92,25 @@ public static class NameGenerator
             }
         }
 
+        if (data.ContainsKey("Town Suffixes"))
+        {
+            for (int i = 0; i < data["Town Suffixes"].Count; i++)
+            {
+                TownSuffixes.Add(data["Town Suffixes"][i].ToString());
+            }
+        }
+
         string wordList = File.ReadAllText(appPath + "/Mods/Core/Dialogue/ArtifactNames.json");
         data = JsonMapper.ToObject(wordList);
 
         for (int i = 0; i < data["Words"].Count; i++)
         {
             ArtWords.Add(data["Words"][i].ToString());
+        }
+
+        for (int i = 0; i < data["Names Complex"].Count; i++)
+        {
+            ArtNamesComplex.Add(data["Names Complex"][i].ToString());
         }
     }
 }

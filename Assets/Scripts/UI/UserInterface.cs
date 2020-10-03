@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Axu.Constants;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class UserInterface : MonoBehaviour
@@ -65,22 +66,10 @@ public class UserInterface : MonoBehaviour
     public GameObject miniMapObject;
     public GameObject fullMapObject;
 
-    public bool SelectItemActions
-    {
-        get { return IAPanel.gameObject.activeSelf; }
-    }
-    public bool SelectBodyPart
-    {
-        get { return SSPanel.gameObject.activeSelf; }
-    }
-    public UIWindow CurrentState
-    {
-        get { return uiState; }
-    }
-    public bool NoWindowsOpen
-    {
-        get { return uiState == UIWindow.None; }
-    }
+    public bool SelectItemActions => IAPanel.gameObject.activeSelf;
+    public bool SelectBodyPart => SSPanel.gameObject.activeSelf;
+    public UIWindow CurrentState => uiState;
+    public bool NoWindowsOpen => uiState == UIWindow.None;
 
     void OnEnable()
     {
@@ -140,9 +129,14 @@ public class UserInterface : MonoBehaviour
     {
         if (dead && (playerInput.keybindings.GetKey("Enter") || playerInput.keybindings.GetKey("Pause")))
         {
+            MyConsole.ClearLog();
+
+            Manager.startElevation = 0;
+            Manager.localStartPos = new Coord(22, 2);
+
             if (World.difficulty.Permadeath)
             {
-                Manager.ClearFiles();
+                Manager.DeleteActiveSaveFile();
                 World.Reset();
                 UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             }
@@ -169,7 +163,9 @@ public class UserInterface : MonoBehaviour
         HandleInput();
 
         if (Input.GetKeyDown(KeyCode.F1))
+        {
             uiState = UIWindow.Options;
+        }
     }
 
     public void OpenGrapple(Body targetBody)
@@ -392,15 +388,24 @@ public class UserInterface : MonoBehaviour
     void HandleInput()
     {
         if (loading || playerInput == null || PlayerInput.lockInput)
+        {
             return;
+        }
 
         if (playerInput.keybindings.GetKey("Enter"))
+        {
             SelectPressed();
+        }
+
         if (playerInput.keybindings.GetKey("Pause"))
+        {
             BackPressed();
+        }
 
         if (boxInv != null && playerInput.keybindings.GetKey("Pickup"))
+        {
             SelectPressed();
+        }
 
         if (paused)
         {
@@ -409,7 +414,9 @@ public class UserInterface : MonoBehaviour
                 selectedItemNum++;
 
                 if (selectedItemNum >= pausePanel.buttons.Length)
+                {
                     selectedItemNum = 0;
+                }
 
                 pausePanel.UpdateSelected(selectedItemNum);
                 World.soundManager.MenuTick();
@@ -419,7 +426,9 @@ public class UserInterface : MonoBehaviour
                 selectedItemNum--;
 
                 if (selectedItemNum < 0)
+                {
                     selectedItemNum = pausePanel.buttons.Length - 1;
+                }
 
                 pausePanel.UpdateSelected(selectedItemNum);
                 World.soundManager.MenuTick();
@@ -477,10 +486,14 @@ public class UserInterface : MonoBehaviour
             if (boxInv.items.Count > 0)
             {
                 if (selectedItemNum > boxInv.items.Count - 1)
+                {
                     selectedItemNum = 0;
+                }
             }
             else
+            {
                 selectedItemNum = 0;
+            }
         }
 
         if (uiState == UIWindow.Shop && shopInv != null)
@@ -488,7 +501,9 @@ public class UserInterface : MonoBehaviour
             if (playerInput.keybindings.GetKey("East"))
             {
                 if (column >= 1 || playerInventory.items.Count <= 0)
+                {
                     return;
+                }
 
                 World.soundManager.MenuTick();
                 selectedItemNum = 0;
@@ -499,7 +514,9 @@ public class UserInterface : MonoBehaviour
             if (playerInput.keybindings.GetKey("West"))
             {
                 if (column <= 0 || shopInv.items.Count <= 0)
+                {
                     return;
+                }
 
                 World.soundManager.MenuTick();
                 selectedItemNum = 0;
@@ -508,7 +525,9 @@ public class UserInterface : MonoBehaviour
             }
 
             if (column == 0 && selectedItemNum > shopInv.items.Count - 1 || column == 1 && selectedItemNum > playerInventory.items.Count - 1)
+            {
                 selectedItemNum = 0;
+            }
         }
 
         else if (uiState == UIWindow.ReplacePartWithItem)
@@ -529,32 +548,52 @@ public class UserInterface : MonoBehaviour
     public void SwitchSelectedNum(int amount)
     {
         if (!NoWindowsOpen)
+        {
             World.soundManager.MenuTick();
+        }
 
         if (uiState == UIWindow.ReplacePartWithItem)
+        {
             RLPanel.SwitchSelectedNum(amount);
+        }
 
         if (SelectBodyPart)
+        {
             SSPanel.SwitchSelectedNum(amount);
+        }
         else if (SelectItemActions)
+        {
             IAPanel.SwitchSelectedNum(amount);
+        }
         else
         {
             selectedItemNum += amount;
 
             if (selectedItemNum > SelectedMax())
+            {
                 selectedItemNum = 0;
+            }
             else if (selectedItemNum < 0)
+            {
                 selectedItemNum = SelectedMax();
+            }
 
             if (uiState == UIWindow.Shop)
+            {
                 ShopPanel.UpdateTooltip();
+            }
             else if (uiState == UIWindow.Loot)
+            {
                 LPanel.UpdateTooltip(true);
+            }
             else if (uiState == UIWindow.SelectItemToThrow)
+            {
                 ThrowPanel.UpdateTooltip();
+            }
             else if (uiState == UIWindow.PauseMenu)
+            {
                 pausePanel.UpdateSelected(selectedItemNum);
+            }
         }
     }
 
@@ -717,13 +756,13 @@ public class UserInterface : MonoBehaviour
     {
         World.userInterface.CloseWindows();
 
-        if (item != null && playerInventory.gold > 0)
+        if (item != null && playerInventory.gold >= goldAmount)
         {
             Alert.NewAlert("Bandit_Yes");
 
             for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
             {
-                if (World.objectManager.onScreenNPCObjects[i].AI.npcBase.faction.ID == "bandits")
+                if (World.objectManager.onScreenNPCObjects[i].AI.npcBase.faction.ID == C_Factions.Bandits)
                 {
                     BaseAI bai = World.objectManager.onScreenNPCObjects[i].GetComponent<BaseAI>();
                     bai.OverrideHostility(false);
@@ -736,7 +775,7 @@ public class UserInterface : MonoBehaviour
 
             for (int i = 0; i < World.objectManager.onScreenNPCObjects.Count; i++)
             {
-                if (World.objectManager.onScreenNPCObjects[i].AI.npcBase.faction.ID == "bandits")
+                if (World.objectManager.onScreenNPCObjects[i].AI.npcBase.faction.ID == C_Factions.Bandits)
                 {
                     BaseAI bai = World.objectManager.onScreenNPCObjects[i].GetComponent<BaseAI>();
                     bai.NoticePlayer();
@@ -825,49 +864,68 @@ public class UserInterface : MonoBehaviour
         }
         else if (NoWindowsOpen)
         {
-            if (World.tileMap.GetTileID(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == TileManager.tiles["Stairs_Up"].ID)
+            Coord p = ObjectManager.playerEntity.myPos;
+            if (World.tileMap.GetTileID(p.x, p.y) == TileManager.tiles["Stairs_Up"].ID)
+            {
                 playerInput.GoUp();
-            else if (World.tileMap.GetTileID(ObjectManager.playerEntity.posX, ObjectManager.playerEntity.posY) == TileManager.tiles["Stairs_Down"].ID)
+            }
+            else if (World.tileMap.GetTileID(p.x, p.y) == TileManager.tiles["Stairs_Down"].ID)
+            {
                 playerInput.GoDown();
+            }
         }
     }
 
     void Select_Shop()
     {
-        int charisma = playerStats.Attributes["Charisma"];
+        int influence = playerStats.Attributes[C_Attributes.Influence];
 
         if (column == 0)
         { //Shop inventory
             bool friendly = shopInv.entity.AI.isFollower();
 
             if (selectedItemNum >= shopInv.items.Count || shopInv.items[selectedItemNum] == null)
+            {
                 return;
+            }
 
-            int cost = shopInv.items[selectedItemNum].BuyCost(charisma);
+            int cost = shopInv.items[selectedItemNum].BuyCost(influence);
 
-            if ((playerInventory.CanAfford(cost) || friendly))
+            if (playerInventory.CanAfford(cost) || friendly)
             {
                 Item newItem = new Item(shopInv.items[selectedItemNum]);
 
                 if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand))
+                {
                     cost *= newItem.amount;
+                }
                 else
+                {
                     newItem.amount = 1;
+                }
 
                 if (friendly)
+                {
                     cost = 0;
+                }
 
                 if (playerInventory.CanPickupItem(newItem) && playerInventory.CanAfford(cost))
                 {
                     if (World.soundManager != null)
+                    {
                         World.soundManager.UseItem();
+                    }
 
                     playerInventory.PickupItem(newItem);
 
                     if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand))
+                    {
                         shopInv.RemoveInstance_All(shopInv.items[selectedItemNum]);
+                    }
                     else
+                    {
                         shopInv.RemoveInstance(shopInv.items[selectedItemNum]);
+                    }
 
                     playerInventory.gold -= cost;
                 }
@@ -876,16 +934,22 @@ public class UserInterface : MonoBehaviour
         else
         { //Player Inventory
             if (selectedItemNum >= playerInventory.items.Count || playerInventory.items[selectedItemNum] == null)
+            {
                 return;
+            }
 
             bool isFollower = shopInv.entity.AI.isFollower();
-            int cost = playerInventory.items[selectedItemNum].SellCost(charisma);
+            int cost = playerInventory.items[selectedItemNum].SellCost(influence);
             Item newItem = new Item(playerInventory.items[selectedItemNum]);
 
             if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand))
+            {
                 cost *= newItem.amount;
+            }
             else
+            {
                 newItem.amount = 1;
+            }
 
             if (World.soundManager != null)
             {
@@ -901,9 +965,13 @@ public class UserInterface : MonoBehaviour
             shopInv.PickupItem(newItem);
 
             if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand))
+            {
                 playerInventory.RemoveInstance_All(playerInventory.items[selectedItemNum]);
+            }
             else
+            {
                 playerInventory.RemoveInstance(playerInventory.items[selectedItemNum]);
+            }
 
             if (!isFollower)
             {
@@ -999,16 +1067,19 @@ public class UserInterface : MonoBehaviour
     public void InitializeAllWindows(Inventory plInv = null)
     {
         if (plInv == null)
+        {
             plInv = playerInventory;
+        }
 
         if (uiState == UIWindow.Inventory)
         {
             InvPanel.Init(plInv);
             EqPanel.Init(plInv);
         }
-
         else if (uiState == UIWindow.Loot)
+        {
             LPanel.Init(boxInv);
+        }
     }
 
     public void SetSelectedNumber(int num, bool scroll)
@@ -1023,48 +1094,37 @@ public class UserInterface : MonoBehaviour
 
             selectedItemNum = num;
 
-            if (uiState == UIWindow.Shop)
-                ShopPanel.UpdateTooltip();
-            else if (uiState == UIWindow.SelectItemToThrow)
-                ThrowPanel.UpdateTooltip();
-            else if (uiState == UIWindow.Loot)
-                LPanel.UpdateTooltip(false);
-            else if (uiState == UIWindow.PauseMenu)
-                pausePanel.UpdateSelected(selectedItemNum);
-            else if (uiState == UIWindow.Abilities)
-                AbPanel.ChangeSelectedNum(num, scroll);
-            else if (uiState == UIWindow.Journal)
-                JPanel.ChangeSelectedNum(num, scroll);
+            switch (uiState)
+            {
+                case UIWindow.Shop: ShopPanel.UpdateTooltip(); break;
+                case UIWindow.SelectItemToThrow: ThrowPanel.UpdateTooltip(); break;
+                case UIWindow.Loot: LPanel.UpdateTooltip(false); break;
+                case UIWindow.PauseMenu: pausePanel.UpdateSelected(selectedItemNum); break;
+                case UIWindow.Abilities: AbPanel.ChangeSelectedNum(num, scroll); break;
+                case UIWindow.Journal: JPanel.ChangeSelectedNum(num, scroll); break;
+            }
         }
     }
 
     int SelectedMax()
     {
         if (SelectItemActions || SelectBodyPart)
+        {
             return selectedItemNum;
+        }
 
         switch (uiState)
         {
-            case UIWindow.PauseMenu:
-                return pausePanel.SelectedMax;
-            case UIWindow.Shop:
-                return (column == 1) ? playerInventory.items.Count - 1 : shopInv.items.Count - 1;
-            case UIWindow.TargetBodyPart:
-                return calledShotTarget.bodyParts.Count - 1;
-            case UIWindow.AmputateLimb:
-                return playerInventory.entity.body.bodyParts.Count - 1;
-            case UIWindow.Dialogue:
-                return DPanel.cMax;
-            case UIWindow.Loot:
-                return LPanel.max;
-            case UIWindow.UseItemOnItem:
-                return UsePanel.NumItems - 1;
-            case UIWindow.LevelUp:
-                return Mathf.Max(1, levelUpTraits.Count);
-            case UIWindow.LiquidActions:
-                return 3;
-            default:
-                return 0;
+            case UIWindow.PauseMenu: return pausePanel.SelectedMax;
+            case UIWindow.Shop: return column == 1 ? playerInventory.items.Count - 1 : shopInv.items.Count - 1;
+            case UIWindow.TargetBodyPart: return calledShotTarget.bodyParts.Count - 1;
+            case UIWindow.AmputateLimb: return playerInventory.entity.body.bodyParts.Count - 1;
+            case UIWindow.Dialogue: return DPanel.cMax;
+            case UIWindow.Loot: return LPanel.max;
+            case UIWindow.UseItemOnItem: return UsePanel.NumItems - 1;
+            case UIWindow.LevelUp: return Mathf.Max(1, levelUpTraits.Count);
+            case UIWindow.LiquidActions: return 3;
+            default: return 0;
         }
     }
 
@@ -1100,10 +1160,14 @@ public class UserInterface : MonoBehaviour
     public void CloseWindows()
     {
         if (uiState == UIWindow.LevelUp && pendingTraitsToPick > 0)
+        {
             return;
+        }
 
         if (uiState == UIWindow.Options)
+        {
             optionsPanel.ApplyChanges();
+        }
 
         ClosePanels();
 
@@ -1116,28 +1180,44 @@ public class UserInterface : MonoBehaviour
         uiState = UIWindow.None;
 
         if (pendingTraitsToPick > 0)
+        {
             PickLevelUpTrait();
+        }
     }
 
     void AssignPlayerValues()
     {
         if (playerEntity == null)
+        {
             playerEntity = ObjectManager.playerEntity;
+        }
         if (playerInventory == null)
+        {
             playerInventory = ObjectManager.player.GetComponent<Inventory>();
+        }
         if (playerStats == null)
+        {
             playerStats = ObjectManager.player.GetComponent<Stats>();
+        }
         if (playerInput == null)
+        {
             playerInput = ObjectManager.player.GetComponent<PlayerInput>();
+        }
         if (playerAbilities == null)
+        {
             playerAbilities = ObjectManager.player.GetComponent<EntitySkills>();
+        }
         if (cursorControl == null)
+        {
             cursorControl = playerInput.GetComponentInChildren<CursorControl>();
+        }
 
-        playerLooking = (playerInput.cursorMode == PlayerInput.CursorMode.Tile);
+        playerLooking = playerInput.cursorMode == PlayerInput.CursorMode.Tile;
 
         if (tileMap == null)
+        {
             tileMap = World.tileMap;
+        }
     }
 
     public void ChangeMapNameInSideBar()

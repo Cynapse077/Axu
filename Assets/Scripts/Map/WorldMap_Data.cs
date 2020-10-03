@@ -27,20 +27,9 @@ public class WorldMap_Data
 
     const int riversMin = 8, riversMax = 16;
 
-    System.Random rng
-    {
-        get { return SeedManager.worldRandom; }
-    }
-
-    int width
-    {
-        get { return Manager.worldMapSize.x; }
-    }
-
-    int height
-    {
-        get { return Manager.worldMapSize.y; }
-    }
+    System.Random rng => SeedManager.worldRandom;
+    int width => Manager.worldMapSize.x;
+    int height => Manager.worldMapSize.y;
 
     //Generating a new world
     public WorldMap_Data(bool newGame, Action callback)
@@ -411,7 +400,7 @@ public class WorldMap_Data
 
     public Coord PlaceZone(Zone_Blueprint zb, Coord parentPos = null, Coord forcePos = null)
     {
-        Coord pos = null;
+        Coord pos;
         bool hasParent = (parentPos != null && zb.placement.relativePosition != null);
 
         if (forcePos != null)
@@ -483,7 +472,7 @@ public class WorldMap_Data
             }
         }
 
-        if (zb.ID == "Village")
+        if (zb.ID == C_Landmarks.Village)
         {
             Village_Data vd = new Village_Data(pos, NameGenerator.CityName(rng), pos);
             villages.Add(vd);
@@ -494,7 +483,7 @@ public class WorldMap_Data
             }
         }
 
-        landmarks.Add(new Landmark(pos, (zb.ID == C_Landmarks.Village ? "Village of " + zb.name : zb.name)));
+        landmarks.Add(new Landmark(pos, zb.ID == C_Landmarks.Village ? "Village of " + zb.name : zb.name));
         return pos;
     }
 
@@ -608,6 +597,7 @@ public class WorldMap_Data
         if (openPositions.Count <= 0)
         {
             Debug.LogError("WorldMap_Data::GetOpenPosition() - No available open positions!");
+            return null;
         }
 
         return openPositions.GetRandom(rng);
@@ -1013,7 +1003,7 @@ public struct MapInfo
 
     public bool HasLandmark()
     {
-        return (!string.IsNullOrEmpty(landmark));
+        return !string.IsNullOrEmpty(landmark);
     }
 
     public bool Walkable()
@@ -1024,10 +1014,14 @@ public struct MapInfo
     public static bool BiomeHasEdge(Biome a, Biome b)
     {
         if (a == Biome.Plains && (b == Biome.Forest || b == Biome.Swamp))
+        {
             return true;
+        }
 
         if (a == Biome.Forest && b == Biome.Swamp)
+        {
             return true;
+        }
 
         return b == Biome.Mountain || b == Biome.Tundra || b == Biome.Ocean || b == Biome.Desert;
     }

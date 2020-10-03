@@ -14,22 +14,21 @@ public static class ShadowCasting
         new int[8] { 1, 0, 0, 1, -1, 0, 0, -1 }
     };
 
-    public static List<Coord> GetVisibleCells()
+    public static List<Coord> GetVisibleCells(Coord start, int range)
     {
         if (ObjectManager.playerEntity == null)
         {
             return EmptyCoordList;
         }
 
-        Entity player = ObjectManager.playerEntity;
         VisiblePoints.Clear();
 
         if (Manager.lightingOn)
         {
-            VisiblePoints.Add(new Coord(player.myPos));
-            VisualRange = player.sightRange;
+            VisiblePoints.Add(new Coord(start));
+            VisualRange = range;
 
-            DoFOV(player.posX, player.posY, VisualRange);
+            DoFOV(start.x, start.y, VisualRange);
         }
         else
         {

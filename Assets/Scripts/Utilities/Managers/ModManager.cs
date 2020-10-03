@@ -24,6 +24,7 @@ public static class ModManager
 
         if (mods.Empty())
         {
+            ModUtility.Reset();
             string[] modPaths = Directory.GetDirectories(ModUtility.ModFolderPath);
 
             foreach (string m in modPaths)

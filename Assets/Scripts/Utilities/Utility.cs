@@ -126,7 +126,7 @@ public static class Utility
         return 0;
     }
 
-    static Sprite SetSpriteRect(this Sprite s, int xOffset, int yOffset, Vector2 pivot, int width = 16, int height = 16)
+    static Sprite SetSpriteRect(this Sprite s, int xOffset, int yOffset, Vector2 pivot, int width = Manager.TileResolution, int height = Manager.TileResolution)
     {
         s = Sprite.Create(s.texture, new Rect(xOffset, yOffset, width, height), pivot, width);
         return s;
@@ -392,20 +392,25 @@ public static class Utility
         return (T)Enum.Parse(typeof(T), enumString);
     }
 
-    public static T WeightedChoice<T>(this List<T> list) where T : IWeighted
+    public static T WeightedChoice<T>(this List<T> list, System.Random rand = null) where T : IWeighted
     {
-        return WeightedChoice(list.ToArray());
+        return WeightedChoice(list.ToArray(), rand);
     }
 
-    public static T WeightedChoice<T>(T[] list) where T : IWeighted
+    public static T WeightedChoice<T>(T[] list, System.Random rand = null) where T : IWeighted
     {
         if (list.Length == 0)
         {
             return default;
         }
 
+        if (rand == null)
+        {
+            rand = SeedManager.combatRandom;
+        }
+
         int totalweight = list.Sum(c => c.Weight);
-        int choice = SeedManager.combatRandom.Next(totalweight + 1);
+        int choice = rand.Next(totalweight + 1);
         int sum = 0;
 
         foreach (var obj in list)
@@ -487,10 +492,14 @@ public static class Utility
     public static string CapFirst(this string s)
     {
         if (s.NullOrEmpty())
+        {
             return null;
+        }
 
         if (s.Length == 1)
+        {
             return s.ToUpper();
+        }
 
         //For HTML-tagged strings
         if (s[0] == '<')

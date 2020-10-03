@@ -25,7 +25,7 @@ public class LoadSaveMenu : MonoBehaviour
         string savePath = Manager.SaveDirectory;
         string[] ss = Directory.GetFiles(savePath, "*.axu", SearchOption.AllDirectories);
 
-        GetDataFromDirectory(ss);
+        GetDataFromDirectory(ss, savedGames);
 
         if (savedGames.Count > 0)
         {
@@ -52,8 +52,7 @@ public class LoadSaveMenu : MonoBehaviour
 
     public void DeleteSaveFile(int index)
     {
-        int m = index;
-        string modPath = (Manager.SaveDirectory + "/" + savedGames[m].charName + ".axu");
+        string modPath = Directory.GetFiles(Manager.SaveDirectory)[index];
 
         if (File.Exists(modPath))
         {
@@ -62,7 +61,7 @@ public class LoadSaveMenu : MonoBehaviour
         }
     }
 
-    void GetDataFromDirectory(string[] ss)
+    public static void GetDataFromDirectory(string[] ss, List<SaveGameObject> savedGames)
     {
         foreach (string s in ss)
         {
@@ -77,6 +76,9 @@ public class LoadSaveMenu : MonoBehaviour
                     return;
                 }
 
+                string fileName = s.Split(Path.PathSeparator).Last();
+                fileName = fileName.Remove(fileName.IndexOf('.'));
+
                 SaveGameObject sgo = new SaveGameObject()
                 {
                     charName = d["Player"]["Name"].ToString(),
@@ -85,7 +87,8 @@ public class LoadSaveMenu : MonoBehaviour
                     days = ((int)d["World"]["Turn_Num"] / (TurnManager.dayLength + TurnManager.nightLength)) + 1,
                     version = d["Version"].ToString(),
                     time = d["World"]["Time"].ToString(),
-                    diffName = ((Difficulty.DiffLevel)(int)d["World"]["Diff"]["Level"]).ToString()
+                    diffName = ((Difficulty.DiffLevel)(int)d["World"]["Diff"]["Level"]).ToString(),
+                    fileName = fileName
                 };
                 savedGames.Add(sgo);
             } 
@@ -172,12 +175,12 @@ public class LoadSaveMenu : MonoBehaviour
         currentSelected = i;
         EventSystem.current.SetSelectedGameObject(loadButtonAnchor.GetChild(currentSelected).gameObject);
 
-        infoText.text = string.Format("{0} (Level {1})\n\nDifficulty: {2}\nFelony: {3}\nDay {4}\n\n\n<color=grey>VERSION {5}</color>", 
+        infoText.text = string.Format("{0} (Level {1})\n\nDifficulty: {2}\nFelony: {3}\nDay {4}\n\n\n<color=grey>VERSION {5}</color> ", 
             savedGames[i].charName, savedGames[i].level, savedGames[i].diffName, savedGames[i].charProf, savedGames[i].days, savedGames[i].version);
 
         if (savedGames[i].version != GameSettings.version)
         {
-            infoText.text += " <color=red>[OUT OF DATE] - May not work correctly</color>";
+            infoText.text += "VersionMismatch".Localize();
         }
     }
 
@@ -185,6 +188,7 @@ public class LoadSaveMenu : MonoBehaviour
     {
         public string version;
         public string charName;
+        public string fileName;
         public string charProf;
         public int days;
         public int level;

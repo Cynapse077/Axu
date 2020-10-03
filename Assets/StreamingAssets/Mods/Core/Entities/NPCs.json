@@ -223,6 +223,35 @@
             "MaxItemRarity" : 6
         },
         {
+            "Name" : "Terrak",
+            "ID" : "terrak",
+            "Faction" : "wildlife",
+            "Body Structure" : "Terrak",
+            "Sprite" : "npc-terrak.png",
+            "Flags" : [
+                "OnDisable_Regen",
+                "Boss"
+            ],
+            "Stats" : {
+                "Health" : 310,
+                "Stamina" : 40,
+
+                "Defense" : 10,
+                "Strength" : 9,
+                "Dexterity" : 8,
+                "Intelligence" : 4,
+                "Endurance" : 5,
+
+                "Speed" : 10,
+                "Perception" : 8,
+                "Accuracy" : 1
+            },
+            "Weapon_Choices" : [ "fangs_large" ],
+			"Weapon Skill" : 4,
+            "MaxItems" : 6,
+            "MaxItemRarity" : 6
+        },
+        {
             "Name" : "Killower",
             "ID" : "killower",
             "Faction" : "flesh",
@@ -1885,7 +1914,7 @@
             "ID" : "frostborne1",
             "Faction" : "frostborne",
             "Body Structure" : "Humanoid",
-            "Sprite" : "npc-frostborne.png",
+            "Sprite" : "npc-frostborne2.png",
             "Flags" : [
                 "Human"
             ],
@@ -2172,6 +2201,38 @@
             "MaxItemRarity" : 0
         },
         {
+            "Name" : "Jellyfish",
+            "ID" : "jellyfish",
+            "Faction" : "wildlife",
+            "Body Structure" : "Fish",
+            "Sprite" : "npc-jellyfish.png",
+            "Flags" : [
+                "Aquatic",
+                "RBleed",
+                "No_TakeDown",
+                "No_Strangle"
+            ],
+            "Stats" : {
+                "Health" : 10,
+                "Stamina" : 2,
+
+                "Defense" : 4,
+                "Strength" : 2,
+                "Dexterity" : 2,
+                "Intelligence" : 2,
+                "Endurance" : 2,
+
+                "Speed" : 4,
+                "Perception" : 5,
+                "Accuracy" : 1,
+
+                "Cold Resist" : -20
+            },
+            "Weapon_Choices" : [ "stinger" ],
+            "MaxItems" : 0,
+            "MaxItemRarity" : 0
+        },
+        {
             "Name" : "Shinpel Fish",
             "ID" : "shark",
             "Faction" : "wildlife",
@@ -2349,6 +2410,44 @@
             "MaxItemRarity" : 2
         },
         {
+            "Name" : "Devomin",
+            "ID" : "plant4",
+            "Faction" : "wildlife",
+            "Body Structure" : "Plant_Flower",
+            "Sprite" : "npc-devomin.png",
+            "Flags" : [
+                "No_Blood",
+                "Stationary",
+                "RBleed",
+                "No_Strangle",
+                "No_TakeDown"
+            ],
+            "Stats" : {
+                "Health" : 40,
+                "Stamina" : 30,
+
+                "Defense" : 5,
+                "Strength" : 4,
+                "Dexterity" : 8,
+                "Intelligence" : 4,
+                "Endurance" : 8,
+                "Speed" : 15,
+                "Perception" : 7,
+                "Accuracy" : 2,
+
+                "Heat Resist" : -25,
+                "Cold Resist" : 25
+            },
+            "Skills" : [
+                { "ID" : "trip", "Level" : 1 },
+                { "ID" : "grapple", "Level" : 2 }
+            ],
+            "Weapon_Choices" : [ "bramble" ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 3,
+            "Corpse_Item" : "corpse_rad"
+        },
+        {
             "Name" : "Devorash",
             "ID" : "plant3",
             "Faction" : "wildlife",
@@ -2362,7 +2461,7 @@
 				"No_TakeDown"
             ],
             "Stats" : {
-                "Health" : 50,
+                "Health" : 75,
                 "Stamina" : 30,
 
                 "Defense" : 7,
@@ -2948,6 +3047,36 @@
             "Corpse_Item" : "corpse_lep"
         },
         {
+            "Name" : "Fledgling Vampire",
+            "ID" : "fledgling",
+            "Faction" : "krish",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-fledgling.png",
+            "Flags" : [
+                "RBleed",
+                "No_Strangle"
+            ],
+            "Stats" : {
+                "Health" : 75,
+                "Stamina" : 100,
+
+                "Defense" : 6,
+                "Strength" : 5,
+                "Dexterity" : 5,
+                "Intelligence" : 5,
+                "Endurance" : 4,
+
+                "Speed" : 11,
+                "Perception" : 12,
+                "Accuracy" : 1
+            },
+            "Equipment Set" : "set_villager",
+            "Weapon_Choices" : [ "kris" ],
+            "MaxItems" : 3,
+            "MaxItemRarity" : 2,
+			"Corpse_Item" : "corpse_vamp"
+        },
+        {
             "Name" : "Vampire",
             "ID" : "vamp",
             "Faction" : "krish",
@@ -3159,6 +3288,35 @@
                 "Speed" : 8,
                 "Perception" : 10,
                 "Accuracy" : 1
+            },
+            "Weapon_Choices" : [ "Random_Weapon_R2" ],
+            "MaxItems" : 2,
+            "MaxItemRarity" : 2,
+            "Corpse_Item" : "corpse_rad"
+        },
+        {
+            "Name" : "Reshaped Slimemancer",
+            "ID" : "slimemancer2",
+            "Faction" : "wildlife",
+            "Body Structure" : "Humanoid",
+            "Sprite" : "npc-slimemancer2.png",
+            "Flags" : [
+                "Summon_Adds",
+                "RPois"
+            ],
+            "Stats" : {
+                "Health" : 55,
+                "Stamina" : 50,
+
+                "Defense" : 4,
+                "Strength" : 6,
+                "Dexterity" : 6,
+                "Intelligence" : 10,
+                "Endurance" : 5,
+
+                "Speed" : 11,
+                "Perception" : 10,
+                "Accuracy" : 2
             },
             "Weapon_Choices" : [ "Random_Weapon_R2" ],
             "MaxItems" : 2,

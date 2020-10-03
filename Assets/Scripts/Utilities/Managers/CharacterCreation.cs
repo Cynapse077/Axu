@@ -113,7 +113,7 @@ public class CharacterCreation : MonoBehaviour
         field.text = text;
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(classAnchor.GetChild(selectedNum).gameObject);
-        StartCoroutine("InputBuffer");
+        StartCoroutine(nameof(InputBuffer));
     }
 
     public static string StripReservedCharacters(string text)
@@ -199,7 +199,7 @@ public class CharacterCreation : MonoBehaviour
             return;
         }
 
-        selectedMax = (DiffPanel.activeSelf) ? difficulties.Length - 1 : professions.Count - 1;
+        selectedMax = DiffPanel.activeSelf ? difficulties.Length - 1 : professions.Count - 1;
         HandleKeys();
     }
 
@@ -264,7 +264,7 @@ public class CharacterCreation : MonoBehaviour
             
             if (classAnchor.childCount > 0)
             {
-                float cur = 1f - ((float)(newNum) / (float)(classAnchor.childCount - 1));
+                float cur = 1f - (newNum / (float)(classAnchor.childCount - 1));
                 if (cur > 1f) cur = 0f;
                 if (cur < 0f) cur = 1f;
                 felonyScrollbar.value = Mathf.Lerp(0f, 1f, cur);
@@ -336,12 +336,12 @@ public class CharacterCreation : MonoBehaviour
         Felony p = professions[profNum];
         InitializePanels();
 
-        Texture2D charTex = new Texture2D(18, 18, TextureFormat.ARGB32, true)
+        Texture2D charTex = new Texture2D(0, 0, TextureFormat.ARGB32, true)
         {
             filterMode = FilterMode.Point
         };
         charTex.LoadImage(File.ReadAllBytes(Path.Combine(Application.streamingAssetsPath, p.baseBodyTexture)));
-        charPicture.sprite = Sprite.Create(charTex, new Rect(0f, 0f, charTex.width, charTex.height), new Vector2(0.5f, 0.5f), 16);
+        charPicture.sprite = Sprite.Create(charTex, new Rect(0f, 0f, charTex.width, charTex.height), new Vector2(0.5f, 0.5f), Manager.TileResolution);
 
         string AttributeText(int index, int attLevel)
         {
@@ -585,7 +585,10 @@ public class CharacterCreation : MonoBehaviour
         }
 
         Manager.profName = currentProf.name;
-        Manager.ClearFiles();
+        MyConsole.ClearLog();
+
+        Manager.startElevation = 0;
+        Manager.localStartPos = new Coord(22, 2);
 
         Manager.playerBuilder.money = currentProf.startingMoney;
         Manager.playerName = characterName;

@@ -1446,6 +1446,10 @@
         {
             "ID" : "LevelUp_GainAbility",
             "Display" : "<color=green>You have learned the ability \"<color=yellow>{0}</color>\".</color>"
+        },
+        {
+            "ID" : "VersionMismatch",
+            "Display" : "<color=red>[VERSION MISMATCH] - May not work correctly</color>"
         }
     ],
     "YesNo" : [
@@ -2278,6 +2282,10 @@
         {
             "ID" : "RoboFrameOffline",
             "Display" : "This Hauler is currently offline. It seems to be missing something."
+        },
+        {
+            "ID" : "HereLies",
+            "Display" : "Here lies {0}."
         }
     ],
     "Locations" : [

@@ -1,14 +1,11 @@
 ﻿using UnityEngine;
-using System.IO;
-using LitJson;
 using System.Collections.Generic;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class MapObjectSprite : MonoBehaviour
 {
     const int MAX_PULSES = 300;
-    const int AutotileSpriteSize = 16;
-    static readonly Rect SpriteRect = new Rect(0, 0, AutotileSpriteSize, AutotileSpriteSize);
+    static readonly Rect SpriteRect = new Rect(0, 0, Manager.TileResolution, Manager.TileResolution);
     static readonly Vector2 Pivot = new Vector2(0.5f, 0.5f);
 
     public MapObject objectBase;
@@ -26,14 +23,8 @@ public class MapObjectSprite : MonoBehaviour
     Color myColor = Color.white;
     bool on;
 
-    public string objectType
-    {
-        get { return objectBase.blueprint.objectType; }
-    }
-    public int PathCost
-    {
-        get { return objectBase.blueprint.pathCost; }
-    }
+    public string objectType => objectBase.blueprint.objectType;
+    public int PathCost => objectBase.blueprint.pathCost;
     public Coord localPos
     {
         get { return objectBase.localPosition; }
@@ -131,7 +122,7 @@ public class MapObjectSprite : MonoBehaviour
         if (bp.autotile) 
         {
             Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectType).spriteID).texture;
-            spriteRenderer.sprite = Sprite.Create(t, new Rect(SpriteRect), Pivot, AutotileSpriteSize);
+            spriteRenderer.sprite = Sprite.Create(t, new Rect(SpriteRect), Pivot, Manager.TileResolution);
             Autotile(true);
         }
 
@@ -252,7 +243,7 @@ public class MapObjectSprite : MonoBehaviour
 
     public void Autotile(bool initial)
     {
-        int xOffset = BitwiseNeighbors() * 16;
+        int xOffset = BitwiseNeighbors() * Manager.TileResolution;
 
         if (initial)
         {
@@ -260,7 +251,7 @@ public class MapObjectSprite : MonoBehaviour
         }
 
         Texture2D t = SpriteManager.GetObjectSprite(ItemList.GetMOB(objectBase.blueprint.objectType).spriteID).texture;
-        spriteRenderer.sprite = Sprite.Create(t, new Rect(xOffset, 0, 16, 16), new Vector2(0.5f, 0.5f), 16);
+        spriteRenderer.sprite = Sprite.Create(t, new Rect(xOffset, 0, Manager.TileResolution, Manager.TileResolution), new Vector2(0.5f, 0.5f), Manager.TileResolution);
     }
 
     void AutotileAdjacent()

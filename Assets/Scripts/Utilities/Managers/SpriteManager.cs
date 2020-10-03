@@ -65,7 +65,7 @@ public static class SpriteManager
             pivot = new Vector2(0.5f, 0);
         }
 
-        return new ModSprite(Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot, 16f), mod.id);
+        return new ModSprite(Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot, Manager.TileResolution), mod.id);
     }
 
     public static Sprite GetObjectSprite(string id)

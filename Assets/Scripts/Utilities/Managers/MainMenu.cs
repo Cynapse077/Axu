@@ -197,6 +197,7 @@ public class MainMenu : MonoBehaviour
         }
 
         dat.TryGetCoord("Default Screen Size", out GameSettings.DefaultScreenSize, new Coord(DefaultScreenWidth, DefaultScreenHeight));
+        dat.TryGetInt("Respawn Time", out GameSettings.RespawnTime, 6000);
 
         if (dat.ContainsKey("World Map"))
         {

@@ -10,23 +10,10 @@ public class CombatComponent
 
     Entity entity;
 
-    Stats MyStats
-    {
-        get { return entity.stats; }
-    }
-    Inventory MyInventory
-    {
-        get { return entity.inventory; }
-    }
-    Body MyBody
-    {
-        get { return entity.body; }
-    }
-
-    int ExtraAttackChance
-    {
-        get { return (MyStats.Dexterity * 2) - 4; }
-    }
+    Stats MyStats => entity.stats;
+    Inventory MyInventory => entity.inventory;
+    Body MyBody => entity.body;
+    int ExtraAttackChance => (MyStats.Dexterity * 2) - 4;
 
     public CombatComponent(Entity e)
     {
@@ -61,11 +48,6 @@ public class CombatComponent
             soundItem = MyBody.MainHand.EquippedItem;
         }
 
-        if (target.dead)
-        {
-            return;
-        }
-
         lastTarget = target.entity;
 
         //Attack with all other arms.
@@ -73,6 +55,11 @@ public class CombatComponent
 
         for (int i = 0; i < hands.Count; i++)
         {
+            if (target.dead)
+            {
+                return;
+            }
+
             if (hands[i] != null && hands[i] != MyBody.MainHand && hands[i].IsAttached && RNG.Chance(ExtraAttackChance) || !attacked)
             {
                 if (!hands[i].arm.FreeToMove())
@@ -91,14 +78,14 @@ public class CombatComponent
             }
         }
 
-        if (target.dead)
-        {
-            return;
-        }
-
         //Attack with proc weapons.
         for (int i = 0; i < MyBody.bodyParts.Count; i++)
         {
+            if (target.dead)
+            {
+                return;
+            }
+
             if (MyBody.bodyParts[i].Attached && MyBody.bodyParts[i].equippedItem.HasProp(ItemProperty.Proc_Attack) && RNG.Chance(ExtraAttackChance))
             {
                 if (ExtraProcAttack(target, MyBody.bodyParts[i].equippedItem))
@@ -232,7 +219,7 @@ public class CombatComponent
             return false;
         }
 
-        if (RNG.Chance(45))
+        if (RNG.Chance(35))
         {
             target.Miss(entity, wep);
             return false;
@@ -274,7 +261,7 @@ public class CombatComponent
             return;
         }
 
-        bool miss = RNG.Next(100) > 40 + MyStats.proficiencies.Throwing.level + MyStats.Accuracy;
+        bool miss = RNG.Next(100) > (40 + MyStats.proficiencies.Throwing.level + MyStats.Accuracy);
 
         if (miss)
         {
@@ -295,7 +282,7 @@ public class CombatComponent
 
         if (!itemForThrowing.HasProp(ItemProperty.Explosive))
         {
-            int throwingLevel = (entity.isPlayer) ? MyStats.proficiencies.Throwing.level : Mathf.Clamp((World.DangerLevel() / 10) + 1, 0, 3);
+            int throwingLevel = entity.isPlayer ? MyStats.proficiencies.Throwing.level : Mathf.Clamp((World.DangerLevel() / 10) + 1, 0, 3);
             damageScript.damage = itemForThrowing.ThrownDamage(throwingLevel, MyStats.Dexterity);
             damageScript.SetName(itemForThrowing.DisplayName());
         }

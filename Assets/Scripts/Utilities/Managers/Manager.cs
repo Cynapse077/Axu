@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
 
 public static class Manager
 {
@@ -19,28 +20,24 @@ public static class Manager
     public static PlayerBuilder playerBuilder;
     public const int TileResolution = 16;
 
-    public static void ClearFiles()
-    {
-        MyConsole.ClearLog();
+    public static string SaveDirectory => Path.Combine(Application.persistentDataPath, "Save");
 
-        startElevation = 0;
-        localStartPos = new Coord(22, 2);
+    public static string SettingsDirectory => Path.Combine(Application.persistentDataPath, "Settings.json");
 
-        DeleteFileIfExists(SaveDirectory + "/" + playerName + ".axu");
-    }
+    public static void DeleteActiveSaveFile()
+    {
+        //Delete save game
+        string[] ss = Directory.GetFiles(SaveDirectory, "*.axu", SearchOption.AllDirectories);
+        List<LoadSaveMenu.SaveGameObject> savedGames = new List<LoadSaveMenu.SaveGameObject>();
+        LoadSaveMenu.GetDataFromDirectory(ss, savedGames);
 
-    public static string SaveDirectory
-    {
-        get { return (Application.persistentDataPath + "/Save"); }
-    }
-    public static string SettingsDirectory
-    {
-        get { return (Application.persistentDataPath + "/Settings.json"); }
-    }
-
-    static void DeleteFileIfExists(string pathExtension)
-    {
-        if (File.Exists(pathExtension))
-            File.Delete(pathExtension);
+        for (int i = 0; i < savedGames.Count; i++)
+        {
+            if (savedGames[i].charName == playerName && savedGames[i].charProf == profName && savedGames[i].diffName == World.difficulty.Level.ToString())
+            {
+                File.Delete(Directory.GetFiles(SaveDirectory)[i]);
+                break;
+            }
+        }
     }
 }

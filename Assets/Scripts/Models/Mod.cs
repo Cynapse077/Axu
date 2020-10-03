@@ -211,7 +211,7 @@ public class Mod
                 {
                     AddData<TranslatedText>(curPath, "Localization.json", s);
                 }
-            }            
+            }
         }
     }
 

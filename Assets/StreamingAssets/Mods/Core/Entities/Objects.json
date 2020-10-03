@@ -12,7 +12,7 @@
         },
         {
             "ObjectType" : "BaseChest",
-            "Name" : "Small Chest",            
+            "Name" : "Small Chest",
             "Description" : "A small wooden chest. It could contain various items.",
             "Display In Editor" : false
         },
@@ -48,7 +48,7 @@
         {
             "ObjectType" : "Chest_Open", 
             "Base" : "BaseChest",
-            "Name" : "Large Chest",  
+            "Name" : "Large Chest",
             "Description" : "A large ornate chest. It could contain various items.",
             "Container" : {},
             "Sprite" : "object-chest_open.png",

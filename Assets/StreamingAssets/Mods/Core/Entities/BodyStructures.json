@@ -38,6 +38,10 @@
             "Parts" : [ "body", "heart" ]
         },
         {
+            "Name" : "Jellyfish",
+            "Parts" : [ "body", "tendril", "tendril", "tendril", "tendril" ]
+        },
+        {
         	"Name" : "Snake/Worm",
         	"Parts" : [ "head", "body", "back", "tail" ]
         },
@@ -96,6 +100,10 @@
 		{
 			"Name" : "Homonculus",
 			"Parts" : [ "head", "chest", "back" ]
+		},
+        {
+            "Name" : "Terrak",
+            "Parts" : [ "head", "head", "chest", "back", "tail", "leg", "leg", "leg", "leg" ]
 		}
     ],
 
@@ -216,6 +224,15 @@
             "Slot" : "Slot_Leg",
             "Size" : 8,
             "Stats" : [ { "Stat" : "Speed", "Amount" : 2 } ],
+			"Tags" : [ "CannotWearGear" ]
+        },
+        {
+            "Name" : "Tendril",
+            "ID" : "tendril",
+            "Slot" : "Slot_Arm",
+            "Size" : 8,
+            "Stats" : [ { "Stat" : "Strength", "Amount" : 1 } ],
+            "Wielding" : "stinger",
 			"Tags" : [ "CannotWearGear" ]
         },
         {

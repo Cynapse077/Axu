@@ -112,7 +112,7 @@
 			],
             "End Dialogue" : "A pleasure to meet you! My name is Arthomas. Please head inside. Our leader <color=yellow>Lomis</color> is waiting to speak with you. You've been granted permission to enter the facility. Don't cause trouble, now...",
 
-            "Chained Quest" : "ensis6"                 
+            "Chained Quest" : "ensis6"
         },
         {
             "Name" : "Speak with Lomis",
@@ -548,10 +548,6 @@
                 {
                     "Event" : "OnStart",
                     "Create Location" : { "Zone ID" : "Tunnel Entrance" }
-                },
-                {
-                    "Event" : "OnComplete",
-                    "Progress Flag" : "Sonar_Complete"
                 }
             ],
 			"Steps" : [
@@ -570,10 +566,30 @@
                 "XP" : 0,
                 "Items" : [ "animusknife" ]
 			},
+            "Events" : [
+                {
+                    "Event" : "OnComplete",
+                    "Progress Flag" : "Sonar_Complete"
+                }
+			],
             "Steps" : [
                 { "Goal" : "Talk To", "NPC" : "oromir" }
 			],
-            "End Dialogue" : "[TO BE CONTINUED...]"
+            "End Dialogue" : "This is an Animus Knife, carved from the stones you retrieved for me earlier. You should be able to use it to trap Xzol in his constructed body, but only if he is weak enough. Make sure you are prepared before diving into the depths. I wish you the best of luck, my friend. I'm sure Arthomas has some words for you, if you would speak to him.",
+
+            "Chained Quest" : "ensis31"
+		},
+        {
+            "Name" : "Last Words",
+            "ID" : "ensis31",
+            "Description" : "Talk to Arthomas.",
+            "Rewards" : {
+                "XP" : 0 
+			},
+            "Steps" : [
+                { "Goal" : "Talk To", "NPC" : "arthomas" } 
+			],
+            "End Dialogue" : "[The current quest line ends here.]\n\n[TO BE CONTINUED...]"
 		},
 
 		{
@@ -590,7 +606,7 @@
             ],
             "End Dialogue" : "You're not exactly one of them, are you? Greetings, my name is Isazna. Did Gemskhet send you? Good, then everything is occuring as expected. We, The Kin of the Deep, represent a new era for this planet.  Look where our ancestors lead us, to a prison billions of miles away.\nI need you to do me a favor. Retrieve an artifact from the <color=yellow>Volcano</color> nearby, and I will show you marvelous things. There are forces at work that you cannot even comprehend. Take this suit. It will help you deal with the heat.",
 
-            "Chained Quest" : "kin1"    
+            "Chained Quest" : "kin1"
         },
 		{
             "Name" : "Searching for Artifacts",
@@ -1346,6 +1362,10 @@
                     "Set Local Position" : { "x" : 18, "y" : 15 },
                     "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
                 },
+                {
+                    "Event" : "OnComplete",
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena7" }
+                },
 				{
 					"Event" : "OnFail",
 					"Remove Spawns" : true,
@@ -1353,8 +1373,47 @@
                     "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena6" }
 				}
             ],
-            "End Dialogue" : "Good show, here's your pay. I don't have any more fights for you at the moment."
+            "End Dialogue" : "Good show, here's your pay. Come back later for the final challenge."
         },
+        {
+            "Name" : "Arena Wave 8 - Finale",
+            "ID" : "arena7",
+            "Start Dialogue" : "I have one last challenge for you. It will be much more dangerous than the previous encounters. Want to try it?",
+            "Description" : "Defeat the final arena wave.",
+			"Fail On Death" : true,
+			"Rewards" : {
+                "XP" : 500,
+                "Money" : 1000,
+                "Items" : [ "bottlecap" ]
+			},
+            "Steps" : [
+                { "Goal" : "Kill Spawned",
+                    "Events" : [
+                        {
+                            "Event" : "OnComplete",
+                            "Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 }
+                        }
+                    ]
+                },
+                { "Goal" : "Talk To", "NPC" : "arenamaster" }
+            ],
+            "Events" : [
+                {
+                    "Event" : "OnStart",
+                    "Spawn NPC" : { "NPC" : "terrak", "Coordinate" : "Arena", "Elevation" : -1, "Local Position" : { "x" : 28, "y" : 15 } },
+                    "Set Elevation" : -1,
+                    "Set Local Position" : { "x" : 18, "y" : 15 },
+                    "Spawn Blocker" : { "Coordinate" : "Arena", "Local Position" : { "x" : 23, "y" : 15 }, "Elevation" : -1 }
+                },
+				{
+					"Event" : "OnFail",
+					"Remove Spawns" : true,
+					"Remove Blockers" : { "Coordinate" : "Arena", "Elevation" : -1 },
+                    "Give Quest" : { "NPC" : "arenamaster", "Quest" : "arena7" }
+				}
+            ],
+            "End Dialogue" : "I am in awe of your combat prowess. Here's your money. You are truly the champion of the arena!"
+		},
 
 
 		{
@@ -1363,7 +1422,7 @@
 			"Start Dialogue" : "There's some coin on a Bandit Leader's head. If you'd like, I can tell you where to find him.",
 			"Description" : "Kill the marked target.",
 			"Rewards" : {
-				"Money" : 200
+				"Money" : 300
 			},
 			"Steps" : [
 				{ "Goal" : "Go", "To" : [ "Bandit Camp" ] },

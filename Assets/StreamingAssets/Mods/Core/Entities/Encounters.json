@@ -43,6 +43,7 @@
             "Name" : "Ocean 1",
             "Biomes" : [ "Ocean" ],
             "Possibilities" : [
+                { "Weight" : 8, "Amount" : "2d2", "Blueprint" : "jellyfish" },
                 { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "shark" },
                 { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "merisian" },
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "bird" }
@@ -239,7 +240,8 @@
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "subject" },
                 { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" },
 				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "snake2" },
-				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "bat2" }
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "bat2" },
+                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slimemancer2"}
             ]
         },
         {
@@ -252,7 +254,9 @@
                 { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "parasect" },
                 { "Weight" : 4, "Amount" : "1d1", "Blueprint" : "phoenix0" },
                 { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "insect" },
-                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "insect2" }
+                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "insect2" },
+                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slimemancer2"},
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "slimemancer"}
             ]
         },
         {
@@ -281,9 +285,10 @@
                 { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "slime2" },
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slime3" },
                 { "Weight" : 4, "Amount" : "1d4", "Blueprint" : "wastewalker"},
-                { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "slimemancer"},
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "slimemancer"},
                 { "Weight" : 1, "Amount" : "1d3", "Blueprint" : "infected" },
-				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "snake2" }
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "snake2" },
+                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "plant4" }
             ]
         },
         {
@@ -294,11 +299,13 @@
                 { "Weight" : 4, "Amount" : "1d2", "Blueprint" : "wastewalker"},
                 { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "slimemancer"},
                 { "Weight" : 1, "Amount" : "1d3", "Blueprint" : "plant3" },
+                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "plant4" },
                 { "Weight" : 2, "Amount" : "1d3", "Blueprint" : "infected" },
                 { "Weight" : 3, "Amount" : "1d3", "Blueprint" : "insect" },
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "insect2" },
 				{ "Weight" : 1, "Amount" : "1d1", "Blueprint" : "snake2" },
-				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "bat2" }
+				{ "Weight" : 3, "Amount" : "1d1", "Blueprint" : "bat2" },
+                { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "slimemancer2"}
             ]
         },
         {
@@ -395,7 +402,8 @@
                 { "Weight" : 1, "Amount" : "1d1", "Blueprint" : "vamp" },
                 { "Weight" : 2, "Amount" : "1d2", "Blueprint" : "insect" },
                 { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "neant1" },
-				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "snake2" }
+				{ "Weight" : 2, "Amount" : "1d1", "Blueprint" : "snake2" },
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "slimemancer2"}
 
             ]
         },
@@ -410,7 +418,8 @@
                 { "Weight" : 10, "Amount" : "1d3", "Blueprint" : "insect" },
                 { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "insect2" },
                 { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "parasect" },
-                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "neant1" }
+                { "Weight" : 3, "Amount" : "1d1", "Blueprint" : "neant1" },
+                { "Weight" : 5, "Amount" : "1d2", "Blueprint" : "slimemancer2"}
 
             ]
         },
@@ -419,8 +428,8 @@
             "Vaults" : [ "Cave_Norm", "Default", "Ruins_UG" ],
             "Level" : 13,
             "Possibilities" : [
-                { "Weight" : 10, "Amount" : "2d3", "Blueprint" : "vamp" }
-
+                { "Weight" : 8, "Amount" : "1d4", "Blueprint" : "fledgling" },
+                { "Weight" : 10, "Amount" : "2d2", "Blueprint" : "vamp" }
             ]
         },
         {
@@ -474,7 +483,7 @@
                 { "Weight" : 5, "Amount" : "1d1", "Blueprint" : "frostborne1" },
                 { "Weight" : 7, "Amount" : "1d1", "Blueprint" : "bot_shield" },
                 { "Weight" : 10, "Amount" : "1d1", "Blueprint" : "ibot" },
-                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "turret" }         
+                { "Weight" : 2, "Amount" : "1d1", "Blueprint" : "turret" }
             ]
         },
         {

@@ -1,5 +1,6 @@
 {
 	"Default Screen Size" : { "x" : 1280, "y" : 720 },
+	"Respawn Time" : 6000,
     "Day Length" : { "Day" : 4000, "Night" : 2000 },
 	"Local Map" : {
 		"Size" : { "x" : 45, "y" : 30 },

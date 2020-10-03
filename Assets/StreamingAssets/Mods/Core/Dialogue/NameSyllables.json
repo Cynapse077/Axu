@@ -133,5 +133,17 @@
         "su",
         "bir",
         "burr"
-    ]
+    ],
+
+    "Town Suffixes" : [
+        "ton", 
+        "ville", 
+        "wood", 
+        "dale", 
+        "crag", 
+        "field", 
+        "ham", 
+        "hope", 
+        "ard"
+	]
 }

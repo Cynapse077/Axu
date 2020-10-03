@@ -81,6 +81,31 @@ function Sprint(caster, skill)
 	ApplyChanges(caster, skill)
 end
 
+--Step in a direction then attack all adjacent cells
+function Dash(caster, direction, skill)
+	local cell = TileMap.GetCellAt(caster.myPos + direction)
+	local target = cell.entity
+
+	if (target ~= nil or not TileMap.WalkableTile(caster.myPos.x + direction.x, caster.myPos.y + direction.y)) then
+		Log("Direction is blocked.")
+	else
+		local newPos = caster.myPos + direction
+		caster.AbilityMove(direction)
+
+		for x = -1, 1 do
+			for y = -1, 1 do
+				local c = Coord.__new(newPos.x + x, newPos.y + y)
+
+				if (c ~= newPos) then
+					caster.AbilitySwipe(Coord.__new(x, y))
+				end
+			end
+		end
+
+		ApplyChanges(caster, skill)
+	end
+end
+
 --Move in a single direction, attacking the first target in the way.
 function Charge(caster, direction, skill)
 	caster.Charge(direction, skill.level + 3)

@@ -93,11 +93,11 @@ public static class SpawnController
                 HouseObjects();
             }
 
-            int numSpawns = mapData.mapInfo.friendly ? RNG.Next(1, 4) : RNG.Next(0, 4);
+            int numSpawns = mapData.mapInfo.friendly ? SeedManager.localRandom.Next(1, 4) : SeedManager.localRandom.Next(0, 4);
 
             if (!mapData.mapInfo.friendly)
             {
-                if (RNG.Chance(60))
+                if (SeedManager.localRandom.Next(100) < 55)
                 {
                     numSpawns = 0;
                 }
@@ -119,7 +119,7 @@ public static class SpawnController
                         {
                             NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
 
-                            int amount = s.AmountToSpawn();
+                            int amount = s.AmountToSpawn(SeedManager.combatRandom);
                             for (int j = 0; j < amount; j++)
                             {
                                 Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
@@ -147,7 +147,7 @@ public static class SpawnController
                 {
                     NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
 
-                    int amount = s.AmountToSpawn();
+                    int amount = s.AmountToSpawn(SeedManager.combatRandom);
                     for (int j = 0; j < amount; j++)
                     {
                         Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
@@ -176,7 +176,7 @@ public static class SpawnController
     static void Encounter()
     {
         //crystal
-        if (RNG.Next(1000) <= 2)
+        if (RNG.OneIn(500))
         {
             Coord c = World.tileMap.CurrentMap.GetRandomFloorTile();
 
@@ -211,8 +211,7 @@ public static class SpawnController
     {
         Entity entity = ObjectManager.playerEntity;
 
-        bool canSpawnBanditAmbush = GameData.TryGet("bandits", out Faction bandits) 
-            && !ObjectManager.playerEntity.inventory.DisguisedAs(bandits);
+        bool canSpawnBanditAmbush = GameData.TryGet("bandits", out Faction bandits) && !ObjectManager.playerEntity.inventory.DisguisedAs(bandits);
 
         if (CanSpawnIncident() && RNG.CoinFlip())
         {
@@ -313,7 +312,7 @@ public static class SpawnController
 
     static void SpawnUndergroundEnemies(TileMap_Data map)
     {
-        if (map.visited && World.turnManager.turn > map.lastTurnSeen + 6000)
+        if (map.visited && World.turnManager.turn > map.lastTurnSeen + GameSettings.RespawnTime)
         {
             return;
         }
@@ -347,7 +346,7 @@ public static class SpawnController
                 }
 
                 NPCSpawn_Blueprint s = Utility.WeightedChoice(gb.npcs);
-                int amount = Mathf.Clamp(s.AmountToSpawn(), 1, 7);
+                int amount = Mathf.Clamp(s.AmountToSpawn(SeedManager.localRandom), 1, 7);
 
                 for (int j = 0; j < amount; j++)
                 {
@@ -370,14 +369,14 @@ public static class SpawnController
 
         if (v != null && v.blueprint.ID == "Cave_Ice")
         {
-            SpawnObject("Ore", RNG.Next(2, 5));
+            SpawnObject("Ore", SeedManager.localRandom.Next(2, 5));
         }
 
-        if (RNG.Next(100) < 5)
+        if (SeedManager.localRandom.Next(100) < 5)
         {
-            SpawnObject("Chest", (RNG.Next(100) < 10) ? 2 : 1);
+            SpawnObject("Chest", (SeedManager.localRandom.Next(100) < 10) ? 2 : 1);
         }
-        else if (RNG.Next(200) == 0)
+        else if (SeedManager.localRandom.Next(200) == 0)
         {
             SpawnObject("Chest_Large");
         }
@@ -429,7 +428,7 @@ public static class SpawnController
 
         MapInfo mi = World.tileMap.worldMap.GetTileAt(World.tileMap.worldCoordX, World.tileMap.worldCoordY);
 
-        return (mi.biome != Biome.Ocean && !mi.friendly);
+        return mi.biome != Biome.Ocean && !mi.friendly;
     }
 
     public static void SpawnFromGroupName(string name, int amount = 1)
@@ -450,7 +449,7 @@ public static class SpawnController
 
         if (amount == 0)
         {
-            amount = chosenSpawn.AmountToSpawn();
+            amount = chosenSpawn.AmountToSpawn(SeedManager.localRandom);
         }
 
         for (int j = 0; j < amount; j++)
@@ -480,7 +479,7 @@ public static class SpawnController
 
         if (amount == 0)
         {
-            amount = chosenSpawn.AmountToSpawn();
+            amount = chosenSpawn.AmountToSpawn(SeedManager.localRandom);
         }
 
         for (int j = 0; j < amount; j++)

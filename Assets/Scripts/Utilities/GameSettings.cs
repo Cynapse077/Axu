@@ -14,6 +14,7 @@ public static class GameSettings
     public static Coord ScreenSize;
     public static bool ShowLog;
     public static bool FourWayMovement;
+    public static int RespawnTime;
 
     public static readonly List<Coord> SupportedResolutions = new List<Coord>()
     {
@@ -22,13 +23,7 @@ public static class GameSettings
         new Coord(2560, 1440)
     };
 
-    public static string version
-    {
-        get
-        {
-            return "0.7.7";
-        }
-    }
+    public static string version => "0.7.8";
 
     public static void InitializeFromFile()
     {
@@ -39,19 +34,19 @@ public static class GameSettings
             string jsonString = File.ReadAllText(Manager.SettingsDirectory);
             JsonData dat = JsonMapper.ToObject(jsonString);
 
-            ScreenSize = dat.ContainsKey("ScreenSize") && dat["ScreenSize"].Count > 1 ? new Coord((int)dat["ScreenSize"][0], (int)dat["ScreenSize"][1]) : DefaultScreenSize;
-            Master_Volume = dat.ContainsKey("Master_Volume") ? dat["Master_Volume"].ToDouble() : 1.0;
-            Mus_Volume = dat.ContainsKey("Music_Volume") ? dat["Music_Volume"].ToDouble() : 1.0;
-            SE_Volume = dat.ContainsKey("SFX_Volume") ? dat["SFX_Volume"].ToDouble() : 1.0;
-            MuteAll = dat.ContainsKey("Mute") ? (bool)dat["Mute"] : false;
-            Fullscreen = dat.ContainsKey("Fullscreen") ? (bool)dat["Fullscreen"] : false;
-            UseMouse = dat.ContainsKey("UseMouse") ? (bool)dat["UseMouse"] : false;
-            Enable_Weather = dat.ContainsKey("Weather") ? (bool)dat["Weather"] : true;
-            Animation_Speed = (dat.ContainsKey("Animation_Speed")) ? dat["Animation_Speed"].ToDouble() : 40.0;
-            Particle_Effects = dat.ContainsKey("Particle_Effects") ? (bool)dat["Particle_Effects"] : true;
-            SimpleDamage = dat.ContainsKey("SimpleDmg") ? (bool)dat["SimpleDmg"] : false;
-            ShowLog = dat.ContainsKey("Show_Log") ? (bool)dat["Show_Log"] : true;
-            FourWayMovement = dat.ContainsKey("FourWayMovement") ? (bool)dat["FourWayMovement"] : false;
+            dat.TryGetCoord("ScreenSize", out ScreenSize, DefaultScreenSize);
+            dat.TryGetDouble("Master_Volume", out Master_Volume, 1.0);
+            dat.TryGetDouble("Music_Volume", out Mus_Volume, 1.0);
+            dat.TryGetDouble("SFX_Volume", out SE_Volume, 1.0);
+            dat.TryGetDouble("Animation_Speed", out Animation_Speed, 40.0);
+            dat.TryGetBool("Mute", out MuteAll);
+            dat.TryGetBool("Fullscreen", out Fullscreen);
+            dat.TryGetBool("UseMouse", out UseMouse);
+            dat.TryGetBool("Weather", out Enable_Weather, true);
+            dat.TryGetBool("Particle_Effects", out Particle_Effects, true);
+            dat.TryGetBool("SimpleDmg", out SimpleDamage);
+            dat.TryGetBool("Show Log", out ShowLog, true);
+            dat.TryGetBool("FourWayMovement", out FourWayMovement);
 
             if (dat.Keys.Contains("Input"))
             {

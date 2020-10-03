@@ -145,6 +145,8 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
+        distanceToTarget = GetDistance(target);
+
         if (npcBase.HasFlag(NPC_Flags.Quantum_Locked) && InSightOfPlayer())
         {
             hasSeenPlayer = true;
@@ -284,8 +286,6 @@ public class BaseAI : MonoBehaviour
             return false;
         }
 
-        distanceToTarget = GetDistance(target);
-
         if (RNG.Chance(60) && distanceToTarget < sightRange)
         {
             RangedAttack(target.myPos);
@@ -331,13 +331,11 @@ public class BaseAI : MonoBehaviour
             return;
         }
 
-        if (RNG.Chance(35) && UsedAbility(target) && TargetInSight())
+        if (RNG.Chance(35) && UsedAbility() && TargetInSight())
         {
             entity.Wait();
             return;
         }
-
-        distanceToTarget = GetDistance(target);
 
         if (isStationary && distanceToTarget > 1.6f)
         {
@@ -490,7 +488,7 @@ public class BaseAI : MonoBehaviour
             target = (possibleTargets.Count > 0) ? GetClosestTarget(possibleTargets) : ObjectManager.playerEntity;
         }
 
-        if (target == ObjectManager.playerEntity && GetDistance(ObjectManager.playerEntity) < 3 || npcBase.HasFlag(NPC_Flags.At_Home))
+        if (target == ObjectManager.playerEntity && distanceToTarget < 3f || npcBase.HasFlag(NPC_Flags.At_Home))
         {
             Wander();
             return;
@@ -523,7 +521,6 @@ public class BaseAI : MonoBehaviour
 
     void RangedAttack(Coord targetPosition)
     {
-        distanceToTarget = GetDistance(target);
         //Fleeing
         if (distanceToTarget < 3 && RNG.OneIn(5) && !isStationary)
         {
@@ -582,24 +579,21 @@ public class BaseAI : MonoBehaviour
             return false;
         }
 
-        float dist = GetDistance(target);
         int playerStealth = ObjectManager.playerEntity.stats.StealthCheck() + ObjectManager.playerEntity.inventory.DisguiseStrength(npcBase.faction);
         int stealthRoll = RNG.Next(playerStealth);
         int perceptionRoll = RNG.Next(1, perception + 1);
 
-        if (isStationary && dist < 1.6f && stealthRoll < perceptionRoll + 2)
+        if (isStationary && distanceToTarget < 1.6f && stealthRoll < perceptionRoll + 2)
         {
             return true;
         }
 
-        int newSightRange = sightRange;
-
-        if (dist >= newSightRange / 2)
+        if (distanceToTarget >= sightRange / 2)
         {
             perceptionRoll--;
         }
 
-        return dist < newSightRange && stealthRoll < perceptionRoll;
+        return distanceToTarget < sightRange && stealthRoll < perceptionRoll;
     }
 
     public void AnswerCallForHelp(BaseAI bai, Entity targ)
@@ -894,7 +888,7 @@ public class BaseAI : MonoBehaviour
         return entity.InSight(target.myPos);
     }
 
-    bool UsedAbility(Entity targetEntity)
+    bool UsedAbility()
     {
         if (entity.stats.stamina <= 0 || entity.stats.SkipTurn() || !InSightOfPlayer() || target == null || entity.stats.SkipTurn())
         {
@@ -976,8 +970,6 @@ public class BaseAI : MonoBehaviour
 
     bool UseAbility_Unique()
     {
-        distanceToTarget = GetDistance(target);
-
         //Call for help
         if (!hasAskedForHelp && entity.skills.HasAndCanUseSkill(C_Abilities.Help) && RNG.Chance(10))
         {
@@ -1044,15 +1036,20 @@ public class BaseAI : MonoBehaviour
         //Grappling
         if (distanceToTarget < 2f && entity.skills.HasAndCanUseSkill(C_Abilities.Grapple) && RNG.OneIn(5))
         {
-            if (entity.body.AllGrips() == null || entity.body.AllGrips().Count == 0)
+            var allGrips = entity.body.AllGrips();
+            if (allGrips.NullOrEmpty())
             {
                 entity.skills.Grapple_GrabPart(target.body.SeverableBodyParts().GetRandom());
             }
             else
             {
-                BodyPart.Grip currentGrip = entity.body.AllGrips().FirstOrDefault();
+                BodyPart.Grip currentGrip = allGrips.FirstOrDefault();
+                if (currentGrip == null)
+                {
+                    return false;
+                }
 
-                if (currentGrip != null && currentGrip.CanStrangle())
+                if (currentGrip.CanStrangle())
                 {
                     entity.skills.Grapple_Strangle(target.stats); //Choke me, daddy.
                 }

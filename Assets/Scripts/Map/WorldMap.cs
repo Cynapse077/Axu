@@ -11,7 +11,7 @@ public class WorldMap : MonoBehaviour
     public static string BiomePath;
     public static string LandmarkPath;
     public static Coord offset = new Coord(50, -200);
-    const int tileResolution = 16;
+    const int tileResolution = Manager.TileResolution;
 
     public GameObject landmarkObject;
     public WorldMap_Data worldMapData;
@@ -43,14 +43,14 @@ public class WorldMap : MonoBehaviour
             SpriteRenderer sr = l.Value.GetComponent<SpriteRenderer>();
 
             Color[] cols = sr.sprite.texture.GetPixels((int)sr.sprite.rect.x, (int)sr.sprite.rect.y, (int)sr.sprite.rect.width, (int)sr.sprite.rect.height);
-            Color[] rep = texture.GetPixels(l.Key.x * 16, l.Key.y * 16, 16, 16);
+            Color[] rep = texture.GetPixels(l.Key.x * tileResolution, l.Key.y * tileResolution, tileResolution, tileResolution);
 
             for (int x = 0; x < rep.Length; x++)
             {
                 cols[x] = Color.Lerp(rep[x], cols[x], cols[x].a);
             }
 
-            tex.SetPixels(l.Key.x * 16, l.Key.y * 16, 16, 16, cols);
+            tex.SetPixels(l.Key.x * tileResolution, l.Key.y * tileResolution, tileResolution, tileResolution, cols);
         }
 
         File.WriteAllBytes(filename, tex.EncodeToPNG());

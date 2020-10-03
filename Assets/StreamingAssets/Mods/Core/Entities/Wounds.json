@@ -25,7 +25,7 @@
 			"Slot" : "Slot_Head",
 			"Stats" : [
 				{ "Stat" : "Armor", "Amount" : -1 },
-				{ "Stat" : "Health", "Amount" : -3 }
+				{ "Stat" : "Stamina", "Amount" : -3 }
 			]
 		},
         {

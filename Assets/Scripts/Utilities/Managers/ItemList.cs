@@ -160,7 +160,7 @@ public static class ItemList
 
         Item i = GameData.Get<Item>(id);
 
-        if (i == null)
+        if (i.IsNullOrDefault())
         {
             return NoneItem;
         }

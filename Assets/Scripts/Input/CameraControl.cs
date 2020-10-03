@@ -49,8 +49,8 @@ public class CameraControl : MonoBehaviour
     {
         if (started && target != null)
         {
-            targetPos.x = Mathf.Round(target.position.x * 16f) / 16f;
-            targetPos.y = Mathf.Round(target.position.y * 16f) / 16f;
+            targetPos.x = Mathf.Round(target.position.x * Manager.TileResolution) / Manager.TileResolution;
+            targetPos.y = Mathf.Round(target.position.y * Manager.TileResolution) / Manager.TileResolution;
             ClampToMap();
             transform.localPosition = targetPos;
         }
@@ -58,22 +58,22 @@ public class CameraControl : MonoBehaviour
 
     public void Resize()
     {
-        cam.orthographicSize = (Screen.height / 16f / scale);
+        cam.orthographicSize = Screen.height / (float)Manager.TileResolution / scale;
         float horExtent = cam.orthographicSize * Screen.width / Screen.height;
 
         minY = cam.orthographicSize - (Manager.localMapSize.y + 6);
         maxY = Manager.localMapSize.y - cam.orthographicSize - (Manager.localMapSize.y - 4);
         minX = horExtent - 4;
-        maxX = (Manager.localMapSize.x - horExtent + 6);
+        maxX = Manager.localMapSize.x - horExtent + 6;
 
-        if (cam.orthographicSize > Manager.localMapSize.y / 2f)
+        if (cam.orthographicSize >= Manager.localMapSize.y / 2f)
         {
-            minY = maxY = (-Manager.localMapSize.y / 2f);
+            minY = maxY = -Manager.localMapSize.y / 2f;
         }
 
-        if (cam.orthographicSize < (Manager.localMapSize.x) / 2f)
+        if (cam.orthographicSize / (scale / 4f) >= Manager.localMapSize.x / 2f)
         {
-            minX = maxX = (Manager.localMapSize.x / 2f);
+            minX = maxX = Manager.localMapSize.x / 2f;
         }
     }
     public void ForcePosition()

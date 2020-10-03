@@ -1,5 +1,7 @@
+using Augments;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -915,6 +917,81 @@ public class Console : MonoBehaviour
 
                 break;
 
+            case "list":
+                if (parsedText.Length < 2)
+                {
+                    MyConsole.Error("Specify a type to list. Check out help for more info.");
+                    return;
+                }
+
+                string ListAssetsInfo<T>(Func<IAsset, string> nameGetter) where T : IAsset
+                {
+                    var list = GameData.GetAll<T>();
+                    var sb = new StringBuilder();
+
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        sb.AppendLine("<b>" + list[i].ID + "</b>  -  " + nameGetter(list[i]));
+                    }
+
+                    return sb.ToString();
+                }
+
+                switch (parsedText[1])
+                {
+                    case "items":
+                        MyConsole.NewMessage("Items (" + GameData.GetAll<Item>().Count + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<Item>(asset => ((Item)asset).DisplayName()));
+                        break;
+                    case "traits":
+                        MyConsole.NewMessage("Traits (" + GameData.GetAll<Trait>().Count + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<Trait>(asset => ((Trait)asset).Name));
+                        break;
+                    case "abilities":
+                        MyConsole.NewMessage("Abilities (" + GameData.GetAll<Ability>().Count + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<Ability>(asset => ((Ability)asset).Name));
+                        break;
+                    case "books":
+                        MyConsole.NewMessage("Books (" + GameData.GetAll<Book>().Count + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<Book>(asset => ((Book)asset).title));
+                        break;
+                    case "itemmods":
+                        MyConsole.NewMessage("Item Mods (" + GameData.GetAll<ItemModifier>().Count + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<ItemModifier>(asset => ((ItemModifier)asset).name));
+                        break;
+                    case "quests":
+                        MyConsole.NewMessage("Quests (" + GameData.GetAll<Quest>().Count + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<Quest>(asset => ((Quest)asset).Name));
+                        break;
+                    case "npcs":
+                        MyConsole.NewMessage("NPCs (" + GameData.GetAll<NPC_Blueprint>().Count + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<NPC_Blueprint>(asset => ((NPC_Blueprint)asset).name));
+                        break;
+                    case "zones":
+                        MyConsole.NewMessage("Zones (" + (GameData.GetAll<Zone_Blueprint>().Count + GameData.GetAll<Vault_Blueprint>().Count).ToString() + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<Zone_Blueprint>(asset => ((Zone_Blueprint)asset).name));
+                        MyConsole.NewMessage(ListAssetsInfo<Vault_Blueprint>(asset => ((Vault_Blueprint)asset).name));
+                        break;
+                    case "maps":
+                        MyConsole.NewMessage("Maps (" + GameData.GetAll<Map>().Count + ")");
+                        MyConsole.NewMessage(ListAssetsInfo<Map>(asset => ((Map)asset).name));
+                        break;
+                    case "cybernetics":
+                        var cybs = Cybernetic.AllCybernetics();
+                        MyConsole.NewMessage("Cybernetics (" + cybs.Count + ")");
+                        StringBuilder cybSB = new StringBuilder();
+
+                        for (int i = 0; i < cybs.Count; i++)
+                        {
+                            cybSB.AppendLine("<b>" + cybs[i].ID + "</b>  -  " + cybs[i].Name);
+                        }
+
+                        MyConsole.NewMessage(cybSB.ToString());
+                        break;
+                }
+
+                break;
+
             case "?":
             case "help":
             case "commands":
@@ -929,22 +1006,22 @@ public class Console : MonoBehaviour
                 MyConsole.NewHelpLine("location", "Displays the current world coordinate.");
                 MyConsole.NewHelpLine("go [area/direction]", "Travel one screen in a direction. [direction] = \"up\", \"down\", \"north\", \"south\", \"east\", \"west\", \"surface\".\n" +
                     "You can also travel to any landmark by typing its ID, or any elevation by typing \"go elevation [e]\" where \"[e]\" is an integer.");
-                MyConsole.NewHelpLine("  - <b>setpos [x] [y]</b>", "Travel to a specific world position. Constraints: 0-199 on each axis.");
-                MyConsole.NewMessage("  - <b>godmode</b> <i>[0-1]</i>\n      0 = off  1 = on");
-                MyConsole.NewMessage("  - <b>fov</b> <i>[0-1]</i>\n      Whether to show fog of war or not. \n      0 = off  1 = on");
-                MyConsole.NewMessage("  - <b>explore</b> <i>[0-1]</i>\n      0 = off  1 = on\n      Enables or disables map encounters.");
-                MyConsole.NewMessage("  - <b>gold</b> <i>[amount]</i>\n      Gives [amount] gold to the player.");
-                MyConsole.NewMessage("  - <b>spawn npc</b> <i>[ID] [x] [y]</i>\n      Spawns an NPC at a position relative to the player.");
-                MyConsole.NewMessage("  - <b>spawn object</b> <i>[ID] [x] [y]</i>\n      Spawns an object at a position relative to the player.");
+                MyConsole.NewHelpLine("<b>setpos [x] [y]</b>", "Travel to a specific world position. Constraints: 0-199 on each axis.");
+                MyConsole.NewMessage("  - <b>godmode</b> <i>[0-1]</i>\n    0 = off  1 = on");
+                MyConsole.NewMessage("  - <b>fov</b> <i>[0-1]</i>\n    Whether to show fog of war or not. \n      0 = off  1 = on");
+                MyConsole.NewMessage("  - <b>explore</b> <i>[0-1]</i>\n    0 = off  1 = on\n    Enables or disables map encounters.");
+                MyConsole.NewMessage("  - <b>gold</b> <i>[amount]</i>\n    Gives [amount] gold to the player.");
+                MyConsole.NewMessage("  - <b>spawn npc</b> <i>[ID] [x] [y]</i>\n    Spawns an NPC at a position relative to the player.");
+                MyConsole.NewMessage("  - <b>spawn object</b> <i>[ID] [x] [y]</i>\n    Spawns an object at a position relative to the player.");
 
-                MyConsole.NewMessage("  - <b>set <i>[stat] [value]</i></b>\n      Sets a specific stat to the selected value.");
-                MyConsole.NewMessage("  - <b>xp <i>[amount]</i></b>\n      gain [amount] XP.");
-                MyConsole.NewMessage("  - <b>sever</b> <i>[limb index] or \"random\"</i>\n      Severs numbered limb, or random.");
-                MyConsole.NewMessage("  - <b>reattach</b> <i>[limb index] or \"all\"</i>\n      Re-attaches limb at index, or all.");
+                MyConsole.NewMessage("  - <b>set <i>[stat] [value]</i></b>\n    Sets a specific stat to the selected value.");
+                MyConsole.NewMessage("  - <b>xp <i>[amount]</i></b>\n    gain [amount] XP.");
+                MyConsole.NewMessage("  - <b>sever</b> <i>[limb index] or \"random\"</i>\n    Severs numbered limb, or random.");
+                MyConsole.NewMessage("  - <b>reattach</b> <i>[limb index] or \"all\"</i>\n    Re-attaches limb at index, or all.");
 
-                MyConsole.NewMessage("  - <b>give/grant</b> <i>[item name/ID]</i>\n      Give a specified item to the player.");
-                MyConsole.NewMessage("  - <b>multigive/multigrant</b> <i>[amount] [item name/ID]</i>\n      Give a specific number of a specified item to the player.");
-                MyConsole.NewMessage("  - <b>mods</b>\n    Lists all the item modifiers.");
+                MyConsole.NewMessage("  - <b>list</b> <i>[type]</i>\n    Lists all assets of a specific type.\n    Types: items, traits, abilities, books, itemmods, quests, cybernetics, npcs, zones, maps.");
+                MyConsole.NewMessage("  - <b>give/grant</b> <i>[item name/ID]</i>\n    Give a specified item to the player.");
+                MyConsole.NewMessage("  - <b>multigive/multigrant</b> <i>[amount] [item name/ID]</i>\n    Give a specific number of a specified item to the player.");
                 MyConsole.NewMessage("  - <b>modwep</b> <i>[mod ID]</i>\n    Modifies the first non-severed hand's equipped weapon with the selected modifier ID.");
 
                 MyConsole.NewMessage("  - <b>levelabilities</b>\n    Gives all current abilities enough XP to level up. Does not work on abilities that do not gain XP.");
@@ -982,7 +1059,8 @@ public class Console : MonoBehaviour
                 MyConsole.NewMessage("  - <b>5k</b>\n    Increases the turn counter by 5000.");
                 MyConsole.NewMessage("  - <b>10k</b>\n    Increases the turn counter by 10000.");
                 MyConsole.NewMessage("  - <b>log</b>\n    Write a message to the combat log.");
-                MyConsole.NewMessage("  - <b>bodydrop <i>[percent]</i></b>\n    Sets the chance to drop bodies upon death.");
+                MyConsole.NewMessage("  - <b>bodydrop</b> <i>[percent]</i>\n    Sets the chance to drop bodies upon death.");
+                MyConsole.NewMessage("  - <b>startincident</b> <i>[id]</i>\n    Starts the selected incident.");
 
                 MyConsole.DoubleLine();
                 break;
